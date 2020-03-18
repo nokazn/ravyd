@@ -5,9 +5,10 @@ module.exports = {
     browser: true,
   },
   extends: [
-    '@nuxtjs',
+    // @nuxtjs などを含む
+    '@nuxtjs/eslint-config-typescript',
     'plugin:nuxt/recommended',
-    '@vue/airbnb',
+    'airbnb-base',
   ],
   rules: {
     'vue/html-closing-bracket-newline': [2, {
@@ -21,8 +22,7 @@ module.exports = {
       vue: 'never',
       scss: 'never',
     }],
-    'import/no-unresolved': 0,
-    'import/no-cycle': 1,
+    // 'import/no-unresolved': 0,
     'require-await': 2,
     'no-console': process.env.NODE_ENV === 'production'
       ? [1, { allow: ['warn', 'error'] }]
@@ -34,8 +34,9 @@ module.exports = {
     'no-multiple-empty-lines': [2, {
       max: 2,
     }],
+    'import/no-extraneous-dependencies': 0,
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
   },
 };
