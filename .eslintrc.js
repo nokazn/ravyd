@@ -10,6 +10,17 @@ module.exports = {
     'plugin:nuxt/recommended',
     'airbnb-base',
   ],
+  settings: {
+    // import/no-unresolved の False Positive 検知対策
+    'import/resolver': {
+      node: {
+        extensions: [
+          '.ts',
+          '.tsx',
+        ],
+      },
+    },
+  },
   rules: {
     'vue/html-closing-bracket-newline': [2, {
       singleline: 'never',
@@ -35,6 +46,7 @@ module.exports = {
       max: 2,
     }],
     'import/no-extraneous-dependencies': 0,
+    'import/prefer-default-export': 0,
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
