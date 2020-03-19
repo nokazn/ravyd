@@ -1,4 +1,5 @@
 import { Configuration } from '@nuxt/types';
+// @todo
 // @ts-ignore
 import colors from 'vuetify/es5/util/colors';
 
@@ -45,6 +46,9 @@ const config: Configuration = {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
   ],
+  env: {
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID || '',
+  },
   // Axios module configuration (https://axios.nuxtjs.org/options)
   axios: {},
   // vuetify module configuration (https://github.com/nuxt-community/vuetify-module)
