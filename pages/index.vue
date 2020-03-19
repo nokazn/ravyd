@@ -4,6 +4,7 @@
       :size="150">
       mdi-account-circle
     </v-icon>
+
     <v-btn
       rounded
       color="green lighten-2"
@@ -11,6 +12,7 @@
       @click="onAuthButtonClicked">
       Spotify アカウントで認証
     </v-btn>
+
     <p class="auth-card__signup-text">
       アカウントをお持ちでない場合は
       <a
@@ -24,10 +26,37 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { getAccessToken } from '@/api/auth/getAccessToken';
+import { createUrl } from '@/utils/createUrl';
+import { generateRandomString } from '@/utils/generateRandomString';
 
 export default Vue.extend({
+  async middleware({
+    query, store,
+  }) {
+    const { code }: { code?: string} = query;
+    if (code == null) return;
+
+    const token = await getAccessToken(code);
+    store.commit('auth/setToken', token);
+    console.log(store.state.auth);
+  },
+
   methods: {
-    onAuthButtonClicked() {},
+    onAuthButtonClicked() {
+      if (process.env.SPOTIFY_CLIENT_ID == null || process.env.BASE_URL == null) {
+        return;
+      }
+
+      const scope = 'user-read-private user-read-email';
+      window.location.href = createUrl('https://accounts.spotify.com/authorize', {
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        response_type: 'code',
+        redirect_uri: process.env.BASE_URL,
+        status: generateRandomString(),
+        scope,
+      });
+    },
   },
 });
 </script>
