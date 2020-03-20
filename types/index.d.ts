@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import '@nuxtjs/axios';
+
 export namespace Spotify {
   export namespace Auth {
     type CodeRequestBody = {
