@@ -25,6 +25,9 @@ const config: Configuration = {
   // Global CSS
   css: [],
   // Plugins to load before mounting the App
+  serverMiddleware: [
+    '@@/api/auth/',
+  ],
   plugins: [
     {
       src: '@/plugins/vuetify.ts',
@@ -47,10 +50,14 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
   ],
   env: {
-    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID || '',
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    clientId: process.env.SPOTIFY_CLIENT_ID || '',
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
   },
   // Axios module configuration (https://axios.nuxtjs.org/options)
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+  },
   // vuetify module configuration (https://github.com/nuxt-community/vuetify-module)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

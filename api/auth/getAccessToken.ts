@@ -13,7 +13,7 @@ export const getAccessToken = (
   const params: Spotify.Auth.TokenRequestBody = {
     grant_type: 'authorization_code',
     code,
-    redirect_uri: redirectUrl,
+    redirect_uri: `${redirectUrl}/api/auth/callback`,
   };
 
   return axios({
@@ -28,6 +28,8 @@ export const getAccessToken = (
     },
     params,
   })
-    .then((res) => res.data)
-    .catch((e) => console.error(e));
+    .then((res) => { console.log(res.data, res.status); return res.data; })
+    .catch((e) => {
+      console.error({ req: e.request, res: e.response, mes: e.message });
+    });
 };
