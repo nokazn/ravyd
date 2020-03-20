@@ -12,9 +12,8 @@ const app: express.Express = express();
 
 app.use(express.json());
 
-app.get('/', (_req, res): void => {
+app.get('/', (_req, res) => {
   if (process.env.SPOTIFY_CLIENT_ID == null || process.env.BASE_URL == null) {
-    res.send(500).send('エラーが発生しました。\n');
     console.error(
       '環境変数が設定されていません。',
       JSON.stringify({
@@ -23,29 +22,28 @@ app.get('/', (_req, res): void => {
       }, null, 2),
     );
 
-    return;
+    return res.send(500).send('エラーが発生しました。\n');
   }
 
   const baseUrl = 'https://accounts.spotify.com/authorize';
-  const status = generateRandomString();
+  const state = generateRandomString();
   const scope = 'user-read-private user-read-email';
   const url = createUrl(baseUrl, {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: 'code',
-    redirect_uri: `${process.env.BASE_URL}/api/auth/callback`,
-    status,
+    redirect_uri: `${process.env.BASE_URL}/login/callback`,
+    state,
     scope,
   });
-  res.redirect(url);
+
+  return res.redirect(url);
 });
 
-app.all('/callback', async (req, res): Promise<void> => {
+app.all('/callback', async (req, res) => {
   const { code }: { code?: string } = req.query;
-  console.log({ code });
 
   if (code == null) {
     const { error }: { error?: string} = req.query;
-    res.status(400).send(error || '認証時にエラーが発生しました。\n');
     console.error(
       'code が取得できませんでした。',
       JSON.stringify({
@@ -54,16 +52,16 @@ app.all('/callback', async (req, res): Promise<void> => {
         code,
       }, null, 2),
     );
-    return;
+
+    return res.status(400).send(error || '認証時にエラーが発生しました。\n');
   }
 
   const token = await getAccessToken(code);
-  res.send(token);
+
+  return res.send(token);
 });
 
-app.use((_req, res): void => {
-  res.status(404).send('An error occurred.\n');
-});
+app.use((_req, res) => res.status(404).send('An error occurred.\n'));
 
 export default {
   path: '/api/auth/',
