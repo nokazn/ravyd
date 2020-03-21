@@ -16,7 +16,7 @@ export default Vue.extend({
   async fetch({ query, $axios, store }): Promise<void> {
     const { code } = query;
     const { data }: { data: Spotify.Auth.TokenResponseData | null } = await $axios({
-      method: 'post',
+      method: 'POST',
       url: '/api/auth/callback',
       params: {
         code,

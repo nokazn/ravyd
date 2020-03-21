@@ -19,7 +19,7 @@ export const getAccessToken = (
 
   return axios({
     url: baseUrl,
-    method: 'post',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
