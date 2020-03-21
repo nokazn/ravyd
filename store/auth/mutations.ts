@@ -3,7 +3,7 @@ import { AuthState } from './state';
 import { Spotify } from '@/types';
 
 const mutations: MutationTree<AuthState> = {
-  setToken(state, token: Spotify.Auth.TokenResponseData) {
+  setToken(state, token: Spotify.Auth.TokenResponseData | null) {
     // eslint-disable-next-line no-param-reassign
     state.token = token;
   },
