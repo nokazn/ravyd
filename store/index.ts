@@ -1,4 +1,8 @@
-import { GetterTree, MutationTree, ActionTree } from 'vuex';
+import {
+  GetterTree,
+  MutationTree,
+  ActionTree,
+} from 'vuex';
 
 export type RootState = {};
 

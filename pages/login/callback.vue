@@ -1,5 +1,10 @@
 <template>
-  <v-progress-circular />
+  <div :class="$style.progress_circular">
+    <v-progress-circular
+      indeterminate
+      :size="50"
+      :width="5" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,9 +12,7 @@ import Vue from 'vue';
 import { Spotify } from '@/types';
 
 export default Vue.extend({
-  async fetch({
-    query, $axios, store, redirect,
-  }): Promise<void> {
+  async fetch({ query, $axios, store }): Promise<void> {
     const { code } = query;
     const { data }: { data: Spotify.Auth.TokenResponseData | null } = await $axios({
       method: 'post',
@@ -19,7 +22,20 @@ export default Vue.extend({
       },
     });
     store.commit('auth/setToken', data);
-    redirect('/');
+  },
+  mounted(): void {
+    // callback ページがレンダリングされて、vuex-persistence が有効になってからページ遷移する
+    this.$router.replace('/');
   },
 });
 </script>
+
+<style lang="scss" module>
+.progress_circular {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
