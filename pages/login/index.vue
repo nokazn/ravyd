@@ -1,5 +1,5 @@
 <template>
-  <v-card class="auth-card">
+  <v-card :class="$style.authCard">
     <v-icon
       :size="150">
       mdi-account-circle
@@ -8,12 +8,12 @@
     <v-btn
       rounded
       color="green lighten-2"
-      class="auth-card__button"
+      :class="$style.authCard__button"
       @click="onAuthButtonClicked">
       Spotify アカウントで認証
     </v-btn>
 
-    <p class="auth-card__signup-text">
+    <p :class="$style.authCard__signupText">
       アカウントをお持ちでない場合は
       <a
         href="//www.spotify.com/jp/signup/"
@@ -36,8 +36,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.auth-card {
+<style lang="scss" module>
+.authCard {
   position: absolute;
   top: 40%;
   left: 50%;
@@ -53,7 +53,7 @@ export default Vue.extend({
   & > *:not(:last-child) {
     margin-bottom: 28px;
   }
-  &__signup-text {
+  &__signupText {
     font-size: 12px;
   }
 }
