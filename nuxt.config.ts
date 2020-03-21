@@ -31,7 +31,10 @@ const config: Configuration = {
   plugins: [
     {
       src: '@/plugins/vuetify.ts',
-      ssr: true,
+      mode: 'server',
+    }, {
+      src: '@/plugins/vuex-persist',
+      mode: 'client',
     },
   ],
   // Nuxt.js dev-modules

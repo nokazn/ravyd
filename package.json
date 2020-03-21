@@ -19,7 +19,8 @@
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-0",
     "express": "^4.17.1",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@mdi/font": "^5.0.45",
