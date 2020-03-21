@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
 import { Spotify } from '@/types';
 
 export default Vue.extend({
@@ -23,10 +24,16 @@ export default Vue.extend({
     });
     store.commit('auth/setToken', data);
   },
-  mounted(): void {
+
+  async mounted(): Promise<void> {
+    await this.getUserData();
     // callback ページがレンダリングされて、vuex-persistence が有効になってからページ遷移する
     this.$router.replace('/');
   },
+
+  methods: mapActions('auth', [
+    'getUserData',
+  ]),
 });
 </script>
 

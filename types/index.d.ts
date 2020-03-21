@@ -25,5 +25,31 @@ export namespace Spotify {
       expires_in: number;
       refresh_toke: string;
     }
+    type UserData = {
+      country: string
+      display_name: string | null
+      email: string
+      explicit_content: {
+        filter_enabled: boolean
+        filter_locked: boolean
+      }
+      external_urls: {
+        [key: string]: string
+      }
+      followers: {
+        href: string | null,
+        total: number
+      }
+      href: string
+      id: string
+      images: Array<{
+        height: number | null
+        url: string
+        width: number | null
+      }>
+      product: string
+      type: string
+      uri: string
+    }
   }
 }
