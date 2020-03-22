@@ -2,17 +2,21 @@ import express from 'express';
 import dotenv from 'dotenv';
 
 // '@' のような alias は serverMiddleware では動作しない
-import { createUrl } from '../../utils/createUrl';
-import { generateRandomString } from '../../utils/generateRandomString';
-import { getAccessToken } from './getAccessToken';
+import session from '../../auth/session';
+import { createUrl } from '../../../utils/createUrl';
+import { generateRandomString } from '../../../utils/generateRandomString';
+import { getAccessToken } from '../../auth/getAccessToken';
+import { refreshAccessToken } from '../../auth/refreshAccessToken';
 
 dotenv.config();
 
 const app: express.Express = express();
 
 app.use(express.json());
+app.use(session);
 
 app.get('/', (_req, res) => {
+  console.log(_req.session);
   if (process.env.SPOTIFY_CLIENT_ID == null || process.env.BASE_URL == null) {
     console.error(
       '環境変数が設定されていません。',
@@ -39,7 +43,13 @@ app.get('/', (_req, res) => {
   return res.redirect(url);
 });
 
-app.all('/callback', async (req, res) => {
+app.post('/refresh', async (_req, res) => {
+  const refreshToken = '';
+  const token = await refreshAccessToken(refreshToken);
+  return res.status(200).send(token);
+});
+
+app.post('/callback', async (req, res) => {
   const { code }: { code?: string } = req.query;
 
   if (code == null) {

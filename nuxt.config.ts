@@ -26,7 +26,7 @@ const config: Configuration = {
   css: [],
   // Plugins to load before mounting the App
   serverMiddleware: [
-    '@@/api/auth/',
+    '@/server/api/auth/',
   ],
   plugins: [
     {
