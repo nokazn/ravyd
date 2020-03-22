@@ -1,14 +1,22 @@
 import express from 'express';
 
+import redisClient from '../../../db/redis';
 import { createUrl } from '../../../utils/createUrl';
 import { generateRandomString } from '../../../utils/generateRandomString';
 import { getAccessToken } from '../../auth/getAccessToken';
 import { refreshAccessToken } from '../../auth/refreshAccessToken';
+import { Spotify } from '~/types';
 
 const router = express.Router();
 
-router.get('/auth', (_req, res) => {
-  console.log(_req.session);
+router.get('/auth', async (req, res) => {
+  const data = await redisClient.get(req.sessionID!);
+  if (data != null) {
+    const token: Spotify.Auth.TokenResponseData = JSON.parse(data);
+
+    return res.send({ access_token: token.access_token });
+  }
+
   if (process.env.SPOTIFY_CLIENT_ID == null || process.env.BASE_URL == null) {
     console.error(
       '環境変数が設定されていません。',
@@ -18,7 +26,7 @@ router.get('/auth', (_req, res) => {
       }, null, 2),
     );
 
-    return res.send(500).send('エラーが発生しました。\n');
+    return res.status(500).send('エラーが発生しました。\n');
   }
 
   const baseUrl = 'https://accounts.spotify.com/authorize';
@@ -32,12 +40,14 @@ router.get('/auth', (_req, res) => {
     scope,
   });
 
-  return res.redirect(url);
+  return res.send({ url });
 });
 
-router.post('/auth/refresh', async (_req, res) => {
+router.post('/auth/refresh', async (req, res) => {
   const refreshToken = '';
   const token = await refreshAccessToken(refreshToken);
+  redisClient.set(req.sessionID!, JSON.stringify(token));
+
   return res.status(200).send(token);
 });
 
@@ -59,6 +69,7 @@ router.post('/auth/callback', async (req, res) => {
   }
 
   const token = await getAccessToken(code);
+  redisClient.set(req.sessionID!, JSON.stringify(token));
 
   return res.send(token);
 });

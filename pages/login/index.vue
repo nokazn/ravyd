@@ -29,8 +29,24 @@ import Vue from 'vue';
 
 export default Vue.extend({
   methods: {
-    onAuthButtonClicked(): void {
-      window.location.href = `${process.env.baseUrl}/api/auth`;
+    async onAuthButtonClicked(): Promise<void> {
+      const res = await this.$axios({
+        method: 'GET',
+        url: `${process.env.baseUrl}/api/auth`,
+      }).catch((e) => {
+        console.error({ e });
+        return null;
+      });
+
+      if (res?.data.token != null) {
+        this.$store.commit('auth/setToken', res.data);
+        this.$router.push('/');
+      } else if (res?.data.url != null) {
+        window.location.href = res.data.url;
+      } else {
+        // @todo
+        console.error('トークン取得時にエラーががっ制しました。');
+      }
     },
   },
 });

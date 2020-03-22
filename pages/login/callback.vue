@@ -15,14 +15,15 @@ import { Spotify } from '@/types';
 export default Vue.extend({
   async fetch({ query, $axios, store }): Promise<void> {
     const { code } = query;
-    const { data }: { data: Spotify.Auth.TokenResponseData | null } = await $axios({
+    // eslint-disable-next-line camelcase
+    const { data: { access_token } }: { data: Spotify.Auth.TokenResponseData } = await $axios({
       method: 'POST',
       url: '/api/auth/callback',
       params: {
         code,
       },
     });
-    store.commit('auth/setToken', data);
+    store.commit('auth/setToken', access_token);
   },
 
   async mounted(): Promise<void> {
