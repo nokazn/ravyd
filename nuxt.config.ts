@@ -26,7 +26,7 @@ const config: Configuration = {
   css: [],
   // Plugins to load before mounting the App
   serverMiddleware: [
-    '@/server/api/auth/',
+    '@/server/api/',
   ],
   plugins: [
     {
@@ -54,8 +54,6 @@ const config: Configuration = {
   ],
   env: {
     baseUrl: process.env.BASE_URL || 'http://localhost:3000',
-    clientId: process.env.SPOTIFY_CLIENT_ID || '',
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
   },
   // Axios module configuration (https://axios.nuxtjs.org/options)
   axios: {
