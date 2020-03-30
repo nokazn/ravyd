@@ -6,10 +6,11 @@ services:
       context: .
       dockerfile: ./Dockerfile
     tty: true
-    ports: 3000:3000
+    ports:
+      - 3000:3000
     volumes:
       - .:/app
-      - node_modules:/app/node_modules
+      - ./node_modules:/app/node_modules
   redis:
     image: redis:latest
     ports:
