@@ -25,12 +25,14 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable camelcase */
 import Vue from 'vue';
+import { Spotify } from '@/types';
 
 export default Vue.extend({
   methods: {
     async onAuthButtonClicked(): Promise<void> {
-      const res = await this.$axios({
+      const res: Spotify.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
         method: 'GET',
         url: `${process.env.baseUrl}/api/auth`,
       }).catch((e) => {
@@ -38,15 +40,15 @@ export default Vue.extend({
         return null;
       });
 
-      if (res?.data.token != null) {
+      if (res?.data.access_token != null) {
         this.$store.commit('auth/setToken', res.data);
         this.$router.push('/');
-      } else if (res?.data.url != null) {
+        return;
+      } if (res?.data.url != null) {
         window.location.href = res.data.url;
-      } else {
-        // @todo
-        console.error('トークン取得時にエラーががっ制しました。');
+        return;
       }
+      console.error('トークン取得時にエラーが発生しました。');
     },
   },
 });

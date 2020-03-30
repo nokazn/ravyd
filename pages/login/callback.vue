@@ -8,33 +8,26 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable camelcase */
 import Vue from 'vue';
-import { mapActions } from 'vuex';
 import { Spotify } from '@/types';
 
 export default Vue.extend({
-  async fetch({ query, $axios, store }): Promise<void> {
+  async fetch({
+    query, $axios, store, redirect,
+  }): Promise<void> {
     const { code } = query;
-    // eslint-disable-next-line camelcase
     const { data: { access_token } }: { data: Spotify.Auth.TokenResponseData } = await $axios({
       method: 'POST',
-      url: '/api/auth/callback',
+      url: `${process.env.BASE_URL}/api/auth/callback`,
       params: {
         code,
       },
     });
     store.commit('auth/setToken', access_token);
-  },
 
-  async mounted(): Promise<void> {
-    await this.getUserData();
-    // callback ページがレンダリングされて、vuex-persistence が有効になってからページ遷移する
-    this.$router.replace('/');
+    redirect('/');
   },
-
-  methods: mapActions('auth', [
-    'getUserData',
-  ]),
 });
 </script>
 

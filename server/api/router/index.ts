@@ -44,6 +44,7 @@ router.get('/auth', async (req, res) => {
 });
 
 router.post('/auth/refresh', async (req, res) => {
+  // @todo
   const refreshToken = '';
   const token = await refreshAccessToken(refreshToken);
   redisClient.set(req.sessionID!, JSON.stringify(token));
@@ -54,8 +55,8 @@ router.post('/auth/refresh', async (req, res) => {
 router.post('/auth/callback', async (req, res) => {
   const { code }: { code?: string } = req.query;
 
-  if (code == null) {
-    const { error }: { error?: string} = req.query;
+  if (typeof code !== 'string') {
+    const { error }: { error?: string } = req.query;
     console.error(
       'code が取得できませんでした。',
       JSON.stringify({

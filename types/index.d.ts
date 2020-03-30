@@ -3,6 +3,11 @@ import '@nuxtjs/axios';
 
 export namespace Spotify {
   export namespace Auth {
+    type AuthorizationResponse<K extends 'access_token' | 'url'> = {
+      data: {
+        [key in K]: string
+      }
+    }
     type CodeRequestBody = {
       client_id: string;
       response_type: 'code';
@@ -12,18 +17,22 @@ export namespace Spotify {
       show_dialog?: string;
     }
     type TokenRequestBody = {
-      grant_type: string;
+      grant_type: 'authorization_code';
       code: string;
       redirect_uri: string;
       client_id?: string;
       client_secret?: string;
+    }
+    type RefreshTokenRequestParams = {
+      grant_type: 'refresh_token'
+      refresh_token: string
     }
     type TokenResponseData = {
       access_token: string;
       token_type: string;
       scope: string;
       expires_in: number;
-      refresh_toke: string;
+      refresh_token?: string;
     }
     type UserData = {
       country: string
