@@ -31,7 +31,20 @@ router.get('/auth', async (req, res) => {
 
   const baseUrl = 'https://accounts.spotify.com/authorize';
   const state = generateRandomString();
-  const scope = 'user-read-private user-read-email';
+  const scope = [
+    'user-read-private',
+    'user-read-email',
+    'user-read-playback-state',
+    'streaming',
+    'user-modify-playback-state',
+    'playlist-modify-public',
+    'user-library-read',
+    'user-library-modify',
+    'user-top-read',
+    'user-read-playback-position',
+    'user-read-currently-playing',
+    'playlist-read-private',
+  ].join(' ');
   const url = createUrl(baseUrl, {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: 'code',
