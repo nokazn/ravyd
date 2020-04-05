@@ -101,7 +101,7 @@ router.post('/auth/callback', async (req, res) => {
   const token = await getAccessToken(code);
   redisClient.set(req.sessionID!, JSON.stringify(token));
 
-  return res.send(token);
+  return res.send(token?.access_token);
 });
 
 export default router;
