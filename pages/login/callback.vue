@@ -8,23 +8,12 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable camelcase */
 import Vue from 'vue';
-import { Spotify } from '@/types';
 
 export default Vue.extend({
-  async fetch({
-    query, $axios, store, redirect,
-  }): Promise<void> {
+  async fetch({ query, store, redirect }): Promise<void> {
     const { code } = query;
-    const { data: { access_token } }: { data: Spotify.Auth.TokenResponseData } = await $axios({
-      method: 'POST',
-      url: `${process.env.BASE_URL}/api/auth/callback`,
-      params: {
-        code,
-      },
-    });
-    store.commit('auth/setToken', access_token);
+    await store.dispatch('auth/exchangeCodeToAccessToken', code);
 
     redirect('/');
   },
