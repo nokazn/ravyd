@@ -1,14 +1,24 @@
 /* eslint-disable no-param-reassign */
-import { MutationTree } from 'vuex';
+import { Mutations } from 'vuex';
 import { AuthState } from './state';
 import { Spotify } from '@/types';
 
-const mutations: MutationTree<AuthState> = {
-  setToken(state, token: Spotify.Auth.TokenResponseData | null): void {
-    state.token = token;
+export type AuthMutations = {
+  setToken: Spotify.Auth.TokenResponseData['access_token'] | null,
+  setUserData: Spotify.Auth.UserData | null
+}
+
+export type RootMutations = {
+  ['auth/setToken']: AuthMutations['setToken']
+  ['auth/setUserData']: AuthMutations['setUserData']
+}
+
+const mutations: Mutations<AuthState, AuthMutations> = {
+  setToken(state, token): void {
+    state.accessToken = token ?? null;
   },
 
-  setUserData(state, userData: Spotify.Auth.UserData | null): void {
+  setUserData(state, userData): void {
     state.userData = userData;
   },
 };

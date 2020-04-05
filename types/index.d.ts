@@ -62,3 +62,7 @@ export namespace Spotify {
     }
   }
 }
+
+export type MethodMap = {
+  [k: string]: (...args: any) => any
+}

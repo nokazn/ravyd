@@ -1,14 +1,13 @@
-/* eslint-disable camelcase */
 import { Spotify } from '@/types';
 
 export type AuthState = {
-  token: Spotify.Auth.TokenResponseData | null;
-  userData: Spotify.Auth.UserData | null;
+  accessToken: Spotify.Auth.TokenResponseData['access_token'] | null;
+  userData: Spotify.Auth.UserData | null | undefined;
 }
 
 const state: (() => AuthState) = () => ({
-  token: null,
-  userData: null,
+  accessToken: null,
+  userData: undefined,
 });
 
 export default state;

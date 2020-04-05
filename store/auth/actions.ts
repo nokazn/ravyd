@@ -1,22 +1,59 @@
-import { ActionTree } from 'vuex';
-import { RootState } from '@/store';
+/* eslint-disable camelcase */
+import { Actions } from 'vuex';
 import { AuthState } from './state';
+import { AuthGetters } from './getters';
+import { AuthMutations } from './mutations';
+import { Spotify } from '@/types';
 
-const actions: ActionTree<AuthState, RootState> = {
-  async getUserData({ state, commit }): Promise<void> {
-    if (state.token == null) return;
+export type AuthActions = {
+  exchangeCodeToAccessToken: (code: string) => Promise<void>
+  getUserData: () => Promise<void>
+  refreshAccessToken: () => Promise<void>
+}
+
+export type RootActions = {
+  'auth/exchangeCodeToAccessToken': AuthActions['exchangeCodeToAccessToken']
+  'auth/getUserData': AuthActions['getUserData']
+  'auth/refreshAccessToken': AuthActions['refreshAccessToken']
+}
+
+const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
+  async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
+    const { data: accessToken }: { data: Spotify.Auth.TokenResponseData['access_token'] } = await this.$axios({
+      method: 'POST',
+      url: `${process.env.BASE_URL}/api/auth/callback`,
+      params: {
+        code,
+      },
+    });
+    commit('setToken', accessToken);
+  },
+
+  async getUserData({ state, commit, dispatch }): Promise<void> {
+    if (state.accessToken == null) return;
 
     const res = await this.$axios({
+      method: 'GET',
       url: 'https://api.spotify.com/v1/me',
       headers: {
-        Authorization: `Bearer ${state.token.access_token}`,
+        Accept: 'application/json',
+        Authorization: `Bearer ${state.accessToken}`,
       },
-    }).catch((e) => {
+    }).catch((e: Error) => {
       console.error(e);
       return null;
     });
-
     commit('setUserData', res?.data);
+
+    await dispatch('refreshAccessToken');
+  },
+
+  async refreshAccessToken({ commit }) {
+    const { data: accessToken }: { data: Spotify.Auth.TokenResponseData['access_token'] } = await this.$axios({
+      method: 'GET',
+      url: `${process.env.BASE_URL}/api/auth/refresh`,
+    });
+    commit('setToken', accessToken);
   },
 };
 
