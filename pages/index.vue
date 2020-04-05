@@ -8,5 +8,8 @@
 import Vue from 'vue';
 
 export default Vue.extend({
+  async fetch({ store }) {
+    await store.dispatch('browse/getNewReleases');
+  },
 });
 </script>
