@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import express from 'express';
 
 import redisClient from '../../../db/redis';
@@ -56,13 +57,28 @@ router.get('/auth', async (req, res) => {
   return res.send({ url });
 });
 
-router.post('/auth/refresh', async (req, res) => {
+router.get('/auth/refresh', async (req, res) => {
+  const data = await redisClient.get(req.sessionID!);
+  if (data == null) {
+    return res.redirect('/auth');
+  }
   // @todo
-  const refreshToken = '';
-  const token = await refreshAccessToken(refreshToken);
-  redisClient.set(req.sessionID!, JSON.stringify(token));
 
-  return res.status(200).send(token);
+  const currentToken: Spotify.Auth.TokenResponseData = JSON.parse(data);
+  const token = await refreshAccessToken(currentToken.refresh_token!);
+  if (token == null) {
+    return res.redirect('/auth');
+  }
+  console.log({
+    token,
+    currentToken,
+  });
+  redisClient.set(req.sessionID!, JSON.stringify({
+    ...currentToken,
+    ...token,
+  }));
+
+  return res.send(token?.access_token);
 });
 
 router.post('/auth/callback', async (req, res) => {
