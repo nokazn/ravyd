@@ -10,11 +10,25 @@ module.exports = {
     'plugin:nuxt/recommended',
     'airbnb-base',
   ],
+  settings: {
+    // import/no-unresolved の False Positive 検知対策
+    'import/resolver': {
+      node: {
+        extensions: [
+          '.ts',
+          '.tsx',
+          'js',
+          'vue',
+        ],
+      },
+    },
+  },
   rules: {
     'vue/html-closing-bracket-newline': [2, {
       singleline: 'never',
       multiline: 'never',
     }],
+    // import するときに拡張子を書かないもの
     'import/extensions': [2, {
       js: 'never',
       ts: 'never',
@@ -22,7 +36,8 @@ module.exports = {
       vue: 'never',
       scss: 'never',
     }],
-    // 'import/no-unresolved': 0,
+    // @todo
+    'import/no-unresolved': 0,
     'require-await': 2,
     'no-console': process.env.NODE_ENV === 'production'
       ? [1, { allow: ['warn', 'error'] }]
@@ -35,6 +50,10 @@ module.exports = {
       max: 2,
     }],
     'import/no-extraneous-dependencies': 0,
+    'import/prefer-default-export': 0,
+    // typescript-eslint の no-unuserd-vars を有効にする
+    "no-unused-vars": 0,
+    "@typescript-eslint/no-unused-vars": 2,
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

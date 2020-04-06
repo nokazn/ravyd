@@ -1,4 +1,5 @@
 import { Configuration } from '@nuxt/types';
+// @todo
 // @ts-ignore
 import colors from 'vuetify/es5/util/colors';
 
@@ -24,10 +25,16 @@ const config: Configuration = {
   // Global CSS
   css: [],
   // Plugins to load before mounting the App
+  serverMiddleware: [
+    '@/server/api/',
+  ],
   plugins: [
     {
       src: '@/plugins/vuetify.ts',
-      ssr: true,
+      mode: 'server',
+    }, {
+      src: '@/plugins/vuex-persist',
+      mode: 'client',
     },
   ],
   // Nuxt.js dev-modules
@@ -45,8 +52,13 @@ const config: Configuration = {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
   ],
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+  },
   // Axios module configuration (https://axios.nuxtjs.org/options)
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+  },
   // vuetify module configuration (https://github.com/nuxt-community/vuetify-module)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
