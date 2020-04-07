@@ -14,6 +14,7 @@ export default Vue.extend({
   async fetch({ query, store, redirect }): Promise<void> {
     const { code } = query;
     await store.dispatch('auth/exchangeCodeToAccessToken', code);
+    await store.dispatch('auth/getUserData');
 
     redirect('/');
   },

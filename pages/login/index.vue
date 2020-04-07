@@ -42,6 +42,8 @@ export default Vue.extend({
 
       if (res?.data.access_token != null) {
         this.$store.commit('auth/setToken', res.data.access_token);
+        await this.$store.dispatch('auth/getUserData');
+
         this.$router.push('/');
         return;
       } if (res?.data.url != null) {

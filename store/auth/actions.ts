@@ -29,7 +29,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('setToken', accessToken);
   },
 
-  async getUserData({ state, commit, dispatch }): Promise<void> {
+  async getUserData({ state, commit }): Promise<void> {
     if (state.accessToken == null) return;
 
     const res = await this.$axios({
@@ -44,8 +44,6 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       return null;
     });
     commit('setUserData', res?.data);
-
-    await dispatch('refreshAccessToken');
   },
 
   async refreshAccessToken({ commit }) {
