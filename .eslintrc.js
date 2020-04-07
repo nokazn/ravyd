@@ -33,7 +33,7 @@ module.exports = {
       js: 'never',
       ts: 'never',
       json: 'never',
-      vue: 'never',
+      vue: 'always',
       scss: 'never',
     }],
     // @todo

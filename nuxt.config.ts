@@ -80,10 +80,9 @@ const config: Configuration = {
       },
     },
   },
-  // Build configuration
+  // webpack build configuration
   build: {
-    // You can extend webpack config here
-    // extend(config, ctx) {},
+    // extend(webpackConfig) {},
   },
   typescript: {
     typeCheck: {
