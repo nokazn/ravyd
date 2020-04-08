@@ -1,24 +1,26 @@
 <template>
-  <v-text-field
-    v-model="text"
-    hide-details
-    dense
-    :height="height"
-    color="white"
-    class="header__search-field">
-    <template #prepend-inner>
-      <v-icon :size="iconSize">
-        mdi-magnify
-      </v-icon>
-    </template>
+  <div>
+    <v-text-field
+      v-model="text"
+      hide-details
+      dense
+      :height="height"
+      color="white"
+      class="header__search-field">
+      <template #prepend-inner>
+        <v-icon :size="prependIconSize">
+          mdi-magnify
+        </v-icon>
+      </template>
 
-    <template #append>
-      <transparent-icon-button
-        icon="mdi-close"
-        :size="iconSize"
-        @click="clearText" />
-    </template>
-  </v-text-field>
+      <template #append>
+        <transparent-icon-button
+          icon="mdi-close"
+          :size="appendIconSize"
+          @click="clearText" />
+      </template>
+    </v-text-field>
+  </div>
 </template>
 
 <script lang="ts">
@@ -50,8 +52,11 @@ export default Vue.extend({
         this.$emit('input', value);
       },
     },
-    iconSize(): number {
+    prependIconSize(): number {
       return (this.height * 2) / 3;
+    },
+    appendIconSize(): number {
+      return this.height / 2;
     },
   },
 
