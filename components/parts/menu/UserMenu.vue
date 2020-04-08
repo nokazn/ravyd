@@ -10,20 +10,9 @@
         small
         rounded
         v-on="on">
-        <div class="userMenu__button">
-          <v-avatar
-            v-if="userAvatarSrc"
-            class="userMenu__avatar">
-            <img
-              :src="userAvatarSrc"
-              alt="user-avatar">
-          </v-avatar>
-          <v-icon
-            v-else
-            dense
-            class="userMenu__avatar">
-            mdi-account-circle-outline
-          </v-icon>
+        <div class="user-menu__button">
+          <user-avatar
+            :src="userAvatarSrc" />
 
           <span>
             {{ userDisplayName }}
@@ -64,8 +53,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState, mapGetters } from 'vuex';
-import { AuthState } from '@/store/auth/state';
+import { mapGetters } from 'vuex';
+import UserAvatar from '@/components/parts/avatar/UserAvatar.vue';
 
 type Data = {
   isOpen: boolean
@@ -76,6 +65,10 @@ type Data = {
 };
 
 export default Vue.extend({
+  components: {
+    UserAvatar,
+  },
+
   data(): Data {
     return {
       isOpen: false,
@@ -97,20 +90,17 @@ export default Vue.extend({
 
   // @todo
   computed: {
-    ...mapState('auth', {
-    // @ts-ignore
-      userAvatarSrc: (state: AuthState) => state.userData?.images[0]?.url ?? null,
-      userDisplayName: (state: AuthState) => state.userData?.display_name ?? state.userData?.email,
-    }),
     ...mapGetters('auth', [
       'isLoggedin',
+      'userAvatarSrc',
+      'userDisplayName',
     ]),
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.userMenu__button {
+.user-menu__button {
   display: flex;
   align-items: center;
   & > *:not(:last-child) {

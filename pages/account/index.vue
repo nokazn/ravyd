@@ -67,13 +67,5 @@ export default Vue.extend({
   & > *:not(:last-child) {
     margin-bottom: 24px;
   }
-  .account-card__content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    & > *:first-child {
-      font-size: 0.9em;
-      color: #bdbdbd;
-    }
-  }
 }
 </style>
