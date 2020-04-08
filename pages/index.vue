@@ -1,7 +1,5 @@
 <template>
-  <nuxt-link to="/login">
-    login
-  </nuxt-link>
+  <main class="root-page" />
 </template>
 
 <script lang="ts">

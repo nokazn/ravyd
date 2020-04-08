@@ -27,8 +27,6 @@ import { AuthState } from '@/store/auth/state';
 import TwoColumnsListCard, { ItemList } from '@/components/parts/list/TwoColumnsListCard.vue';
 
 export default Vue.extend({
-  name: 'AccountPage',
-
   components: {
     TwoColumnsListCard,
   },
