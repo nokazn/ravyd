@@ -15,9 +15,32 @@
 
     <v-navigation-drawer
       v-if="isLoggedin"
-      app />
+      app
+      permanent
+      :mobile-break-point="768"
+      expand-on-hover>
+      <v-list
+        nav>
+        <v-list-item
+          v-for="item in navigationDrawerItemList"
+          :key="item.title"
+          link
+          nuxt
+          :to="item.to"
+          dense>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.title }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-    <v-content>
+    <v-content app>
       <nuxt />
     </v-content>
   </v-app>
@@ -31,6 +54,11 @@ import UserMenu from '@/components/parts/menu/UserMenu.vue';
 
 type Data = {
   searchWords: string
+  navigationDrawerItemList: {
+    title: string
+    to: string
+    icon: string
+  }[]
 }
 
 export default Vue.extend({
@@ -42,6 +70,18 @@ export default Vue.extend({
   data(): Data {
     return {
       searchWords: '',
+      navigationDrawerItemList: [
+        {
+          title: 'ホーム',
+          to: '/',
+          icon: 'mdi-home',
+        },
+        {
+          title: 'ライブラリ',
+          to: '/library',
+          icon: 'mdi-bookshelf',
+        },
+      ],
     };
   },
 

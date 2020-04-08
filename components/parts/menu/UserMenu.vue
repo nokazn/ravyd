@@ -27,26 +27,25 @@
 
     <v-list
       dense>
-      <v-list-item-group>
-        <template
-          v-for="(itemList, index) in itemLists">
-          <v-list-item
-            v-for="item in itemList"
-            :key="item.title"
-            nuxt
-            :to="item.to">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+      <template
+        v-for="(itemList, index) in itemLists">
+        <v-list-item
+          v-for="item in itemList"
+          :key="item.title"
+          nuxt
+          link
+          :to="item.to">
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.title }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-          <v-divider
-            v-show="itemLists.length !== index + 1"
-            :key="index" />
-        </template>
-      </v-list-item-group>
+        <v-divider
+          v-show="itemLists.length !== index + 1"
+          :key="index" />
+      </template>
     </v-list>
   </v-menu>
 </template>
