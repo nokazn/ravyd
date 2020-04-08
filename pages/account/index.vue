@@ -1,30 +1,13 @@
 <template>
   <main class="account-page">
     <h1>アカウント</h1>
-    <v-card class="account-card">
-      <v-list>
-        <template
-          v-for="(item, index) in itemList">
-          <v-list-item
-            :key="item.title">
-            <v-list-item-content>
-              <v-list-item-title class="account-card__content">
-                <div>
-                  {{ item.title }}
-                </div>
-                <div>
-                  {{ item.value }}
-                </div>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
 
-          <v-divider
-            v-show="itemList.length !== index + 1"
-            :key="index" />
-        </template>
-      </v-list>
-    </v-card>
+    <two-columns-list-card
+      v-if="itemList"
+      :item-list="itemList" />
+    <v-skeleton-loader
+      v-else
+      type="list-item" />
 
     <v-btn
       rounded
@@ -41,14 +24,14 @@
 import Vue from 'vue';
 import { mapState } from 'vuex';
 import { AuthState } from '@/store/auth/state';
-
-export type ItemList = {
-  title: string
-  value?: string | null
-}[]
+import TwoColumnsListCard, { ItemList } from '@/components/parts/list/TwoColumnsListCard.vue';
 
 export default Vue.extend({
   name: 'AccountPage',
+
+  components: {
+    TwoColumnsListCard,
+  },
 
   computed: {
     ...mapState('auth', [
