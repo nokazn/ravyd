@@ -32,7 +32,8 @@ const config: Configuration = {
     {
       src: '@/plugins/vuetify.ts',
       mode: 'server',
-    }, {
+    },
+    {
       src: '@/plugins/vuex-persist',
       mode: 'client',
     },
