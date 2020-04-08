@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import axios from 'axios';
 import { Spotify } from '@/types';
 

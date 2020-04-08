@@ -25,7 +25,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable camelcase */
 import Vue from 'vue';
 import { Spotify } from '@/types';
 

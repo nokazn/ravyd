@@ -52,8 +52,9 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
     // typescript-eslint の no-unuserd-vars を有効にする
-    "no-unused-vars": 0,
-    "@typescript-eslint/no-unused-vars": 2,
+    'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': 2,
+    'camelcase': 0,
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

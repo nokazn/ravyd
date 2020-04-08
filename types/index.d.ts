@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import '@nuxtjs/axios';
 
 export namespace Spotify {

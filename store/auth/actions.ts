@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Actions } from 'vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
