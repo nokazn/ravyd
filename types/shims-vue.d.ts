@@ -1,5 +1,15 @@
-declare module '*.vue' {
-  import type Vue from 'vue';
+import {
+  RootState,
+  RootGetters,
+  SFCCommit,
+  SFCDispatch,
+} from 'vuex';
 
-  export default Vue;
+declare module 'vue/types/vue' {
+  interface Vue {
+    $state: RootState
+    $getters: RootGetters
+    $commit: SFCCommit
+    $dispatch: SFCDispatch
+  }
 }

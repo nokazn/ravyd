@@ -30,6 +30,10 @@ const config: Configuration = {
   ],
   plugins: [
     {
+      src: '@/plugins/vue-inject.ts',
+      mode: 'client',
+    },
+    {
       src: '@/plugins/vuetify.ts',
       mode: 'server',
     },

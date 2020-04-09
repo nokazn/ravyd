@@ -2,7 +2,7 @@ import 'vuex';
 import * as Root from '@/store';
 import * as Auth from '@/store/auth/types';
 import * as Browse from '@/store/browse/types';
-import { MethodMap, Merge } from '@/types';
+import { ActionMethodMap, Merge } from '@/types';
 
 declare module 'vuex' {
   /**
@@ -55,23 +55,35 @@ declare module 'vuex' {
     ...args: CommitArguments<M, T>
   ) => void
 
+  type SFCCommit = <T extends keyof RootMutations>(
+    type: T,
+    payload: RootMutations[T],
+  ) => void
+
   type DispatchArguments<
-    A extends MethodMap,
+    A extends ActionMethodMap,
     T extends keyof Merge<A, RootActions>
   > = T extends keyof RootActions
     ? [Parameters<RootActions[T]>[0], { root: boolean }]
     : Parameters<A[T]>[0] extends undefined
-      ? [Parameters<A[T]>[0]?]
+      ? [never?]
       : [Parameters<A[T]>[0]]
 
-  type ExtendedDispatch<A extends MethodMap> = <T extends keyof Merge<A, RootActions>>(
+  type ExtendedDispatch<A extends ActionMethodMap> = <T extends keyof Merge<A, RootActions>>(
     type: T,
     ...args: DispatchArguments<A, T>,
   ) => T extends keyof RootActions
     ? ReturnType<RootActions[T]>
     : ReturnType<A[T]>
 
-  type Context<S, G, M, A extends MethodMap> = {
+  type SFCDispatch = <T extends keyof RootActions>(
+    type: T,
+    ...payload: Parameters<RootActions[T]>[0] extends undefined
+      ? [never?]
+      : [Parameters<RootActions[T]>[0]],
+  ) => ReturnType<RootActions[T]>
+
+  type Context<S, G, M, A extends ActionMethodMap> = {
     state: S,
     getters: G,
     commit: ExtendedCommit<M>,
@@ -80,7 +92,7 @@ declare module 'vuex' {
     rootGetters: RootGetters,
   }
 
-  type Actions<S, A extends MethodMap, G = {}, M = {}> = {
+  type Actions<S, A extends ActionMethodMap, G = {}, M = {}> = {
     [K in keyof A]: (
       // this は仮の引数
       this: Store<RootState>,

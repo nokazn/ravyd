@@ -62,8 +62,8 @@ export namespace Spotify {
   }
 }
 
-export type MethodMap = {
-  [k: string]: (...args: any) => any
+export type ActionMethodMap = {
+  [k: string]: (...args: any) => Promise<void> | void
 }
 
 export type Except<ObjectType, KeysType extends keyof ObjectType> = Pick<
