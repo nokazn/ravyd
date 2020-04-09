@@ -59,7 +59,6 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@nuxt/vue-app",
       "@nuxtjs/axios"
     ],                           /* Type declaration files to be included in compilation. */
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
