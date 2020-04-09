@@ -6,8 +6,8 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  async fetch({ $dispatch }) {
-    await $dispatch('browse/getNewReleases');
+  async fetch({ app }) {
+    await app.$dispatch('browse/getNewReleases');
   },
 });
 </script>

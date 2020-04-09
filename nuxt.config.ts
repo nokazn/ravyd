@@ -30,16 +30,10 @@ const config: Configuration = {
   ],
   plugins: [
     {
-      src: '@/plugins/vue-inject.ts',
-      mode: 'client',
+      src: './plugins/nuxt-inject',
     },
     {
-      src: '@/plugins/nuxt-inject.ts',
-      mode: 'server',
-    },
-    {
-      src: '@/plugins/vuetify.ts',
-      mode: 'server',
+      src: '@/plugins/vuetify',
     },
     {
       src: '@/plugins/vuex-persist',

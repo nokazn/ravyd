@@ -9,6 +9,8 @@ export type AuthGetters = {
 
 export type RootGetters = {
   'auth/isLoggedin': AuthGetters['isLoggedin']
+  'auth/userDisplayName': AuthGetters['userDisplayName']
+  'auth/userAvatarSrc': AuthGetters['userAvatarSrc']
 }
 
 const getters: Getters<AuthState, AuthGetters> = {

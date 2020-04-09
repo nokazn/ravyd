@@ -11,10 +11,10 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  async fetch({ query, $dispatch, redirect }): Promise<void> {
+  async fetch({ query, app, redirect }): Promise<void> {
     const { code } = query;
-    await $dispatch('auth/exchangeCodeToAccessToken', code as string);
-    await $dispatch('auth/getUserData');
+    await app.$dispatch('auth/exchangeCodeToAccessToken', code as string);
+    await app.$dispatch('auth/getUserData');
 
     redirect('/');
   },
