@@ -4,7 +4,7 @@ import { BrowseGetters } from './getters';
 import { BrowseMutations } from './mutations';
 
 export type BrowseActions = {
-  getNewReleases: (limit: number) => Promise<void>
+  getNewReleases: (limit?: number) => Promise<void>
 }
 
 export type RootActions = {
@@ -14,7 +14,7 @@ export type RootActions = {
 const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutations> = {
   async getNewReleases(
     { commit, dispatch, rootState },
-    limit: number = 10,
+    limit = 10,
   ): Promise<void> {
     if (rootState.auth.accessToken == null) return;
 
