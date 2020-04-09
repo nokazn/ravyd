@@ -48,7 +48,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
 import SearchField from '@/components/parts/form/SearchField.vue';
 import UserMenu from '@/components/parts/menu/UserMenu.vue';
 
@@ -85,9 +84,11 @@ export default Vue.extend({
     };
   },
 
-  computed: mapGetters('auth', [
-    'isLoggedin',
-  ]),
+  computed: {
+    isLoggedin() {
+      return this.$getters['auth/isLoggedin'];
+    },
+  },
 });
 </script>
 

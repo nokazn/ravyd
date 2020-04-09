@@ -22,8 +22,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState } from 'vuex';
-import { AuthState } from '@/store/auth/state';
 import TwoColumnsListCard, { ItemList } from '@/components/parts/list/TwoColumnsListCard.vue';
 
 export default Vue.extend({
@@ -32,24 +30,23 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapState('auth', [
-      'userData',
-    ]),
+    userData() {
+      return this.$state.auth.userData;
+    },
     itemList(): ItemList | null {
-      const userData = this.userData as AuthState['userData'];
-      return userData != null
+      return this.userData != null
         ? [
           {
             title: 'ユーザー名',
-            value: userData.display_name,
+            value: this.userData.display_name,
           },
           {
             title: 'メールアドレス',
-            value: userData.email,
+            value: this.userData.email,
           },
           {
             title: '国',
-            value: userData.country,
+            value: this.userData.country,
           },
         ]
         : null;

@@ -52,7 +52,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
 import UserAvatar from '@/components/parts/avatar/UserAvatar.vue';
 
 type Data = {
@@ -87,13 +86,16 @@ export default Vue.extend({
     };
   },
 
-  // @todo
   computed: {
-    ...mapGetters('auth', [
-      'isLoggedin',
-      'userAvatarSrc',
-      'userDisplayName',
-    ]),
+    isLoggedin() {
+      return this.$getters['auth/isLoggedin'];
+    },
+    userAvatarSrc() {
+      return this.$getters['auth/userAvatarSrc'];
+    },
+    userDisplayName() {
+      return this.$getters['auth/userDisplayName'];
+    },
   },
 });
 </script>
