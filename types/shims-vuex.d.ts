@@ -65,9 +65,10 @@ declare module 'vuex' {
     T extends keyof Merge<A, RootActions>
   > = T extends keyof RootActions
     ? [Parameters<RootActions[T]>[0], { root: boolean }]
-    : Parameters<A[T]>[0] extends undefined
-      ? [never?]
-      : [Parameters<A[T]>[0]]
+    // undifined をとりうるか (省略可能か) で場合分け
+    : Extract<Parameters<A[T]>[0], undefined> extends never
+      ? [Parameters<A[T]>[0]]
+      : [Parameters<A[T]>[0]?]
 
   type ExtendedDispatch<A extends ActionMethodMap> = <T extends keyof Merge<A, RootActions>>(
     type: T,
@@ -76,12 +77,13 @@ declare module 'vuex' {
     ? ReturnType<RootActions[T]>
     : ReturnType<A[T]>
 
-  type SFCDispatch = <T extends keyof RootActions>(
-    type: T,
-    ...payload: Parameters<RootActions[T]>[0] extends undefined
-      ? [never?]
-      : [Parameters<RootActions[T]>[0]],
-  ) => ReturnType<RootActions[T]>
+    type SFCDispatch = <T extends keyof RootActions>(
+      type: T,
+      // undifined をとりうるか (省略可能か) で場合分け
+      ...payload: Extract<Parameters<RootActions[T]>[0], undefined> extends never
+      ? [Parameters<RootActions[T]>[0]]
+      : [Parameters<RootActions[T]>[0]?]
+    ) => ReturnType<RootActions[T]>
 
   type Context<S, G, M, A extends ActionMethodMap> = {
     state: S,
@@ -101,9 +103,9 @@ declare module 'vuex' {
     ) => ReturnType<A[K]>
   }
 
-  // @todo
+  // @todo Dispatch に互換性がない
   // @ts-ignore
-  interface ExtendedStore extends Store<{}> {
+  interface ExtendedStore extends Store<RootState> {
     getters: RootGetters
     commit: ExtendedCommit<RootMutations>
     dispatch: ExtendedDispatch<RootActions>
