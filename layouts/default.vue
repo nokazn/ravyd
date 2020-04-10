@@ -40,9 +40,18 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-content app>
+    <v-content
+      v-if="!isLoading"
+      app>
       <nuxt />
     </v-content>
+    <v-overlay
+      v-else
+      :value="isLoading">
+      <v-progress-circular
+        indeterminate
+        :size="64" />
+    </v-overlay>
   </v-app>
 </template>
 
@@ -85,8 +94,11 @@ export default Vue.extend({
   },
 
   computed: {
-    isLoggedin() {
+    isLoggedin(): boolean | null {
       return this.$getters['auth/isLoggedin'];
+    },
+    isLoading(): boolean {
+      return this.isLoggedin == null;
     },
   },
 });
