@@ -1,6 +1,4 @@
 import { Configuration } from '@nuxt/types';
-// @todo
-// @ts-ignore
 import colors from 'vuetify/es5/util/colors';
 
 const config: Configuration = {
