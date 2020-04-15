@@ -1,4 +1,5 @@
 import 'vuex';
+import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '@/store';
 import * as Auth from '@/store/auth/types';
 import * as Browse from '@/store/browse/types';
@@ -101,11 +102,19 @@ declare module 'vuex' {
       context: Context<S, G, M, A>,
       payload: Parameters<A[K]>[0]
     ) => ReturnType<A[K]>
+  } & {
+    nuxtServerInit?: (
+      context: StoreContext,
+      payload: {
+        req: IncomingMessage,
+        res: ServerResponse,
+        error: Error,
+      },
+    ) => void | Promise<void>
   }
 
-  // @todo Dispatch に互換性がない
-  // @ts-ignore
-  interface ExtendedStore extends Store<RootState> {
+  // Dispatch と Commit に互換性がない
+  interface ExtendedStore extends Omit<Store<RootState>, 'dispatch' | 'commit'> {
     getters: RootGetters
     commit: ExtendedCommit<RootMutations>
     dispatch: ExtendedDispatch<RootActions>
