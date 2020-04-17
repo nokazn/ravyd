@@ -95,6 +95,16 @@ declare module 'vuex' {
     rootGetters: RootGetters,
   }
 
+  // nuxtServerInit 用
+  type StoreContext = {
+    state: RootState,
+    getters: RootGetters,
+    commit: ExtendedCommit<RootMutations>,
+    dispatch: ExtendedDispatch<RootActions>
+    rootState: RootState,
+    rootGetters: RootGetters,
+  }
+
   type Actions<S, A extends ActionMethodMap, G = {}, M = {}> = {
     [K in keyof A]: (
       // this は仮の引数
@@ -118,15 +128,5 @@ declare module 'vuex' {
     getters: RootGetters
     commit: ExtendedCommit<RootMutations>
     dispatch: ExtendedDispatch<RootActions>
-  }
-
-  // nuxtServerInit 用
-  type StoreContext = {
-    state: RootState,
-    getters: RootGetters,
-    commit: ExtendedCommit<RootMutations>,
-    dispatch: ExtendedDispatch<RootActions>
-    rootState: RootState,
-    rootGetters: RootGetters,
   }
 }

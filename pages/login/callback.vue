@@ -15,7 +15,6 @@ export default Vue.extend({
     const { code } = query;
     await app.$dispatch('auth/exchangeCodeToAccessToken', code as string);
     await app.$dispatch('auth/getUserData');
-
     redirect('/');
   },
 });
