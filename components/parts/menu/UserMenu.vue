@@ -87,13 +87,13 @@ export default Vue.extend({
   },
 
   computed: {
-    isLoggedin() {
+    isLoggedin(): boolean | null {
       return this.$getters['auth/isLoggedin'];
     },
-    userAvatarSrc() {
+    userAvatarSrc(): string | null {
       return this.$getters['auth/userAvatarSrc'];
     },
-    userDisplayName() {
+    userDisplayName(): string | null {
       return this.$getters['auth/userDisplayName'];
     },
   },

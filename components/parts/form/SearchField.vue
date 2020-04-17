@@ -48,7 +48,7 @@ export default Vue.extend({
       get(): string {
         return this.value;
       },
-      set(value: string) {
+      set(value: string): void {
         this.$emit('input', value);
       },
     },
