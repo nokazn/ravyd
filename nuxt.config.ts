@@ -28,7 +28,7 @@ const config: Configuration = {
   ],
   plugins: [
     {
-      src: './plugins/nuxt-inject',
+      src: '@/plugins/nuxt-inject',
     },
     {
       src: '@/plugins/vuetify',
@@ -38,6 +38,9 @@ const config: Configuration = {
       mode: 'client',
     },
   ],
+  router: {
+    middleware: 'auth',
+  },
   // Nuxt.js dev-modules
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module

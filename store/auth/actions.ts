@@ -8,12 +8,14 @@ export type AuthActions = {
   exchangeCodeToAccessToken: (code: string) => Promise<void>
   getUserData: () => Promise<void>
   refreshAccessToken: () => Promise<void>
+  logout: () => void
 }
 
 export type RootActions = {
   'auth/exchangeCodeToAccessToken': AuthActions['exchangeCodeToAccessToken']
   'auth/getUserData': AuthActions['getUserData']
   'auth/refreshAccessToken': AuthActions['refreshAccessToken']
+  'auth/logout': AuthActions['logout']
 }
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
@@ -51,6 +53,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       url: `${process.env.BASE_URL}/api/auth/refresh`,
     });
     commit('setToken', accessToken);
+  },
+
+  logout({ commit }) {
+    commit('setToken', null);
+    commit('setUserData', null);
   },
 };
 

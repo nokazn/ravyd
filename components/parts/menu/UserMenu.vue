@@ -79,7 +79,7 @@ export default Vue.extend({
         ], [
           {
             title: 'ログアウト',
-            to: '/api/auth/logout',
+            to: '/logout',
           },
         ],
       ],
