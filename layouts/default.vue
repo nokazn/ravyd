@@ -86,7 +86,7 @@ export default Vue.extend({
 
   computed: {
     isLoggedin(): boolean | null {
-      return this.$getters['auth/isLoggedin'];
+      return this.$getters()['auth/isLoggedin'];
     },
   },
 });

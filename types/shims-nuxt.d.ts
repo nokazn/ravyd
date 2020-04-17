@@ -7,8 +7,8 @@ import {
 
 declare module '@nuxt/types/app' {
   interface NuxtAppOptions {
-    $state: RootState
-    $getters: RootGetters
+    $state: () => RootState
+    $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
   }

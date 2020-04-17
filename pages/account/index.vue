@@ -32,7 +32,7 @@ export default Vue.extend({
 
   computed: {
     userData(): Spotify.Auth.UserData | null {
-      return this.$state.auth.userData ?? null;
+      return this.$state().auth.userData ?? null;
     },
     itemList(): ItemList | null {
       return this.userData != null

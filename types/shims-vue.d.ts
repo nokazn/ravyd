@@ -7,8 +7,8 @@ import {
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $state: RootState
-    $getters: RootGetters
+    $state: () => RootState
+    $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
   }
