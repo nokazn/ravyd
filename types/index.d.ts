@@ -60,6 +60,49 @@ export namespace Spotify {
       uri: string
     }
   }
+
+  export type Album = {
+    alubm_type: 'album' | 'single' | 'compilation'
+    artist: Artist[]
+    available_markets: string[]
+    copyrights: Copyright[]
+    external_ids: ExternalId[]
+    external_urls: ExternalUrl[]
+    genres: string[]
+    href: string
+    id: string
+    images: Image[]
+    label: string
+    name: string
+    popularity: number // 0 ~ 100
+    release_date: string
+    release_date_precision: 'year' | 'month' | 'day'
+    tracks: Track[]
+    type: 'alubm'
+    uri: string
+  }
+
+  export type Artist = {}
+
+  export type Copyright = {}
+
+  export type ExternalId = {}
+
+  export type ExternalUrl = {}
+
+  export type Image = {}
+
+  export type NewReleases = {
+    href: string
+    items: Album[]
+    limit: number
+    next: string | null
+    offset: number
+    previous: string | null
+    total: number
+  }
+
+  export type Track = {}
 }
 
 export type ActionMethodMap = {

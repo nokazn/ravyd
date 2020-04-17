@@ -2,6 +2,7 @@ import { Actions } from 'vuex';
 import { BrowseState } from './state';
 import { BrowseGetters } from './getters';
 import { BrowseMutations } from './mutations';
+import { Spotify } from '@/types';
 
 export type BrowseActions = {
   getNewReleases: (limit?: number) => Promise<void>
@@ -30,8 +31,10 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       console.error(e);
       return null;
     });
+    // @todo
     console.log(res?.data, { res });
-    commit('setNewReleases', res?.data);
+    const newReleases: Spotify.NewReleases | null = res?.data.albums ?? null;
+    commit('setNewReleases', newReleases);
 
     dispatch('auth/refreshAccessToken', undefined, { root: true });
   },
