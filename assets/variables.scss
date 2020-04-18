@@ -7,3 +7,17 @@
 @function z-index-of($key) {
   @return map-get($__layer-map, $key);
 }
+
+/**
+ * フェードイン・フェードアウト
+ */
+@mixin fade-transition($seconds) {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity #{$seconds}s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+}

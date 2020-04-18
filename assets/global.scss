@@ -1,22 +1,11 @@
-// リンクのスタイル
+/**
+ * デフォルトのリンクノスタイル
+ */
 .v-application a {
   color: inherit;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-  }
-}
-
-// @todo
-@mixin fade-transition($seconds) {
-  .fade-enter-active,
-  .fade-leave-active {
-    // transition: opacity #{$seconds}s;
-    transition: opacity .5s;
-  }
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 }
 

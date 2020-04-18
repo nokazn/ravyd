@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ hover }">
     <div :class="$style.ReleaseCardContainer">
-      <transition>
+      <transition name="fade">
         <v-btn
           v-show="hover"
           icon
@@ -16,7 +16,7 @@
         </v-btn>
       </transition>
 
-      <transition>
+      <transition name="fade">
         <v-btn
           v-show="hover"
           icon
@@ -77,4 +77,8 @@ export default Vue.extend({});
     }
   }
 }
+</style>
+
+<style lang="scss" scoped>
+@include fade-transition(.2);
 </style>

@@ -15,17 +15,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import ReleaseCardContainer from '@/components/parts/container/ReleaseCardConteiner.vue';
-import ReleaseCard from '@/components/parts/card/ReleaseCard.vue';
-
-export type ReleaseCardInfo = {
-  releaseName: string
-  releaseId: string
-  artists: {
-    name: string
-    id: string
-  }[]
-  src: string
-}
+import ReleaseCard, { ReleaseCardInfo } from '@/components/parts/card/ReleaseCard.vue';
 
 export default Vue.extend({
   components: {
