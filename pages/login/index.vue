@@ -1,5 +1,7 @@
 <template>
-  <v-card :class="$style.authCard">
+  <v-card
+    v-show="!isLoggedin"
+    :class="$style.authCard">
     <v-icon
       :size="150">
       mdi-account-circle
@@ -29,6 +31,11 @@ import Vue from 'vue';
 import { Spotify } from '@/types';
 
 export default Vue.extend({
+  computed: {
+    isLoggedin(): boolean | null {
+      return this.$getters()['auth/isLoggedin'];
+    },
+  },
   methods: {
     async onAuthButtonClicked(): Promise<void> {
       const res: Spotify.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
