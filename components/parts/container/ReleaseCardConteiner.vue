@@ -69,16 +69,20 @@ export default Vue.extend({});
     display: flex;
     overflow-x: auto;
     padding: 0 32px;
+    height: 100%;
+    // padding-right が効かないので、疑似要素で隙間を作る
+    &::after {
+      display: block;
+      padding-right: 32px;
+      content: "";
+    }
     & > *:not(:last-child) {
       margin-right: 16px;
-    }
-    & > *:last-child {
-      padding-right: 32px;
     }
   }
 }
 </style>
 
 <style lang="scss" scoped>
-@include fade-transition(.2);
+@include fade-transition(.3);
 </style>
