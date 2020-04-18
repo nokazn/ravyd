@@ -1,0 +1,37 @@
+// @todo
+@mixin fade-transition($seconds) {
+  .fade-enter-active,
+  .fade-leave-active {
+    // transition: opacity #{$seconds}s;
+    transition: opacity .5s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+}
+
+.g-no-scroll-bar {
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    display: none;
+  }
+}
+
+.g-scroll-wrapper-x:hover {
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #eeeeee;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 8px;
+  }
+}

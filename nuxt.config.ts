@@ -21,7 +21,9 @@ const config: Configuration = {
   // Customize the progress-bar color
   loading: { color: '#fff' },
   // Global CSS
-  css: [],
+  css: [
+    './assets/global.scss',
+  ],
   // Plugins to load before mounting the App
   serverMiddleware: [
     '@/server/api/',
