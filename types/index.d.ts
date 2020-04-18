@@ -63,7 +63,7 @@ export namespace Spotify {
 
   export type Album = {
     alubm_type: 'album' | 'single' | 'compilation'
-    artist: Artist[]
+    artists: Artist[]
     available_markets: string[]
     copyrights: Copyright[]
     external_ids: ExternalId[]
@@ -78,19 +78,32 @@ export namespace Spotify {
     release_date: string
     release_date_precision: 'year' | 'month' | 'day'
     tracks: Track[]
-    type: 'alubm'
+    type: 'album'
     uri: string
   }
 
-  export type Artist = {}
+  export type Artist = {
+    external_urls: ExternalUrl
+    href: string
+    id: string
+    name: string
+    type: 'artist'
+    uri: string
+  }
 
   export type Copyright = {}
 
   export type ExternalId = {}
 
-  export type ExternalUrl = {}
+  export type ExternalUrl = {
+    spotify: string
+  }
 
-  export type Image = {}
+  export type Image = {
+    height: number
+    url: string
+    width: number
+  }
 
   export type NewReleases = {
     href: string

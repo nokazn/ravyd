@@ -3,7 +3,7 @@
     hover
     ripple
     tile
-    width="200"
+    width="160"
     :class="$style.ReleaseCard">
     <div :class="$style.ReleaseCard__container">
       <v-hover #default="{ hover }">
@@ -13,7 +13,17 @@
           :height="height"
           :width="width"
           :aspect-ratio="1">
-          <release-card-mask v-if="hover" />
+          <v-overlay
+            v-if="hover"
+            absolute
+            :opacity="0.7">
+            <v-hover #default="{ hover: buttonHoverd }">
+              <v-icon
+                :size="buttonSize(buttonHoverd)">
+                mdi-play-circle
+              </v-icon>
+            </v-hover>
+          </v-overlay>
         </v-img>
       </v-hover>
 
@@ -30,13 +40,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import ReleaseCardMask from '@/components/parts/card/ReleaseCardMask.vue';
 
 export default Vue.extend({
-  components: {
-    ReleaseCardMask,
-  },
-
   props: {
     releaseName: {
       type: String,
@@ -63,6 +68,11 @@ export default Vue.extend({
   computed: {
     alt() {
       return `${this.releaseName} - ${this.artistName}`;
+    },
+    buttonSize() {
+      return (hover: boolean) => (hover
+        ? 60
+        : 48);
     },
   },
 });

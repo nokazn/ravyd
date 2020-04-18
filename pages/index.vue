@@ -3,17 +3,18 @@
     <h2 :class="$style.RootPage__title">
       今週の新譜
     </h2>
-    <div :class="$style.RootPage__releaseCardContainer">
+    <release-card-container :class="$style.RootPage__releaseCardContainer">
       <release-card
         v-for="release in newReleaseList"
         :key="release.name"
         v-bind="release" />
-    </div>
+    </release-card-container>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import ReleaseCardContainer from '@/components/parts/container/ReleaseCardConteiner.vue';
 import ReleaseCard from '@/components/parts/card/ReleaseCard.vue';
 
 export type ReleaseCardInfo = {
@@ -24,6 +25,7 @@ export type ReleaseCardInfo = {
 
 export default Vue.extend({
   components: {
+    ReleaseCardContainer,
     ReleaseCard,
   },
 
@@ -53,12 +55,7 @@ export default Vue.extend({
     margin-bottom: 16px;
   }
   &__releaseCardContainer {
-    display: flex;
-    overflow-x: auto;
     margin: 12px -32px;
-    & > *:not(:last-child) {
-      margin-right: 16px;
-    }
   }
 }
 </style>

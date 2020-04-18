@@ -1,1 +1,9 @@
-$g-mask-color: rgba(55, 55, 55, .8);
+/**
+ * z-index
+ */
+ $__layer-map: (
+  floating-button: 100,
+);
+@function z-index-of($key) {
+  @return map-get($__layer-map, $key);
+}
