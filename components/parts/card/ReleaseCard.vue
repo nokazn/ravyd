@@ -19,7 +19,7 @@
             :opacity="0.7">
             <v-hover #default="{ hover: buttonHoverd }">
               <v-icon
-                :size="buttonSize(buttonHoverd)">
+                :size="playButtonSize(buttonHoverd)">
                 mdi-play-circle
               </v-icon>
             </v-hover>
@@ -28,28 +28,60 @@
       </v-hover>
 
       <v-card-title :class="$style.ReleaseCard__title">
-        {{ releaseName }}
+        <nuxt-link :to="releasePath">
+          {{ releaseName }}
+        </nuxt-link>
       </v-card-title>
 
       <v-card-subtitle :class="$style.ReleaseCard__subtitle">
-        {{ artistName }}
+        <template
+          v-for="({ name, id }, index) in artists">
+          <nuxt-link
+            :key="id"
+            :to="artistPath(id)">
+            {{ name }}
+          </nuxt-link>
+
+          <span
+            v-if="index !== artists.length - 1"
+            :key="id">, </span>
+        </template>
       </v-card-subtitle>
     </div>
   </v-card>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
+import { hasProp } from '@/utils/hasProp';
+
+export type ReleaseCardInfo = {
+  releaseName: string
+  releaseId: string
+  artists: {
+    name: string
+    id: string
+  }[]
+  src: string
+}
 
 export default Vue.extend({
+  // @todo props の型定義
   props: {
     releaseName: {
       type: String,
       required: true,
     },
-    artistName: {
+    releaseId: {
       type: String,
       required: true,
+    },
+    artists: {
+      type: Array as PropType<ReleaseCardInfo['artists']>,
+      required: true,
+      validator(value) {
+        return value.every((ele) => hasProp(ele, ['name', 'id']));
+      },
     },
     src: {
       type: String,
@@ -66,13 +98,25 @@ export default Vue.extend({
   },
 
   computed: {
-    alt() {
-      return `${this.releaseName} - ${this.artistName}`;
+    alt(): string {
+      return `${this.releaseName} - ${this.artistsName}`;
     },
-    buttonSize() {
+    playButtonSize(): (hover: boolean) => number {
       return (hover: boolean) => (hover
         ? 60
         : 48);
+    },
+    releasePath(): string {
+      // @todo
+      return `/releases/${this.releaseId}`;
+    },
+    artistsName(): string {
+      return this.artists
+        .map((artist) => artist.name)
+        .join(', ');
+    },
+    artistPath(): (id: string) => string {
+      return (id: string) => `/artists/${id}`;
     },
   },
 });

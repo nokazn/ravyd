@@ -19,7 +19,11 @@ import ReleaseCard from '@/components/parts/card/ReleaseCard.vue';
 
 export type ReleaseCardInfo = {
   releaseName: string
-  artistName: string
+  releaseId: string
+  artists: {
+    name: string
+    id: string
+  }[]
   src: string
 }
 
@@ -38,7 +42,8 @@ export default Vue.extend({
       const releases = this.$state().browse.newReleases?.items
         .map((album) => ({
           releaseName: album.name,
-          artistName: album.artists[0].name,
+          releaseId: album.id,
+          artists: album.artists,
           src: album.images[0].url,
         }));
 
