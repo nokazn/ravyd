@@ -44,7 +44,7 @@
 
           <span
             v-if="index !== artists.length - 1"
-            :key="id">, </span>
+            :key="`${id}-comma`">, </span>
         </template>
       </v-card-subtitle>
     </div>
