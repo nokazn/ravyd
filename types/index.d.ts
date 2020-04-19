@@ -102,7 +102,7 @@ export namespace Spotify {
   } & SimpleArtist
 
   export namespace Browse {
-    export type NewReleases = {
+    type NewReleases = {
       href: string
       items: Album[]
       limit: number
@@ -129,6 +129,30 @@ export namespace Spotify {
   export type Cursor = {
     before?: string
     after: string
+  }
+
+  // @todo
+  export type Device = {}
+
+  export type Episode = {
+    audio_preview_url: string | null
+    description: string
+    duration_ms: number
+    explicit: boolean
+    external_urls: ExternalUrl
+    href: string
+    id: string
+    images: Image[]
+    is_externally_hosted: boolean
+    is_playable: boolean
+    language: string // deprecated
+    languages: string[]
+    name: string
+    release_date: string
+    release_date_precision: 'year' | 'month' | 'day'
+    resume_point: ResumePoint
+    type: 'episode'
+    uri: string
   }
 
   // @todo
@@ -166,8 +190,8 @@ export namespace Spotify {
     uri: string
   }
 
-  export type Player = {
-    RecentlyPlayed: {
+  export namespace Player {
+    type RecentlyPlayed = {
       cursor: {
         after: number
         before: number
@@ -181,11 +205,27 @@ export namespace Spotify {
       limit: number
       next: string
     }
+    type CurrentlyPlaying = {
+      device: Device
+      // @todo
+      repeat_state: 'off' | 'track' | 'context'
+      shuffle_state: 'on' | 'off'
+      context: Context
+      timestamp: number
+      progress_ms: number | null
+      is_playing: boolean
+      item: Track | Episode
+    }
   }
 
   export type Restriction = {
     reason: string
     [k: string]: string
+  }
+
+  export type ResumePoint = {
+    fully_played: boolean
+    resume_position_ms: number
   }
 
   export type SimpleTrack = {
