@@ -1,7 +1,7 @@
 import { Spotify } from '@/types';
 
 export type BrowseState = {
-  newReleases: Spotify.NewReleases | null
+  newReleases: Spotify.Browse.NewReleases | null
 }
 
 export type RootState = {

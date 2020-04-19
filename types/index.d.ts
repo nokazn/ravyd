@@ -101,6 +101,18 @@ export namespace Spotify {
     popularity: number
   } & SimpleArtist
 
+  export namespace Browse {
+    export type NewReleases = {
+      href: string
+      items: Album[]
+      limit: number
+      next: string | null
+      offset: number
+      previous: string | null
+      total: number
+    }
+  }
+
   export type Context = {
     // @todo
     type: 'artist' | 'playlist' | 'album' | string
@@ -152,16 +164,6 @@ export namespace Spotify {
     id: string
     type: 'track'
     uri: string
-  }
-
-  export type NewReleases = {
-    href: string
-    items: Album[]
-    limit: number
-    next: string | null
-    offset: number
-    previous: string | null
-    total: number
   }
 
   export type Player = {

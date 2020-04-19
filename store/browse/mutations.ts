@@ -4,7 +4,7 @@ import { BrowseState } from './state';
 import { Spotify } from '@/types';
 
 export type BrowseMutations = {
-  setNewReleases: Spotify.NewReleases | null
+  setNewReleases: Spotify.Browse.NewReleases | null
 }
 
 export type RootMutations = {

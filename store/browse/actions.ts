@@ -33,7 +33,7 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
     });
     // @todo
     console.log(res?.data, { res });
-    const newReleases: Spotify.NewReleases | null = res?.data.albums ?? null;
+    const newReleases: Spotify.Browse.NewReleases | null = res?.data.albums ?? null;
     commit('setNewReleases', newReleases);
 
     dispatch('auth/refreshAccessToken', undefined, { root: true });
