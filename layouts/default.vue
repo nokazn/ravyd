@@ -44,22 +44,34 @@
     <v-content app>
       <nuxt />
     </v-content>
+
     <v-footer
       v-if="isLoggedin"
       fixed
       app
+      padless
       :height="80"
       :class="$style.Footer">
-      <div :class="$style.Footer__container">
+      <v-slider
+        dense
+        hide-details
+        :class="[$style.Footer__seekBar, 'g-track-seek-bar']" />
+
+      <div
+        v-if="currentTrack != null"
+        :class="$style.Footer__container">
         <release-art-work
           v-if="artWorkSrc"
           :src="artWorkSrc"
           alt="current-track-art-work"
           :size="80"
           :class="$style.Footer__artWork" />
-        <div>
-          <p />
-          <p />
+        <div :class="$style.Footer__trackInfo">
+          <release-name
+            v-bind="releases" />
+
+          <artist-name
+            :artist-list="artistList" />
         </div>
       </div>
     </v-footer>
@@ -72,6 +84,8 @@ import { RootGetters } from 'vuex';
 import SearchField from '@/components/parts/form/SearchField.vue';
 import UserMenu from '@/components/parts/menu/UserMenu.vue';
 import ReleaseArtWork from '@/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseName, { Releases } from '@/components/parts/text/ReleaseName.vue';
+import ArtistName, { Artists } from '@/components/parts/text/ArtistName.vue';
 
 type Data = {
   searchWords: string
@@ -87,6 +101,8 @@ export default Vue.extend({
     SearchField,
     UserMenu,
     ReleaseArtWork,
+    ReleaseName,
+    ArtistName,
   },
 
   data(): Data {
@@ -117,6 +133,17 @@ export default Vue.extend({
     artWorkSrc(): NonNullable<RootGetters['player/currentTrack']>['artWorkSrc'] | null {
       return this.currentTrack?.artWorkSrc ?? null;
     },
+    releases(): Releases | null {
+      return this.currentTrack != null
+        ? {
+          name: this.currentTrack.trackName,
+          releaseId: this.currentTrack.trackId,
+        }
+        : null;
+    },
+    artistList(): Artists | null {
+      return this.currentTrack?.artists ?? null;
+    },
   },
 });
 </script>
@@ -132,13 +159,45 @@ export default Vue.extend({
 }
 
 .Footer {
-  padding: 0;
+  position: relative;
+  &__seekBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100000;
+    margin: 0;
+    transform: translateY(-50%);
+  }
   &__container {
-    display: grid;
+    display: flex;
+    & > *:not(:last-child) {
+      margin-right: 4px;
+    }
   }
   &__artWork {
     height: 80px;
     width: 80px;
+  }
+  &__trackInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+</style>
+
+<style lang="scss">
+/**
+ * フッターのシークバーのスタイルを上書き
+ */
+.g-track-seek-bar {
+  .v-slider--horizontal {
+    margin: 0;
+    min-height: 0;
+  }
+  .v-slider__thumb {
+    cursor: pointer;
   }
 }
 </style>
