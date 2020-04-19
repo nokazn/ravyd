@@ -61,28 +61,32 @@ export namespace Spotify {
     }
   }
 
-  export type Album = {
+  export type SimpleAlbum = {
+    alubm_group?: 'album' | 'single' | 'compilation'
     alubm_type: 'album' | 'single' | 'compilation'
     artists: Artist[]
     available_markets: string[]
     copyrights: Copyright[]
-    external_ids: ExternalId[]
-    external_urls: ExternalUrl[]
-    genres: string[]
+    external_urls: ExternalUrl
     href: string
     id: string
     images: Image[]
-    label: string
     name: string
-    popularity: number // 0 ~ 100
     release_date: string
     release_date_precision: 'year' | 'month' | 'day'
-    tracks: Track[]
+    restriction: Restriction
     type: 'album'
     uri: string
   }
+  export type Album = {
+    external_ids: ExternalId
+    genres: string[]
+    label: string
+    popularity: number // 0 ~ 100
+    tracks: Track[]
+  } & Omit<SimpleAlbum, 'album_group'>
 
-  export type Artist = {
+  export type SimpleArtist = {
     external_urls: ExternalUrl
     href: string
     id: string
@@ -90,19 +94,64 @@ export namespace Spotify {
     type: 'artist'
     uri: string
   }
+  export type Artist = {
+    followers: Followers
+    genres: string[]
+    images: Image[]
+    popularity: number
+  } & SimpleArtist
 
-  export type Copyright = {}
+  export type Context = {
+    // @todo
+    type: 'artist' | 'playlist' | 'album' | string
+    href: string
+    external_urls: ExternalUrl
+    uri: string
+  }
 
-  export type ExternalId = {}
+  export type Copyright = {
+    text: string
+    type: 'C' | 'P'
+  }
 
+  export type Cursor = {
+    before?: string
+    after: string
+  }
+
+  // @todo
+  export type ExternalId = {
+    isrc?: string
+    ean?: string
+    upc?: string
+  } & {
+    [k: string]: string
+  }
+
+  // @todo
   export type ExternalUrl = {
-    spotify: string
+    spotify?: string
+  } & {
+    [k: string]: string
+  }
+
+  export type Followers = {
+    href: string
+    total: number
   }
 
   export type Image = {
     height: number
     url: string
     width: number
+  }
+
+  export type LinkedTrack ={
+    external_urls: ExternalUrl
+    href: string
+    id: string
+    type: 'track'
+    uri: string
   }
 
   export type NewReleases = {
@@ -115,7 +164,52 @@ export namespace Spotify {
     total: number
   }
 
-  export type Track = {}
+  export type Player = {
+    RecentlyPlayed: {
+      cursor: {
+        after: number
+        before: number
+      }
+      href: string
+      items: {
+        context: Context
+        played_at: string // timestamp
+        track: SimpleTrack
+      }
+      limit: number
+      next: string
+    }
+  }
+
+  export type Restriction = {
+    reason: string
+    [k: string]: string
+  }
+
+  export type SimpleTrack = {
+    artists: SimpleArtist[]
+    available_markets: string[]
+    disc_number: number
+    duration_ms: number
+    explicit: boolean
+    external_urls: ExternalUrl
+    href: string
+    id: string
+    id_playable: boolean
+    linked_from: LinkedTrack
+    restrictions: Restriction
+    name: string
+    preview_url: string
+    track_number: number
+    type: string
+    uri: string
+    is_local: boolean
+  }
+  export type Track = {
+    album: SimpleAlbum
+    external_ids: ExternalId
+    popularity: string
+  } & SimpleTrack
 }
 
 export type ActionMethodMap = {
