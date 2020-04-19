@@ -3,29 +3,14 @@
     hover
     ripple
     tile
-    width="160"
+    :width="width"
     :class="$style.ReleaseCard">
     <div :class="$style.ReleaseCard__container">
-      <v-hover #default="{ hover }">
-        <v-img
-          :src="src"
-          :alt="alt"
-          :height="height"
-          :width="width"
-          :aspect-ratio="1">
-          <v-overlay
-            v-if="hover"
-            absolute
-            :opacity="0.7">
-            <v-hover #default="{ hover: buttonHoverd }">
-              <v-icon
-                :size="playButtonSize(buttonHoverd)">
-                mdi-play-circle
-              </v-icon>
-            </v-hover>
-          </v-overlay>
-        </v-img>
-      </v-hover>
+      <release-art-work
+        :src="src"
+        :alt="alt"
+        :size="width"
+        icon="mdi-play-circle" />
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link :to="releasePath">
@@ -53,6 +38,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import ReleaseArtWork from '@/components/parts/avatar/ReleaseArtWork.vue';
 import { hasProp } from '@/utils/hasProp';
 
 export type ReleaseCardInfo = {
@@ -63,9 +49,14 @@ export type ReleaseCardInfo = {
     id: string
   }[]
   src: string
+  width?: number
 }
 
 export default Vue.extend({
+  components: {
+    ReleaseArtWork,
+  },
+
   // @todo props の型定義
   props: {
     releaseName: {
@@ -87,10 +78,6 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    height: {
-      type: Number,
-      default: 160,
-    },
     width: {
       type: Number,
       default: 160,
@@ -100,11 +87,6 @@ export default Vue.extend({
   computed: {
     alt(): string {
       return `${this.releaseName} - ${this.artistsName}`;
-    },
-    playButtonSize(): (hover: boolean) => number {
-      return (hover: boolean) => (hover
-        ? 60
-        : 48);
     },
     releasePath(): string {
       // @todo
