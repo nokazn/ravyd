@@ -1,7 +1,7 @@
 const hasOwnProperty = (
   obj: any,
   type: string,
-) => Object.prototype.hasOwnProperty.call(obj, type);
+) => obj != null && Object.prototype.hasOwnProperty.call(obj, type);
 
 export const hasProp = (
   obj: any,

@@ -78,13 +78,13 @@ export namespace Spotify {
     type: 'album'
     uri: string
   }
-  export type Album = {
+  export type Album = Merge<{
     external_ids: ExternalId
     genres: string[]
     label: string
     popularity: number // 0 ~ 100
     tracks: Track[]
-  } & Omit<SimpleAlbum, 'album_group'>
+  }, Omit<SimpleAlbum, 'album_group'>>
 
   export type SimpleArtist = {
     external_urls: ExternalUrl
@@ -94,12 +94,12 @@ export namespace Spotify {
     type: 'artist'
     uri: string
   }
-  export type Artist = {
+  export type Artist = Merge<{
     followers: Followers
     genres: string[]
     images: Image[]
     popularity: number
-  } & SimpleArtist
+  }, SimpleArtist>
 
   export namespace Browse {
     type NewReleases = {
@@ -131,8 +131,28 @@ export namespace Spotify {
     after: string
   }
 
-  // @todo
-  export type Device = {}
+  export type Device = {
+    id: string | null
+    is_active: boolean
+    is_private_session: boolean
+    is_restricted: boolean
+    name: string
+    type: 'Computer' | 'Tablet' | 'Smartphone' | 'Speaker' | 'TV' | 'AVR' | 'STB' | 'AudioDongle' | 'GameConsole' | 'CastVideo' | 'CastAudio' | 'Automobile' | 'Unknown'
+    volume_percent: number
+  }
+
+  export type Disallow = {
+    nterrupting_playback?: boolean
+    pausing?: boolean
+    resuming?: boolean
+    seeking?: boolean
+    skipping_next?: boolean
+    skipping_prev?: boolean
+    toggling_repeat_context?: boolean
+    toggling_shuffle?: boolean
+    toggling_repeat_track?: boolean
+    transferring_playback?: boolean
+  }
 
   export type Episode = {
     audio_preview_url: string | null
@@ -156,20 +176,20 @@ export namespace Spotify {
   }
 
   // @todo
-  export type ExternalId = {
+  export type ExternalId = Merge<{
     isrc?: string
     ean?: string
     upc?: string
-  } & {
+  }, {
     [k: string]: string
-  }
+  }>
 
   // @todo
-  export type ExternalUrl = {
+  export type ExternalUrl = Merge<{
     spotify?: string
-  } & {
+  }, {
     [k: string]: string
-  }
+  }>
 
   export type Followers = {
     href: string
@@ -201,20 +221,25 @@ export namespace Spotify {
         context: Context
         played_at: string // timestamp
         track: SimpleTrack
-      }
+      }[]
       limit: number
       next: string
     }
+
     type CurrentlyPlaying = {
+      actions: {
+        disallow?: Disallow
+      }
+      context: Context | null
+      currently_playing_type: 'track' | 'episode' | 'ad' | 'unknown'
       device: Device
+      is_playing: boolean
+      item: Track | Episode | null
+      progress_ms: number | null
       // @todo
       repeat_state: 'off' | 'track' | 'context'
       shuffle_state: 'on' | 'off'
-      context: Context
       timestamp: number
-      progress_ms: number | null
-      is_playing: boolean
-      item: Track | Episode
     }
   }
 
@@ -229,6 +254,8 @@ export namespace Spotify {
   }
 
   export type SimpleTrack = {
+    // @todo
+    album: SimpleAlbum
     artists: SimpleArtist[]
     available_markets: string[]
     disc_number: number
@@ -247,11 +274,11 @@ export namespace Spotify {
     uri: string
     is_local: boolean
   }
-  export type Track = {
+  export type Track = Merge<{
     album: SimpleAlbum
     external_ids: ExternalId
     popularity: string
-  } & SimpleTrack
+  }, SimpleTrack>
 }
 
 export type ActionMethodMap = {
