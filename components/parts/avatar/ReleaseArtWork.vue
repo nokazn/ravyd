@@ -5,6 +5,8 @@
       :alt="alt"
       :height="size"
       :width="size"
+      :max-height="size"
+      :max-width="size"
       :aspect-ratio="1"
       :class="$style.ReleaseArtWork">
       <v-overlay
