@@ -50,6 +50,16 @@ export default Vue.extend({});
 </script>
 
 <style lang="scss" module>
+// .ReleaseCardContainerMask {
+//   z-index: 1000;
+//   background-attachment: scroll;
+//   background: linear-gradient(
+//     to right,
+//     red,
+//     rgba(0,0,0,0)
+//   );
+//   box-shadow: 0 100px 10px 10px red;
+// }
 .ReleaseCardContainer {
   position: relative;
   &__icon {
