@@ -2,6 +2,7 @@
   <button>
     <v-icon
       :size="size"
+      :color="color"
       class="transparent-icon-button">
       {{ icon }}
     </v-icon>
@@ -20,6 +21,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 16,
+    },
+    color: {
+      type: String,
+      default: undefined,
     },
   },
 });

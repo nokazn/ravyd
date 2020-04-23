@@ -2,22 +2,31 @@
   <div>
     <v-text-field
       v-model="text"
-      hide-details
       dense
+      hide-details
+      rounded
+      light
+      background-color="grey lighten-4"
       :height="height"
-      color="white"
-      class="header__search-field">
+      :class="$style.SearchField">
       <template #prepend-inner>
-        <v-icon :size="prependIconSize">
+        <v-icon
+          :size="iconSize"
+          color="grey darken-4"
+          :class="$style.SearchField__prependInnerIcon">
           mdi-magnify
         </v-icon>
       </template>
 
       <template #append>
-        <transparent-icon-button
-          icon="mdi-close"
-          :size="appendIconSize"
-          @click="clearText" />
+        <v-icon
+          v-show="value !== ''"
+          :size="iconSize"
+          color="grey darken-1"
+          :class="$style.SearchField__clearIcon"
+          @click="clearText">
+          mdi-close
+        </v-icon>
       </template>
     </v-text-field>
   </div>
@@ -25,11 +34,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import TransparentIconButton from '@/components/parts/button/TransparentIconButton.vue';
+// import TransparentIconButton from '@/components/parts/button/TransparentIconButton.vue';
 
 export default Vue.extend({
   components: {
-    TransparentIconButton,
+    // TransparentIconButton,
   },
 
   props: {
@@ -52,19 +61,36 @@ export default Vue.extend({
         this.$emit('input', value);
       },
     },
-    prependIconSize(): number {
+    iconSize(): number {
       return (this.height * 2) / 3;
-    },
-    appendIconSize(): number {
-      return this.height / 2;
     },
   },
 
   methods: {
     clearText() {
       this.text = '';
-      console.log('onclick2');
     },
   },
 });
 </script>
+
+<style lang="scss" module>
+.SearchField {
+  min-width: 140px;
+  max-width: 180px;
+  position: relative;
+  &__prependInnerIcon {
+    margin-left: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  &__clearIcon {
+    cursor: pointer;
+    margin-right: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+</style>
