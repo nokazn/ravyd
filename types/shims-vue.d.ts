@@ -4,6 +4,7 @@ import {
   SFCCommit,
   SFCDispatch,
 } from 'vuex';
+import { Dayjs } from 'dayjs';
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -11,5 +12,6 @@ declare module 'vue/types/vue' {
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
+    $dayjs: Dayjs
   }
 }

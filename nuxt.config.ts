@@ -30,7 +30,10 @@ const config: Configuration = {
   ],
   plugins: [
     {
-      src: '@/plugins/nuxt-inject',
+      src: '@/plugins/inject-dayjs',
+    },
+    {
+      src: '@/plugins/inject-vuex',
     },
     {
       src: '@/plugins/vuetify',

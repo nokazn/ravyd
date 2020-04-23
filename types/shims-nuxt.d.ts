@@ -4,6 +4,7 @@ import {
   SFCCommit,
   SFCDispatch,
 } from 'vuex';
+import { Dayjs } from 'dayjs';
 
 declare module '@nuxt/types/app' {
   interface NuxtAppOptions {
@@ -11,5 +12,6 @@ declare module '@nuxt/types/app' {
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
+    $dayjs: Dayjs
   }
 }
