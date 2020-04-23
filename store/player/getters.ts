@@ -1,4 +1,5 @@
 import { Getters } from 'vuex';
+import dayjs from 'dayjs';
 import { PlayerState } from './state';
 import { hasProp } from '@/utils/hasProp';
 import { Spotify } from '@/types';
@@ -12,6 +13,8 @@ export type PlayerGetters = {
       name: string
       id: string
     }[] | null
+    duration: string
+    progress: string
   } | null
 }
 
@@ -22,7 +25,7 @@ export type RootGetters = {
 const getters: Getters<PlayerState, PlayerGetters> = {
   currentTrack(state) {
     const currentTrack = state.currentlyPlaying?.item;
-    if (currentTrack != null) {
+    if (state.currentlyPlaying != null && currentTrack != null) {
       const artWorkSrc = hasProp(currentTrack, 'album')
         ? (currentTrack as Spotify.Track).album.images[0]?.url ?? null
         : null;
@@ -37,6 +40,10 @@ const getters: Getters<PlayerState, PlayerGetters> = {
           name: artist.name,
           id: artist.id,
         })) ?? null,
+        duration: dayjs(currentTrack.duration_ms).format('m:ss'),
+        progress: state.currentlyPlaying.progress_ms != null
+          ? dayjs(state.currentlyPlaying.progress_ms).format('m:ss')
+          : '0:00',
       };
     }
 
@@ -51,6 +58,8 @@ const getters: Getters<PlayerState, PlayerGetters> = {
         name: artist.name,
         id: artist.id,
       })),
+      duration: dayjs(recentTrack.duration_ms).format('m:ss'),
+      progress: '0:00',
     };
   },
 };

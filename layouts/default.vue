@@ -76,7 +76,16 @@
           <v-slider
             dense
             hide-details
-            :class="[$style.Footer__seekBar]" />
+            :class="$style.Footer__seekBar" />
+          <div :class="$style.Footer__hmm">
+            <span v-if="currentTrack">
+              {{ currentTrack.progress }}
+            </span>
+
+            <span v-if="currentTrack">
+              {{ currentTrack.duration }}
+            </span>
+          </div>
 
           <div :class="$style.Footer__trackControler">
             <v-btn
@@ -302,18 +311,24 @@ export default Vue.extend({
 
   &__center {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
   &__seekBar {
     width: 50vw;
   }
+  &__hmm {
+    font-size: 10px;
+    margin-top: -4px;
+    display: flex;
+    justify-content: space-between;
+  }
   &__trackControler {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: -8px;
+    margin-top: -16px;
     & > *:not(:last-child) {
       margin-right: 8px;
     }
