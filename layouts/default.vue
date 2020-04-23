@@ -16,6 +16,7 @@
     <v-navigation-drawer
       v-if="isLoggedin"
       app
+      color="#080808"
       permanent
       :mobile-break-point="768"
       expand-on-hover>
@@ -51,10 +52,10 @@
       padless
       :height="80"
       :class="$style.Footer">
-      <div
-        v-if="currentTrack != null"
-        :class="$style.Footer__container">
-        <div :class="$style.Footer__left">
+      <div :class="$style.Footer__container">
+        <div
+          v-if="currentTrack != null"
+          :class="$style.Footer__left">
           <release-art-work
             v-if="artWorkSrc"
             :src="artWorkSrc"
@@ -136,6 +137,14 @@
               small>
               <v-icon :size="16">
                 mdi-devices
+              </v-icon>
+            </v-btn>
+
+            <v-btn
+              icon
+              small>
+              <v-icon :size="16">
+                mdi-dots-horizontal
               </v-icon>
             </v-btn>
           </div>
@@ -265,6 +274,7 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   width: 100%;
+  margin: 0 8px;
   &__searchField {
     width: 20%;
   }
