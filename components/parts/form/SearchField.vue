@@ -80,14 +80,14 @@ export default Vue.extend({
   max-width: 180px;
   position: relative;
   &__prependInnerIcon {
-    margin-left: 8px;
+    margin-left: -16px;
     position: absolute;
     top: 0;
     left: 0;
   }
   &__clearIcon {
     cursor: pointer;
-    margin-right: 8px;
+    margin-right: -16px;
     position: absolute;
     top: 0;
     left: 0;
