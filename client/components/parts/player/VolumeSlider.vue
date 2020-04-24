@@ -24,7 +24,6 @@ export type Data = {
     'mdi-volume-high',
     'mdi-volume-high',
   ],
-  volumeSetter: (value: number) => void
 }
 
 const instance = Vue.extend({
@@ -37,9 +36,6 @@ const instance = Vue.extend({
         'mdi-volume-high',
         'mdi-volume-high',
       ],
-      volumeSetter: debounce((value: number) => {
-        this.$commit('player/setVolume', value);
-      }, 300),
     };
   },
   computed: {
