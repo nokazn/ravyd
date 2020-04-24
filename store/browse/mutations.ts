@@ -13,7 +13,7 @@ export type RootMutations = {
 
 const mutations: Mutations<BrowseState, BrowseMutations> = {
   setNewReleases(state, newReleases) {
-    state.newReleases = newReleases ?? null;
+    state.newReleases = newReleases;
   },
 };
 

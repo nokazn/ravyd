@@ -15,7 +15,7 @@ export type RootMutations = {
 
 const mutations: Mutations<AuthState, AuthMutations> = {
   setToken(state, token): void {
-    state.accessToken = token ?? null;
+    state.accessToken = token;
   },
 
   setUserData(state, userData): void {
