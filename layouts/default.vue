@@ -270,8 +270,17 @@ export default Vue.extend({
     },
   },
 
+  mounted() {
+    this.$dispatch('player/initPlayer');
+  },
+
   methods: {
     onMediaClicked() {
+      if (this.isPlaying) {
+        this.$dispatch('player/play');
+      } else {
+        this.$dispatch('player/pause');
+      }
       this.isPlaying = !this.isPlaying;
     },
   },

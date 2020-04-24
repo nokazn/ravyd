@@ -24,7 +24,10 @@ export default Vue.extend({
   },
 
   async fetch({ app }) {
-    await app.$dispatch('browse/getNewReleases');
+    await Promise.all([
+      app.$dispatch('browse/getNewReleases'),
+      app.$dispatch('player/getCurrentlyPlayingTrack'),
+    ]);
   },
 
   computed: {
@@ -40,6 +43,10 @@ export default Vue.extend({
       return releases ?? [];
     },
   },
+
+  mounted() {
+    this.$dispatch('player/initPlayer');
+  },
 });
 </script>
 
@@ -49,6 +56,7 @@ export default Vue.extend({
   &__title {
     margin-bottom: 16px;
   }
+  // .RootPage の margin を打ち消す
   &__releaseCardContainer {
     margin: 12px -32px;
   }

@@ -4,6 +4,9 @@ module.exports = {
     node: true,
     browser: true,
   },
+  globals: {
+    Spotify: 'readonly'
+  },
   extends: [
     // @nuxtjs などを含む
     '@nuxtjs/eslint-config-typescript',
