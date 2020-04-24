@@ -16,6 +16,12 @@ const config: Configuration = {
         content: process.env.npm_package_description || '',
       },
     ],
+    script: [
+      {
+        src: 'https://sdk.scdn.co/spotify-player.js',
+        body: true,
+      },
+    ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   // Customize the progress-bar color
