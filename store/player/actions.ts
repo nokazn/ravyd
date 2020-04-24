@@ -112,7 +112,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('setRecentlyPlayed', recentlyRes?.data);
   },
 
-  async play({ rootState }) {
+  async play({ commit, rootState }) {
     await this.$axios({
       method: 'PUT',
       url: 'https://api.spotify.com/v1/me/player/play',
@@ -122,8 +122,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).catch((e) => {
       console.error({ e });
     });
+    commit('changePlayState');
   },
-  async pause({ rootState }) {
+
+  async pause({ commit, rootState }) {
     await this.$axios({
       method: 'PUT',
       url: 'https://api.spotify.com/v1/me/player/pause',
@@ -133,6 +135,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).catch((e) => {
       console.error({ e });
     });
+    commit('changePlayState');
   },
 };
 

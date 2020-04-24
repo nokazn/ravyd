@@ -7,24 +7,36 @@ export type PlayerMutations = {
   setDeviceId: string
   setCurrentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
   setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
+  changePlayState: undefined
+  setVolume: number
 };
 
 export type RootMutations = {
   ['player/setDeviceId']: PlayerMutations['setDeviceId']
   ['player/setCurrentlyPlaying']: PlayerMutations['setCurrentlyPlaying']
   ['player/setRecentlyPlayed']: PlayerMutations['setRecentlyPlayed']
+  ['player/changePlayState']: PlayerMutations['changePlayState']
+  ['player/setVolume']: PlayerMutations['setVolume']
 };
 
 const mutations: Mutations<PlayerState, PlayerMutations> = {
   setDeviceId(state, deviceId) {
-    state.deviceId = deviceId ?? null;
+    state.deviceId = deviceId;
   },
   setCurrentlyPlaying(state, playing) {
-    state.currentlyPlaying = playing ?? null;
+    state.currentlyPlaying = playing;
   },
 
-  setRecentlyPlayed(state, played) {
-    state.recentlyPlayed = played ?? null;
+  setRecentlyPlayed(state, recentLyPlayed) {
+    state.recentlyPlayed = recentLyPlayed;
+  },
+
+  changePlayState(state) {
+    state.isPlaying = !state.isPlaying;
+  },
+
+  setVolume(state, volume) {
+    state.volume = volume;
   },
 };
 

@@ -64,71 +64,14 @@
             :class="$style.Footer__artWork" />
 
           <div :class="$style.Footer__trackInfo">
-            <release-name
-              v-bind="releases" />
-
-            <artist-name
-              :artist-list="artistList" />
+            <release-name v-bind="releases" />
+            <artist-name :artist-list="artistList" />
           </div>
         </div>
 
         <div :class="$style.Footer__center">
-          <v-slider
-            dense
-            hide-details
-            :class="$style.Footer__seekBar" />
-          <div :class="$style.Footer__hmm">
-            <span v-if="currentTrack">
-              {{ currentTrack.progress }}
-            </span>
-
-            <span v-if="currentTrack">
-              {{ currentTrack.duration }}
-            </span>
-          </div>
-
-          <div :class="$style.Footer__trackControler">
-            <v-btn
-              icon
-              color="grey lighten-1">
-              <v-icon :size="16">
-                mdi-shuffle-variant
-              </v-icon>
-            </v-btn>
-
-            <v-btn
-              icon
-              large>
-              <v-icon :size="28">
-                mdi-skip-previous
-              </v-icon>
-            </v-btn>
-
-            <v-btn
-              icon
-              large
-              @click="onMediaClicked">
-              <v-icon :size="40">
-                {{ mediaButton }}
-              </v-icon>
-            </v-btn>
-
-            <v-btn
-              icon
-              large>
-              <v-icon :size="28">
-                mdi-skip-next
-              </v-icon>
-            </v-btn>
-
-            <v-btn
-              icon
-              color="grey lighten-1">
-              <v-icon :size="16">
-                mdi-repeat
-              </v-icon>
-            </v-btn>
-          </div>
+          <seek-bar :class="$style.Footer__seekBar" />
+          <media-controller />
         </div>
 
         <div :class="$style.Footer__right">
@@ -158,16 +101,7 @@
             </v-btn>
           </div>
 
-          <div :class="$style.Footer__volumeSlider">
-            <v-icon small>
-              {{ volumeIcon }}
-            </v-icon>
-
-            <v-slider
-              v-model="volume"
-              hide-details
-              dense />
-          </div>
+          <volume-slider />
         </div>
       </div>
     </v-footer>
@@ -182,6 +116,9 @@ import UserMenu from '@/components/parts/menu/UserMenu.vue';
 import ReleaseArtWork from '@/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName, { Releases } from '@/components/parts/text/ReleaseName.vue';
 import ArtistName, { Artists } from '@/components/parts/text/ArtistName.vue';
+import SeekBar from '@/components/parts/player/SeekBar.vue';
+import MediaController from '@/components/parts/player/MediaController.vue';
+import VolumeSlider from '@/components/parts/player/VolumeSlider.vue';
 
 export type Data = {
   searchWords: string
@@ -190,14 +127,6 @@ export type Data = {
     to: string
     icon: string
   }[],
-  isPlaying: boolean;
-  volumeIconList: [
-    'mdi-volume-mute',
-    'mdi-volume-low',
-    'mdi-volume-medium',
-    'mdi-volume-high',
-  ],
-  volume: number
 }
 
 export default Vue.extend({
@@ -207,6 +136,9 @@ export default Vue.extend({
     ReleaseArtWork,
     ReleaseName,
     ArtistName,
+    SeekBar,
+    MediaController,
+    VolumeSlider,
   },
 
   data(): Data {
@@ -224,14 +156,6 @@ export default Vue.extend({
           icon: 'mdi-bookshelf',
         },
       ],
-      isPlaying: false,
-      volumeIconList: [
-        'mdi-volume-mute',
-        'mdi-volume-low',
-        'mdi-volume-medium',
-        'mdi-volume-high',
-      ],
-      volume: 0,
     };
   },
 
@@ -256,33 +180,10 @@ export default Vue.extend({
     artistList(): Artists | null {
       return this.currentTrack?.artists ?? null;
     },
-    mediaButton(): 'mdi-play-circle' | 'mdi-pause-circle' {
-      return this.isPlaying
-        ? 'mdi-play-circle'
-        : 'mdi-pause-circle';
-    },
-    volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {
-      const index = Math.min(
-        Math.floor((this.volume / 100) * this.volumeIconList.length),
-        this.volumeIconList.length - 1,
-      );
-      return this.volumeIconList[index];
-    },
   },
 
   mounted() {
     this.$dispatch('player/initPlayer');
-  },
-
-  methods: {
-    onMediaClicked() {
-      if (this.isPlaying) {
-        this.$dispatch('player/play');
-      } else {
-        this.$dispatch('player/pause');
-      }
-      this.isPlaying = !this.isPlaying;
-    },
   },
 });
 </script>
@@ -327,21 +228,6 @@ export default Vue.extend({
   &__seekBar {
     width: 50vw;
   }
-  &__hmm {
-    font-size: 10px;
-    margin-top: -4px;
-    display: flex;
-    justify-content: space-between;
-  }
-  &__trackControler {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -16px;
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
-  }
 
   &__right {
     display: flex;
@@ -350,22 +236,5 @@ export default Vue.extend({
     justify-content: center;
     margin-right: 2%;
   }
-  &__volumeSlider {
-    display: flex;
-    justify-content: center;
-    min-width: 120px;
-    & > *:not(:last-child) {
-      margin-right: 4px;
-    }
-  }
-}
-</style>
-
-<style lang="scss">
-/**
- * スライダーのスタイルを上書き
- */
-.v-slider__thumb {
-  cursor: pointer;
 }
 </style>
