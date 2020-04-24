@@ -44,29 +44,39 @@ declare module 'vuex' {
   }
 
   type Mutations<S, M> = {
-    [K in keyof M]: (state: S, payload?: M[K]) => void
+    [K in keyof M]: Extract<M[K], undefined> extends never
+      ? (state: S, payload: M[K]) => void
+      : (state: S, payload?: M[K]) => void
   }
 
-  type CommitArguments<
+  type ExtendedCommitArguments<
     M extends { [k: string]: any },
     T extends keyof Merge<M, RootMutations>
   > = T extends keyof RootMutations
     ? [RootMutations[T], { root: boolean }]
-    : [M[T]]
+    : Extract<M[T], undefined> extends never
+      ? [M[T]]
+      : [M[T]?]
 
   type ExtendedCommit<M> = <
     T extends keyof Merge<M, RootMutations>
   >(
     type: T,
-    ...args: CommitArguments<M, T>
+    ...payload: ExtendedCommitArguments<M, T>
   ) => void
+
+  type SFCCommitArguments<
+    T extends keyof RootMutations
+  > = Extract<RootMutations[T], undefined> extends never
+    ? [RootMutations[T]]
+    : [RootMutations[T]?]
 
   type SFCCommit = <T extends keyof RootMutations>(
     type: T,
-    payload: RootMutations[T],
+    ...payload: SFCCommitArguments<T>,
   ) => void
 
-  type DispatchArguments<
+  type ExtendedDispatchArguments<
     A extends ActionMethodMap,
     T extends keyof Merge<A, RootActions>
   > = T extends keyof RootActions
@@ -78,18 +88,18 @@ declare module 'vuex' {
 
   type ExtendedDispatch<A extends ActionMethodMap> = <T extends keyof Merge<A, RootActions>>(
     type: T,
-    ...args: DispatchArguments<A, T>,
+    ...args: ExtendedDispatchArguments<A, T>,
   ) => T extends keyof RootActions
     ? ReturnType<RootActions[T]>
     : ReturnType<A[T]>
 
-    type SFCDispatch = <T extends keyof RootActions>(
-      type: T,
-      // undifined をとりうるか (省略可能か) で場合分け
-      ...payload: Extract<Parameters<RootActions[T]>[0], undefined> extends never
+  type SFCDispatch = <T extends keyof RootActions>(
+    type: T,
+    // undifined をとりうるか (省略可能か) で場合分け
+    ...payload: Extract<Parameters<RootActions[T]>[0], undefined> extends never
       ? [Parameters<RootActions[T]>[0]]
       : [Parameters<RootActions[T]>[0]?]
-    ) => ReturnType<RootActions[T]>
+  ) => ReturnType<RootActions[T]>
 
   type Context<S, G, M, A extends ActionMethodMap> = {
     state: S,
