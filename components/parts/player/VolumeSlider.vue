@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import debounce from 'lodash/debounce';
 import { RootState } from 'vuex';
 
 export type Data = {
@@ -22,10 +23,11 @@ export type Data = {
     'mdi-volume-medium',
     'mdi-volume-high',
     'mdi-volume-high',
-  ]
+  ],
+  volumeSetter: (value: number) => void
 }
 
-export default Vue.extend({
+const instance = Vue.extend({
   data(): Data {
     return {
       volumeIconList: [
@@ -35,6 +37,9 @@ export default Vue.extend({
         'mdi-volume-high',
         'mdi-volume-high',
       ],
+      volumeSetter: debounce((value: number) => {
+        this.$commit('player/setVolume', value);
+      }, 300),
     };
   },
   computed: {
@@ -42,9 +47,11 @@ export default Vue.extend({
       get(): RootState['player']['volume'] {
         return this.$state().player.volume;
       },
-      set(value: number) {
+      set: debounce(function set(value: number) {
+        // @todo
+        // @ts-ignore
         this.$commit('player/setVolume', value);
-      },
+      }, 300),
     },
     volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {
       const index = Math.min(
@@ -55,6 +62,8 @@ export default Vue.extend({
     },
   },
 });
+
+export default instance;
 </script>
 
 <style lang="scss" module>
