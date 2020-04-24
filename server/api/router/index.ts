@@ -43,6 +43,7 @@ router.get('/auth', async (req, res) => {
     'user-top-read',
     'user-read-playback-position',
     'user-read-currently-playing',
+    'user-read-recently-played',
     'playlist-read-private',
   ].join(' ');
   const url = createUrl(baseUrl, {
@@ -61,7 +62,6 @@ router.get('/auth/refresh', async (req, res) => {
   if (data == null) {
     return res.redirect('/auth');
   }
-  // @todo
 
   const currentToken: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
   const token = await refreshAccessToken(currentToken.refresh_token!);
