@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
 import { BrowseState } from './state';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export type BrowseMutations = {
-  setNewReleases: Spotify.Browse.NewReleases | null
+  setNewReleases: SpotifyAPI.Browse.NewReleases | null
 }
 
 export type RootMutations = {

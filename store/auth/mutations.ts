@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
 import { AuthState } from './state';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export type AuthMutations = {
-  setToken: Spotify.Auth.TokenResponseData['access_token'] | null,
-  setUserData: Spotify.Auth.UserData | null
+  setToken: SpotifyAPI.Auth.TokenResponseData['access_token'] | null,
+  setUserData: SpotifyAPI.Auth.UserData | null
 }
 
 export type RootMutations = {

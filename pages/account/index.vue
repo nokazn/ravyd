@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import TwoColumnsListCard, { ItemList } from '@/components/parts/list/TwoColumnsListCard.vue';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export default Vue.extend({
   components: {
@@ -31,7 +31,7 @@ export default Vue.extend({
   },
 
   computed: {
-    userData(): Spotify.Auth.UserData | null {
+    userData(): SpotifyAPI.Auth.UserData | null {
       return this.$state().auth.userData ?? null;
     },
     itemList(): ItemList | null {

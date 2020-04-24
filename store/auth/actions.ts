@@ -2,7 +2,7 @@ import { Actions } from 'vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
 import { AuthMutations } from './mutations';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export type AuthActions = {
   exchangeCodeToAccessToken: (code: string) => Promise<void>
@@ -20,7 +20,7 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const { data: accessToken }: { data: Spotify.Auth.TokenResponseData['access_token'] } = await this.$axios({
+    const { data: accessToken }: { data: SpotifyAPI.Auth.TokenResponseData['access_token'] } = await this.$axios({
       method: 'POST',
       url: `${process.env.BASE_URL}/api/auth/callback`,
       params: {
@@ -48,7 +48,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async refreshAccessToken({ commit }) {
-    const { data: accessToken }: { data: Spotify.Auth.TokenResponseData['access_token'] } = await this.$axios({
+    const { data: accessToken }: { data: SpotifyAPI.Auth.TokenResponseData['access_token'] } = await this.$axios({
       method: 'GET',
       url: `${process.env.BASE_URL}/api/auth/refresh`,
     });

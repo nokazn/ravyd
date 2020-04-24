@@ -1,8 +1,8 @@
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export type AuthState = {
-  accessToken: Spotify.Auth.TokenResponseData['access_token'] | null;
-  userData: Spotify.Auth.UserData | null | undefined;
+  accessToken: SpotifyAPI.Auth.TokenResponseData['access_token'] | null;
+  userData: SpotifyAPI.Auth.UserData | null | undefined;
 }
 
 const state: (() => AuthState) = () => ({

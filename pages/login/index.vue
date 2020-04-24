@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export default Vue.extend({
   computed: {
@@ -38,7 +38,7 @@ export default Vue.extend({
   },
   methods: {
     async onAuthButtonClicked(): Promise<void> {
-      const res: Spotify.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
+      const res: SpotifyAPI.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
         method: 'GET',
         url: `${process.env.baseUrl}/api/auth`,
       }).catch((e) => {

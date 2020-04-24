@@ -5,14 +5,14 @@ import { createUrl } from '../../../utils/createUrl';
 import { generateRandomString } from '../../../utils/generateRandomString';
 import { getAccessToken } from '../../auth/getAccessToken';
 import { refreshAccessToken } from '../../auth/refreshAccessToken';
-import { Spotify } from '~/types';
+import { SpotifyAPI } from '@/types';
 
 const router = express.Router();
 
 router.get('/auth', async (req, res) => {
   const data = await redisClient.get(req.sessionID!);
   if (data != null) {
-    const token: Spotify.Auth.TokenResponseData = JSON.parse(data);
+    const token: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
 
     return res.send({ access_token: token.access_token });
   }
@@ -63,7 +63,7 @@ router.get('/auth/refresh', async (req, res) => {
   }
   // @todo
 
-  const currentToken: Spotify.Auth.TokenResponseData = JSON.parse(data);
+  const currentToken: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
   const token = await refreshAccessToken(currentToken.refresh_token!);
   if (token == null) {
     return res.redirect('/auth');

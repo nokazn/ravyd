@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
 import { PlayerState } from './state';
-import type { Spotify } from '@/types';
+import type { SpotifyAPI } from '@/types';
 
 export type PlayerMutations = {
-  setCurrentlyPlaying: Spotify.Player.CurrentlyPlaying | null
-  setRecentlyPlayed: Spotify.Player.RecentlyPlayed | null
+  setCurrentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
+  setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
 };
 
 export type RootMutations = {

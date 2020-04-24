@@ -1,6 +1,6 @@
 import '@nuxtjs/axios';
 
-export namespace Spotify {
+export namespace SpotifyAPI {
   export namespace Auth {
     type AuthorizationResponse<K extends 'access_token' | 'url'> = {
       data: {

@@ -1,8 +1,8 @@
-import type { Spotify } from '@/types';
+import type { SpotifyAPI } from '@/types';
 
 export type PlayerState = {
-  currentlyPlaying: Spotify.Player.CurrentlyPlaying | null;
-  recentlyPlayed: Spotify.Player.RecentlyPlayed | null;
+  currentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null;
+  recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null;
 }
 
 const state: (() => PlayerState) = () => ({

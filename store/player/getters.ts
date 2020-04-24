@@ -2,7 +2,7 @@ import { Getters } from 'vuex';
 import dayjs from 'dayjs';
 import { PlayerState } from './state';
 import { hasProp } from '@/utils/hasProp';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export type PlayerGetters = {
   currentTrack: {
@@ -27,10 +27,10 @@ const getters: Getters<PlayerState, PlayerGetters> = {
     const currentTrack = state.currentlyPlaying?.item;
     if (state.currentlyPlaying != null && currentTrack != null) {
       const artWorkSrc = hasProp(currentTrack, 'album')
-        ? (currentTrack as Spotify.Track).album.images[0]?.url ?? null
+        ? (currentTrack as SpotifyAPI.Track).album.images[0]?.url ?? null
         : null;
       const artists = hasProp(currentTrack, 'artists')
-        ? (currentTrack as Spotify.Track).artists
+        ? (currentTrack as SpotifyAPI.Track).artists
         : null;
       return {
         artWorkSrc,

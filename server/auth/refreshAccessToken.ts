@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { Spotify } from '@/types';
+import { SpotifyAPI } from '@/types';
 
 export const refreshAccessToken = (
   refresh_token: string,
-): Promise<Spotify.Auth.TokenResponseData> | null => {
+): Promise<SpotifyAPI.Auth.TokenResponseData> | null => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   if (clientId == null || clientSecret == null) return null;
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
-  const params: Spotify.Auth.RefreshTokenRequestParams = {
+  const params: SpotifyAPI.Auth.RefreshTokenRequestParams = {
     grant_type: 'refresh_token',
     refresh_token,
   };
