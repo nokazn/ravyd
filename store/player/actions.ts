@@ -18,13 +18,13 @@ export type RootActions = {
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
-  initPlayer({ rootState }) {
+  initPlayer({ commit, rootState }) {
     const token = rootState.auth.accessToken;
-    console.log(token);
     if (token == null) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
+
     window.onSpotifyWebPlaybackSDKReady = async () => {
       const player = new Spotify.Player({
         // @todo
@@ -53,13 +53,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
 
       // Ready
-      player.addListener('ready', (context) => {
-        console.log('Ready with Device ID 🎉', context);
+      player.addListener('ready', ({ device_id }) => {
+        commit('setDeviceId', device_id);
+        console.log('Ready with this device 🎉');
       });
 
       // Not Ready
-      player.addListener('not_ready', (context) => {
-        console.log('Device ID has gone offline 😴', context);
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('This device has gone offline 😴', device_id);
       });
 
       // @todo
