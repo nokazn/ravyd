@@ -63,7 +63,6 @@ export default Vue.extend({
       } else {
         this.$dispatch('player/pause');
       }
-      this.$commit('player/changePlayState');
     },
   },
 });
