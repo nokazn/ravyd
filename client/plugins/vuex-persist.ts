@@ -6,9 +6,7 @@ export default ({ store }: { store: Store<RootState> }) => {
   // @ts-ignore @todo
   window.onNuxtReady(() => {
     new VuexPersistence<RootState>({
-      modules: [
-        'auth',
-      ],
+      modules: [],
     }).plugin(store);
   });
 };
