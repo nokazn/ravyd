@@ -5,7 +5,7 @@ import { createUrl } from '../../../utils/createUrl';
 import { generateRandomString } from '../../../utils/generateRandomString';
 import { getAccessToken } from '../../auth/getAccessToken';
 import { refreshAccessToken } from '../../auth/refreshAccessToken';
-import { SpotifyAPI } from '@/types';
+import { SpotifyAPI } from '~~/types';
 
 const router = express.Router();
 

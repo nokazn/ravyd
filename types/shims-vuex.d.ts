@@ -1,10 +1,10 @@
 import 'vuex';
 import { IncomingMessage, ServerResponse } from 'http';
-import * as Root from '@/store';
-import * as Auth from '@/store/auth/types';
-import * as Browse from '@/store/browse/types';
-import * as Player from '@/store/player/types';
-import { ActionMethodMap, Merge } from '@/types';
+import * as Root from '~/store';
+import * as Auth from '~/store/auth/types';
+import * as Browse from '~/store/browse/types';
+import * as Player from '~/store/player/types';
+import { ActionMethodMap, Merge } from '~~/types';
 
 declare module 'vuex' {
   /**

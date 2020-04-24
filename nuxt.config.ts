@@ -3,6 +3,8 @@ import colors from 'vuetify/es5/util/colors';
 
 const config: Configuration = {
   mode: 'universal',
+  srcDir: './client/',
+  rootDir: './',
   // Headers of the page
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
@@ -32,20 +34,20 @@ const config: Configuration = {
   ],
   // Plugins to load before mounting the App
   serverMiddleware: [
-    '@/server/api/',
+    '~~/server/api/',
   ],
   plugins: [
     {
-      src: '@/plugins/inject-dayjs',
+      src: '~/plugins/inject-dayjs',
     },
     {
-      src: '@/plugins/inject-vuex',
+      src: '~/plugins/inject-vuex',
     },
     {
-      src: '@/plugins/vuetify',
+      src: '~/plugins/vuetify',
     },
     {
-      src: '@/plugins/vuex-persist',
+      src: '~/plugins/vuex-persist',
       mode: 'client',
     },
   ],

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SpotifyAPI } from '@/types';
+import { SpotifyAPI } from '~~/types';
 
 export const getAccessToken = (
   code: string,
