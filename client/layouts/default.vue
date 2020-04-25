@@ -202,8 +202,9 @@ export default Vue.extend({
 .Footer {
   position: relative;
   &__container {
-    display: flex;
+    display: grid;
     justify-content: space-between;
+    grid-template-columns: 1fr 1fr;
     position: relative;
     width: 100%;
   }
