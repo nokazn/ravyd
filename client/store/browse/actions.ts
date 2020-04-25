@@ -31,8 +31,6 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       console.error(e);
       return null;
     });
-    // @todo
-    console.log(res?.data, { res });
     const newReleases: SpotifyAPI.Browse.NewReleases | null = res?.data.albums ?? null;
     commit('setNewReleases', newReleases);
 

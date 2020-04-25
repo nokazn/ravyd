@@ -44,6 +44,9 @@ const config: Configuration = {
       src: '~/plugins/inject-vuex',
     },
     {
+      src: '~/plugins/axios',
+    },
+    {
       src: '~/plugins/vuetify',
     },
     {
@@ -71,10 +74,18 @@ const config: Configuration = {
   ],
   env: {
     baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    spotifyUrl: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
   // Axios module configuration (https://axios.nuxtjs.org/options)
   axios: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.baseUrl,
+    browserBaseURL: process.env.SpotifyUrl,
+    progress: false,
+    retry: 3,
+    debug: process.env.NODE_ENV === 'development',
+    headers: {
+      Accept: 'application/json',
+    },
   },
   // vuetify module configuration (https://github.com/nuxt-community/vuetify-module)
   vuetify: {

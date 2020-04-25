@@ -23,7 +23,9 @@ const getters: Getters<AuthState, AuthGetters> = {
   },
 
   userAvatarSrc(state) {
-    return state.userData?.images[0]?.url ?? null;
+    return state.userData?.images != null
+      ? state.userData?.images[0]?.url ?? null
+      : null;
   },
 };
 

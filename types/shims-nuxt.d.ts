@@ -5,6 +5,7 @@ import {
   SFCDispatch,
 } from 'vuex';
 import { Dayjs } from 'dayjs';
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 declare module '@nuxt/types/app' {
   interface NuxtAppOptions {
@@ -13,5 +14,7 @@ declare module '@nuxt/types/app' {
     $commit: SFCCommit
     $dispatch: SFCDispatch
     $dayjs: Dayjs
+    $spotifyApi: NuxtAxiosInstance
+    $serverApi: NuxtAxiosInstance
   }
 }

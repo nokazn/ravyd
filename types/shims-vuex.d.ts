@@ -1,10 +1,20 @@
 import 'vuex';
+import { Dayjs } from 'dayjs';
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '~/store';
 import * as Auth from '~/store/auth/types';
 import * as Browse from '~/store/browse/types';
 import * as Player from '~/store/player/types';
 import { ActionMethodMap, Merge } from '~~/types';
+
+declare module 'vuex/types/index' {
+  interface Store<S> {
+    $dayjs: Dayjs
+    $spotifyApi: NuxtAxiosInstance,
+    $serverApi: NuxtAxiosInstance,
+  }
+}
 
 declare module 'vuex' {
   /**

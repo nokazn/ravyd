@@ -20,38 +20,37 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const { data: accessToken }: { data: SpotifyAPI.Auth.TokenResponseData['access_token'] } = await this.$axios({
-      method: 'POST',
-      url: `${process.env.BASE_URL}/api/auth/callback`,
-      params: {
-        code,
-      },
+    const accessToken: SpotifyAPI.Auth.TokenResponseData['access_token'] = await this.$serverApi.$post('/api/auth/callback', {
+      code,
+    }).catch((err: Error) => {
+      console.error({ err }, err.message);
+      return null;
     });
+
     commit('setToken', accessToken);
   },
 
   async getUserData({ state, commit }): Promise<void> {
     if (state.accessToken == null) return;
 
-    const res = await this.$axios({
-      method: 'GET',
-      url: 'https://api.spotify.com/v1/me',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${state.accessToken}`,
-      },
-    }).catch((e: Error) => {
-      console.error(e);
-      return null;
-    });
-    commit('setUserData', res?.data);
+    // @todo
+    this.$spotifyApi.setToken(state.accessToken, 'Bearer');
+    const userData: SpotifyAPI.Auth.UserData | null = await this.$spotifyApi.$get('/me')
+      .catch((err: Error) => {
+        console.error({ err });
+        return null;
+      });
+
+    commit('setUserData', userData);
   },
 
   async refreshAccessToken({ commit }) {
-    const { data: accessToken }: { data: SpotifyAPI.Auth.TokenResponseData['access_token'] } = await this.$axios({
-      method: 'GET',
-      url: `${process.env.BASE_URL}/api/auth/refresh`,
-    });
+    const accessToken: SpotifyAPI.Auth.TokenResponseData['access_token'] | null = await this.$serverApi.$get('/api/auth/refresh')
+      .catch((err: Error) => {
+        console.error(err);
+        return null;
+      });
+
     commit('setToken', accessToken);
   },
 
