@@ -72,69 +72,50 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     window.onSpotifyWebPlaybackSDKReady();
   },
 
-  async getCurrentlyPlayingTrack({ commit, rootState }) {
+  async getCurrentlyPlayingTrack({ commit }) {
     // @todo
     // await dispatch('auth/refreshAccessToken', undefined, { root: true });
 
-    const currentRes = await this.$axios({
-      method: 'GET',
-      url: 'https://api.spotify.com/v1/me/player',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${rootState.auth.accessToken}`,
-      },
-    }).catch((e: Error) => {
-      console.error(e);
-      return null;
-    });
+    const currentResponse = await this.$spotifyApi.get('me/player')
+      .catch((e: Error) => {
+        console.error(e);
+        return null;
+      });
     // @todo
-    console.log(currentRes);
-    if (currentRes == null || currentRes.status !== 204) {
-      commit('setCurrentlyPlaying', currentRes?.data);
+    console.log(currentResponse);
+    if (currentResponse == null || currentResponse.status !== 204) {
+      commit('setCurrentlyPlaying', currentResponse?.data);
       return;
     }
 
-    const recentlyRes = await this.$axios({
-      method: 'GET',
-      url: 'https://api.spotify.com/v1/me/player/recently-played',
+    const recentlyPlayed = await this.$spotifyApi.$get('me/player/recently-played', {
       params: {
         limit: 3,
-      },
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${rootState.auth.accessToken}`,
       },
     }).catch((e: Error) => {
       console.error({ e });
       return null;
     });
-    console.log(recentlyRes);
-    commit('setRecentlyPlayed', recentlyRes?.data);
+
+    console.log(recentlyPlayed);
+    commit('setRecentlyPlayed', recentlyPlayed);
   },
 
-  async play({ commit, rootState }) {
-    await this.$axios({
-      method: 'PUT',
-      url: 'https://api.spotify.com/v1/me/player/play',
-      headers: {
-        Authorization: `Bearer ${rootState.auth.accessToken}`,
-      },
-    }).catch((e) => {
-      console.error({ e });
-    });
+  async play({ commit }) {
+    await this.$spotifyApi.$put('/me/player/play')
+      .catch((e) => {
+        console.error({ e });
+      });
+
     commit('changePlayState');
   },
 
-  async pause({ commit, rootState }) {
-    await this.$axios({
-      method: 'PUT',
-      url: 'https://api.spotify.com/v1/me/player/pause',
-      headers: {
-        Authorization: `Bearer ${rootState.auth.accessToken}`,
-      },
-    }).catch((e) => {
-      console.error({ e });
-    });
+  async pause({ commit }) {
+    await this.$axios.$put('/me/player/pause')
+      .catch((e) => {
+        console.error({ e });
+      });
+
     commit('changePlayState');
   },
 };

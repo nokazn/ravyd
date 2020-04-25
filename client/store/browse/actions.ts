@@ -19,11 +19,9 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
   ): Promise<void> {
     if (rootState.auth.accessToken == null) return;
 
-    const res = await this.$axios({
-      url: 'https://api.spotify.com/v1/browse/new-releases',
-      headers: {
-        Authorization: `Bearer ${rootState.auth.accessToken}`,
-      },
+    const { albums: newReleases } : {
+      albums: SpotifyAPI.Browse.NewReleases | null
+    } = await this.$spotifyApi.$get('/browse/new-releases', {
       params: {
         limit,
       },
@@ -31,7 +29,6 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       console.error(e);
       return null;
     });
-    const newReleases: SpotifyAPI.Browse.NewReleases | null = res?.data.albums ?? null;
     commit('setNewReleases', newReleases);
 
     dispatch('auth/refreshAccessToken', undefined, { root: true });

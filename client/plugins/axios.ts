@@ -3,7 +3,6 @@ import { Plugin } from '@nuxt/types';
 const plugin: Plugin = ({ $axios, app }, inject) => {
   $axios.onRequest(() => {
     const token = app.$state().auth.accessToken;
-    console.log(token);
     if (token == null) return;
 
     const spotifyApi = $axios.create({
