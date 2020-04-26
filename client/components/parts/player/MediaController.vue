@@ -10,7 +10,8 @@
 
     <v-btn
       icon
-      large>
+      large
+      @click="onPreivousClicked">
       <v-icon :size="28">
         mdi-skip-previous
       </v-icon>
@@ -27,7 +28,8 @@
 
     <v-btn
       icon
-      large>
+      large
+      @click="onNextClicked">
       <v-icon :size="28">
         mdi-skip-next
       </v-icon>
@@ -56,12 +58,18 @@ export default Vue.extend({
   },
 
   methods: {
+    onPreivousClicked() {
+      this.$dispatch('player/previous');
+    },
     onMediaClicked() {
       if (this.$state().player.isPlaying) {
         this.$dispatch('player/pause');
       } else {
         this.$dispatch('player/play');
       }
+    },
+    onNextClicked() {
+      this.$dispatch('player/next');
     },
   },
 });

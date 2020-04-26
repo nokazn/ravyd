@@ -6,20 +6,24 @@ import { SpotifyAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
-  getCurrentlyPlayingTrack: () => Promise<void>
+  getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   play: () => Promise<void>
   pause: () => Promise<void>
   seek: (position: number) => Promise<void>
+  next: () => Promise<void>
+  previous: () => Promise<void>
 };
 
 export type RootActions = {
   'player/initPlayer': PlayerActions['initPlayer']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
-  'player/getCurrentlyPlayingTrack': PlayerActions['getCurrentlyPlayingTrack']
+  'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
   'player/seek': PlayerActions['seek']
+  'player/next': PlayerActions['next']
+  'player/previous': PlayerActions['previous']
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
@@ -60,12 +64,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           paused: isPaused,
           shuffle: isShuffled,
           repeat_mode: repeatMode,
-          // @todo
-          // track_window: {
-          //   current_track: currentTrack,
-          //   next_tracks: nextTracks,
-          //   previous_tracks: previousTracks,
-          // },
+          track_window: {
+            current_track: currentTrack,
+            next_tracks: nextTracks,
+            previous_tracks: previousTracks,
+          },
         } = state;
 
         commit('setIsPlaying', !isPaused);
@@ -73,6 +76,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('setDuration', duration);
         commit('setIsShuffled', isShuffled);
         commit('setRepeatMode', repeatMode);
+        commit('setCurrentTrack', currentTrack);
+        commit('setNextTrackList', nextTracks);
+        commit('setPreviousTrackList', previousTracks);
         console.log(state);
       });
 
@@ -111,29 +117,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('setActiveDeviceList', devices);
   },
 
-  async getCurrentlyPlayingTrack({ commit }) {
-    const currentResponse = await this.$spotifyApi.get('me/player')
-      .catch((e: Error) => {
-        console.error(e);
-        return null;
-      });
-    // @todo
-    console.log(currentResponse);
-    if (currentResponse == null || currentResponse.status !== 204) {
-      commit('setCurrentlyPlaying', currentResponse?.data);
-      return;
-    }
-
+  async getRecentlyPlayed({ commit }, limit = 10) {
     const recentlyPlayed = await this.$spotifyApi.$get('/me/player/recently-played', {
       params: {
-        limit: 3,
+        limit,
       },
     }).catch((e: Error) => {
       console.error({ e });
       return null;
     });
 
-    console.log(recentlyPlayed);
     commit('setRecentlyPlayed', recentlyPlayed);
   },
 
@@ -164,6 +157,20 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).catch((err: Error) => {
       console.error({ err });
     });
+  },
+
+  async next() {
+    await this.$spotifyApi.$post('/me/player/next')
+      .catch((err: Error) => {
+        console.error(err);
+      });
+  },
+
+  async previous() {
+    await this.$spotifyApi.$post('/me/player/previous')
+      .catch((err: Error) => {
+        console.error(err);
+      });
   },
 };
 

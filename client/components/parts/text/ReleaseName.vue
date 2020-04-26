@@ -1,18 +1,18 @@
 <template>
   <div :class="$style.ReleaseName">
-    <nuxt-link :to="releasesPath">
+    <nuxt-link
+      v-if="releasesPath != null"
+      :to="releasesPath">
       {{ name }}
     </nuxt-link>
+    <span v-else>
+      {{ name }}
+    </span>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-
-export type Releases = {
-  name: string
-  releaseId: string
-}
 
 export default Vue.extend({
   props: {
@@ -21,14 +21,18 @@ export default Vue.extend({
       required: true,
     },
     releaseId: {
-      type: String,
       required: true,
+      validator(value) {
+        return typeof value === 'string' || value == null;
+      },
     },
   },
 
   computed: {
-    releasesPath(): string {
-      return `/releases/${this.releaseId}`;
+    releasesPath(): string | null {
+      return this.releaseId != null
+        ? `/releases/${this.releaseId}`
+        : null;
     },
   },
 });

@@ -6,7 +6,9 @@ import type { SpotifyAPI } from '~~/types';
 export type PlayerMutations = {
   setDeviceId: string
   setActiveDeviceList: SpotifyAPI.Device[]
-  setCurrentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
+  setCurrentTrack: Spotify.Track
+  setNextTrackList: Spotify.Track[]
+  setPreviousTrackList: Spotify.Track[]
   setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
   setIsPlaying: boolean
   setPosition: number,
@@ -19,7 +21,9 @@ export type PlayerMutations = {
 export type RootMutations = {
   ['player/setDeviceId']: PlayerMutations['setDeviceId']
   ['player/setActiveDeviceList']: PlayerMutations['setActiveDeviceList']
-  ['player/setCurrentlyPlaying']: PlayerMutations['setCurrentlyPlaying']
+  ['player/setCurrentTrack']: PlayerMutations['setCurrentTrack']
+  ['player/setNextTrackList']: PlayerMutations['setNextTrackList']
+  ['player/setPreviousTrackList']: PlayerMutations['setPreviousTrackList']
   ['player/setRecentlyPlayed']: PlayerMutations['setRecentlyPlayed']
   ['player/setIsPlaying']: PlayerMutations['setIsPlaying']
   ['player/setPosition']: PlayerMutations['setPosition']
@@ -38,8 +42,22 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.activeDeviceList = deviceList;
   },
 
-  setCurrentlyPlaying(state, playing) {
-    state.currentlyPlaying = playing;
+  setCurrentTrack(state, currentTrack) {
+    state.artWorkSrc = currentTrack.album.images[0].url;
+    state.trackName = currentTrack.name;
+    state.trackId = currentTrack.id;
+    state.artistList = currentTrack.artists.map((artist) => ({
+      name: artist.name,
+      id: artist.uri.replace(/^.+:/g, ''),
+    }));
+  },
+
+  setNextTrackList(state, nextTrackList) {
+    state.nextTrackList = nextTrackList;
+  },
+
+  setPreviousTrackList(state, previousTrackList) {
+    state.previousTrackList = previousTrackList;
   },
 
   setRecentlyPlayed(state, recentLyPlayed) {

@@ -1,68 +1,41 @@
 import { Getters } from 'vuex';
-import dayjs from 'dayjs';
 import { PlayerState } from './state';
-import { hasProp } from '~~/utils/hasProp';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
-  currentTrack: {
+  recentlyPlayedTrackList: {
     artWorkSrc: string | null
-    trackName: string
-    trackId: string
+    trackName: string | null
+    trackId: string | null
     artists: {
       name: string
       id: string
     }[] | null
-    duration: string
-    progress: string
-  } | null
+  }[] | null
   activeDevice: SpotifyAPI.Device | null
 }
 
 export type RootGetters = {
-  ['player/currentTrack']: PlayerGetters['currentTrack']
+  ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/activeDevice']: PlayerGetters['activeDevice']
 }
 
 const getters: Getters<PlayerState, PlayerGetters> = {
-  currentTrack(state) {
-    const currentTrack = state.currentlyPlaying?.item;
-    if (state.currentlyPlaying != null && currentTrack != null) {
-      const artWorkSrc = hasProp(currentTrack, 'album')
-        ? (currentTrack as SpotifyAPI.Track).album.images[0]?.url ?? null
-        : null;
-      const artists = hasProp(currentTrack, 'artists')
-        ? (currentTrack as SpotifyAPI.Track).artists
-        : null;
-      return {
-        artWorkSrc,
-        trackName: currentTrack.name,
-        trackId: currentTrack.id,
-        artists: artists?.map((artist) => ({
-          name: artist.name,
-          id: artist.id,
-        })) ?? null,
-        duration: dayjs(currentTrack.duration_ms).format('m:ss'),
-        progress: state.currentlyPlaying.progress_ms != null
-          ? dayjs(state.currentlyPlaying.progress_ms).format('m:ss')
-          : '0:00',
-      };
-    }
-
+  recentlyPlayedTrackList(state) {
     if (state.recentlyPlayed == null) return null;
 
-    const recentTrack = state.recentlyPlayed.items[0].track;
-    return {
-      artWorkSrc: recentTrack.album.images[0]?.url ?? null,
-      trackName: recentTrack.name,
-      trackId: recentTrack.id,
-      artists: recentTrack.album.artists.map((artist) => ({
-        name: artist.name,
-        id: artist.id,
-      })),
-      duration: dayjs(recentTrack.duration_ms).format('m:ss'),
-      progress: '0:00',
-    };
+    return state.recentlyPlayed.items.map((item) => {
+      const { track } = item;
+      return {
+        artWorkSrc: track.album.images[0]?.url ?? null,
+        trackName: track.name,
+        trackId: track.id,
+        artists: track.album.artists.map((artist) => ({
+          name: artist.name,
+          id: artist.id,
+        })),
+      };
+    });
   },
 
   activeDevice(state) {

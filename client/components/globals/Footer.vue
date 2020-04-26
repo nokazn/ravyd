@@ -6,9 +6,7 @@
     :height="80"
     :class="$style.Footer">
     <div :class="$style.Footer__container">
-      <div
-        v-if="currentTrack != null"
-        :class="$style.Footer__left">
+      <div :class="$style.Footer__left">
         <release-art-work
           v-if="artWorkSrc"
           :src="artWorkSrc"
@@ -17,7 +15,10 @@
           :class="$style.Footer__artWork" />
 
         <div :class="$style.Footer__trackInfo">
-          <release-name v-bind="releases" />
+          <release-name
+            v-if="trackName != null"
+            :name="trackName"
+            :release-id="trackId" />
           <artist-name :artist-list="artistList" />
         </div>
       </div>
@@ -64,10 +65,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootState } from 'vuex';
 
 import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
-import ReleaseName, { Releases } from '~/components/parts/text/ReleaseName.vue';
+import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
 import SeekBar from '~/components/parts/player/SeekBar.vue';
 import MediaController from '~/components/parts/player/MediaController.vue';
@@ -84,28 +85,22 @@ export default Vue.extend({
   },
 
   computed: {
-    currentTrack(): RootGetters['player/currentTrack'] {
-      return this.$getters()['player/currentTrack'];
+    artWorkSrc(): RootState['player']['artWorkSrc'] {
+      return this.$state().player.artWorkSrc;
     },
-    artWorkSrc(): NonNullable<RootGetters['player/currentTrack']>['artWorkSrc'] | null {
-      return this.currentTrack?.artWorkSrc ?? null;
+    trackName(): RootState['player']['trackName'] {
+      return this.$state().player.trackName;
     },
-    releases(): Releases | null {
-      return this.currentTrack != null
-        ? {
-          name: this.currentTrack.trackName,
-          releaseId: this.currentTrack.trackId,
-        }
-        : null;
+    trackId(): RootState['player']['trackId'] {
+      return this.$state().player.trackId;
     },
     artistList(): Artists | null {
-      return this.currentTrack?.artists ?? null;
+      return this.$state().player.artistList;
     },
   },
 
   // player を初期化してからアクティブなデバイスを取得する
   async mounted() {
-    console.log('player/initPlayer dispatcher');
     await this.$dispatch('player/initPlayer');
     this.$dispatch('player/getActiveDeviceList');
   },

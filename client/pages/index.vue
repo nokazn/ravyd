@@ -26,7 +26,6 @@ export default Vue.extend({
   async fetch({ app }) {
     await Promise.all([
       app.$dispatch('browse/getNewReleases'),
-      app.$dispatch('player/getCurrentlyPlayingTrack'),
     ]);
   },
 
