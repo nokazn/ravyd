@@ -10,6 +10,7 @@ export type PlayerActions = {
   getActiveDeviceList: () => Promise<void>
   play: () => Promise<void>
   pause: () => Promise<void>
+  seek: (position: number) => Promise<void>
 };
 
 export type RootActions = {
@@ -18,6 +19,7 @@ export type RootActions = {
   'player/getCurrentlyPlayingTrack': PlayerActions['getCurrentlyPlayingTrack']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
+  'player/seek': PlayerActions['seek']
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
@@ -52,6 +54,25 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // Playback status updates
       player.addListener('player_state_changed', (state) => {
+        const {
+          position,
+          duration,
+          paused: isPaused,
+          shuffle: isShuffled,
+          repeat_mode: repeatMode,
+          // @todo
+          // track_window: {
+          //   current_track: currentTrack,
+          //   next_tracks: nextTracks,
+          //   previous_tracks: previousTracks,
+          // },
+        } = state;
+
+        commit('setIsPlaying', !isPaused);
+        commit('setPosition', position);
+        commit('setDuration', duration);
+        commit('setIsShuffled', isShuffled);
+        commit('setRepeatMode', repeatMode);
         console.log(state);
       });
 
@@ -117,21 +138,31 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async play({ commit }) {
+    commit('setIsPlaying', true);
     await this.$spotifyApi.$put('/me/player/play')
       .catch((e) => {
         console.error({ e });
       });
-
-    commit('changePlayState');
   },
 
   async pause({ commit }) {
+    commit('setIsPlaying', false);
     await this.$spotifyApi.$put('/me/player/pause')
-      .catch((e) => {
-        console.error({ e });
+      .catch((err) => {
+        console.error({ err });
       });
+  },
 
-    commit('changePlayState');
+  async seek({ state }, position) {
+    // query parameters で渡す必要がある
+    await this.$spotifyApi.$put('/me/player/seek', null, {
+      params: {
+        position_ms: position,
+        device_id: state.deviceId,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
   },
 };
 

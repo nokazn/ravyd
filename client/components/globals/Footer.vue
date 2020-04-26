@@ -23,7 +23,9 @@
       </div>
 
       <div :class="$style.Footer__center">
-        <seek-bar :class="$style.Footer__seekBar" />
+        <seek-bar
+          :class="$style.Footer__seekBar"
+          @on-change="onSeekbarChanged" />
         <media-controller />
       </div>
 
@@ -107,6 +109,12 @@ export default Vue.extend({
     await this.$dispatch('player/initPlayer');
     this.$dispatch('player/getActiveDeviceList');
   },
+
+  methods: {
+    onSeekbarChanged(position: number) {
+      this.$dispatch('player/seek', position);
+    },
+  },
 });
 </script>
 
@@ -116,7 +124,7 @@ export default Vue.extend({
   &__container {
     display: grid;
     justify-content: space-between;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 25vw 25vw;
     position: relative;
     width: 100%;
   }
@@ -136,10 +144,11 @@ export default Vue.extend({
     position: absolute;
     top: 45%;
     left: 50%;
+    width: 40vw;
     transform: translate(-50%, -50%);
   }
   &__seekBar {
-    width: 50vw;
+    width: 40vw;
   }
 
   &__right {
@@ -147,7 +156,7 @@ export default Vue.extend({
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    margin-right: 2%;
+    margin-right: 4%;
   }
 }
 </style>

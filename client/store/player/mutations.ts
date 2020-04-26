@@ -8,7 +8,11 @@ export type PlayerMutations = {
   setActiveDeviceList: SpotifyAPI.Device[]
   setCurrentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
   setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
-  changePlayState: undefined
+  setIsPlaying: boolean
+  setPosition: number,
+  setDuration: number,
+  setIsShuffled: boolean,
+  setRepeatMode: number,
   setVolume: number
 };
 
@@ -17,7 +21,11 @@ export type RootMutations = {
   ['player/setActiveDeviceList']: PlayerMutations['setActiveDeviceList']
   ['player/setCurrentlyPlaying']: PlayerMutations['setCurrentlyPlaying']
   ['player/setRecentlyPlayed']: PlayerMutations['setRecentlyPlayed']
-  ['player/changePlayState']: PlayerMutations['changePlayState']
+  ['player/setIsPlaying']: PlayerMutations['setIsPlaying']
+  ['player/setPosition']: PlayerMutations['setPosition']
+  ['player/setDuration']: PlayerMutations['setDuration']
+  ['player/setIsShuffled']: PlayerMutations['setIsShuffled']
+  ['player/setRepeatMode']: PlayerMutations['setRepeatMode']
   ['player/setVolume']: PlayerMutations['setVolume']
 };
 
@@ -38,13 +46,30 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.recentlyPlayed = recentLyPlayed;
   },
 
-  changePlayState(state) {
-    state.isPlaying = !state.isPlaying;
+  setIsPlaying(state, isPlaying) {
+    state.isPlaying = isPlaying;
   },
 
   setVolume(state, volume) {
     state.volume = volume;
   },
+
+  setPosition(state, position) {
+    state.position = position;
+  },
+
+  setDuration(state, duration) {
+    state.duration = duration;
+  },
+
+  setIsShuffled(state, isShuffled) {
+    state.isShuffled = isShuffled;
+  },
+
+  setRepeatMode(state, repeatMode) {
+    state.repeatMode = repeatMode;
+  },
+
 };
 
 export default mutations;

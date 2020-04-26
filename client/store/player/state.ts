@@ -6,6 +6,10 @@ export type PlayerState = {
   currentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
   isPlaying: boolean
+  position: number
+  duration: number
+  isShuffled: boolean
+  repeatMode: number
   volume: number
 }
 
@@ -15,6 +19,10 @@ const state: (() => PlayerState) = () => ({
   currentlyPlaying: null,
   recentlyPlayed: null,
   isPlaying: false,
+  position: 0,
+  duration: 0,
+  isShuffled: false,
+  repeatMode: 0,
   volume: 0,
 });
 
