@@ -82,7 +82,10 @@ export default Vue.extend({
       this.$emit('on-change', value);
     },
     onMouseup() {
-      this.$emit('on-change', this.position);
+      // setter の後に実行させたい
+      setTimeout(() => {
+        this.$emit('on-change', this.position);
+      }, 0);
     },
     updatePosition() {
       const intervalMs = 300;
