@@ -4,7 +4,7 @@ import {
   SFCCommit,
   SFCDispatch,
 } from 'vuex';
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 declare module 'vue/types/vue' {
@@ -13,7 +13,7 @@ declare module 'vue/types/vue' {
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
-    $dayjs: Dayjs
+    $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
     $serverApi: NuxtAxiosInstance
   }

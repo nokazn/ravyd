@@ -1,5 +1,5 @@
 import 'vuex';
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '~/store';
@@ -10,7 +10,7 @@ import { ActionMethodMap, Merge } from '~~/types';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
-    $dayjs: Dayjs
+    $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance,
     $serverApi: NuxtAxiosInstance,
   }
