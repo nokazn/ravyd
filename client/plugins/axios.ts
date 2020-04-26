@@ -15,6 +15,7 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   });
 
   $axios.onResponseError(async (err) => {
+    // @todo 401 のときにリフレッシュする
     console.error({ err });
     await app.$dispatch('auth/refreshAccessToken');
   });
