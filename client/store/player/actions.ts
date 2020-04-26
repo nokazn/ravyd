@@ -137,12 +137,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('setRecentlyPlayed', recentlyPlayed);
   },
 
-  async play({ commit }) {
+  async play({ state, commit }) {
     commit('setIsPlaying', true);
-    await this.$spotifyApi.$put('/me/player/play')
-      .catch((e) => {
-        console.error({ e });
-      });
+    await this.$spotifyApi.$put('/me/player/play', {
+      position_ms: state.position,
+    }).catch((e) => {
+      console.error({ e });
+    });
   },
 
   async pause({ commit }) {
