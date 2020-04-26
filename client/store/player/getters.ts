@@ -21,6 +21,7 @@ export type PlayerGetters = {
 
 export type RootGetters = {
   ['player/currentTrack']: PlayerGetters['currentTrack']
+  ['player/activeDevice']: PlayerGetters['activeDevice']
 }
 
 const getters: Getters<PlayerState, PlayerGetters> = {
