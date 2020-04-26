@@ -16,6 +16,7 @@ export type PlayerGetters = {
     duration: string
     progress: string
   } | null
+  activeDevice: SpotifyAPI.Device | null
 }
 
 export type RootGetters = {
@@ -61,6 +62,13 @@ const getters: Getters<PlayerState, PlayerGetters> = {
       duration: dayjs(recentTrack.duration_ms).format('m:ss'),
       progress: '0:00',
     };
+  },
+
+  activeDevice(state) {
+    const activeDevice = state.activeDeviceList?.filter((device) => device.is_active);
+    return activeDevice != null && activeDevice.length > 0
+      ? activeDevice[0]
+      : null;
   },
 };
 

@@ -2,6 +2,7 @@ import type { SpotifyAPI } from '~~/types';
 
 export type PlayerState = {
   deviceId: string | null
+  activeDeviceList: SpotifyAPI.Device[]
   currentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
   isPlaying: boolean
@@ -10,6 +11,7 @@ export type PlayerState = {
 
 const state: (() => PlayerState) = () => ({
   deviceId: null,
+  activeDeviceList: [],
   currentlyPlaying: null,
   recentlyPlayed: null,
   isPlaying: false,

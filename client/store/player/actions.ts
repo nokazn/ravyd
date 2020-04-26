@@ -2,23 +2,26 @@ import { Actions } from 'vuex';
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
+import { SpotifyAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
   getCurrentlyPlayingTrack: () => Promise<void>
+  getActiveDeviceList: () => Promise<void>
   play: () => Promise<void>
   pause: () => Promise<void>
 };
 
 export type RootActions = {
   'player/initPlayer': PlayerActions['initPlayer']
+  'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
   'player/getCurrentlyPlayingTrack': PlayerActions['getCurrentlyPlayingTrack']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
-  initPlayer({ commit, rootState }) {
+  initPlayer({ commit, dispatch, rootState }) {
     const token = rootState.auth.accessToken;
     if (token == null) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
@@ -53,8 +56,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
 
       // Ready
-      player.addListener('ready', ({ device_id }) => {
+      player.addListener('ready', async ({ device_id }) => {
         commit('setDeviceId', device_id);
+        // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
+        await dispatch('pause');
+        await this.$spotifyApi.$put('/me/player/', {
+          device_ids: [device_id],
+        });
         console.log('Ready with this device 🎉');
       });
 
@@ -72,10 +80,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     window.onSpotifyWebPlaybackSDKReady();
   },
 
-  async getCurrentlyPlayingTrack({ commit }) {
-    // @todo
-    // await dispatch('auth/refreshAccessToken', undefined, { root: true });
+  async getActiveDeviceList({ commit }) {
+    const { devices }: { devices: SpotifyAPI.Device[] } = await this.$spotifyApi.$get('/me/player/devices')
+      .catch((err: Error) => {
+        console.error(err);
+        return null;
+      });
 
+    commit('setActiveDeviceList', devices);
+  },
+
+  async getCurrentlyPlayingTrack({ commit }) {
     const currentResponse = await this.$spotifyApi.get('me/player')
       .catch((e: Error) => {
         console.error(e);
@@ -88,7 +103,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       return;
     }
 
-    const recentlyPlayed = await this.$spotifyApi.$get('me/player/recently-played', {
+    const recentlyPlayed = await this.$spotifyApi.$get('/me/player/recently-played', {
       params: {
         limit: 3,
       },
@@ -111,7 +126,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async pause({ commit }) {
-    await this.$axios.$put('/me/player/pause')
+    await this.$spotifyApi.$put('/me/player/pause')
       .catch((e) => {
         console.error({ e });
       });

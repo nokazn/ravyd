@@ -5,6 +5,7 @@ import type { SpotifyAPI } from '~~/types';
 
 export type PlayerMutations = {
   setDeviceId: string
+  setActiveDeviceList: SpotifyAPI.Device[]
   setCurrentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | null
   setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
   changePlayState: undefined
@@ -13,6 +14,7 @@ export type PlayerMutations = {
 
 export type RootMutations = {
   ['player/setDeviceId']: PlayerMutations['setDeviceId']
+  ['player/setActiveDeviceList']: PlayerMutations['setActiveDeviceList']
   ['player/setCurrentlyPlaying']: PlayerMutations['setCurrentlyPlaying']
   ['player/setRecentlyPlayed']: PlayerMutations['setRecentlyPlayed']
   ['player/changePlayState']: PlayerMutations['changePlayState']
@@ -23,6 +25,11 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
   setDeviceId(state, deviceId) {
     state.deviceId = deviceId;
   },
+
+  setActiveDeviceList(state, deviceList) {
+    state.activeDeviceList = deviceList;
+  },
+
   setCurrentlyPlaying(state, playing) {
     state.currentlyPlaying = playing;
   },

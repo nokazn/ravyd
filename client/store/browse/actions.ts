@@ -14,7 +14,7 @@ export type RootActions = {
 
 const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutations> = {
   async getNewReleases(
-    { commit, dispatch, rootState },
+    { commit, rootState },
     limit = 10,
   ): Promise<void> {
     if (rootState.auth.accessToken == null) return;
@@ -29,9 +29,8 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       console.error(e);
       return null;
     });
-    commit('setNewReleases', newReleases);
 
-    dispatch('auth/refreshAccessToken', undefined, { root: true });
+    commit('setNewReleases', newReleases);
   },
 };
 

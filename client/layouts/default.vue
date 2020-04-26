@@ -31,5 +31,10 @@ export default Vue.extend({
       return this.$getters()['auth/isLoggedin'];
     },
   },
+
+  // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
+  mounted() {
+    this.$dispatch('player/initPlayer');
+  },
 });
 </script>
