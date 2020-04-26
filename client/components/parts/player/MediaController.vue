@@ -50,18 +50,17 @@ export default Vue.extend({
   computed: {
     mediaButton(): 'mdi-play-circle' | 'mdi-pause-circle' {
       return this.$state().player.isPlaying
-        ? 'mdi-play-circle'
-        : 'mdi-pause-circle';
+        ? 'mdi-pause-circle'
+        : 'mdi-play-circle';
     },
   },
 
   methods: {
     onMediaClicked() {
-      const { isPlaying } = this.$state().player;
-      if (isPlaying) {
-        this.$dispatch('player/play');
-      } else {
+      if (this.$state().player.isPlaying) {
         this.$dispatch('player/pause');
+      } else {
+        this.$dispatch('player/play');
       }
     },
   },
