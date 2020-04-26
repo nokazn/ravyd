@@ -43,10 +43,6 @@ export default Vue.extend({
       return releases ?? [];
     },
   },
-
-  mounted() {
-    this.$dispatch('player/initPlayer');
-  },
 });
 </script>
 
