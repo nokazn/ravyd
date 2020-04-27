@@ -32,6 +32,8 @@ export type RootActions = {
   'player/repeat': PlayerActions['repeat']
 };
 
+let playbackPlayer: Spotify.SpotifyPlayer;
+
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
   initPlayer({ commit, dispatch, rootState }) {
     const token = rootState.auth.accessToken;
@@ -41,6 +43,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }
 
     window.onSpotifyWebPlaybackSDKReady = async () => {
+      // player が登録されている場合は無効化する
+      if (playbackPlayer != null) playbackPlayer.disconnect();
+
       const player = new Spotify.Player({
         // @todo
         name: 'spotify-player',
@@ -108,6 +113,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // Connect to the player
       const isConnected = await player.connect();
       console.log(isConnected);
+      playbackPlayer = player;
     };
 
     window.onSpotifyWebPlaybackSDKReady();
