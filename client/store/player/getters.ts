@@ -16,6 +16,7 @@ export type PlayerGetters = {
     }[] | null
   }[] | null
   repeatState: SpotifyAPI.RepeatState
+  isPreviousDisallowed: boolean
   isShuffleDisallowed: boolean
   isRepeatContextDisallowed: boolean
   isRepeatTrackDisallowed: boolean
@@ -25,6 +26,7 @@ export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
+  ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
   ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
   ['player/isRepeatContextDisallowed']: PlayerGetters['isRepeatContextDisallowed']
   ['player/isRepeatTrackDisallowed']: PlayerGetters['isRepeatTrackDisallowed']
@@ -62,6 +64,11 @@ const getters: Getters<PlayerState, PlayerGetters> = {
   repeatState(state) {
     return REPEAT_STATE_LIST[state.repeatMode];
   },
+
+  isPreviousDisallowed(state) {
+    return state.disallowList.some((disallow) => disallow.includes('prev'));
+  },
+
   isRepeatContextDisallowed(state) {
     return state.disallowList.some((disallow) => disallow.includes('repeat_context'));
   },

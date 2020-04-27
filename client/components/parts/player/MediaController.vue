@@ -13,6 +13,7 @@
     <v-btn
       icon
       large
+      :disabled="isPreviousDisallowed"
       @click="onPreivousClicked">
       <v-icon :size="28">
         mdi-skip-previous
@@ -51,15 +52,24 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 export default Vue.extend({
   computed: {
+    position(): RootState['player']['position'] {
+      return this.$state().player.position;
+    },
+
     mediaButton(): 'mdi-play-circle' | 'mdi-pause-circle' {
       return this.$state().player.isPlaying
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
+
+    isPreviousDisallowed(): boolean {
+      return this.$getters()['player/isPreviousDisallowed'] && this.position < 1000;
+    },
+
     isShuffleDisallowed(): RootGetters['player/isShuffleDisallowed'] {
       return this.$getters()['player/isShuffleDisallowed'];
     },
@@ -102,7 +112,12 @@ export default Vue.extend({
       this.$dispatch('player/shuffle');
     },
     onPreivousClicked() {
-      this.$dispatch('player/previous');
+      // position が 0:01 未満のときに前の曲に戻る
+      if (this.position < 1000) {
+        this.$dispatch('player/previous');
+      } else {
+        this.$dispatch('player/seek', 0);
+      }
     },
     onMediaClicked() {
       if (this.$state().player.isPlaying) {
