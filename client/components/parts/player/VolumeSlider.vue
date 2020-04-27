@@ -46,7 +46,7 @@ const instance = Vue.extend({
       set: debounce(function set(value: number) {
         // @todo
         // @ts-ignore
-        this.$commit('player/setVolume', value);
+        this.$commit('player/SET_VOLUME', value);
       }, 300),
     },
     volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {

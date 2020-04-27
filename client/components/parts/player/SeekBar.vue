@@ -42,7 +42,7 @@ export default Vue.extend({
         return this.$state().player.position;
       },
       set(value: number) {
-        this.$commit('player/setPosition', value);
+        this.$commit('player/SET_POSITION', value);
       },
     },
     positionMss(): string {
@@ -92,7 +92,7 @@ export default Vue.extend({
       if (this.updateInterval != null) clearInterval(this.updateInterval);
       this.updateInterval = setInterval(() => {
         // position が duration より大きい値になった場合は次の曲に移る
-        this.$commit('player/setPosition', this.$state().player.position + intervalMs);
+        this.$commit('player/SET_POSITION', this.$state().player.position + intervalMs);
       }, intervalMs);
     },
     clearInterval() {

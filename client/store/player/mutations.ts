@@ -4,47 +4,47 @@ import { PlayerState } from './state';
 import type { SpotifyAPI } from '~~/types';
 
 export type PlayerMutations = {
-  setDeviceId: string
-  setActiveDeviceList: SpotifyAPI.Device[]
-  setCurrentTrack: Spotify.Track
-  setNextTrackList: Spotify.Track[]
-  setPreviousTrackList: Spotify.Track[]
-  setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
-  setIsPlaying: boolean
-  setPosition: number
-  setDuration: number
-  setIsShuffled: boolean
-  setRepeatMode: 0 | 1 | 2
-  setDisallowList: string[]
-  setVolume: number
+  SET_DEVICE_ID: string
+  SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
+  SET_CURRENT_TRACK: Spotify.Track
+  SET_NEXT_TRACK_LIST: Spotify.Track[]
+  SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
+  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | null
+  SET_IS_PLAYING: boolean
+  SET_POSITION: number
+  SET_DURATION: number
+  SET_IS_SHUFFLED: boolean
+  SET_REPEAT_MODE: 0 | 1 | 2
+  SET_DISALLOW_LIST: string[]
+  SET_VOLUME: number
 };
 
 export type RootMutations = {
-  ['player/setDeviceId']: PlayerMutations['setDeviceId']
-  ['player/setActiveDeviceList']: PlayerMutations['setActiveDeviceList']
-  ['player/setCurrentTrack']: PlayerMutations['setCurrentTrack']
-  ['player/setNextTrackList']: PlayerMutations['setNextTrackList']
-  ['player/setPreviousTrackList']: PlayerMutations['setPreviousTrackList']
-  ['player/setRecentlyPlayed']: PlayerMutations['setRecentlyPlayed']
-  ['player/setIsPlaying']: PlayerMutations['setIsPlaying']
-  ['player/setPosition']: PlayerMutations['setPosition']
-  ['player/setDuration']: PlayerMutations['setDuration']
-  ['player/setIsShuffled']: PlayerMutations['setIsShuffled']
-  ['player/setRepeatMode']: PlayerMutations['setRepeatMode']
-  ['player/setDisallowList']: PlayerMutations['setDisallowList']
-  ['player/setVolume']: PlayerMutations['setVolume']
+  ['player/SET_DEVICE_ID']: PlayerMutations['SET_DEVICE_ID']
+  ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
+  ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
+  ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
+  ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
+  ['player/SET_RECENTLY_PLAYED']: PlayerMutations['SET_RECENTLY_PLAYED']
+  ['player/SET_IS_PLAYING']: PlayerMutations['SET_IS_PLAYING']
+  ['player/SET_POSITION']: PlayerMutations['SET_POSITION']
+  ['player/SET_DURATION']: PlayerMutations['SET_DURATION']
+  ['player/SET_IS_SHUFFLED']: PlayerMutations['SET_IS_SHUFFLED']
+  ['player/SET_REPEAT_MODE']: PlayerMutations['SET_REPEAT_MODE']
+  ['player/SET_DISALLOW_LIST']: PlayerMutations['SET_DISALLOW_LIST']
+  ['player/SET_VOLUME']: PlayerMutations['SET_VOLUME']
 };
 
 const mutations: Mutations<PlayerState, PlayerMutations> = {
-  setDeviceId(state, deviceId) {
+  SET_DEVICE_ID(state, deviceId) {
     state.deviceId = deviceId;
   },
 
-  setActiveDeviceList(state, deviceList) {
+  SET_ACTIVE_DEVICE_LIST(state, deviceList) {
     state.activeDeviceList = deviceList;
   },
 
-  setCurrentTrack(state, currentTrack) {
+  SET_CURRENT_TRACK(state, currentTrack) {
     state.artWorkSrc = currentTrack.album.images[0].url;
     state.trackName = currentTrack.name;
     state.trackId = currentTrack.id;
@@ -54,43 +54,43 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     }));
   },
 
-  setNextTrackList(state, nextTrackList) {
+  SET_NEXT_TRACK_LIST(state, nextTrackList) {
     state.nextTrackList = nextTrackList;
   },
 
-  setPreviousTrackList(state, previousTrackList) {
+  SET_PREVIOUS_TRACK_LIST(state, previousTrackList) {
     state.previousTrackList = previousTrackList;
   },
 
-  setRecentlyPlayed(state, recentLyPlayed) {
+  SET_RECENTLY_PLAYED(state, recentLyPlayed) {
     state.recentlyPlayed = recentLyPlayed;
   },
 
-  setIsPlaying(state, isPlaying) {
+  SET_IS_PLAYING(state, isPlaying) {
     state.isPlaying = isPlaying;
   },
 
-  setPosition(state, position) {
+  SET_POSITION(state, position) {
     state.position = position;
   },
 
-  setDuration(state, duration) {
+  SET_DURATION(state, duration) {
     state.duration = duration;
   },
 
-  setIsShuffled(state, isShuffled) {
+  SET_IS_SHUFFLED(state, isShuffled) {
     state.isShuffled = isShuffled;
   },
 
-  setRepeatMode(state, repeatMode) {
+  SET_REPEAT_MODE(state, repeatMode) {
     state.repeatMode = repeatMode;
   },
 
-  setDisallowList(state, disallowList) {
+  SET_DISALLOW_LIST(state, disallowList) {
     state.disallowList = disallowList;
   },
 
-  setVolume(state, volume) {
+  SET_VOLUME(state, volume) {
     state.volume = volume;
   },
 };

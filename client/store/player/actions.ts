@@ -85,20 +85,21 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
         const disallowList = disallowKeys.filter((key) => disallows[key]);
 
-        commit('setIsPlaying', !isPaused);
-        commit('setPosition', position);
-        commit('setDuration', duration);
-        commit('setIsShuffled', isShuffled);
-        commit('setRepeatMode', repeatMode);
-        commit('setCurrentTrack', currentTrack);
-        commit('setNextTrackList', nextTracks);
-        commit('setPreviousTrackList', previousTracks);
-        commit('setDisallowList', disallowList);
+        commit('SET_IS_PLAYING', !isPaused);
+        commit('SET_POSITION', position);
+        commit('SET_DURATION', duration);
+        commit('SET_IS_SHUFFLED', isShuffled);
+        commit('SET_REPEAT_MODE', repeatMode);
+        commit('SET_CURRENT_TRACK', currentTrack);
+        commit('SET_NEXT_TRACK_LIST', nextTracks);
+        commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
+        commit('SET_DISALLOW_LIST', disallowList);
+        console.log(state);
       });
 
       // Ready
       player.addListener('ready', async ({ device_id }) => {
-        commit('setDeviceId', device_id);
+        commit('SET_DEVICE_ID', device_id);
         // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
         await dispatch('pause');
         await this.$spotifyApi.$put('/me/player/', {
@@ -128,7 +129,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         return null;
       });
 
-    commit('setActiveDeviceList', devices);
+    commit('SET_ACTIVE_DEVICE_LIST', devices);
   },
 
   async getRecentlyPlayed({ commit }, limit = 10) {
@@ -141,11 +142,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       return null;
     });
 
-    commit('setRecentlyPlayed', recentlyPlayed);
+    commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
   async play({ state, commit }) {
-    commit('setIsPlaying', true);
+    commit('SET_IS_PLAYING', true);
     await this.$spotifyApi.$put('/me/player/play', {
       position_ms: state.position,
     }).catch((e) => {
@@ -154,7 +155,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async pause({ commit }) {
-    commit('setIsPlaying', false);
+    commit('SET_IS_PLAYING', false);
     await this.$spotifyApi.$put('/me/player/pause')
       .catch((err) => {
         console.error({ err });
