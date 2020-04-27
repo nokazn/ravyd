@@ -18,6 +18,7 @@ export type PlayerState = {
   duration: number
   isShuffled: boolean
   repeatMode: 0 | 1 | 2
+  disallowList: string[]
   volume: number
 }
 
@@ -36,6 +37,7 @@ const state: (() => PlayerState) = () => ({
   duration: 0,
   isShuffled: false,
   repeatMode: 0,
+  disallowList: [],
   volume: 0,
 });
 

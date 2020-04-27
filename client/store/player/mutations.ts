@@ -11,10 +11,11 @@ export type PlayerMutations = {
   setPreviousTrackList: Spotify.Track[]
   setRecentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
   setIsPlaying: boolean
-  setPosition: number,
-  setDuration: number,
-  setIsShuffled: boolean,
-  setRepeatMode: 0 | 1 | 2,
+  setPosition: number
+  setDuration: number
+  setIsShuffled: boolean
+  setRepeatMode: 0 | 1 | 2
+  setDisallowList: string[]
   setVolume: number
 };
 
@@ -30,6 +31,7 @@ export type RootMutations = {
   ['player/setDuration']: PlayerMutations['setDuration']
   ['player/setIsShuffled']: PlayerMutations['setIsShuffled']
   ['player/setRepeatMode']: PlayerMutations['setRepeatMode']
+  ['player/setDisallowList']: PlayerMutations['setDisallowList']
   ['player/setVolume']: PlayerMutations['setVolume']
 };
 
@@ -82,6 +84,10 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   setRepeatMode(state, repeatMode) {
     state.repeatMode = repeatMode;
+  },
+
+  setDisallowList(state, disallowList) {
+    state.disallowList = disallowList;
   },
 
   setVolume(state, volume) {

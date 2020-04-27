@@ -80,7 +80,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             next_tracks: nextTracks,
             previous_tracks: previousTracks,
           },
+          disallows,
         } = state;
+        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
+        const disallowList = disallowKeys.filter((key) => disallows[key]);
 
         commit('setIsPlaying', !isPaused);
         commit('setPosition', position);
@@ -90,7 +93,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('setCurrentTrack', currentTrack);
         commit('setNextTrackList', nextTracks);
         commit('setPreviousTrackList', previousTracks);
-        console.log(state);
+        commit('setDisallowList', disallowList);
       });
 
       // Ready
@@ -109,10 +112,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log('This device has gone offline 😴', device_id);
       });
 
-      // @todo
       // Connect to the player
-      const isConnected = await player.connect();
-      console.log(isConnected);
+      await player.connect();
+
       playbackPlayer = player;
     };
 

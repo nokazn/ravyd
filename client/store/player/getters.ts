@@ -5,6 +5,7 @@ import { REPEAT_STATE_LIST } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
+  activeDevice: SpotifyAPI.Device | null
   recentlyPlayedTrackList: {
     artWorkSrc: string | null
     trackName: string | null
@@ -15,16 +16,28 @@ export type PlayerGetters = {
     }[] | null
   }[] | null
   repeatState: SpotifyAPI.RepeatState
-  activeDevice: SpotifyAPI.Device | null
+  isShuffleDisallowed: boolean
+  isRepeatContextDisallowed: boolean
+  isRepeatTrackDisallowed: boolean
 }
 
 export type RootGetters = {
+  ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
-  ['player/activeDevice']: PlayerGetters['activeDevice']
+  ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
+  ['player/isRepeatContextDisallowed']: PlayerGetters['isRepeatContextDisallowed']
+  ['player/isRepeatTrackDisallowed']: PlayerGetters['isRepeatTrackDisallowed']
 }
 
 const getters: Getters<PlayerState, PlayerGetters> = {
+  activeDevice(state) {
+    const activeDevice = state.activeDeviceList?.filter((device) => device.is_active);
+    return activeDevice != null && activeDevice.length > 0
+      ? activeDevice[0]
+      : null;
+  },
+
   recentlyPlayedTrackList(state) {
     if (state.recentlyPlayed == null) return null;
 
@@ -42,15 +55,19 @@ const getters: Getters<PlayerState, PlayerGetters> = {
     });
   },
 
+  isShuffleDisallowed(state) {
+    return state.disallowList.some((disallow) => disallow.includes('shuffle'));
+  },
+
   repeatState(state) {
     return REPEAT_STATE_LIST[state.repeatMode];
   },
+  isRepeatContextDisallowed(state) {
+    return state.disallowList.some((disallow) => disallow.includes('repeat_context'));
+  },
 
-  activeDevice(state) {
-    const activeDevice = state.activeDeviceList?.filter((device) => device.is_active);
-    return activeDevice != null && activeDevice.length > 0
-      ? activeDevice[0]
-      : null;
+  isRepeatTrackDisallowed(state) {
+    return state.disallowList.some((disallow) => disallow.includes('repeat_track'));
   },
 };
 

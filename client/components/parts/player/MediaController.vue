@@ -3,8 +3,9 @@
     <v-btn
       icon
       :color="shuffleColor"
+      :disabled="isShuffleDisallowed"
       @click="onShuffleClicked">
-      <v-icon :size="20">
+      <v-icon :size="16">
         mdi-shuffle-variant
       </v-icon>
     </v-btn>
@@ -39,8 +40,9 @@
     <v-btn
       icon
       :color="repeatColor"
+      :disabled="isRepeatDisallowed"
       @click="onRepeatClicked">
-      <v-icon :size="20">
+      <v-icon :size="16">
         {{ repeatIcon }}
       </v-icon>
     </v-btn>
@@ -49,6 +51,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootGetters } from 'vuex';
 
 export default Vue.extend({
   computed: {
@@ -57,11 +60,17 @@ export default Vue.extend({
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
+    isShuffleDisallowed(): RootGetters['player/isShuffleDisallowed'] {
+      return this.$getters()['player/isShuffleDisallowed'];
+    },
     shuffleColor(): string {
+      if (this.isShuffleDisallowed) return 'grey darken2';
+
       return this.$state().player.isShuffled
         ? 'success'
         : 'grey lighten-1';
     },
+
     repeatIcon(): string {
       switch (this.$state().player.repeatMode) {
         case 0:
@@ -72,7 +81,13 @@ export default Vue.extend({
           return 'mdi-repeat';
       }
     },
+    isRepeatDisallowed(): boolean {
+      return this.$getters()['player/isRepeatContextDisallowed']
+        || this.$getters()['player/isRepeatTrackDisallowed'];
+    },
     repeatColor(): string {
+      if (this.isRepeatDisallowed) return 'grey-darken-2';
+
       switch (this.$state().player.repeatMode) {
         case 0:
           return 'grey lighten-1';
