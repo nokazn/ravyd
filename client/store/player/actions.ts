@@ -1,8 +1,10 @@
 import { Actions } from 'vuex';
+
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { SpotifyAPI } from '~~/types';
+import { REPEAT_STATE_LIST } from '~/variables';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -13,6 +15,8 @@ export type PlayerActions = {
   seek: (position: number) => Promise<void>
   next: () => Promise<void>
   previous: () => Promise<void>
+  shuffle: () => Promise<void>
+  repeat: () => Promise<void>
 };
 
 export type RootActions = {
@@ -24,6 +28,8 @@ export type RootActions = {
   'player/seek': PlayerActions['seek']
   'player/next': PlayerActions['next']
   'player/previous': PlayerActions['previous']
+  'player/shuffle': PlayerActions['shuffle']
+  'player/repeat': PlayerActions['repeat']
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
@@ -171,6 +177,27 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .catch((err: Error) => {
         console.error(err);
       });
+  },
+
+  async shuffle({ state }) {
+    await this.$spotifyApi.$put('/me/player/shuffle', null, {
+      params: {
+        state: !state.isShuffled,
+      },
+    }).catch((err: Error) => {
+      console.error(err);
+    });
+  },
+
+  async repeat({ state }) {
+    const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
+    await this.$spotifyApi.$put('/me/player/repeat', null, {
+      params: {
+        state: REPEAT_STATE_LIST[nextRepeatMode],
+      },
+    }).catch((err: Error) => {
+      console.error(err);
+    });
   },
 };
 

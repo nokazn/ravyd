@@ -236,12 +236,13 @@ export namespace SpotifyAPI {
       is_playing: boolean
       item: Track | Episode | null
       progress_ms: number | null
-      // @todo
-      repeat_state: 'off' | 'track' | 'context'
+      repeat_state: RepeatState
       shuffle_state: 'on' | 'off'
       timestamp: number
     }
   }
+
+  export type RepeatState = 'off' | 'track' | 'context'
 
   export type Restriction = {
     reason: string

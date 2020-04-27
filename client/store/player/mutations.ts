@@ -14,7 +14,7 @@ export type PlayerMutations = {
   setPosition: number,
   setDuration: number,
   setIsShuffled: boolean,
-  setRepeatMode: number,
+  setRepeatMode: 0 | 1 | 2,
   setVolume: number
 };
 
@@ -68,10 +68,6 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.isPlaying = isPlaying;
   },
 
-  setVolume(state, volume) {
-    state.volume = volume;
-  },
-
   setPosition(state, position) {
     state.position = position;
   },
@@ -88,6 +84,9 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.repeatMode = repeatMode;
   },
 
+  setVolume(state, volume) {
+    state.volume = volume;
+  },
 };
 
 export default mutations;

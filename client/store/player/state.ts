@@ -17,7 +17,7 @@ export type PlayerState = {
   position: number
   duration: number
   isShuffled: boolean
-  repeatMode: number
+  repeatMode: 0 | 1 | 2
   volume: number
 }
 

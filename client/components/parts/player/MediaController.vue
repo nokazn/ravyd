@@ -2,8 +2,9 @@
   <div :class="$style.MediaControler">
     <v-btn
       icon
-      color="grey lighten-1">
-      <v-icon :size="16">
+      :color="shuffleColor"
+      @click="onShuffleClicked">
+      <v-icon :size="20">
         mdi-shuffle-variant
       </v-icon>
     </v-btn>
@@ -37,9 +38,10 @@
 
     <v-btn
       icon
-      color="grey lighten-1">
-      <v-icon :size="16">
-        mdi-repeat
+      :color="repeatColor"
+      @click="onRepeatClicked">
+      <v-icon :size="20">
+        {{ repeatIcon }}
       </v-icon>
     </v-btn>
   </div>
@@ -55,9 +57,35 @@ export default Vue.extend({
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
+    shuffleColor(): string {
+      return this.$state().player.isShuffled
+        ? 'success'
+        : 'grey lighten-1';
+    },
+    repeatIcon(): string {
+      switch (this.$state().player.repeatMode) {
+        case 0:
+          return 'mdi-repeat-off';
+        case 1:
+          return 'mdi-repeat-once';
+        default:
+          return 'mdi-repeat';
+      }
+    },
+    repeatColor(): string {
+      switch (this.$state().player.repeatMode) {
+        case 0:
+          return 'grey lighten-1';
+        default:
+          return 'success';
+      }
+    },
   },
 
   methods: {
+    onShuffleClicked() {
+      this.$dispatch('player/shuffle');
+    },
     onPreivousClicked() {
       this.$dispatch('player/previous');
     },
@@ -70,6 +98,9 @@ export default Vue.extend({
     },
     onNextClicked() {
       this.$dispatch('player/next');
+    },
+    onRepeatClicked() {
+      this.$dispatch('player/repeat');
     },
   },
 });

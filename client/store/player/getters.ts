@@ -1,5 +1,7 @@
 import { Getters } from 'vuex';
+
 import { PlayerState } from './state';
+import { REPEAT_STATE_LIST } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
@@ -12,11 +14,13 @@ export type PlayerGetters = {
       id: string
     }[] | null
   }[] | null
+  repeatState: SpotifyAPI.RepeatState
   activeDevice: SpotifyAPI.Device | null
 }
 
 export type RootGetters = {
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
+  ['player/repeatState']: PlayerGetters['repeatState']
   ['player/activeDevice']: PlayerGetters['activeDevice']
 }
 
@@ -36,6 +40,10 @@ const getters: Getters<PlayerState, PlayerGetters> = {
         })),
       };
     });
+  },
+
+  repeatState(state) {
+    return REPEAT_STATE_LIST[state.repeatMode];
   },
 
   activeDevice(state) {
