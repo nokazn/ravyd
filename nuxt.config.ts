@@ -73,7 +73,7 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
   ],
   env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    baseUrl: process.env.BASE_URL || 'http://127.0.0.1:3000',
     spotifyUrl: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
   // Axios module configuration (https://axios.nuxtjs.org/options)
