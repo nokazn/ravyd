@@ -11,7 +11,7 @@
 
     <v-btn
       rounded
-      color="green lighten-2"
+      color="cyan darken-3"
       nuxt
       to="//www.spotify.com/jp/account/overview/"
       target="_blank">

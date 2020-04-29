@@ -78,7 +78,7 @@ export default Vue.extend({
       if (this.isShuffleDisallowed) return 'grey darken2';
 
       return this.$state().player.isShuffled
-        ? 'success'
+        ? 'cyan'
         : 'grey lighten-1';
     },
 
@@ -103,7 +103,7 @@ export default Vue.extend({
         case 0:
           return 'grey lighten-1';
         default:
-          return 'success';
+          return 'cyan';
       }
     },
   },

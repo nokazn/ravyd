@@ -61,8 +61,8 @@ export default Vue.extend({
     },
     seekbarColor(): string {
       return this.isPlaying
-        ? 'lime lighten-3'
-        : 'lime darken-3';
+        ? 'cyan'
+        : 'grey darken-1';
     },
   },
 

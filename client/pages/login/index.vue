@@ -9,7 +9,7 @@
 
     <v-btn
       rounded
-      color="green lighten-2"
+      color="cyan darken-3"
       :class="$style.authCard__button"
       @click="onAuthButtonClicked">
       Spotify アカウントで認証
