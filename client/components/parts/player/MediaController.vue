@@ -14,7 +14,8 @@
       icon
       large
       :disabled="isPreviousDisallowed"
-      @click="onPreivousClicked">
+      @click="onPreivousClicked"
+      @dblclick="onPreviousDoubleClicked">
       <v-icon :size="28">
         mdi-skip-previous
       </v-icon>
@@ -118,6 +119,9 @@ export default Vue.extend({
       } else {
         this.$dispatch('player/seek', 0);
       }
+    },
+    onPreviousDoubleClicked() {
+      this.$dispatch('player/previous');
     },
     onMediaClicked() {
       if (this.$state().player.isPlaying) {
