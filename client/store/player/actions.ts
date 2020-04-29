@@ -116,12 +116,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           device_ids: [device_id],
         });
 
+        // 0 から 1
         const volume = await player.getVolume()
           .catch((err: Error) => {
             console.error({ err });
             return 100;
           });
-        commit('SET_VOLUME', volume);
+        commit('SET_VOLUME', volume * 100);
 
         console.log('Ready with this device 🎉');
       });
