@@ -4,15 +4,15 @@ import { BrowseState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type BrowseMutations = {
-  setNewReleases: SpotifyAPI.Browse.NewReleases | null
+  SET_NEW_RELEASES: SpotifyAPI.Browse.NewReleases | null
 }
 
 export type RootMutations = {
-  'browse/setNewReleases': BrowseMutations['setNewReleases']
+  'browse/SET_NEW_RELEASES': BrowseMutations['SET_NEW_RELEASES']
 }
 
 const mutations: Mutations<BrowseState, BrowseMutations> = {
-  setNewReleases(state, newReleases) {
+  SET_NEW_RELEASES(state, newReleases) {
     state.newReleases = newReleases;
   },
 };

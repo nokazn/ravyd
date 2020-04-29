@@ -27,7 +27,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       return null;
     });
 
-    commit('setToken', accessToken);
+    commit('SET_TOKEN', accessToken);
   },
 
   async getUserData({ state, commit }): Promise<void> {
@@ -41,7 +41,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         return null;
       });
 
-    commit('setUserData', userData);
+    commit('SET_USER_DATA', userData);
   },
 
   async refreshAccessToken({ commit }) {
@@ -51,12 +51,12 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         return null;
       });
 
-    commit('setToken', accessToken);
+    commit('SET_TOKEN', accessToken);
   },
 
   logout({ commit }) {
-    commit('setToken', null);
-    commit('setUserData', null);
+    commit('SET_TOKEN', null);
+    commit('SET_USER_DATA', null);
   },
 };
 

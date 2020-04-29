@@ -30,7 +30,7 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       return null;
     });
 
-    commit('setNewReleases', newReleases);
+    commit('SET_NEW_RELEASES', newReleases);
   },
 };
 

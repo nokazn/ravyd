@@ -4,21 +4,21 @@ import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type AuthMutations = {
-  setToken: SpotifyAPI.Auth.TokenResponseData['access_token'] | null,
-  setUserData: SpotifyAPI.Auth.UserData | null
+  SET_TOKEN: SpotifyAPI.Auth.TokenResponseData['access_token'] | null,
+  SET_USER_DATA: SpotifyAPI.Auth.UserData | null
 }
 
 export type RootMutations = {
-  ['auth/setToken']: AuthMutations['setToken']
-  ['auth/setUserData']: AuthMutations['setUserData']
+  ['auth/SET_TOKEN']: AuthMutations['SET_TOKEN']
+  ['auth/SET_USER_DATA']: AuthMutations['SET_USER_DATA']
 }
 
 const mutations: Mutations<AuthState, AuthMutations> = {
-  setToken(state, token): void {
+  SET_TOKEN(state, token): void {
     state.accessToken = token;
   },
 
-  setUserData(state, userData): void {
+  SET_USER_DATA(state, userData): void {
     state.userData = userData;
   },
 };
