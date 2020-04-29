@@ -11,6 +11,7 @@ $g-bar-background-color: #272727;
  */
  $__layer-map: (
   floating-button: 100,
+  text-gradation: 100,
 );
 @function z-index-of($key) {
   @return map-get($__layer-map, $key);

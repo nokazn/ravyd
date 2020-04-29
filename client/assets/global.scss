@@ -48,3 +48,36 @@ body {
     border-radius: 8px;
   }
 }
+
+/**
+ * テキストの両端ヲグラデーションにする
+ * 親要素を position: relative にする必要がある
+ */
+ .g-text-gradation {
+  &::before {
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    content: "";
+    padding: 8px 4px;
+    background-image: linear-gradient(
+      to right,
+      rgba($g-bar-background-color, 1),
+      rgba($g-bar-background-color, 0),
+    );
+    z-index: z-index-of(text-gradation);
+  }
+  &::after {
+    position: absolute;
+    top: 8px;
+    right: 0px;
+    content: "";
+    padding: 8px 4px;
+    background-image: linear-gradient(
+      to left,
+      rgba($g-bar-background-color, 1),
+      rgba($g-bar-background-color, 0),
+    );
+    z-index: z-index-of(text-gradation);
+  }
+}

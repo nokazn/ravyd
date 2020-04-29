@@ -1,10 +1,8 @@
 <template>
-  <div
-    ref="releaseName"
-    :class="$style.ReleaseName">
+  <div :class="[$style.ReleaseName, 'g-text-gradation']">
     <nuxt-link
       v-if="releasesPath != null"
-      ref="releaseNameLink"
+      id="releaseNameLink"
       :to="releasesPath"
       :style="marqueeStyles"
       @mouseover.native="onHovered">
@@ -12,6 +10,7 @@
     </nuxt-link>
     <span
       v-else
+      id="releaseNameLink"
       :style="marqueeStyles"
       @mouseover="onHovered">
       {{ name }}
@@ -81,11 +80,15 @@ export default Vue.extend({
 
   methods: {
     calculateWidth() {
-      console.log(this.$refs);
-      const parentEle = this.$refs.releaseName as Element;
-      this.parentWidth = parentEle?.getBoundingClientRect().width ?? null;
-      const linkEle = this.$refs.releaseNameLink as Vue;
-      this.linkWidth = linkEle?.$el.getBoundingClientRect().width ?? null;
+      const linkEle = document.getElementById('releaseNameLink');
+      if (linkEle == null) {
+        console.error('Not Found Element of which id is "releaseNameLink"');
+        return;
+      }
+
+      this.linkWidth = linkEle?.clientWidth ?? null;
+      const parentElement = linkEle?.parentElement;
+      this.parentWidth = parentElement?.clientWidth ?? null;
     },
     async onHovered() {
       this.calculateWidth();
@@ -104,7 +107,6 @@ export default Vue.extend({
       // アニメーション終了後に再度アニメーションを受け付けられる状態にする
       this.animationTimeoutId = setTimeout(() => {
         this.isHoverd = false;
-        console.log('onHoverFinished');
       }, this.marqueeSeconds * 1000 + extraMillSeconds);
     },
     clearTimeout() {
@@ -125,31 +127,6 @@ export default Vue.extend({
   position: relative;
   & > * {
     display: inline-block;
-  }
-  &::before {
-    position: absolute;
-    top: 8px;
-    left: 0px;
-    content: "";
-    padding: 8px 4px;
-    background-image: linear-gradient(
-      to right,
-      rgba($g-bar-background-color, 1),
-      rgba($g-bar-background-color, 0),
-    );
-    z-index: 100;
-  }
-  &::after {
-    position: absolute;
-    top: 8px;
-    right: 0px;
-    content: "";
-    padding: 8px 4px;
-    background-image: linear-gradient(
-      to left,
-      rgba($g-bar-background-color, 1),
-      rgba($g-bar-background-color, 0),
-    );
   }
 }
 </style>
