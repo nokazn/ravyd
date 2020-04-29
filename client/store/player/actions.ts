@@ -57,14 +57,20 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // Error handling
       const errorList: Spotify.ErrorTypes[] = [
         'initialization_error',
-        'authentication_error',
         'account_error',
         'playback_error',
       ];
       errorList.forEach((errorType) => {
-        player.addListener(errorType, (e) => {
-          console.error(e);
+        player.addListener(errorType, (err) => {
+          console.error(err);
         });
+      });
+
+      // 認証エラーが発生した場合
+      player.addListener('authentication_error', async (err) => {
+        console.error({ err });
+        await dispatch('auth/refreshAccessToken', undefined, { root: true });
+        if (rootState.auth.accessToken == null) dispatch('auth/logout', undefined, { root: true });
       });
 
       // Playback status updates
@@ -94,6 +100,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_NEXT_TRACK_LIST', nextTracks);
         commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
         commit('SET_DISALLOW_LIST', disallowList);
+
+        // @todo
         console.log(state);
       });
 
