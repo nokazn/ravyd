@@ -27,3 +27,17 @@ $g-subtitle-color: rgba(255, 255, 255, 0.7);
     opacity: 0;
   }
 }
+
+/**
+ * テキストを流す
+*/
+@mixin marquee-animation() {
+  @keyframes marquee {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+}

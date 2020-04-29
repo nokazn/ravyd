@@ -133,6 +133,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-x: hidden;
   }
 
   &__center {
