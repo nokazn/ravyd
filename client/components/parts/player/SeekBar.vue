@@ -4,6 +4,8 @@
       v-model="position"
       dense
       hide-details
+      color="lime"
+      thumb-color="white"
       :max="duration"
       :class="$style.SeekBar__slider"
       @end="onEnd"

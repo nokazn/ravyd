@@ -6,6 +6,8 @@
 
     <v-slider
       v-model="volume"
+      color="lime"
+      thumb-color="white"
       hide-details
       dense />
   </div>

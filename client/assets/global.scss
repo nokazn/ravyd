@@ -9,12 +9,24 @@ body {
 /**
  * スライダーのスタイルを上書き
  */
- .v-slider__thumb {
-  cursor: pointer;
+.v-slider {
+  cursor: pointer!important;
+  &__track {
+    &-container {
+      height: 6px!important;
+    }
+    &-background,
+    &-fill {
+      border-radius: 6px;
+    }
+    &-background {
+      height: 4px!important;
+    }
+  }
 }
 
 /**
- * デフォルトのリンクノスタイル
+ * デフォルトのリンクのスタイル
  */
 .v-application a {
   color: inherit;
@@ -24,6 +36,9 @@ body {
   }
 }
 
+/**
+ * スクロールバーを無効化
+ */
 .g-no-scroll-bar {
   &::-webkit-scrollbar,
   &::-webkit-scrollbar-track,
