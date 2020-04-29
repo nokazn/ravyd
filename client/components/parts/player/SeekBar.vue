@@ -60,8 +60,9 @@ export default Vue.extend({
   },
 
   watch: {
-    isPlaying(curr: boolean) {
-      if (curr) {
+    // curr の引数の型指定をすると $state 等の型推論が効かなくなる
+    isPlaying(curr): void {
+      if (curr === true) {
         this.updatePosition();
       } else {
         this.clearInterval();
