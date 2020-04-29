@@ -1,27 +1,29 @@
 <template>
   <v-hover #default="{ hover }">
-    <v-img
-      :src="src"
-      :alt="alt"
-      :height="size"
-      :width="size"
-      :max-height="size"
-      :max-width="size"
-      :aspect-ratio="1"
-      :class="$style.ReleaseArtWork">
-      <v-overlay
-        v-if="hover"
-        absolute
-        :opacity="0.7">
-        <v-hover #default="{ hover: buttonHoverd }">
-          <v-icon
-            :size="playButtonSize(buttonHoverd)"
-            :class="$style.ReleaseArtWork__icon">
-            {{ icon }}
-          </v-icon>
-        </v-hover>
-      </v-overlay>
-    </v-img>
+    <transition name="fade">
+      <v-img
+        :src="src"
+        :alt="alt"
+        :height="size"
+        :width="size"
+        :max-height="size"
+        :max-width="size"
+        :aspect-ratio="1"
+        :class="$style.ReleaseArtWork">
+        <v-overlay
+          v-if="hover"
+          absolute
+          :opacity="0.7">
+          <v-hover #default="{ hover: buttonHoverd }">
+            <v-icon
+              :size="playButtonSize(buttonHoverd)"
+              :class="$style.ReleaseArtWork__icon">
+              {{ icon }}
+            </v-icon>
+          </v-hover>
+        </v-overlay>
+      </v-img>
+    </transition>
   </v-hover>
 </template>
 
