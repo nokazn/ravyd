@@ -23,7 +23,7 @@ import Vue from 'vue';
 import { sleep } from '~~/utils/sleep';
 
 type Data = {
-  isHoverd: boolean
+  isHovered: boolean
   animationTimeoutId: ReturnType<typeof setTimeout> | null
   parentWidth: number | null
   linkWidth: number | null
@@ -45,7 +45,7 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      isHoverd: false,
+      isHovered: false,
       animationTimeoutId: null,
       parentWidth: null,
       linkWidth: null,
@@ -59,7 +59,7 @@ export default Vue.extend({
         : null;
     },
     marqueeSeconds(): number | null {
-      if (!this.isHoverd || this.parentWidth == null || this.linkWidth == null) return null;
+      if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;
       if (this.linkWidth < this.parentWidth) return null;
 
       const widthPerSeconds = 30;
@@ -93,25 +93,25 @@ export default Vue.extend({
     async onHovered() {
       this.calculateWidth();
       // 既にアニメーションがスタートしてる場合はキャンセル
-      if (this.isHoverd) return;
+      if (this.isHovered) return;
 
       // ホバーしてから0.5秒後にアニメーションを開始
       const extraMillSeconds = 500;
       await sleep(extraMillSeconds);
-      this.isHoverd = true;
+      this.isHovered = true;
       if (this.marqueeSeconds == null) {
-        this.isHoverd = false;
+        this.isHovered = false;
         return;
       }
 
       // アニメーション終了後に再度アニメーションを受け付けられる状態にする
       this.animationTimeoutId = setTimeout(() => {
-        this.isHoverd = false;
+        this.isHovered = false;
       }, this.marqueeSeconds * 1000 + extraMillSeconds);
     },
     clearTimeout() {
       if (this.animationTimeoutId != null) clearTimeout(this.animationTimeoutId);
-      this.isHoverd = false;
+      this.isHovered = false;
     },
   },
 });
