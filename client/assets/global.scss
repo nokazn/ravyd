@@ -56,7 +56,7 @@ body {
  .g-text-gradation {
   &::before {
     position: absolute;
-    top: 8px;
+    top: 0px;
     left: 0px;
     content: "";
     padding: 8px 4px;
@@ -69,7 +69,7 @@ body {
   }
   &::after {
     position: absolute;
-    top: 8px;
+    top: 0px;
     right: 0px;
     content: "";
     padding: 8px 4px;

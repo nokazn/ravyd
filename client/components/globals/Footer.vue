@@ -134,6 +134,9 @@ export default Vue.extend({
     flex-direction: column;
     justify-content: center;
     overflow-x: hidden;
+    & > *:not(:last-child) {
+      margin-bottom: 8px;
+    }
   }
 
   &__center {

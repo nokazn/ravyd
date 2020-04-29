@@ -111,6 +111,7 @@ export default Vue.extend({
     },
     clearTimeout() {
       if (this.animationTimeoutId != null) clearTimeout(this.animationTimeoutId);
+      this.animationTimeoutId = null;
       this.isHovered = false;
     },
   },
@@ -122,7 +123,10 @@ export default Vue.extend({
   color: $g-title-color;
   font-size: 0.8rem;
   line-height: 1rem;
-  padding: 8px;
+  padding: {
+    right: 8px;
+    left: 8px;
+  };
   white-space: nowrap;
   position: relative;
   & > * {
