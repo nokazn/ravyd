@@ -51,7 +51,8 @@
           </v-btn>
         </div>
 
-        <volume-slider />
+        <volume-slider
+          @on-change="onVolumuChanged" />
       </div>
     </div>
   </v-footer>
@@ -102,6 +103,9 @@ export default Vue.extend({
   methods: {
     onSeekbarChanged(position: number) {
       this.$dispatch('player/seek', position);
+    },
+    onVolumuChanged(volume: number) {
+      this.$dispatch('player/volume', volume);
     },
   },
 });

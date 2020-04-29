@@ -9,13 +9,14 @@
       color="cyan"
       thumb-color="white"
       hide-details
-      dense />
+      dense
+      @end="onEnd"
+      @mouseup="onMouseup" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import debounce from 'lodash/debounce';
 import { RootState } from 'vuex';
 
 export type Data = {
@@ -40,16 +41,15 @@ const instance = Vue.extend({
       ],
     };
   },
+
   computed: {
     volume: {
       get(): RootState['player']['volume'] {
         return this.$state().player.volume;
       },
-      set: debounce(function set(value: number) {
-        // @todo
-        // @ts-ignore
+      set(value: number) {
         this.$commit('player/SET_VOLUME', value);
-      }, 300),
+      },
     },
     volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {
       const index = Math.min(
@@ -57,6 +57,17 @@ const instance = Vue.extend({
         this.volumeIconList.length - 1,
       );
       return this.volumeIconList[index];
+    },
+  },
+
+  methods: {
+    onEnd(value: number) {
+      this.$emit('on-change', value);
+    },
+    onMouseup() {
+      setTimeout(() => {
+        this.$emit('on-change', this.volume);
+      }, 0);
     },
   },
 });

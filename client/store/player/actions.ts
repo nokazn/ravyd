@@ -17,6 +17,7 @@ export type PlayerActions = {
   previous: () => Promise<void>
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
+  volume: (volume: number) => Promise<void>
 };
 
 export type RootActions = {
@@ -30,6 +31,7 @@ export type RootActions = {
   'player/previous': PlayerActions['previous']
   'player/shuffle': PlayerActions['shuffle']
   'player/repeat': PlayerActions['repeat']
+  'player/volume': PlayerActions['volume']
 };
 
 let playbackPlayer: Spotify.SpotifyPlayer;
@@ -113,6 +115,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         await this.$spotifyApi.$put('/me/player/', {
           device_ids: [device_id],
         });
+
+        const volume = await player.getVolume()
+          .catch((err: Error) => {
+            console.error({ err });
+            return 100;
+          });
+        commit('SET_VOLUME', volume);
+
         console.log('Ready with this device 🎉');
       });
 
@@ -123,7 +133,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // Connect to the player
       await player.connect();
-
       playbackPlayer = player;
     };
 
@@ -215,6 +224,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).catch((err: Error) => {
       console.error(err);
     });
+  },
+
+  async volume({ commit }, volume) {
+    await this.$spotifyApi.$put('/me/player/volume', null, {
+      params: {
+        volume_percent: volume,
+      },
+    });
+
+    commit('SET_VOLUME', volume);
   },
 };
 
