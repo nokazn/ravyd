@@ -50,16 +50,6 @@ export default Vue.extend({});
 </script>
 
 <style lang="scss" module>
-// .ReleaseCardContainerMask {
-//   z-index: 1000;
-//   background-attachment: scroll;
-//   background: linear-gradient(
-//     to right,
-//     red,
-//     rgba(0,0,0,0)
-//   );
-//   box-shadow: 0 100px 10px 10px red;
-// }
 .ReleaseCardContainer {
   position: relative;
   &__icon {
@@ -80,6 +70,7 @@ export default Vue.extend({});
     overflow-x: auto;
     padding: 0 32px;
     height: 100%;
+    position: relative;
     // padding-right が効かないので、疑似要素で隙間を作る
     &::after {
       display: block;
@@ -89,6 +80,40 @@ export default Vue.extend({});
     & > *:not(:last-child) {
       margin-right: 16px;
     }
+  }
+
+  // 左のグラデーション
+  &::before{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 32px;
+    content: "";
+    background-image: linear-gradient(
+      to right,
+      rgba($g-background-color, 1),
+      rgba($g-background-color, 0),
+    );
+    z-index: z-index-of(text-gradation);
+  }
+
+  // 右のグラデーション
+  &::after{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 32px;
+    content: "";
+    background-image: linear-gradient(
+      to left,
+      rgba($g-background-color, 1),
+      rgba($g-background-color, 0),
+    );
+    z-index: z-index-of(text-gradation);
   }
 }
 </style>

@@ -71,8 +71,8 @@ body {
  .g-text-gradation {
   &::before {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     content: "";
     padding: 8px 4px;
     background-image: linear-gradient(
