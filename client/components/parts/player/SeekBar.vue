@@ -4,7 +4,7 @@
       v-model="position"
       dense
       hide-details
-      color="lime"
+      :color="seekbarColor"
       thumb-color="white"
       :max="duration"
       :class="$style.SeekBar__slider"
@@ -59,6 +59,11 @@ export default Vue.extend({
     isPlaying(): RootState['player']['isPlaying'] {
       return this.$state().player.isPlaying;
     },
+    seekbarColor(): string {
+      return this.isPlaying
+        ? 'lime lighten-3'
+        : 'lime darken-3';
+    },
   },
 
   watch: {
@@ -110,7 +115,7 @@ export default Vue.extend({
 .SeekBar {
   width: 100%;
   &__mss {
-    font-size: 10px;
+    font-size: .75rem;
     margin-top: -4px;
     display: flex;
     justify-content: space-between;

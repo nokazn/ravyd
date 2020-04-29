@@ -27,31 +27,25 @@
         <seek-bar
           :class="$style.Footer__seekBar"
           @on-change="onSeekbarChanged" />
-        <media-controller />
+        <media-controllers :class="$style.Footer__mediaControllers" />
       </div>
 
       <div :class="$style.Footer__right">
         <div>
-          <v-btn
-            icon
-            small>
-            <v-icon :size="16">
+          <v-btn icon>
+            <v-icon :size="20">
               mdi-playlist-play
             </v-icon>
           </v-btn>
 
-          <v-btn
-            icon
-            small>
-            <v-icon :size="16">
+          <v-btn icon>
+            <v-icon :size="20">
               mdi-devices
             </v-icon>
           </v-btn>
 
-          <v-btn
-            icon
-            small>
-            <v-icon :size="16">
+          <v-btn icon>
+            <v-icon :size="20">
               mdi-dots-horizontal
             </v-icon>
           </v-btn>
@@ -71,7 +65,7 @@ import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
 import SeekBar from '~/components/parts/player/SeekBar.vue';
-import MediaController from '~/components/parts/player/MediaController.vue';
+import MediaControllers from '~/components/parts/player/MediaControllers.vue';
 import VolumeSlider from '~/components/parts/player/VolumeSlider.vue';
 
 export default Vue.extend({
@@ -80,7 +74,7 @@ export default Vue.extend({
     ReleaseName,
     ArtistName,
     SeekBar,
-    MediaController,
+    MediaControllers,
     VolumeSlider,
   },
 
@@ -149,13 +143,19 @@ export default Vue.extend({
   &__seekBar {
     width: 40vw;
   }
+  &__mediaControllers {
+    margin-top: -20px;
+  }
 
   &__right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    margin-right: 4%;
+    margin-right: 8%;
+    & > *:not(:last-child) {
+      margin-right: 4px;
+    }
   }
 }
 </style>
