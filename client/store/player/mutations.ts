@@ -10,6 +10,7 @@ export type PlayerMutations = {
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | null
+  SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
   SET_POSITION: number
   SET_DURATION: number
@@ -26,6 +27,7 @@ export type RootMutations = {
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
   ['player/SET_RECENTLY_PLAYED']: PlayerMutations['SET_RECENTLY_PLAYED']
+  ['player/SET_IS_SAVED_TRACK']: PlayerMutations['SET_IS_SAVED_TRACK']
   ['player/SET_IS_PLAYING']: PlayerMutations['SET_IS_PLAYING']
   ['player/SET_POSITION']: PlayerMutations['SET_POSITION']
   ['player/SET_DURATION']: PlayerMutations['SET_DURATION']
@@ -64,6 +66,10 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_RECENTLY_PLAYED(state, recentLyPlayed) {
     state.recentlyPlayed = recentLyPlayed;
+  },
+
+  SET_IS_SAVED_TRACK(state, isSavedTrack) {
+    state.isSavedTrack = isSavedTrack;
   },
 
   SET_IS_PLAYING(state, isPlaying) {

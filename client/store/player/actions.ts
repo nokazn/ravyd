@@ -18,6 +18,7 @@ export type PlayerActions = {
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
   volume: (volume: number) => Promise<void>
+  checkSavedTracks: (trackIds: string) => Promise<void>
 };
 
 export type RootActions = {
@@ -32,6 +33,7 @@ export type RootActions = {
   'player/shuffle': PlayerActions['shuffle']
   'player/repeat': PlayerActions['repeat']
   'player/volume': PlayerActions['volume']
+  'player/checkSavedTracks': PlayerActions['checkSavedTracks']
 };
 
 let playbackPlayer: Spotify.SpotifyPlayer;
@@ -103,6 +105,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
         commit('SET_DISALLOW_LIST', disallowList);
 
+        const trackId = currentTrack.id;
+        if (trackId != null) dispatch('checkSavedTracks', trackId);
+
         // @todo
         console.log(state);
       });
@@ -116,11 +121,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           device_ids: [device_id],
         });
 
-        // 0 から 1
+        // volme は 0 から 1
         const volume = await player.getVolume()
           .catch((err: Error) => {
             console.error({ err });
-            return 100;
+            return 1;
           });
         commit('SET_VOLUME', volume * 100);
 
@@ -235,6 +240,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
 
     commit('SET_VOLUME', volume);
+  },
+
+  async checkSavedTracks({ commit }, trackId) {
+    const [isSavedTrack] = await this.$spotifyApi.$get('/me/tracks/contains', {
+      params: {
+        ids: trackId,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
+
+    commit('SET_IS_SAVED_TRACK', isSavedTrack);
   },
 };
 

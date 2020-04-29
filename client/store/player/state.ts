@@ -13,6 +13,7 @@ export type PlayerState = {
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
+  isSavedTrack: boolean
   isPlaying: boolean
   position: number
   duration: number
@@ -32,6 +33,7 @@ const state: (() => PlayerState) = () => ({
   nextTrackList: [],
   previousTrackList: [],
   recentlyPlayed: null,
+  isSavedTrack: false,
   isPlaying: false,
   position: 0,
   duration: 0,

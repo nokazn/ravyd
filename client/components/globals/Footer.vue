@@ -21,6 +21,12 @@
             :release-id="trackId" />
           <artist-name :artist-list="artistList" />
         </div>
+
+        <div :class="$style.Footer__favoriteButton">
+          <favorite-button
+            :is-favorited="isSavedTrack"
+            @on-clicked="onFavoriteButtonClicked" />
+        </div>
       </div>
 
       <div :class="$style.Footer__center">
@@ -65,6 +71,7 @@ import { RootState } from 'vuex';
 import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
+import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/parts/player/SeekBar.vue';
 import MediaControllers from '~/components/parts/player/MediaControllers.vue';
 import VolumeSlider from '~/components/parts/player/VolumeSlider.vue';
@@ -74,6 +81,7 @@ export default Vue.extend({
     ReleaseArtWork,
     ReleaseName,
     ArtistName,
+    FavoriteButton,
     SeekBar,
     MediaControllers,
     VolumeSlider,
@@ -92,6 +100,9 @@ export default Vue.extend({
     artistList(): Artists | null {
       return this.$state().player.artistList;
     },
+    isSavedTrack(): boolean {
+      return this.$state().player.isSavedTrack;
+    },
   },
 
   // player を初期化してからアクティブなデバイスを取得する
@@ -101,6 +112,18 @@ export default Vue.extend({
   },
 
   methods: {
+    async onFavoriteButtonClicked(isSaved: boolean) {
+      if (this.trackId == null) return;
+
+      // API との通信の結果を待たずに先に表示を変更させておく
+      this.$commit('player/SET_IS_SAVED_TRACK', isSaved);
+      if (isSaved) {
+        await this.$dispatch('library/saveTracks', this.trackId);
+      } else {
+        await this.$dispatch('library/removeTracks', this.trackId);
+      }
+      this.$dispatch('player/checkSavedTracks', this.trackId);
+    },
     onSeekbarChanged(position: number) {
       this.$dispatch('player/seek', position);
     },
@@ -123,9 +146,10 @@ export default Vue.extend({
   }
   &__left {
     display: flex;
-  }
-  &__artWork {
-    margin-right: 4px;
+    height: 100%;
+    & > *:not(:last-child) {
+      margin-right: 4px;
+    }
   }
   &__trackInfo {
     display: flex;
@@ -135,6 +159,12 @@ export default Vue.extend({
     & > *:not(:last-child) {
       margin-bottom: 8px;
     }
+  }
+  &__favoriteButton {
+    display: flex;
+    align-items: center;
+    transform: translateY(-12px);
+    height: 100%;
   }
 
   &__center {

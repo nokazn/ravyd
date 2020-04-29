@@ -5,6 +5,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '~/store';
 import * as Auth from '~/store/auth/types';
 import * as Browse from '~/store/browse/types';
+import * as Library from '~/store/library/types';
 import * as Player from '~/store/player/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
@@ -23,22 +24,26 @@ declare module 'vuex' {
   type RootState = {
     auth: Auth.AuthState
     browse: Browse.BrowseState
+    library: Library.LibraryState
     player: Player.PlayerState
   } & Root.RootState
 
   type RootGetters = Root.RootGetters
     & Auth.RootGetters
     & Browse.RootGetters
+    & Library.RootGetters
     & Player.RootGetters
 
   type RootMutations = Root.RootMutations
     & Auth.RootMutations
     & Browse.RootMutations
+    & Library.RootMutations
     & Player.RootMutations
 
   type RootActions = Root.RootActions
     & Auth.RootActions
     & Browse.RootActions
+    & Library.RootActions
     & Player.RootActions
 
   /**
