@@ -25,9 +25,9 @@ const actions: Actions<BrowseState, BrowseActions, BrowseGetters, BrowseMutation
       params: {
         limit,
       },
-    }).catch((e) => {
-      console.error(e);
-      return null;
+    }).catch((err: Error) => {
+      console.error({ err });
+      return {};
     });
 
     commit('SET_NEW_RELEASES', newReleases);

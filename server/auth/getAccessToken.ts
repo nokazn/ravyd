@@ -30,8 +30,8 @@ export const getAccessToken = (
     params,
   })
     .then((res) => res.data)
-    .catch((e) => {
-      console.error(e);
+    .catch((err: Error) => {
+      console.error({ err });
       return null;
     });
 };
