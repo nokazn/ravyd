@@ -3,7 +3,7 @@
     <Header v-if="isLoggedin" />
     <NavigationDrawer v-if="isLoggedin" />
 
-    <v-content app>
+    <v-content>
       <nuxt />
     </v-content>
 

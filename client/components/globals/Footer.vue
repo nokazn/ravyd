@@ -1,6 +1,5 @@
 <template>
   <v-footer
-    fixed
     app
     padless
     :height="80"
@@ -136,7 +135,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Footer {
-  position: relative;
   &__container {
     display: grid;
     justify-content: space-between;
