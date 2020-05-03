@@ -1,9 +1,9 @@
 <template>
   <div :class="[$style.ReleaseName, 'g-text-gradation']">
     <nuxt-link
-      v-if="releasesPath != null"
+      v-if="releasePath != null"
       id="releaseNameLink"
-      :to="releasesPath"
+      :to="releasePath"
       :style="marqueeStyles"
       @mouseover.native="onHovered">
       {{ name }}
@@ -53,7 +53,7 @@ export default Vue.extend({
   },
 
   computed: {
-    releasesPath(): string | null {
+    releasePath(): string | null {
       return this.releaseId != null
         ? `/releases/${this.releaseId}`
         : null;
