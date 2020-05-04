@@ -60,7 +60,7 @@ export default Vue.extend({
     },
     marqueeSeconds(): number | null {
       if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;
-      if (this.linkWidth < this.parentWidth) return null;
+      if (this.linkWidth < this.parentWidth * 0.95) return null;
 
       const widthPerSeconds = 30;
       return Math.ceil((this.linkWidth / widthPerSeconds));

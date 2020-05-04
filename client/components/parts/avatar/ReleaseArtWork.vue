@@ -11,7 +11,7 @@
         :aspect-ratio="1"
         :class="$style.ReleaseArtWork">
         <v-overlay
-          v-if="hover"
+          v-if="hover && isOverlayed"
           absolute
           :opacity="0.7">
           <v-hover #default="{ hover: buttonHoverd }">
@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export type ReleaseArtWork = {
+export type ReleaseArtWorkInfo = {
   src: string
   alt: string
   icon?: string
@@ -54,6 +54,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 160,
+    },
+    isOverlayed: {
+      type: Boolean,
+      default: true,
     },
   },
 

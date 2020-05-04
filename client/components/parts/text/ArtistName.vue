@@ -1,6 +1,6 @@
 <template>
   <div :class="[$style.ArtistName, 'g-text-gradation']">
-    <span
+    <div
       id="artistNameLink"
       :style="marqueeStyles"
       @mouseover="onHovered">
@@ -15,7 +15,7 @@
           v-if="index !== artistList.length - 1"
           :key="`${id}-comma`">, </span>
       </template>
-    </span>
+    </div>
   </div>
 </template>
 
@@ -62,7 +62,7 @@ export default Vue.extend({
     },
     marqueeSeconds(): number | null {
       if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;
-      if (this.linkWidth < this.parentWidth) return null;
+      if (this.linkWidth < this.parentWidth * 0.95) return null;
 
       const widthPerSeconds = 30;
       return Math.ceil((this.linkWidth / widthPerSeconds));
@@ -77,6 +77,7 @@ export default Vue.extend({
   watch: {
     artistList(): void {
       this.clearTimeout();
+      this.calculateWidth();
     },
   },
 
