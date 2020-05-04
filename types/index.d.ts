@@ -62,8 +62,8 @@ export namespace SpotifyAPI {
   }
 
   export type SimpleAlbum = {
-    alubm_group?: 'album' | 'single' | 'compilation'
-    alubm_type: 'album' | 'single' | 'compilation'
+    album_group?: 'album' | 'single' | 'compilation'
+    album_type: 'album' | 'single' | 'compilation'
     artists: Artist[]
     available_markets: string[]
     copyrights: Copyright[]
@@ -84,6 +84,7 @@ export namespace SpotifyAPI {
     label: string
     popularity: number // 0 ~ 100
     tracks: Track[]
+    total_tracks: number
   }, Omit<SimpleAlbum, 'album_group'>>
 
   export type SimpleArtist = {
@@ -102,15 +103,7 @@ export namespace SpotifyAPI {
   }, SimpleArtist>
 
   export namespace Browse {
-    type NewReleases = {
-      href: string
-      items: Album[]
-      limit: number
-      next: string | null
-      offset: number
-      previous: string | null
-      total: number
-    }
+    type NewReleases = Paging<Album>
   }
 
   export type Context = {
@@ -202,7 +195,7 @@ export namespace SpotifyAPI {
     width: number
   }
 
-  export type LinkedTrack ={
+  export type LinkedTrack = {
     external_urls: ExternalUrl
     href: string
     id: string
@@ -210,21 +203,34 @@ export namespace SpotifyAPI {
     uri: string
   }
 
-  export namespace Player {
-    type RecentlyPlayed = {
-      cursor: {
-        after: number
-        before: number
-      }
-      href: string
-      items: {
-        context: Context
-        played_at: string // timestamp
-        track: SimpleTrack
-      }[]
-      limit: number
-      next: string
+  export type Paging<I> = {
+    href: string
+    items: I[]
+    limit: number
+    next: string | null
+    offset: number
+    previous: string | null
+    total: number
+  }
+
+  export type CursorPaging<I> = {
+    cursor: {
+      after: string
+      before?: string
     }
+    href: string
+    items: I[]
+    limit: number
+    next: string | null
+    total: number
+  }
+
+  export namespace Player {
+    type RecentlyPlayed = CursorPaging<{
+      context: Context
+      played_at: string // timestamp
+      track: SimpleTrack
+    }>
 
     type CurrentlyPlaying = {
       actions: {
