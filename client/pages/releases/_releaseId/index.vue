@@ -25,7 +25,8 @@
     </div>
 
     <div :class="$style.releaseIdPage__trackList">
-      {{ }}
+      <track-list
+        :track-list="tracks.items" />
     </div>
   </main>
 </template>
@@ -36,6 +37,7 @@ import Vue from 'vue';
 import ReleaseArtWork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
+import TrackList from '~/components/parts/table/TrackList.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
 import { SpotifyAPI } from '~~/types';
 
@@ -47,6 +49,7 @@ export type AsyncData = {
   releaseDate: string
   releaseDatePrecision: string
   releaseArtWorkInfo: ReleaseArtWorkInfo
+  tracks: SpotifyAPI.Album['tracks']
   totalTracks: number
 }
 
@@ -57,6 +60,7 @@ export default Vue.extend({
     ArtistName,
     ReleaseDate,
     ReleaseTotalTracks,
+    TrackList,
   },
 
   validate({ params }) {
@@ -70,7 +74,6 @@ export default Vue.extend({
         console.error(err);
         return null;
       });
-
     if (release == null) return null;
 
     console.log(release);
@@ -81,9 +84,11 @@ export default Vue.extend({
       name,
       release_date: releaseDate,
       release_date_precision: releaseDatePrecision,
+      tracks,
       total_tracks: totalTracks,
       images,
     } = release;
+
     const albumType = {
       album: 'アルバム' as const,
       single: 'シングル' as const,
@@ -109,6 +114,7 @@ export default Vue.extend({
       releaseDate,
       releaseDatePrecision,
       releaseArtWorkInfo,
+      tracks,
       totalTracks,
     };
   },
@@ -120,6 +126,7 @@ export default Vue.extend({
   padding: 32px 6%;
   &__header {
     display: flex;
+    margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px;
     }
