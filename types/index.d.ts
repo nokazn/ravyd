@@ -62,7 +62,8 @@ export namespace SpotifyAPI {
   }
 
   export type SimpleAlbum = {
-    album_group?: 'album' | 'single' | 'compilation'
+    // artist の album を取得すると├に含まれる値
+    album_group?: 'album' | 'single' | 'compilation' | 'appears_on'
     album_type: 'album' | 'single' | 'compilation'
     artists: Artist[]
     available_markets: string[]
@@ -83,7 +84,7 @@ export namespace SpotifyAPI {
     genres: string[]
     label: string
     popularity: number // 0 ~ 100
-    tracks: Track[]
+    tracks: Paging<SimpleTrack>
     total_tracks: number
   }, Omit<SimpleAlbum, 'album_group'>>
 
@@ -117,11 +118,6 @@ export namespace SpotifyAPI {
   export type Copyright = {
     text: string
     type: 'C' | 'P'
-  }
-
-  export type Cursor = {
-    before?: string
-    after: string
   }
 
   export type Device = {
@@ -213,11 +209,13 @@ export namespace SpotifyAPI {
     total: number
   }
 
+  export type Cursor = {
+    after: string
+    before?: string
+  }
+
   export type CursorPaging<I> = {
-    cursor: {
-      after: string
-      before?: string
-    }
+    cursor: Cursor
     href: string
     items: I[]
     limit: number
