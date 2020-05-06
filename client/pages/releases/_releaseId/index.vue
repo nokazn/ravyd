@@ -27,6 +27,10 @@
     <div :class="$style.releaseIdPage__trackList">
       <track-list
         :track-list="tracks.items" />
+
+      <copyrights
+        :copyright-list="copyrightList"
+        :class="$style.releaseIdPage__copyrights" />
     </div>
   </main>
 </template>
@@ -39,6 +43,7 @@ import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import TrackList from '~/components/parts/table/TrackList.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
+import Copyrights from '~/components/parts/text/Copyrights.vue';
 import { SpotifyAPI } from '~~/types';
 
 export type AsyncData = {
@@ -51,6 +56,7 @@ export type AsyncData = {
   releaseArtWorkInfo: ReleaseArtWorkInfo
   tracks: SpotifyAPI.Album['tracks']
   totalTracks: number
+  copyrightList: SpotifyAPI.Copyright[]
 }
 
 export default Vue.extend({
@@ -61,6 +67,7 @@ export default Vue.extend({
     ReleaseDate,
     ReleaseTotalTracks,
     TrackList,
+    Copyrights,
   },
 
   validate({ params }) {
@@ -87,6 +94,7 @@ export default Vue.extend({
       tracks,
       total_tracks: totalTracks,
       images,
+      copyrights: copyrightList,
     } = release;
 
     const albumType = {
@@ -116,6 +124,7 @@ export default Vue.extend({
       releaseArtWorkInfo,
       tracks,
       totalTracks,
+      copyrightList,
     };
   },
 });
@@ -150,6 +159,15 @@ export default Vue.extend({
     & > *:not(:last-child) {
       margin-right: 12px;
     }
+  }
+
+  &__trackList {
+    & > *:not(:last-child) {
+      margin-bottom: 28px;
+    }
+  }
+  &__copyrights {
+    padding-left: 16px;
   }
 }
 </style>
