@@ -24,6 +24,7 @@
         <div :class="$style.Footer__favoriteButton">
           <favorite-button
             :is-favorited="isSavedTrack"
+            :size="20"
             @on-clicked="onFavoriteButtonClicked" />
         </div>
       </div>
