@@ -20,8 +20,12 @@
           <release-date
             :release-date="releaseDate"
             :release-date-precision="releaseDatePrecision" />
+
           <release-total-tracks
             :total-tracks="totalTracks" />
+
+          <release-duration
+            :duration-ms="durationMs" />
         </div>
 
         <div :class="$style.ReleaseIdPage__buttons">
@@ -52,6 +56,7 @@ import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
+import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import TrackListTable from '~/components/parts/table/TrackListTable.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import { SpotifyAPI } from '~~/types';
@@ -67,6 +72,7 @@ export type AsyncData = {
   releaseArtWorkInfo: ReleaseArtWorkInfo
   tracks: SpotifyAPI.Album['tracks']
   totalTracks: number
+  durationMs: number
   copyrightList: SpotifyAPI.Copyright[]
   isFavorited: boolean
 }
@@ -79,6 +85,7 @@ export default Vue.extend({
     FavoriteButton,
     ReleaseDate,
     ReleaseTotalTracks,
+    ReleaseDuration,
     TrackListTable,
     Copyrights,
   },
@@ -128,6 +135,8 @@ export default Vue.extend({
       size: 180,
     };
 
+    const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
+
     const [isFavorited]: [boolean] = await app.$spotifyApi.$get('/me/albums/contains', {
       params: {
         ids: id,
@@ -148,6 +157,7 @@ export default Vue.extend({
       releaseArtWorkInfo,
       tracks,
       totalTracks,
+      durationMs,
       copyrightList,
       isFavorited,
     };
@@ -163,6 +173,7 @@ export default Vue.extend({
           },
         }).catch((err: Error) => {
           console.error({ err });
+          // エラーが発生した場合戻す
           this.isFavorited = !isFavorited;
         });
       } else {
@@ -172,6 +183,7 @@ export default Vue.extend({
           },
         }).catch((err: Error) => {
           console.error({ err });
+          // エラーが発生した場合戻す
           this.isFavorited = !isFavorited;
         });
       }
