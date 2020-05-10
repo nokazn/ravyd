@@ -63,6 +63,7 @@ const config: Configuration = {
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify',
     '@nuxt/typescript-build',
+    'nuxt-composition-api',
   ],
   // Nuxt.js modules
   modules: [
