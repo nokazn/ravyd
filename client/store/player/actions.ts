@@ -155,13 +155,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_ACTIVE_DEVICE_LIST', devices);
   },
 
-  async getRecentlyPlayed({ commit }, limit = 10) {
+  async getRecentlyPlayed({ commit, dispatch }, limit = 10) {
     const recentlyPlayed = await this.$spotifyApi.$get('/me/player/recently-played', {
       params: {
         limit,
       },
-    }).catch((e: Error) => {
-      console.error({ e });
+    }).catch(async (err: Error) => {
+      console.error({ err });
+      await dispatch('auth/refreshAccessToken', undefined, { root: true });
       return null;
     });
 
@@ -172,15 +173,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_PLAYING', true);
     await this.$spotifyApi.$put('/me/player/play', {
       position_ms: state.position,
-    }).catch((e) => {
-      console.error({ e });
+    }).catch((err: Error) => {
+      console.error({ err });
     });
   },
 
   async pause({ commit }) {
     commit('SET_IS_PLAYING', false);
     await this.$spotifyApi.$put('/me/player/pause')
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
       });
   },

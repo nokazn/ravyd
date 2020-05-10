@@ -41,8 +41,8 @@ export default Vue.extend({
       const res: SpotifyAPI.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
         method: 'GET',
         url: `${process.env.baseUrl}/api/auth`,
-      }).catch((e) => {
-        console.error({ e });
+      }).catch((err: Error) => {
+        console.error({ err });
         return null;
       });
 
