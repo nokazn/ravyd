@@ -49,7 +49,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Component, Vue } from 'nuxt-property-decorator';
+import { Context } from '@nuxt/types';
 
 import ReleaseArtWork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
@@ -61,7 +62,7 @@ import TrackListTable from '~/components/parts/table/TrackListTable.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import { SpotifyAPI } from '~~/types';
 
-export type AsyncData = {
+export interface AsyncData {
   albumType: 'アルバム' | 'シングル' | 'コンピレーション'
   artistList: Artists
   label: string
@@ -77,8 +78,7 @@ export type AsyncData = {
   isFavorited: boolean
 }
 
-export default Vue.extend({
-  name: 'ReleaseIdPage',
+@Component({
   components: {
     ReleaseArtWork,
     ArtistName,
@@ -89,21 +89,18 @@ export default Vue.extend({
     TrackListTable,
     Copyrights,
   },
-
-  validate({ params }) {
+  validate({ params }: Context) {
     console.log(params);
     return params.releaseId !== '';
   },
-
-  async asyncData({ app, params }): Promise<AsyncData | null> {
-    const release: SpotifyAPI.Album = await app.$spotifyApi.$get(`/albums/${params.releaseId}`)
+  async asyncData({ app, params }: Context): Promise<AsyncData | null> {
+    const release: SpotifyAPI.Album | null = await app.$spotifyApi.$get(`/albums/${params.releaseId}`)
       .catch((err: Error) => {
         console.error(err);
         return null;
       });
     if (release == null) return null;
 
-    console.log(release);
     const {
       album_type,
       artists,
@@ -162,34 +159,41 @@ export default Vue.extend({
       isFavorited,
     };
   },
+})
+export default class ReleaseIdPage extends Vue implements AsyncData {
+  albumType: 'アルバム' = 'アルバム'
+  artistList = []
+  label = ''
+  name = ''
+  id = ''
+  releaseDate = ''
+  releaseDatePrecision = ''
+  releaseArtWorkInfo = {} as ReleaseArtWorkInfo
+  tracks = {} as SpotifyAPI.Album['tracks']
+  totalTracks = 0
+  durationMs = 0
+  copyrightList = []
+  isFavorited = false
 
-  methods: {
-    async onFavoriteButtonClicked(isFavorited: boolean) {
-      this.isFavorited = isFavorited;
-      if (isFavorited) {
-        await this.$spotifyApi.$put('/me/albums', null, {
-          params: {
-            ids: this.id,
-          },
-        }).catch((err: Error) => {
-          console.error({ err });
-          // エラーが発生した場合戻す
-          this.isFavorited = !isFavorited;
-        });
-      } else {
-        await this.$spotifyApi.$delete('/me/albums', {
-          params: {
-            ids: this.id,
-          },
-        }).catch((err: Error) => {
-          console.error({ err });
-          // エラーが発生した場合戻す
-          this.isFavorited = !isFavorited;
-        });
-      }
-    },
-  },
-});
+  async onFavoriteButtonClicked(isFavorited: boolean) {
+    const handler = () => (isFavorited
+      ? this.$spotifyApi.$put('/me/albums', null, {
+        params: {
+          ids: this.id,
+        },
+      })
+      : this.$spotifyApi.$delete('/me/albums', {
+        params: {
+          ids: this.id,
+        },
+      }));
+
+    this.isFavorited = isFavorited;
+    await handler().catch((err: Error) => {
+      console.error({ err });
+    });
+  }
+}
 </script>
 
 <style lang="scss" module>
