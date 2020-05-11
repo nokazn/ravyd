@@ -58,6 +58,7 @@ module.exports = {
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': 2,
     'camelcase': 0,
+    'lines-between-class-members': 0,
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

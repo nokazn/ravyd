@@ -63,7 +63,6 @@ const config: Configuration = {
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify',
     '@nuxt/typescript-build',
-    'nuxt-composition-api',
   ],
   // Nuxt.js modules
   modules: [
@@ -111,6 +110,13 @@ const config: Configuration = {
   },
   // webpack build configuration
   build: {
+    babel: {
+      presets() {
+        return [
+          ['@nuxt/babel-preset-app', { loose: true }],
+        ];
+      },
+    },
     // extend(webpackConfig) {},
   },
   typescript: {

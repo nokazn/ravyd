@@ -25,7 +25,7 @@
     "ioredis": "^4.16.0",
     "lodash.debounce": "^4.0.8",
     "nuxt": "^2.0.0",
-    "nuxt-composition-api": "^0.6.0",
+    "nuxt-property-decorator": "^2.7.2",
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
