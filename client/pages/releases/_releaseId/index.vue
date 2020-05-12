@@ -1,22 +1,22 @@
 <template>
-  <main :class="$style.releaseIdPage">
-    <div :class="$style.releaseIdPage__header">
+  <main :class="$style.ReleaseIdPage">
+    <div :class="$style.ReleaseIdPage__header">
       <ReleaseArtWork v-bind="releaseArtWorkInfo" />
 
-      <div :class="$style.releaseIdPage__releaseInfo">
-        <div :class="$style.releaseIdPage__releaseType">
+      <div :class="$style.ReleaseIdPage__releaseInfo">
+        <div :class="$style.ReleaseIdPage__releaseType">
           {{ albumType }}
         </div>
 
-        <h1 :class="$style.releaseIdPage__releaseName">
+        <h1 :class="$style.ReleaseIdPage__releaseName">
           {{ name }}
         </h1>
 
         <artist-name
           :artist-list="artistList"
-          :class="$style.releaseIdPage__artistsName" />
+          :class="$style.ReleaseIdPage__artistsName" />
 
-        <div :class="$style.releaseIdPage__releaseDetail">
+        <div :class="$style.ReleaseIdPage__releaseDetail">
           <release-date
             :release-date="releaseDate"
             :release-date-precision="releaseDatePrecision" />
@@ -29,6 +29,10 @@
         </div>
 
         <div :class="$style.ReleaseIdPage__buttons">
+          <media-control-button
+            :is-playing="isPlaying && isAlbumPlaying"
+            @on-clicked="onMediaControlButtonClicked" />
+
           <favorite-button
             :is-favorited="isFavorited"
             outlined
@@ -37,13 +41,13 @@
       </div>
     </div>
 
-    <div :class="$style.releaseIdPage__trackList">
+    <div :class="$style.ReleaseIdPage__trackList">
       <track-list-table
-        :track-list="tracks.items" />
+        :track-list="trackList" />
 
       <copyrights
         :copyright-list="copyrightList"
-        :class="$style.releaseIdPage__copyrights" />
+        :class="$style.ReleaseIdPage__copyrights" />
     </div>
   </main>
 </template>
@@ -54,6 +58,7 @@ import { Context } from '@nuxt/types';
 
 import ReleaseArtWork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
+import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
@@ -68,10 +73,11 @@ export interface AsyncData {
   label: string
   name: string
   id: string
+  uri: string
   releaseDate: string
   releaseDatePrecision: string
   releaseArtWorkInfo: ReleaseArtWorkInfo
-  tracks: SpotifyAPI.Album['tracks']
+  trackList: SpotifyAPI.SimpleTrack[]
   totalTracks: number
   durationMs: number
   copyrightList: SpotifyAPI.Copyright[]
@@ -82,6 +88,7 @@ export interface AsyncData {
   components: {
     ReleaseArtWork,
     ArtistName,
+    MediaControlButton,
     FavoriteButton,
     ReleaseDate,
     ReleaseTotalTracks,
@@ -107,9 +114,12 @@ export interface AsyncData {
       label,
       name,
       id,
+      uri,
       release_date: releaseDate,
       release_date_precision: releaseDatePrecision,
-      tracks,
+      tracks: {
+        items: trackList,
+      },
       total_tracks: totalTracks,
       images,
       copyrights: copyrightList,
@@ -132,7 +142,7 @@ export interface AsyncData {
       size: 180,
     };
 
-    const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
+    const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
 
     const [isFavorited]: [boolean] = await app.$spotifyApi.$get('/me/albums/contains', {
       params: {
@@ -149,10 +159,11 @@ export interface AsyncData {
       label,
       name,
       id,
+      uri,
       releaseDate,
       releaseDatePrecision,
       releaseArtWorkInfo,
-      tracks,
+      trackList,
       totalTracks,
       durationMs,
       copyrightList,
@@ -162,20 +173,33 @@ export interface AsyncData {
 })
 export default class ReleaseIdPage extends Vue implements AsyncData {
   albumType: 'アルバム' = 'アルバム'
-  artistList = []
+  artistList: SpotifyAPI.Artist[] = []
   label = ''
   name = ''
   id = ''
+  uri = ''
   releaseDate = ''
   releaseDatePrecision = ''
-  releaseArtWorkInfo = {} as ReleaseArtWorkInfo
-  tracks = {} as SpotifyAPI.Album['tracks']
+  releaseArtWorkInfo: ReleaseArtWorkInfo = {
+    src: '',
+    alt: '',
+  }
+  trackList: SpotifyAPI.SimpleTrack[] = []
   totalTracks = 0
   durationMs = 0
   copyrightList = []
   isFavorited = false
 
+  get isPlaying() {
+    return this.$state().player.isPlaying;
+  }
+
+  get isAlbumPlaying() {
+    return this.$getters()['player/isAlbumPlaying'](this.id);
+  }
+
   async onFavoriteButtonClicked(isFavorited: boolean) {
+    this.isFavorited = isFavorited;
     const handler = () => (isFavorited
       ? this.$spotifyApi.$put('/me/albums', null, {
         params: {
@@ -187,17 +211,28 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
           ids: this.id,
         },
       }));
-
-    this.isFavorited = isFavorited;
     await handler().catch((err: Error) => {
       console.error({ err });
     });
+  }
+
+  async onMediaControlButtonClicked(nextPlayingState: boolean) {
+    console.log(nextPlayingState, this.uri);
+    if (nextPlayingState) {
+      // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
+      const payload = this.isAlbumPlaying
+        ? undefined
+        : { contextUri: this.uri };
+      await this.$dispatch('player/play', payload);
+    } else {
+      await this.$dispatch('player/pause');
+    }
   }
 }
 </script>
 
 <style lang="scss" module>
-.releaseIdPage {
+.ReleaseIdPage {
   padding: 32px 6%;
   &__header {
     display: flex;
@@ -217,7 +252,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
   &__releaseName {
     font-size: 44px;
-    margin: -6px 0;
+    margin-top: -4px;
   }
   &__artistsName {
     margin-bottom: 4px;
@@ -225,7 +260,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   &__releaseDetail {
     margin-bottom: 8px;
     & > *:not(:last-child) {
-      margin-right: 12px;
+      margin-right: 8px;
     }
   }
 

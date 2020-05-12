@@ -10,7 +10,7 @@ export type PlayerActions = {
   initPlayer: () => void
   getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
-  play: () => Promise<void>
+  play: (payload?: { contextUri: string }) => Promise<void>
   pause: (payload?: { isInitializing: boolean }) => Promise<void>
   seek: (position: number) => Promise<void>
   next: () => Promise<void>
@@ -169,13 +169,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
-  async play({ state, commit }) {
+  async play({ state, commit }, payload?) {
     commit('SET_IS_PLAYING', true);
-    await this.$spotifyApi.$put('/me/player/play', {
-      position_ms: state.position,
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
+    const context_uri = payload?.contextUri;
+    // context_uri が指定された場合は新しいトラックを再生、そうでない場合は一時停止中のトラックを再生
+    const params = context_uri != null
+      ? { context_uri }
+      : { position_ms: state.position };
+
+    await this.$spotifyApi.$put('/me/player/play', params)
+      .catch((err: Error) => {
+        console.error({ err });
+      });
   },
 
   async pause({ commit }, payload = { isInitializing: false }) {

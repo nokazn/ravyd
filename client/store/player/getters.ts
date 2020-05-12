@@ -7,6 +7,8 @@ import { SpotifyAPI } from '~~/types';
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
   albumId: string | null
+  isTrackPlaying: (trackId: string) => boolean
+  isAlbumPlaying: (albumId: string) => boolean
   recentlyPlayedTrackList: {
     artWorkSrc: string | null
     trackName: string | null
@@ -26,6 +28,8 @@ export type PlayerGetters = {
 export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/albumId']: PlayerGetters['albumId']
+  ['player/isTrackPlaying']: PlayerGetters['isTrackPlaying']
+  ['player/isAlbumPlaying']: PlayerGetters['isAlbumPlaying']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
@@ -34,7 +38,7 @@ export type RootGetters = {
   ['player/isRepeatTrackDisallowed']: PlayerGetters['isRepeatTrackDisallowed']
 }
 
-const getters: Getters<PlayerState, PlayerGetters> = {
+const playerGetters: Getters<PlayerState, PlayerGetters> = {
   activeDevice(state) {
     const activeDevice = state.activeDeviceList?.filter((device) => device.is_active);
     return activeDevice != null && activeDevice.length > 0
@@ -45,6 +49,14 @@ const getters: Getters<PlayerState, PlayerGetters> = {
   albumId(state) {
     // 最後の ":" 以降を取り出す
     return state.albumUri?.replace(/^.+:(.+)$/, '$1') ?? null;
+  },
+
+  isTrackPlaying(state) {
+    return (trackId) => state.trackId === trackId;
+  },
+
+  isAlbumPlaying(_state, getters) {
+    return (albumId) => getters.albumId === albumId;
   },
 
   recentlyPlayedTrackList(state) {
@@ -85,4 +97,4 @@ const getters: Getters<PlayerState, PlayerGetters> = {
   },
 };
 
-export default getters;
+export default playerGetters;
