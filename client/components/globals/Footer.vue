@@ -17,7 +17,7 @@
           <release-name
             v-if="trackName != null"
             :name="trackName"
-            :release-id="trackId" />
+            :release-id="albumId" />
           <marquee-artist-name :artist-list="artistList" />
         </div>
 
@@ -66,7 +66,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
@@ -96,6 +96,9 @@ export default Vue.extend({
     },
     trackId(): RootState['player']['trackId'] {
       return this.$state().player.trackId;
+    },
+    albumId(): RootGetters['player/albumId'] {
+      return this.$getters()['player/albumId'];
     },
     artistList(): Artists | null {
       return this.$state().player.artistList;

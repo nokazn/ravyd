@@ -6,6 +6,8 @@ export type PlayerState = {
   artWorkSrc: string | null
   trackName: string | null
   trackId: string | null
+  trackUri: string | null
+  albumUri: string | null
   artistList: {
     name: string
     id: string
@@ -29,6 +31,8 @@ const state = (): PlayerState => ({
   artWorkSrc: null,
   trackName: null,
   trackId: null,
+  trackUri: null,
+  albumUri: null,
   artistList: [],
   nextTrackList: [],
   previousTrackList: [],

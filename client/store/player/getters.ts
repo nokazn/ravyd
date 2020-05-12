@@ -6,6 +6,7 @@ import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
+  albumId: string | null
   recentlyPlayedTrackList: {
     artWorkSrc: string | null
     trackName: string | null
@@ -24,6 +25,7 @@ export type PlayerGetters = {
 
 export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
+  ['player/albumId']: PlayerGetters['albumId']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
@@ -38,6 +40,11 @@ const getters: Getters<PlayerState, PlayerGetters> = {
     return activeDevice != null && activeDevice.length > 0
       ? activeDevice[0]
       : null;
+  },
+
+  albumId(state) {
+    // 最後の ":" 以降を取り出す
+    return state.albumUri?.replace(/^.+:(.+)$/, '$1') ?? null;
   },
 
   recentlyPlayedTrackList(state) {
