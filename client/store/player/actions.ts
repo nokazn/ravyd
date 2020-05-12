@@ -11,7 +11,7 @@ export type PlayerActions = {
   getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   play: () => Promise<void>
-  pause: () => Promise<void>
+  pause: ({ isInitializing }: { isInitializing?: boolean }) => Promise<void>
   seek: (position: number) => Promise<void>
   next: () => Promise<void>
   previous: () => Promise<void>
@@ -116,7 +116,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('ready', async ({ device_id }) => {
         commit('SET_DEVICE_ID', device_id);
         // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
-        await dispatch('pause');
+        await dispatch('pause', { isInitializing: true });
         await this.$spotifyApi.$put('/me/player/', {
           device_ids: [device_id],
         });
@@ -178,11 +178,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async pause({ commit }) {
+  async pause({ commit }, { isInitializing = false }) {
     commit('SET_IS_PLAYING', false);
     await this.$spotifyApi.$put('/me/player/pause')
       .catch((err: Error) => {
-        console.error({ err });
+        if (isInitializing) {
+          console.log('Not found another active device.');
+        } else {
+          console.error({ err });
+        }
       });
   },
 
