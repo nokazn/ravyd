@@ -79,14 +79,14 @@ export namespace SpotifyAPI {
     type: 'album'
     uri: string
   }
-  export type Album = Merge<{
+  export type Album = {
     external_ids: ExternalId
     genres: string[]
     label: string
     popularity: number // 0 ~ 100
     tracks: Paging<SimpleTrack>
     total_tracks: number
-  }, Omit<SimpleAlbum, 'album_group'>>
+  } & Omit<SimpleAlbum, 'album_group'>
 
   export type SimpleArtist = {
     external_urls: ExternalUrl
@@ -96,12 +96,12 @@ export namespace SpotifyAPI {
     type: 'artist'
     uri: string
   }
-  export type Artist = Merge<{
+  export type Artist = {
     followers: Followers
     genres: string[]
     images: Image[]
     popularity: number
-  }, SimpleArtist>
+  } & SimpleArtist
 
   export namespace Browse {
     type NewReleases = Paging<Album>
@@ -279,11 +279,10 @@ export namespace SpotifyAPI {
     uri: string
     is_local: boolean
   }
-  export type Track = Merge<{
-    album: SimpleAlbum
+  export type Track = SimpleTrack & {
     external_ids: ExternalId
     popularity: string
-  }, SimpleTrack>
+  }
 }
 
 export type ActionMethodMap = {
