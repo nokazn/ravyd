@@ -4,13 +4,16 @@
     ripple
     tile
     :width="width"
-    :class="$style.ReleaseCard">
+    :class="$style.ReleaseCard"
+    @click="onClick">
     <div :class="$style.ReleaseCard__container">
       <release-art-work
         :src="src"
         :alt="alt"
         :size="width"
-        icon="mdi-play-circle" />
+        is-overlayed
+        :icon="releaseArtWorkIcon"
+        @on-media-button-clicked="onMediaButtonClicked" />
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link :to="releasePath">
@@ -38,12 +41,13 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseArtWork, { ReleaseArtWorkIcon } from '~/components/parts/avatar/ReleaseArtWork.vue';
 import { hasProp } from '~~/utils/hasProp';
 
 export type ReleaseCardInfo = {
   releaseName: string
   releaseId: string
+  releaseUri: string
   artists: {
     name: string
     id: string
@@ -57,13 +61,16 @@ export default Vue.extend({
     ReleaseArtWork,
   },
 
-  // @todo props の型定義
   props: {
     releaseName: {
       type: String,
       required: true,
     },
     releaseId: {
+      type: String,
+      required: true,
+    },
+    releaseUri: {
       type: String,
       required: true,
     },
@@ -89,7 +96,6 @@ export default Vue.extend({
       return `${this.releaseName} - ${this.artistsName}`;
     },
     releasePath(): string {
-      // @todo
       return `/releases/${this.releaseId}`;
     },
     artistsName(): string {
@@ -99,6 +105,35 @@ export default Vue.extend({
     },
     artistPath(): (id: string) => string {
       return (id: string) => `/artists/${id}`;
+    },
+
+    isPlaying(): boolean {
+      return this.$state().player.isPlaying;
+    },
+    isAlbumSet(): boolean {
+      return this.$getters()['player/isAlbumSet'](this.releaseId);
+    },
+    releaseArtWorkIcon(): ReleaseArtWorkIcon {
+      return this.isPlaying && this.isAlbumSet
+        ? 'mdi-pause-circle'
+        : 'mdi-play-circle';
+    },
+  },
+
+  methods: {
+    onClick() {
+      this.$router.push(this.releasePath);
+    },
+    onMediaButtonClicked() {
+      // 現在再生中のトラックの場合
+      if (this.isPlaying && this.isAlbumSet) {
+        this.$dispatch('player/pause');
+      } else {
+        const payload = this.isAlbumSet
+          ? undefined
+          : { contextUri: this.releaseUri };
+        this.$dispatch('player/play', payload);
+      }
     },
   },
 });

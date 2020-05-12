@@ -30,7 +30,7 @@
 
         <div :class="$style.ReleaseIdPage__buttons">
           <media-control-button
-            :is-playing="isPlaying && isAlbumPlaying"
+            :is-playing="isPlaying && isAlbumSet"
             @on-clicked="onMediaControlButtonClicked" />
 
           <favorite-button
@@ -97,7 +97,6 @@ export interface AsyncData {
     Copyrights,
   },
   validate({ params }: Context) {
-    console.log(params);
     return params.releaseId !== '';
   },
   async asyncData({ app, params }: Context): Promise<AsyncData | null> {
@@ -194,8 +193,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return this.$state().player.isPlaying;
   }
 
-  get isAlbumPlaying() {
-    return this.$getters()['player/isAlbumPlaying'](this.id);
+  get isAlbumSet() {
+    return this.$getters()['player/isAlbumSet'](this.id);
   }
 
   async onFavoriteButtonClicked(isFavorited: boolean) {
@@ -217,10 +216,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
 
   async onMediaControlButtonClicked(nextPlayingState: boolean) {
-    console.log(nextPlayingState, this.uri);
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
-      const payload = this.isAlbumPlaying
+      const payload = this.isAlbumSet
         ? undefined
         : { contextUri: this.uri };
       await this.$dispatch('player/play', payload);

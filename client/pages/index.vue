@@ -35,6 +35,7 @@ export default Vue.extend({
         .map((album) => ({
           releaseName: album.name,
           releaseId: album.id,
+          releaseUri: album.uri,
           artists: album.artists,
           src: album.images[0].url,
         }));

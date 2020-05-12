@@ -15,11 +15,15 @@
           absolute
           :opacity="0.7">
           <v-hover #default="{ hover: buttonHoverd }">
-            <v-icon
-              :size="playButtonSize(buttonHoverd)"
-              :class="$style.ReleaseArtWork__icon">
-              {{ icon }}
-            </v-icon>
+            <v-btn
+              icon
+              @click.stop="onClicked">
+              <v-icon
+                :size="playButtonSize(buttonHoverd)"
+                :class="$style.ReleaseArtWork__icon">
+                {{ icon }}
+              </v-icon>
+            </v-btn>
           </v-hover>
         </v-overlay>
       </v-img>
@@ -28,13 +32,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 export type ReleaseArtWorkInfo = {
   src: string
   alt: string
   icon?: string
   size?: number
+}
+
+export type ReleaseArtWorkIcon = 'mdi-play-circle' | 'mdi-pause-circle'
+
+export type Data = {
+  isMediaButtonPushed: boolean
 }
 
 export default Vue.extend({
@@ -48,7 +58,7 @@ export default Vue.extend({
       required: true,
     },
     icon: {
-      type: String,
+      type: String as PropType<ReleaseArtWorkIcon>,
       default: 'mdi-play-circle',
     },
     size: {
@@ -57,7 +67,7 @@ export default Vue.extend({
     },
     isOverlayed: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -72,6 +82,12 @@ export default Vue.extend({
           ? 120 * ratio
           : this.size * ratio;
       };
+    },
+  },
+
+  methods: {
+    onClicked() {
+      this.$emit('on-media-button-clicked');
     },
   },
 });
