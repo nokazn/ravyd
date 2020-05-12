@@ -177,10 +177,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       ? { context_uri }
       : { position_ms: state.position };
 
-    await this.$spotifyApi.$put('/me/player/play', params)
-      .catch((err: Error) => {
-        console.error({ err });
-      });
+    await this.$spotifyApi.$put('/me/player/play', params, {
+      params: {
+        device_id: state.deviceId,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
   },
 
   async pause({ commit }, payload = { isInitializing: false }) {

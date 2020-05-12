@@ -197,7 +197,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return this.$getters()['player/isAlbumSet'](this.id);
   }
 
-  async onFavoriteButtonClicked(isFavorited: boolean) {
+  onFavoriteButtonClicked(isFavorited: boolean) {
     this.isFavorited = isFavorited;
     const handler = () => (isFavorited
       ? this.$spotifyApi.$put('/me/albums', null, {
@@ -210,20 +210,20 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
           ids: this.id,
         },
       }));
-    await handler().catch((err: Error) => {
+    handler().catch((err: Error) => {
       console.error({ err });
     });
   }
 
-  async onMediaControlButtonClicked(nextPlayingState: boolean) {
+  onMediaControlButtonClicked(nextPlayingState: boolean) {
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
       const payload = this.isAlbumSet
         ? undefined
         : { contextUri: this.uri };
-      await this.$dispatch('player/play', payload);
+      this.$dispatch('player/play', payload);
     } else {
-      await this.$dispatch('player/pause');
+      this.$dispatch('player/pause');
     }
   }
 }
