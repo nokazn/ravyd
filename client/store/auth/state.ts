@@ -5,7 +5,7 @@ export type AuthState = {
   userData: SpotifyAPI.Auth.UserData | null | undefined;
 }
 
-const state: (() => AuthState) = () => ({
+const state = (): AuthState => ({
   accessToken: null,
   userData: undefined,
 });

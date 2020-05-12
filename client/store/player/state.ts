@@ -23,7 +23,7 @@ export type PlayerState = {
   volume: number
 }
 
-const state: (() => PlayerState) = () => ({
+const state = (): PlayerState => ({
   deviceId: null,
   activeDeviceList: [],
   artWorkSrc: null,

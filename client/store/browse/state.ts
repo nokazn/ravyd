@@ -8,7 +8,7 @@ export type RootState = {
   'browse/newReleases': BrowseState['newReleases']
 }
 
-const state: (() => BrowseState) = () => ({
+const state = (): BrowseState => ({
   newReleases: null,
 });
 
