@@ -11,7 +11,7 @@ export type PlayerActions = {
   getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   play: () => Promise<void>
-  pause: ({ isInitializing }: { isInitializing?: boolean }) => Promise<void>
+  pause: (payload?: { isInitializing: boolean }) => Promise<void>
   seek: (position: number) => Promise<void>
   next: () => Promise<void>
   previous: () => Promise<void>
@@ -178,11 +178,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async pause({ commit }, { isInitializing = false }) {
+  async pause({ commit }, payload = { isInitializing: false }) {
     commit('SET_IS_PLAYING', false);
     await this.$spotifyApi.$put('/me/player/pause')
       .catch((err: Error) => {
-        if (isInitializing) {
+        if (payload.isInitializing) {
           console.log('Not found another active device.');
         } else {
           console.error({ err });
