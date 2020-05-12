@@ -9,6 +9,14 @@
         :key="release.name"
         v-bind="release" />
     </release-card-container>
+
+    <h2>お気に入りのトラック</h2>
+    <release-card-container :class="$style.RootPage__releaseCardContainer">
+      <release-card
+        v-for="track in topTrackList"
+        :key="track.name"
+        v-bind="track" />
+    </release-card-container>
   </main>
 </template>
 
@@ -16,6 +24,12 @@
 import Vue from 'vue';
 import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/parts/card/ReleaseCard.vue';
+import { SpotifyAPI } from '~~/types';
+
+export type AsyncData = {
+  topArtistList: any,
+  topTrackList: ReleaseCardInfo[] | null
+}
 
 export default Vue.extend({
   components: {
@@ -27,20 +41,73 @@ export default Vue.extend({
     await Promise.all([
       app.$dispatch('browse/getNewReleases'),
     ]);
+    const data = await app.$spotifyApi.$get('/me/top/artists');
+    console.log(data);
+  },
+
+  async asyncData({ app }): Promise<AsyncData> {
+    const [topArtists, topTracks]: [
+      SpotifyAPI.Browse.TopArtists | null,
+      SpotifyAPI.Browse.TopTracks | null,
+    ] = await Promise.all([
+      app.$spotifyApi.$get('/me/top/artists')
+        .catch((err: Error) => {
+          console.error({ err });
+          return null;
+        }),
+      app.$spotifyApi.$get('/me/top/tracks')
+        .catch((err: Error) => {
+          console.error({ err });
+          return null;
+        }),
+    ]);
+
+    const topArtistList: {
+      name: string
+      id: string
+      src: string
+    }[] | null = topArtists != null
+      ? topArtists.items.map((artist) => ({
+        name: artist.name,
+        id: artist.id,
+        src: artist.images[0].url,
+      }))
+      : null;
+    const topTrackList: ReleaseCardInfo[] | null = topTracks != null
+      ? topTracks.items.map((track) => ({
+        type: track.type,
+        name: track.name,
+        id: track.id,
+        releaseId: track.album.id,
+        uri: track.uri,
+        artists: track.artists.map((artist) => ({
+          name: artist.name,
+          id: artist.id,
+        })),
+        src: track.album.images[0].url,
+      }))
+      : null;
+
+    return {
+      topArtistList,
+      topTrackList,
+    };
   },
 
   computed: {
     newReleaseList(): ReleaseCardInfo[] {
-      const releases = this.$state().browse.newReleases?.items
+      const newReleaseList: ReleaseCardInfo[] | undefined = this.$state().browse.newReleases?.items
         .map((album) => ({
-          releaseName: album.name,
+          type: album.type,
+          name: album.name,
+          id: album.id,
           releaseId: album.id,
-          releaseUri: album.uri,
+          uri: album.uri,
           artists: album.artists,
           src: album.images[0].url,
         }));
 
-      return releases ?? [];
+      return newReleaseList ?? [];
     },
   },
 });

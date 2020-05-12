@@ -105,11 +105,13 @@ export namespace SpotifyAPI {
 
   export namespace Browse {
     type NewReleases = Paging<Album>
+    type TopArtists = Paging<Artist>
+    type TopTracks = Paging<Track>
   }
 
   export type Context = {
     // @todo
-    type: 'artist' | 'playlist' | 'album' | string
+    type: 'artist' | 'playlist' | 'album' | 'track' | 'episode'| string
     href: string
     external_urls: ExternalUrl
     uri: string
@@ -275,7 +277,7 @@ export namespace SpotifyAPI {
     name: string
     preview_url: string
     track_number: number
-    type: string
+    type: 'track'
     uri: string
     is_local: boolean
   }

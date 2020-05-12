@@ -7,7 +7,7 @@ import { SpotifyAPI } from '~~/types';
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
   albumId: string | null
-  isTrackPlaying: (trackId: string) => boolean
+  isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
   recentlyPlayedTrackList: {
     artWorkSrc: string | null
@@ -28,7 +28,7 @@ export type PlayerGetters = {
 export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/albumId']: PlayerGetters['albumId']
-  ['player/isTrackPlaying']: PlayerGetters['isTrackPlaying']
+  ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
@@ -51,7 +51,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return state.albumUri?.replace(/^.+:(.+)$/, '$1') ?? null;
   },
 
-  isTrackPlaying(state) {
+  isTrackSet(state) {
     return (trackId) => state.trackId === trackId;
   },
 

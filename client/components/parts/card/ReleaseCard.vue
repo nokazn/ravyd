@@ -17,22 +17,25 @@
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link :to="releasePath">
-          {{ releaseName }}
+          {{ name }}
         </nuxt-link>
       </v-card-title>
 
       <v-card-subtitle :class="$style.ReleaseCard__subtitle">
         <template
-          v-for="({ name, id }, index) in artists">
+          v-for="({
+            name: artistName,
+            id: artistId
+          }, index) in artists">
           <nuxt-link
-            :key="id"
-            :to="artistPath(id)">
-            {{ name }}
+            :key="artistId"
+            :to="artistPath(artistId)">
+            {{ artistName }}
           </nuxt-link>
 
           <span
             v-if="index !== artists.length - 1"
-            :key="`${id}-comma`">, </span>
+            :key="`${artistId}-comma`">, </span>
         </template>
       </v-card-subtitle>
     </div>
@@ -45,9 +48,11 @@ import ReleaseArtWork, { ReleaseArtWorkIcon } from '~/components/parts/avatar/Re
 import { hasProp } from '~~/utils/hasProp';
 
 export type ReleaseCardInfo = {
-  releaseName: string
+  type: 'album' | 'track'
+  name: string //  track または album の name
+  id: string //  track または album の id
   releaseId: string
-  releaseUri: string
+  uri: string
   artists: {
     name: string
     id: string
@@ -62,7 +67,11 @@ export default Vue.extend({
   },
 
   props: {
-    releaseName: {
+    name: {
+      type: String,
+      required: true,
+    },
+    id: {
       type: String,
       required: true,
     },
@@ -70,7 +79,7 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    releaseUri: {
+    uri: {
       type: String,
       required: true,
     },
@@ -93,7 +102,7 @@ export default Vue.extend({
 
   computed: {
     alt(): string {
-      return `${this.releaseName} - ${this.artistsName}`;
+      return `${this.name} - ${this.artistsName}`;
     },
     releasePath(): string {
       return `/releases/${this.releaseId}`;
@@ -110,11 +119,12 @@ export default Vue.extend({
     isPlaying(): boolean {
       return this.$state().player.isPlaying;
     },
-    isAlbumSet(): boolean {
-      return this.$getters()['player/isAlbumSet'](this.releaseId);
+    isReleaseSet(): boolean {
+      return this.$getters()['player/isTrackSet'](this.id)
+        || this.$getters()['player/isAlbumSet'](this.releaseId);
     },
     releaseArtWorkIcon(): ReleaseArtWorkIcon {
-      return this.isPlaying && this.isAlbumSet
+      return this.isPlaying && this.isReleaseSet
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
@@ -125,14 +135,18 @@ export default Vue.extend({
       this.$router.push(this.releasePath);
     },
     onMediaButtonClicked() {
-      // 現在再生中のトラックの場合
-      if (this.isPlaying && this.isAlbumSet) {
+      // 現在再生中のトラック/アルバムの場合
+      if (this.isPlaying && this.isReleaseSet) {
         this.$dispatch('player/pause');
       } else {
-        const payload = this.isAlbumSet
+        // トラックとアルバムのカードで場合分け
+        const uri = this.uri.includes('track')
+          ? { uris: [this.uri] }
+          : { contextUri: this.uri };
+        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
+        this.$dispatch('player/play', this.isReleaseSet
           ? undefined
-          : { contextUri: this.releaseUri };
-        this.$dispatch('player/play', payload);
+          : uri);
       }
     },
   },

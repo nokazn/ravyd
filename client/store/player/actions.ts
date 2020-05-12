@@ -10,7 +10,13 @@ export type PlayerActions = {
   initPlayer: () => void
   getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
-  play: (payload?: { contextUri: string }) => Promise<void>
+  play: (payload?: {
+    contextUri: string
+    uris?: undefined
+  } | {
+    contextUri?: undefined
+    uris: string[]
+  }) => Promise<void>
   pause: (payload?: { isInitializing: boolean }) => Promise<void>
   seek: (position: number) => Promise<void>
   next: () => Promise<void>
@@ -155,14 +161,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_ACTIVE_DEVICE_LIST', devices);
   },
 
-  async getRecentlyPlayed({ commit, dispatch }, limit = 10) {
+  async getRecentlyPlayed({ commit }, limit = 10) {
     const recentlyPlayed = await this.$spotifyApi.$get('/me/player/recently-played', {
       params: {
         limit,
       },
-    }).catch(async (err: Error) => {
+    }).catch((err: Error) => {
       console.error({ err });
-      await dispatch('auth/refreshAccessToken', undefined, { root: true });
       return null;
     });
 
@@ -172,12 +177,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async play({ state, commit }, payload?) {
     commit('SET_IS_PLAYING', true);
     const context_uri = payload?.contextUri;
+    const uris = payload?.uris;
     // context_uri が指定された場合は新しいトラックを再生、そうでない場合は一時停止中のトラックを再生
-    const params = context_uri != null
-      ? { context_uri }
-      : { position_ms: state.position };
+    const bodyParams = context_uri == null && uris == null
+      ? { position_ms: state.position }
+      : {
+        context_uri,
+        uris,
+      };
 
-    await this.$spotifyApi.$put('/me/player/play', params, {
+    await this.$spotifyApi.$put('/me/player/play', bodyParams, {
       params: {
         device_id: state.deviceId,
       },
