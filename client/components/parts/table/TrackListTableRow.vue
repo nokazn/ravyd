@@ -6,21 +6,12 @@
           $style.TrackListTableRow__id,
           'text-center'
         ]">
-        <v-btn
-          v-if="isRowHovered"
-          outlined
-          small
-          icon>
-          <v-icon>
-            {{ mediaButtonIcon }}
-          </v-icon>
-        </v-btn>
-        <v-icon v-else-if="isPlayingTrack">
-          mdi-volume-high
-        </v-icon>
-        <span v-else>
-          {{ item.index }}
-        </span>
+        <track-list-table-media-icon
+          :is-hovered="isRowHovered"
+          :is-playing-track="isPlayingTrack"
+          :media-button-icon="mediaButtonIcon"
+          :index="item.index"
+          @on-clicked="onMediaButtonClicked" />
       </td>
 
       <td>
@@ -45,15 +36,22 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
+
 export type RowItem = {
   index: number
   like: boolean
   name: string
   id: string
-  uri: string
 }
 
+export type LikeIcon = 'mdi-heart' | 'mdi-heart-outline';
+
 export default Vue.extend({
+  components: {
+    TrackListTableMediaIcon,
+  },
+
   props: {
     item: {
       type: Object as PropType<RowItem>,
@@ -68,16 +66,36 @@ export default Vue.extend({
       required: true,
     },
     mediaButtonIcon: {
-      type: String as PropType<'mdi-play' | 'mdi-heart-outline'>,
+      type: String as PropType<MediaButtonIcon>,
+      required: true,
+    },
+    uri: {
+      type: String,
       required: true,
     },
   },
 
   computed: {
-    likeIcon(): (isLiked: boolean) => 'mdi-heart' | 'mdi-heart-outline' {
+    likeIcon(): (isLiked: boolean) => LikeIcon {
       return (isLiked: boolean) => (isLiked
         ? 'mdi-heart'
         : 'mdi-heart-outline');
+    },
+  },
+
+  methods: {
+    onMediaButtonClicked() {
+      if (this.isPlayingTrack) {
+        this.$dispatch('player/pause');
+      } else if (this.isTrackSet) {
+        this.$dispatch('player/play');
+      } else {
+        const offset = { position: this.item.index - 1 };
+        this.$spotifyApi.$put('/me/player/play', {
+          context_uri: this.uri,
+          offset,
+        });
+      }
     },
   },
 });

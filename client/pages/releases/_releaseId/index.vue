@@ -46,6 +46,7 @@
     <track-list-table
       :track-list="trackList"
       :is-track-favorited-list="isTrackFavoritedList"
+      :uri="uri"
       :class="$style.ReleaseIdPage__trackList" />
 
     <copyrights

@@ -11,7 +11,8 @@
         :item="item"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
-        :media-button-icon="mediaButtonIcon(item.id)" />
+        :media-button-icon="mediaButtonIcon(item.id)"
+        :uri="uri" />
     </template>
   </v-data-table>
 </template>
@@ -42,6 +43,10 @@ export default Vue.extend({
       type: Array as PropType<boolean[]>,
       required: true,
     },
+    uri: {
+      type: String,
+      required: true,
+    },
   },
 
   data(): Data {
@@ -66,7 +71,6 @@ export default Vue.extend({
       index: i + 1,
       id: track.id,
       name: track.name,
-      uri: track.uri,
       like: this.isTrackFavoritedList[i],
     }));
 
