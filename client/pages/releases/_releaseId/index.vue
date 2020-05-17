@@ -16,39 +16,40 @@
           :artist-list="artistList"
           :class="$style.ReleaseIdPage__artistsName" />
 
-        <div :class="$style.ReleaseIdPage__releaseDetail">
-          <release-date
-            :release-date="releaseDate"
-            :release-date-precision="releaseDatePrecision" />
+        <div :class="$style.ReleaseIdPage__releaseInfoFooter">
+          <div :class="$style.ReleaseIdPage__buttons">
+            <media-control-button
+              :is-playing="isPlaying && isAlbumSet"
+              @on-clicked="onMediaControlButtonClicked" />
 
-          <release-total-tracks
-            :total-tracks="totalTracks" />
+            <favorite-button
+              :is-favorited="isFavorited"
+              outlined
+              @on-clicked="onFavoriteButtonClicked" />
+          </div>
 
-          <release-duration
-            :duration-ms="durationMs" />
-        </div>
+          <div :class="$style.ReleaseIdPage__releaseDetail">
+            <release-date
+              :release-date="releaseDate"
+              :release-date-precision="releaseDatePrecision" />
 
-        <div :class="$style.ReleaseIdPage__buttons">
-          <media-control-button
-            :is-playing="isPlaying && isAlbumSet"
-            @on-clicked="onMediaControlButtonClicked" />
+            <release-total-tracks
+              :total-tracks="totalTracks" />
 
-          <favorite-button
-            :is-favorited="isFavorited"
-            outlined
-            @on-clicked="onFavoriteButtonClicked" />
+            <release-duration
+              :duration-ms="durationMs" />
+          </div>
         </div>
       </div>
     </div>
 
-    <div :class="$style.ReleaseIdPage__trackList">
-      <track-list-table
-        :track-list="trackList" />
+    <track-list-table
+      :track-list="trackList"
+      :class="$style.ReleaseIdPage__trackList" />
 
-      <copyrights
-        :copyright-list="copyrightList"
-        :class="$style.ReleaseIdPage__copyrights" />
-    </div>
+    <copyrights
+      :copyright-list="copyrightList"
+      :class="$style.ReleaseIdPage__copyrights" />
   </main>
 </template>
 
@@ -245,31 +246,36 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     flex-direction: column;
     justify-content: flex-end;
   }
+
   &__releaseType {
     font-size: 10px;
   }
+
   &__releaseName {
     font-size: 44px;
     margin-top: -4px;
   }
+
   &__artistsName {
-    margin-bottom: 4px;
-  }
-  &__releaseDetail {
-    margin-bottom: 8px;
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
+    margin-bottom: 12px;
   }
 
+  &__releaseInfoFooter {
+    display: flex;
+    align-items: flex-end;
+    & > *:not(:last-child) {
+      margin-right: 24px;
+    }
+  }
   &__buttons > *:not(:last-child) {
+    margin-right: 12px;
+  }
+  &__releaseDetail > *:not(:last-child) {
     margin-right: 12px;
   }
 
   &__trackList {
-    & > *:not(:last-child) {
-      margin-bottom: 28px;
-    }
+    margin-bottom: 20px;
   }
 }
 </style>
