@@ -16,7 +16,7 @@
 import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
-import UserMenu from '~/components/parts/menu/UserMenu.vue';
+import UserMenu from '~/components/containers/menu/UserMenu.vue';
 
 type Data = {
   searchWords: string

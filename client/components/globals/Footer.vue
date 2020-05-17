@@ -72,9 +72,10 @@ import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import MarqueeArtistName, { Artists } from '~/components/parts/text/MarqueeArtistName.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import SeekBar from '~/components/parts/player/SeekBar.vue';
-import MediaControllers from '~/components/parts/player/MediaControllers.vue';
-import VolumeSlider from '~/components/parts/player/VolumeSlider.vue';
+
+import SeekBar from '~/components/containers/player/SeekBar.vue';
+import MediaControllers from '~/components/containers/player/MediaControllers.vue';
+import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
 export default Vue.extend({
   components: {
