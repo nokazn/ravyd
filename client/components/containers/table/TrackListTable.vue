@@ -19,7 +19,8 @@
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :media-button-icon="mediaButtonIcon(item.id)"
-        :uri="uri" />
+        :uri="uri"
+        @on-favorite-button-clicked="onFavoriteButtonClicked" />
     </template>
   </v-data-table>
 </template>
@@ -83,13 +84,14 @@ export default Vue.extend({
       },
       {
         text: ' ',
-        value: 'popularity',
+        value: 'menu',
         width: 60,
         align: 'center' as const,
       },
     ];
 
     const items = this.trackList.map((track, i) => ({
+      index: i,
       id: track.id,
       trackNumber: track.track_number,
       isFavorited: this.isTrackFavoritedList[i],
@@ -115,6 +117,43 @@ export default Vue.extend({
       return (trackId: string) => (this.isPlayingTrack(trackId)
         ? 'mdi-pause'
         : 'mdi-play');
+    },
+  },
+
+  methods: {
+    async onFavoriteButtonClicked(row: RowItem) {
+      const nextIsFavorited = !row.isFavorited;
+      const modifyedItems = (
+        isFavorited: boolean,
+        index: number,
+      ) => this.items.map((item, i) => (i === index
+        ? {
+          ...item,
+          isFavorited,
+        }
+        : item));
+
+      // API との通信の結果を待たずに先に表示を変更させておく
+      this.items = modifyedItems(nextIsFavorited, row.index);
+      if (nextIsFavorited) {
+        await this.$dispatch('library/saveTracks', row.id);
+      } else {
+        await this.$dispatch('library/removeTracks', row.id);
+      }
+
+      const ids = `${row.id},${this.$state().player.trackId}`;
+      this.$spotifyApi.$get('/me/tracks/contains', { params: { ids } })
+        .then(([isFavorited, isPlayingTrackFavorited]: [boolean, boolean]) => {
+          // 実際の状態と異なれば戻す
+          if (isFavorited !== nextIsFavorited) {
+            this.items = modifyedItems(isFavorited, row.index);
+          }
+          // セットされているトラックが保存された場合は変更される
+          this.$commit('player/SET_IS_SAVED_TRACK', isPlayingTrackFavorited);
+        })
+        .catch((err: Error) => {
+          console.error({ err });
+        });
     },
   },
 });

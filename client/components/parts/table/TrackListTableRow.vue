@@ -18,7 +18,8 @@
 
       <td>
         <favorite-button
-          :is-favorited="item.isFavorited" />
+          :is-favorited="item.isFavorited"
+          @on-clicked="onFavoriteButtonClicked" />
       </td>
 
       <td :class="$style.TrackListTableRow__name">
@@ -49,6 +50,7 @@ import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/but
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 
 export type RowItem = {
+  index: number
   id: string
   trackNumber: number
   isFavorited: boolean
@@ -98,6 +100,9 @@ export default Vue.extend({
           offset,
         });
       }
+    },
+    onFavoriteButtonClicked() {
+      this.$emit('on-favorite-button-clicked', this.item);
     },
   },
 });
