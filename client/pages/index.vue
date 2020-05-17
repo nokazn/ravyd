@@ -1,29 +1,33 @@
 <template>
   <main :class="$style.RootPage">
-    <h2 :class="$style.RootPage__title">
-      今週の新譜
-    </h2>
-    <release-card-container :class="$style.RootPage__releaseCardContainer">
-      <release-card
-        v-for="release in newReleaseList"
-        :key="release.name"
-        v-bind="release" />
-    </release-card-container>
+    <section :class="$style.RootPage__section">
+      <h2 :class="$style.RootPage__title">
+        今週の新譜
+      </h2>
+      <release-card-container :class="$style.RootPage__releaseCardContainer">
+        <release-card
+          v-for="release in newReleaseList"
+          :key="release.name"
+          v-bind="release" />
+      </release-card-container>
+    </section>
 
-    <h2>お気に入りのトラック</h2>
-    <release-card-container :class="$style.RootPage__releaseCardContainer">
-      <release-card
-        v-for="track in topTrackList"
-        :key="track.name"
-        v-bind="track" />
-    </release-card-container>
+    <section :class="$style.RootPage__section">
+      <h2>お気に入りのトラック</h2>
+      <release-card-container :class="$style.RootPage__releaseCardContainer">
+        <release-card
+          v-for="track in topTrackList"
+          :key="track.name"
+          v-bind="track" />
+      </release-card-container>
+    </section>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
-import ReleaseCard, { ReleaseCardInfo } from '~/components/parts/card/ReleaseCard.vue';
+import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import { SpotifyAPI } from '~~/types';
 
 export type AsyncData = {
@@ -115,7 +119,10 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  margin: 16px 32px;
+  margin: 32px;
+  &__section:not(:last-child) {
+    margin-bottom: 32px;
+  }
   &__title {
     margin-bottom: 16px;
   }
