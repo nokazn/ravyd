@@ -271,8 +271,5 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
       margin-bottom: 28px;
     }
   }
-  &__copyrights {
-    padding-left: 16px;
-  }
 }
 </style>
