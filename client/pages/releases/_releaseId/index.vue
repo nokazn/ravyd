@@ -45,6 +45,7 @@
 
     <track-list-table
       :track-list="trackList"
+      :is-track-favorited-list="isTrackFavoritedList"
       :class="$style.ReleaseIdPage__trackList" />
 
     <copyrights
@@ -64,8 +65,9 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import TrackListTable from '~/components/parts/table/TrackListTable.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
+
+import TrackListTable from '~/components/containers/table/TrackListTable.vue';
 import { SpotifyAPI } from '~~/types';
 
 export interface AsyncData {
@@ -79,6 +81,7 @@ export interface AsyncData {
   releaseDatePrecision: string
   releaseArtWorkInfo: ReleaseArtWorkInfo
   trackList: SpotifyAPI.SimpleTrack[]
+  isTrackFavoritedList: boolean[]
   totalTracks: number
   durationMs: number
   copyrightList: SpotifyAPI.Copyright[]
@@ -142,16 +145,35 @@ export interface AsyncData {
       size: 180,
     };
 
-    const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
-
-    const [isFavorited]: [boolean] = await app.$spotifyApi.$get('/me/albums/contains', {
+    const getIsFaboritedTrackList: Promise<boolean[]> = app.$spotifyApi.$get('/me/tracks/contains', {
+      params: {
+        ids: trackList.map((track) => track.id).join(','),
+      },
+    }).catch((err) => {
+      console.error({ err });
+      return new Array(trackList.length).fill(false);
+    });
+    const getIsFavorited = app.$spotifyApi.$get('/me/albums/contains', {
       params: {
         ids: id,
       },
     }).catch((err) => {
       console.error({ err });
-      return false;
+      return [false];
     });
+    // @todo 50 トラック超えた時
+    const [
+      isTrackFavoritedList,
+      [isFavorited],
+    ]: [
+      boolean[],
+      [boolean]
+    ] = await Promise.all([
+      getIsFaboritedTrackList,
+      getIsFavorited,
+    ]);
+
+    const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
 
     return {
       albumType,
@@ -164,6 +186,7 @@ export interface AsyncData {
       releaseDatePrecision,
       releaseArtWorkInfo,
       trackList,
+      isTrackFavoritedList,
       totalTracks,
       durationMs,
       copyrightList,
@@ -185,6 +208,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     alt: '',
   }
   trackList: SpotifyAPI.SimpleTrack[] = []
+  isTrackFavoritedList: boolean[] = []
   totalTracks = 0
   durationMs = 0
   copyrightList = []
