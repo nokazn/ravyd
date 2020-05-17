@@ -89,17 +89,7 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      if (this.isPlayingTrack) {
-        this.$dispatch('player/pause');
-      } else if (this.isTrackSet) {
-        this.$dispatch('player/play');
-      } else {
-        const offset = { position: this.item.trackNumber - 1 };
-        this.$spotifyApi.$put('/me/player/play', {
-          context_uri: this.uri,
-          offset,
-        });
-      }
+      this.$emit('on-media-button-clicked', this.item);
     },
     onFavoriteButtonClicked() {
       this.$emit('on-favorite-button-clicked', this.item);

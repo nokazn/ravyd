@@ -20,6 +20,7 @@
         :is-playing-track="isPlayingTrack(item.id)"
         :media-button-icon="mediaButtonIcon(item.id)"
         :uri="uri"
+        @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked" />
     </template>
   </v-data-table>
@@ -121,6 +122,18 @@ export default Vue.extend({
   },
 
   methods: {
+    onMediaButtonClicked(row: RowItem) {
+      if (this.isPlayingTrack(row.id)) {
+        this.$dispatch('player/pause');
+      } else if (this.isTrackSet(row.id)) {
+        this.$dispatch('player/play');
+      } else {
+        this.$spotifyApi.$put('/me/player/play', {
+          context_uri: this.uri,
+          offset: { position: row.index },
+        });
+      }
+    },
     async onFavoriteButtonClicked(row: RowItem) {
       const nextIsFavorited = !row.isFavorited;
       const modifyedItems = (
