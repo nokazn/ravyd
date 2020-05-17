@@ -1,6 +1,8 @@
 <template>
   <v-hover #default="{ hover: isRowHovered }">
-    <tr :class="$style.TrackListTableRow">
+    <tr
+      :class="$style.TrackListTableRow"
+      :data-is-track-set="isTrackSet">
       <td
         :class="[
           $style.TrackListTableRow__id,
@@ -24,9 +26,7 @@
         </v-btn>
       </td>
 
-      <td
-        :class="$style.TrackListTableRow__name"
-        :data-is-track-set="isTrackSet">
+      <td :class="$style.TrackListTableRow__name">
         {{ item.name }}
       </td>
     </tr>
@@ -103,18 +103,20 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListTableRow {
+  &[data-is-track-set=true] {
+    background-color: lighten($g-data-table-background-color, 10%);
+    .TrackListTableRow__name {
+      color: map-get($cyan, 'accent-3')
+    }
+  }
   &__id {
     width: 60px;
-  }
-  &__name[data-is-track-set=true] {
-    color: #00E5FF;
   }
 }
 </style>
 
 <style lang="scss">
 tr {
-  cursor: pointer;
   td {
     padding: 0 12px;
   }
