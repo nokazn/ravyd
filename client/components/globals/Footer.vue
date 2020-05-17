@@ -126,7 +126,7 @@ export default Vue.extend({
       } else {
         await this.$dispatch('library/removeTracks', this.trackId);
       }
-      this.$dispatch('player/checkSavedTracks', this.trackId);
+      this.$dispatch('player/checkSavedTracks');
     },
     onSeekbarChanged(position: number) {
       this.$dispatch('player/seek', position);

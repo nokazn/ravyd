@@ -24,7 +24,7 @@ export type PlayerActions = {
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
   volume: (volume: number) => Promise<void>
-  checkSavedTracks: (trackIds: string) => Promise<void>
+  checkSavedTracks: (trackIds?: string) => Promise<void>
 };
 
 export type RootActions = {
@@ -264,10 +264,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_VOLUME', volume);
   },
 
-  async checkSavedTracks({ commit }, trackId) {
+  async checkSavedTracks({ state, commit }, trackId?) {
     const [isSavedTrack] = await this.$spotifyApi.$get('/me/tracks/contains', {
       params: {
-        ids: trackId,
+        ids: trackId ?? state.trackId,
       },
     }).catch((err: Error) => {
       console.error({ err });
