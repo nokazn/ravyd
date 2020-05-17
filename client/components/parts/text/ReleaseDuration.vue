@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { elapsedTime } from '~~/utils/elapsedTime';
+import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
 export default Vue.extend({
   props: {
@@ -29,7 +29,7 @@ export default Vue.extend({
 
   computed: {
     duration(): string {
-      return elapsedTime(this.durationMs);
+      return elapsedTimeInJapanese(this.durationMs);
     },
     textStyles(): { 'font-size': string } {
       return {

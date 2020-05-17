@@ -13,7 +13,7 @@
     mdi-volume-high
   </v-icon>
   <span v-else>
-    {{ index }}
+    {{ trackNumber }}
   </span>
 </template>
 
@@ -36,7 +36,7 @@ export default Vue.extend({
       type: String as PropType<MediaButtonIcon>,
       required: true,
     },
-    index: {
+    trackNumber: {
       type: Number,
       required: true,
     },

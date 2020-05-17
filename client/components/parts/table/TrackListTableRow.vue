@@ -12,7 +12,7 @@
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
           :media-button-icon="mediaButtonIcon"
-          :index="item.index"
+          :track-number="item.trackNumber"
           @on-clicked="onMediaButtonClicked" />
       </td>
 
@@ -29,6 +29,20 @@
       <td :class="$style.TrackListTableRow__name">
         {{ item.name }}
       </td>
+
+      <td>
+        {{ item.duration }}
+      </td>
+
+      <td>
+        <v-btn
+          icon
+          size="small">
+          <v-icon>
+            mdi-dots-horizontal
+          </v-icon>
+        </v-btn>
+      </td>
     </tr>
   </v-hover>
 </template>
@@ -39,10 +53,11 @@ import Vue, { PropType } from 'vue';
 import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
 
 export type RowItem = {
-  index: number
+  id: string
+  trackNumber: number
   like: boolean
   name: string
-  id: string
+  duration: string
 }
 
 export type LikeIcon = 'mdi-heart' | 'mdi-heart-outline';
@@ -90,7 +105,7 @@ export default Vue.extend({
       } else if (this.isTrackSet) {
         this.$dispatch('player/play');
       } else {
-        const offset = { position: this.item.index - 1 };
+        const offset = { position: this.item.trackNumber - 1 };
         this.$spotifyApi.$put('/me/player/play', {
           context_uri: this.uri,
           offset,

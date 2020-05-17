@@ -6,6 +6,14 @@
     disable-sort
     hide-default-footer
     @click:row="onClickRow">
+    <template #header.duration>
+      <v-icon
+        :size="16"
+        color="grey">
+        mdi-clock-outline
+      </v-icon>
+    </template>
+
     <template #item="{ item }">
       <track-list-table-row
         :item="item"
@@ -22,6 +30,7 @@ import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
 import TrackListTableRow, { RowItem } from '~/components/parts/table/TrackListTableRow.vue';
+import { elapsedTime } from '~~/utils/elapsedTime';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {
@@ -36,7 +45,7 @@ export default Vue.extend({
 
   props: {
     trackList: {
-      type: Array as PropType<SpotifyAPI.SimpleAlbum[]>,
+      type: Array as PropType<SpotifyAPI.SimpleTrack[]>,
       required: true,
     },
     isTrackFavoritedList: {
@@ -54,25 +63,41 @@ export default Vue.extend({
       {
         text: '#',
         value: 'index',
-        width: 40,
+        width: 60,
+        align: 'center' as const,
       },
       {
         text: ' ',
         value: 'like',
-        width: 24,
+        width: 60,
+        align: 'center' as const,
       },
       {
         text: 'タイトル',
         value: 'name',
       },
+      {
+        text: ' ',
+        value: 'duration',
+        width: 60,
+        align: 'center' as const,
+      },
+      {
+        text: ' ',
+        value: 'popularity',
+        width: 60,
+        align: 'center' as const,
+      },
     ];
 
     const items = this.trackList.map((track, i) => ({
-      index: i + 1,
       id: track.id,
-      name: track.name,
+      trackNumber: track.track_number,
       like: this.isTrackFavoritedList[i],
+      name: track.name,
+      duration: elapsedTime(track.duration_ms),
     }));
+    console.log({ item: this.trackList[0] });
 
     return {
       headers,
@@ -102,14 +127,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.Row {
-  &__id {
-    width: 52px;
-  }
-  &__name[data-is-track-set=true] {
-    color: #00E5FF;
-  }
-}
-</style>
