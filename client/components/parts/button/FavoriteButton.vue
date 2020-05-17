@@ -18,6 +18,8 @@ type ButtonProps = {
   outlined: boolean
 }
 
+export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
+
 export default Vue.extend({
   props: {
     isFavorited: {
@@ -35,7 +37,7 @@ export default Vue.extend({
   },
 
   computed: {
-    favoriteIcon(): string {
+    favoriteIcon(): FavoriteIcon {
       return this.isFavorited
         ? 'mdi-heart'
         : 'mdi-heart-outline';

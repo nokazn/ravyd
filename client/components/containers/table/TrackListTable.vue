@@ -4,8 +4,7 @@
     :items="items"
     disable-pagination
     disable-sort
-    hide-default-footer
-    @click:row="onClickRow">
+    hide-default-footer>
     <template #header.duration>
       <v-icon
         :size="16"
@@ -68,7 +67,7 @@ export default Vue.extend({
       },
       {
         text: ' ',
-        value: 'like',
+        value: 'isFavorited',
         width: 60,
         align: 'center' as const,
       },
@@ -93,11 +92,10 @@ export default Vue.extend({
     const items = this.trackList.map((track, i) => ({
       id: track.id,
       trackNumber: track.track_number,
-      like: this.isTrackFavoritedList[i],
+      isFavorited: this.isTrackFavoritedList[i],
       name: track.name,
       duration: elapsedTime(track.duration_ms),
     }));
-    console.log({ item: this.trackList[0] });
 
     return {
       headers,
@@ -117,12 +115,6 @@ export default Vue.extend({
       return (trackId: string) => (this.isPlayingTrack(trackId)
         ? 'mdi-pause'
         : 'mdi-play');
-    },
-  },
-
-  methods: {
-    onClickRow(item: RowItem) {
-      console.log('row', item);
     },
   },
 });

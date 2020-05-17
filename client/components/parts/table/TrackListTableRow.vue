@@ -17,13 +17,8 @@
       </td>
 
       <td>
-        <v-btn
-          icon
-          size="small">
-          <v-icon :size="18">
-            {{ likeIcon(item.like) }}
-          </v-icon>
-        </v-btn>
+        <favorite-button
+          :is-favorited="item.isFavorited" />
       </td>
 
       <td :class="$style.TrackListTableRow__name">
@@ -51,20 +46,20 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
+import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 
 export type RowItem = {
   id: string
   trackNumber: number
-  like: boolean
+  isFavorited: boolean
   name: string
   duration: string
 }
 
-export type LikeIcon = 'mdi-heart' | 'mdi-heart-outline';
-
 export default Vue.extend({
   components: {
     TrackListTableMediaIcon,
+    FavoriteButton,
   },
 
   props: {
@@ -87,14 +82,6 @@ export default Vue.extend({
     uri: {
       type: String,
       required: true,
-    },
-  },
-
-  computed: {
-    likeIcon(): (isLiked: boolean) => LikeIcon {
-      return (isLiked: boolean) => (isLiked
-        ? 'mdi-heart'
-        : 'mdi-heart-outline');
     },
   },
 
