@@ -38,6 +38,9 @@
 
             <release-duration
               :duration-ms="durationMs" />
+
+            <release-label
+              :label="label" />
           </div>
         </div>
       </div>
@@ -66,6 +69,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
+import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 
 import TrackListTable from '~/components/containers/table/TrackListTable.vue';
@@ -98,6 +102,7 @@ export interface AsyncData {
     ReleaseDate,
     ReleaseTotalTracks,
     ReleaseDuration,
+    ReleaseLabel,
     TrackListTable,
     Copyrights,
   },
@@ -296,7 +301,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     margin-right: 12px;
   }
   &__releaseDetail > *:not(:last-child) {
-    margin-right: 12px;
+    margin-right: 8px;
   }
 
   &__trackList {

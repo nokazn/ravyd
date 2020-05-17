@@ -1,12 +1,12 @@
 <template>
-  <span :class="$style.ReleaseTotalTracks">
+  <span :class="$style.ReleaseLabel">
     <v-icon
       :size="size"
       color="grey lighten-1">
-      mdi-music-box-multiple-outline
+      mdi-album
     </v-icon>
     <span :style="textStyles">
-      {{ totalTracks }}曲
+      {{ label }}
     </span>
   </span>
 </template>
@@ -16,8 +16,8 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    totalTracks: {
-      type: Number,
+    label: {
+      type: String,
       required: true,
     },
     size: {
@@ -27,9 +27,9 @@ export default Vue.extend({
   },
 
   computed: {
-    textStyles(): { fontSize: string } {
+    textStyles(): { 'font-size': string } {
       return {
-        fontSize: `${this.size * 0.8}px`,
+        'font-size': `${this.size * 0.8}px`,
       };
     },
   },
@@ -37,7 +37,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ReleaseTotalTracks {
+.ReleaseLabel {
   color: $g-subtitle-color;
 }
 </style>
