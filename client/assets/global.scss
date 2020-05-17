@@ -36,6 +36,10 @@ body {
   }
 }
 
+.v-btn--outlined {
+  border: 1.5px solid currentColor!important;
+}
+
 /**
  * スクロールバーを無効化
  */
