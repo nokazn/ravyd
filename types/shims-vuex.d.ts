@@ -9,10 +9,13 @@ import * as Library from '~/store/library/types';
 import * as Player from '~/store/player/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
+import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+
 declare module 'vuex/types/index' {
   interface Store<S> {
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance,
+    $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance,
   }
 }

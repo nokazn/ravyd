@@ -7,7 +7,10 @@ import {
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
+import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+
 declare module '@nuxt/types/app' {
+
   interface NuxtAppOptions {
     $state: () => RootState
     $getters: () => RootGetters
@@ -15,6 +18,7 @@ declare module '@nuxt/types/app' {
     $dispatch: SFCDispatch
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
+    $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
   }
 }

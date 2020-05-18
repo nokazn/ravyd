@@ -211,15 +211,15 @@ export namespace SpotifyAPI {
     width: number
   }
 
-  export type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<Merge<{
+  export type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
     added_at: string // timestamp
-  }, {
+  } & {
     [k in T]: T extends 'album'
       ? Album
       : T extends 'show'
       ? Show
       : Track
-  }>>
+  }>
 
   export type LinkedTrack = {
     external_urls: ExternalUrl

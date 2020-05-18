@@ -7,6 +7,8 @@ import {
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
+import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+
 declare module 'vue/types/vue' {
   interface Vue {
     $state: () => RootState
@@ -15,6 +17,7 @@ declare module 'vue/types/vue' {
     $dispatch: SFCDispatch
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
+    $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
   }
 }
