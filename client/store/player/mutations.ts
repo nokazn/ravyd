@@ -17,7 +17,7 @@ export type PlayerMutations = {
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
   SET_DISALLOW_LIST: string[]
-  SET_VOLUME: number
+  SET_VOLUME: { volumePercent: number }
 };
 
 export type RootMutations = {
@@ -98,8 +98,8 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.disallowList = disallowList;
   },
 
-  SET_VOLUME(state, volume) {
-    state.volume = volume;
+  SET_VOLUME(state, { volumePercent }) {
+    state.volume = volumePercent;
   },
 };
 

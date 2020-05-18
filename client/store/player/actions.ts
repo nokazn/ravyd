@@ -28,7 +28,7 @@ export type PlayerActions = {
   previous: () => Promise<void>
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
-  volume: (volumePercent: number) => Promise<void>
+  volume: ({ volumePercent }: { volumePercent: number }) => Promise<void>
   checkSavedTracks: (trackIds?: string) => Promise<void>
 };
 
@@ -140,7 +140,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             console.error({ err });
             return 1;
           });
-        commit('SET_VOLUME', volume * 100);
+        commit('SET_VOLUME', { volumePercent: volume * 100 });
 
         console.log('Ready with this device 🎉');
       });
@@ -238,14 +238,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async volume({ state, commit }, volumePercent) {
+  async volume({ state, commit }, { volumePercent }) {
     const { deviceId } = state;
     await this.$spotify.player.volume({
       deviceId,
       volumePercent,
     });
 
-    commit('SET_VOLUME', volumePercent);
+    commit('SET_VOLUME', { volumePercent });
   },
 
   async checkSavedTracks({ state, commit }, trackId?) {

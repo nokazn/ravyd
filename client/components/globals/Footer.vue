@@ -130,8 +130,8 @@ export default Vue.extend({
     onSeekbarChanged(position: number) {
       this.$dispatch('player/seek', position);
     },
-    onVolumuChanged(volume: number) {
-      this.$dispatch('player/volume', volume);
+    onVolumuChanged(volumePercent: number) {
+      this.$dispatch('player/volume', { volumePercent });
     },
   },
 });

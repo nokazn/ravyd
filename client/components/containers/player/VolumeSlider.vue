@@ -47,8 +47,8 @@ const instance = Vue.extend({
       get(): RootState['player']['volume'] {
         return this.$state().player.volume;
       },
-      set(value: number) {
-        this.$commit('player/SET_VOLUME', value);
+      set(volumePercent: number) {
+        this.$commit('player/SET_VOLUME', { volumePercent });
       },
     },
     volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {
