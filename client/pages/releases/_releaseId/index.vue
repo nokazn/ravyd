@@ -253,8 +253,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
 
   &__releaseName {
-    font-size: 44px;
-    margin-top: -4px;
+    font-size: 48px;
+    margin: 4px 0;
+    line-height: 1.1em;
   }
 
   &__artistsName {
