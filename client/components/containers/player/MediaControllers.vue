@@ -87,9 +87,9 @@ export default Vue.extend({
         case 0:
           return 'mdi-repeat-off';
         case 1:
-          return 'mdi-repeat-once';
-        default:
           return 'mdi-repeat';
+        default:
+          return 'mdi-repeat-once';
       }
     },
     isRepeatDisallowed(): boolean {

@@ -100,7 +100,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           duration,
           paused: isPaused,
           shuffle: isShuffled,
-          repeat_mode: repeatMode,
+          // repeat_mode: repeatMode,
           track_window: {
             current_track: currentTrack,
             next_tracks: nextTracks,
@@ -116,7 +116,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION', position);
         commit('SET_DURATION', duration);
         commit('SET_IS_SHUFFLED', isShuffled);
-        commit('SET_REPEAT_MODE', repeatMode);
+        // 表示がちらつくので、player/repeat 内で commit する
+        // commit('SET_REPEAT_MODE', repeatMode);
         commit('SET_CURRENT_TRACK', currentTrack);
         commit('SET_NEXT_TRACK_LIST', nextTracks);
         commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
@@ -166,17 +167,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   async getActiveDeviceList({ commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
+
     commit('SET_ACTIVE_DEVICE_LIST', devices ?? []);
   },
 
   async getRecentlyPlayed({ commit }, limit = 20) {
     const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit });
+
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
   async play({ state, commit }, payload?) {
-    commit('SET_IS_PLAYING', true);
-
     const { deviceId } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -197,16 +198,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         trackUriList,
         offset,
       });
+
+    commit('SET_IS_PLAYING', true);
   },
 
   async pause({ state, commit }, payload = { isInitializing: false }) {
-    commit('SET_IS_PLAYING', false);
-
     const { deviceId } = state;
     const isInitializing = payload?.isInitializing;
     await this.$spotify.player.pause(isInitializing
       ? { isInitializing }
       : { deviceId });
+
+    commit('SET_IS_PLAYING', false);
   },
 
   async seek({ state }, positionMs) {
@@ -227,21 +230,26 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     await this.$spotify.player.previous({ deviceId });
   },
 
-  async shuffle({ state }) {
+  async shuffle({ state, commit }) {
     const { deviceId, isShuffled } = state;
+    const nextIsShuffled = !isShuffled;
     await this.$spotify.player.shuffle({
       deviceId,
-      state: !isShuffled,
+      state: nextIsShuffled,
     });
+
+    commit('SET_IS_SHUFFLED', nextIsShuffled);
   },
 
-  async repeat({ state }) {
+  async repeat({ state, commit }) {
     const { deviceId } = state;
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
     await this.$spotify.player.repeat({
       deviceId,
       state: REPEAT_STATE_LIST[nextRepeatMode],
     });
+
+    commit('SET_REPEAT_MODE', nextRepeatMode);
   },
 
   async volume({ state, commit }, { volumePercent }) {

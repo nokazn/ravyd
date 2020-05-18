@@ -2,6 +2,6 @@ import { SpotifyAPI } from '~~/types';
 
 export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'off',
-  'track',
   'context',
+  'track',
 ];
