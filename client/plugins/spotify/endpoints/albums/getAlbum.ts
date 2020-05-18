@@ -6,7 +6,7 @@ export const getAlbum = (context: Context) => {
 
   return ({ albumId }: {
     albumId: string
-  }): Promise<SpotifyAPI.Album | null> => app.$spotifyApi.$get(`/me/albums/${albumId}`)
+  }): Promise<SpotifyAPI.Album | null> => app.$spotifyApi.$get(`/albums/${albumId}`)
     .catch((err: Error) => {
       console.error({ err });
       return null;

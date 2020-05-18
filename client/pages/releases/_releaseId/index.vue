@@ -110,11 +110,7 @@ export interface AsyncData {
     return params.releaseId !== '';
   },
   async asyncData({ app, params }: Context): Promise<AsyncData | null> {
-    const release: SpotifyAPI.Album | null = await app.$spotifyApi.$get(`/albums/${params.releaseId}`)
-      .catch((err: Error) => {
-        console.error(err);
-        return null;
-      });
+    const release = await app.$spotify.albums.getAlbum({ albumId: params.releaseId });
     if (release == null) return null;
 
     const {
@@ -151,30 +147,14 @@ export interface AsyncData {
       size: 180,
     };
 
-    const getIsFaboritedTrackList: Promise<boolean[]> = app.$spotifyApi.$get('/me/tracks/contains', {
-      params: {
-        ids: trackList.map((track) => track.id).join(','),
-      },
-    }).catch((err) => {
-      console.error({ err });
-      return new Array(trackList.length).fill(false);
-    });
-    const getIsFavorited = app.$spotifyApi.$get('/me/albums/contains', {
-      params: {
-        ids: id,
-      },
-    }).catch((err) => {
-      console.error({ err });
-      return [false];
-    });
     // @todo 50 トラック超えた時
-    const [
-      isTrackFavoritedList,
-      [isFavorited],
-    ]: [
-      boolean[],
-      [boolean]
-    ] = await Promise.all([
+    const getIsFaboritedTrackList = app.$spotify.library.checkUserSavedTracks({
+      trackIdList: trackList.map((track) => track.id),
+    });
+    const getIsFavorited = app.$spotify.library.checkUserSavedAlbums({
+      albumIdList: [id],
+    });
+    const [isTrackFavoritedList, [isFavorited]] = await Promise.all([
       getIsFaboritedTrackList,
       getIsFavorited,
     ]);
@@ -228,22 +208,14 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return this.$getters()['player/isAlbumSet'](this.id);
   }
 
-  onFavoriteButtonClicked(isFavorited: boolean) {
-    this.isFavorited = isFavorited;
-    const handler = () => (isFavorited
-      ? this.$spotifyApi.$put('/me/albums', null, {
-        params: {
-          ids: this.id,
-        },
-      })
-      : this.$spotifyApi.$delete('/me/albums', {
-        params: {
-          ids: this.id,
-        },
-      }));
-    handler().catch((err: Error) => {
-      console.error({ err });
-    });
+  onFavoriteButtonClicked(nextIsFavorited: boolean) {
+    this.isFavorited = nextIsFavorited;
+    const albumIdList = [this.id];
+    if (nextIsFavorited) {
+      this.$spotify.library.saveAlbums({ albumIdList });
+    } else {
+      this.$spotify.library.removeUserSavedAlbums({ albumIdList });
+    }
   }
 
   onMediaControlButtonClicked(nextPlayingState: boolean) {

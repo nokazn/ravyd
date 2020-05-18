@@ -11,7 +11,7 @@ export const saveTracks = (context: Context) => {
     }
 
     const ids = trackIdList.join(',');
-    return app.$spotifyApi.$put('/me/albums', null, {
+    return app.$spotifyApi.$put('/me/tracks', null, {
       params: {
         ids,
       },

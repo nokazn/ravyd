@@ -15,7 +15,7 @@ export const getAlbums = (context: Context) => {
     }
 
     const ids = albumIdList.join(',');
-    return app.$spotifyApi.$get('/me/albums', {
+    return app.$spotifyApi.$get('/albums', {
       params: {
         ids,
         market,

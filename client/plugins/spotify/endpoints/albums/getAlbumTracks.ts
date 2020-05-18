@@ -19,7 +19,7 @@ export const getAlbumTracks = (context: Context) => {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
 
-    return app.$spotifyApi.$get(`/me/albums/${albumId}`, {
+    return app.$spotifyApi.$get(`/albums/${albumId}`, {
       params: {
         limit,
         offset,

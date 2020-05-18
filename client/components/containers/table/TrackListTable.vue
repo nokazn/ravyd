@@ -136,37 +136,27 @@ export default Vue.extend({
     },
     async onFavoriteButtonClicked(row: RowItem) {
       const nextIsFavorited = !row.isFavorited;
-      const modifyedItems = (
-        isFavorited: boolean,
-        index: number,
-      ) => this.items.map((item, i) => (i === index
-        ? {
-          ...item,
-          isFavorited,
-        }
-        : item));
+      const modifyedItems = (isFavorited: boolean, index: number) => this.items
+        .map((item, i) => (i === index
+          ? { ...item, isFavorited }
+          : item));
 
       // API との通信の結果を待たずに先に表示を変更させておく
       this.items = modifyedItems(nextIsFavorited, row.index);
+      const trackIdList = [row.id];
       if (nextIsFavorited) {
-        await this.$dispatch('library/saveTracks', row.id);
+        await this.$spotify.library.saveTracks({ trackIdList });
       } else {
-        await this.$dispatch('library/removeTracks', row.id);
+        await this.$spotify.library.removeUserSavedTracks({ trackIdList });
       }
 
-      const ids = `${row.id},${this.$state().player.trackId}`;
-      this.$spotifyApi.$get('/me/tracks/contains', { params: { ids } })
-        .then(([isFavorited, isPlayingTrackFavorited]: [boolean, boolean]) => {
-          // 実際の状態と異なれば戻す
-          if (isFavorited !== nextIsFavorited) {
-            this.items = modifyedItems(isFavorited, row.index);
-          }
-          // セットされているトラックが保存された場合は変更される
-          this.$commit('player/SET_IS_SAVED_TRACK', isPlayingTrackFavorited);
-        })
-        .catch((err: Error) => {
-          console.error({ err });
-        });
+      const [isFavorited] = await this.$spotify.library.checkUserSavedTracks({
+        trackIdList: [row.id],
+      });
+      // 実際の状態と異なれば戻す
+      if (isFavorited !== nextIsFavorited) this.items = modifyedItems(isFavorited, row.index);
+      // 保存したトラックがプレイヤーにセットされている場合、合わせて変更
+      if (this.isTrackSet(row.id)) this.$commit('player/SET_IS_SAVED_TRACK', isFavorited);
     },
   },
 });
