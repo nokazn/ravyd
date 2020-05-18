@@ -5,8 +5,8 @@ import { LibraryGetters } from './getters';
 import { LibraryMutations } from './mutations';
 
 export type LibraryActions = {
-  saveTracks: (trackIds: string | string[]) => Promise<void>
-  removeTracks: (trackIds: string | string[]) => Promise<void>
+  saveTracks: (trackIdList: string[]) => Promise<void>
+  removeTracks: (trackIdList: string[]) => Promise<void>
 };
 
 export type RootActions = {
@@ -15,32 +15,25 @@ export type RootActions = {
 };
 
 const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMutations> = {
-  async saveTracks(_, trackIds) {
-    const ids = Array.isArray(trackIds)
-      ? trackIds.join(',')
-      : trackIds;
-    await this.$spotifyApi.$put('/me/tracks', null, {
-      params: {
-        ids,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
+  async saveTracks({ dispatch, rootState }, trackIdList) {
+    await this.$spotify.library.saveTracks({ trackIdList });
+
+    const isSetTrackFavoriteStateChanged = rootState.player.trackId != null
+      && trackIdList.includes(rootState.player.trackId);
+    if (isSetTrackFavoriteStateChanged) {
+      dispatch('player/checkSavedTracks', undefined, { root: true });
+    }
   },
 
-  async removeTracks(_, trackIds) {
-    const ids = Array.isArray(trackIds)
-      ? trackIds.join(',')
-      : trackIds;
-    await this.$spotifyApi.$delete('/me/tracks', {
-      params: {
-        ids,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
-  },
+  async removeTracks({ dispatch, rootState }, trackIdList) {
+    await this.$spotify.library.removeUserSavedTracks({ trackIdList });
 
+    const isSetTrackFavoriteStateChanged = rootState.player.trackId != null
+      && trackIdList.includes(rootState.player.trackId);
+    if (isSetTrackFavoriteStateChanged) {
+      dispatch('player/checkSavedTracks', undefined, { root: true });
+    }
+  },
 };
 
 export default actions;

@@ -143,11 +143,10 @@ export default Vue.extend({
 
       // API との通信の結果を待たずに先に表示を変更させておく
       this.items = modifyedItems(nextIsFavorited, row.index);
-      const trackIdList = [row.id];
       if (nextIsFavorited) {
-        await this.$spotify.library.saveTracks({ trackIdList });
+        await this.$dispatch('library/saveTracks', [row.id]);
       } else {
-        await this.$spotify.library.removeUserSavedTracks({ trackIdList });
+        await this.$dispatch('library/removeTracks', [row.id]);
       }
 
       const [isFavorited] = await this.$spotify.library.checkUserSavedTracks({
@@ -155,8 +154,6 @@ export default Vue.extend({
       });
       // 実際の状態と異なれば戻す
       if (isFavorited !== nextIsFavorited) this.items = modifyedItems(isFavorited, row.index);
-      // 保存したトラックがプレイヤーにセットされている場合、合わせて変更
-      if (this.isTrackSet(row.id)) this.$commit('player/SET_IS_SAVED_TRACK', isFavorited);
     },
   },
 });
