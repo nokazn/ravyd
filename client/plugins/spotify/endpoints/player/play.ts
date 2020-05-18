@@ -8,37 +8,25 @@ export const play = (context: Context) => {
     contextUri,
     trackUriList,
     offset,
+    positionMs,
   }: {
-    deviceId?: string
+    deviceId: string | null
     contextUri?: string
     trackUriList?: string[]
     offset?: {
       uri: string // position ではなく uri で指定する
     }
     positionMs?: number
-  }): Promise<void> => {
-    const device_id = deviceId ?? app.$state().player.deviceId;
-    const uris = trackUriList?.join(',');
-    // uri が指定されなかったか、指定した uri がせっとされているトラックと同じ場合は一時停止中のトラックを再生
-    const isRestartingPlayer = (contextUri == null && trackUriList == null)
-      || app.$state().player.trackUri === offset?.uri;
-    const bodyParams = isRestartingPlayer
-      ? {
-        position_ms: app.$state().player.position,
-        offset,
-      }
-      : {
-        context_uri: contextUri,
-        uris,
-        offset,
-      };
-
-    return app.$spotifyApi.$put('/me/player/play', bodyParams, {
-      params: {
-        device_id,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
-  };
+  }): Promise<void> => app.$spotifyApi.$put('/me/player/play', {
+    context_uri: contextUri,
+    uris: trackUriList,
+    offset,
+    position_ms: positionMs,
+  }, {
+    params: {
+      device_id: deviceId,
+    },
+  }).catch((err: Error) => {
+    console.error({ err });
+  });
 };

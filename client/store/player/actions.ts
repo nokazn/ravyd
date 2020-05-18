@@ -3,7 +3,6 @@ import { Actions } from 'vuex';
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
-import { SpotifyAPI } from '~~/types';
 import { REPEAT_STATE_LIST } from '~/variables';
 
 export type PlayerActions = {
@@ -12,18 +11,24 @@ export type PlayerActions = {
   getActiveDeviceList: () => Promise<void>
   play: (payload?: {
     contextUri: string
-    uris?: undefined
+    trackUriList?: undefined
+    offset?: {
+      uri: string
+    }
   } | {
     contextUri?: undefined
-    uris: string[]
+    trackUriList: string[]
+    offset?: {
+      uri: string
+    }
   }) => Promise<void>
   pause: (payload?: { isInitializing: boolean }) => Promise<void>
-  seek: (position: number) => Promise<void>
+  seek: (positionMs: number) => Promise<void>
   next: () => Promise<void>
   previous: () => Promise<void>
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
-  volume: (volume: number) => Promise<void>
+  volume: (volumePercent: number) => Promise<void>
   checkSavedTracks: (trackIds?: string) => Promise<void>
 };
 
@@ -112,6 +117,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_DISALLOW_LIST', disallowList);
 
         const trackId = currentTrack.id;
+        // @todo trackId 変わったときだけにする
         if (trackId != null) dispatch('checkSavedTracks', trackId);
 
         // @todo
@@ -152,116 +158,93 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async getActiveDeviceList({ commit }) {
-    const { devices }: { devices: SpotifyAPI.Device[] } = await this.$spotifyApi.$get('/me/player/devices')
-      .catch((err: Error) => {
-        console.error(err);
-        return null;
-      });
-
-    commit('SET_ACTIVE_DEVICE_LIST', devices);
+    const { devices } = await this.$spotify.player.getActiveDeviceList();
+    commit('SET_ACTIVE_DEVICE_LIST', devices ?? []);
   },
 
-  async getRecentlyPlayed({ commit }, limit = 10) {
-    const recentlyPlayed = await this.$spotifyApi.$get('/me/player/recently-played', {
-      params: {
-        limit,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      return null;
-    });
-
+  async getRecentlyPlayed({ commit }, limit = 20) {
+    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit });
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
   async play({ state, commit }, payload?) {
     commit('SET_IS_PLAYING', true);
-    const context_uri = payload?.contextUri;
-    const uris = payload?.uris;
-    // context_uri が指定された場合は新しいトラックを再生、そうでない場合は一時停止中のトラックを再生
-    const bodyParams = context_uri == null && uris == null
-      ? { position_ms: state.position }
+
+    const { deviceId } = state;
+    const contextUri = payload?.contextUri;
+    const trackUriList = payload?.trackUriList;
+    const offset = payload?.offset;
+    // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止中のトラックを再生
+    const isRestartingCurrentTrack = (contextUri == null && trackUriList == null)
+      || state.trackUri === offset?.uri;
+
+    await this.$spotify.player.play(isRestartingCurrentTrack
+      ? {
+        deviceId,
+        positionMs: state.position,
+        offset,
+      }
       : {
-        context_uri,
-        uris,
-      };
-
-    await this.$spotifyApi.$put('/me/player/play', bodyParams, {
-      params: {
-        device_id: state.deviceId,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
+        deviceId,
+        contextUri,
+        trackUriList,
+        offset,
+      });
   },
 
-  async pause({ commit }, payload = { isInitializing: false }) {
+  async pause({ state, commit }, payload = { isInitializing: false }) {
     commit('SET_IS_PLAYING', false);
-    await this.$spotifyApi.$put('/me/player/pause')
-      .catch((err: Error) => {
-        if (payload.isInitializing) {
-          console.log('Not found another active device.');
-        } else {
-          console.error({ err });
-        }
-      });
+
+    const { deviceId } = state;
+    const isInitializing = payload?.isInitializing;
+    await this.$spotify.player.pause(isInitializing
+      ? { isInitializing }
+      : { deviceId });
   },
 
-  async seek({ state }, position) {
-    // query parameters で渡す必要がある
-    await this.$spotifyApi.$put('/me/player/seek', null, {
-      params: {
-        position_ms: position,
-        device_id: state.deviceId,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
+  async seek({ state }, positionMs) {
+    const { deviceId } = state;
+    await this.$spotify.player.seek({
+      deviceId,
+      positionMs,
     });
   },
 
-  async next() {
-    await this.$spotifyApi.$post('/me/player/next')
-      .catch((err: Error) => {
-        console.error(err);
-      });
+  async next({ state }) {
+    const { deviceId } = state;
+    await this.$spotify.player.next({ deviceId });
   },
 
-  async previous() {
-    await this.$spotifyApi.$post('/me/player/previous')
-      .catch((err: Error) => {
-        console.error(err);
-      });
+  async previous({ state }) {
+    const { deviceId } = state;
+    await this.$spotify.player.previous({ deviceId });
   },
 
   async shuffle({ state }) {
-    await this.$spotifyApi.$put('/me/player/shuffle', null, {
-      params: {
-        state: !state.isShuffled,
-      },
-    }).catch((err: Error) => {
-      console.error(err);
+    const { deviceId, isShuffled } = state;
+    await this.$spotify.player.shuffle({
+      deviceId,
+      state: !isShuffled,
     });
   },
 
   async repeat({ state }) {
+    const { deviceId } = state;
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
-    await this.$spotifyApi.$put('/me/player/repeat', null, {
-      params: {
-        state: REPEAT_STATE_LIST[nextRepeatMode],
-      },
-    }).catch((err: Error) => {
-      console.error(err);
+    await this.$spotify.player.repeat({
+      deviceId,
+      state: REPEAT_STATE_LIST[nextRepeatMode],
     });
   },
 
-  async volume({ commit }, volume) {
-    await this.$spotifyApi.$put('/me/player/volume', null, {
-      params: {
-        volume_percent: volume,
-      },
+  async volume({ state, commit }, volumePercent) {
+    const { deviceId } = state;
+    await this.$spotify.player.volume({
+      deviceId,
+      volumePercent,
     });
 
-    commit('SET_VOLUME', volume);
+    commit('SET_VOLUME', volumePercent);
   },
 
   async checkSavedTracks({ state, commit }, trackId?) {

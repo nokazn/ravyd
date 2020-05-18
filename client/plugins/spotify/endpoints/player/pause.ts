@@ -7,21 +7,20 @@ export const pause = (context: Context) => {
     deviceId,
     isInitializing = false,
   }: {
-    deviceId?: string
-    isInitializing?: boolean
-  }): Promise<void> => {
-    const device_id = deviceId ?? app.$state().player.deviceId;
-
-    return app.$spotifyApi.$put('/me/player/pause', null, {
-      params: {
-        device_id,
-      },
-    }).catch((err: Error) => {
-      if (isInitializing) {
-        console.log('Not found another active device.');
-      } else {
-        console.error({ err });
-      }
-    });
-  };
+    deviceId: string | null
+    isInitializing?: false
+  } | {
+    deviceId?: undefined
+    isInitializing: true
+  }): Promise<void> => app.$spotifyApi.$put('/me/player/pause', null, {
+    params: {
+      device_id: deviceId,
+    },
+  }).catch((err: Error) => {
+    if (isInitializing) {
+      console.log('Not found another active device.');
+    } else {
+      console.error({ err });
+    }
+  });
 };

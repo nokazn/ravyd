@@ -94,6 +94,7 @@ export default Vue.extend({
     const items = this.trackList.map((track, i) => ({
       index: i,
       id: track.id,
+      uri: track.uri,
       trackNumber: track.track_number,
       isFavorited: this.isTrackFavoritedList[i],
       name: track.name,
@@ -128,9 +129,11 @@ export default Vue.extend({
       } else if (this.isTrackSet(row.id)) {
         this.$dispatch('player/play');
       } else {
-        this.$spotifyApi.$put('/me/player/play', {
-          context_uri: this.uri,
-          offset: { position: row.index },
+        this.$dispatch('player/play', {
+          contextUri: this.uri,
+          offset: {
+            uri: row.uri,
+          },
         });
       }
     },

@@ -221,10 +221,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   onMediaControlButtonClicked(nextPlayingState: boolean) {
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
-      const payload = this.isAlbumSet
+      this.$dispatch('player/play', this.isAlbumSet
         ? undefined
-        : { contextUri: this.uri };
-      this.$dispatch('player/play', payload);
+        : { contextUri: this.uri });
     } else {
       this.$dispatch('player/pause');
     }

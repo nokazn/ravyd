@@ -9,18 +9,14 @@ export const repeat = (context: Context) => {
     deviceId,
     state,
   }: {
-    deviceId?: string
+    deviceId: string | null
     state: SpotifyAPI.RepeatState
-  }): Promise<void> => {
-    const device_id = deviceId ?? app.$state().player.deviceId;
-
-    return app.$spotifyApi.$put('/me/player/repeat', null, {
-      params: {
-        device_id,
-        state,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-    });
-  };
+  }): Promise<void> => app.$spotifyApi.$put('/me/player/repeat', null, {
+    params: {
+      device_id: deviceId,
+      state,
+    },
+  }).catch((err: Error) => {
+    console.error({ err });
+  });
 };

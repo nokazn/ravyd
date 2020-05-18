@@ -1,12 +1,12 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
-export const getNewReleases = (context: Context) => {
+export const getActiveDeviceList = (context: Context) => {
   const { app } = context;
 
-  return (): Promise<SpotifyAPI.Device[] | null> => app.$spotifyApi.$get('/me/player/devices')
+  return (): Promise<{ devices: SpotifyAPI.Device[] | undefined }> => app.$spotifyApi.$get('/me/player/devices')
     .catch((err: Error) => {
       console.error({ err });
-      return null;
+      return {};
     });
 };

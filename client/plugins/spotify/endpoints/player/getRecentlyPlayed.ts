@@ -1,21 +1,7 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
-type Payload = {
-  limit?: number // 1 ~ 50 まで指定できる
-  after?: undefined
-  before: undefined
-} | {
-  limit?: number // 1 ~ 50 まで指定できる
-  after: number
-  before?: undefined
-} | {
-  limit?: number // 1 ~ 50 まで指定できる
-  after?: undefined
-  before: number
-}
-
-export const getNewReleases = (context: Context) => {
+export const getRecentlyPlayed = (context: Context) => {
   const { app } = context;
 
   /**
@@ -25,7 +11,11 @@ export const getNewReleases = (context: Context) => {
     limit = 20,
     after,
     before,
-  }: Payload): Promise<SpotifyAPI.Player.RecentlyPlayed | null> => {
+  }: {
+    limit?: number // 1 ~ 50 まで指定できる
+    after?: number
+    before?: number
+  }): Promise<SpotifyAPI.Player.RecentlyPlayed | null> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }

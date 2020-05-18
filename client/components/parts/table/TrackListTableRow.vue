@@ -52,6 +52,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 export type RowItem = {
   index: number
   id: string
+  uri: string
   trackNumber: number
   isFavorited: boolean
   name: string
