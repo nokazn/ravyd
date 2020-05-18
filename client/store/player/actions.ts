@@ -50,7 +50,12 @@ export type RootActions = {
 let playbackPlayer: Spotify.SpotifyPlayer;
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
-  initPlayer({ commit, dispatch, rootState }) {
+  initPlayer({
+    state,
+    commit,
+    dispatch,
+    rootState,
+  }) {
     const token = rootState.auth.accessToken;
     if (token == null) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
@@ -89,7 +94,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
 
       // Playback status updates
-      player.addListener('player_state_changed', (state) => {
+      player.addListener('player_state_changed', (playerState) => {
         const {
           position,
           duration,
@@ -102,7 +107,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             previous_tracks: previousTracks,
           },
           disallows,
-        } = state;
+        } = playerState;
+        const lastTrackId = state.trackId;
         const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
         const disallowList = disallowKeys.filter((key) => disallows[key]);
 
@@ -117,11 +123,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_DISALLOW_LIST', disallowList);
 
         const trackId = currentTrack.id;
-        // @todo trackId 変わったときだけにする
-        if (trackId != null) dispatch('checkSavedTracks', trackId);
+        // trackId 変わったときだけチェック
+        if (trackId != null && trackId !== lastTrackId) dispatch('checkSavedTracks', trackId);
 
         // @todo
-        console.log(state);
+        console.log(playerState);
       });
 
       // Ready
