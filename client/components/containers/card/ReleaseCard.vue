@@ -120,8 +120,9 @@ export default Vue.extend({
       return this.$state().player.isPlaying;
     },
     isReleaseSet(): boolean {
-      return this.$getters()['player/isTrackSet'](this.id)
-        || this.$getters()['player/isAlbumSet'](this.releaseId);
+      // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
+      return (this.uri.includes('track') && this.$getters()['player/isTrackSet'](this.id))
+        || (this.uri.includes('album') && this.$getters()['player/isAlbumSet'](this.id));
     },
     releaseArtWorkIcon(): ReleaseArtWorkIcon {
       return this.isPlaying && this.isReleaseSet
@@ -141,7 +142,7 @@ export default Vue.extend({
       } else {
         // トラックとアルバムのカードで場合分け
         const uri = this.uri.includes('track')
-          ? { uris: [this.uri] }
+          ? { trackUriList: [this.uri] }
           : { contextUri: this.uri };
         // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
         this.$dispatch('player/play', this.isReleaseSet
