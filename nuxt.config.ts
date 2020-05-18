@@ -47,6 +47,9 @@ const config: Configuration = {
       src: '~/plugins/axios',
     },
     {
+      src: '~/plugins/spotify',
+    },
+    {
       src: '~/plugins/vuetify',
     },
     {

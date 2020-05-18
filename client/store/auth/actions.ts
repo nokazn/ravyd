@@ -33,13 +33,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async getUserData({ state, commit }): Promise<void> {
     if (state.accessToken == null) return;
 
-    // @todo
-    this.$spotifyApi.setToken(state.accessToken, 'Bearer');
-    const userData: SpotifyAPI.Auth.UserData | null = await this.$spotifyApi.$get('/me')
-      .catch((err: Error) => {
-        console.error({ err });
-        return null;
-      });
+    const userData = await this.$spotify.user.getCurrentUserProfile();
 
     commit('SET_USER_DATA', userData);
   },
