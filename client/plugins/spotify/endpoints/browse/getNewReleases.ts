@@ -23,10 +23,9 @@ export const getNewReleases = (context: Context) => {
         limit,
         offset,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-        return null;
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+      return null;
+    });
   };
 };
