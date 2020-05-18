@@ -8,8 +8,9 @@ export const getAlbums = (context: Context) => {
     albumIdList: string[] // 最大 20
     market?: SpotifyAPI.Market
   }): Promise<SpotifyAPI.Album[] | null> => {
+    const { length } = albumIdList;
     const maxLength = 20;
-    if (albumIdList.length > maxLength) {
+    if (length > maxLength) {
       throw new Error(`albumIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
     }
 
