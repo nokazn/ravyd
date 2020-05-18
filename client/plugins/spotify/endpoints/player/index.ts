@@ -10,6 +10,7 @@ import { repeat } from './repeat';
 import { seek } from './seek';
 import { shuffle } from './shuffle';
 import { volume } from './volume';
+import { transferPlayback } from './transferPlayback';
 
 export const player = (context: Context) => ({
   getActiveDeviceList: getActiveDeviceList(context),
@@ -22,4 +23,5 @@ export const player = (context: Context) => ({
   seek: seek(context),
   shuffle: shuffle(context),
   volume: volume(context),
+  transferPlayback: transferPlayback(context),
 });

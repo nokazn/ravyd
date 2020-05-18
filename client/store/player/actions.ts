@@ -129,8 +129,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_DEVICE_ID', device_id);
         // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
         await dispatch('pause', { isInitializing: true });
-        await this.$spotifyApi.$put('/me/player/', {
-          device_ids: [device_id],
+        await this.$spotify.player.transferPlayback({
+          deviceIdList: [device_id],
+          play: false,
         });
 
         // volme は 0 から 1
