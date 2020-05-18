@@ -28,7 +28,6 @@
 import Vue from 'vue';
 import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
-import { SpotifyAPI } from '~~/types';
 
 export type AsyncData = {
   topArtistList: any,
@@ -45,25 +44,12 @@ export default Vue.extend({
     await Promise.all([
       app.$dispatch('browse/getNewReleases'),
     ]);
-    const data = await app.$spotifyApi.$get('/me/top/artists');
-    console.log(data);
   },
 
   async asyncData({ app }): Promise<AsyncData> {
-    const [topArtists, topTracks]: [
-      SpotifyAPI.Browse.TopArtists | null,
-      SpotifyAPI.Browse.TopTracks | null,
-    ] = await Promise.all([
-      app.$spotifyApi.$get('/me/top/artists')
-        .catch((err: Error) => {
-          console.error({ err });
-          return null;
-        }),
-      app.$spotifyApi.$get('/me/top/tracks')
-        .catch((err: Error) => {
-          console.error({ err });
-          return null;
-        }),
+    const [topArtists, topTracks] = await Promise.all([
+      app.$spotify.top.getTopArtists({}),
+      app.$spotify.top.getTopTracks({}),
     ]);
 
     const topArtistList: {

@@ -21,7 +21,7 @@ export const getTopArtists = (context: Context) => {
       params: {
         limit,
         offset,
-        timeRange,
+        time_range: timeRange,
       },
     })
       .catch((err: Error) => {
