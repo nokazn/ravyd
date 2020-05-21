@@ -263,12 +263,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async checkSavedTracks({ state, commit }, trackId?) {
-    const [isSavedTrack] = await this.$spotifyApi.$get('/me/tracks/contains', {
-      params: {
-        ids: trackId ?? state.trackId,
-      },
+    if (state.trackId == null) return;
+
+    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
+      trackIdList: [trackId ?? state.trackId],
     }).catch((err: Error) => {
       console.error({ err });
+      return [false];
     });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
