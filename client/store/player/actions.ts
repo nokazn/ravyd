@@ -94,7 +94,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
 
       // Playback status updates
-      player.addListener('player_state_changed', (playerState) => {
+      player.addListener('player_state_changed', ((playerState) => {
+        // playerState は Nullable
+        if (playerState == null) return;
+
+        // @todo
+        console.log(playerState);
         const {
           position,
           duration,
@@ -126,10 +131,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         const trackId = currentTrack.id;
         // trackId 変わったときだけチェック
         if (trackId != null && trackId !== lastTrackId) dispatch('checkSavedTracks', trackId);
-
-        // @todo
-        console.log(playerState);
-      });
+      }));
 
       // Ready
       player.addListener('ready', async ({ device_id }) => {
