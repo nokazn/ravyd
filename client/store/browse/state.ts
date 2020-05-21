@@ -1,15 +1,7 @@
-import { SpotifyAPI } from '~~/types';
+export type BrowseState = {}
 
-export type BrowseState = {
-  newReleases: SpotifyAPI.Browse.NewReleases | null
-}
+export type RootState = {}
 
-export type RootState = {
-  'browse/newReleases': BrowseState['newReleases']
-}
-
-const state = (): BrowseState => ({
-  newReleases: null,
-});
+const state = (): BrowseState => ({});
 
 export default state;

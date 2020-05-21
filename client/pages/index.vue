@@ -26,12 +26,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
+import { parseTrack } from '~/scripts/parser/parseTrack';
+import { parseArtist } from '~/scripts/parser/parseArtist';
+import { parseAlbum } from '~/scripts/parser/parseAlbum';
 
 export type AsyncData = {
   topArtistList: any,
-  topTrackList: ReleaseCardInfo[] | null
+  topTrackList: ReleaseCardInfo[] | undefined
+  newReleaseList: ReleaseCardInfo[] | undefined
 }
 
 export default Vue.extend({
@@ -40,65 +45,29 @@ export default Vue.extend({
     ReleaseCard,
   },
 
-  async fetch({ app }) {
-    await Promise.all([
-      app.$dispatch('browse/getNewReleases'),
-    ]);
-  },
-
   async asyncData({ app }): Promise<AsyncData> {
-    const [topArtists, topTracks] = await Promise.all([
+    const [topArtists, topTracks, newReleases] = await Promise.all([
       app.$spotify.top.getTopArtists({}),
       app.$spotify.top.getTopTracks({}),
+      app.$spotify.browse.getNewReleases({
+        country: 'JP',
+        limit: 20,
+      }),
     ]);
 
     const topArtistList: {
       name: string
       id: string
       src: string
-    }[] | null = topArtists != null
-      ? topArtists.items.map((artist) => ({
-        name: artist.name,
-        id: artist.id,
-        src: artist.images[0].url,
-      }))
-      : null;
-    const topTrackList: ReleaseCardInfo[] | null = topTracks != null
-      ? topTracks.items.map((track) => ({
-        type: track.type,
-        name: track.name,
-        id: track.id,
-        releaseId: track.album.id,
-        uri: track.uri,
-        artists: track.artists.map((artist) => ({
-          name: artist.name,
-          id: artist.id,
-        })),
-        src: track.album.images[0].url,
-      }))
-      : null;
+    }[] | undefined = topArtists?.items.map(parseArtist);
+    const topTrackList: ReleaseCardInfo[] | undefined = topTracks?.items.map(parseTrack);
+    const newReleaseList: ReleaseCardInfo[] | undefined = newReleases?.albums.items.map(parseAlbum);
 
     return {
       topArtistList,
       topTrackList,
+      newReleaseList,
     };
-  },
-
-  computed: {
-    newReleaseList(): ReleaseCardInfo[] {
-      const newReleaseList: ReleaseCardInfo[] | undefined = this.$state().browse.newReleases?.items
-        .map((album) => ({
-          type: album.type,
-          name: album.name,
-          id: album.id,
-          releaseId: album.id,
-          uri: album.uri,
-          artists: album.artists,
-          src: album.images[0].url,
-        }));
-
-      return newReleaseList ?? [];
-    },
   },
 });
 </script>

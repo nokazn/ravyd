@@ -12,7 +12,7 @@ export const getNewReleases = (context: Context) => {
     country?: SpotifyAPI.Market
     limit?: number // 1 ~ 50 まで指定できる
     offset?: number
-  }): Promise<SpotifyAPI.Browse.NewReleases | null> => {
+  }): Promise<{ albums: SpotifyAPI.Browse.NewReleases } | null> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
