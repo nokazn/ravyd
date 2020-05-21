@@ -4,7 +4,7 @@
       <h2 :class="$style.RootPage__title">
         今週の新譜
       </h2>
-      <release-card-container :class="$style.RootPage__releaseCardContainer">
+      <release-card-container>
         <release-card
           v-for="release in newReleaseList"
           :key="release.name"
@@ -13,8 +13,10 @@
     </section>
 
     <section :class="$style.RootPage__section">
-      <h2>お気に入りのトラック</h2>
-      <release-card-container :class="$style.RootPage__releaseCardContainer">
+      <h2 :class="$style.RootPage__title">
+        お気に入りのトラック
+      </h2>
+      <release-card-container>
         <release-card
           v-for="track in topTrackList"
           :key="track.name"
@@ -74,16 +76,15 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  margin: 32px;
+  padding: 16px 0;
   &__section:not(:last-child) {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
   &__title {
-    margin-bottom: 16px;
-  }
-  // .RootPage の margin を打ち消す
-  &__releaseCardContainer {
-    margin: 12px -32px;
+    margin: {
+      left: 32px;
+      bottom: 8px;
+    }
   }
 }
 </style>

@@ -4,7 +4,7 @@
     <NavigationDrawer v-if="isLoggedin" />
 
     <v-content>
-      <nuxt />
+      <nuxt :class="[$style.Content, 'g-scroll-wrapper-y']" />
     </v-content>
 
     <Footer v-if="isLoggedin" />
@@ -38,3 +38,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.Content {
+  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
+}
+</style>
