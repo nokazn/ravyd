@@ -19,7 +19,7 @@
               icon
               @click.stop="onClicked">
               <v-icon
-                :size="playButtonSize(buttonHoverd)"
+                :size="mediaButtonSize(buttonHoverd)"
                 :class="$style.ReleaseArtWork__icon">
                 {{ icon }}
               </v-icon>
@@ -41,7 +41,7 @@ export type ReleaseArtWorkInfo = {
   size?: number
 }
 
-export type ReleaseArtWorkIcon = 'mdi-play-circle' | 'mdi-pause-circle'
+export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
 export type Data = {
   isMediaButtonPushed: boolean
@@ -58,7 +58,7 @@ export default Vue.extend({
       required: true,
     },
     icon: {
-      type: String as PropType<ReleaseArtWorkIcon>,
+      type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
     size: {
@@ -72,7 +72,7 @@ export default Vue.extend({
   },
 
   computed: {
-    playButtonSize(): (hover: boolean) => number {
+    mediaButtonSize(): (hover: boolean) => number {
       return (hover: boolean) => {
         const ratio = hover
           ? 0.375

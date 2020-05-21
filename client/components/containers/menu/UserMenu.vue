@@ -12,7 +12,8 @@
         v-on="on">
         <div class="user-menu__button">
           <user-avatar
-            :src="userAvatarSrc" />
+            :src="userAvatarSrc"
+            alt="my-account-avatar" />
 
           <span>
             {{ userDisplayName }}

@@ -12,7 +12,7 @@
         :alt="alt"
         :size="width"
         is-overlayed
-        :icon="releaseArtWorkIcon"
+        :icon="mediaIcon"
         @on-media-button-clicked="onMediaButtonClicked" />
 
       <v-card-title :class="$style.ReleaseCard__title">
@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import ReleaseArtWork, { ReleaseArtWorkIcon } from '~/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseArtWork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtWork.vue';
 import { hasProp } from '~~/utils/hasProp';
 
 export type ReleaseCardInfo = {
@@ -102,7 +102,7 @@ export default Vue.extend({
 
   computed: {
     alt(): string {
-      return `${this.name} - ${this.artistsName}`;
+      return `${this.name} by ${this.artistsName}`;
     },
     releasePath(): string {
       return `/releases/${this.releaseId}`;
@@ -124,7 +124,8 @@ export default Vue.extend({
       return (this.uri.includes('track') && this.$getters()['player/isTrackSet'](this.id))
         || (this.uri.includes('album') && this.$getters()['player/isAlbumSet'](this.id));
     },
-    releaseArtWorkIcon(): ReleaseArtWorkIcon {
+
+    mediaIcon(): MediaIcon {
       return this.isPlaying && this.isReleaseSet
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
@@ -161,7 +162,8 @@ export default Vue.extend({
     flex-direction: column;
   }
   &__title {
-    font-size: 0.78rem;
+    font-size: 0.9rem;
+    font-weight: bold;
     padding: 12px 8px;
     line-height: 1rem;
   }
@@ -169,7 +171,7 @@ export default Vue.extend({
     font-size: 0.7rem;
     padding: 8px;
     line-height: 1rem;
-    margin-top: -8px!important;
+    margin-top: -4px!important;
   }
 }
 </style>

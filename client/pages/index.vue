@@ -7,7 +7,7 @@
       <release-card-container>
         <release-card
           v-for="release in newReleaseList"
-          :key="release.name"
+          :key="release.id"
           v-bind="release" />
       </release-card-container>
     </section>
@@ -19,8 +19,20 @@
       <release-card-container>
         <release-card
           v-for="track in topTrackList"
-          :key="track.name"
+          :key="track.id"
           v-bind="track" />
+      </release-card-container>
+    </section>
+
+    <section :class="$style.RootPage__section">
+      <h2 :class="$style.RootPage__title">
+        お気に入りのアーティスト
+      </h2>
+      <release-card-container>
+        <artist-card
+          v-for="artist in topArtistList"
+          :key="artist.id"
+          v-bind="artist" />
       </release-card-container>
     </section>
   </main>
@@ -31,12 +43,13 @@ import Vue from 'vue';
 
 import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
+import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
 import { parseTrack } from '~/scripts/parser/parseTrack';
 import { parseArtist } from '~/scripts/parser/parseArtist';
 import { parseAlbum } from '~/scripts/parser/parseAlbum';
 
 export type AsyncData = {
-  topArtistList: any,
+  topArtistList: ArtistCardInfo[] | undefined,
   topTrackList: ReleaseCardInfo[] | undefined
   newReleaseList: ReleaseCardInfo[] | undefined
 }
@@ -45,6 +58,7 @@ export default Vue.extend({
   components: {
     ReleaseCardContainer,
     ReleaseCard,
+    ArtistCard,
   },
 
   async asyncData({ app }): Promise<AsyncData> {
@@ -57,11 +71,7 @@ export default Vue.extend({
       }),
     ]);
 
-    const topArtistList: {
-      name: string
-      id: string
-      src: string
-    }[] | undefined = topArtists?.items.map(parseArtist);
+    const topArtistList: ArtistCardInfo[] | undefined = topArtists?.items.map(parseArtist);
     const topTrackList: ReleaseCardInfo[] | undefined = topTracks?.items.map(parseTrack);
     const newReleaseList: ReleaseCardInfo[] | undefined = newReleases?.albums.items.map(parseAlbum);
 

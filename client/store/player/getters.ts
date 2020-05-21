@@ -9,6 +9,7 @@ export type PlayerGetters = {
   albumId: string | null
   isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
+  isArtistSet: (artistId: string) => boolean
   recentlyPlayedTrackList: {
     artWorkSrc: string | null
     trackName: string | null
@@ -30,6 +31,7 @@ export type RootGetters = {
   ['player/albumId']: PlayerGetters['albumId']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
+  ['player/isArtistSet']: PlayerGetters['isArtistSet']
   ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
@@ -57,6 +59,10 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isAlbumSet(_state, getters) {
     return (albumId) => getters.albumId === albumId;
+  },
+
+  isArtistSet(state) {
+    return (artistId) => state.artistList?.some((artist) => artist.id === artistId) ?? false;
   },
 
   recentlyPlayedTrackList(state) {
