@@ -1,10 +1,11 @@
 <template>
   <v-navigation-drawer
     app
-    color="#080808"
     permanent
+    :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
     :mobile-break-point="768"
-    expand-on-hover>
+    expand-on-hover
+    :class="$style.NavigationDrawer">
     <v-list nav>
       <v-list-item
         v-for="item in navigationDrawerItemList"
@@ -29,8 +30,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { NAVIGATION_DRAWER_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
+  NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
   navigationDrawerItemList: {
     title: string
     to: string
@@ -41,6 +44,7 @@ type Data = {
 export default Vue.extend({
   data(): Data {
     return {
+      NAVIGATION_DRAWER_BACKGROUND_COLOR,
       navigationDrawerItemList: [
         {
           title: 'ホーム',
@@ -57,3 +61,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.NavigationDrawer {
+  z-index: z-index-of(navigation-drawer)
+}
+</style>

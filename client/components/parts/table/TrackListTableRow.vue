@@ -102,7 +102,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackListTableRow {
   &[data-is-track-set=true] {
-    background-color: lighten($g-data-table-background-color, 10%);
+    background-color: lighten($g-data-table-background-color, 15%);
     .TrackListTableRow__name {
       color: map-get($cyan, 'accent-3')
     }
