@@ -202,9 +202,9 @@ export namespace SpotifyAPI {
   }
 
   export type Image = {
-    height: number
+    height?: number | null
     url: string
-    width: number
+    width?: number | null
   }
 
   export type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
