@@ -78,7 +78,7 @@ export default Vue.extend({});
       content: "";
     }
     & > *:not(:last-child) {
-      margin-right: 16px;
+      margin-right: 24px;
     }
   }
 

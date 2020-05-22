@@ -49,7 +49,7 @@ import { parseArtist } from '~/scripts/parser/parseArtist';
 import { parseAlbum } from '~/scripts/parser/parseAlbum';
 
 export type AsyncData = {
-  topArtistList: ArtistCardInfo[] | undefined,
+  topArtistList: ArtistCardInfo[] | undefined
   topTrackList: ReleaseCardInfo[] | undefined
   newReleaseList: ReleaseCardInfo[] | undefined
 }
