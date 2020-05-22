@@ -29,7 +29,8 @@
           }, index) in artists">
           <nuxt-link
             :key="artistId"
-            :to="artistPath(artistId)">
+            :to="artistPath(artistId)"
+            @click.native.stop>
             {{ artistName }}
           </nuxt-link>
 
