@@ -9,6 +9,7 @@
       :max-width="size"
       :aspect-ratio="1">
       <avatar-overlay
+        v-if="isOverlayed && hover"
         :hover="hover"
         :size="size"
         :icon="icon"
