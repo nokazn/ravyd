@@ -4,7 +4,9 @@ import { SpotifyAPI } from '~~/types';
 export const getUserProfile = (context: Context) => {
   const { app } = context;
 
-  return (userId: string): Promise<SpotifyAPI.Auth.UserData | null> => app.$spotifyApi.$get(`/users/${userId}`)
+  return ({ userId }: {
+    userId: string
+  }): Promise<SpotifyAPI.Auth.UserData | null> => app.$spotifyApi.$get(`/users/${userId}`)
     .catch((err: Error) => {
       console.error({ err });
       return null;
