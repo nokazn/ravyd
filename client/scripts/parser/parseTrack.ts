@@ -1,3 +1,4 @@
+import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export type TrackInfo = {
@@ -13,7 +14,7 @@ export type TrackInfo = {
   src: SpotifyAPI.Image['url'],
 }
 
-export const parseTrack = (track: SpotifyAPI.Track): TrackInfo => ({
+export const parseTrack = (imageMinSize?: number) => (track: SpotifyAPI.Track): TrackInfo => ({
   type: track.type,
   name: track.name,
   id: track.id,
@@ -23,5 +24,5 @@ export const parseTrack = (track: SpotifyAPI.Track): TrackInfo => ({
     name: artist.name,
     id: artist.id,
   })),
-  src: track.album.images[0].url,
+  src: getImageSrc(track.album.images, imageMinSize),
 });

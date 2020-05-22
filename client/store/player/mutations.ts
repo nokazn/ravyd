@@ -47,7 +47,7 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
-    state.artWorkSrc = currentTrack.album.images[0].url;
+    state.albumArtWorkList = currentTrack.album.images;
     state.trackName = currentTrack.name;
     state.trackId = currentTrack.id;
     state.trackUri = currentTrack.uri;

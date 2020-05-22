@@ -3,11 +3,11 @@ import type { SpotifyAPI } from '~~/types';
 export type PlayerState = {
   deviceId: string | null
   activeDeviceList: SpotifyAPI.Device[]
-  artWorkSrc: string | null
   trackName: string | null
   trackId: string | null
   trackUri: string | null
   albumUri: string | null
+  albumArtWorkList: SpotifyAPI.Image[] | null
   artistList: {
     name: string
     id: string
@@ -28,11 +28,11 @@ export type PlayerState = {
 export type RootState = {
   'player/deviceId': PlayerState['deviceId']
   'player/activeDeviceList': PlayerState['activeDeviceList']
-  'player/artWorkSrc': PlayerState['artWorkSrc']
   'player/trackName': PlayerState['trackName']
   'player/trackId': PlayerState['trackId']
   'player/trackUri': PlayerState['trackUri']
   'player/albumUri': PlayerState['albumUri']
+  'player/albumArtWorkList': PlayerState['albumArtWorkList']
   'player/artistList': PlayerState['artistList']
   'player/nextTrackList': PlayerState['nextTrackList']
   'player/previousTrackList': PlayerState['previousTrackList']
@@ -50,7 +50,7 @@ export type RootState = {
 const state = (): PlayerState => ({
   deviceId: null,
   activeDeviceList: [],
-  artWorkSrc: null,
+  albumArtWorkList: null,
   trackName: null,
   trackId: null,
   trackUri: null,

@@ -71,8 +71,8 @@ import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
-
 import TrackListTable from '~/components/containers/table/TrackListTable.vue';
+import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export interface AsyncData {
@@ -144,7 +144,7 @@ export interface AsyncData {
     }));
 
     const releaseArtWorkInfo: ReleaseArtWorkInfo = {
-      src: images[0].url,
+      src: getImageSrc(images, 240),
       alt: `the artwork of ${name} by ${artistList.map((artist) => artist.name).join(', ')}`,
       size: 240,
     };

@@ -8,10 +8,10 @@
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
         <release-art-work
-          v-if="artWorkSrc"
-          :src="artWorkSrc"
+          v-if="hasAlbumArtwork"
+          :src="albumArtWorkSrc(64)"
           alt="current-track-art-work"
-          :size="80"
+          :size="64"
           :class="$style.Footer__artWork" />
 
         <div :class="$style.Footer__trackInfo">
@@ -73,11 +73,9 @@ import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import MarqueeArtistName, { Artists } from '~/components/parts/text/MarqueeArtistName.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllers from '~/components/containers/player/MediaControllers.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
 export default Vue.extend({
@@ -98,8 +96,15 @@ export default Vue.extend({
   },
 
   computed: {
-    artWorkSrc(): RootState['player']['artWorkSrc'] {
-      return this.$state().player.artWorkSrc;
+    // @todo any[] で推論されてしまう
+    hasAlbumArtwork(): boolean {
+      const { albumArtWorkList } = this.$state().player;
+      return albumArtWorkList != null
+        ? albumArtWorkList.length > 0
+        : false;
+    },
+    albumArtWorkSrc(): (size: number) => string | null {
+      return (size: number) => this.$getters()['player/albumArtworkSrc'](size);
     },
     trackName(): RootState['player']['trackName'] {
       return this.$state().player.trackName;
@@ -159,6 +164,7 @@ export default Vue.extend({
   &__left {
     display: flex;
     height: 100%;
+    margin-left: 4%;
     & > *:not(:last-child) {
       margin-right: 4px;
     }

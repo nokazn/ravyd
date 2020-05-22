@@ -2,11 +2,13 @@ import { Getters } from 'vuex';
 
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST } from '~/variables';
+import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
   albumId: string | null
+  albumArtworkSrc: (minSize?: number) => string | null
   isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
   isArtistSet: (artistId: string) => boolean
@@ -29,6 +31,7 @@ export type PlayerGetters = {
 export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/albumId']: PlayerGetters['albumId']
+  ['player/albumArtworkSrc']: PlayerGetters['albumArtworkSrc']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
   ['player/isArtistSet']: PlayerGetters['isArtistSet']
@@ -51,6 +54,12 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   albumId(state) {
     // 最後の ":" 以降を取り出す
     return state.albumUri?.replace(/^.+:(.+)$/, '$1') ?? null;
+  },
+
+  albumArtworkSrc(state) {
+    return (minSize?: number) => (state.albumArtWorkList != null
+      ? getImageSrc(state.albumArtWorkList, minSize)
+      : null);
   },
 
   isTrackSet(state) {
