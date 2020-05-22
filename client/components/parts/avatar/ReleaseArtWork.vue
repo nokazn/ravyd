@@ -1,38 +1,25 @@
 <template>
   <v-hover #default="{ hover }">
-    <transition name="fade">
-      <v-img
-        :src="src"
-        :alt="alt"
-        :height="size"
-        :width="size"
-        :max-height="size"
-        :max-width="size"
-        :aspect-ratio="1"
-        :class="$style.ReleaseArtWork">
-        <v-overlay
-          v-if="hover && isOverlayed"
-          absolute
-          :opacity="0.7">
-          <v-hover #default="{ hover: buttonHoverd }">
-            <v-btn
-              icon
-              @click.stop="onClicked">
-              <v-icon
-                :size="mediaButtonSize(buttonHoverd)"
-                :class="$style.ReleaseArtWork__icon">
-                {{ icon }}
-              </v-icon>
-            </v-btn>
-          </v-hover>
-        </v-overlay>
-      </v-img>
-    </transition>
+    <v-img
+      :src="src"
+      :alt="alt"
+      :height="size"
+      :width="size"
+      :max-height="size"
+      :max-width="size"
+      :aspect-ratio="1">
+      <avatar-overlay
+        :hover="hover"
+        :size="size"
+        :icon="icon"
+        @on-clicked="onClicked" />
+    </v-img>
   </v-hover>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
 export type ReleaseArtWorkInfo = {
   src: string
@@ -48,6 +35,10 @@ export type Data = {
 }
 
 export default Vue.extend({
+  components: {
+    AvatarOverlay,
+  },
+
   props: {
     src: {
       type: String,
@@ -92,11 +83,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ReleaseArtWork {
-  &__icon {
-    cursor: pointer;
-  }
-}
-</style>

@@ -5,22 +5,17 @@
       :size="size">
       <v-img
         :src="src"
-        alt="user-avaar">
-        <v-overlay
-          v-if="hover && isOverlayed"
-          absolute
-          :opacity="0.7">
-          <v-hover #default="{ hover: buttonHoverd }">
-            <v-btn
-              icon
-              @click.stop="onClicked">
-              <v-icon
-                :size="mediaButtonSize(buttonHoverd)">
-                {{ icon }}
-              </v-icon>
-            </v-btn>
-          </v-hover>
-        </v-overlay>
+        alt="user-avaar"
+        :height="size"
+        :width="size"
+        :max-height="size"
+        :max-width="size"
+        :aspect-ratio="1">
+        <avatar-overlay
+          :hover="hover"
+          :size="size"
+          :icon="icon"
+          @on-clicked="onClicked" />
       </v-img>
     </v-avatar>
     <v-icon
@@ -34,10 +29,15 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
 export default Vue.extend({
+  components: {
+    AvatarOverlay,
+  },
+
   props: {
     src: {
       required: true,
