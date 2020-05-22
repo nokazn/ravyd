@@ -106,9 +106,11 @@ export interface AsyncData {
     TrackListTable,
     Copyrights,
   },
+
   validate({ params }: Context) {
     return params.releaseId !== '';
   },
+
   async asyncData({ app, params }: Context): Promise<AsyncData | null> {
     const release = await app.$spotify.albums.getAlbum({ albumId: params.releaseId });
     if (release == null) return null;
@@ -200,11 +202,17 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   copyrightList = []
   isFavorited = false
 
-  get isPlaying() {
+  head() {
+    return {
+      title: this.name,
+    };
+  }
+
+  get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }
 
-  get isAlbumSet() {
+  get isAlbumSet(): boolean {
     return this.$getters()['player/isAlbumSet'](this.id);
   }
 

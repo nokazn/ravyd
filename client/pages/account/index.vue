@@ -53,6 +53,12 @@ export default Vue.extend({
         : null;
     },
   },
+
+  head() {
+    return {
+      title: 'アカウント',
+    };
+  },
 });
 </script>
 

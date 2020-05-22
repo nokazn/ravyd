@@ -38,6 +38,7 @@ export default Vue.extend({
       return this.$getters()['auth/isLoggedin'];
     },
   },
+
   methods: {
     async onAuthButtonClicked(): Promise<void> {
       const res: SpotifyAPI.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
@@ -60,6 +61,12 @@ export default Vue.extend({
       }
       console.error('トークン取得時にエラーが発生しました。');
     },
+  },
+
+  head() {
+    return {
+      title: 'ログイン',
+    };
   },
 });
 </script>

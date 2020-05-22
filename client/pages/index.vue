@@ -81,6 +81,12 @@ export default Vue.extend({
       newReleaseList,
     };
   },
+
+  head() {
+    return {
+      title: 'ホーム',
+    };
+  },
 });
 </script>
 
