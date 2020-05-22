@@ -6,7 +6,7 @@ export const getAlbums = (context: Context) => {
 
   return ({ albumIdList, market }: {
     albumIdList: string[] // 最大 20
-    market?: SpotifyAPI.Market
+    market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.Album[] | null> => {
     const { length } = albumIdList;
     const maxLength = 20;

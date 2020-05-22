@@ -9,7 +9,7 @@ export const getNewReleases = (context: Context) => {
     limit = 20,
     offset = 0,
   }: {
-    country?: SpotifyAPI.Market
+    country?: SpotifyAPI.Country
     limit?: number // 1 ~ 50 まで指定できる
     offset?: number
   }): Promise<{ albums: SpotifyAPI.Browse.NewReleases } | null> => {

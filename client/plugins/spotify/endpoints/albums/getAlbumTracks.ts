@@ -13,7 +13,7 @@ export const getAlbumTracks = (context: Context) => {
     albumId: string
     limit?: number // 1 ~ 50 まで指定できる
     offset?: number
-    market?: SpotifyAPI.Market
+    market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleTrack> | null> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);

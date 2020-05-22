@@ -11,7 +11,7 @@ export const getUserSavedAlbums = (context: Context) => {
   }: {
     limit?: number
     offset?: number
-    market?: SpotifyAPI.Market
+    market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.LibraryOf<'album'> | null> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
