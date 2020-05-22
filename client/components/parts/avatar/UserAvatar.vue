@@ -12,7 +12,7 @@
         :max-width="size"
         :aspect-ratio="1">
         <avatar-overlay
-          :hover="hover"
+          :hover="isOverlayed && hover"
           :size="size"
           :icon="icon"
           @on-clicked="onClicked" />

@@ -3,6 +3,7 @@ import { Context } from '@nuxt/types';
 import { albums } from './albums';
 import { artists } from './artists';
 import { browse } from './browse';
+import { following } from './following';
 import { library } from './library';
 import { player } from './player';
 import { top } from './top';
@@ -12,6 +13,7 @@ export const endpoints = (context: Context) => ({
   albums: albums(context),
   artists: artists(context),
   browse: browse(context),
+  following: following(context),
   library: library(context),
   player: player(context),
   top: top(context),

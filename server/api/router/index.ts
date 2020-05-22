@@ -43,6 +43,8 @@ router.get('/auth', async (req, res) => {
     'user-read-currently-playing',
     'user-read-recently-played',
     'playlist-read-private',
+    'user-follow-read',
+    'user-follow-modify',
   ].join(' ');
   const url = createUrl(baseUrl, {
     client_id: process.env.SPOTIFY_CLIENT_ID,
