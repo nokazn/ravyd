@@ -4,7 +4,8 @@
       <h2 :class="$style.RootPage__title">
         今週の新譜
       </h2>
-      <release-card-container>
+      <v-divider :class="$style.Divider" />
+      <release-card-container :class="$style.RootPage__cardContainer">
         <release-card
           v-for="release in newReleaseList"
           :key="release.id"
@@ -12,11 +13,13 @@
       </release-card-container>
     </section>
 
+
     <section :class="$style.RootPage__section">
       <h2 :class="$style.RootPage__title">
         お気に入りのトラック
       </h2>
-      <release-card-container>
+      <v-divider :class="$style.Divider" />
+      <release-card-container :class="$style.RootPage__cardContainer">
         <release-card
           v-for="track in topTrackList"
           :key="track.id"
@@ -24,11 +27,13 @@
       </release-card-container>
     </section>
 
+
     <section :class="$style.RootPage__section">
       <h2 :class="$style.RootPage__title">
         お気に入りのアーティスト
       </h2>
-      <release-card-container>
+      <v-divider :class="$style.Divider" />
+      <release-card-container :class="$style.RootPage__cardContainer">
         <artist-card
           v-for="artist in topArtistList"
           :key="artist.id"
@@ -70,10 +75,10 @@ export default Vue.extend({
         limit: 20,
       }),
     ]);
-
-    const topArtistList: ArtistCardInfo[] | undefined = topArtists?.items.map(parseArtist);
-    const topTrackList: ReleaseCardInfo[] | undefined = topTracks?.items.map(parseTrack);
-    const newReleaseList: ReleaseCardInfo[] | undefined = newReleases?.albums.items.map(parseAlbum);
+    const cardImageSize = 160;
+    const topArtistList = topArtists?.items.map(parseArtist(cardImageSize));
+    const topTrackList = topTracks?.items.map(parseTrack(cardImageSize));
+    const newReleaseList = newReleases?.albums.items.map(parseAlbum(cardImageSize));
 
     return {
       topArtistList,
@@ -92,15 +97,19 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  padding: 16px 0;
+  padding: 12px 0 48px;
   &__section:not(:last-child) {
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
   &__title {
     margin: {
-      left: 32px;
-      bottom: 8px;
+      left: 40px;
+      bottom: 6px;
     }
+  }
+
+  .Divider {
+    margin: 0 40px 16px;
   }
 }
 </style>
