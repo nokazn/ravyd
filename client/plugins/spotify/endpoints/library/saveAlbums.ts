@@ -15,9 +15,8 @@ export const saveAlbums = (context: Context) => {
       params: {
         ids,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
   };
 };

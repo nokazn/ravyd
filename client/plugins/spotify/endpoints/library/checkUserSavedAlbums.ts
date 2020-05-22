@@ -15,10 +15,9 @@ export const checkUserSavedAlbums = (context: Context) => {
       params: {
         ids,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-        return new Array(length).fill(false);
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+      return new Array(length).fill(false);
+    });
   };
 };
