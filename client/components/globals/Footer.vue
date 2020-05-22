@@ -3,7 +3,7 @@
     app
     padless
     :height="80"
-    :color="BAR_BACKGROUND_COLOR"
+    :color="FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer">
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
@@ -78,7 +78,7 @@ import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllers from '~/components/containers/player/MediaControllers.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
-import { BAR_BACKGROUND_COLOR } from '~/variables';
+import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
 export default Vue.extend({
   components: {
@@ -93,7 +93,7 @@ export default Vue.extend({
 
   data() {
     return {
-      BAR_BACKGROUND_COLOR,
+      FOOTER_BACKGROUND_COLOR,
     };
   },
 

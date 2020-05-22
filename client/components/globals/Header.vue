@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     app
-    :color="BAR_BACKGROUND_COLOR"
+    :color="HEADER_BACKGROUND_COLOR"
     :height="52">
     <div :class="$style.Header">
       <search-field
@@ -19,10 +19,10 @@ import Vue from 'vue';
 import SearchField from '~/components/parts/form/SearchField.vue';
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
 
-import { BAR_BACKGROUND_COLOR } from '~/variables';
+import { HEADER_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
-  BAR_BACKGROUND_COLOR: typeof BAR_BACKGROUND_COLOR
+  HEADER_BACKGROUND_COLOR: typeof HEADER_BACKGROUND_COLOR
   searchWords: string
 }
 
@@ -34,7 +34,7 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      BAR_BACKGROUND_COLOR,
+      HEADER_BACKGROUND_COLOR,
       searchWords: '',
     };
   },
