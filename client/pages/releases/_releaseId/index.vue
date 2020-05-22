@@ -144,7 +144,7 @@ export interface AsyncData {
     const releaseArtWorkInfo: ReleaseArtWorkInfo = {
       src: images[0].url,
       alt: `the artwork of ${name} by ${artistList.map((artist) => artist.name).join(', ')}`,
-      size: 180,
+      size: 240,
     };
 
     // @todo 50 トラック超えた時
@@ -233,10 +233,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
 
 <style lang="scss" module>
 .ReleaseIdPage {
-  padding: 32px 6%;
+  padding: 16px 6% 32px;
   &__header {
     display: flex;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     & > *:not(:last-child) {
       margin-right: 24px;
     }
@@ -253,13 +253,14 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
 
   &__releaseName {
-    font-size: 48px;
-    margin: 4px 0;
+    font-size: 60px;
+    margin: 8px 0;
     line-height: 1.1em;
   }
 
   &__artistsName {
-    margin-bottom: 12px;
+    font-size: 16px;
+    margin-bottom: 16px;
   }
 
   &__releaseInfoFooter {
@@ -277,7 +278,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
 
   &__trackList {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 }
 </style>
