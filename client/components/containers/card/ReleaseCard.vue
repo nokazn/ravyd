@@ -164,7 +164,6 @@ export default Vue.extend({
   }
   &__title {
     font-size: 0.9rem;
-    font-weight: bold;
     padding: 12px 8px;
     line-height: 1rem;
   }
