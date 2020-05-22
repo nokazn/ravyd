@@ -5,12 +5,12 @@
         今週の新譜
       </h2>
       <v-divider :class="$style.Divider" />
-      <release-card-container :class="$style.RootPage__cardContainer">
+      <cards-container :class="$style.RootPage__cardContainer">
         <release-card
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release" />
-      </release-card-container>
+      </cards-container>
     </section>
 
 
@@ -19,12 +19,12 @@
         お気に入りのトラック
       </h2>
       <v-divider :class="$style.Divider" />
-      <release-card-container :class="$style.RootPage__cardContainer">
+      <cards-container :class="$style.RootPage__cardContainer">
         <release-card
           v-for="track in topTrackList"
           :key="track.id"
           v-bind="track" />
-      </release-card-container>
+      </cards-container>
     </section>
 
 
@@ -33,12 +33,12 @@
         お気に入りのアーティスト
       </h2>
       <v-divider :class="$style.Divider" />
-      <release-card-container :class="$style.RootPage__cardContainer">
+      <cards-container :class="$style.RootPage__cardContainer">
         <artist-card
           v-for="artist in topArtistList"
           :key="artist.id"
           v-bind="artist" />
-      </release-card-container>
+      </cards-container>
     </section>
   </main>
 </template>
@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import ReleaseCardContainer from '~/components/parts/container/ReleaseCardConteiner.vue';
+import CardsContainer from '~/components/parts/container/CardsContainer.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
 import { parseTrack } from '~/scripts/parser/parseTrack';
@@ -61,7 +61,7 @@ export type AsyncData = {
 
 export default Vue.extend({
   components: {
-    ReleaseCardContainer,
+    CardsContainer,
     ReleaseCard,
     ArtistCard,
   },
