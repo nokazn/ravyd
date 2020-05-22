@@ -14,7 +14,6 @@ export const getImageSrc = (imageList: SpotifyAPI.Image[], minSize?: number) => 
   if (minSize == null) return imageList[0].url;
 
   const appropriateImage = imageList.reduce((prev, curr) => {
-    console.log({ curr });
     if (prev == null) return curr;
 
     const prevDiff = computeAbsoluteRatioDiff(prev.width, minSize);
@@ -23,6 +22,6 @@ export const getImageSrc = (imageList: SpotifyAPI.Image[], minSize?: number) => 
       ? curr
       : prev;
   });
-  console.log({ appropriateImage });
+
   return appropriateImage.url;
 };

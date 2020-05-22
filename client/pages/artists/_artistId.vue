@@ -87,7 +87,6 @@ export type AsyncData = {
     const avatarSrc = getImageSrc(images, 220);
     const avatarAlt = `the avatar of ${name}`;
     const followersText = `フォロワー ${addComma(followers.total)}人`;
-    console.log(artist);
 
     return {
       name,
