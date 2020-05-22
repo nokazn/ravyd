@@ -1,5 +1,5 @@
 <template>
-  <main class="account-page">
+  <main :class="$style.AccountPage">
     <h1>アカウント</h1>
 
     <two-columns-list-card
@@ -15,7 +15,14 @@
       nuxt
       to="//www.spotify.com/jp/account/overview/"
       target="_blank">
-      アカウント情報を編集
+      <span>
+        アカウント情報を編集
+      </span>
+      <v-icon
+        small
+        :class="$style.AccountPage__editAccountIcon">
+        mdi-open-in-new
+      </v-icon>
     </v-btn>
   </main>
 </template>
@@ -62,12 +69,15 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.account-page {
+<style lang="scss" module>
+.AccountPage {
   min-width: 300px;
   margin: 24px 6%;
   & > *:not(:last-child) {
     margin-bottom: 24px;
+  }
+  &__editAccountIcon {
+    margin-left: 8px;
   }
 }
 </style>
