@@ -212,7 +212,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }
-
   get isAlbumSet(): boolean {
     return this.$getters()['player/isAlbumSet'](this.id);
   }
@@ -242,7 +241,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
 
 <style lang="scss" module>
 .ReleaseIdPage {
-  padding: 16px 6% 32px;
+  padding: 16px 6% 48px;
   &__header {
     display: flex;
     margin-bottom: 24px;
@@ -264,12 +263,12 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   &__releaseName {
     font-size: 40px;
     margin: 8px 0;
-    line-height: 1.1em;
+    line-height: 1.2em;
   }
 
   &__artistsName {
     font-size: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   &__releaseInfoFooter {
@@ -280,7 +279,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
       margin-right: 24px;
     }
     & > *:last-child {
-      margin-top: 8px;
+      margin-top: 12px;
     }
   }
   &__buttons > *:not(:last-child) {
