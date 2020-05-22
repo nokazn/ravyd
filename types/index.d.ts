@@ -50,11 +50,7 @@ export namespace SpotifyAPI {
       }
       href: string
       id: string
-      images: Array<{
-        height: number | null
-        url: string
-        width: number | null
-      }>
+      images: Image[]
       product: string
       type: string
       uri: string
