@@ -7,7 +7,7 @@
     :class="$style.ReleaseCard"
     @click="onClick">
     <div :class="$style.ReleaseCard__container">
-      <release-art-work
+      <release-artwork
         :src="src"
         :alt="alt"
         :size="width"
@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import ReleaseArtWork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { hasProp } from '~~/utils/hasProp';
 
 export type ReleaseCardInfo = {
@@ -64,7 +64,7 @@ export type ReleaseCardInfo = {
 
 export default Vue.extend({
   components: {
-    ReleaseArtWork,
+    ReleaseArtwork,
   },
 
   props: {

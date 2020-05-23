@@ -1,7 +1,7 @@
 <template>
   <main :class="$style.ReleaseIdPage">
     <div :class="$style.ReleaseIdPage__header">
-      <ReleaseArtWork v-bind="releaseArtWorkInfo" />
+      <release-artwork v-bind="releaseInfo.artwork" />
 
       <div :class="$style.ReleaseIdPage__releaseInfo">
         <div :class="$style.ReleaseIdPage__releaseType">
@@ -62,7 +62,7 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 
-import ReleaseArtWork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseArtwork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
@@ -95,7 +95,7 @@ export interface AsyncData {
 
 @Component({
   components: {
-    ReleaseArtWork,
+    ReleaseArtwork,
     ArtistName,
     MediaControlButton,
     FavoriteButton,

@@ -7,7 +7,7 @@
     :class="$style.Footer">
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
-        <release-art-work
+        <release-artwork
           v-if="hasAlbumArtwork"
           :src="albumArtWorkSrc(64)"
           alt="current-track-art-work"
@@ -69,7 +69,7 @@
 import Vue from 'vue';
 import { RootState, RootGetters } from 'vuex';
 
-import ReleaseArtWork from '~/components/parts/avatar/ReleaseArtWork.vue';
+import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import MarqueeArtistName, { Artists } from '~/components/parts/text/MarqueeArtistName.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
@@ -80,7 +80,7 @@ import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
 export default Vue.extend({
   components: {
-    ReleaseArtWork,
+    ReleaseArtwork,
     ReleaseName,
     MarqueeArtistName,
     FavoriteButton,
