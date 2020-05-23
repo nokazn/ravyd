@@ -1,5 +1,7 @@
 <template>
-  <v-app dark>
+  <v-app
+    dark
+    :class="$style.ErrorPage">
     <h1 v-if="error.statusCode === 404">
       {{ pageNotFound }}
     </h1>
@@ -37,8 +39,8 @@ export default {
 };
 </script>
 
-<style scoped>
-h1 {
-  font-size: 20px;
+<style lang="scss" module>
+.ErrorPage {
+  padding: 16px 4%;
 }
 </style>
