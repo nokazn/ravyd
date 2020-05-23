@@ -86,7 +86,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
 
   head() {
     return {
-      title: this.artistInfo?.name ?? '',
+      title: this.artistInfo?.name ?? 'エラー',
     };
   }
 

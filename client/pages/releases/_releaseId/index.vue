@@ -107,7 +107,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
 
   head() {
     return {
-      title: this.releaseInfo?.name ?? '',
+      title: this.releaseInfo?.name ?? 'エラー',
     };
   }
 

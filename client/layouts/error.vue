@@ -41,6 +41,6 @@ export default {
 
 <style lang="scss" module>
 .ErrorPage {
-  padding: 16px 4%;
+  padding: 8px 4%;
 }
 </style>
