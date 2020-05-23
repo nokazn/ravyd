@@ -67,10 +67,11 @@ export type AsyncData = {
   },
 
   async asyncData(context): Promise<AsyncData | null> {
-    const artistInfo = await getArtistInfo(context);
-    const isFollowing = await getIsFollowing(context);
-    const topTrackList = await getTopTrackList(context);
-    console.log(topTrackList);
+    const [artistInfo, isFollowing, topTrackList] = await Promise.all([
+      getArtistInfo(context),
+      getIsFollowing(context),
+      getTopTrackList(context),
+    ] as const);
 
     return {
       artistInfo,
