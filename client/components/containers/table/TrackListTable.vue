@@ -31,7 +31,7 @@ import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
 import TrackListTableRow, { RowItem } from '~/components/parts/table/TrackListTableRow.vue';
-import { elapsedTime } from '~~/utils/elapsedTime';
+import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {
@@ -91,15 +91,7 @@ export default Vue.extend({
       },
     ];
 
-    const items = this.trackList.map((track, i) => ({
-      index: i,
-      id: track.id,
-      uri: track.uri,
-      trackNumber: track.track_number,
-      isSaved: this.isTrackSavedList[i],
-      name: track.name,
-      duration: elapsedTime(track.duration_ms),
-    }));
+    const items = this.trackList.map(parseTrackDetail(this.isTrackSavedList));
 
     return {
       headers,
