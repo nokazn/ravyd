@@ -1,19 +1,21 @@
 <template>
-  <main :class="$style.ReleaseIdPage">
+  <main
+    v-if="releaseInfo != null"
+    :class="$style.ReleaseIdPage">
     <div :class="$style.ReleaseIdPage__header">
       <release-artwork v-bind="releaseInfo.artwork" />
 
       <div :class="$style.ReleaseIdPage__releaseInfo">
         <div :class="$style.ReleaseIdPage__releaseType">
-          {{ albumType }}
+          {{ releaseInfo.albumType }}
         </div>
 
         <h1 :class="$style.ReleaseIdPage__releaseName">
-          {{ name }}
+          {{ releaseInfo.name }}
         </h1>
 
         <artist-name
-          :artist-list="artistList"
+          :artist-list="releaseInfo.artistList"
           :class="$style.ReleaseIdPage__artistsName" />
 
         <div :class="$style.ReleaseIdPage__releaseInfoFooter">
@@ -23,37 +25,37 @@
               @on-clicked="onMediaControlButtonClicked" />
 
             <favorite-button
-              :is-favorited="isSaved"
+              :is-favorited="releaseInfo.isSaved"
               outlined
               @on-clicked="onFavoriteButtonClicked" />
           </div>
 
           <div :class="$style.ReleaseIdPage__releaseDetail">
             <release-date
-              :release-date="releaseDate"
-              :release-date-precision="releaseDatePrecision" />
+              :release-date="releaseInfo.releaseDate"
+              :release-date-precision="releaseInfo.releaseDatePrecision" />
 
             <release-total-tracks
-              :total-tracks="totalTracks" />
+              :total-tracks="releaseInfo.totalTracks" />
 
             <release-duration
-              :duration-ms="durationMs" />
+              :duration-ms="releaseInfo.durationMs" />
 
             <release-label
-              :label="label" />
+              :label="releaseInfo.label" />
           </div>
         </div>
       </div>
     </div>
 
     <track-list-table
-      :track-list="trackList"
-      :is-track-saved-list="isTrackSavedList"
-      :uri="uri"
+      :track-list="releaseInfo.trackList"
+      :is-track-saved-list="releaseInfo.isTrackSavedList"
+      :uri="releaseInfo.uri"
       :class="$style.ReleaseIdPage__trackList" />
 
     <copyrights
-      :copyright-list="copyrightList"
+      :copyright-list="releaseInfo.copyrightList"
       :class="$style.ReleaseIdPage__copyrights" />
   </main>
 </template>
@@ -62,8 +64,8 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 
-import ReleaseArtwork, { ReleaseArtWorkInfo } from '~/components/parts/avatar/ReleaseArtwork.vue';
-import ArtistName, { Artists } from '~/components/parts/text/ArtistName.vue';
+import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ArtistName from '~/components/parts/text/ArtistName.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
@@ -72,25 +74,10 @@ import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackListTable from '~/components/containers/table/TrackListTable.vue';
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
-import { SpotifyAPI } from '~~/types';
+import { getReleaseInfo, ReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 
 export interface AsyncData {
-  albumType: 'アルバム' | 'シングル' | 'コンピレーション'
-  artistList: Artists
-  label: string
-  name: string
-  id: string
-  uri: string
-  releaseDate: string
-  releaseDatePrecision: string
-  releaseArtWorkInfo: ReleaseArtWorkInfo
-  trackList: SpotifyAPI.SimpleTrack[]
-  isTrackSavedList: boolean[]
-  totalTracks: number
-  durationMs: number
-  copyrightList: SpotifyAPI.Copyright[]
-  isSaved: boolean
+  releaseInfo: ReleaseInfo | null
 }
 
 @Component({
@@ -111,101 +98,17 @@ export interface AsyncData {
     return params.releaseId !== '';
   },
 
-  async asyncData({ app, params }: Context): Promise<AsyncData | null> {
-    const release = await app.$spotify.albums.getAlbum({ albumId: params.releaseId });
-    if (release == null) return null;
-
-    const {
-      album_type,
-      artists,
-      label,
-      name,
-      id,
-      uri,
-      release_date: releaseDate,
-      release_date_precision: releaseDatePrecision,
-      tracks: {
-        items: trackList,
-      },
-      total_tracks: totalTracks,
-      images,
-      copyrights: copyrightList,
-    } = release;
-
-    const albumType = {
-      album: 'アルバム' as const,
-      single: 'シングル' as const,
-      compilation: 'コンピレーション' as const,
-    }[album_type];
-
-    const artistList = artists.map((artist) => ({
-      id: artist.id,
-      name: artist.name,
-    }));
-
-    const artworkSize = 220;
-    const releaseArtWorkInfo: ReleaseArtWorkInfo = {
-      src: getImageSrc(images, artworkSize),
-      alt: `the artwork of ${name} by ${artistList.map((artist) => artist.name).join(', ')}`,
-      size: artworkSize,
-    };
-
-    // @todo 50 トラック超えた時
-    const getIsFaboritedTrackList = app.$spotify.library.checkUserSavedTracks({
-      trackIdList: trackList.map((track) => track.id),
-    });
-    const getIsSaved = app.$spotify.library.checkUserSavedAlbums({
-      albumIdList: [id],
-    });
-    const [isTrackSavedList, [isSaved]] = await Promise.all([
-      getIsFaboritedTrackList,
-      getIsSaved,
-    ]);
-
-    const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
-
-    return {
-      albumType,
-      artistList,
-      label,
-      name,
-      id,
-      uri,
-      releaseDate,
-      releaseDatePrecision,
-      releaseArtWorkInfo,
-      trackList,
-      isTrackSavedList,
-      totalTracks,
-      durationMs,
-      copyrightList,
-      isSaved,
-    };
+  async asyncData(context: Context): Promise<AsyncData | null> {
+    const releaseInfo = await getReleaseInfo(context);
+    return { releaseInfo };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData {
-  albumType: 'アルバム' = 'アルバム'
-  artistList: SpotifyAPI.Artist[] = []
-  label = ''
-  name = ''
-  id = ''
-  uri = ''
-  releaseDate = ''
-  releaseDatePrecision = ''
-  releaseArtWorkInfo: ReleaseArtWorkInfo = {
-    src: '',
-    alt: '',
-  }
-  trackList: SpotifyAPI.SimpleTrack[] = []
-  isTrackSavedList: boolean[] = []
-  totalTracks = 0
-  durationMs = 0
-  copyrightList = []
-  isSaved = false
+  releaseInfo: ReleaseInfo | null = null
 
   head() {
     return {
-      title: this.name,
+      title: this.releaseInfo?.name ?? '',
     };
   }
 
@@ -213,12 +116,16 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return this.$state().player.isPlaying;
   }
   get isAlbumSet(): boolean {
-    return this.$getters()['player/isAlbumSet'](this.id);
+    return this.releaseInfo != null
+      ? this.$getters()['player/isAlbumSet'](this.releaseInfo.id)
+      : false;
   }
 
   onFavoriteButtonClicked(nextSavedState: boolean) {
-    this.isSaved = nextSavedState;
-    const albumIdList = [this.id];
+    if (this.releaseInfo == null) return;
+
+    this.releaseInfo.isSaved = nextSavedState;
+    const albumIdList = [this.releaseInfo.id];
     if (nextSavedState) {
       this.$spotify.library.saveAlbums({ albumIdList });
     } else {
@@ -227,11 +134,13 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   }
 
   onMediaControlButtonClicked(nextPlayingState: boolean) {
+    if (this.releaseInfo == null) return;
+
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
       this.$dispatch('player/play', this.isAlbumSet
         ? undefined
-        : { contextUri: this.uri });
+        : { contextUri: this.releaseInfo.uri });
     } else {
       this.$dispatch('player/pause');
     }
