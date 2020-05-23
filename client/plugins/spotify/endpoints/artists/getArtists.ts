@@ -6,7 +6,7 @@ export const getArtists = (context: Context) => {
 
   return ({ artistIdList }: {
     artistIdList: string[] // 最大 50
-  }): Promise<{ artists: SpotifyAPI.Artist[]} | null> => {
+  }): Promise<{ artists: SpotifyAPI.Artist[] | undefined }> => {
     const { length } = artistIdList;
     const maxLength = 50;
     if (length > maxLength) {
@@ -20,7 +20,7 @@ export const getArtists = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return {};
     });
   };
 };

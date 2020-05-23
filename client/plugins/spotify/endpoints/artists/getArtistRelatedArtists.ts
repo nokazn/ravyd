@@ -6,9 +6,9 @@ export const getArtistRelatedArtists = (context: Context) => {
 
   return ({ artistId }: {
     artistId: string
-  }): Promise<{ artists: SpotifyAPI.Artist } | null> => app.$spotifyApi.$get(`/artists/${artistId}/related-artists`)
+  }): Promise<{ artists: SpotifyAPI.Artist | undefined }> => app.$spotifyApi.$get(`/artists/${artistId}/related-artists`)
     .catch((err: Error) => {
       console.error({ err });
-      return null;
+      return {};
     });
 };

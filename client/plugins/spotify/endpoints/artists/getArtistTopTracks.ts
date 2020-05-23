@@ -7,12 +7,12 @@ export const getArtistTopTracks = (context: Context) => {
   return ({ artistId, country }: {
     artistId: string
     country: SpotifyAPI.Country
-  }): Promise<{ tracks: SpotifyAPI.Track[] } | null> => app.$spotifyApi.$get(`/artists/${artistId}/top-tracks`, {
+  }): Promise<{ tracks: SpotifyAPI.Track[] | undefined }> => app.$spotifyApi.$get(`/artists/${artistId}/top-tracks`, {
     params: {
       country,
     },
   }).catch((err: Error) => {
     console.error({ err });
-    return null;
+    return {};
   });
 };

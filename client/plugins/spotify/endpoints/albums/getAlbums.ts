@@ -7,7 +7,7 @@ export const getAlbums = (context: Context) => {
   return ({ albumIdList, market }: {
     albumIdList: string[] // 最大 20
     market?: SpotifyAPI.Country
-  }): Promise<{ albums: SpotifyAPI.Album[] } | null> => {
+  }): Promise<{ albums: SpotifyAPI.Album[] | undefined }> => {
     const { length } = albumIdList;
     const maxLength = 20;
     if (length > maxLength) {
@@ -23,7 +23,7 @@ export const getAlbums = (context: Context) => {
     })
       .catch((err: Error) => {
         console.error({ err });
-        return null;
+        return {};
       });
   };
 };
