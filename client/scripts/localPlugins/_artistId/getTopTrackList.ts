@@ -1,8 +1,8 @@
 import { Context } from '@nuxt/types';
 
-import { parseTrackDetail, TrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { parseTrackDetail, TrackDetail as _TrackDetail } from '~/scripts/parser/parseTrackDetail';
 
-export { TrackDetail } from '~/scripts/parser/parseTrackDetail';
+export type TrackDetail = _TrackDetail;
 
 export const getTopTrackList = async ({ app, params }: Context): Promise<TrackDetail[] | null> => {
   const country = app.$state().auth.userData?.country;
