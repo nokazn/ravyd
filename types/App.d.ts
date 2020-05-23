@@ -12,7 +12,7 @@ export namespace App {
       name: SpotifyAPI.Artist['name'],
       id: SpotifyAPI.Artist['id'],
     }[]
-    isPlayable: boolean
+    explicit: boolean
     isSaved: boolean
     duration: string
   }

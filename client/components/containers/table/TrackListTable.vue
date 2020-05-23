@@ -85,6 +85,12 @@ export default Vue.extend({
       },
       {
         text: ' ',
+        value: 'explicit',
+        width: 60,
+        align: 'center' as const,
+      },
+      {
+        text: ' ',
         value: 'duration',
         width: 60,
         align: 'center' as const,

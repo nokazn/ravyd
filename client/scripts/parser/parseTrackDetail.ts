@@ -15,7 +15,7 @@ export const parseTrackDetail = (isTrackSavedList: boolean[]) => (
     name: artist.name,
     id: artist.id,
   })),
-  isPlayable: track.is_playable,
+  explicit: track.explicit,
   isSaved: isTrackSavedList[index],
   duration: elapsedTime(track.duration_ms),
 });

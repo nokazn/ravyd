@@ -26,6 +26,10 @@
         {{ item.name }}
       </td>
 
+      <td style="potision: relative">
+        <explicit-chip v-if="item.explicit" />
+      </td>
+
       <td>
         {{ item.duration }}
       </td>
@@ -47,12 +51,14 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
+import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import { App } from '~~/types';
 
 export default Vue.extend({
   components: {
     TrackListTableMediaIcon,
+    ExplicitChip,
     FavoriteButton,
   },
 
