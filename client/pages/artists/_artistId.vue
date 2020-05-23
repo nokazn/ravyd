@@ -4,7 +4,8 @@
       <user-avatar
         :src="avatarSrc"
         :alt="avatarAlt"
-        :size="220" />
+        :size="220"
+        default-user-icon="mdi-account-music" />
       <div>
         <div :class="$style.ArtistIdPage__type">
           アーティスト
