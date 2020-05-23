@@ -2,15 +2,24 @@
   <v-data-table
     :headers="headers"
     :items="items"
+    group-by="discNumber"
     disable-pagination
     disable-sort
-    hide-default-footer>
+    hide-default-footer
+    class="track-list-table">
     <template #header.duration>
       <v-icon
         :size="16"
         color="grey">
         mdi-clock-outline
       </v-icon>
+    </template>
+
+    <template #group.header="{ group }">
+      <track-list-table-group-header
+        v-if="hasMultipleDiscs"
+        :disc-number="group"
+        :colspan="headers.length" />
     </template>
 
     <template #item="{ item }">
@@ -30,18 +39,20 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackListTableRow, { RowItem } from '~/components/parts/table/TrackListTableRow.vue';
-import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import TrackListTableRow from '~/components/parts/table/TrackListTableRow.vue';
+import TrackListTableGroupHeader from '~/components/parts/table/TrackListTableGroupHeader.vue';
+import { parseTrackDetail, TrackDetail } from '~/scripts/parser/parseTrackDetail';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  items: RowItem[]
+  items: TrackDetail[]
 };
 
 export default Vue.extend({
   components: {
     TrackListTableRow,
+    TrackListTableGroupHeader,
   },
 
   props: {
@@ -112,10 +123,16 @@ export default Vue.extend({
         ? 'mdi-pause'
         : 'mdi-play');
     },
+    hasMultipleDiscs(): boolean {
+      const discNumberList = Array.from(new Set(this.items
+        .map((item) => item.discNumber)));
+
+      return discNumberList.length > 1;
+    },
   },
 
   methods: {
-    onMediaButtonClicked(row: RowItem) {
+    onMediaButtonClicked(row: TrackDetail) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else if (this.isTrackSet(row.id)) {
@@ -129,7 +146,7 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: RowItem) {
+    async onFavoriteButtonClicked(row: TrackDetail) {
       const nextSavedState = !row.isSaved;
       const modifyedItems = (isSaved: boolean, index: number) => this.items
         .map((item, i) => (i === index
@@ -153,3 +170,16 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+.track-list-table {
+  // 表全体の背景と同じ色にする
+  .v-row-group__header {
+    background: inherit!important;
+  }
+  td, th {
+    // 列の幅をデフォルトの 48px から少し狭める
+    height: 44px!important;
+  }
+}
+</style>
