@@ -1,7 +1,8 @@
 import { Context } from '@nuxt/types';
 import { parseAlbumType } from '~/scripts/parser/parseAlbumType';
 import { getImageSrc } from '~/scripts/parser/getImageSrc';
-import { SpotifyAPI } from '~~/types';
+import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { SpotifyAPI, App } from '~~/types';
 
 export type ReleaseInfo = {
   albumType: 'アルバム' | 'シングル' | 'コンピレーション'
@@ -20,8 +21,7 @@ export type ReleaseInfo = {
     alt: string
     size: 220
   }
-  trackList: SpotifyAPI.SimpleTrack[]
-  isTrackSavedList: boolean[]
+  trackList: App.TrackDetail[]
   totalTracks: number
   durationMs: number
   copyrightList: SpotifyAPI.Copyright[]
@@ -41,9 +41,7 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     uri,
     release_date: releaseDate,
     release_date_precision: releaseDatePrecision,
-    tracks: {
-      items: trackList,
-    },
+    tracks,
     total_tracks: totalTracks,
     images,
     copyrights: copyrightList,
@@ -63,7 +61,7 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     alt: `the artwork of ${name} by ${artistList.map((artist) => artist.name).join(', ')}`,
   };
 
-  const trackIdList = trackList.map((track) => track.id);
+  const trackIdList = tracks.items.map((track) => track.id);
   const albumIdList = [id];
   const [isTrackSavedList, [isSaved]] = await Promise.all([
     // @todo 50 トラック超えた時
@@ -71,7 +69,9 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     app.$spotify.library.checkUserSavedAlbums({ albumIdList }),
   ] as const);
 
-  const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
+  const trackList = tracks.items.map(parseTrackDetail(isTrackSavedList));
+
+  const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
 
   return {
     albumType,
@@ -84,7 +84,6 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     releaseDatePrecision,
     artwork,
     trackList,
-    isTrackSavedList,
     totalTracks,
     durationMs,
     copyrightList,

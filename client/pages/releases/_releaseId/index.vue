@@ -50,7 +50,6 @@
 
     <track-list-table
       :track-list="releaseInfo.trackList"
-      :is-track-saved-list="releaseInfo.isTrackSavedList"
       :uri="releaseInfo.uri"
       :class="$style.ReleaseIdPage__trackList" />
 

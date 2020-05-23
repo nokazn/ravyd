@@ -41,8 +41,7 @@ import { DataTableHeader } from 'vuetify';
 
 import TrackListTableRow from '~/components/parts/table/TrackListTableRow.vue';
 import TrackListTableGroupHeader from '~/components/parts/table/TrackListTableGroupHeader.vue';
-import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
-import { SpotifyAPI, App } from '~~/types';
+import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
@@ -57,11 +56,7 @@ export default Vue.extend({
 
   props: {
     trackList: {
-      type: Array as PropType<SpotifyAPI.SimpleTrack[]>,
-      required: true,
-    },
-    isTrackSavedList: {
-      type: Array as PropType<boolean[]>,
+      type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
     uri: {
@@ -101,8 +96,7 @@ export default Vue.extend({
         align: 'center' as const,
       },
     ];
-
-    const items = this.trackList.map(parseTrackDetail(this.isTrackSavedList));
+    const items = this.trackList;
 
     return {
       headers,
