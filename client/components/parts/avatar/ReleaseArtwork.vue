@@ -22,11 +22,11 @@
 import Vue, { PropType } from 'vue';
 import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
-export type ReleaseArtWorkInfo = {
+export type ReleaseArtworkInfo = {
   src: string
   alt: string
+  size: number
   icon?: string
-  size?: number
 }
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
@@ -55,7 +55,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 160,
+      required: true,
     },
     isOverlayed: {
       type: Boolean,

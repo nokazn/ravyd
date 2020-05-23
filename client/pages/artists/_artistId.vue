@@ -48,7 +48,6 @@ import {
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
 
-
 export type AsyncData = {
   artistInfo: ArtistInfo | null
   isFollowing: boolean
@@ -81,20 +80,13 @@ export type AsyncData = {
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData {
-  artistInfo: ArtistInfo = {
-    name: '',
-    id: '',
-    uri: '',
-    avatarSrc: '',
-    avatarAlt: '',
-    followersText: '',
-  }
+  artistInfo: ArtistInfo | null = null
   isFollowing = false
   topTrackList: TrackDetail[] | null = null
 
   head() {
     return {
-      title: this.artistInfo.name,
+      title: this.artistInfo?.name ?? '',
     };
   }
 
