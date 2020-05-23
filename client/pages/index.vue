@@ -67,11 +67,12 @@ export default Vue.extend({
   },
 
   async asyncData({ app }): Promise<AsyncData> {
+    const country = app.$state().auth.userData?.country;
     const [topArtists, topTracks, newReleases] = await Promise.all([
       app.$spotify.top.getTopArtists({}),
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({
-        country: 'JP',
+        country,
         limit: 20,
       }),
     ]);
@@ -99,7 +100,7 @@ export default Vue.extend({
 .RootPage {
   padding: 12px 0 48px;
   &__section:not(:last-child) {
-    margin-bottom: 48px;
+    margin-bottom: 40px;
   }
   &__title {
     margin: {
