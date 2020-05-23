@@ -78,7 +78,7 @@ export default Vue.extend({
     const cardImageSize = 160;
     const topArtistList = topArtists?.items.map(parseArtist(cardImageSize));
     const topTrackList = topTracks?.items.map(parseTrack(cardImageSize));
-    const newReleaseList = newReleases?.albums.items.map(parseAlbum(cardImageSize));
+    const newReleaseList = newReleases?.albums?.items.map(parseAlbum(cardImageSize));
 
     return {
       topArtistList,
