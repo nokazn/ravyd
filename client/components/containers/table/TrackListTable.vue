@@ -49,7 +49,7 @@ export default Vue.extend({
       type: Array as PropType<SpotifyAPI.SimpleTrack[]>,
       required: true,
     },
-    isTrackFavoritedList: {
+    isTrackSavedList: {
       type: Array as PropType<boolean[]>,
       required: true,
     },
@@ -69,7 +69,7 @@ export default Vue.extend({
       },
       {
         text: ' ',
-        value: 'isFavorited',
+        value: 'isSaved',
         width: 60,
         align: 'center' as const,
       },
@@ -96,7 +96,7 @@ export default Vue.extend({
       id: track.id,
       uri: track.uri,
       trackNumber: track.track_number,
-      isFavorited: this.isTrackFavoritedList[i],
+      isSaved: this.isTrackSavedList[i],
       name: track.name,
       duration: elapsedTime(track.duration_ms),
     }));
@@ -138,25 +138,25 @@ export default Vue.extend({
       }
     },
     async onFavoriteButtonClicked(row: RowItem) {
-      const nextIsFavorited = !row.isFavorited;
-      const modifyedItems = (isFavorited: boolean, index: number) => this.items
+      const nextSavedState = !row.isSaved;
+      const modifyedItems = (isSaved: boolean, index: number) => this.items
         .map((item, i) => (i === index
-          ? { ...item, isFavorited }
+          ? { ...item, isSaved }
           : item));
 
       // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifyedItems(nextIsFavorited, row.index);
-      if (nextIsFavorited) {
+      this.items = modifyedItems(nextSavedState, row.index);
+      if (nextSavedState) {
         await this.$dispatch('library/saveTracks', [row.id]);
       } else {
         await this.$dispatch('library/removeTracks', [row.id]);
       }
 
-      const [isFavorited] = await this.$spotify.library.checkUserSavedTracks({
+      const [isSaved] = await this.$spotify.library.checkUserSavedTracks({
         trackIdList: [row.id],
       });
       // 実際の状態と異なれば戻す
-      if (isFavorited !== nextIsFavorited) this.items = modifyedItems(isFavorited, row.index);
+      if (isSaved !== nextSavedState) this.items = modifyedItems(isSaved, row.index);
     },
   },
 });

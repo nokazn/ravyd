@@ -23,7 +23,7 @@
               @on-clicked="onMediaControlButtonClicked" />
 
             <favorite-button
-              :is-favorited="isFavorited"
+              :is-favorited="isSaved"
               outlined
               @on-clicked="onFavoriteButtonClicked" />
           </div>
@@ -48,7 +48,7 @@
 
     <track-list-table
       :track-list="trackList"
-      :is-track-favorited-list="isTrackFavoritedList"
+      :is-track-saved-list="isTrackSavedList"
       :uri="uri"
       :class="$style.ReleaseIdPage__trackList" />
 
@@ -86,11 +86,11 @@ export interface AsyncData {
   releaseDatePrecision: string
   releaseArtWorkInfo: ReleaseArtWorkInfo
   trackList: SpotifyAPI.SimpleTrack[]
-  isTrackFavoritedList: boolean[]
+  isTrackSavedList: boolean[]
   totalTracks: number
   durationMs: number
   copyrightList: SpotifyAPI.Copyright[]
-  isFavorited: boolean
+  isSaved: boolean
 }
 
 @Component({
@@ -154,12 +154,12 @@ export interface AsyncData {
     const getIsFaboritedTrackList = app.$spotify.library.checkUserSavedTracks({
       trackIdList: trackList.map((track) => track.id),
     });
-    const getIsFavorited = app.$spotify.library.checkUserSavedAlbums({
+    const getIsSaved = app.$spotify.library.checkUserSavedAlbums({
       albumIdList: [id],
     });
-    const [isTrackFavoritedList, [isFavorited]] = await Promise.all([
+    const [isTrackSavedList, [isSaved]] = await Promise.all([
       getIsFaboritedTrackList,
-      getIsFavorited,
+      getIsSaved,
     ]);
 
     const durationMs = trackList.reduce((prev, track) => track.duration_ms + prev, 0);
@@ -175,11 +175,11 @@ export interface AsyncData {
       releaseDatePrecision,
       releaseArtWorkInfo,
       trackList,
-      isTrackFavoritedList,
+      isTrackSavedList,
       totalTracks,
       durationMs,
       copyrightList,
-      isFavorited,
+      isSaved,
     };
   },
 })
@@ -197,11 +197,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     alt: '',
   }
   trackList: SpotifyAPI.SimpleTrack[] = []
-  isTrackFavoritedList: boolean[] = []
+  isTrackSavedList: boolean[] = []
   totalTracks = 0
   durationMs = 0
   copyrightList = []
-  isFavorited = false
+  isSaved = false
 
   head() {
     return {
@@ -216,10 +216,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return this.$getters()['player/isAlbumSet'](this.id);
   }
 
-  onFavoriteButtonClicked(nextIsFavorited: boolean) {
-    this.isFavorited = nextIsFavorited;
+  onFavoriteButtonClicked(nextSavedState: boolean) {
+    this.isSaved = nextSavedState;
     const albumIdList = [this.id];
-    if (nextIsFavorited) {
+    if (nextSavedState) {
       this.$spotify.library.saveAlbums({ albumIdList });
     } else {
       this.$spotify.library.removeUserSavedAlbums({ albumIdList });

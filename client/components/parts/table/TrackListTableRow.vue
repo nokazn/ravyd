@@ -18,7 +18,7 @@
 
       <td>
         <favorite-button
-          :is-favorited="item.isFavorited"
+          :is-favorited="item.isSaved"
           @on-clicked="onFavoriteButtonClicked" />
       </td>
 
@@ -54,7 +54,7 @@ export type RowItem = {
   id: string
   uri: string
   trackNumber: number
-  isFavorited: boolean
+  isSaved: boolean
   name: string
   duration: string
 }

@@ -18,9 +18,9 @@ const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMuta
   async saveTracks({ dispatch, rootState }, trackIdList) {
     await this.$spotify.library.saveTracks({ trackIdList });
 
-    const isSetTrackFavoriteStateChanged = rootState.player.trackId != null
+    const isCurrentTrackSavedStateChanged = rootState.player.trackId != null
       && trackIdList.includes(rootState.player.trackId);
-    if (isSetTrackFavoriteStateChanged) {
+    if (isCurrentTrackSavedStateChanged) {
       dispatch('player/checkSavedTracks', undefined, { root: true });
     }
   },
@@ -28,9 +28,9 @@ const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMuta
   async removeTracks({ dispatch, rootState }, trackIdList) {
     await this.$spotify.library.removeUserSavedTracks({ trackIdList });
 
-    const isSetTrackFavoriteStateChanged = rootState.player.trackId != null
+    const isCurrentTrackSavedStateChanged = rootState.player.trackId != null
       && trackIdList.includes(rootState.player.trackId);
-    if (isSetTrackFavoriteStateChanged) {
+    if (isCurrentTrackSavedStateChanged) {
       dispatch('player/checkSavedTracks', undefined, { root: true });
     }
   },
