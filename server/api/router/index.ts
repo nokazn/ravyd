@@ -36,6 +36,7 @@ router.get('/auth', async (req, res) => {
     'streaming',
     'user-modify-playback-state',
     'playlist-modify-public',
+    'playlist-modify-private',
     'user-library-read',
     'user-library-modify',
     'user-top-read',

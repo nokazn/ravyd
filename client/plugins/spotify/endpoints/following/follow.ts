@@ -3,10 +3,7 @@ import { Context } from '@nuxt/types';
 export const follow = (context: Context) => {
   const { app } = context;
 
-  return ({
-    type,
-    idList,
-  }: {
+  return ({ type, idList }: {
     type: 'artist' | 'user'
     idList: string[]
   }): Promise<void> => {
