@@ -44,14 +44,14 @@ import {
   getArtistInfo,
   ArtistInfo,
   getTopTrackList,
-  TrackDetail,
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
+import { App } from '~~/types';
 
 export type AsyncData = {
   artistInfo: ArtistInfo | null
   isFollowing: boolean
-  topTrackList: TrackDetail[] | null
+  topTrackList: App.TrackDetail[] | null
 }
 
 @Component({
@@ -82,7 +82,7 @@ export type AsyncData = {
 export default class ArtistIdPage extends Vue implements AsyncData {
   artistInfo: ArtistInfo | null = null
   isFollowing = false
-  topTrackList: TrackDetail[] | null = null
+  topTrackList: App.TrackDetail[] | null = null
 
   head() {
     return {

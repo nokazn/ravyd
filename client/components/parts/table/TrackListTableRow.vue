@@ -48,7 +48,7 @@ import Vue, { PropType } from 'vue';
 
 import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import { TrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { App } from '~~/types';
 
 export default Vue.extend({
   components: {
@@ -58,7 +58,7 @@ export default Vue.extend({
 
   props: {
     item: {
-      type: Object as PropType<TrackDetail>,
+      type: Object as PropType<App.TrackDetail>,
       required: true,
     },
     isTrackSet: {

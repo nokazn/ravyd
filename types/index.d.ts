@@ -1,5 +1,7 @@
 import '@nuxtjs/axios';
 
+export * from './app';
+
 export namespace SpotifyAPI {
   export namespace Auth {
     type AuthorizationResponse<K extends 'access_token' | 'url'> = {

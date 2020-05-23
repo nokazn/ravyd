@@ -41,12 +41,12 @@ import { DataTableHeader } from 'vuetify';
 
 import TrackListTableRow from '~/components/parts/table/TrackListTableRow.vue';
 import TrackListTableGroupHeader from '~/components/parts/table/TrackListTableGroupHeader.vue';
-import { parseTrackDetail, TrackDetail } from '~/scripts/parser/parseTrackDetail';
-import { SpotifyAPI } from '~~/types';
+import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { SpotifyAPI, App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  items: TrackDetail[]
+  items: App.TrackDetail[]
 };
 
 export default Vue.extend({
@@ -132,7 +132,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: TrackDetail) {
+    onMediaButtonClicked(row: App.TrackDetail) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else if (this.isTrackSet(row.id)) {
@@ -146,7 +146,7 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: TrackDetail) {
+    async onFavoriteButtonClicked(row: App.TrackDetail) {
       const nextSavedState = !row.isSaved;
       const modifyedItems = (isSaved: boolean, index: number) => this.items
         .map((item, i) => (i === index

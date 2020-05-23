@@ -1,10 +1,12 @@
 import { Context } from '@nuxt/types';
 
-import { parseTrackDetail, TrackDetail as _TrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { App } from '~~/types';
 
-export type TrackDetail = _TrackDetail;
-
-export const getTopTrackList = async ({ app, params }: Context): Promise<TrackDetail[] | null> => {
+export const getTopTrackList = async ({
+  app,
+  params,
+}: Context): Promise<App.TrackDetail[] | null> => {
   const country = app.$state().auth.userData?.country;
   if (country == null) return null;
 
