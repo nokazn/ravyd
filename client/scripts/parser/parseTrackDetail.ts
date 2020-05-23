@@ -12,6 +12,7 @@ export type TrackDetail = {
     name: SpotifyAPI.Artist['name'],
     id: SpotifyAPI.Artist['id'],
   }[]
+  isPlayable: boolean
   isSaved: boolean
   duration: string
 }
@@ -30,6 +31,7 @@ export const parseTrackDetail = (isTrackSavedList: boolean[]) => (
     name: artist.name,
     id: artist.id,
   })),
+  isPlayable: track.is_playable,
   isSaved: isTrackSavedList[index],
   duration: elapsedTime(track.duration_ms),
 });
