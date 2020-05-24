@@ -37,7 +37,8 @@
       <td>
         <v-btn
           icon
-          size="small">
+          size="small"
+          title="メニュー">
           <v-icon>
             mdi-dots-horizontal
           </v-icon>

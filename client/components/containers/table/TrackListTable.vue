@@ -10,7 +10,8 @@
     <template #header.duration>
       <v-icon
         :size="16"
-        color="grey">
+        color="grey"
+        title="再生時間">
         mdi-clock-outline
       </v-icon>
     </template>
