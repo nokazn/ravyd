@@ -25,7 +25,10 @@
       </td>
 
       <td
-        :class="$style.TrackListTableRow__name"
+        :class="[
+          $style.TrackListTableRow__name,
+          titleColor
+        ]"
         v-text="item.name" />
 
       <td>
@@ -86,6 +89,14 @@ export default Vue.extend({
     },
   },
 
+  computed: {
+    titleColor(): string | undefined {
+      return this.isTrackSet
+        ? 'cyan--text  text--accent-2'
+        : undefined;
+    },
+  },
+
   methods: {
     onRowClicked() {
       this.$emit('on-row-clicked', this.item);
@@ -105,9 +116,6 @@ export default Vue.extend({
   cursor: pointer;
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
-  }
-  &[data-is-track-set=true] .TrackListTableRow__name {
-    color: map-get($cyan, 'accent-3')
   }
   &__id {
     width: 60px;

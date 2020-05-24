@@ -153,13 +153,13 @@ export default Vue.extend({
     },
     async onFavoriteButtonClicked(row: App.TrackDetail) {
       const nextSavedState = !row.isSaved;
-      const modifyedItems = (isSaved: boolean, index: number) => this.items
+      const modifySavedState = (isSaved: boolean, index: number) => this.items
         .map((item, i) => (i === index
           ? { ...item, isSaved }
           : item));
 
       // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifyedItems(nextSavedState, row.index);
+      this.items = modifySavedState(nextSavedState, row.index);
       if (nextSavedState) {
         await this.$dispatch('library/saveTracks', [row.id]);
       } else {
@@ -170,7 +170,7 @@ export default Vue.extend({
         trackIdList: [row.id],
       });
       // 実際の状態と異なれば戻す
-      if (isSaved !== nextSavedState) this.items = modifyedItems(isSaved, row.index);
+      if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, row.index);
     },
     onRowClicked({ id }: App.TrackDetail) {
       this.activeRowId = id;
