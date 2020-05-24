@@ -35,7 +35,7 @@
         <seek-bar
           :class="$style.Footer__seekBar"
           @on-change="onSeekbarChanged" />
-        <media-controllers :class="$style.Footer__mediaControllers" />
+        <media-controllers-wrapper :class="$style.Footer__mediaControllers" />
       </div>
 
       <div :class="$style.Footer__right">
@@ -81,7 +81,7 @@ import ReleaseName from '~/components/parts/text/ReleaseName.vue';
 import MarqueeArtistNames, { Artists } from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
-import MediaControllers from '~/components/containers/player/MediaControllers.vue';
+import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
@@ -92,7 +92,7 @@ export default Vue.extend({
     MarqueeArtistNames,
     FavoriteButton,
     SeekBar,
-    MediaControllers,
+    MediaControllersWrapper,
     VolumeSlider,
   },
 
