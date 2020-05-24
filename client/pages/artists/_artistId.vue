@@ -10,7 +10,15 @@
         default-user-icon="mdi-account-music" />
       <div>
         <div :class="$style.ArtistIdPage__type">
-          アーティスト
+          <span>
+            アーティスト
+          </span>
+          <v-icon
+            :size="14"
+            color="light-blue"
+            :class="$style.ArtistIdPage__verifiedIrtistIcon">
+            mdi-check-decagram
+          </v-icon>
         </div>
         <h1 :class="$style.ArtistIdPage__artistName">
           {{ artistInfo.name }}
@@ -142,7 +150,10 @@ export default class ArtistIdPage extends Vue implements AsyncData {
   }
 
   &__type {
-    font-size: 10px;
+    font-size: 12px;
+  }
+  &__verifiedIrtistIcon {
+    margin-bottom: 2px;
   }
   &__artistName {
     font-size: 40px;

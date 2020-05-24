@@ -26,7 +26,7 @@
         {{ item.name }}
       </td>
 
-      <td style="potision: relative">
+      <td>
         <explicit-chip v-if="item.explicit" />
       </td>
 
