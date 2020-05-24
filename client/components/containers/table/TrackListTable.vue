@@ -73,13 +73,13 @@ export default Vue.extend({
       {
         text: '#',
         value: 'index',
-        width: 60,
+        width: 48,
         align: 'center' as const,
       },
       {
         text: ' ',
         value: 'isSaved',
-        width: 60,
+        width: 48,
         align: 'center' as const,
       },
       {
@@ -101,7 +101,7 @@ export default Vue.extend({
       {
         text: ' ',
         value: 'menu',
-        width: 60,
+        width: 48,
         align: 'center' as const,
       },
     ];
