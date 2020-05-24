@@ -28,6 +28,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
+import { App } from '~~/types';
+
+export type ArtistCardInfo = App.ArtistCardInfo
 
 export default Vue.extend({
   components: {

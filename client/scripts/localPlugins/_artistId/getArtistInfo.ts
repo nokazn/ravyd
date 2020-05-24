@@ -3,7 +3,10 @@ import { addComma } from '~~/utils/addComma';
 import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { App } from '~~/types';
 
-export const getArtistInfo = async ({ app, params }: Context): Promise<App.ArtistInfo | null> => {
+export const getArtistInfo = async (
+  { app, params }: Context,
+  avatarSize: number,
+): Promise<App.ArtistInfo | null> => {
   const artist = await app.$spotify.artists.getArtist({
     artistId: params.artistId,
   });
@@ -16,7 +19,6 @@ export const getArtistInfo = async ({ app, params }: Context): Promise<App.Artis
     images,
     followers,
   } = artist;
-  const avatarSize = 220;
   const avatarSrc = getImageSrc(images, avatarSize);
   const followersText = `フォロワー ${addComma(followers.total)}人`;
 

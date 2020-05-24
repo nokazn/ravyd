@@ -4,7 +4,7 @@
       v-if="artistInfo != null"
       :class="$style.ArtistIdPage__header">
       <user-avatar
-        :size="220"
+        :size="avatarSize"
         :src="artistInfo.avatarSrc"
         :alt="artistInfo.name"
         :title="artistInfo.name"
@@ -61,6 +61,7 @@ import {
 import { App } from '~~/types';
 
 export type AsyncData = {
+  avatarSize: number
   artistInfo: App.ArtistInfo | null
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | null
@@ -78,13 +79,15 @@ export type AsyncData = {
   },
 
   async asyncData(context): Promise<AsyncData | null> {
+    const avatarSize = 220;
     const [artistInfo, isFollowing, topTrackList] = await Promise.all([
-      getArtistInfo(context),
+      getArtistInfo(context, avatarSize),
       getIsFollowing(context),
       getTopTrackList(context),
     ] as const);
 
     return {
+      avatarSize,
       artistInfo,
       isFollowing,
       topTrackList,
@@ -92,6 +95,7 @@ export type AsyncData = {
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData {
+  avatarSize = 220
   artistInfo: App.ArtistInfo | null = null
   isFollowing = false
   topTrackList: App.TrackDetail[] | null = null

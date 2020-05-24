@@ -2,33 +2,12 @@ import { Context } from '@nuxt/types';
 import { parseAlbumType } from '~/scripts/parser/parseAlbumType';
 import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
-import { SpotifyAPI, App } from '~~/types';
+import { App } from '~~/types';
 
-export type ReleaseInfo = {
-  albumType: 'アルバム' | 'シングル' | 'コンピレーション'
-  artistList: {
-    name: string
-    id: string
-  }[]
-  label: string
-  name: string
-  id: string
-  uri: string
-  releaseDate: string
-  releaseDatePrecision: string
-  artwork: {
-    src: string
-    alt: string
-    size: 220
-  }
-  trackList: App.TrackDetail[]
-  totalTracks: number
-  durationMs: number
-  copyrightList: SpotifyAPI.Copyright[]
-  isSaved: boolean
-}
-
-export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseInfo | null> => {
+export const getReleaseInfo = async (
+  { app, params }: Context,
+  artworkSize: number,
+): Promise<App.ReleaseInfo | null> => {
   const release = await app.$spotify.albums.getAlbum({ albumId: params.releaseId });
   if (release == null) return null;
 
@@ -54,12 +33,7 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     name: artist.name,
   }));
 
-  const artworkSize = 220 as const;
-  const artwork = {
-    size: artworkSize,
-    src: getImageSrc(images, artworkSize),
-    alt: `the artwork of ${name} by ${artistList.map((artist) => artist.name).join(', ')}`,
-  };
+  const artworkSrc = getImageSrc(images, artworkSize);
 
   const trackIdList = tracks.items.map((track) => track.id);
   const albumIdList = [id];
@@ -82,7 +56,7 @@ export const getReleaseInfo = async ({ app, params }: Context): Promise<ReleaseI
     uri,
     releaseDate,
     releaseDatePrecision,
-    artwork,
+    artworkSrc,
     trackList,
     totalTracks,
     durationMs,

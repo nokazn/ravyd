@@ -17,6 +17,33 @@ export namespace App {
     duration: string
   }
 
+  export type ReleaseCardInfo = {
+    type: 'album' | 'track'
+    name: string //  track または album の name
+    id: string //  track または album の id
+    releaseId: string
+    uri: string
+    artists: App.SimpleArtistInfo[]
+    artworkSrc: string
+  }
+  // /releases/{release_id}
+  export type ReleaseInfo = {
+    albumType: 'アルバム' | 'シングル' | 'コンピレーション'
+    artistList: App.SimpleArtistInfo[]
+    label: string
+    name: string
+    id: string
+    uri: string
+    releaseDate: string
+    releaseDatePrecision: string
+    artworkSrc: string
+    trackList: App.TrackDetail[]
+    totalTracks: number
+    durationMs: number
+    copyrightList: SpotifyAPI.Copyright[]
+    isSaved: boolean
+  }
+
   export type SimpleArtistInfo = {
     name: string
     id: string
@@ -28,6 +55,7 @@ export namespace App {
     avatarSrc: string
     width?: number
   }
+  // /artists/{artist_id}
   export type ArtistInfo = {
     name: string
     id: string

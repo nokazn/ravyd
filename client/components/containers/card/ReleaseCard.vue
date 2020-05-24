@@ -8,9 +8,9 @@
     @click="onClick">
     <div :class="$style.ReleaseCard__container">
       <release-artwork
-        :src="src"
-        :alt="name"
+        :src="artworkSrc"
         :size="width"
+        :alt="name"
         :title="name"
         is-overlayed
         :icon="mediaIcon"
@@ -46,22 +46,12 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { hasProp } from '~~/utils/hasProp';
+import { App } from '~~/types';
 
-export type ReleaseCardInfo = {
-  type: 'album' | 'track'
-  name: string //  track または album の name
-  id: string //  track または album の id
-  releaseId: string
-  uri: string
-  artists: {
-    name: string
-    id: string
-  }[]
-  src: string
-  width?: number
-}
+export type ReleaseCardInfo = App.ReleaseCardInfo
 
 export default Vue.extend({
   components: {
@@ -86,13 +76,13 @@ export default Vue.extend({
       required: true,
     },
     artists: {
-      type: Array as PropType<ReleaseCardInfo['artists']>,
+      type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
       validator(value) {
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
-    src: {
+    artworkSrc: {
       type: String,
       required: true,
     },

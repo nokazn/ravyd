@@ -22,13 +22,6 @@
 import Vue, { PropType } from 'vue';
 import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
-export type ReleaseArtworkInfo = {
-  src: string
-  alt: string
-  size: number
-  icon?: string
-}
-
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
 export type Data = {
@@ -49,13 +42,13 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    icon: {
-      type: String as PropType<MediaIcon>,
-      default: 'mdi-play-circle',
-    },
     size: {
       type: Number,
       required: true,
+    },
+    icon: {
+      type: String as PropType<MediaIcon>,
+      default: 'mdi-play-circle',
     },
     isOverlayed: {
       type: Boolean,

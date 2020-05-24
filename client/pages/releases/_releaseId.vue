@@ -4,7 +4,9 @@
     :class="$style.ReleaseIdPage">
     <div :class="$style.ReleaseIdPage__header">
       <release-artwork
-        v-bind="releaseInfo.artwork"
+        :src="releaseInfo.artworkSrc"
+        :alt="releaseInfo.name"
+        :size="220"
         :title="releaseInfo.name" />
 
       <div :class="$style.ReleaseIdPage__releaseInfo">
@@ -75,10 +77,12 @@ import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackListTable from '~/components/containers/table/TrackListTable.vue';
-import { getReleaseInfo, ReleaseInfo } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
+import { App } from '~~/types';
 
 export interface AsyncData {
-  releaseInfo: ReleaseInfo | null
+  artworkSize: number
+  releaseInfo: App.ReleaseInfo | null
 }
 
 @Component({
@@ -100,12 +104,17 @@ export interface AsyncData {
   },
 
   async asyncData(context: Context): Promise<AsyncData | null> {
-    const releaseInfo = await getReleaseInfo(context);
-    return { releaseInfo };
+    const artworkSize = 220;
+    const releaseInfo = await getReleaseInfo(context, artworkSize);
+    return {
+      artworkSize,
+      releaseInfo,
+    };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData {
-  releaseInfo: ReleaseInfo | null = null
+  artworkSize = 220
+  releaseInfo: App.ReleaseInfo | null = null
 
   head() {
     return {

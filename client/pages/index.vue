@@ -48,14 +48,13 @@ import Vue from 'vue';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
-import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import { parseTrack } from '~/scripts/parser/parseTrack';
+import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
+import { parseTrackForCard } from '~/scripts/parser/parseTrackForCard';
 import { parseArtistForCard } from '~/scripts/parser/parseArtistForCard';
-import { parseAlbum } from '~/scripts/parser/parseAlbum';
-import { App } from '~~/types';
+import { parseAlbumForCard } from '~/scripts/parser/parseAlbumForCard';
 
 export type AsyncData = {
-  topArtistList: App.ArtistCardInfo[] | undefined
+  topArtistList: ArtistCardInfo[] | undefined
   topTrackList: ReleaseCardInfo[] | undefined
   newReleaseList: ReleaseCardInfo[] | undefined
 }
@@ -72,15 +71,12 @@ export default Vue.extend({
     const [topArtists, topTracks, newReleases] = await Promise.all([
       app.$spotify.top.getTopArtists({}),
       app.$spotify.top.getTopTracks({}),
-      app.$spotify.browse.getNewReleases({
-        country,
-        limit: 20,
-      }),
+      app.$spotify.browse.getNewReleases({ country }),
     ]);
     const cardImageSize = 160;
     const topArtistList = topArtists?.items.map(parseArtistForCard(cardImageSize));
-    const topTrackList = topTracks?.items.map(parseTrack(cardImageSize));
-    const newReleaseList = newReleases?.albums?.items.map(parseAlbum(cardImageSize));
+    const topTrackList = topTracks?.items.map(parseTrackForCard(cardImageSize));
+    const newReleaseList = newReleases?.albums?.items.map(parseAlbumForCard(cardImageSize));
 
     return {
       topArtistList,
