@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.ArtistName">
+  <div :class="$style.ArtistNames">
     <template
       v-for="({ name, id }, index) in artistList">
       <nuxt-link
@@ -53,7 +53,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ArtistName {
+.ArtistNames {
   white-space: nowrap;
   & > * {
     display: inline-block;

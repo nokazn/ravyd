@@ -19,7 +19,7 @@
             v-if="trackName != null"
             :name="trackName"
             :release-id="albumId" />
-          <marquee-artist-name :artist-list="artistList" />
+          <marquee-artist-names :artist-list="artistList" />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
@@ -71,7 +71,7 @@ import { RootState, RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
-import MarqueeArtistName, { Artists } from '~/components/parts/text/MarqueeArtistName.vue';
+import MarqueeArtistNames, { Artists } from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllers from '~/components/containers/player/MediaControllers.vue';
@@ -82,7 +82,7 @@ export default Vue.extend({
   components: {
     ReleaseArtwork,
     ReleaseName,
-    MarqueeArtistName,
+    MarqueeArtistNames,
     FavoriteButton,
     SeekBar,
     MediaControllers,

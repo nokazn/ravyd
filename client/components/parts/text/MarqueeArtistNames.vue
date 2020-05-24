@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style.MarqueeArtistName, 'g-text-gradation']">
+  <div :class="[$style.MarqueeArtistNames, 'g-text-gradation']">
     <div
       id="marqueeArtistNameLink"
       :style="marqueeStyles"
@@ -122,7 +122,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.MarqueeArtistName {
+.MarqueeArtistNames {
   color: $g-subtitle-color;
   font-size: 0.7rem;
   line-height: 1rem;

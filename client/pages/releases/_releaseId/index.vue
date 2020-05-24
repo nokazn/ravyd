@@ -14,7 +14,7 @@
           {{ releaseInfo.name }}
         </h1>
 
-        <artist-name
+        <artist-names
           :artist-list="releaseInfo.artistList"
           :class="$style.ReleaseIdPage__artistsName" />
 
@@ -64,7 +64,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
-import ArtistName from '~/components/parts/text/ArtistName.vue';
+import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
@@ -82,7 +82,7 @@ export interface AsyncData {
 @Component({
   components: {
     ReleaseArtwork,
-    ArtistName,
+    ArtistNames,
     MediaControlButton,
     FavoriteButton,
     ReleaseDate,
