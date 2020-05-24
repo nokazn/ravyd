@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 
-export type MediaButtonIcon = 'mdi-play' | 'mdi-heart-outline'
+export type MediaButtonIcon = 'mdi-play' | 'mdi-pause'
 
 export default Vue.extend({
   props: {
@@ -32,13 +32,17 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    mediaButtonIcon: {
-      type: String as PropType<MediaButtonIcon>,
-      required: true,
-    },
     trackNumber: {
       type: Number,
       required: true,
+    },
+  },
+
+  computed: {
+    mediaButtonIcon(): MediaButtonIcon {
+      return this.isPlayingTrack
+        ? 'mdi-pause'
+        : 'mdi-play';
     },
   },
 

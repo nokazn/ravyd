@@ -29,7 +29,6 @@
         :is-active="isActiveRow(item.id)"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
-        :media-button-icon="mediaButtonIcon(item.id)"
         :uri="uri"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
@@ -125,11 +124,6 @@ export default Vue.extend({
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().player.isPlaying;
-    },
-    mediaButtonIcon(): (trackId: string) => 'mdi-play' | 'mdi-pause' {
-      return (trackId: string) => (this.isPlayingTrack(trackId)
-        ? 'mdi-pause'
-        : 'mdi-play');
     },
     hasMultipleDiscs(): boolean {
       const discNumberList = Array.from(new Set(this.items

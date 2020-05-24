@@ -11,10 +11,9 @@
           $style.TrackListTableRow__id,
           'text-center'
         ]">
-        <track-list-table-media-icon
+        <track-list-media-button
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
-          :media-button-icon="mediaButtonIcon"
           :track-number="item.trackNumber"
           @on-clicked="onMediaButtonClicked" />
       </td>
@@ -52,14 +51,14 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackListTableMediaIcon, { MediaButtonIcon } from '~/components/parts/button/TrackListTableMediaButton.vue';
+import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import { App } from '~~/types';
 
 export default Vue.extend({
   components: {
-    TrackListTableMediaIcon,
+    TrackListMediaButton,
     ExplicitChip,
     FavoriteButton,
   },
@@ -75,10 +74,6 @@ export default Vue.extend({
     },
     isPlayingTrack: {
       type: Boolean,
-      required: true,
-    },
-    mediaButtonIcon: {
-      type: String as PropType<MediaButtonIcon>,
       required: true,
     },
     uri: {
