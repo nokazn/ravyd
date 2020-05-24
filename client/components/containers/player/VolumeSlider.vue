@@ -1,8 +1,13 @@
 <template>
   <div :class="$style.VolumeSlider">
-    <v-icon small>
-      {{ volumeIcon }}
-    </v-icon>
+    <v-btn
+      icon
+      small
+      :title="volumeButton.title">
+      <v-icon small>
+        {{ volumeButton.icon }}
+      </v-icon>
+    </v-btn>
 
     <v-slider
       v-model="volume"
@@ -19,29 +24,12 @@
 import Vue from 'vue';
 import { RootState } from 'vuex';
 
-export type Data = {
-  volumeIconList: [
-    'mdi-volume-mute',
-    'mdi-volume-low',
-    'mdi-volume-medium',
-    'mdi-volume-high',
-    'mdi-volume-high',
-  ],
+export type VolumeButton = {
+  icon: 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
+  title: 'ミュート' | 'ミュートを解除'
 }
 
-const instance = Vue.extend({
-  data(): Data {
-    return {
-      volumeIconList: [
-        'mdi-volume-mute',
-        'mdi-volume-low',
-        'mdi-volume-medium',
-        'mdi-volume-high',
-        'mdi-volume-high',
-      ],
-    };
-  },
-
+export default Vue.extend({
   computed: {
     volume: {
       get(): RootState['player']['volume'] {
@@ -51,12 +39,27 @@ const instance = Vue.extend({
         this.$commit('player/SET_VOLUME', { volumePercent });
       },
     },
-    volumeIcon(): Data['volumeIconList'][keyof Data['volumeIconList']] {
+    volumeButton(): VolumeButton {
+      const volumeIconList: Array<VolumeButton['icon']> = [
+        'mdi-volume-mute',
+        'mdi-volume-low',
+        'mdi-volume-medium',
+        'mdi-volume-high',
+        'mdi-volume-high',
+      ];
       const index = Math.min(
-        Math.floor((this.volume / 100) * this.volumeIconList.length),
-        this.volumeIconList.length - 1,
+        Math.floor((this.volume / 100) * volumeIconList.length),
+        volumeIconList.length - 1,
       );
-      return this.volumeIconList[index];
+      const icon = volumeIconList[index];
+      const title = this.volume === 0
+        ? 'ミュートを解除'
+        : 'ミュート';
+
+      return {
+        icon,
+        title,
+      };
     },
   },
 
@@ -71,17 +74,13 @@ const instance = Vue.extend({
     },
   },
 });
-
-export default instance;
 </script>
 
 <style lang="scss" module>
 .VolumeSlider {
   display: flex;
   justify-content: center;
+  align-items: center;
   min-width: 120px;
-  & > *:not(:last-child) {
-    margin-right: 4px;
-  }
 }
 </style>

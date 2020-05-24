@@ -12,6 +12,7 @@
         :alt="name"
         :size="width"
         :icon="mediaIcon"
+        :title="name"
         is-overlayed
         @on-media-button-clicked="onMediaButtonClicked" />
 

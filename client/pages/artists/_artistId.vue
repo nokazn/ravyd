@@ -7,9 +7,12 @@
         :src="artistInfo.avatarSrc"
         :alt="artistInfo.avatarAlt"
         :size="220"
+        :title="artistInfo.name"
         default-user-icon="mdi-account-music" />
       <div>
-        <div :class="$style.ArtistIdPage__type">
+        <div
+          title="認証済アーティスト"
+          :class="$style.ArtistIdPage__type">
           <span>
             アーティスト
           </span>
@@ -20,9 +23,11 @@
             mdi-check-decagram
           </v-icon>
         </div>
+
         <h1 :class="$style.ArtistIdPage__artistName">
           {{ artistInfo.name }}
         </h1>
+
         <p>
           {{ artistInfo.followersText }}
         </p>

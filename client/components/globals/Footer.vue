@@ -10,8 +10,9 @@
         <release-artwork
           v-if="hasAlbumArtwork"
           :src="albumArtWorkSrc(64)"
-          alt="current-track-art-work"
           :size="64"
+          :alt="trackName"
+          :title="trackName"
           :class="$style.Footer__artWork" />
 
         <div :class="$style.Footer__trackInfo">
@@ -39,19 +40,25 @@
 
       <div :class="$style.Footer__right">
         <div>
-          <v-btn icon>
+          <v-btn
+            icon
+            title="再生リスト">
             <v-icon :size="20">
               mdi-playlist-play
             </v-icon>
           </v-btn>
 
-          <v-btn icon>
+          <v-btn
+            icon
+            title="デバイスを選択">
             <v-icon :size="20">
               mdi-devices
             </v-icon>
           </v-btn>
 
-          <v-btn icon>
+          <v-btn
+            icon
+            title="メニュー">
             <v-icon :size="20">
               mdi-dots-horizontal
             </v-icon>

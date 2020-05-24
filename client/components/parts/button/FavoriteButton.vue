@@ -2,6 +2,7 @@
   <v-btn
     icon
     v-bind="buttonProps"
+    :title="title"
     @click="onClicked">
     <v-icon :size="iconSize">
       {{ favoriteIcon }}
@@ -41,6 +42,11 @@ export default Vue.extend({
       return this.isFavorited
         ? 'mdi-heart'
         : 'mdi-heart-outline';
+    },
+    title(): string {
+      return this.isFavorited
+        ? '保存しない'
+        : '保存する';
     },
     buttonProps(): ButtonProps {
       return typeof this.size === 'number'

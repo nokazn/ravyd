@@ -1,5 +1,7 @@
 <template>
-  <div :class="[$style.MarqueeArtistNames, 'g-text-gradation']">
+  <div
+    :title="title"
+    :class="[$style.MarqueeArtistNames, 'g-text-gradation']">
     <div
       id="marqueeArtistNameLink"
       :style="marqueeStyles"
@@ -8,7 +10,7 @@
         v-for="({ name, id }, index) in artistList">
         <nuxt-link
           :key="id"
-          :to="artistsPath(id)">
+          :to="artistPath(id)">
           {{ name }}
         </nuxt-link>
         <span
@@ -57,8 +59,13 @@ export default Vue.extend({
   },
 
   computed: {
-    artistsPath(): (id: string) => string {
+    artistPath(): (id: string) => string {
       return (id: string) => `/artists/${id}`;
+    },
+    title(): string {
+      return this.artistList
+        .map((artist) => artist.name)
+        .join(', ');
     },
     marqueeSeconds(): number | null {
       if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;

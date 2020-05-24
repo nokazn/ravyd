@@ -9,8 +9,9 @@
     <div :class="$style.ReleaseCard__container">
       <release-artwork
         :src="src"
-        :alt="alt"
+        :alt="name"
         :size="width"
+        :title="name"
         is-overlayed
         :icon="mediaIcon"
         @on-media-button-clicked="onMediaButtonClicked" />
@@ -102,9 +103,6 @@ export default Vue.extend({
   },
 
   computed: {
-    alt(): string {
-      return `${this.name} by ${this.artistsName}`;
-    },
     releasePath(): string {
       return `/releases/${this.releaseId}`;
     },

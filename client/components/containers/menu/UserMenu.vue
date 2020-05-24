@@ -9,6 +9,7 @@
         text
         small
         rounded
+        :title="userDisplayName"
         v-on="on">
         <div class="user-menu__button">
           <user-avatar

@@ -4,12 +4,12 @@
       v-for="({ name, id }, index) in artistList">
       <nuxt-link
         :key="id"
-        :to="artistsPath(id)">
+        :to="artistPath(id)">
         {{ name }}
-      </nuxt-link>
-      <span
+      </nuxt-link><span
         v-if="index !== artistList.length - 1"
-        :key="`${id}-comma`">, </span>
+        :key="`${id}-comma`"
+        :class="$style.ArtistNames__comma">, </span>
     </template>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default Vue.extend({
   },
 
   computed: {
-    artistsPath(): (id: string) => string {
+    artistPath(): (id: string) => string {
       return (id: string) => `/artists/${id}`;
     },
   },
@@ -57,6 +57,9 @@ export default Vue.extend({
   white-space: nowrap;
   & > * {
     display: inline-block;
+  }
+  &__comma {
+    margin-right: .5em;
   }
 }
 </style>

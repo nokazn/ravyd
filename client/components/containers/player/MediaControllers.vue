@@ -2,8 +2,9 @@
   <div :class="$style.MediaControler">
     <v-btn
       icon
-      :color="shuffleColor"
       :disabled="isShuffleDisallowed"
+      :color="shuffleButton.color"
+      :title="shuffleButton.title"
       @click="onShuffleClicked">
       <v-icon :size="16">
         mdi-shuffle-variant
@@ -14,6 +15,7 @@
       icon
       large
       :disabled="isPreviousDisallowed"
+      title="前の曲"
       @click="onPreivousClicked"
       @dblclick="onPreviousDoubleClicked">
       <v-icon :size="28">
@@ -24,15 +26,17 @@
     <v-btn
       icon
       large
+      :title="mediaButton.title"
       @click="onMediaClicked">
       <v-icon :size="40">
-        {{ mediaButton }}
+        {{ mediaButton.icon }}
       </v-icon>
     </v-btn>
 
     <v-btn
       icon
       large
+      title="次の曲"
       @click="onNextClicked">
       <v-icon :size="28">
         mdi-skip-next
@@ -41,11 +45,12 @@
 
     <v-btn
       icon
-      :color="repeatColor"
+      :color="repeatButton.color"
+      :title="repeatButton.title"
       :disabled="isRepeatDisallowed"
       @click="onRepeatClicked">
       <v-icon :size="16">
-        {{ repeatIcon }}
+        {{ repeatButton.icon }}
       </v-icon>
     </v-btn>
   </div>
@@ -55,56 +60,84 @@
 import Vue from 'vue';
 import { RootState, RootGetters } from 'vuex';
 
+export type MediaButton = {
+  icon: 'mdi-play-circle' | 'mdi-pause-circle'
+  title: '再生' | '停止'
+}
+
+export type ShuffleButton = {
+  color: 'cyan' | 'grey lighten-1',
+  title: 'シャッフル再生' | 'シャッフル再生しない'
+};
+
+export type RepeatButton = {
+  icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once'
+  title: 'リピート再生しない' | 'リピート再生' | '曲をリピート再生'
+  color: 'cyan' | 'grey lighten-1'
+}
+
 export default Vue.extend({
   computed: {
     position(): RootState['player']['position'] {
       return this.$state().player.position;
     },
 
-    mediaButton(): 'mdi-play-circle' | 'mdi-pause-circle' {
+    mediaButton(): MediaButton {
       return this.$state().player.isPlaying
-        ? 'mdi-pause-circle'
-        : 'mdi-play-circle';
+        ? {
+          icon: 'mdi-pause-circle',
+          title: '停止',
+        }
+        : {
+          icon: 'mdi-play-circle',
+          title: '再生',
+        };
     },
 
     isPreviousDisallowed(): boolean {
       return this.$getters()['player/isPreviousDisallowed'] && this.position < 1000;
     },
 
+    shuffleButton(): ShuffleButton {
+      return this.$state().player.isShuffled
+        ? {
+          color: 'cyan',
+          title: 'シャッフル再生しない',
+        }
+        : {
+          color: 'grey lighten-1',
+          title: 'シャッフル再生',
+        };
+    },
     isShuffleDisallowed(): RootGetters['player/isShuffleDisallowed'] {
       return this.$getters()['player/isShuffleDisallowed'];
     },
-    shuffleColor(): string {
-      if (this.isShuffleDisallowed) return 'grey darken2';
 
-      return this.$state().player.isShuffled
-        ? 'cyan'
-        : 'grey lighten-1';
-    },
-
-    repeatIcon(): string {
+    repeatButton(): RepeatButton {
       switch (this.$state().player.repeatMode) {
         case 0:
-          return 'mdi-repeat-off';
+          return {
+            icon: 'mdi-repeat-off',
+            color: 'grey lighten-1',
+            title: 'リピート再生',
+          };
         case 1:
-          return 'mdi-repeat';
+          return {
+            icon: 'mdi-repeat',
+            color: 'cyan',
+            title: '曲をリピート再生',
+          };
         default:
-          return 'mdi-repeat-once';
+          return {
+            icon: 'mdi-repeat-once',
+            color: 'cyan',
+            title: 'リピート再生しない',
+          };
       }
     },
     isRepeatDisallowed(): boolean {
       return this.$getters()['player/isRepeatContextDisallowed']
         || this.$getters()['player/isRepeatTrackDisallowed'];
-    },
-    repeatColor(): string {
-      if (this.isRepeatDisallowed) return 'grey-darken-2';
-
-      switch (this.$state().player.repeatMode) {
-        case 0:
-          return 'grey lighten-1';
-        default:
-          return 'cyan';
-      }
     },
   },
 

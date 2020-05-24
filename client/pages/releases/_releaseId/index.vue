@@ -3,7 +3,9 @@
     v-if="releaseInfo != null"
     :class="$style.ReleaseIdPage">
     <div :class="$style.ReleaseIdPage__header">
-      <release-artwork v-bind="releaseInfo.artwork" />
+      <release-artwork
+        v-bind="releaseInfo.artwork"
+        :title="releaseInfo.name" />
 
       <div :class="$style.ReleaseIdPage__releaseInfo">
         <div :class="$style.ReleaseIdPage__releaseType">

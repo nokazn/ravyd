@@ -8,11 +8,13 @@
       light
       background-color="grey lighten-4"
       :height="height"
+      title="検索"
       :class="$style.SearchField">
       <template #prepend-inner>
         <v-icon
           :size="iconSize"
           color="grey darken-4"
+          title="検索"
           :class="$style.SearchField__prependInnerIcon">
           mdi-magnify
         </v-icon>
@@ -24,6 +26,7 @@
           :size="iconSize"
           color="grey darken-1"
           :class="$style.SearchField__clearIcon"
+          title="消去"
           @click="clearText">
           mdi-close
         </v-icon>

@@ -1,5 +1,7 @@
 <template>
-  <span :class="$style.ReleaseTotalTracks">
+  <span
+    :title="title"
+    :class="$style.ReleaseTotalTracks">
     <v-icon
       :size="size"
       color="grey lighten-1">
@@ -14,6 +16,12 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export type Data = {
+  text: string
+  title: string
+  textStyles: { fontSize: string }
+}
+
 export default Vue.extend({
   props: {
     totalTracks: {
@@ -26,12 +34,18 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    textStyles(): { fontSize: string } {
-      return {
-        fontSize: `${this.size * 0.8}px`,
-      };
-    },
+  data() {
+    const text = `${this.totalTracks}曲`;
+    const title = `全${text}`;
+    const textStyles = {
+      fontSize: `${this.size * 0.8}px`,
+    };
+
+    return {
+      text,
+      title,
+      textStyles,
+    };
   },
 });
 </script>

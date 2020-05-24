@@ -1,5 +1,7 @@
 <template>
-  <span :class="$style.ReleaseDate">
+  <span
+    :class="$style.ReleaseDate"
+    :title="title">
     <v-icon
       :size="size"
       color="grey lighten-1">
@@ -15,6 +17,12 @@
 import Vue from 'vue';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
+export type Data = {
+  duration: string
+  title: string
+  textStyles: { fontSize: string }
+}
+
 export default Vue.extend({
   props: {
     durationMs: {
@@ -27,15 +35,16 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    duration(): string {
-      return elapsedTimeInJapanese(this.durationMs);
-    },
-    textStyles(): { 'font-size': string } {
-      return {
-        'font-size': `${this.size * 0.8}px`,
-      };
-    },
+  data(): Data {
+    const duration = elapsedTimeInJapanese(this.durationMs);
+    const title = `全${duration}`;
+    const textStyles = { fontSize: `${this.size * 0.8}px` };
+
+    return {
+      duration,
+      title,
+      textStyles,
+    };
   },
 });
 </script>

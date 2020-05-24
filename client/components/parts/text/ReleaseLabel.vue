@@ -1,5 +1,7 @@
 <template>
-  <span :class="$style.ReleaseLabel">
+  <span
+    :title="title"
+    :class="$style.ReleaseLabel">
     <v-icon
       :size="size"
       color="grey lighten-1">
@@ -14,6 +16,11 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export type Data = {
+  title: string
+  textStyles: { fontSize: string }
+}
+
 export default Vue.extend({
   props: {
     label: {
@@ -26,12 +33,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    textStyles(): { 'font-size': string } {
-      return {
-        'font-size': `${this.size * 0.8}px`,
-      };
-    },
+  data(): Data {
+    const title = `レーベル - ${this.label}`;
+    const textStyles = { fontSize: `${this.size * 0.8}px` };
+    return {
+      title,
+      textStyles,
+    };
   },
 });
 </script>

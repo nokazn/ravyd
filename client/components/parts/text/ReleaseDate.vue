@@ -1,5 +1,7 @@
 <template>
-  <span :class="$style.ReleaseDate">
+  <span
+    :class="$style.ReleaseDate"
+    :title="title">
     <v-icon
       :size="size"
       color="grey lighten-1">
@@ -16,6 +18,8 @@ import Vue, { PropType } from 'vue';
 
 export type Data = {
   date: string
+  title: string
+  textStyles: { fontSize: string }
 }
 
 export default Vue.extend({
@@ -45,18 +49,16 @@ export default Vue.extend({
       day: ['YYYY-MM-dd', 'YYYY年M月d日'] as const,
     }[this.releaseDatePrecision];
     const date = this.$dayjs(this.releaseDate, releaseDateFormat[0]).format(releaseDateFormat[1]);
+    const title = `${date}リリース`;
+    const textStyles = {
+      fontSize: `${this.size * 0.8}px`,
+    };
 
     return {
       date,
+      title,
+      textStyles,
     };
-  },
-
-  computed: {
-    textStyles(): { 'font-size': string } {
-      return {
-        'font-size': `${this.size * 0.8}px`,
-      };
-    },
   },
 });
 </script>

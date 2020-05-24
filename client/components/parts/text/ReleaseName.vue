@@ -1,20 +1,14 @@
 <template>
-  <div :class="[$style.ReleaseName, 'g-text-gradation']">
+  <div
+    :title="name"
+    :class="[$style.ReleaseName, 'g-text-gradation']">
     <nuxt-link
-      v-if="releasePath != null"
       id="releaseNameLink"
       :to="releasePath"
       :style="marqueeStyles"
       @mouseover.native="onHovered">
       {{ name }}
     </nuxt-link>
-    <span
-      v-else
-      id="releaseNameLink"
-      :style="marqueeStyles"
-      @mouseover="onHovered">
-      {{ name }}
-    </span>
   </div>
 </template>
 
@@ -36,10 +30,8 @@ export default Vue.extend({
       required: true,
     },
     releaseId: {
+      type: String,
       required: true,
-      validator(value) {
-        return typeof value === 'string' || value == null;
-      },
     },
   },
 
@@ -53,10 +45,8 @@ export default Vue.extend({
   },
 
   computed: {
-    releasePath(): string | null {
-      return this.releaseId != null
-        ? `/releases/${this.releaseId}`
-        : null;
+    releasePath(): string {
+      return `/releases/${this.releaseId}`;
     },
     marqueeSeconds(): number | null {
       if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;
