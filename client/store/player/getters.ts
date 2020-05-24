@@ -3,7 +3,7 @@ import { Getters } from 'vuex';
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST } from '~/variables';
 import { getImageSrc } from '~/scripts/parser/getImageSrc';
-import { SpotifyAPI, App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
@@ -12,12 +12,6 @@ export type PlayerGetters = {
   isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
   isArtistSet: (artistId: string) => boolean
-  recentlyPlayedTrackList: {
-    artWorkSrc: string | null
-    trackName: string | null
-    trackId: string | null
-    artists: App.SimpleArtistInfo[] | null
-  }[] | null
   repeatState: SpotifyAPI.RepeatState
   isPreviousDisallowed: boolean
   isShuffleDisallowed: boolean
@@ -33,7 +27,6 @@ export type RootGetters = {
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
   ['player/isArtistSet']: PlayerGetters['isArtistSet']
-  ['player/recentlyPlayedTrackList']: PlayerGetters['recentlyPlayedTrackList']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
   ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
@@ -71,23 +64,6 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isArtistSet(state) {
     return (artistId) => state.artistList?.some((artist) => artist.id === artistId) ?? false;
-  },
-
-  recentlyPlayedTrackList(state) {
-    if (state.recentlyPlayed == null) return null;
-
-    return state.recentlyPlayed.items.map((item) => {
-      const { track } = item;
-      return {
-        artWorkSrc: track.album.images[0]?.url ?? null,
-        trackName: track.name,
-        trackId: track.id,
-        artists: track.album.artists.map((artist) => ({
-          name: artist.name,
-          id: artist.id,
-        })),
-      };
-    });
   },
 
   isShuffleDisallowed(state) {
