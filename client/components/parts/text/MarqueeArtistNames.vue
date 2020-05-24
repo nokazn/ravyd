@@ -23,13 +23,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+
 import { hasProp } from '~~/utils/hasProp';
 import { sleep } from '~~/utils/sleep';
-
-export type Artists = {
-  name: string
-  id: string
-}[]
+import { App } from '~~/types';
 
 export type Data = {
   isHovered: boolean
@@ -41,7 +38,7 @@ export type Data = {
 export default Vue.extend({
   props: {
     artistList: {
-      type: Array as PropType<Artists>,
+      type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
       validator(value) {
         return value.every((ele) => hasProp(ele, ['name', 'id']));

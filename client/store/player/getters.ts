@@ -3,7 +3,7 @@ import { Getters } from 'vuex';
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST } from '~/variables';
 import { getImageSrc } from '~/scripts/parser/getImageSrc';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, App } from '~~/types';
 
 export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
@@ -16,10 +16,7 @@ export type PlayerGetters = {
     artWorkSrc: string | null
     trackName: string | null
     trackId: string | null
-    artists: {
-      name: string
-      id: string
-    }[] | null
+    artists: App.SimpleArtistInfo[] | null
   }[] | null
   repeatState: SpotifyAPI.RepeatState
   isPreviousDisallowed: boolean

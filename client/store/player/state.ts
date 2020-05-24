@@ -1,4 +1,4 @@
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI, App } from '~~/types';
 
 export type PlayerState = {
   deviceId: string | null
@@ -8,10 +8,7 @@ export type PlayerState = {
   trackUri: string | null
   albumUri: string | null
   albumArtWorkList: SpotifyAPI.Image[] | null
-  artistList: {
-    name: string
-    id: string
-  }[] | null
+  artistList: App.SimpleArtistInfo[] | null
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null

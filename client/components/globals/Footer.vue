@@ -20,7 +20,10 @@
             v-if="trackName != null"
             :name="trackName"
             :release-id="albumId" />
-          <marquee-artist-names :artist-list="artistList" />
+
+          <marquee-artist-names
+            v-if="artistList != null"
+            :artist-list="artistList" />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
@@ -78,12 +81,13 @@ import { RootState, RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ReleaseName from '~/components/parts/text/ReleaseName.vue';
-import MarqueeArtistNames, { Artists } from '~/components/parts/text/MarqueeArtistNames.vue';
+import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
+import { App } from '~~/types';
 
 export default Vue.extend({
   components: {
@@ -122,7 +126,7 @@ export default Vue.extend({
     albumId(): RootGetters['player/albumId'] {
       return this.$getters()['player/albumId'];
     },
-    artistList(): Artists | null {
+    artistList(): App.SimpleArtistInfo[] | null {
       return this.$state().player.artistList;
     },
     isSavedTrack(): boolean {

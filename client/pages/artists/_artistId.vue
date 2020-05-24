@@ -4,9 +4,9 @@
       v-if="artistInfo != null"
       :class="$style.ArtistIdPage__header">
       <user-avatar
-        :src="artistInfo.avatarSrc"
-        :alt="artistInfo.avatarAlt"
         :size="220"
+        :src="artistInfo.avatarSrc"
+        :alt="artistInfo.name"
         :title="artistInfo.name"
         default-user-icon="mdi-account-music" />
       <div>
@@ -55,14 +55,13 @@ import MediaControlButton from '~/components/parts/button/MediaControlButton.vue
 import FollowButton from '~/components/parts/button/FollowButton.vue';
 import {
   getArtistInfo,
-  ArtistInfo,
   getTopTrackList,
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
 import { App } from '~~/types';
 
 export type AsyncData = {
-  artistInfo: ArtistInfo | null
+  artistInfo: App.ArtistInfo | null
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | null
 }
@@ -93,7 +92,7 @@ export type AsyncData = {
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData {
-  artistInfo: ArtistInfo | null = null
+  artistInfo: App.ArtistInfo | null = null
   isFollowing = false
   topTrackList: App.TrackDetail[] | null = null
 

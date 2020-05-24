@@ -16,4 +16,23 @@ export namespace App {
     isSaved: boolean
     duration: string
   }
+
+  export type SimpleArtistInfo = {
+    name: string
+    id: string
+  }
+  export type ArtistCardInfo = {
+    name: string
+    id: string
+    uri: string
+    avatarSrc: string
+    width?: number
+  }
+  export type ArtistInfo = {
+    name: string
+    id: string
+    uri: string
+    avatarSrc: string
+    followersText: string
+  }
 }

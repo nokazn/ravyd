@@ -8,7 +8,7 @@
     @click="onClick">
     <div :class="$style.ArtistCard__container">
       <user-avatar
-        :src="src"
+        :src="avatarSrc"
         :alt="name"
         :size="width"
         :icon="mediaIcon"
@@ -29,14 +29,6 @@
 import Vue from 'vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
 
-export type ArtistCardInfo = {
-  name: string
-  id: string
-  uri: string
-  src: string
-  width?: number
-}
-
 export default Vue.extend({
   components: {
     UserAvatar,
@@ -55,7 +47,7 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    src: {
+    avatarSrc: {
       type: String,
       required: true,
     },
