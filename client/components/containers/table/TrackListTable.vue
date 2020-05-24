@@ -26,10 +26,12 @@
     <template #item="{ item }">
       <track-list-table-row
         :item="item"
+        :is-active="isActiveRow(item.id)"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :media-button-icon="mediaButtonIcon(item.id)"
         :uri="uri"
+        @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked" />
     </template>
@@ -47,6 +49,7 @@ import { App } from '~~/types';
 export type Data = {
   headers: DataTableHeader[]
   items: App.TrackDetail[]
+  activeRowId: string | undefined
 };
 
 export default Vue.extend({
@@ -105,9 +108,13 @@ export default Vue.extend({
     ];
     const items = this.trackList;
 
+    const { hash } = this.$route;
+    const activeRowId = items.find((item) => item.hash === hash)?.id;
+
     return {
       headers,
       items,
+      activeRowId,
     };
   },
 
@@ -129,6 +136,9 @@ export default Vue.extend({
         .map((item) => item.discNumber)));
 
       return discNumberList.length > 1;
+    },
+    isActiveRow(): (id: string) => boolean {
+      return (id: string) => this.activeRowId === id;
     },
   },
 
@@ -167,6 +177,9 @@ export default Vue.extend({
       });
       // 実際の状態と異なれば戻す
       if (isSaved !== nextSavedState) this.items = modifyedItems(isSaved, row.index);
+    },
+    onRowClicked({ id }: App.TrackDetail) {
+      this.activeRowId = id;
     },
   },
 });

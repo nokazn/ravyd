@@ -6,9 +6,12 @@ export namespace App {
     name: SpotifyAPI.SimpleTrack['name']
     id: SpotifyAPI.SimpleTrack['id']
     uri: SpotifyAPI.SimpleTrack['uri']
+    artworkSrc?: string
+    releaseId?: string
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
-    artists: {
+    hash: string
+    artistList: {
       name: SpotifyAPI.Artist['name'],
       id: SpotifyAPI.Artist['id'],
     }[]

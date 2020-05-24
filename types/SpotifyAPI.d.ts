@@ -308,8 +308,6 @@ export namespace SpotifyAPI {
   }
 
   export type SimpleTrack = {
-    // @todo
-    album: SimpleAlbum
     artists: SimpleArtist[]
     available_markets: Country[]
     disc_number: number
@@ -329,6 +327,7 @@ export namespace SpotifyAPI {
     is_local: boolean
   }
   export type Track = SimpleTrack & {
+    album: SimpleAlbum
     external_ids: ExternalId
     popularity: string
   }

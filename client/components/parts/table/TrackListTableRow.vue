@@ -1,8 +1,11 @@
 <template>
   <v-hover #default="{ hover: isRowHovered }">
     <tr
+      :id="item.hash"
       :class="$style.TrackListTableRow"
-      :data-is-track-set="isTrackSet">
+      :data-is-active="isActive"
+      :data-is-track-set="isTrackSet"
+      @click="onRowClicked">
       <td
         :class="[
           $style.TrackListTableRow__id,
@@ -84,9 +87,16 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   methods: {
+    onRowClicked() {
+      this.$emit('on-row-clicked', this.item);
+    },
     onMediaButtonClicked() {
       this.$emit('on-media-button-clicked', this.item);
     },
@@ -99,11 +109,12 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListTableRow {
-  &[data-is-track-set=true] {
+  cursor: pointer;
+  &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
-    .TrackListTableRow__name {
-      color: map-get($cyan, 'accent-3')
-    }
+  }
+  &[data-is-track-set=true] .TrackListTableRow__name {
+    color: map-get($cyan, 'accent-3')
   }
   &__id {
     width: 60px;
