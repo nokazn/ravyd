@@ -2,7 +2,8 @@
   <v-chip
     label
     outlined
-    x-small>
+    x-small
+    title="露骨な表現を含む">
     E
   </v-chip>
 </template>
