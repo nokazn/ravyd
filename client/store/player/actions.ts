@@ -13,14 +13,11 @@ export type PlayerActions = {
     contextUri: string
     trackUriList?: undefined
     offset?: {
-      uri: string
-    }
+      uri: string }
   } | {
     contextUri?: undefined
     trackUriList: string[]
-    offset?: {
-      uri: string
-    }
+    offset?: { uri: string }
   }) => Promise<void>
   pause: (payload?: { isInitializing: boolean }) => Promise<void>
   seek: (positionMs: number) => Promise<void>

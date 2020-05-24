@@ -140,8 +140,6 @@ export default Vue.extend({
     onMediaButtonClicked(row: App.TrackDetail) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
-      } else if (this.isTrackSet(row.id)) {
-        this.$dispatch('player/play');
       } else {
         this.$dispatch('player/play', {
           contextUri: this.uri,

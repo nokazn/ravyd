@@ -13,9 +13,7 @@ export const play = (context: Context) => {
     deviceId: string | null
     contextUri?: string
     trackUriList?: string[]
-    offset?: {
-      uri: string // position ではなく uri で指定する
-    }
+    offset?: { uri: string } // position ではなく uri で指定する
     positionMs?: number
   }): Promise<void> => app.$spotifyApi.$put('/me/player/play', {
     context_uri: contextUri,
