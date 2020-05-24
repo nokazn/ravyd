@@ -1,15 +1,15 @@
 <template>
   <v-hover #default="{ hover }">
     <div>
-      <div :class="$style.ReleaseCardContainer">
+      <div :class="$style.CardsWrapper">
         <transition name="fade">
           <v-btn
             v-show="hover"
             icon
             large
             :class="[
-              $style.ReleaseCardContainer__icon,
-              $style['ReleaseCardContainer__icon--left']
+              $style.CardsWrapper__icon,
+              $style['CardsWrapper__icon--left']
             ]">
             <v-icon :size="48">
               mdi-chevron-left
@@ -24,8 +24,8 @@
             absolute
             large
             :class="[
-              $style.ReleaseCardContainer__icon,
-              $style['ReleaseCardContainer__icon--right']
+              $style.CardsWrapper__icon,
+              $style['CardsWrapper__icon--right']
             ]">
             <v-icon :size="48">
               mdi-chevron-right
@@ -35,7 +35,7 @@
 
         <div
           :class="[
-            $style.ReleaseCardContainer__container,
+            $style.CardsWrapper__container,
             'g-no-scroll-bar'
           ]">
           <slot />
@@ -54,7 +54,7 @@ export default Vue.extend({});
 <style lang="scss" module>
 $total-side-padding: 40px;
 $gradation-width: 24px;
-.ReleaseCardContainer {
+.CardsWrapper {
   margin: 0 ($total-side-padding - $gradation-width);
   position: relative;
   &__icon {
