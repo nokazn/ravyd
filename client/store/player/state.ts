@@ -23,6 +23,7 @@ export type PlayerState = {
   repeatMode: 0 | 1 | 2
   disallowList: string[]
   volume: number
+  isMuted: boolean
 }
 
 export type RootState = {
@@ -45,6 +46,7 @@ export type RootState = {
   'player/repeatMode': PlayerState['repeatMode']
   'player/disallowList': PlayerState['disallowList']
   'player/volume': PlayerState['volume']
+  'player/isMuted': PlayerState['isMuted']
 }
 
 const state = (): PlayerState => ({
@@ -67,6 +69,7 @@ const state = (): PlayerState => ({
   repeatMode: 0,
   disallowList: [],
   volume: 0,
+  isMuted: false,
 });
 
 export default state;

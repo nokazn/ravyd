@@ -26,6 +26,7 @@ export type PlayerGetters = {
   isShuffleDisallowed: boolean
   isRepeatContextDisallowed: boolean
   isRepeatTrackDisallowed: boolean
+  volume: number
 }
 
 export type RootGetters = {
@@ -41,6 +42,7 @@ export type RootGetters = {
   ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
   ['player/isRepeatContextDisallowed']: PlayerGetters['isRepeatContextDisallowed']
   ['player/isRepeatTrackDisallowed']: PlayerGetters['isRepeatTrackDisallowed']
+  ['player/volume']: PlayerGetters['volume']
 }
 
 const playerGetters: Getters<PlayerState, PlayerGetters> = {
@@ -109,6 +111,10 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isRepeatTrackDisallowed(state) {
     return state.disallowList.some((disallow) => disallow.includes('repeat_track'));
+  },
+
+  volume(state) {
+    return state.isMuted ? 0 : state.volume;
   },
 };
 

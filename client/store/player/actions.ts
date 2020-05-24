@@ -29,6 +29,7 @@ export type PlayerActions = {
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
   volume: ({ volumePercent }: { volumePercent: number }) => Promise<void>
+  mute: () => Promise<void>
   checkSavedTracks: (trackIds?: string) => Promise<void>
 };
 
@@ -44,6 +45,7 @@ export type RootActions = {
   'player/shuffle': PlayerActions['shuffle']
   'player/repeat': PlayerActions['repeat']
   'player/volume': PlayerActions['volume']
+  'player/mute': PlayerActions['mute']
   'player/checkSavedTracks': PlayerActions['checkSavedTracks']
 };
 
@@ -262,6 +264,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
 
     commit('SET_VOLUME', { volumePercent });
+  },
+
+  async mute({ state, commit }) {
+    const { isMuted, deviceId, volume } = state;
+    const nextMuteState = !isMuted;
+    const volumePercent = nextMuteState ? 0 : volume;
+    await this.$spotify.player.volume({
+      deviceId,
+      volumePercent,
+    });
+
+    commit('SET_IS_MUTED', nextMuteState);
   },
 
   async checkSavedTracks({ state, commit }, trackId?) {

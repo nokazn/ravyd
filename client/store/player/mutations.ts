@@ -18,6 +18,7 @@ export type PlayerMutations = {
   SET_REPEAT_MODE: 0 | 1 | 2
   SET_DISALLOW_LIST: string[]
   SET_VOLUME: { volumePercent: number }
+  SET_IS_MUTED: boolean
 };
 
 export type RootMutations = {
@@ -35,6 +36,7 @@ export type RootMutations = {
   ['player/SET_REPEAT_MODE']: PlayerMutations['SET_REPEAT_MODE']
   ['player/SET_DISALLOW_LIST']: PlayerMutations['SET_DISALLOW_LIST']
   ['player/SET_VOLUME']: PlayerMutations['SET_VOLUME']
+  ['player/SET_IS_MUTED']: PlayerMutations['SET_IS_MUTED']
 };
 
 const mutations: Mutations<PlayerState, PlayerMutations> = {
@@ -100,6 +102,10 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_VOLUME(state, { volumePercent }) {
     state.volume = volumePercent;
+  },
+
+  SET_IS_MUTED(state, isMuted) {
+    state.isMuted = isMuted;
   },
 };
 

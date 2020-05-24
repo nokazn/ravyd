@@ -3,7 +3,8 @@
     <v-btn
       icon
       small
-      :title="volumeButton.title">
+      :title="volumeButton.title"
+      @click="onVolumeButtonClicked">
       <v-icon small>
         {{ volumeButton.icon }}
       </v-icon>
@@ -22,7 +23,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'vuex';
+import { RootGetters } from 'vuex';
 
 export type VolumeButton = {
   icon: 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
@@ -32,12 +33,15 @@ export type VolumeButton = {
 export default Vue.extend({
   computed: {
     volume: {
-      get(): RootState['player']['volume'] {
-        return this.$state().player.volume;
+      get(): RootGetters['player/volume'] {
+        return this.$getters()['player/volume'];
       },
       set(volumePercent: number) {
         this.$commit('player/SET_VOLUME', { volumePercent });
       },
+    },
+    isMuted(): boolean {
+      return this.$state().player.isMuted;
     },
     volumeButton(): VolumeButton {
       const volumeIconList: Array<VolumeButton['icon']> = [
@@ -72,6 +76,9 @@ export default Vue.extend({
         this.$emit('on-change', this.volume);
       }, 0);
     },
+    onVolumeButtonClicked() {
+      this.$dispatch('player/mute');
+    },
   },
 });
 </script>
@@ -81,6 +88,6 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 120px;
+  min-width: 130px;
 }
 </style>
