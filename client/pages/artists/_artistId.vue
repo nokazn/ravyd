@@ -47,16 +47,9 @@
 
     <section>
       <h2>人気の曲</h2>
-      <v-list
-        dense
-        :color="listColor">
-        <template v-for="track in topTrackList">
-          <v-divider :key="`${track.id}-divider`" />
-          <track-list-item
-            :key="track.id"
-            v-bind="track" />
-        </template>
-      </v-list>
+      <track-list
+        :track-list="topTrackList"
+        :uri="artistInfo.uri" />
     </section>
   </main>
 </template>
@@ -68,7 +61,7 @@ import { Context } from '@nuxt/types';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
-import TrackListItem from '~/components/parts/list/TrackListItem.vue';
+import TrackList from '~/components/parts/list/TrackList.vue';
 import {
   getArtistInfo,
   getTopTrackList,
@@ -91,7 +84,7 @@ export type AsyncData = {
     UserAvatar,
     MediaControlButton,
     FollowButton,
-    TrackListItem,
+    TrackList,
   },
 
   validate({ params }: Context) {

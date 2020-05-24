@@ -13,11 +13,16 @@ export type PlayerActions = {
     contextUri: string
     trackUriList?: undefined
     offset?: {
-      uri: string }
+      uri: string
+      position?: undefined
+    }
   } | {
     contextUri?: undefined
     trackUriList: string[]
-    offset?: { uri: string }
+    offset?: {
+      uri?: undefined
+      position: number
+    }
   }) => Promise<void>
   pause: (payload?: { isInitializing: boolean }) => Promise<void>
   seek: (positionMs: number) => Promise<void>
@@ -178,6 +183,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
+  /**
+   * contextUri が album/playlist の時のみに offset.uri が有効
+   * trackUriList が指定された時のみに offset.position が有効
+   */
   async play({ state, commit }, payload?) {
     const { deviceId } = state;
     const contextUri = payload?.contextUri;
@@ -191,7 +200,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       ? {
         deviceId,
         positionMs: state.position,
-        offset,
       }
       : {
         deviceId,

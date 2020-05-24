@@ -1,46 +1,58 @@
 <template>
-  <v-list-item
-    dense
-    :class="$style.TrackListItem"
-    class="track-list-item">
-    <v-list-item-avatar tile>
-      <release-artwork
-        :src="artworkSrc"
-        :size="40"
-        :alt="name"
-        :title="name" />
-    </v-list-item-avatar>
-    <v-list-item-content>
-      <div :class="$style.TrackListItem__content">
-        <v-btn icon small>
-          <v-icon :size="18">
-            mdi-play
-          </v-icon>
-        </v-btn>
+  <v-hover #default="{ hover }">
+    <v-list-item
+      dense
+      :class="$style.TrackListItem"
+      class="track-list-item">
+      <v-list-item-avatar tile>
+        <release-artwork
+          :src="artworkSrc"
+          :size="40"
+          :alt="name"
+          :title="name" />
+      </v-list-item-avatar>
 
-        <favorite-button
-          :is-favorited="isSaved"
-          @on-clicked="onFavoriteButtonClicked" />
+      <v-list-item-content>
+        <div :class="$style.TrackListItem__content">
+          <track-list-media-button
+            :is-hovered="hover"
+            :is-playing-track="isPlayingTrack"
+            :track-number="trackIndex"
+            @on-clicked="onMediaButtonClicked" />
 
-        <nuxt-link
-          :to="path"
-          :class="$style.TrackListItem__contentTitle"
-          v-text="name" />
+          <favorite-button
+            :is-favorited="isSaved"
+            @on-clicked="onFavoriteButtonClicked" />
 
-        <v-list-item-subtitle v-if="hasSubtitle">
-          <artist-names :artist-list="artistList" />
-        </v-list-item-subtitle>
-      </div>
-    </v-list-item-content>
+          <nuxt-link
+            :to="path"
+            :class="[
+              $style.TrackListItem__contentTitle,
+              textColor,
+            ]"
+            v-text="name" />
 
-    <v-list-item-action>
-      <v-btn icon>
-        <v-icon>
-          mdi-dots-horizontal
-        </v-icon>
-      </v-btn>
-    </v-list-item-action>
-  </v-list-item>
+          <v-list-item-subtitle v-if="hasSubtitle">
+            <artist-names :artist-list="artistList" />
+          </v-list-item-subtitle>
+        </div>
+      </v-list-item-content>
+
+      <v-list-item-action>
+        <div :class="$style.TrackListItem__action">
+          <explicit-chip v-if="explicit" />
+          <span
+            :class="$style.TrackListItem__actionDuration"
+            v-text="duration" />
+          <v-btn icon>
+            <v-icon>
+              mdi-dots-horizontal
+            </v-icon>
+          </v-btn>
+        </div>
+      </v-list-item-action>
+    </v-list-item>
+  </v-hover>
 </template>
 
 <script lang="ts">
@@ -48,7 +60,9 @@ import Vue, { PropType } from 'vue';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
+import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
+import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
@@ -56,16 +70,35 @@ export type TrackDetail = App.TrackDetail
 
 export type Data = {
   path: string
+  trackIndex: number
+}
+
+export namespace On {
+  export type OnMediaButtonClicked = {
+    index: number
+    id: string
+  }
+  export type OnFavoriteButtonClicked = {
+    index: number
+    id: string
+    nextSavedState: boolean
+  }
 }
 
 export default Vue.extend({
   components: {
     ReleaseArtwork,
     ArtistNames,
+    TrackListMediaButton,
     FavoriteButton,
+    ExplicitChip,
   },
 
   props: {
+    index: {
+      type: Number,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -117,24 +150,48 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    isPlayingTrack: {
+      type: Boolean,
+      required: true,
+    },
+    isTrackSet: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data(): Data {
     const hash = `#${this.discNumber}-${this.trackNumber}`;
     const path = `/releases/${this.releaseId}${hash}`;
+    const trackIndex = this.index + 1;
     return {
       path,
+      trackIndex,
     };
   },
 
+  computed: {
+    textColor(): string | undefined {
+      return this.isTrackSet
+        ? 'cyan--text text--accent-2'
+        : undefined;
+    },
+  },
+
   methods: {
+    onMediaButtonClicked() {
+      this.$emit('on-media-button-clicked', {
+        id: this.id,
+        index: this.index,
+      });
+    },
     onFavoriteButtonClicked(nextSavedState: boolean) {
-      const { id } = this;
+      const { id, index } = this;
       this.$emit('on-favorite-button-clicked', {
         nextSavedState,
         id,
+        index,
       });
-      console.log({ nextSavedState, id });
     },
   },
 });
@@ -144,11 +201,21 @@ export default Vue.extend({
 .TrackListItem {
   padding: .3em 0;
   &__content {
+    display: flex;
+    align-items: center;
     & > *:not(:last-child) {
-      margin-right: 8px;
+      margin-right: 1.5%;
     }
     &Title {
       font-size: 0.85rem;
+    }
+  }
+  &__action {
+    & > *:not(:last-child) {
+      margin-right: 16px;
+    }
+    &Duration {
+      font-size: 0.75rem;
     }
   }
 }
