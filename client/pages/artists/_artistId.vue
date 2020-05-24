@@ -43,6 +43,21 @@
         </div>
       </div>
     </div>
+
+
+    <section>
+      <h2>人気の曲</h2>
+      <v-list
+        dense
+        :color="listColor">
+        <template v-for="track in topTrackList">
+          <v-divider :key="`${track.id}-divider`" />
+          <track-list-item
+            :key="track.id"
+            v-bind="track" />
+        </template>
+      </v-list>
+    </section>
   </main>
 </template>
 
@@ -53,18 +68,22 @@ import { Context } from '@nuxt/types';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
+import TrackListItem from '~/components/parts/list/TrackListItem.vue';
 import {
   getArtistInfo,
   getTopTrackList,
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
+import { BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
 export type AsyncData = {
   avatarSize: number
+  topTrackArtworkSize: number
   artistInfo: App.ArtistInfo | null
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | null
+  listColor: typeof BACKGROUND_COLOR
 }
 
 @Component({
@@ -72,6 +91,7 @@ export type AsyncData = {
     UserAvatar,
     MediaControlButton,
     FollowButton,
+    TrackListItem,
   },
 
   validate({ params }: Context) {
@@ -80,25 +100,31 @@ export type AsyncData = {
 
   async asyncData(context): Promise<AsyncData | null> {
     const avatarSize = 220;
+    const topTrackArtworkSize = 64;
     const [artistInfo, isFollowing, topTrackList] = await Promise.all([
       getArtistInfo(context, avatarSize),
       getIsFollowing(context),
-      getTopTrackList(context),
+      getTopTrackList(context, topTrackArtworkSize),
     ] as const);
+    console.log(topTrackList);
 
     return {
       avatarSize,
+      topTrackArtworkSize,
       artistInfo,
       isFollowing,
       topTrackList,
+      listColor: BACKGROUND_COLOR,
     };
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData {
   avatarSize = 220
+  topTrackArtworkSize = 64
   artistInfo: App.ArtistInfo | null = null
   isFollowing = false
   topTrackList: App.TrackDetail[] | null = null
+  listColor: typeof BACKGROUND_COLOR = BACKGROUND_COLOR
 
   head() {
     return {
@@ -152,6 +178,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
   &__header {
     display: flex;
     align-items: flex-end;
+    margin-bottom: 24px;
     & > *:not(:last-child) {
       margin-right: 24px
     }
