@@ -108,7 +108,7 @@ export default Vue.extend({
     ];
     const items = this.trackList;
 
-    const { hash } = this.$route;
+    const hash = this.$route.hash.replace('#', '');
     const activeRowId = items.find((item) => item.hash === hash)?.id;
 
     return {

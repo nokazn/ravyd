@@ -25,17 +25,15 @@
           @on-clicked="onFavoriteButtonClicked" />
       </td>
 
-      <td :class="$style.TrackListTableRow__name">
-        {{ item.name }}
-      </td>
+      <td
+        :class="$style.TrackListTableRow__name"
+        v-text="item.name" />
 
       <td>
         <explicit-chip v-if="item.explicit" />
       </td>
 
-      <td>
-        {{ item.duration }}
-      </td>
+      <td v-text="item.duration" />
 
       <td>
         <v-btn

@@ -43,7 +43,6 @@ export const getReleaseInfo = async (
     app.$spotify.library.checkUserSavedAlbums({ albumIdList }),
   ] as const);
 
-  console.log(tracks.items);
   const trackList = tracks.items.map(parseTrackDetail({ isTrackSavedList }));
 
   const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
