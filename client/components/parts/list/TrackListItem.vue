@@ -212,7 +212,7 @@ export default Vue.extend({
       display: flex;
       align-items: center;
       & > * {
-        margin-right: 10px;
+        margin-right: 12px;
       }
     }
     &Title {
