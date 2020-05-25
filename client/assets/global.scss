@@ -66,6 +66,10 @@ body {
   }
 }
 
+.g-box-shadow {
+  box-shadow: 0 0 8px 8px rgba($g-background-color, .2);
+}
+
 /**
  * テキストの両端ヲグラデーションにする
  * 親要素を position: relative にする必要がある

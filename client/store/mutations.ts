@@ -2,6 +2,7 @@
 import { Mutations } from 'vuex';
 
 import { RootState } from './state';
+import { BACKGROUND_COLOR } from '~/variables';
 
 export type RootMutations = {
   SET_DOMINANT_BACKGROUND_COLOR: string | undefined
@@ -9,7 +10,7 @@ export type RootMutations = {
 
 const mutations: Mutations<RootState, RootMutations> = {
   SET_DOMINANT_BACKGROUND_COLOR(state, color) {
-    state.dominantBackgroundColor = color;
+    state.dominantBackgroundColor = color ?? BACKGROUND_COLOR;
   },
 };
 
