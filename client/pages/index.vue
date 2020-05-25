@@ -5,12 +5,12 @@
         今週の新譜
       </h2>
       <v-divider :class="$style.Divider" />
-      <cards-wrapper :class="$style.RootPage__cardContainer">
+      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
         <release-card
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release" />
-      </cards-wrapper>
+      </scrollable-cards-wrapper>
     </section>
 
 
@@ -19,12 +19,12 @@
         お気に入りのトラック
       </h2>
       <v-divider :class="$style.Divider" />
-      <cards-wrapper :class="$style.RootPage__cardContainer">
+      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
         <release-card
           v-for="track in topTrackList"
           :key="track.id"
           v-bind="track" />
-      </cards-wrapper>
+      </scrollable-cards-wrapper>
     </section>
 
 
@@ -33,12 +33,12 @@
         お気に入りのアーティスト
       </h2>
       <v-divider :class="$style.Divider" />
-      <cards-wrapper :class="$style.RootPage__cardContainer">
+      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
         <artist-card
           v-for="artist in topArtistList"
           :key="artist.id"
           v-bind="artist" />
-      </cards-wrapper>
+      </scrollable-cards-wrapper>
     </section>
   </main>
 </template>
@@ -46,7 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
+import ScrollableCardsWrapper from '~/components/parts/wrapper/ScrollableCardsWrapper.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
 import { parseTrackForCard } from '~/scripts/parser/parseTrackForCard';
@@ -61,7 +61,7 @@ export type AsyncData = {
 
 export default Vue.extend({
   components: {
-    CardsWrapper,
+    ScrollableCardsWrapper,
     ReleaseCard,
     ArtistCard,
   },
