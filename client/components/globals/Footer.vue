@@ -16,7 +16,7 @@
           :class="$style.Footer__artWork" />
 
         <div :class="$style.Footer__trackInfo">
-          <release-name
+          <marquee-release-name
             v-if="trackName != null"
             :name="trackName"
             :release-id="albumId" />
@@ -80,7 +80,7 @@ import Vue from 'vue';
 import { RootState, RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
-import ReleaseName from '~/components/parts/text/ReleaseName.vue';
+import MarqueeReleaseName from '~/components/parts/text/MarqueeReleaseName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
@@ -92,7 +92,7 @@ import { App } from '~~/types';
 export default Vue.extend({
   components: {
     ReleaseArtwork,
-    ReleaseName,
+    MarqueeReleaseName,
     MarqueeArtistNames,
     FavoriteButton,
     SeekBar,
