@@ -44,14 +44,28 @@
       </div>
     </div>
 
-
     <section>
       <track-list-wrapper
         title="人気の曲"
         :omitted-length="5"
         :track-list="topTrackList"
-        :uri="artistInfo.uri" />
+        :uri="artistInfo.uri"
+        :class="$style.ArtistIdPage__trackListSection" />
     </section>
+
+    <template v-for="{ title, items } in Object.values(releaseListMap)">
+      <cards-section
+        v-if="items.length > 0"
+        :key="title"
+        :title="title"
+        :class="$style.ArtistIdPage__cardSection">
+        <release-card
+          v-for="item in items"
+          :key="item.id"
+          v-bind="item"
+          year-subtitle />
+      </cards-section>
+    </template>
   </main>
 </template>
 
@@ -63,7 +77,11 @@ import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
 import TrackListWrapper from '~/components/parts/wrapper/TrackListWrapper.vue';
+import CardsSection from '~/components/parts/section/CardsSection.vue';
+import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import {
+  getReleaseListMap,
+  ArtistReleaseInfo,
   getArtistInfo,
   getTopTrackList,
   getIsFollowing,
@@ -74,6 +92,7 @@ import { App } from '~~/types';
 export type AsyncData = {
   avatarSize: number
   topTrackArtworkSize: number
+  releaseListMap: ArtistReleaseInfo | null
   artistInfo: App.ArtistInfo | null
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | null
@@ -86,6 +105,8 @@ export type AsyncData = {
     MediaControlButton,
     FollowButton,
     TrackListWrapper,
+    CardsSection,
+    ReleaseCard,
   },
 
   validate({ params }: Context) {
@@ -95,16 +116,17 @@ export type AsyncData = {
   async asyncData(context): Promise<AsyncData | null> {
     const avatarSize = 220;
     const topTrackArtworkSize = 64;
-    const [artistInfo, isFollowing, topTrackList] = await Promise.all([
+    const [releaseListMap, artistInfo, isFollowing, topTrackList] = await Promise.all([
+      getReleaseListMap(context, avatarSize),
       getArtistInfo(context, avatarSize),
       getIsFollowing(context),
       getTopTrackList(context, topTrackArtworkSize),
     ] as const);
-    console.log(topTrackList);
 
     return {
       avatarSize,
       topTrackArtworkSize,
+      releaseListMap,
       artistInfo,
       isFollowing,
       topTrackList,
@@ -115,6 +137,7 @@ export type AsyncData = {
 export default class ArtistIdPage extends Vue implements AsyncData {
   avatarSize = 220
   topTrackArtworkSize = 64
+  releaseListMap: ArtistReleaseInfo | null = null
   artistInfo: App.ArtistInfo | null = null
   isFollowing = false
   topTrackList: App.TrackDetail[] | null = null
@@ -172,7 +195,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
   &__header {
     display: flex;
     align-items: flex-end;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px
     }
@@ -191,6 +214,14 @@ export default class ArtistIdPage extends Vue implements AsyncData {
   }
   &__buttons > *:not(:last-child) {
     margin-right: 12px;
+  }
+
+  &__trackListSection {
+    margin-bottom: 32px;
+  }
+
+  &__cardSection:not(:last-child) {
+    margin-bottom: 32px;
   }
 }
 </style>

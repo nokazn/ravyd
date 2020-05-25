@@ -23,21 +23,27 @@
       </v-card-title>
 
       <v-card-subtitle :class="$style.ReleaseCard__subtitle">
-        <template
-          v-for="({
-            name: artistName,
-            id: artistId
-          }, index) in artists">
-          <nuxt-link
-            :key="artistId"
-            :to="artistPath(artistId)"
-            @click.native.stop>
-            {{ artistName }}
-          </nuxt-link>
+        <template v-if="yearSubtitle">
+          <span v-text="releaseYear" />
+        </template>
 
-          <span
-            v-if="index !== artists.length - 1"
-            :key="`${artistId}-comma`">, </span>
+        <template v-else>
+          <template
+            v-for="({
+              name: artistName,
+              id: artistId
+            }, index) in artists">
+            <nuxt-link
+              :key="artistId"
+              :to="artistPath(artistId)"
+              @click.native.stop>
+              {{ artistName }}
+            </nuxt-link>
+
+            <span
+              v-if="index !== artists.length - 1"
+              :key="`${artistId}-comma`">, </span>
+          </template>
         </template>
       </v-card-subtitle>
     </div>
@@ -82,6 +88,10 @@ export default Vue.extend({
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
+    releaseYear: {
+      type: String,
+      default: undefined,
+    },
     artworkSrc: {
       type: String,
       required: true,
@@ -89,6 +99,10 @@ export default Vue.extend({
     width: {
       type: Number,
       default: 160,
+    },
+    yearSubtitle: {
+      type: Boolean,
+      default: false,
     },
   },
 

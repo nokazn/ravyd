@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { parseReleaseDate } from '~/scripts/parser/parseReleaseDate';
 
 export type Data = {
   date: string
@@ -42,13 +43,8 @@ export default Vue.extend({
   },
 
   data(): Data {
-    // releaseDate のフォーマットと date のフォーマットの配列
-    const releaseDateFormat = {
-      year: ['YYYY', 'YYYY年'] as const,
-      month: ['YYYY-MM', 'YYYY年M月'] as const,
-      day: ['YYYY-MM-dd', 'YYYY年M月d日'] as const,
-    }[this.releaseDatePrecision];
-    const date = this.$dayjs(this.releaseDate, releaseDateFormat[0]).format(releaseDateFormat[1]);
+    const { releaseDate, releaseDatePrecision } = this;
+    const date = parseReleaseDate({ releaseDate, releaseDatePrecision });
     const title = `${date}リリース`;
     const textStyles = {
       fontSize: `${this.size * 0.8}px`,
