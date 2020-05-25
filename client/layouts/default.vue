@@ -4,7 +4,9 @@
     <NavigationDrawer v-if="isLoggedin" />
 
     <v-content>
-      <div :class="[$style.Content, 'g-scroll-wrapper-y']">
+      <div
+        id="nuxt-content"
+        :class="[$style.Content, 'g-scroll-wrapper-y']">
         <nuxt />
       </div>
     </v-content>

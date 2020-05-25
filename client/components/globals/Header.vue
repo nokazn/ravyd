@@ -1,9 +1,9 @@
 <template>
   <v-app-bar
+    v-scroll:#nuxt-content="onScrolled"
     app
     :color="color"
-    elevate-on-scroll
-    :elevation="0"
+    :elevation="elevation"
     :height="52"
     :class="$style.Header">
     <div :class="$style.Header__container">
@@ -27,6 +27,7 @@ import { HEADER_BACKGROUND_COLOR } from '~/variables';
 type Data = {
   HEADER_BACKGROUND_COLOR: typeof HEADER_BACKGROUND_COLOR
   searchWords: string
+  elevation: number
 }
 
 export default Vue.extend({
@@ -39,12 +40,24 @@ export default Vue.extend({
     return {
       HEADER_BACKGROUND_COLOR,
       searchWords: '',
+      elevation: 0,
     };
   },
 
   computed: {
     color(): RootState['dominantBackgroundColor'] {
       return this.$state().dominantBackgroundColor;
+    },
+  },
+
+  methods: {
+    onScrolled(e: { target?: HTMLDivElement }) {
+      const scrollTop = e.target?.scrollTop as number;
+      if (scrollTop == null) return;
+
+      this.elevation = scrollTop < 120
+        ? scrollTop / 5
+        : 24;
     },
   },
 });
