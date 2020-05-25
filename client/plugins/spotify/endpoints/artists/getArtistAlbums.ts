@@ -12,12 +12,12 @@ export const getArtistAlbums = (context: Context) => {
     offset = 0,
   }: {
     artistId: string
-    includeGroupList: Array<'album' | 'single' | 'appears_on' | 'compilation'>
-    country: SpotifyAPI.Country
-    limit: number
-    offset: number
+    includeGroupList?: Array<'album' | 'single' | 'appears_on' | 'compilation'>
+    country?: SpotifyAPI.Country
+    limit?: number
+    offset?: number
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleAlbum> | null> => {
-    const include_groups = includeGroupList.join(',');
+    const include_groups = includeGroupList?.join(',');
 
     return app.$spotifyApi.$get(`/artists/${artistId}/albums`, {
       params: {
