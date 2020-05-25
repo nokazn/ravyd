@@ -7,6 +7,7 @@ import { REPEAT_STATE_LIST } from '~/variables';
 
 export type PlayerActions = {
   initPlayer: () => void
+  disconnectPlayer: () => void
   getRecentlyPlayed: (limit?: number) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   play: (payload?: {
@@ -51,12 +52,11 @@ export type RootActions = {
   'player/checkSavedTracks': PlayerActions['checkSavedTracks']
 };
 
-let playbackPlayer: Spotify.SpotifyPlayer;
-
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
   initPlayer({
     state,
     commit,
+    getters,
     dispatch,
     rootState,
   }) {
@@ -67,8 +67,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }
 
     window.onSpotifyWebPlaybackSDKReady = async () => {
-      // player が登録されている場合は無効化する
-      if (playbackPlayer != null) playbackPlayer.disconnect();
+      // player が登録されていないときのみ初期化
+      if (getters.isPlayerConnected) return;
 
       const player = new Spotify.Player({
         // @todo
@@ -165,10 +165,19 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // Connect to the player
       await player.connect();
-      playbackPlayer = player;
+
+      commit('SET_PLAYBACK_PLAYER', player);
     };
 
     window.onSpotifyWebPlaybackSDKReady();
+  },
+
+  disconnectPlayer({ state, commit }) {
+    const { playbackPlayer } = state;
+    if (playbackPlayer == null) return;
+
+    playbackPlayer.disconnect();
+    commit('SET_PLAYBACK_PLAYER', null);
   },
 
   async getActiveDeviceList({ commit }) {

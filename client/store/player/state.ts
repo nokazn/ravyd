@@ -1,6 +1,7 @@
 import type { SpotifyAPI, App } from '~~/types';
 
 export type PlayerState = {
+  playbackPlayer: Spotify.SpotifyPlayer | null
   deviceId: string | null
   activeDeviceList: SpotifyAPI.Device[]
   trackName: string | null
@@ -47,6 +48,7 @@ export type RootState = {
 }
 
 const state = (): PlayerState => ({
+  playbackPlayer: null,
   deviceId: null,
   activeDeviceList: [],
   albumArtWorkList: null,

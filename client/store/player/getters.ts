@@ -6,6 +6,7 @@ import { getImageSrc } from '~/scripts/parser/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {
+  isPlayerConnected: boolean
   activeDevice: SpotifyAPI.Device | null
   albumId: string | null
   albumArtworkSrc: (minSize?: number) => string | null
@@ -21,6 +22,7 @@ export type PlayerGetters = {
 }
 
 export type RootGetters = {
+  ['player/isPlayerConnected']: PlayerGetters['isPlayerConnected']
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/albumId']: PlayerGetters['albumId']
   ['player/albumArtworkSrc']: PlayerGetters['albumArtworkSrc']
@@ -36,6 +38,10 @@ export type RootGetters = {
 }
 
 const playerGetters: Getters<PlayerState, PlayerGetters> = {
+  isPlayerConnected(state) {
+    return state.playbackPlayer != null;
+  },
+
   activeDevice(state) {
     const activeDevice = state.activeDeviceList?.filter((device) => device.is_active);
     return activeDevice != null && activeDevice.length > 0

@@ -4,6 +4,7 @@ import { PlayerState } from './state';
 import type { SpotifyAPI } from '~~/types';
 
 export type PlayerMutations = {
+  SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | null
   SET_DEVICE_ID: string
   SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
   SET_CURRENT_TRACK: Spotify.Track
@@ -22,6 +23,7 @@ export type PlayerMutations = {
 };
 
 export type RootMutations = {
+  ['player/SET_PLAYBACK_PLAYER']: PlayerMutations['SET_PLAYBACK_PLAYER']
   ['player/SET_DEVICE_ID']: PlayerMutations['SET_DEVICE_ID']
   ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
@@ -40,6 +42,10 @@ export type RootMutations = {
 };
 
 const mutations: Mutations<PlayerState, PlayerMutations> = {
+  SET_PLAYBACK_PLAYER(state, playbackPlayer) {
+    state.playbackPlayer = playbackPlayer;
+  },
+
   SET_DEVICE_ID(state, deviceId) {
     state.deviceId = deviceId;
   },
