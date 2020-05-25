@@ -78,6 +78,8 @@ export default Vue.extend({
     const topTrackList = topTracks?.items.map(parseTrackForCard(cardImageSize));
     const newReleaseList = newReleases?.albums?.items.map(parseReleaseForCard(cardImageSize));
 
+    app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
+
     return {
       topArtistList,
       topTrackList,

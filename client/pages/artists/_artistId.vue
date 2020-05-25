@@ -1,5 +1,7 @@
 <template>
-  <main :class="$style.ArtistIdPage">
+  <main
+    :class="$style.ArtistIdPage"
+    :style="styles">
     <div
       v-if="artistInfo != null"
       :class="$style.ArtistIdPage__header">
@@ -72,6 +74,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
+import { RootGetters } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
@@ -116,12 +119,21 @@ export type AsyncData = {
   async asyncData(context): Promise<AsyncData | null> {
     const avatarSize = 220;
     const topTrackArtworkSize = 64;
-    const [releaseListMap, artistInfo, isFollowing, topTrackList] = await Promise.all([
+    const [
+      releaseListMap,
+      artistInfo,
+      isFollowing,
+      topTrackList,
+    ] = await Promise.all([
       getReleaseListMap(context, avatarSize),
       getArtistInfo(context, avatarSize),
       getIsFollowing(context),
       getTopTrackList(context, topTrackArtworkSize),
     ] as const);
+
+    if (artistInfo != null) {
+      context.app.$dispatch('extractDominantBackgroudColor', artistInfo.avatarSrc);
+    }
 
     return {
       avatarSize,
@@ -149,6 +161,9 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     };
   }
 
+  get styles(): RootGetters['backgroundStyles'] {
+    return this.$getters().backgroundStyles;
+  }
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }

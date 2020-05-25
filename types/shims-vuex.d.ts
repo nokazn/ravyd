@@ -2,7 +2,7 @@ import 'vuex';
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { IncomingMessage, ServerResponse } from 'http';
-import * as Root from '~/store';
+import * as Root from '~/store/types';
 import * as Auth from '~/store/auth/types';
 import * as Browse from '~/store/browse/types';
 import * as Library from '~/store/library/types';

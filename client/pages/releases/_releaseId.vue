@@ -1,7 +1,8 @@
 <template>
   <main
     v-if="releaseInfo != null"
-    :class="$style.ReleaseIdPage">
+    :class="$style.ReleaseIdPage"
+    :style="styles">
     <div :class="$style.ReleaseIdPage__header">
       <release-artwork
         :src="releaseInfo.artworkSrc"
@@ -66,6 +67,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
+import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -106,6 +108,11 @@ export interface AsyncData {
   async asyncData(context: Context): Promise<AsyncData | null> {
     const artworkSize = 220;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
+
+    if (releaseInfo != null) {
+      context.app.$dispatch('extractDominantBackgroudColor', releaseInfo.artworkSrc);
+    }
+
     return {
       artworkSize,
       releaseInfo,
@@ -122,6 +129,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     };
   }
 
+  get styles(): RootGetters['backgroundStyles'] {
+    return this.$getters().backgroundStyles;
+  }
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }

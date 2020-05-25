@@ -1,6 +1,6 @@
 import VuexPersistence from 'vuex-persist';
 import { Store } from 'vuex';
-import { RootState } from '~/store';
+import { RootState } from '~/store/types';
 
 export default ({ store }: { store: Store<RootState> }) => {
   // @ts-ignore @todo
