@@ -114,9 +114,16 @@ const config: Configuration = {
   // webpack build configuration
   build: {
     babel: {
-      presets() {
+      presets({ isServer }) {
         return [
-          ['@nuxt/babel-preset-app', { loose: true }],
+          [
+            '@nuxt/babel-preset-app',
+            {
+              loose: true,
+              buildTarget: isServer ? 'server' : 'client',
+              corejs: { version: 3 },
+            },
+          ],
         ];
       },
     },

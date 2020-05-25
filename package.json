@@ -24,11 +24,13 @@
     "express-session": "^1.17.0",
     "ioredis": "^4.16.0",
     "lodash.debounce": "^4.0.8",
+    "node-vibrant": "^3.1.5",
     "nuxt": "^2.0.0",
     "nuxt-property-decorator": "^2.7.2",
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
+    "@babel/runtime-corejs3": "^7.9.6",
     "@mdi/font": "^5.0.45",
     "@nuxt/typescript-build": "^0.6.0",
     "@nuxtjs/eslint-config-typescript": "^1.0.2",
@@ -44,6 +46,7 @@
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
+    "core-js": "3",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-nuxt": ">=0.4.2",
