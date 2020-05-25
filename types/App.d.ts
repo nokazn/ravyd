@@ -22,12 +22,13 @@ export namespace App {
 
   export type ReleaseCardInfo = {
     type: 'album' | 'track'
-    releaseType: 'album' | 'single' | 'compilation'
+    releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
     name: string //  track または album の name
     id: string //  track または album の id
     releaseId: string
     uri: string
     artists: App.SimpleArtistInfo[]
+    releaseYear?: string
     artworkSrc: string
   }
   // /releases/{release_id}
