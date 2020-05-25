@@ -5,8 +5,9 @@ export const parseTrackForCard = (artworkSize?: number) => (
   track: SpotifyAPI.Track,
 ): App.ReleaseCardInfo => ({
   type: track.type,
-  name: track.name,
   id: track.id,
+  name: track.name,
+  releaseType: track.album.album_type,
   releaseId: track.album.id,
   uri: track.uri,
   artists: track.artists.map((artist) => ({

@@ -51,7 +51,7 @@ import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/Relea
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
 import { parseTrackForCard } from '~/scripts/parser/parseTrackForCard';
 import { parseArtistForCard } from '~/scripts/parser/parseArtistForCard';
-import { parseAlbumForCard } from '~/scripts/parser/parseAlbumForCard';
+import { parseReleaseForCard } from '~/scripts/parser/parseReleaseForCard';
 
 export type AsyncData = {
   topArtistList: ArtistCardInfo[] | undefined
@@ -76,7 +76,7 @@ export default Vue.extend({
     const cardImageSize = 160;
     const topArtistList = topArtists?.items.map(parseArtistForCard(cardImageSize));
     const topTrackList = topTracks?.items.map(parseTrackForCard(cardImageSize));
-    const newReleaseList = newReleases?.albums?.items.map(parseAlbumForCard(cardImageSize));
+    const newReleaseList = newReleases?.albums?.items.map(parseReleaseForCard(cardImageSize));
 
     return {
       topArtistList,

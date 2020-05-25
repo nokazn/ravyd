@@ -22,6 +22,7 @@ export namespace App {
 
   export type ReleaseCardInfo = {
     type: 'album' | 'track'
+    releaseType: 'album' | 'single' | 'compilation'
     name: string //  track または album の name
     id: string //  track または album の id
     releaseId: string
