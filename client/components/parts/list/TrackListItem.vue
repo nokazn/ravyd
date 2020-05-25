@@ -14,23 +14,32 @@
 
       <v-list-item-content>
         <div :class="$style.TrackListItem__content">
-          <track-list-media-button
-            :is-hovered="hover"
-            :is-playing-track="isPlayingTrack"
-            :track-number="trackIndex"
-            @on-clicked="onMediaButtonClicked" />
+          <div :class="$style['TrackListItem__content--left']">
+            <track-list-media-button
+              :is-hovered="hover"
+              :is-playing-track="isPlayingTrack"
+              :track-number="trackIndex"
+              @on-clicked="onMediaButtonClicked" />
 
-          <favorite-button
-            :is-favorited="isSaved"
-            @on-clicked="onFavoriteButtonClicked" />
+            <favorite-button
+              :is-favorited="isSaved"
+              @on-clicked="onFavoriteButtonClicked" />
 
-          <nuxt-link
-            :to="path"
-            :class="[
-              $style.TrackListItem__contentTitle,
-              textColor,
-            ]"
-            v-text="name" />
+            <nuxt-link
+              :to="path"
+              :class="[
+                $style.TrackListItem__contentTitle,
+                textColor,
+              ]"
+              v-text="name" />
+          </div>
+
+          <div :class="$style['TrackListItem__content--right']">
+            <explicit-chip v-if="explicit" />
+            <span
+              :class="$style.TrackListItem__actionDuration"
+              v-text="duration" />
+          </div>
 
           <v-list-item-subtitle v-if="hasSubtitle">
             <artist-names :artist-list="artistList" />
@@ -40,10 +49,6 @@
 
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
-          <explicit-chip v-if="explicit" />
-          <span
-            :class="$style.TrackListItem__actionDuration"
-            v-text="duration" />
           <v-btn icon>
             <v-icon>
               mdi-dots-horizontal
@@ -202,18 +207,19 @@ export default Vue.extend({
   padding: .3em 0;
   &__content {
     display: flex;
-    align-items: center;
-    & > *:not(:last-child) {
-      margin-right: 1.5%;
+    justify-content: space-between;
+    &--left, &--right {
+      display: flex;
+      align-items: center;
+      & > * {
+        margin-right: 10px;
+      }
     }
     &Title {
       font-size: 0.85rem;
     }
   }
   &__action {
-    & > *:not(:last-child) {
-      margin-right: 16px;
-    }
     &Duration {
       font-size: 0.75rem;
     }
