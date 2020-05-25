@@ -192,21 +192,27 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
     const offset = payload?.offset;
-    // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止中のトラックを再生
-    const isRestartingCurrentTrack = (contextUri == null && trackUriList == null)
-      || state.trackUri === offset?.uri;
 
-    await this.$spotify.player.play(isRestartingCurrentTrack
-      ? {
-        deviceId,
-        positionMs: state.position,
-      }
-      : {
-        deviceId,
-        contextUri,
-        trackUriList,
-        offset,
-      });
+    const isNotUriPassed = contextUri == null && trackUriList == null;
+    const isRestartingContext = state.trackUri === offset?.uri;
+    const isRestartingTracks = trackUriList != null
+      && offset?.position != null
+      && state.trackUri === trackUriList[offset.position];
+
+    await this.$spotify.player.play(
+      // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
+      isNotUriPassed || isRestartingContext || isRestartingTracks
+        ? {
+          deviceId,
+          positionMs: state.position,
+        }
+        : {
+          deviceId,
+          contextUri,
+          trackUriList,
+          offset,
+        },
+    );
 
     commit('SET_IS_PLAYING', true);
   },
