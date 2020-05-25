@@ -189,3 +189,10 @@ export default Vue.extend({
   }
 }
 </style>
+
+<style lang="scss">
+.v-data-table {
+  // 表の背景を透過にする
+  background-color: rgba(0, 0, 0, 0)!important;
+}
+</style>
