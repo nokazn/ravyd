@@ -3,8 +3,11 @@
     dense
     :color="BACKGROUND_COLOR">
     <template v-for="track in items">
-      <v-divider :key="`${track.id}-divider`" />
+      <v-divider
+        v-show="track.index < length"
+        :key="`${track.id}-divider`" />
       <track-list-item
+        v-show="track.index < length"
         :key="track.id"
         :is-playing-track="isPlayingTrack(track.id)"
         :is-track-set="isTrackSet(track.id)"
@@ -14,16 +17,19 @@
     </template>
   </v-list>
 </template>
+  </v-list>
+</template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackListItem, { On } from '~/components/parts/list/TrackListItem.vue';
+import TrackListItem, { TrackDetail, On } from '~/components/parts/list/TrackListItem.vue';
 import { BACKGROUND_COLOR } from '~/variables';
-import { App } from '~~/types';
+
+export { TrackDetail } from '~/components/parts/list/TrackListItem.vue';
 
 export type Data = {
-  items: App.TrackDetail[]
+  items: TrackDetail[]
   trackUriList: string[]
   BACKGROUND_COLOR: typeof BACKGROUND_COLOR
 }
@@ -35,11 +41,15 @@ export default Vue.extend({
 
   props: {
     trackList: {
-      type: Array as PropType<App.TrackDetail[]>,
+      type: Array as PropType<TrackDetail[]>,
       required: true,
     },
     uri: {
       type: String,
+      required: true,
+    },
+    length: {
+      type: Number,
       required: true,
     },
   },

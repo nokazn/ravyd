@@ -46,8 +46,9 @@
 
 
     <section>
-      <h2>人気の曲</h2>
-      <track-list
+      <track-list-wrapper
+        title="人気の曲"
+        :omitted-length="5"
         :track-list="topTrackList"
         :uri="artistInfo.uri" />
     </section>
@@ -61,7 +62,7 @@ import { Context } from '@nuxt/types';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
-import TrackList from '~/components/parts/list/TrackList.vue';
+import TrackListWrapper from '~/components/parts/wrapper/TrackListWrapper.vue';
 import {
   getArtistInfo,
   getTopTrackList,
@@ -84,7 +85,7 @@ export type AsyncData = {
     UserAvatar,
     MediaControlButton,
     FollowButton,
-    TrackList,
+    TrackListWrapper,
   },
 
   validate({ params }: Context) {
