@@ -8,7 +8,8 @@
         :src="releaseInfo.artworkSrc"
         :alt="releaseInfo.name"
         :size="220"
-        :title="releaseInfo.name" />
+        :title="releaseInfo.name"
+        shadow />
 
       <div :class="$style.ReleaseIdPage__releaseInfo">
         <div :class="$style.ReleaseIdPage__releaseType">

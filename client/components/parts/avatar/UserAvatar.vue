@@ -2,7 +2,8 @@
   <v-hover #default="{ hover }">
     <v-avatar
       v-if="src"
-      :size="size">
+      :size="size"
+      :class="{ 'g-box-shadow': shadow }">
       <v-img
         :src="src"
         alt="user-avaar"
@@ -64,6 +65,10 @@ export default Vue.extend({
     defaultUserIcon: {
       type: String,
       default: 'mdi-account-circle-outline',
+    },
+    shadow: {
+      type: Boolean,
+      default: false,
     },
   },
 

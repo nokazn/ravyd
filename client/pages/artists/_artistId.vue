@@ -10,7 +10,8 @@
         :src="artistInfo.avatarSrc"
         :alt="artistInfo.name"
         :title="artistInfo.name"
-        default-user-icon="mdi-account-music" />
+        default-user-icon="mdi-account-music"
+        shadow />
       <div>
         <div
           title="認証済アーティスト"

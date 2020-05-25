@@ -7,7 +7,8 @@
       :width="size"
       :max-height="size"
       :max-width="size"
-      :aspect-ratio="1">
+      :aspect-ratio="1"
+      :class="{ 'g-box-shadow': shadow }">
       <avatar-overlay
         v-if="isOverlayed && hover"
         :hover="hover"
@@ -51,6 +52,10 @@ export default Vue.extend({
       default: 'mdi-play-circle',
     },
     isOverlayed: {
+      type: Boolean,
+      default: false,
+    },
+    shadow: {
       type: Boolean,
       default: false,
     },
