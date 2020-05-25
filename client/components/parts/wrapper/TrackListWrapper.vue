@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.TrackListWrapper">
+  <div :class="$style.TrackListWrapper">
     <div :class="$style.TrackListWrapper__header">
       <h2 v-text="title" />
       <show-all-button
@@ -12,7 +12,7 @@
       :track-list="trackList"
       :length="length"
       :uri="uri" />
-  </section>
+  </div>
 </template>
 
 <script lang="ts">
