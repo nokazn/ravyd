@@ -1,52 +1,38 @@
 <template>
   <main :class="$style.RootPage">
-    <section :class="$style.RootPage__section">
-      <h2 :class="$style.RootPage__title">
-        今週の新譜
-      </h2>
-      <v-divider :class="$style.Divider" />
-      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
-        <release-card
-          v-for="release in newReleaseList"
-          :key="release.id"
-          v-bind="release" />
-      </scrollable-cards-wrapper>
-    </section>
+    <scrollable-cards-section
+      title="今週の新譜"
+      :class="$style.RootPage__section">
+      <release-card
+        v-for="release in newReleaseList"
+        :key="release.id"
+        v-bind="release" />
+    </scrollable-cards-section>
 
+    <scrollable-cards-section
+      title="お気に入りのトラック"
+      :class="$style.RootPage__section">
+      <release-card
+        v-for="release in topTrackList"
+        :key="release.id"
+        v-bind="release" />
+    </scrollable-cards-section>
 
-    <section :class="$style.RootPage__section">
-      <h2 :class="$style.RootPage__title">
-        お気に入りのトラック
-      </h2>
-      <v-divider :class="$style.Divider" />
-      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
-        <release-card
-          v-for="track in topTrackList"
-          :key="track.id"
-          v-bind="track" />
-      </scrollable-cards-wrapper>
-    </section>
-
-
-    <section :class="$style.RootPage__section">
-      <h2 :class="$style.RootPage__title">
-        お気に入りのアーティスト
-      </h2>
-      <v-divider :class="$style.Divider" />
-      <scrollable-cards-wrapper :class="$style.RootPage__cardContainer">
-        <artist-card
-          v-for="artist in topArtistList"
-          :key="artist.id"
-          v-bind="artist" />
-      </scrollable-cards-wrapper>
-    </section>
+    <scrollable-cards-section
+      title="お気に入りのアーティスト"
+      :class="$style.RootPage__section">
+      <artist-card
+        v-for="artist in topArtistList"
+        :key="artist.id"
+        v-bind="artist" />
+    </scrollable-cards-section>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-import ScrollableCardsWrapper from '~/components/parts/wrapper/ScrollableCardsWrapper.vue';
+import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
 import { parseTrackForCard } from '~/scripts/parser/parseTrackForCard';
@@ -61,7 +47,7 @@ export type AsyncData = {
 
 export default Vue.extend({
   components: {
-    ScrollableCardsWrapper,
+    ScrollableCardsSection,
     ReleaseCard,
     ArtistCard,
   },
@@ -97,19 +83,9 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  padding: 12px 0 48px;
+  padding: 16px 0 48px;
   &__section:not(:last-child) {
     margin-bottom: 40px;
-  }
-  &__title {
-    margin: {
-      left: 40px;
-      bottom: 6px;
-    }
-  }
-
-  .Divider {
-    margin: 0 40px 16px;
   }
 }
 </style>
