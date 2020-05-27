@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 import { addComma } from '~~/utils/addComma';
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 export const getArtistInfo = async (

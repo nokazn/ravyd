@@ -6,7 +6,7 @@ import { hasProp } from '~~/utils/hasProp';
 /**
  * アルバム情報が取得できない (SpotifyAPI.SimpleTrack) 場合は artworkSrc は省略して返す
  */
-export const parseTrackDetail = ({
+export const convertTrackDetail = ({
   isTrackSavedList,
   artworkSize,
 }: {

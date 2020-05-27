@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { parseReleaseDate } from '~/scripts/parser/parseReleaseDate';
+import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
 
 export type Data = {
   date: string
@@ -44,7 +44,7 @@ export default Vue.extend({
 
   data(): Data {
     const { releaseDate, releaseDatePrecision } = this;
-    const date = parseReleaseDate({ releaseDate, releaseDatePrecision });
+    const date = convertReleaseDate({ releaseDate, releaseDatePrecision });
     const title = `${date}リリース`;
     const textStyles = {
       fontSize: `${this.size * 0.8}px`,

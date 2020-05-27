@@ -1,7 +1,7 @@
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI, App } from '~~/types';
 
-export const parseArtistForCard = (avatarSize?: number) => (
+export const convertArtistForCard = (avatarSize?: number) => (
   artist: SpotifyAPI.Artist,
 ): App.ArtistCardInfo => ({
   name: artist.name,

@@ -2,7 +2,7 @@ import { Getters } from 'vuex';
 
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST } from '~/variables';
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerGetters = {

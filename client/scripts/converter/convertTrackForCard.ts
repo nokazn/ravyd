@@ -1,7 +1,7 @@
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI, App } from '~~/types';
 
-export const parseTrackForCard = (artworkSize?: number) => (
+export const convertTrackForCard = (artworkSize?: number) => (
   track: SpotifyAPI.Track,
 ): App.ReleaseCardInfo => ({
   type: track.type,

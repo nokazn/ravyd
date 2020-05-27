@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
-import { parseAlbumType } from '~/scripts/parser/parseAlbumType';
-import { getImageSrc } from '~/scripts/parser/getImageSrc';
-import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { convertAlbumType } from '~/scripts/converter/convertAlbumType';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { App } from '~~/types';
 
 export const getReleaseInfo = async (
@@ -26,7 +26,7 @@ export const getReleaseInfo = async (
     copyrights: copyrightList,
   } = release;
 
-  const albumType = parseAlbumType(album_type);
+  const albumType = convertAlbumType(album_type);
 
   const artistList = artists.map((artist) => ({
     id: artist.id,
@@ -43,7 +43,7 @@ export const getReleaseInfo = async (
     app.$spotify.library.checkUserSavedAlbums({ albumIdList }),
   ] as const);
 
-  const trackList = tracks.items.map(parseTrackDetail({ isTrackSavedList }));
+  const trackList = tracks.items.map(convertTrackDetail({ isTrackSavedList }));
 
   const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
 

@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { parseReleaseForCard } from '~/scripts/parser/parseReleaseForCard';
+import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { App } from '~~/types';
 
 export type ArtistReleaseInfo = {
@@ -47,10 +47,10 @@ export const getReleaseListMap = async (
     getArtistReleases('appears_on'),
   ] as const);
 
-  const albumList = albums?.items.map(parseReleaseForCard(artworkSize));
-  const singleList = singles?.items.map(parseReleaseForCard(artworkSize));
-  const compilationList = compilations?.items.map(parseReleaseForCard(artworkSize));
-  const appearsOnList = appearsOns?.items.map(parseReleaseForCard(artworkSize));
+  const albumList = albums?.items.map(convertReleaseForCard(artworkSize));
+  const singleList = singles?.items.map(convertReleaseForCard(artworkSize));
+  const compilationList = compilations?.items.map(convertReleaseForCard(artworkSize));
+  const appearsOnList = appearsOns?.items.map(convertReleaseForCard(artworkSize));
 
   return {
     albums: {

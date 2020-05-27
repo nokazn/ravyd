@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const parseReleaseDate = ({ releaseDate, releaseDatePrecision, format }: {
+export const convertReleaseDate = ({ releaseDate, releaseDatePrecision, format }: {
   releaseDate: string
   releaseDatePrecision: 'year' | 'month' | 'day'
   format?: string

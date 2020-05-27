@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { parseTrackDetail } from '~/scripts/parser/parseTrackDetail';
+import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { App } from '~~/types';
 
 export const getTopTrackList = async (
@@ -18,7 +18,7 @@ export const getTopTrackList = async (
 
   const trackIdList = tracks.map((track) => track.id);
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });
-  const trackList = tracks.map(parseTrackDetail({
+  const trackList = tracks.map(convertTrackDetail({
     isTrackSavedList,
     artworkSize,
   }));
