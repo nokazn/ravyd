@@ -2,9 +2,9 @@
   <v-app-bar
     v-scroll:#nuxt-content="onScrolled"
     app
-    :color="color"
     :elevation="elevation"
     :height="52"
+    :style="styles"
     :class="$style.Header">
     <div :class="$style.Header__container">
       <search-field
@@ -18,11 +18,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'vuex';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
-import { HEADER_BACKGROUND_COLOR } from '~/variables';
+import { HEADER_BACKGROUND_COLOR, BACKGROUND_RGB_LIST } from '~/variables';
 
 type Data = {
   HEADER_BACKGROUND_COLOR: typeof HEADER_BACKGROUND_COLOR
@@ -45,8 +44,12 @@ export default Vue.extend({
   },
 
   computed: {
-    color(): RootState['dominantBackgroundColor'] {
-      return this.$state().dominantBackgroundColor;
+    styles(): { backgroundColor: string } {
+      const rgbList = this.$state().dominantBackgroundColor?.rgb
+        ?.map((color) => Math.round(color))
+          ?? BACKGROUND_RGB_LIST;
+
+      return { backgroundColor: `rgba(${rgbList.join(', ')}, 0.7)` };
     },
   },
 
@@ -66,6 +69,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .Header {
   z-index: z-index-of(header)!important;
+  backdrop-filter: blur(16px);
   &__container {
     display: flex;
     justify-content: space-between;

@@ -1,8 +1,17 @@
-body {
-  &::-webkit-scrollbar,
-  &::-webkit-scrollbar-track,
+html {
+  overscroll-behavior-y: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $g-background-color;
+  }
   &::-webkit-scrollbar-thumb {
-    display: none;
+    background-color: #5a5a5a;
+    border-radius: 8px;
   }
 }
 
@@ -51,19 +60,8 @@ body {
   }
 }
 
-.g-scroll-wrapper-y {
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: $g-background-color;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #777777;
-    border-radius: 8px;
-  }
+.g-content {
+  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
 }
 
 .g-box-shadow {

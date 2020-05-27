@@ -1,37 +1,40 @@
 <template>
-  <main :class="$style.RootPage">
-    <scrollable-cards-section
-      title="今週の新譜"
-      :class="$style.RootPage__section">
-      <release-card
-        v-for="release in newReleaseList"
-        :key="release.id"
-        v-bind="release" />
-    </scrollable-cards-section>
+  <page>
+    <div :class="$style.RootPage">
+      <scrollable-cards-section
+        title="今週の新譜"
+        :class="$style.RootPage__section">
+        <release-card
+          v-for="release in newReleaseList"
+          :key="release.id"
+          v-bind="release" />
+      </scrollable-cards-section>
 
-    <scrollable-cards-section
-      title="お気に入りのトラック"
-      :class="$style.RootPage__section">
-      <release-card
-        v-for="release in topTrackList"
-        :key="release.id"
-        v-bind="release" />
-    </scrollable-cards-section>
+      <scrollable-cards-section
+        title="お気に入りのトラック"
+        :class="$style.RootPage__section">
+        <release-card
+          v-for="release in topTrackList"
+          :key="release.id"
+          v-bind="release" />
+      </scrollable-cards-section>
 
-    <scrollable-cards-section
-      title="お気に入りのアーティスト"
-      :class="$style.RootPage__section">
-      <artist-card
-        v-for="artist in topArtistList"
-        :key="artist.id"
-        v-bind="artist" />
-    </scrollable-cards-section>
-  </main>
+      <scrollable-cards-section
+        title="お気に入りのアーティスト"
+        :class="$style.RootPage__section">
+        <artist-card
+          v-for="artist in topArtistList"
+          :key="artist.id"
+          v-bind="artist" />
+      </scrollable-cards-section>
+    </div>
+  </page>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
+import Page from '~/components/globals/Page.vue';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
@@ -47,6 +50,7 @@ export type AsyncData = {
 
 export default Vue.extend({
   components: {
+    Page,
     ScrollableCardsSection,
     ReleaseCard,
     ArtistCard,

@@ -12,9 +12,9 @@ export type RootActions = {
 const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
   async extractDominantBackgroudColor({ commit }, src) {
     const colors = await extractDominantColors(src);
-    const backgroundColor = colors?.DarkMuted?.hex;
+    const backgroundPallet = colors?.DarkMuted;
 
-    commit('SET_DOMINANT_BACKGROUND_COLOR', backgroundColor, { root: true });
+    commit('SET_DOMINANT_BACKGROUND_COLOR', backgroundPallet, { root: true });
   },
 };
 

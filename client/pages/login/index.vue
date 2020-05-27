@@ -1,38 +1,46 @@
 <template>
-  <main :class="$style.LoginPage">
-    <v-card
-      v-show="!isLoggedin"
-      :class="$style.LoginCard">
-      <v-icon
-        :size="150">
-        mdi-account-circle
-      </v-icon>
+  <page>
+    <div :class="$style.LoginPage">
+      <v-card
+        v-show="!isLoggedin"
+        :class="$style.LoginCard">
+        <v-icon
+          :size="150">
+          mdi-account-circle
+        </v-icon>
 
-      <v-btn
-        rounded
-        color="cyan darken-3"
-        :class="$style.LoginCard__button"
-        @click="onAuthButtonClicked">
-        Spotify アカウントで認証
-      </v-btn>
+        <v-btn
+          rounded
+          color="cyan darken-3"
+          :class="$style.LoginCard__button"
+          @click="onAuthButtonClicked">
+          Spotify アカウントで認証
+        </v-btn>
 
-      <p :class="$style.LoginCard__signupText">
-        アカウントをお持ちでない場合は
-        <a
-          href="//www.spotify.com/jp/signup/"
-          target="_blank">
-          新規作成
-        </a>
-      </p>
-    </v-card>
-  </main>
+        <p :class="$style.LoginCard__signupText">
+          アカウントをお持ちでない場合は
+          <a
+            href="//www.spotify.com/jp/signup/"
+            target="_blank">
+            新規作成
+          </a>
+        </p>
+      </v-card>
+    </div>
+  </page>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+
+import Page from '~/components/globals/Page.vue';
 import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
+  components: {
+    Page,
+  },
+
   computed: {
     isLoggedin(): boolean | null {
       return this.$getters()['auth/isLoggedin'];

@@ -1,75 +1,77 @@
 <template>
-  <main
-    :class="$style.ArtistIdPage"
-    :style="styles">
+  <page>
     <div
-      v-if="artistInfo != null"
-      :class="$style.ArtistIdPage__header">
-      <user-avatar
-        :size="avatarSize"
-        :src="artistInfo.avatarSrc"
-        :alt="artistInfo.name"
-        :title="artistInfo.name"
-        default-user-icon="mdi-account-music"
-        shadow />
-      <div>
-        <div
-          title="認証済アーティスト"
-          :class="$style.ArtistIdPage__type">
-          <span>
-            アーティスト
-          </span>
-          <v-icon
-            :size="14"
-            color="light-blue"
-            :class="$style.ArtistIdPage__verifiedIrtistIcon">
-            mdi-check-decagram
-          </v-icon>
-        </div>
+      :class="$style.ArtistIdPage"
+      :style="styles">
+      <div
+        v-if="artistInfo != null"
+        :class="$style.ArtistIdPage__header">
+        <user-avatar
+          :size="avatarSize"
+          :src="artistInfo.avatarSrc"
+          :alt="artistInfo.name"
+          :title="artistInfo.name"
+          default-user-icon="mdi-account-music"
+          shadow />
+        <div>
+          <div
+            title="認証済アーティスト"
+            :class="$style.ArtistIdPage__type">
+            <span>
+              アーティスト
+            </span>
+            <v-icon
+              :size="14"
+              color="light-blue"
+              :class="$style.ArtistIdPage__verifiedIrtistIcon">
+              mdi-check-decagram
+            </v-icon>
+          </div>
 
-        <h1 :class="$style.ArtistIdPage__artistName">
-          {{ artistInfo.name }}
-        </h1>
+          <h1 :class="$style.ArtistIdPage__artistName">
+            {{ artistInfo.name }}
+          </h1>
 
-        <p>
-          {{ artistInfo.followersText }}
-        </p>
+          <p>
+            {{ artistInfo.followersText }}
+          </p>
 
-        <div :class="$style.ArtistIdPage__buttons">
-          <media-control-button
-            :is-playing="isPlaying && isArtistSet"
-            @on-clicked="onMediaControlButtonClicked" />
+          <div :class="$style.ArtistIdPage__buttons">
+            <media-control-button
+              :is-playing="isPlaying && isArtistSet"
+              @on-clicked="onMediaControlButtonClicked" />
 
-          <follow-button
-            :is-following="isFollowing"
-            @on-clicked="onFollowButtonClicked" />
+            <follow-button
+              :is-following="isFollowing"
+              @on-clicked="onFollowButtonClicked" />
+          </div>
         </div>
       </div>
+
+      <section>
+        <track-list-wrapper
+          title="人気の曲"
+          :omitted-length="5"
+          :track-list="topTrackList"
+          :uri="artistInfo.uri"
+          :class="$style.ArtistIdPage__trackListSection" />
+      </section>
+
+      <template v-for="{ title, items } in Object.values(releaseListMap)">
+        <cards-section
+          v-if="items.length > 0"
+          :key="title"
+          :title="title"
+          :class="$style.ArtistIdPage__cardSection">
+          <release-card
+            v-for="item in items"
+            :key="item.id"
+            v-bind="item"
+            year-subtitle />
+        </cards-section>
+      </template>
     </div>
-
-    <section>
-      <track-list-wrapper
-        title="人気の曲"
-        :omitted-length="5"
-        :track-list="topTrackList"
-        :uri="artistInfo.uri"
-        :class="$style.ArtistIdPage__trackListSection" />
-    </section>
-
-    <template v-for="{ title, items } in Object.values(releaseListMap)">
-      <cards-section
-        v-if="items.length > 0"
-        :key="title"
-        :title="title"
-        :class="$style.ArtistIdPage__cardSection">
-        <release-card
-          v-for="item in items"
-          :key="item.id"
-          v-bind="item"
-          year-subtitle />
-      </cards-section>
-    </template>
-  </main>
+  </page>
 </template>
 
 <script lang="ts">
@@ -77,6 +79,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 import { RootGetters } from 'vuex';
 
+import Page from '~/components/globals/Page.vue';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
@@ -105,6 +108,7 @@ export type AsyncData = {
 
 @Component({
   components: {
+    Page,
     UserAvatar,
     MediaControlButton,
     FollowButton,

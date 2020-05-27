@@ -3,13 +3,11 @@
     <Header v-if="isLoggedin" />
     <NavigationDrawer v-if="isLoggedin" />
 
-    <v-content>
-      <div
-        id="nuxt-content"
-        :class="[$style.Content, 'g-scroll-wrapper-y']">
-        <nuxt />
-      </div>
-    </v-content>
+    <main
+      :class="$style.ContentContainer"
+      :style="styles">
+      <nuxt />
+    </main>
 
     <Footer v-if="isLoggedin" />
   </v-app>
@@ -34,6 +32,9 @@ export default Vue.extend({
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
+    styles(): RootGetters['backgroundStyles'] {
+      return this.$getters().backgroundStyles;
+    },
   },
 
   // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
@@ -44,7 +45,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.Content {
-  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
+.ContentContainer {
+  padding: 0 0 $g-footer-height $g-navigation-drawer-width;
 }
 </style>

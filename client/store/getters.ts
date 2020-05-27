@@ -10,9 +10,9 @@ export type RootGetters = {
 const getters: Getters<RootState, RootGetters> = {
   backgroundStyles(state) {
     const gradationHeight = 250;
-    const color = state.dominantBackgroundColor;
+    const color = state.dominantBackgroundColor?.hex;
     return color != null
-      ? { background: `linear-gradient(to bottom, ${color}, ${BACKGROUND_COLOR} ${gradationHeight}px)` }
+      ? { background: `linear-gradient(to bottom, ${color} 80px, ${BACKGROUND_COLOR} ${gradationHeight}px)` }
       : undefined;
   },
 };

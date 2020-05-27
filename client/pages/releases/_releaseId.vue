@@ -1,68 +1,70 @@
 <template>
-  <main
-    v-if="releaseInfo != null"
-    :class="$style.ReleaseIdPage"
-    :style="styles">
-    <div :class="$style.ReleaseIdPage__header">
-      <release-artwork
-        :src="releaseInfo.artworkSrc"
-        :alt="releaseInfo.name"
-        :size="220"
-        :title="releaseInfo.name"
-        shadow />
+  <page>
+    <div
+      v-if="releaseInfo != null"
+      :class="$style.ReleaseIdPage"
+      :style="styles">
+      <div :class="$style.ReleaseIdPage__header">
+        <release-artwork
+          :src="releaseInfo.artworkSrc"
+          :alt="releaseInfo.name"
+          :size="220"
+          :title="releaseInfo.name"
+          shadow />
 
-      <div :class="$style.ReleaseIdPage__releaseInfo">
-        <div :class="$style.ReleaseIdPage__releaseType">
-          {{ releaseInfo.albumType }}
-        </div>
-
-        <h1 :class="$style.ReleaseIdPage__releaseName">
-          {{ releaseInfo.name }}
-        </h1>
-
-        <artist-names
-          :artist-list="releaseInfo.artistList"
-          :class="$style.ReleaseIdPage__artistsName" />
-
-        <div :class="$style.ReleaseIdPage__releaseInfoFooter">
-          <div :class="$style.ReleaseIdPage__buttons">
-            <media-control-button
-              :is-playing="isPlaying && isAlbumSet"
-              @on-clicked="onMediaControlButtonClicked" />
-
-            <favorite-button
-              :is-favorited="releaseInfo.isSaved"
-              outlined
-              @on-clicked="onFavoriteButtonClicked" />
+        <div :class="$style.ReleaseIdPage__releaseInfo">
+          <div :class="$style.ReleaseIdPage__releaseType">
+            {{ releaseInfo.albumType }}
           </div>
 
-          <div :class="$style.ReleaseIdPage__releaseDetail">
-            <release-date
-              :release-date="releaseInfo.releaseDate"
-              :release-date-precision="releaseInfo.releaseDatePrecision" />
+          <h1 :class="$style.ReleaseIdPage__releaseName">
+            {{ releaseInfo.name }}
+          </h1>
 
-            <release-total-tracks
-              :total-tracks="releaseInfo.totalTracks" />
+          <artist-names
+            :artist-list="releaseInfo.artistList"
+            :class="$style.ReleaseIdPage__artistsName" />
 
-            <release-duration
-              :duration-ms="releaseInfo.durationMs" />
+          <div :class="$style.ReleaseIdPage__releaseInfoFooter">
+            <div :class="$style.ReleaseIdPage__buttons">
+              <media-control-button
+                :is-playing="isPlaying && isAlbumSet"
+                @on-clicked="onMediaControlButtonClicked" />
 
-            <release-label
-              :label="releaseInfo.label" />
+              <favorite-button
+                :is-favorited="releaseInfo.isSaved"
+                outlined
+                @on-clicked="onFavoriteButtonClicked" />
+            </div>
+
+            <div :class="$style.ReleaseIdPage__releaseDetail">
+              <release-date
+                :release-date="releaseInfo.releaseDate"
+                :release-date-precision="releaseInfo.releaseDatePrecision" />
+
+              <release-total-tracks
+                :total-tracks="releaseInfo.totalTracks" />
+
+              <release-duration
+                :duration-ms="releaseInfo.durationMs" />
+
+              <release-label
+                :label="releaseInfo.label" />
+            </div>
           </div>
         </div>
       </div>
+
+      <track-list-table
+        :track-list="releaseInfo.trackList"
+        :uri="releaseInfo.uri"
+        :class="$style.ReleaseIdPage__trackList" />
+
+      <copyrights
+        :copyright-list="releaseInfo.copyrightList"
+        :class="$style.ReleaseIdPage__copyrights" />
     </div>
-
-    <track-list-table
-      :track-list="releaseInfo.trackList"
-      :uri="releaseInfo.uri"
-      :class="$style.ReleaseIdPage__trackList" />
-
-    <copyrights
-      :copyright-list="releaseInfo.copyrightList"
-      :class="$style.ReleaseIdPage__copyrights" />
-  </main>
+  </page>
 </template>
 
 <script lang="ts">
@@ -70,6 +72,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 import { RootGetters } from 'vuex';
 
+import Page from '~/components/globals/Page.vue';
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
@@ -90,6 +93,7 @@ export interface AsyncData {
 
 @Component({
   components: {
+    Page,
     ReleaseArtwork,
     ArtistNames,
     MediaControlButton,

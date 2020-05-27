@@ -1,11 +1,11 @@
-import { BACKGROUND_COLOR } from '~/variables';
+import { Swatch } from 'node-vibrant/lib/color';
 
 export type RootState = {
-  dominantBackgroundColor: string
+  dominantBackgroundColor: Swatch | undefined
 }
 
 const state = (): RootState => ({
-  dominantBackgroundColor: BACKGROUND_COLOR,
+  dominantBackgroundColor: undefined,
 });
 
 export default state;
