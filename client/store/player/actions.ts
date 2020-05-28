@@ -3,7 +3,7 @@ import { Actions } from 'vuex';
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
-import { REPEAT_STATE_LIST } from '~/variables';
+import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 export type PlayerActions = {
@@ -77,8 +77,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       if (getters.isPlayerConnected) return;
 
       const player = new Spotify.Player({
-        // @todo
-        name: 'spotify-player',
+        name: APP_NAME,
         getOAuthToken: (cb) => {
           cb(token);
         },

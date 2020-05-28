@@ -11,3 +11,5 @@ export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'context',
   'track',
 ];
+
+export const APP_NAME = 'spotify-player';

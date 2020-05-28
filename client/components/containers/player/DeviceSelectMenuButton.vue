@@ -8,6 +8,7 @@
     <template #activator="{ on }">
       <v-btn
         icon
+        :color="deviceButtonColor"
         title="デバイスを選択"
         v-on="on"
         @click="onDeviceButtonClicked"
@@ -25,7 +26,25 @@
         :color="FOOTER_BACKGROUND_COLOR"
         :class="$style.DeviceSelectMenuList"
       >
-        <v-subheader>デバイスを選択</v-subheader>
+        <div :class="$style.DeviceSelectMenuList__header">
+          <v-subheader>
+            デバイスを選択
+          </v-subheader>
+
+          <v-btn
+            icon
+            small
+            title="デバイスの一覧を更新"
+            @click.stop="onUpdateButtonClicked"
+          >
+            <v-icon>
+              mdi-refresh
+            </v-icon>
+          </v-btn>
+        </div>
+
+        <v-divider />
+
         <v-list-item-group>
           <v-list-item
             v-for="device in deviceItemList"
@@ -137,6 +156,11 @@ export default Vue.extend({
   },
 
   computed: {
+    deviceButtonColor(): string | undefined {
+      return this.$getters()['player/isTheAppPlaying']
+        ? 'cyan'
+        : undefined;
+    },
     deviceItemList(): DeviceInfo[] {
       // @todo any[] で推論されてしまう
       const activeDeviceList = this.$state().player.activeDeviceList as SpotifyAPI.Device[];
@@ -156,6 +180,9 @@ export default Vue.extend({
     onDeviceButtonClicked() {
       this.isShown = !this.isShown;
     },
+    onUpdateButtonClicked() {
+      this.$dispatch('player/getActiveDeviceList');
+    },
     onListItemClickedHandler(id: string) {
       this.$dispatch('player/transferPlayback', { deviceId: id });
     },
@@ -165,6 +192,12 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .DeviceSelectMenuList {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+  }
   &__listItemTitle {
     font-size: 14px!important;
     margin-bottom: 6px!important;
