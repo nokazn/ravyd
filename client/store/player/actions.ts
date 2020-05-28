@@ -4,11 +4,16 @@ import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { REPEAT_STATE_LIST } from '~/variables';
+import { SpotifyAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
   disconnectPlayer: () => void
   getRecentlyPlayed: (limit?: number) => Promise<void>
+  transferPlayback: ({ deviceId, play }: {
+    deviceId: string
+    play?: boolean
+  }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   play: (payload?: {
     contextUri: string
@@ -38,6 +43,7 @@ export type PlayerActions = {
 
 export type RootActions = {
   'player/initPlayer': PlayerActions['initPlayer']
+  'player/transferPlayback': PlayerActions['transferPlayback']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
@@ -139,20 +145,22 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // Ready
       player.addListener('ready', async ({ device_id }) => {
-        commit('SET_DEVICE_ID', device_id);
         // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
         await dispatch('pause', { isInitializing: true });
-        await this.$spotify.player.transferPlayback({
-          deviceIdList: [device_id],
+        await dispatch('transferPlayback', {
+          deviceId: device_id,
           play: false,
         });
 
         // volme は 0 から 1
-        const volume = await player.getVolume()
-          .catch((err: Error) => {
+        const [volume] = await Promise.all([
+          player.getVolume().catch((err: Error) => {
             console.error({ err });
             return 1;
-          });
+          }),
+          dispatch('getActiveDeviceList'),
+        ] as const);
+
         commit('SET_VOLUME', { volumePercent: volume * 100 });
 
         console.log('Ready with this device 🎉');
@@ -180,10 +188,40 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_PLAYBACK_PLAYER', null);
   },
 
-  async getActiveDeviceList({ commit }) {
+  async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
+    if (deviceId === state.deviceId) return;
+
+    // play が指定されなかった場合は、現在の状態を維持
+    await this.$spotify.player.transferPlayback({
+      deviceId,
+      play: play != null
+        ? play
+        : state.isPlaying,
+    });
+
+    commit('SET_DEVICE_ID', deviceId);
+
+    const playingDevice = state.activeDeviceList.find((device) => device.id === deviceId);
+    if (playingDevice != null) {
+      // 再生されているデバイスの isActive を true にする
+      const activeDeviceList: SpotifyAPI.Device[] = state.activeDeviceList.map((device) => ({
+        ...device,
+        is_active: device.id === deviceId,
+      }));
+      commit('SET_ACTIVE_DEVICE_LIST', activeDeviceList);
+    } else {
+      // デバイスのリストを取得しなおす
+      await dispatch('getActiveDeviceList');
+    }
+  },
+
+  async getActiveDeviceList({ state, commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
 
     commit('SET_ACTIVE_DEVICE_LIST', devices ?? []);
+
+    const playingDevice = state.activeDeviceList.find((device) => device.id === state.deviceId);
+    if (playingDevice?.id != null) commit('SET_DEVICE_ID', playingDevice.id);
   },
 
   async getRecentlyPlayed({ commit }, limit = 20) {

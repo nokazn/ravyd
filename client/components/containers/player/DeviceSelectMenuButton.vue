@@ -22,6 +22,7 @@
       <v-list
         dense
         subheader
+        :color="FOOTER_BACKGROUND_COLOR"
         :class="$style.DeviceSelectMenuList"
       >
         <v-subheader>デバイスを選択</v-subheader>
@@ -31,7 +32,9 @@
             :key="device.id"
             dense
             two-line
+            :input-value="device.id"
             :class="$style.DeviceSelectMenuList__listItem"
+            @click="onListItemClickedHandler(device.id)"
           >
             <v-list-item-avatar>
               <v-icon
@@ -77,10 +80,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
+import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 type Data = {
   isShown: boolean
+  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
 }
 
 type DeviceInfo = {
@@ -126,6 +132,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
+      FOOTER_BACKGROUND_COLOR,
     };
   },
 
@@ -148,6 +155,9 @@ export default Vue.extend({
   methods: {
     onDeviceButtonClicked() {
       this.isShown = !this.isShown;
+    },
+    onListItemClickedHandler(id: string) {
+      this.$dispatch('player/transferPlayback', { deviceId: id });
     },
   },
 });
