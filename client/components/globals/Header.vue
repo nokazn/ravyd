@@ -1,17 +1,41 @@
 <template>
   <v-app-bar
-    v-scroll:#nuxt-content="onScrolled"
+    v-scroll="onScrolled"
     app
     :elevation="elevation"
     :height="52"
     :style="styles"
     :class="$style.Header">
     <div :class="$style.Header__container">
-      <search-field
-        v-model="searchWords"
-        :class="$style.Header__searchField" />
+      <div :class="$style.Header__left">
+        <v-btn
+          :width="36"
+          :height="36"
+          icon
+          @click="onBackButtonClicked">
+          <v-icon :size="32">
+            mdi-chevron-left
+          </v-icon>
+        </v-btn>
 
-      <user-menu />
+        <v-btn
+          :width="36"
+          :height="36"
+          icon
+          @click="onForwardButtonClicked">
+          <v-icon :size="32">
+            mdi-chevron-right
+          </v-icon>
+        </v-btn>
+
+        <search-field
+          v-model="searchWords"
+          :class="$style.Header__searchField" />
+      </div>
+
+      <div :class="$style.Header__right">
+        <user-menu />
+      </div>
     </div>
   </v-app-bar>
 </template>
@@ -62,6 +86,12 @@ export default Vue.extend({
         ? scrollTop / 5
         : 24;
     },
+    onBackButtonClicked() {
+      this.$router.back();
+    },
+    onForwardButtonClicked() {
+      this.$router.forward();
+    },
   },
 });
 </script>
@@ -75,9 +105,13 @@ export default Vue.extend({
     justify-content: space-between;
     width: 100%;
     margin: 0 8px;
+    & > * {
+      display: flex;
+      align-items: center;
+    }
   }
   &__searchField {
-    width: 20%;
+    margin-left: 20px;
   }
 }
 </style>
