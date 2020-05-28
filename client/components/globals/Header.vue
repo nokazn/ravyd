@@ -13,6 +13,7 @@
           :width="36"
           :height="36"
           icon
+          title="戻る"
           @click="onBackButtonClicked"
         >
           <v-icon :size="32">
@@ -24,6 +25,7 @@
           :width="36"
           :height="36"
           icon
+          title="進む"
           @click="onForwardButtonClicked"
         >
           <v-icon :size="32">
