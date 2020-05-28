@@ -1,24 +1,22 @@
 <template>
-  <page>
-    <v-app
-      dark
-      :class="$style.ErrorPage"
-    >
+  <v-app
+    dark
+    :class="$style.ErrorPage"
+  >
+    <main :class="$style.ErrorPage__container">
       <h1>
         {{ errorMessage }}
       </h1>
       <NuxtLink to="/">
         トップへ戻る
       </NuxtLink>
-    </v-app>
-  </page>
+    </main>
+  </v-app>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { NuxtError } from '@nuxt/types';
-
-import Page from '~/components/globals/Page.vue';
 
 type Data = {
   errorMessage: string
@@ -26,9 +24,6 @@ type Data = {
 
 export default Vue.extend({
   layout: 'empty',
-  components: {
-    Page,
-  },
 
   props: {
     error: {
@@ -55,6 +50,9 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ErrorPage {
-  padding: 8px 4%;
+  height: calc(100vh - #{$g-footer-height});
+  &__container {
+    padding: 60px 4%;
+  }
 }
 </style>
