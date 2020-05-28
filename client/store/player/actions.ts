@@ -110,6 +110,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         // @todo
         console.log(playerState);
         const {
+          context: { uri },
           position,
           duration,
           paused: isPaused,
@@ -127,6 +128,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         const disallowList = disallowKeys.filter((key) => disallows[key]);
 
         commit('SET_IS_PLAYING', !isPaused);
+        commit('SET_CONTEXT_URI', uri);
         commit('SET_POSITION', position);
         commit('SET_DURATION', duration);
         commit('SET_IS_SHUFFLED', isShuffled);

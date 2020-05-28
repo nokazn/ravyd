@@ -13,6 +13,7 @@ export type PlayerMutations = {
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | null
   SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
+  SET_CONTEXT_URI: string | null
   SET_POSITION: number
   SET_DURATION: number
   SET_IS_SHUFFLED: boolean
@@ -32,6 +33,7 @@ export type RootMutations = {
   ['player/SET_RECENTLY_PLAYED']: PlayerMutations['SET_RECENTLY_PLAYED']
   ['player/SET_IS_SAVED_TRACK']: PlayerMutations['SET_IS_SAVED_TRACK']
   ['player/SET_IS_PLAYING']: PlayerMutations['SET_IS_PLAYING']
+  ['player/SET_CONTEXT_URI']: PlayerMutations['SET_CONTEXT_URI']
   ['player/SET_POSITION']: PlayerMutations['SET_POSITION']
   ['player/SET_DURATION']: PlayerMutations['SET_DURATION']
   ['player/SET_IS_SHUFFLED']: PlayerMutations['SET_IS_SHUFFLED']
@@ -59,6 +61,7 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.trackName = currentTrack.name;
     state.trackId = currentTrack.id;
     state.trackUri = currentTrack.uri;
+    state.albumName = currentTrack.album.name;
     state.albumUri = currentTrack.album.uri;
     state.artistList = currentTrack.artists.map((artist) => ({
       name: artist.name,
@@ -84,6 +87,10 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_IS_PLAYING(state, isPlaying) {
     state.isPlaying = isPlaying;
+  },
+
+  SET_CONTEXT_URI(state, uri) {
+    state.contextUri = uri;
   },
 
   SET_POSITION(state, position) {

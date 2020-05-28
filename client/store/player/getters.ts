@@ -3,12 +3,14 @@ import { Getters } from 'vuex';
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { SpotifyAPI } from '~~/types';
+import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
+import { SpotifyAPI, App } from '~~/types';
 
 export type PlayerGetters = {
   isPlayerConnected: boolean
   activeDevice: SpotifyAPI.Device | null
   isTheAppPlaying: boolean
+  trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
   albumId: string | null
   albumArtworkSrc: (minSize?: number) => string | null
   isTrackSet: (trackId: string) => boolean
@@ -26,6 +28,7 @@ export type RootGetters = {
   ['player/isPlayerConnected']: PlayerGetters['isPlayerConnected']
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/isTheAppPlaying']: PlayerGetters['isTheAppPlaying']
+  ['player/trackQueue']: PlayerGetters['trackQueue']
   ['player/albumId']: PlayerGetters['albumId']
   ['player/albumArtworkSrc']: PlayerGetters['albumArtworkSrc']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
@@ -53,6 +56,32 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isTheAppPlaying(_state, getters) {
     return getters.activeDevice?.name === APP_NAME;
+  },
+
+  trackQueue(state) {
+    return (artworkSize = 64) => {
+      if (state.albumArtWorkList == null) return [];
+
+      const currentTrack = {
+        isPlaying: true,
+        id: state.trackId,
+        name: state.trackName!,
+        uri: state.trackUri!,
+        artistList: state.artistList!,
+        albumName: state.albumName!,
+        artworkSrc: getImageSrc(state.albumArtWorkList!, artworkSize),
+      };
+      const previousTrackList = state.previousTrackList
+        .map(convertTrackForQueue(false, artworkSize));
+      const nextTrackList = state.nextTrackList
+        .map(convertTrackForQueue(false, artworkSize));
+
+      return [
+        ...previousTrackList,
+        currentTrack,
+        ...nextTrackList,
+      ];
+    };
   },
 
   albumId(state) {

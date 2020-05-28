@@ -4,9 +4,11 @@ export type PlayerState = {
   playbackPlayer: Spotify.SpotifyPlayer | null
   deviceId: string | null
   activeDeviceList: SpotifyAPI.Device[]
+  contextUri: string | null
   trackName: string | null
   trackId: string | null
   trackUri: string | null
+  albumName: string | null
   albumUri: string | null
   albumArtWorkList: SpotifyAPI.Image[] | null
   artistList: App.SimpleArtistInfo[] | null
@@ -30,6 +32,7 @@ export type RootState = {
   'player/trackName': PlayerState['trackName']
   'player/trackId': PlayerState['trackId']
   'player/trackUri': PlayerState['trackUri']
+  'player/albumName': PlayerState['albumName']
   'player/albumUri': PlayerState['albumUri']
   'player/albumArtWorkList': PlayerState['albumArtWorkList']
   'player/artistList': PlayerState['artistList']
@@ -52,9 +55,11 @@ const state = (): PlayerState => ({
   deviceId: null,
   activeDeviceList: [],
   albumArtWorkList: null,
+  contextUri: null,
   trackName: null,
   trackId: null,
   trackUri: null,
+  albumName: null,
   albumUri: null,
   artistList: [],
   nextTrackList: [],

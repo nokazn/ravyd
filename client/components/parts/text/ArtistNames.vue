@@ -6,6 +6,7 @@
       <nuxt-link
         :key="id"
         :to="artistPath(id)"
+        @click.stop
       >
         {{ name }}
       </nuxt-link><span

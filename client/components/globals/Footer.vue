@@ -49,14 +49,7 @@
 
       <div :class="$style.Footer__right">
         <div>
-          <v-btn
-            icon
-            title="再生リスト"
-          >
-            <v-icon :size="20">
-              mdi-playlist-play
-            </v-icon>
-          </v-btn>
+          <TrackListButton />
 
           <DeviceSelectMenuButton />
 
@@ -90,6 +83,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
+import TrackListButton from '~/components/containers/player/TrackListButton.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
@@ -107,6 +101,7 @@ export default Vue.extend({
     FavoriteButton,
     SeekBar,
     MediaControllersWrapper,
+    TrackListButton,
     DeviceSelectMenuButton,
     VolumeSlider,
   },

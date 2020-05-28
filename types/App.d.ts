@@ -19,6 +19,18 @@ export namespace App {
     isSaved: boolean
     duration: string
   }
+  export type TrackQueueInfo = {
+    isPlaying: boolean
+    id: string | null
+    name: string
+    uri: string
+    artistList: {
+      id: string
+      name: string
+    }[]
+    albumName: string
+    artworkSrc: string
+  }
 
   export type ReleaseCardInfo = {
     type: 'album' | 'track'
