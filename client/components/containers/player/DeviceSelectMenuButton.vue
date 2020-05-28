@@ -52,7 +52,6 @@
             :key="device.id"
             dense
             two-line
-            :input-value="device.id"
             :class="$style.DeviceSelectMenuList__listItem"
             @click="onListItemClickedHandler(device.id)"
           >
@@ -201,14 +200,14 @@ export default Vue.extend({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
+    margin: 0 12px;
   }
   &__listItemTitle {
-    font-size: 14px!important;
+    font-size: 0.9em!important;
     margin-bottom: 6px!important;
   }
   &__listItemSubtitle {
-    font-size: 12px!important;
+    font-size: 0.8em!important;
   }
 }
 </style>
