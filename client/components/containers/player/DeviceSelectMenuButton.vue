@@ -34,6 +34,7 @@
           <v-btn
             icon
             small
+            :loading="isRefreshingDeviceList"
             title="デバイスの一覧を更新"
             @click.stop="onUpdateButtonClicked"
           >
@@ -105,6 +106,7 @@ import { SpotifyAPI } from '~~/types';
 
 type Data = {
   isShown: boolean
+  isRefreshingDeviceList: boolean
   FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
 }
 
@@ -151,6 +153,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
+      isRefreshingDeviceList: false,
       FOOTER_BACKGROUND_COLOR,
     };
   },
@@ -180,8 +183,10 @@ export default Vue.extend({
     onDeviceButtonClicked() {
       this.isShown = !this.isShown;
     },
-    onUpdateButtonClicked() {
-      this.$dispatch('player/getActiveDeviceList');
+    async onUpdateButtonClicked() {
+      this.isRefreshingDeviceList = true;
+      await this.$dispatch('player/getActiveDeviceList');
+      this.isRefreshingDeviceList = false;
     },
     onListItemClickedHandler(id: string) {
       this.$dispatch('player/transferPlayback', { deviceId: id });
