@@ -58,16 +58,10 @@
             </v-icon>
           </v-btn>
 
-          <v-btn
-            icon
-            title="デバイスを選択"
-          >
-            <v-icon :size="20">
-              mdi-devices
-            </v-icon>
-          </v-btn>
+          <DeviceSelectMenuButton />
 
           <v-btn
+            ref=""
             icon
             title="メニュー"
           >
@@ -95,9 +89,15 @@ import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
+import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
+
+type Data = {
+  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
+  deviceSelectMenu: boolean
+}
 
 export default Vue.extend({
   components: {
@@ -107,12 +107,14 @@ export default Vue.extend({
     FavoriteButton,
     SeekBar,
     MediaControllersWrapper,
+    DeviceSelectMenuButton,
     VolumeSlider,
   },
 
-  data() {
+  data(): Data {
     return {
       FOOTER_BACKGROUND_COLOR,
+      deviceSelectMenu: false,
     };
   },
 
