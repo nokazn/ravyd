@@ -3,7 +3,8 @@
     icon
     v-bind="buttonProps"
     :title="title"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :size="iconSize">
       {{ favoriteIcon }}
     </v-icon>

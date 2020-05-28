@@ -2,7 +2,8 @@
   <page>
     <v-app
       dark
-      :class="$style.ErrorPage">
+      :class="$style.ErrorPage"
+    >
       <h1>
         {{ errorMessage }}
       </h1>

@@ -5,23 +5,27 @@
 
       <two-columns-list-card
         v-if="itemList"
-        :item-list="itemList" />
+        :item-list="itemList"
+      />
       <v-skeleton-loader
         v-else
-        type="list-item" />
+        type="list-item"
+      />
 
       <v-btn
         rounded
         color="cyan darken-3"
         nuxt
         to="//www.spotify.com/jp/account/overview/"
-        target="_blank">
+        target="_blank"
+      >
         <span>
           アカウント情報を編集
         </span>
         <v-icon
           small
-          :class="$style.AccountPage__editAccountIcon">
+          :class="$style.AccountPage__editAccountIcon"
+        >
           mdi-open-in-new
         </v-icon>
       </v-btn>

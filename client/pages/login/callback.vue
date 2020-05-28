@@ -4,7 +4,8 @@
       <v-progress-circular
         indeterminate
         :size="50"
-        :width="5" />
+        :width="5"
+      />
     </div>
   </page>
 </template>

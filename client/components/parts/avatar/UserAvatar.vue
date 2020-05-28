@@ -3,7 +3,8 @@
     <v-avatar
       v-if="src"
       :size="size"
-      :class="{ 'g-box-shadow': shadow }">
+      :class="{ 'g-box-shadow': shadow }"
+    >
       <v-img
         :src="src"
         alt="user-avaar"
@@ -11,18 +12,21 @@
         :width="size"
         :max-height="size"
         :max-width="size"
-        :aspect-ratio="1">
+        :aspect-ratio="1"
+      >
         <avatar-overlay
           :hover="isOverlayed && hover"
           :size="size"
           :icon="icon"
-          @on-clicked="onClicked" />
+          @on-clicked="onClicked"
+        />
       </v-img>
     </v-avatar>
     <v-icon
       v-else
       :size="size"
-      class="user-avatar">
+      class="user-avatar"
+    >
       {{ defaultUserIcon }}
     </v-icon>
   </v-hover>

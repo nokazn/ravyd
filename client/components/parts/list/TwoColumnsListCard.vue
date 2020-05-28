@@ -2,9 +2,11 @@
   <v-card class="two-columns-list-card">
     <v-list>
       <template
-        v-for="(item, index) in itemList">
+        v-for="(item, index) in itemList"
+      >
         <v-list-item
-          :key="item.title">
+          :key="item.title"
+        >
           <v-list-item-content>
             <v-list-item-title class="two-columns-list-card__content">
               <div>
@@ -19,7 +21,8 @@
 
         <v-divider
           v-show="itemList.length !== index + 1"
-          :key="index" />
+          :key="index"
+        />
       </template>
     </v-list>
     <v-card />

@@ -4,7 +4,8 @@
     :disabled="isShuffleDisallowed"
     :color="shuffleButton.color"
     :title="shuffleButton.title"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :size="16">
       mdi-shuffle-variant
     </v-icon>

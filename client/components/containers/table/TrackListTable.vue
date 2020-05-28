@@ -6,12 +6,14 @@
     disable-pagination
     disable-sort
     hide-default-footer
-    class="track-list-table">
+    class="track-list-table"
+  >
     <template #header.duration>
       <v-icon
         :size="16"
         color="grey"
-        title="再生時間">
+        title="再生時間"
+      >
         mdi-clock-outline
       </v-icon>
     </template>
@@ -20,7 +22,8 @@
       <track-list-table-group-header
         v-if="hasMultipleDiscs"
         :disc-number="group"
-        :colspan="headers.length" />
+        :colspan="headers.length"
+      />
     </template>
 
     <template #item="{ item }">
@@ -32,7 +35,8 @@
         :uri="uri"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
-        @on-favorite-button-clicked="onFavoriteButtonClicked" />
+        @on-favorite-button-clicked="onFavoriteButtonClicked"
+      />
     </template>
   </v-data-table>
 </template>

@@ -11,7 +11,8 @@
               $style.CardsWrapper__icon,
               $style['CardsWrapper__icon--left']
             ]"
-            @click="onLeftButtonClicked">
+            @click="onLeftButtonClicked"
+          >
             <v-icon :size="48">
               mdi-chevron-left
             </v-icon>
@@ -28,7 +29,8 @@
               $style.CardsWrapper__icon,
               $style['CardsWrapper__icon--right']
             ]"
-            @click="onRightButtonClicked">
+            @click="onRightButtonClicked"
+          >
             <v-icon :size="48">
               mdi-chevron-right
             </v-icon>
@@ -40,7 +42,8 @@
           :class="[
             $style.CardsWrapper__container,
             'g-no-scroll-bar'
-          ]">
+          ]"
+        >
           <slot />
         </div>
       </div>

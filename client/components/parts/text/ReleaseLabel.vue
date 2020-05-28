@@ -1,10 +1,12 @@
 <template>
   <span
     :title="title"
-    :class="$style.ReleaseLabel">
+    :class="$style.ReleaseLabel"
+  >
     <v-icon
       :size="size"
-      color="grey lighten-1">
+      color="grey lighten-1"
+    >
       mdi-album
     </v-icon>
     <span :style="textStyles">

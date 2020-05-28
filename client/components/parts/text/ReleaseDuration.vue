@@ -1,10 +1,12 @@
 <template>
   <span
     :class="$style.ReleaseDate"
-    :title="title">
+    :title="title"
+  >
     <v-icon
       :size="size"
-      color="grey lighten-1">
+      color="grey lighten-1"
+    >
       mdi-clock-outline
     </v-icon>
     <span :style="textStyles">

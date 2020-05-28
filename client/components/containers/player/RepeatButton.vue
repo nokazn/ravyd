@@ -4,7 +4,8 @@
     :color="repeatButton.color"
     :title="repeatButton.title"
     :disabled="isRepeatDisallowed"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :size="size">
       {{ repeatButton.icon }}
     </v-icon>

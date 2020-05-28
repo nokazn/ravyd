@@ -27,10 +27,6 @@ module.exports = {
     },
   },
   rules: {
-    'vue/html-closing-bracket-newline': [2, {
-      singleline: 'never',
-      multiline: 'never',
-    }],
     // import するときに拡張子を書かないもの
     'import/extensions': [2, {
       js: 'never',

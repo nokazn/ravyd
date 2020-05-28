@@ -1,10 +1,12 @@
 <template>
   <span
     :title="title"
-    :class="$style.ReleaseTotalTracks">
+    :class="$style.ReleaseTotalTracks"
+  >
     <v-icon
       :size="size"
-      color="grey lighten-1">
+      color="grey lighten-1"
+    >
       mdi-music-box-multiple-outline
     </v-icon>
     <span :style="textStyles">

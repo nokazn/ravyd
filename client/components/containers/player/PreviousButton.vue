@@ -5,7 +5,8 @@
     :disabled="isPreviousDisallowed"
     title="前の曲"
     @click="onPreivousClicked"
-    @dblclick="onPreviousDoubleClicked">
+    @dblclick="onPreviousDoubleClicked"
+  >
     <v-icon :size="size">
       mdi-skip-previous
     </v-icon>

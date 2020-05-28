@@ -4,11 +4,13 @@
     text
     small
     :min-width="120"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <div :class="$style.ShowAllButton">
       <v-icon
         small
-        v-text="showAllButton.icon" />
+        v-text="showAllButton.icon"
+      />
       <span v-text="showAllButton.text" />
     </div>
   </v-btn>

@@ -5,14 +5,16 @@
     :elevation="elevation"
     :height="52"
     :style="styles"
-    :class="$style.Header">
+    :class="$style.Header"
+  >
     <div :class="$style.Header__container">
       <div :class="$style.Header__left">
         <v-btn
           :width="36"
           :height="36"
           icon
-          @click="onBackButtonClicked">
+          @click="onBackButtonClicked"
+        >
           <v-icon :size="32">
             mdi-chevron-left
           </v-icon>
@@ -22,7 +24,8 @@
           :width="36"
           :height="36"
           icon
-          @click="onForwardButtonClicked">
+          @click="onForwardButtonClicked"
+        >
           <v-icon :size="32">
             mdi-chevron-right
           </v-icon>
@@ -30,7 +33,8 @@
 
         <search-field
           v-model="searchWords"
-          :class="$style.Header__searchField" />
+          :class="$style.Header__searchField"
+        />
       </div>
 
       <div :class="$style.Header__right">

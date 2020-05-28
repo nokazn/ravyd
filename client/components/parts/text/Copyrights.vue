@@ -3,7 +3,8 @@
     <small
       v-for="copyright in parsedCopyrightList"
       :key="copyright"
-      :class="$style.Copyrights__item">
+      :class="$style.Copyrights__item"
+    >
       {{ copyright }}
     </small>
   </div>

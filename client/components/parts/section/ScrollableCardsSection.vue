@@ -2,7 +2,8 @@
   <section :class="$style.ScrollableCardSection">
     <h2
       :class="$style.ScrollableCardSection__title"
-      v-text="title" />
+      v-text="title"
+    />
     <v-divider :class="$style.ScrollableCardSection__divider" />
     <scrollable-cards-wrapper :class="$style.ScrollableCardSection__cardContainer">
       <slot />

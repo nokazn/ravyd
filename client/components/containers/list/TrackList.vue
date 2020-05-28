@@ -1,11 +1,13 @@
 <template>
   <v-list
     dense
-    :color="BACKGROUND_COLOR">
+    :color="BACKGROUND_COLOR"
+  >
     <template v-for="track in items">
       <v-divider
         v-show="track.index < length"
-        :key="`${track.id}-divider`" />
+        :key="`${track.id}-divider`"
+      />
       <track-list-item
         v-show="track.index < length"
         :key="track.id"
@@ -13,7 +15,8 @@
         :is-track-set="isTrackSet(track.id)"
         v-bind="track"
         @on-media-button-clicked="onMediaButtonClicked"
-        @on-favorite-button-clicked="onFavoriteButtonClicked" />
+        @on-favorite-button-clicked="onFavoriteButtonClicked"
+      />
     </template>
   </v-list>
 </template>

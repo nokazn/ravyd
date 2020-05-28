@@ -3,29 +3,35 @@
     <div :class="$style.RootPage">
       <scrollable-cards-section
         title="今週の新譜"
-        :class="$style.RootPage__section">
+        :class="$style.RootPage__section"
+      >
         <release-card
           v-for="release in newReleaseList"
           :key="release.id"
-          v-bind="release" />
+          v-bind="release"
+        />
       </scrollable-cards-section>
 
       <scrollable-cards-section
         title="お気に入りのトラック"
-        :class="$style.RootPage__section">
+        :class="$style.RootPage__section"
+      >
         <release-card
           v-for="release in topTrackList"
           :key="release.id"
-          v-bind="release" />
+          v-bind="release"
+        />
       </scrollable-cards-section>
 
       <scrollable-cards-section
         title="お気に入りのアーティスト"
-        :class="$style.RootPage__section">
+        :class="$style.RootPage__section"
+      >
         <artist-card
           v-for="artist in topArtistList"
           :key="artist.id"
-          v-bind="artist" />
+          v-bind="artist"
+        />
       </scrollable-cards-section>
     </div>
   </page>

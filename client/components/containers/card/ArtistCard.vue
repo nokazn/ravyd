@@ -5,7 +5,8 @@
     tile
     :width="width"
     :class="$style.ArtistCard"
-    @click="onClick">
+    @click="onClick"
+  >
     <div :class="$style.ArtistCard__container">
       <user-avatar
         :src="avatarSrc"
@@ -14,7 +15,8 @@
         :icon="mediaIcon"
         :title="name"
         is-overlayed
-        @on-media-button-clicked="onMediaButtonClicked" />
+        @on-media-button-clicked="onMediaButtonClicked"
+      />
 
       <v-card-title :class="$style.ArtistCard__title">
         <nuxt-link :to="artistPath">

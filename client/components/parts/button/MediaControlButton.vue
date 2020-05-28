@@ -3,7 +3,8 @@
     color="cyan darken-3"
     rounded
     :class="$style.MediaControlButton"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :class="$style.MediaControlButton__icon">
       {{ icon }}
     </v-icon>

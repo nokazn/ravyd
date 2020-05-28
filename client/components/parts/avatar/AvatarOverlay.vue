@@ -2,14 +2,17 @@
   <v-overlay
     v-if="hover"
     absolute
-    :opacity="0.7">
+    :opacity="0.7"
+  >
     <v-hover #default="{ hover: buttonHoverd }">
       <v-btn
         icon
-        @click.stop="onClicked">
+        @click.stop="onClicked"
+      >
         <v-icon
           :size="mediaButtonSize(buttonHoverd)"
-          :class="$style.AvatarOverlay__icon">
+          :class="$style.AvatarOverlay__icon"
+        >
           {{ icon }}
         </v-icon>
       </v-btn>

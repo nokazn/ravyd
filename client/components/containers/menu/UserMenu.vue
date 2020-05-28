@@ -2,19 +2,23 @@
   <v-menu
     v-model="isOpen"
     offset-y
-    :nudge-bottom="2">
+    :nudge-bottom="2"
+  >
     <template
-      #activator="{ on }">
+      #activator="{ on }"
+    >
       <v-btn
         text
         small
         rounded
         :title="userDisplayName"
-        v-on="on">
+        v-on="on"
+      >
         <div class="user-menu__button">
           <user-avatar
             :src="userAvatarSrc"
-            alt="my-account-avatar" />
+            alt="my-account-avatar"
+          />
 
           <span>
             {{ userDisplayName }}
@@ -28,15 +32,18 @@
     </template>
 
     <v-list
-      dense>
+      dense
+    >
       <template
-        v-for="(itemList, index) in itemLists">
+        v-for="(itemList, index) in itemLists"
+      >
         <v-list-item
           v-for="item in itemList"
           :key="item.title"
           nuxt
           link
-          :to="item.to">
+          :to="item.to"
+        >
           <v-list-item-content>
             <v-list-item-title>
               {{ item.title }}
@@ -46,7 +53,8 @@
 
         <v-divider
           v-show="itemLists.length !== index + 1"
-          :key="index" />
+          :key="index"
+        />
       </template>
     </v-list>
   </v-menu>

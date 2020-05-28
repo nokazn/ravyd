@@ -1,15 +1,18 @@
 <template>
   <div :class="$style.ArtistNames">
     <template
-      v-for="({ name, id }, index) in artistList">
+      v-for="({ name, id }, index) in artistList"
+    >
       <nuxt-link
         :key="id"
-        :to="artistPath(id)">
+        :to="artistPath(id)"
+      >
         {{ name }}
       </nuxt-link><span
         v-if="index !== artistList.length - 1"
         :key="`${id}-comma`"
-        :class="$style.ArtistNames__comma">, </span>
+        :class="$style.ArtistNames__comma"
+      >, </span>
     </template>
   </div>
 </template>

@@ -4,7 +4,8 @@
     padless
     :height="80"
     :color="FOOTER_BACKGROUND_COLOR"
-    :class="$style.Footer">
+    :class="$style.Footer"
+  >
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
         <release-artwork
@@ -13,31 +14,36 @@
           :size="64"
           :alt="trackName"
           :title="trackName"
-          :class="$style.Footer__artWork" />
+          :class="$style.Footer__artWork"
+        />
 
         <div :class="$style.Footer__trackInfo">
           <marquee-release-name
             v-if="trackName != null"
             :name="trackName"
-            :release-id="albumId" />
+            :release-id="albumId"
+          />
 
           <marquee-artist-names
             v-if="artistList != null"
-            :artist-list="artistList" />
+            :artist-list="artistList"
+          />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
           <favorite-button
             :is-favorited="isSavedTrack"
             :size="20"
-            @on-clicked="onFavoriteButtonClicked" />
+            @on-clicked="onFavoriteButtonClicked"
+          />
         </div>
       </div>
 
       <div :class="$style.Footer__center">
         <seek-bar
           :class="$style.Footer__seekBar"
-          @on-change="onSeekbarChanged" />
+          @on-change="onSeekbarChanged"
+        />
         <media-controllers-wrapper :class="$style.Footer__mediaControllers" />
       </div>
 
@@ -45,7 +51,8 @@
         <div>
           <v-btn
             icon
-            title="再生リスト">
+            title="再生リスト"
+          >
             <v-icon :size="20">
               mdi-playlist-play
             </v-icon>
@@ -53,7 +60,8 @@
 
           <v-btn
             icon
-            title="デバイスを選択">
+            title="デバイスを選択"
+          >
             <v-icon :size="20">
               mdi-devices
             </v-icon>
@@ -61,7 +69,8 @@
 
           <v-btn
             icon
-            title="メニュー">
+            title="メニュー"
+          >
             <v-icon :size="20">
               mdi-dots-horizontal
             </v-icon>
@@ -69,7 +78,8 @@
         </div>
 
         <volume-slider
-          @on-change="onVolumuChanged" />
+          @on-change="onVolumuChanged"
+        />
       </div>
     </div>
   </v-footer>

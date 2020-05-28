@@ -4,10 +4,12 @@
       rounded
       :outlined="!isFollowing"
       :width="180"
-      @click="onClicked">
+      @click="onClicked"
+    >
       <v-icon
         :size="18"
-        :class="$style.FollowButton__icon">
+        :class="$style.FollowButton__icon"
+      >
         {{ followIcon(hover) }}
       </v-icon>
       {{ followText(hover) }}

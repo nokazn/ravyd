@@ -3,7 +3,8 @@
     icon
     large
     title="次の曲"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :size="size">
       mdi-skip-next
     </v-icon>

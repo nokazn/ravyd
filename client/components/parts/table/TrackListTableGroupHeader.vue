@@ -2,7 +2,8 @@
   <td :colspan="colspan">
     <v-icon
       color="grey"
-      :size="16">
+      :size="16"
+    >
       mdi-album
     </v-icon>
     <span class="grey--text">{{ discNumber }}</span>

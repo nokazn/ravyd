@@ -5,13 +5,15 @@
       <show-all-button
         :is-omitted="isOmmited"
         :omitted-length="omittedLength"
-        @on-clicked="onShowAllButtonClicked" />
+        @on-clicked="onShowAllButtonClicked"
+      />
     </div>
 
     <track-list
       :track-list="trackList"
       :length="length"
-      :uri="uri" />
+      :uri="uri"
+    />
   </div>
 </template>
 

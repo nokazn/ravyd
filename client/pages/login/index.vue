@@ -3,9 +3,11 @@
     <div :class="$style.LoginPage">
       <v-card
         v-show="!isLoggedin"
-        :class="$style.LoginCard">
+        :class="$style.LoginCard"
+      >
         <v-icon
-          :size="150">
+          :size="150"
+        >
           mdi-account-circle
         </v-icon>
 
@@ -13,7 +15,8 @@
           rounded
           color="cyan darken-3"
           :class="$style.LoginCard__button"
-          @click="onAuthButtonClicked">
+          @click="onAuthButtonClicked"
+        >
           Spotify アカウントで認証
         </v-btn>
 
@@ -21,7 +24,8 @@
           アカウントをお持ちでない場合は
           <a
             href="//www.spotify.com/jp/signup/"
-            target="_blank">
+            target="_blank"
+          >
             新規作成
           </a>
         </p>

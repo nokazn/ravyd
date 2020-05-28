@@ -8,13 +8,15 @@
       :max-height="size"
       :max-width="size"
       :aspect-ratio="1"
-      :class="{ 'g-box-shadow': shadow }">
+      :class="{ 'g-box-shadow': shadow }"
+    >
       <avatar-overlay
         v-if="isOverlayed && hover"
         :hover="hover"
         :size="size"
         :icon="icon"
-        @on-clicked="onClicked" />
+        @on-clicked="onClicked"
+      />
     </v-img>
   </v-hover>
 </template>

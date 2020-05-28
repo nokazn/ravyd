@@ -1,21 +1,26 @@
 <template>
   <div
     :title="title"
-    :class="[$style.MarqueeArtistNames, 'g-text-gradation']">
+    :class="[$style.MarqueeArtistNames, 'g-text-gradation']"
+  >
     <div
       id="marqueeArtistNameLink"
       :style="marqueeStyles"
-      @mouseover="onHovered">
+      @mouseover="onHovered"
+    >
       <template
-        v-for="({ name, id }, index) in artistList">
+        v-for="({ name, id }, index) in artistList"
+      >
         <nuxt-link
           :key="id"
-          :to="artistPath(id)">
+          :to="artistPath(id)"
+        >
           {{ name }}
         </nuxt-link>
         <span
           v-if="index !== artistList.length - 1"
-          :key="`${id}-comma`">, </span>
+          :key="`${id}-comma`"
+        >, </span>
       </template>
     </div>
   </div>

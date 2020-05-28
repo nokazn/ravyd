@@ -3,13 +3,15 @@
     <v-list-item
       dense
       :class="$style.TrackListItem"
-      class="track-list-item">
+      class="track-list-item"
+    >
       <v-list-item-avatar tile>
         <release-artwork
           :src="artworkSrc"
           :size="40"
           :alt="name"
-          :title="name" />
+          :title="name"
+        />
       </v-list-item-avatar>
 
       <v-list-item-content>
@@ -19,11 +21,13 @@
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
               :track-number="trackIndex"
-              @on-clicked="onMediaButtonClicked" />
+              @on-clicked="onMediaButtonClicked"
+            />
 
             <favorite-button
               :is-favorited="isSaved"
-              @on-clicked="onFavoriteButtonClicked" />
+              @on-clicked="onFavoriteButtonClicked"
+            />
 
             <nuxt-link
               :to="path"
@@ -31,14 +35,16 @@
                 $style.TrackListItem__contentTitle,
                 textColor,
               ]"
-              v-text="name" />
+              v-text="name"
+            />
           </div>
 
           <div :class="$style['TrackListItem__content--right']">
             <explicit-chip v-if="explicit" />
             <span
               :class="$style.TrackListItem__actionDuration"
-              v-text="duration" />
+              v-text="duration"
+            />
           </div>
 
           <v-list-item-subtitle v-if="hasSubtitle">

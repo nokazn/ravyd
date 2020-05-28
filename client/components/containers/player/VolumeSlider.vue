@@ -4,7 +4,8 @@
       icon
       small
       :title="volumeButton.title"
-      @click="onVolumeButtonClicked">
+      @click="onVolumeButtonClicked"
+    >
       <v-icon small>
         {{ volumeButton.icon }}
       </v-icon>
@@ -17,7 +18,8 @@
       hide-details
       dense
       @end="onEnd"
-      @mouseup="onMouseup" />
+      @mouseup="onMouseup"
+    />
   </div>
 </template>
 

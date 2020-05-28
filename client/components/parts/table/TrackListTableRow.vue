@@ -5,23 +5,27 @@
       :class="$style.TrackListTableRow"
       :data-is-active="isActive"
       :data-is-track-set="isTrackSet"
-      @click="onRowClicked">
+      @click="onRowClicked"
+    >
       <td
         :class="[
           $style.TrackListTableRow__id,
           'text-center'
-        ]">
+        ]"
+      >
         <track-list-media-button
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
           :track-number="item.trackNumber"
-          @on-clicked="onMediaButtonClicked" />
+          @on-clicked="onMediaButtonClicked"
+        />
       </td>
 
       <td>
         <favorite-button
           :is-favorited="item.isSaved"
-          @on-clicked="onFavoriteButtonClicked" />
+          @on-clicked="onFavoriteButtonClicked"
+        />
       </td>
 
       <td
@@ -29,7 +33,8 @@
           $style.TrackListTableRow__name,
           titleColor
         ]"
-        v-text="item.name" />
+        v-text="item.name"
+      />
 
       <td>
         <explicit-chip v-if="item.explicit" />
@@ -41,7 +46,8 @@
         <v-btn
           icon
           size="small"
-          title="メニュー">
+          title="メニュー"
+        >
           <v-icon>
             mdi-dots-horizontal
           </v-icon>

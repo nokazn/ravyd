@@ -3,7 +3,8 @@
     icon
     large
     :title="mediaButton.title"
-    @click="onClicked">
+    @click="onClicked"
+  >
     <v-icon :size="size">
       {{ mediaButton.icon }}
     </v-icon>

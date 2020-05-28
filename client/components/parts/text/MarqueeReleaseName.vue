@@ -1,12 +1,14 @@
 <template>
   <div
     :title="name"
-    :class="[$style.ReleaseName, 'g-text-gradation']">
+    :class="[$style.ReleaseName, 'g-text-gradation']"
+  >
     <nuxt-link
       id="releaseNameLink"
       :to="releasePath"
       :style="marqueeStyles"
-      @mouseover.native="onHovered">
+      @mouseover.native="onHovered"
+    >
       {{ name }}
     </nuxt-link>
   </div>

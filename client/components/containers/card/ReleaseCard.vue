@@ -5,7 +5,8 @@
     tile
     :width="width"
     :class="$style.ReleaseCard"
-    @click="onClick">
+    @click="onClick"
+  >
     <div :class="$style.ReleaseCard__container">
       <release-artwork
         :src="artworkSrc"
@@ -14,7 +15,8 @@
         :title="name"
         is-overlayed
         :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked" />
+        @on-media-button-clicked="onMediaButtonClicked"
+      />
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link :to="releasePath">
@@ -32,17 +34,20 @@
             v-for="({
               name: artistName,
               id: artistId
-            }, index) in artists">
+            }, index) in artists"
+          >
             <nuxt-link
               :key="artistId"
               :to="artistPath(artistId)"
-              @click.native.stop>
+              @click.native.stop
+            >
               {{ artistName }}
             </nuxt-link>
 
             <span
               v-if="index !== artists.length - 1"
-              :key="`${artistId}-comma`">, </span>
+              :key="`${artistId}-comma`"
+            >, </span>
           </template>
         </template>
       </v-card-subtitle>

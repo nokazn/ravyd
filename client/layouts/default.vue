@@ -5,7 +5,8 @@
 
     <main
       :class="$style.ContentContainer"
-      :style="styles">
+      :style="styles"
+    >
       <nuxt />
     </main>
 

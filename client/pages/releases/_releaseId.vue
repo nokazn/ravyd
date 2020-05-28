@@ -3,14 +3,16 @@
     <div
       v-if="releaseInfo != null"
       :class="$style.ReleaseIdPage"
-      :style="styles">
+      :style="styles"
+    >
       <div :class="$style.ReleaseIdPage__header">
         <release-artwork
           :src="releaseInfo.artworkSrc"
           :alt="releaseInfo.name"
           :size="220"
           :title="releaseInfo.name"
-          shadow />
+          shadow
+        />
 
         <div :class="$style.ReleaseIdPage__releaseInfo">
           <div :class="$style.ReleaseIdPage__releaseType">
@@ -23,33 +25,40 @@
 
           <artist-names
             :artist-list="releaseInfo.artistList"
-            :class="$style.ReleaseIdPage__artistsName" />
+            :class="$style.ReleaseIdPage__artistsName"
+          />
 
           <div :class="$style.ReleaseIdPage__releaseInfoFooter">
             <div :class="$style.ReleaseIdPage__buttons">
               <media-control-button
                 :is-playing="isPlaying && isAlbumSet"
-                @on-clicked="onMediaControlButtonClicked" />
+                @on-clicked="onMediaControlButtonClicked"
+              />
 
               <favorite-button
                 :is-favorited="releaseInfo.isSaved"
                 outlined
-                @on-clicked="onFavoriteButtonClicked" />
+                @on-clicked="onFavoriteButtonClicked"
+              />
             </div>
 
             <div :class="$style.ReleaseIdPage__releaseDetail">
               <release-date
                 :release-date="releaseInfo.releaseDate"
-                :release-date-precision="releaseInfo.releaseDatePrecision" />
+                :release-date-precision="releaseInfo.releaseDatePrecision"
+              />
 
               <release-total-tracks
-                :total-tracks="releaseInfo.totalTracks" />
+                :total-tracks="releaseInfo.totalTracks"
+              />
 
               <release-duration
-                :duration-ms="releaseInfo.durationMs" />
+                :duration-ms="releaseInfo.durationMs"
+              />
 
               <release-label
-                :label="releaseInfo.label" />
+                :label="releaseInfo.label"
+              />
             </div>
           </div>
         </div>
@@ -58,11 +67,13 @@
       <track-list-table
         :track-list="releaseInfo.trackList"
         :uri="releaseInfo.uri"
-        :class="$style.ReleaseIdPage__trackList" />
+        :class="$style.ReleaseIdPage__trackList"
+      />
 
       <copyrights
         :copyright-list="releaseInfo.copyrightList"
-        :class="$style.ReleaseIdPage__copyrights" />
+        :class="$style.ReleaseIdPage__copyrights"
+      />
     </div>
   </page>
 </template>

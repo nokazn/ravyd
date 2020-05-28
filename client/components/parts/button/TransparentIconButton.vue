@@ -3,7 +3,8 @@
     <v-icon
       :size="size"
       :color="color"
-      class="transparent-icon-button">
+      class="transparent-icon-button"
+    >
       {{ icon }}
     </v-icon>
   </button>

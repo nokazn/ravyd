@@ -9,7 +9,8 @@
       :max="duration"
       :class="$style.SeekBar__slider"
       @end="onEnd"
-      @mouseup="onMouseup" />
+      @mouseup="onMouseup"
+    />
 
     <div :class="$style.SeekBar__mss">
       <span v-if="position != null">

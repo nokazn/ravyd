@@ -2,28 +2,33 @@
   <page>
     <div
       :class="$style.ArtistIdPage"
-      :style="styles">
+      :style="styles"
+    >
       <div
         v-if="artistInfo != null"
-        :class="$style.ArtistIdPage__header">
+        :class="$style.ArtistIdPage__header"
+      >
         <user-avatar
           :size="avatarSize"
           :src="artistInfo.avatarSrc"
           :alt="artistInfo.name"
           :title="artistInfo.name"
           default-user-icon="mdi-account-music"
-          shadow />
+          shadow
+        />
         <div>
           <div
             title="認証済アーティスト"
-            :class="$style.ArtistIdPage__type">
+            :class="$style.ArtistIdPage__type"
+          >
             <span>
               アーティスト
             </span>
             <v-icon
               :size="14"
               color="light-blue"
-              :class="$style.ArtistIdPage__verifiedIrtistIcon">
+              :class="$style.ArtistIdPage__verifiedIrtistIcon"
+            >
               mdi-check-decagram
             </v-icon>
           </div>
@@ -39,11 +44,13 @@
           <div :class="$style.ArtistIdPage__buttons">
             <media-control-button
               :is-playing="isPlaying && isArtistSet"
-              @on-clicked="onMediaControlButtonClicked" />
+              @on-clicked="onMediaControlButtonClicked"
+            />
 
             <follow-button
               :is-following="isFollowing"
-              @on-clicked="onFollowButtonClicked" />
+              @on-clicked="onFollowButtonClicked"
+            />
           </div>
         </div>
       </div>
@@ -54,7 +61,8 @@
           :omitted-length="5"
           :track-list="topTrackList"
           :uri="artistInfo.uri"
-          :class="$style.ArtistIdPage__trackListSection" />
+          :class="$style.ArtistIdPage__trackListSection"
+        />
       </section>
 
       <template v-for="{ title, items } in Object.values(releaseListMap)">
@@ -62,12 +70,14 @@
           v-if="items.length > 0"
           :key="title"
           :title="title"
-          :class="$style.ArtistIdPage__cardSection">
+          :class="$style.ArtistIdPage__cardSection"
+        >
           <release-card
             v-for="item in items"
             :key="item.id"
             v-bind="item"
-            year-subtitle />
+            year-subtitle
+          />
         </cards-section>
       </template>
     </div>

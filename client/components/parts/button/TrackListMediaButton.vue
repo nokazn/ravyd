@@ -5,14 +5,16 @@
       outlined
       small
       icon
-      @click="onClick">
+      @click="onClick"
+    >
       <v-icon :title="mediaButton.title">
         {{ mediaButton.icon }}
       </v-icon>
     </v-btn>
     <v-icon
       v-else-if="isPlayingTrack"
-      title="再生中">
+      title="再生中"
+    >
       mdi-volume-high
     </v-icon>
     <span v-else>
