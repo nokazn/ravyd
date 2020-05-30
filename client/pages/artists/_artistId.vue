@@ -131,7 +131,7 @@ export type AsyncData = {
     return params.artistId !== '';
   },
 
-  async asyncData(context): Promise<AsyncData | null> {
+  async asyncData(context): Promise<AsyncData> {
     const avatarSize = 220;
     const topTrackArtworkSize = 64;
     const [

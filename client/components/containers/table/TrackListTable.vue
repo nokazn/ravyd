@@ -81,7 +81,7 @@ export default Vue.extend({
         align: 'center' as const,
       },
       {
-        text: ' ',
+        text: '',
         value: 'isSaved',
         width: 48,
         align: 'center' as const,
@@ -91,19 +91,18 @@ export default Vue.extend({
         value: 'name',
       },
       {
-        text: ' ',
+        text: '',
         value: 'explicit',
         width: 60,
         align: 'center' as const,
       },
       {
-        text: ' ',
+        text: '',
         value: 'duration',
         width: 60,
-        align: 'center' as const,
       },
       {
-        text: ' ',
+        text: '',
         value: 'menu',
         width: 48,
         align: 'center' as const,
@@ -130,8 +129,9 @@ export default Vue.extend({
         && this.$state().player.isPlaying;
     },
     hasMultipleDiscs(): boolean {
-      const discNumberList = Array.from(new Set(this.items
-        .map((item) => item.discNumber)));
+      const discNumberList = Array.from(
+        new Set(this.items.map((item) => item.discNumber)),
+      );
 
       return discNumberList.length > 1;
     },

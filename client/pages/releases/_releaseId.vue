@@ -121,7 +121,7 @@ export interface AsyncData {
     return params.releaseId !== '';
   },
 
-  async asyncData(context: Context): Promise<AsyncData | null> {
+  async asyncData(context: Context): Promise<AsyncData> {
     const artworkSize = 220;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
 
