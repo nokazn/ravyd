@@ -6,15 +6,20 @@ import { RootGetters } from './getters';
 import { RootMutations } from './mutations';
 
 export type RootActions = {
-  extractDominantBackgroudColor: (src: string) => Promise<void>
+  extractDominantBackgroundColor: (src: string) => Promise<void>
+  resetBackgroundColor: () => void
 }
 
 const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
-  async extractDominantBackgroudColor({ commit }, src) {
+  async extractDominantBackgroundColor({ commit }, src) {
     const colors = await extractDominantColors(src);
     const backgroundPallet = colors?.DarkMuted;
 
     commit('SET_DOMINANT_BACKGROUND_COLOR', backgroundPallet, { root: true });
+  },
+
+  resetBackgroundColor({ commit }) {
+    commit('SET_DOMINANT_BACKGROUND_COLOR', undefined, { root: true });
   },
 };
 

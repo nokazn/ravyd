@@ -147,7 +147,7 @@ export type AsyncData = {
     ] as const);
 
     if (artistInfo != null) {
-      context.app.$dispatch('extractDominantBackgroudColor', artistInfo.avatarSrc);
+      context.app.$dispatch('extractDominantBackgroundColor', artistInfo.avatarSrc);
     }
 
     return {
@@ -174,6 +174,10 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     return {
       title: this.artistInfo?.name ?? 'エラー',
     };
+  }
+
+  beforeDestroy() {
+    this.$dispatch('resetBackgroundColor');
   }
 
   get styles(): RootGetters['backgroundStyles'] {

@@ -126,7 +126,7 @@ export interface AsyncData {
     const releaseInfo = await getReleaseInfo(context, artworkSize);
 
     if (releaseInfo != null) {
-      context.app.$dispatch('extractDominantBackgroudColor', releaseInfo.artworkSrc);
+      context.app.$dispatch('extractDominantBackgroundColor', releaseInfo.artworkSrc);
     }
 
     return {
@@ -143,6 +143,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     return {
       title: this.releaseInfo?.name ?? 'エラー',
     };
+  }
+
+  beforeDestroy() {
+    this.$dispatch('resetBackgroundColor');
   }
 
   get styles(): RootGetters['backgroundStyles'] {
