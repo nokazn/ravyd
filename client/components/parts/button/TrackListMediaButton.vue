@@ -17,7 +17,7 @@
     >
       mdi-volume-high
     </v-icon>
-    <span v-else>
+    <span v-else-if="trackNumber != null">
       {{ trackNumber }}
     </span>
   </span>
@@ -43,7 +43,7 @@ export default Vue.extend({
     },
     trackNumber: {
       type: Number,
-      required: true,
+      default: undefined,
     },
   },
 
