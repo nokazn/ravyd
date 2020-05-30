@@ -1,38 +1,45 @@
 <template>
   <v-menu
-    v-model="isOpen"
+    v-model="isOpened"
     offset-y
     :nudge-bottom="2"
   >
     <template
       #activator="{ on }"
     >
-      <v-btn
-        text
-        small
-        rounded
+      <div
         :title="userDisplayName"
+        :class="$style.UserMenu"
         v-on="on"
       >
-        <div class="user-menu__button">
+        <div
+          :class="$style.UserMenu__container"
+        >
           <user-avatar
             :src="userAvatarSrc"
-            alt="my-account-avatar"
+            :alt="userDisplayName"
+            :size="32"
           />
 
-          <span>
-            {{ userDisplayName }}
+          <span
+            :class="$style.UserMenu__userDisplayName"
+          >
+            @{{ userDisplayName }}
           </span>
 
-          <v-icon x-small>
+          <v-icon
+            x-small
+          >
             mdi-chevron-down
           </v-icon>
         </div>
-      </v-btn>
+      </div>
     </template>
 
     <v-list
       dense
+      :elevation="12"
+      :color="MENU_BACKGROUND_COLOR"
     >
       <template
         v-for="(itemList, index) in itemLists"
@@ -62,10 +69,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import { MENU_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
-  isOpen: boolean
+  isOpened: boolean
+  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
   itemLists: {
     title: string
     to: string
@@ -79,7 +89,8 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      isOpen: false,
+      isOpened: false,
+      MENU_BACKGROUND_COLOR,
       itemLists: [
         [
           {
@@ -118,4 +129,24 @@ export default Vue.extend({
     margin-right: 6px;
   }
 }
+</style>
+
+<style lang="scss" module>
+.UserMenu {
+  &__container {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    .UserMenu__userDisplayName {
+      font-size: 1.1em;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
 </style>

@@ -39,9 +39,7 @@
         />
       </div>
 
-      <div :class="$style.Header__right">
-        <user-menu />
-      </div>
+      <div :class="$style.Header__right" />
     </div>
   </v-app-bar>
 </template>
@@ -50,7 +48,6 @@
 import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
-import UserMenu from '~/components/containers/menu/UserMenu.vue';
 import { HEADER_BACKGROUND_COLOR, BACKGROUND_RGB_LIST } from '~/variables';
 
 type Data = {
@@ -62,7 +59,6 @@ type Data = {
 export default Vue.extend({
   components: {
     SearchField,
-    UserMenu,
   },
 
   data(): Data {

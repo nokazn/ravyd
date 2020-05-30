@@ -23,7 +23,7 @@
       <v-list
         dense
         subheader
-        :color="FOOTER_BACKGROUND_COLOR"
+        :color="MENU_BACKGROUND_COLOR"
         :class="$style.DeviceSelectMenuList"
       >
         <div :class="$style.DeviceSelectMenuList__header">
@@ -100,13 +100,13 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { FOOTER_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 type Data = {
   isShown: boolean
   isRefreshingDeviceList: boolean
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
+  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
 type DeviceInfo = {
@@ -153,7 +153,7 @@ export default Vue.extend({
     return {
       isShown: false,
       isRefreshingDeviceList: false,
-      FOOTER_BACKGROUND_COLOR,
+      MENU_BACKGROUND_COLOR,
     };
   },
 

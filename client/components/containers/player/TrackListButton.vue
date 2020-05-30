@@ -22,7 +22,7 @@
       <v-list
         dense
         subheader
-        :color="FOOTER_BACKGROUND_COLOR"
+        :color="MENU_BACKGROUND_COLOR"
         :class="$style.DeviceSelectMenuList"
       >
         <v-subheader :class="$style.DeviceSelectMenuList__header">
@@ -92,12 +92,12 @@ import Vue from 'vue';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { FOOTER_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
   isShown: boolean
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
+  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
 export default Vue.extend({
@@ -109,7 +109,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
-      FOOTER_BACKGROUND_COLOR,
+      MENU_BACKGROUND_COLOR,
     };
   },
 

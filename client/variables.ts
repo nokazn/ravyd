@@ -5,6 +5,7 @@ export const BACKGROUND_COLOR = '#121212';
 export const HEADER_BACKGROUND_COLOR = '#121212';
 export const FOOTER_BACKGROUND_COLOR = '#323232';
 export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#161616';
+export const MENU_BACKGROUND_COLOR = '#323232';
 
 export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'off',
