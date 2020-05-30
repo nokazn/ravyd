@@ -7,7 +7,7 @@ export const getTopTrackList = async (
   { app, params }: Context,
   artworkSize: number,
 ): Promise<App.TrackDetail[] | null> => {
-  const country = app.$state().auth.userData?.country;
+  const country = app.$getters()['auth/userCountryCode'];
   if (country == null) return null;
 
   const { tracks } = await app.$spotify.artists.getArtistTopTracks({

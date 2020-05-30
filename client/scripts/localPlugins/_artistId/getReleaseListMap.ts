@@ -26,7 +26,7 @@ export const getReleaseListMap = async (
   { app, params }: Context,
   artworkSize: number,
 ): Promise<ArtistReleaseInfo | null> => {
-  const country = app.$state().auth.userData?.country;
+  const country = app.$getters()['auth/userCountryCode'];
   if (country == null) return null;
 
   const getArtistReleases = (
