@@ -15,7 +15,6 @@ import { Vue, Component } from 'nuxt-property-decorator';
 
 import Page from '~/components/globals/Page.vue';
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
-import { getUserSavedTracks } from '~/scripts/localPlugins/library/tracks';
 import { App } from '~~/types';
 
 interface AsyncData {
@@ -28,11 +27,8 @@ interface AsyncData {
     PlaylistTrackTable,
   },
 
-  async asyncData(context): Promise<AsyncData> {
-    const trackList = await getUserSavedTracks(context);
-    return {
-      trackList,
-    };
+  async fetch({ app }): Promise<void> {
+    await app.$dispatch('library/getSavedTrackList');
   },
 
   head() {
@@ -42,7 +38,9 @@ interface AsyncData {
   },
 })
 export default class LibraryTracksPage extends Vue implements AsyncData {
-  trackList: App.PlaylistTrackDetail[] | null = null;
+  get trackList(): App.PlaylistTrackDetail[] | null {
+    return this.$state().library.trackList;
+  }
 }
 </script>
 

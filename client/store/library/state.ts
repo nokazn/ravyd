@@ -1,5 +1,11 @@
-export type LibraryState = {};
+import { App } from '~~/types';
 
-const state: () => LibraryState = () => ({});
+export type LibraryState = {
+  trackList: App.PlaylistTrackDetail[] | null
+};
+
+const state: () => LibraryState = () => ({
+  trackList: [],
+});
 
 export default state;
