@@ -26,30 +26,6 @@ export type PlayerState = {
   isMuted: boolean
 }
 
-export type RootState = {
-  'player/deviceId': PlayerState['deviceId']
-  'player/activeDeviceList': PlayerState['activeDeviceList']
-  'player/trackName': PlayerState['trackName']
-  'player/trackId': PlayerState['trackId']
-  'player/trackUri': PlayerState['trackUri']
-  'player/albumName': PlayerState['albumName']
-  'player/albumUri': PlayerState['albumUri']
-  'player/albumArtWorkList': PlayerState['albumArtWorkList']
-  'player/artistList': PlayerState['artistList']
-  'player/nextTrackList': PlayerState['nextTrackList']
-  'player/previousTrackList': PlayerState['previousTrackList']
-  'player/recentlyPlayed': PlayerState['recentlyPlayed']
-  'player/isSavedTrack': PlayerState['isSavedTrack']
-  'player/isPlaying': PlayerState['isPlaying']
-  'player/position': PlayerState['position']
-  'player/duration': PlayerState['duration']
-  'player/isShuffled': PlayerState['isShuffled']
-  'player/repeatMode': PlayerState['repeatMode']
-  'player/disallowList': PlayerState['disallowList']
-  'player/volume': PlayerState['volume']
-  'player/isMuted': PlayerState['isMuted']
-}
-
 const state = (): PlayerState => ({
   playbackPlayer: null,
   deviceId: null,
