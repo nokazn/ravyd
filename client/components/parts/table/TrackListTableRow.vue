@@ -7,13 +7,8 @@
       :data-is-track-set="isTrackSet"
       @click="onRowClicked"
     >
-      <td
-        :class="[
-          $style.TrackListTableRow__id,
-          'text-center'
-        ]"
-      >
-        <track-list-media-button
+      <td class="text-center">
+        <TrackListMediaButton
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
           :track-number="item.trackNumber"
@@ -22,25 +17,29 @@
       </td>
 
       <td>
-        <favorite-button
+        <FavoriteButton
           :is-favorited="item.isSaved"
           @on-clicked="onFavoriteButtonClicked"
         />
       </td>
 
-      <td
-        :class="[
-          $style.TrackListTableRow__name,
-          titleColor
-        ]"
-        v-text="item.name"
-      />
-
-      <td>
-        <explicit-chip v-if="item.explicit" />
+      <td :title="item.name">
+        <div :class="$style.TrackListTableRow__content">
+          <span
+            class="g-ellipsis-text"
+            :class="titleColor"
+            v-text="item.name"
+          />
+          <ExplicitChip
+            v-if="item.explicit"
+          />
+        </div>
       </td>
 
-      <td v-text="item.duration" />
+      <td
+        class="text-center"
+        v-text="item.duration"
+      />
 
       <td>
         <v-btn
@@ -123,16 +122,13 @@ export default Vue.extend({
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
   }
-  &__id {
-    width: 60px;
-  }
-}
-</style>
 
-<style lang="scss">
-tr {
-  td {
-    padding: 0 12px;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 }
 </style>

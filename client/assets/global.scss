@@ -60,8 +60,10 @@ html {
   }
 }
 
-.g-content {
-  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
+.g-ellipsis-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
 }
 
 .g-box-shadow {

@@ -1,13 +1,11 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="items"
-    group-by="discNumber"
+    :items="trackList"
     disable-pagination
-    disable-sort
     hide-default-footer
-    :class="$style.TrackListTable"
-    class="TrackListTable"
+    :class="$style.PlaylistTrackTable"
+    class="PlaylistTrackTable"
   >
     <template #header.duration>
       <v-icon
@@ -19,16 +17,18 @@
       </v-icon>
     </template>
 
-    <template #group.header="{ group }">
-      <track-list-table-group-header
-        v-if="hasMultipleDiscs"
-        :disc-number="group"
-        :colspan="headers.length"
-      />
+    <template #header.addedAt>
+      <v-icon
+        :size="16"
+        color="grey"
+        title="保存した日"
+      >
+        mdi-calendar-outline
+      </v-icon>
     </template>
 
     <template #item="{ item }">
-      <track-list-table-row
+      <PlaylistTrackTableRow
         :item="item"
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
@@ -46,25 +46,22 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackListTableRow from '~/components/parts/table/TrackListTableRow.vue';
-import TrackListTableGroupHeader from '~/components/parts/table/TrackListTableGroupHeader.vue';
+import PlaylistTrackTableRow, { On } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  items: App.TrackDetail[]
-  activeRowId: string | undefined
+  activeRowId: string | null
 };
 
 export default Vue.extend({
   components: {
-    TrackListTableRow,
-    TrackListTableGroupHeader,
+    PlaylistTrackTableRow,
   },
 
   props: {
     trackList: {
-      type: Array as PropType<App.TrackDetail[]>,
+      type: Array as PropType<App.PlaylistTrackDetail[]>,
       required: true,
     },
     uri: {
@@ -76,16 +73,11 @@ export default Vue.extend({
   data(): Data {
     const headers = [
       {
-        text: '#',
-        value: 'index',
-        width: 44,
-        align: 'center' as const,
-      },
-      {
         text: '',
         value: 'isSaved',
-        width: 52,
-        align: 'center' as const,
+        width: 96,
+        sortable: false,
+        filterable: false,
       },
       {
         text: 'タイトル',
@@ -93,8 +85,14 @@ export default Vue.extend({
       },
       {
         text: '',
+        value: 'addedAt',
+        width: 72,
+        align: 'center' as const,
+      },
+      {
+        text: '',
         value: 'duration',
-        width: 60,
+        width: 72,
         align: 'center' as const,
       },
       {
@@ -102,17 +100,14 @@ export default Vue.extend({
         value: 'menu',
         width: 60,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       },
     ];
-    const items = this.trackList;
-
-    const hash = this.$route.hash.replace('#', '');
-    const activeRowId = items.find((item) => item.hash === hash)?.id;
 
     return {
       headers,
-      items,
-      activeRowId,
+      activeRowId: null,
     };
   },
 
@@ -124,20 +119,10 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().player.isPlaying;
     },
-    hasMultipleDiscs(): boolean {
-      const discNumberList = Array.from(
-        new Set(this.items.map((item) => item.discNumber)),
-      );
-
-      return discNumberList.length > 1;
-    },
-    isActiveRow(): (id: string) => boolean {
-      return (id: string) => this.activeRowId === id;
-    },
   },
 
   methods: {
-    onMediaButtonClicked(row: App.TrackDetail) {
+    onMediaButtonClicked(row: On) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -149,28 +134,15 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: App.TrackDetail) {
+    onFavoriteButtonClicked(row: On) {
       const nextSavedState = !row.isSaved;
-      const modifySavedState = (isSaved: boolean, index: number) => this.items
-        .map((item, i) => (i === index
-          ? { ...item, isSaved }
-          : item));
-
-      // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifySavedState(nextSavedState, row.index);
       if (nextSavedState) {
-        await this.$dispatch('library/saveTracks', [row.id]);
+        this.$dispatch('library/saveTracks', [row.id]);
       } else {
-        await this.$dispatch('library/removeTracks', [row.id]);
+        this.$dispatch('library/removeTracks', [row.id]);
       }
-
-      const [isSaved] = await this.$spotify.library.checkUserSavedTracks({
-        trackIdList: [row.id],
-      });
-      // 実際の状態と異なれば戻す
-      if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, row.index);
     },
-    onRowClicked({ id }: App.TrackDetail) {
+    onRowClicked({ id }: On) {
       this.activeRowId = id;
     },
   },
@@ -178,29 +150,18 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.TrackListTable {
+.PlaylistTrackTable {
   // 表の背景を透過にする
   background-color: rgba(0, 0, 0, 0)!important;
-  // 表全体の背景と同じ色にする
   table {
     // 表と列の幅を最初の行のセルの幅に固定して設定
     table-layout:fixed;
     tr {
       td, th {
         padding: 0 8px;
-        // 列の幅をデフォルトの 48px から少し狭める
-        height: 44px!important;
       }
     }
   }
 }
-</style>
 
-<style lang="scss">
-.TrackListTable {
-  .v-row-group__header {
-    // 表全体の背景と同じ色にする
-      background: inherit!important;
-  }
-}
 </style>

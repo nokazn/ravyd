@@ -38,7 +38,11 @@ export type PlayerActions = {
   repeat: () => Promise<void>
   volume: ({ volumePercent }: { volumePercent: number }) => Promise<void>
   mute: () => Promise<void>
-  checkSavedTracks: (trackIds?: string) => Promise<void>
+  checkTrackSavedState: (trackIds?: string) => Promise<void>
+  modifyTrackSavedState: ({ trackId, isSaved }: {
+    trackId?: string
+    isSaved: boolean
+  }) => void
 };
 
 export type RootActions = {
@@ -55,7 +59,8 @@ export type RootActions = {
   'player/repeat': PlayerActions['repeat']
   'player/volume': PlayerActions['volume']
   'player/mute': PlayerActions['mute']
-  'player/checkSavedTracks': PlayerActions['checkSavedTracks']
+  'player/checkTrackSavedState': PlayerActions['checkTrackSavedState']
+  'player/modifyTrackSavedState': PlayerActions['modifyTrackSavedState']
 };
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
@@ -141,7 +146,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         const trackId = currentTrack.id;
         // trackId 変わったときだけチェック
-        if (trackId != null && trackId !== lastTrackId) dispatch('checkSavedTracks', trackId);
+        if (trackId != null && trackId !== lastTrackId) dispatch('checkTrackSavedState', trackId);
       }));
 
       // Ready
@@ -337,17 +342,20 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_MUTED', nextMuteState);
   },
 
-  async checkSavedTracks({ state, commit }, trackId?) {
+  async checkTrackSavedState({ state, commit }, trackId?) {
     if (state.trackId == null) return;
 
     const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
       trackIdList: [trackId ?? state.trackId],
-    }).catch((err: Error) => {
-      console.error({ err });
-      return [false];
     });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
+  },
+
+  modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
+    if (state.trackId == null || state.trackId !== trackId) return;
+
+    commit('SET_IS_SAVED_TRACK', isSaved);
   },
 };
 

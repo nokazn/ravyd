@@ -1,16 +1,20 @@
 import { Getters } from 'vuex';
+
 import { AuthState } from './state';
+import { SpotifyAPI } from '~~/types';
 
 export type AuthGetters = {
   isLoggedin: boolean | null
   userDisplayName: string | null
   userAvatarSrc: string| null
+  userCountryCode: SpotifyAPI.Country | undefined
 }
 
 export type RootGetters = {
   'auth/isLoggedin': AuthGetters['isLoggedin']
   'auth/userDisplayName': AuthGetters['userDisplayName']
   'auth/userAvatarSrc': AuthGetters['userAvatarSrc']
+  'auth/userCountryCode': AuthGetters['userCountryCode']
 }
 
 const getters: Getters<AuthState, AuthGetters> = {
@@ -26,6 +30,10 @@ const getters: Getters<AuthState, AuthGetters> = {
     return state.userData?.images != null
       ? state.userData?.images[0]?.url ?? null
       : null;
+  },
+
+  userCountryCode(state) {
+    return state.userData?.country;
   },
 };
 

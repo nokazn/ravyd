@@ -1,11 +1,17 @@
 <template>
-  <div :class="$style.ArtistNames">
+  <div
+    :class="{
+      [$style.ArtistNames]: true,
+      [$style.inline]: inline,
+    }"
+  >
     <template
       v-for="({ name, id }, index) in artistList"
     >
       <nuxt-link
         :key="id"
         :to="artistPath(id)"
+        :title="name"
         @click.stop
       >
         {{ name }}
@@ -33,6 +39,10 @@ export default Vue.extend({
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
+    inline: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -52,5 +62,9 @@ export default Vue.extend({
   &__comma {
     margin-right: .5em;
   }
+}
+
+.inline {
+  display: inline;
 }
 </style>

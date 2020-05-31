@@ -63,7 +63,7 @@ export default Vue.extend({
   },
 
   async asyncData({ app }): Promise<AsyncData> {
-    const country = app.$state().auth.userData?.country;
+    const country = app.$getters()['auth/userCountryCode'];
     const [topArtists, topTracks, newReleases] = await Promise.all([
       app.$spotify.top.getTopArtists({}),
       app.$spotify.top.getTopTracks({}),

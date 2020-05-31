@@ -3,8 +3,8 @@ import { SpotifyAPI } from '~~/types';
 export namespace App {
   export type TrackDetail = {
     index: number
-    name: SpotifyAPI.SimpleTrack['name']
     id: SpotifyAPI.SimpleTrack['id']
+    name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
     artworkSrc?: string
     releaseId?: string
@@ -18,6 +18,23 @@ export namespace App {
     explicit: boolean
     isSaved: boolean
     duration: string
+  }
+  export type PlaylistTrackDetail = {
+    index: number
+    id: SpotifyAPI.SimpleTrack['id']
+    name: SpotifyAPI.SimpleTrack['name']
+    uri: SpotifyAPI.SimpleTrack['uri']
+    releaseId: string
+    releaseName: string
+    hash: string
+    artistList: {
+      name: SpotifyAPI.Artist['name'],
+      id: SpotifyAPI.Artist['id'],
+    }[]
+    explicit: boolean
+    isSaved: boolean
+    duration: string
+    addedAt: AddedAtInfo
   }
   export type TrackQueueInfo = {
     isPlaying: boolean
@@ -79,5 +96,12 @@ export namespace App {
     uri: string
     avatarSrc: string
     followersText: string
+  }
+
+  export type AddedAtInfo = {
+    fromNow: string
+    yyyymd: string
+    title: string
+    overTwoWeeksAgo: boolean
   }
 }
