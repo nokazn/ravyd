@@ -6,7 +6,8 @@
     disable-pagination
     disable-sort
     hide-default-footer
-    class="track-list-table"
+    :class="$style.TrackListTable"
+    class="TrackListTable"
   >
     <template #header.duration>
       <v-icon
@@ -29,7 +30,7 @@
     <template #item="{ item }">
       <track-list-table-row
         :item="item"
-        :is-active="isActiveRow(item.id)"
+        :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :uri="uri"
@@ -77,13 +78,13 @@ export default Vue.extend({
       {
         text: '#',
         value: 'index',
-        width: 48,
+        width: 44,
         align: 'center' as const,
       },
       {
         text: '',
         value: 'isSaved',
-        width: 48,
+        width: 52,
         align: 'center' as const,
       },
       {
@@ -92,19 +93,14 @@ export default Vue.extend({
       },
       {
         text: '',
-        value: 'explicit',
+        value: 'duration',
         width: 60,
         align: 'center' as const,
       },
       {
         text: '',
-        value: 'duration',
-        width: 60,
-      },
-      {
-        text: '',
         value: 'menu',
-        width: 48,
+        width: 60,
         align: 'center' as const,
       },
     ];
@@ -181,22 +177,30 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
-.track-list-table {
+<style lang="scss" module>
+.TrackListTable {
+  // 表の背景を透過にする
+  background-color: rgba(0, 0, 0, 0)!important;
   // 表全体の背景と同じ色にする
-  .v-row-group__header {
-    background: inherit!important;
-  }
-  td, th {
-    // 列の幅をデフォルトの 48px から少し狭める
-    height: 44px!important;
+  table {
+    // 表と列の幅を最初の行のセルの幅に固定して設定
+    table-layout:fixed;
+    tr {
+      td, th {
+        padding: 0 8px;
+        // 列の幅をデフォルトの 48px から少し狭める
+        height: 44px!important;
+      }
+    }
   }
 }
 </style>
 
 <style lang="scss">
-.v-data-table {
-  // 表の背景を透過にする
-  background-color: rgba(0, 0, 0, 0)!important;
+.TrackListTable {
+  .v-row-group__header {
+    // 表全体の背景と同じ色にする
+      background: inherit!important;
+  }
 }
 </style>

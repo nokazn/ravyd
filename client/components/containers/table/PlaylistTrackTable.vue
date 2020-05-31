@@ -76,7 +76,6 @@ export default Vue.extend({
         text: '',
         value: 'isSaved',
         width: 96,
-        align: 'center' as const,
         sortable: false,
         filterable: false,
       },

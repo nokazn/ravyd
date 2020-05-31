@@ -160,6 +160,7 @@ export default Vue.extend({
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
   }
+
   &__buttons {
     display: flex;
     & > *:not(:last-child) {
@@ -168,7 +169,7 @@ export default Vue.extend({
   }
 
   &__content {
-    padding: 10px 0;
+    padding: 12px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
