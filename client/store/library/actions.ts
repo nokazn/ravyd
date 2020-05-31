@@ -4,17 +4,23 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryState } from './state';
 import { LibraryGetters } from './getters';
 import { LibraryMutations } from './mutations';
+import { App } from '~~/types';
 
 export type LibraryActions = {
   getSavedTrackList: (payload?: { limit: number } | undefined) => Promise<void>
   saveTracks: (trackIdList: string[]) => Promise<void>
   removeTracks: (trackIdList: string[]) => Promise<void>
+  modifyTrackSavedState: ({ trackId, isSaved }: {
+    trackId: string
+    isSaved: boolean
+  }) => void
 };
 
 export type RootActions = {
   'library/getSavedTrackList': LibraryActions['getSavedTrackList']
   'library/saveTracks': LibraryActions['saveTracks']
   'library/removeTracks': LibraryActions['removeTracks']
+  'library/modifyTrackSavedState': LibraryActions['modifyTrackSavedState']
 };
 
 const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMutations> = {
@@ -47,7 +53,7 @@ const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMuta
     const trackList = tracks.items
       .map(convertPlaylistTrackDetail({ isTrackSavedList }));
 
-    commit('SET_TRACK_LIST', trackList);
+    commit('ADD_TRACK_LIST', trackList);
 
     // limit 以下の個数が返ってきた場合、これをもってすべての曲が取得されたとする
     if (trackList.length < limit) {
@@ -55,23 +61,49 @@ const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMuta
     }
   },
 
-  async saveTracks({ dispatch, rootState }, trackIdList) {
+  async saveTracks({ dispatch }, trackIdList) {
     await this.$spotify.library.saveTracks({ trackIdList });
 
-    const isCurrentTrackSavedStateChanged = rootState.player.trackId != null
-      && trackIdList.includes(rootState.player.trackId);
-    if (isCurrentTrackSavedStateChanged) {
-      dispatch('player/checkSavedTracks', undefined, { root: true });
-    }
+    trackIdList.forEach((trackId) => {
+      dispatch('modifyTrackSavedState', { trackId, isSaved: true });
+    });
   },
 
-  async removeTracks({ dispatch, rootState }, trackIdList) {
+  async removeTracks({ dispatch }, trackIdList) {
     await this.$spotify.library.removeUserSavedTracks({ trackIdList });
 
-    const isCurrentTrackSavedStateChanged = rootState.player.trackId != null
-      && trackIdList.includes(rootState.player.trackId);
-    if (isCurrentTrackSavedStateChanged) {
-      dispatch('player/checkSavedTracks', undefined, { root: true });
+    trackIdList.forEach((trackId) => {
+      dispatch('modifyTrackSavedState', { trackId, isSaved: false });
+    });
+  },
+
+  async modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
+    const currentTrackList = state.trackList;
+    if (currentTrackList == null) return;
+
+    const modifyTrackSavedStateHandler = (
+      list: App.PlaylistTrackDetail[],
+      savedState: boolean,
+    ) => list
+      .map((item) => (item.id === trackId
+        ? { ...item, isSaved: savedState }
+        : item));
+
+    const nextTrackList = modifyTrackSavedStateHandler(currentTrackList, isSaved);
+    // ライブラリ一覧を更新
+    commit('SET_TRACK_LIST', nextTrackList);
+    // プレイヤーを更新
+    dispatch('player/modifyTrackSavedState', { trackId, isSaved }, { root: true });
+
+    const [actualIsSaved] = await this.$spotify.library.checkUserSavedTracks({
+      trackIdList: [trackId],
+    });
+    // 実際の状態と異なれば戻す
+    if (isSaved !== actualIsSaved) {
+      // ライブラリ一覧を戻す
+      commit('SET_TRACK_LIST', currentTrackList);
+      // プレイヤーを戻す
+      dispatch('player/modifyTrackSavedState', { trackId, isSaved: actualIsSaved }, { root: true });
     }
   },
 };
