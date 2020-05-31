@@ -11,12 +11,14 @@
         {{ mediaButton.icon }}
       </v-icon>
     </v-btn>
+
     <v-icon
       v-else-if="isPlayingTrack"
       title="再生中"
     >
       mdi-volume-high
     </v-icon>
+
     <span v-else-if="trackNumber != null">
       {{ trackNumber }}
     </span>

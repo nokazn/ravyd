@@ -1,5 +1,10 @@
 <template>
-  <div :class="$style.ArtistNames">
+  <div
+    :class="{
+      [$style.ArtistNames]: true,
+      [$style.inline]: inline,
+    }"
+  >
     <template
       v-for="({ name, id }, index) in artistList"
     >
@@ -33,6 +38,10 @@ export default Vue.extend({
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
+    inline: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -52,5 +61,9 @@ export default Vue.extend({
   &__comma {
     margin-right: .5em;
   }
+}
+
+.inline {
+  display: inline;
 }
 </style>

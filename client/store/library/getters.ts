@@ -2,18 +2,18 @@ import { Getters } from 'vuex';
 import { LibraryState } from './state';
 
 export type LibraryGetters = {
-  trackListOffset: number
+  trackListLength: number
 };
 
 export type RootGetters = {
-  'library/trackListOffset': LibraryGetters['trackListOffset']
+  'library/trackListLength': LibraryGetters['trackListLength']
 };
 
 const getters: Getters<LibraryState, LibraryGetters> = {
-  trackListOffset(state) {
+  trackListLength(state) {
     const { trackList } = state;
     return trackList != null
-      ? trackList.length + 1
+      ? trackList.length
       : 0;
   },
 };

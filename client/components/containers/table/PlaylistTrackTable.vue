@@ -1,10 +1,9 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="items"
+    :items="trackList"
     disable-pagination
     hide-default-footer
-    class="track-list-table"
   >
     <template #header.duration>
       <v-icon
@@ -29,7 +28,7 @@
     <template #item="{ item }">
       <PlaylistTrackTableRow
         :item="item"
-        :is-active="isActiveRow(item.id)"
+        :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :uri="uri"
@@ -45,13 +44,12 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import PlaylistTrackTableRow from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import PlaylistTrackTableRow, { On } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  items: App.PlaylistTrackDetail[]
-  activeRowId: string | undefined
+  activeRowId: string | null
 };
 
 export default Vue.extend({
@@ -74,23 +72,13 @@ export default Vue.extend({
     const headers = [
       {
         text: '',
-        value: 'index',
-        width: 48,
-        align: 'center' as const,
-      },
-      {
-        text: '',
         value: 'isSaved',
-        width: 48,
+        width: 120,
         align: 'center' as const,
       },
       {
         text: 'タイトル',
         value: 'name',
-      },
-      {
-        text: 'アルバム',
-        value: 'releaseName',
       },
       {
         text: '',
@@ -117,15 +105,10 @@ export default Vue.extend({
         align: 'center' as const,
       },
     ];
-    const items = this.trackList;
-
-    const hash = this.$route.hash.replace('#', '');
-    const activeRowId = items.find((item) => item.hash === hash)?.id;
 
     return {
       headers,
-      items,
-      activeRowId,
+      activeRowId: null,
     };
   },
 
@@ -137,13 +120,10 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().player.isPlaying;
     },
-    isActiveRow(): (id: string) => boolean {
-      return (id: string) => this.activeRowId === id;
-    },
   },
 
   methods: {
-    onMediaButtonClicked(row: App.PlaylistTrackDetail) {
+    onMediaButtonClicked(row: On) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -155,28 +135,10 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: App.PlaylistTrackDetail) {
-      const nextSavedState = !row.isSaved;
-      const modifySavedState = (isSaved: boolean, index: number) => this.items
-        .map((item, i) => (i === index
-          ? { ...item, isSaved }
-          : item));
-
-      // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifySavedState(nextSavedState, row.index);
-      if (nextSavedState) {
-        await this.$dispatch('library/saveTracks', [row.id]);
-      } else {
-        await this.$dispatch('library/removeTracks', [row.id]);
-      }
-
-      const [isSaved] = await this.$spotify.library.checkUserSavedTracks({
-        trackIdList: [row.id],
-      });
-      // 実際の状態と異なれば戻す
-      if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, row.index);
+    onFavoriteButtonClicked(row: On) {
+      this.$emit('on-favorite-button-clicked', row);
     },
-    onRowClicked({ id }: App.PlaylistTrackDetail) {
+    onRowClicked({ id }: On) {
       this.activeRowId = id;
     },
   },
@@ -184,13 +146,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.track-list-table {
-  td, th {
-    // 列の幅をデフォルトの 48px から少し狭める
-    height: 44px!important;
-  }
-}
-
 .v-data-table {
   // 表の背景を透過にする
   background-color: rgba(0, 0, 0, 0)!important;
