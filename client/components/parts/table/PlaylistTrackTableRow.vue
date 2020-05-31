@@ -21,19 +21,12 @@
         />
       </td>
 
-      <td
-        :class="[
-          titleColor
-        ]"
-      >
+      <td :class="titleColor">
         <div :class="$style.TrackListTableRow__content">
-          <div>
-            {{ item.name }}
-          </div>
+          <div v-text="item.name" />
 
           <div
-            class="grey--text"
-            :class="$style.TrackListTableRow__contentSubtitle"
+            :class="[$style.TrackListTableRow__contentSubtitle, subtitleColor]"
           >
             <ArtistNames
               inline
@@ -125,6 +118,11 @@ export default Vue.extend({
         ? 'cyan--text  text--accent-2'
         : undefined;
     },
+    subtitleColor(): string {
+      return this.isTrackSet
+        ? 'cyan--text text--accent-2'
+        : 'grey--text';
+    },
   },
 
   methods: {
@@ -157,15 +155,16 @@ export default Vue.extend({
   &__content {
     padding: 8px 0;
     & > *:not(:last-child) {
-      margin-bottom: 2px
+      margin-bottom: 0.2rem;
     }
     &Subtitle {
-      font-size: 0.8rem!important;
+      font-size: 0.8rem;
     }
   }
 
   &__smallText {
     font-size: 0.75rem!important;
+    white-space: nowrap;
   }
 }
 </style>
@@ -173,7 +172,7 @@ export default Vue.extend({
 <style lang="scss">
 tr {
   td {
-    padding: 0 12px;
+    padding: 0 1%!important;
   }
 }
 </style>

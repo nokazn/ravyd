@@ -105,7 +105,7 @@ export default Vue.extend({
       {
         text: '',
         value: 'menu',
-        width: 48,
+        width: 60,
         align: 'center' as const,
         sortable: false,
         filterable: false,
