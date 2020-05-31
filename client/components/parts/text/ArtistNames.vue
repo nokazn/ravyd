@@ -11,6 +11,7 @@
       <nuxt-link
         :key="id"
         :to="artistPath(id)"
+        :title="name"
         @click.stop
       >
         {{ name }}
