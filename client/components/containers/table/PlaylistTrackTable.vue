@@ -4,6 +4,8 @@
     :items="trackList"
     disable-pagination
     hide-default-footer
+    :class="$style.PlaylistTrackTable"
+    class="PlaylistTrackTable"
   >
     <template #header.duration>
       <v-icon
@@ -73,7 +75,7 @@ export default Vue.extend({
       {
         text: '',
         value: 'isSaved',
-        width: 120,
+        width: 96,
         align: 'center' as const,
         sortable: false,
         filterable: false,
@@ -81,14 +83,6 @@ export default Vue.extend({
       {
         text: 'タイトル',
         value: 'name',
-      },
-      {
-        text: '',
-        value: 'explicit',
-        width: 60,
-        align: 'center' as const,
-        sortable: false,
-        filterable: false,
       },
       {
         text: '',
@@ -151,9 +145,19 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
-.v-data-table {
+<style lang="scss" module>
+.PlaylistTrackTable {
   // 表の背景を透過にする
   background-color: rgba(0, 0, 0, 0)!important;
+  table {
+    // 表と列の幅を最初の行のセルの幅に固定して設定
+    table-layout:fixed;
+    tr {
+      td, th {
+        padding: 0 8px;
+      }
+    }
+  }
 }
+
 </style>

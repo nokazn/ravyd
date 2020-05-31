@@ -6,52 +6,66 @@
       :data-is-track-set="isTrackSet"
       @click="onRowClicked"
     >
-      <td
-        :class="$style.TrackListTableRow__buttons"
-        class="text-center"
-      >
-        <PlaylistMediaButton
-          :is-hovered="isRowHovered"
-          :is-playing-track="isPlayingTrack"
-          @on-clicked="onMediaButtonClicked"
-        />
-        <FavoriteButton
-          :is-favorited="item.isSaved"
-          @on-clicked="onFavoriteButtonClicked"
-        />
+      <td>
+        <div
+          :class="$style.TrackListTableRow__buttons"
+          class="text-center"
+        >
+          <PlaylistMediaButton
+            :is-hovered="isRowHovered"
+            :is-playing-track="isPlayingTrack"
+            @on-clicked="onMediaButtonClicked"
+          />
+          <FavoriteButton
+            :is-favorited="item.isSaved"
+            @on-clicked="onFavoriteButtonClicked"
+          />
+        </div>
       </td>
 
       <td :class="titleColor">
         <div :class="$style.TrackListTableRow__content">
-          <div v-text="item.name" />
-
-          <div
-            :class="[$style.TrackListTableRow__contentSubtitle, subtitleColor]"
-          >
-            <ArtistNames
-              inline
-              :artist-list="item.artistList"
-            /> ・ <nuxt-link
-              :to="`/releases/${item.releaseId}`"
-              v-text="item.releaseName"
+          <div class="g-ellipsis-text">
+            <div
+              class="g-ellipsis-text"
+              :title="item.name"
+              v-text="item.name"
             />
+
+            <div
+              :class="[$style.TrackListTableRow__contentSubtitle, subtitleColor]"
+              class="g-ellipsis-text"
+            >
+              <ArtistNames
+                inline
+                :artist-list="item.artistList"
+              />
+              ・
+              <nuxt-link
+                :to="`/releases/${item.releaseId}`"
+                :title="item.releaseName"
+                v-text="item.releaseName"
+              />
+            </div>
+          </div>
+
+          <div>
+            <ExplicitChip v-if="item.explicit" />
           </div>
         </div>
-      </td>
-
-      <td>
-        <ExplicitChip v-if="item.explicit" />
       </td>
 
       <td
         :title="item.addedAt.title"
         :class="$style.TrackListTableRow__smallText"
+        class="text-center"
       >
         {{ item.addedAt.overTwoWeeksAgo ? item.addedAt.yyyymd : item.addedAt.fromNow }}
       </td>
 
       <td
         :class="$style.TrackListTableRow__smallText"
+        class="text-center"
         v-text="item.duration"
       />
 
@@ -147,17 +161,22 @@ export default Vue.extend({
     background-color: lighten($g-data-table-background-color, 15%);
   }
   &__buttons {
+    display: flex;
     & > *:not(:last-child) {
       margin-right: 8px;
     }
   }
 
   &__content {
-    padding: 8px 0;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     & > *:not(:last-child) {
-      margin-bottom: 0.2rem;
+      margin-right: 8px;
     }
     &Subtitle {
+      margin-top: 0.2rem;
       font-size: 0.8rem;
     }
   }
@@ -165,14 +184,7 @@ export default Vue.extend({
   &__smallText {
     font-size: 0.75rem!important;
     white-space: nowrap;
-  }
-}
-</style>
-
-<style lang="scss">
-tr {
-  td {
-    padding: 0 1%!important;
+    padding: 0 4px!important;
   }
 }
 </style>

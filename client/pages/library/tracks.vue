@@ -9,6 +9,7 @@
         v-if="trackList != null"
         :track-list="trackList"
         uri=""
+        :class="$style.LibraryTracksPage__table"
       />
 
       <div
@@ -44,7 +45,9 @@ const TRACK_LIMIT = 30 as const;
   },
 
   async fetch({ app }): Promise<void> {
-    await app.$dispatch('library/getSavedTrackList', { limit: TRACK_LIMIT });
+    if (app.$getters()['library/trackListLength'] === 0) {
+      await app.$dispatch('library/getSavedTrackList', { limit: TRACK_LIMIT });
+    }
   },
 
   head() {
@@ -88,6 +91,9 @@ export default class LibraryTracksPage extends Vue implements Data {
   padding: 16px 3% 48px;
   & > * {
     margin-bottom: 24px;
+  }
+  &__table {
+    width: calc((100vw - #{g-navigation-drawer-width}) * 0.94);
   }
   &__loading {
     display: flex;
