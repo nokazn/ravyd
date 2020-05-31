@@ -136,7 +136,6 @@ export default Vue.extend({
     },
     onFavoriteButtonClicked(row: On) {
       const nextSavedState = !row.isSaved;
-      console.log({ nextSavedState });
       if (nextSavedState) {
         this.$dispatch('library/saveTracks', [row.id]);
       } else {

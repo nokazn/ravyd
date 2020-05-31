@@ -47,7 +47,10 @@ const TRACK_LIMIT = 30 as const;
   async fetch({ app }): Promise<void> {
     if (app.$getters()['library/trackListLength'] === 0) {
       await app.$dispatch('library/getSavedTrackList', { limit: TRACK_LIMIT });
+    } else {
+      await app.$dispatch('library/updateLatestSavedTrackList');
     }
+    app.$dispatch('library/removeUnsavedTracks');
   },
 
   head() {
@@ -82,6 +85,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 
   beforeDestroy() {
     if (this.observer != null) this.observer.disconnect();
+    this.$dispatch('library/removeUnsavedTracks');
   }
 }
 </script>
