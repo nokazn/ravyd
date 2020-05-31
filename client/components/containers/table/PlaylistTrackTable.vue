@@ -75,6 +75,8 @@ export default Vue.extend({
         value: 'isSaved',
         width: 120,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       },
       {
         text: 'タイトル',
@@ -85,6 +87,8 @@ export default Vue.extend({
         value: 'explicit',
         width: 60,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       },
       {
         text: '',
@@ -103,6 +107,8 @@ export default Vue.extend({
         value: 'menu',
         width: 48,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       },
     ];
 
