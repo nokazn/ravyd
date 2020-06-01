@@ -9,6 +9,7 @@
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release"
+          :width="cardWidth"
         />
       </scrollable-cards-section>
 
@@ -20,6 +21,7 @@
           v-for="release in topTrackList"
           :key="release.id"
           v-bind="release"
+          :width="cardWidth"
         />
       </scrollable-cards-section>
 
@@ -31,6 +33,7 @@
           v-for="artist in topArtistList"
           :key="artist.id"
           v-bind="artist"
+          :width="cardWidth"
         />
       </scrollable-cards-section>
     </div>
@@ -49,6 +52,7 @@ import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
 export type AsyncData = {
+  cardWidth: number
   topArtistList: ArtistCardInfo[] | undefined
   topTrackList: ReleaseCardInfo[] | undefined
   newReleaseList: ReleaseCardInfo[] | undefined
@@ -69,14 +73,15 @@ export default Vue.extend({
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ]);
-    const cardImageSize = 160;
-    const topArtistList = topArtists?.items.map(convertArtistForCard(cardImageSize));
-    const topTrackList = topTracks?.items.map(convertTrackForCard(cardImageSize));
-    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard(cardImageSize));
+    const cardWidth = 180;
+    const topArtistList = topArtists?.items.map(convertArtistForCard(cardWidth));
+    const topTrackList = topTracks?.items.map(convertTrackForCard(cardWidth));
+    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard(cardWidth));
 
     app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
 
     return {
+      cardWidth,
       topArtistList,
       topTrackList,
       newReleaseList,

@@ -7,7 +7,7 @@
     <v-hover #default="{ hover: buttonHoverd }">
       <v-btn
         icon
-        @click.stop="onClicked"
+        @click.stop.prevent="onClicked"
       >
         <v-icon
           :size="mediaButtonSize(buttonHoverd)"
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
   props: {
@@ -30,8 +30,8 @@ export default Vue.extend({
       required: true,
     },
     size: {
-      type: Number,
-      required: true,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
     icon: {
       type: String,
@@ -44,8 +44,9 @@ export default Vue.extend({
         const ratio = hover
           ? 0.375
           : 0.3;
-        const maxSize = 120;
-        return this.size < maxSize
+        const maxSize = 150;
+
+        return this.size == null || this.size < maxSize
           ? maxSize * ratio
           : this.size * ratio;
       };

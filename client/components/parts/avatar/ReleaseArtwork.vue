@@ -46,8 +46,8 @@ export default Vue.extend({
       required: true,
     },
     size: {
-      type: Number,
-      required: true,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
     icon: {
       type: String as PropType<MediaIcon>,
@@ -60,20 +60,6 @@ export default Vue.extend({
     shadow: {
       type: Boolean,
       default: false,
-    },
-  },
-
-  computed: {
-    mediaButtonSize(): (hover: boolean) => number {
-      return (hover: boolean) => {
-        const ratio = hover
-          ? 0.375
-          : 0.3;
-
-        return this.size < 120
-          ? 120 * ratio
-          : this.size * ratio;
-      };
     },
   },
 

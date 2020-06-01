@@ -70,14 +70,29 @@
           v-if="items.length > 0"
           :key="title"
           :title="title"
-          :class="$style.ArtistIdPage__cardSection"
         >
-          <release-card
-            v-for="item in items"
-            :key="item.id"
-            v-bind="item"
-            year-subtitle
-          />
+          <div
+            :class="$style.ArtistIdPage__cardSection"
+          >
+            <release-card
+              v-for="item in items"
+              :key="item.id"
+              v-bind="item"
+              :width="180"
+              :max-width="240"
+              year-subtitle
+              :class="$style.ArtistIdPage__card"
+            />
+
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+            <div :class="$style.ArtistIdPage__cardSpacer" />
+          </div>
         </cards-section>
       </template>
     </div>
@@ -132,6 +147,7 @@ export type AsyncData = {
   },
 
   async asyncData(context): Promise<AsyncData> {
+    const artworkMaxSize = 180;
     const avatarSize = 220;
     const topTrackArtworkSize = 64;
     const [
@@ -140,7 +156,7 @@ export type AsyncData = {
       isFollowing,
       topTrackList,
     ] = await Promise.all([
-      getReleaseListMap(context, avatarSize),
+      getReleaseListMap(context, artworkMaxSize),
       getArtistInfo(context, avatarSize),
       getIsFollowing(context),
       getTopTrackList(context, topTrackArtworkSize),
@@ -226,6 +242,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
 <style lang="scss" module>
 .ArtistIdPage {
   padding: 16px 6% 48px;
+
   &__header {
     display: flex;
     align-items: flex-end;
@@ -234,7 +251,6 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       margin-right: 24px
     }
   }
-
   &__type {
     font-size: 12px;
   }
@@ -254,8 +270,28 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     margin-bottom: 32px;
   }
 
-  &__cardSection:not(:last-child) {
+  &__cardSection {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    &:not(:last-child) {
+      margin-bottom: 32px;
+    }
+    // card と cardSpacer 両方に適用
+    & > * {
+      margin-left: 16px;
+      margin-right: 16px;
+      flex: 1 0 180px;
+      min-width: 180px;
+      max-width: 240px;
+    }
+  }
+  &__card {
     margin-bottom: 32px;
+  }
+  // 最終行の余りの部分を埋める
+  &__cardSpacer {
+    height: 0;
   }
 }
 </style>

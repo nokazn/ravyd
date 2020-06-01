@@ -87,7 +87,6 @@ export namespace App {
     id: string
     uri: string
     avatarSrc: string
-    width?: number
   }
   // /artists/{artist_id}
   export type ArtistInfo = {

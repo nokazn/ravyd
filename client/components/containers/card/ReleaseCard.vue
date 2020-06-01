@@ -2,29 +2,38 @@
   <v-card
     hover
     ripple
-    tile
+    nuxt
     :width="width"
+    :min-width="width"
+    :max-width="maxWidth || width"
     :class="$style.ReleaseCard"
-    @click="onClick"
+    :to="releasePath"
   >
     <div :class="$style.ReleaseCard__container">
-      <release-artwork
-        :src="artworkSrc"
-        :size="width"
-        :alt="name"
-        :title="name"
-        is-overlayed
-        :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
+      <div :class="$style.ReleaseCard__artwork">
+        <release-artwork
+          :src="artworkSrc"
+          :alt="name"
+          :title="name"
+          is-overlayed
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </div>
 
       <v-card-title :class="$style.ReleaseCard__title">
-        <nuxt-link :to="releasePath">
-          {{ name }}
-        </nuxt-link>
+        <nuxt-link
+          :to="releasePath"
+          :title="name"
+          class="g-ellipsis-text"
+          v-text="name"
+        />
       </v-card-title>
 
-      <v-card-subtitle :class="$style.ReleaseCard__subtitle">
+      <v-card-subtitle
+        :class="$style.ReleaseCard__subtitle"
+        class="g-ellipsis-text"
+      >
         <template v-if="yearSubtitle">
           <span v-text="releaseYear" />
         </template>
@@ -38,13 +47,11 @@
           >
             <nuxt-link
               :key="artistId"
-              :to="artistPath(artistId)"
+              :to="`/artists/${artistId}`"
+              :title="artistsName"
               @click.native.stop
-            >
-              {{ artistName }}
-            </nuxt-link>
-
-            <span
+              v-text="artistName"
+            /><span
               v-if="index !== artists.length - 1"
               :key="`${artistId}-comma`"
             >, </span>
@@ -63,6 +70,10 @@ import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
 export type ReleaseCardInfo = App.ReleaseCardInfo
+
+export type Data = {
+  releasePath: string
+}
 
 export default Vue.extend({
   components: {
@@ -102,8 +113,12 @@ export default Vue.extend({
       required: true,
     },
     width: {
-      type: Number,
-      default: 160,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    maxWidth: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
     yearSubtitle: {
       type: Boolean,
@@ -111,17 +126,17 @@ export default Vue.extend({
     },
   },
 
+  data(): Data {
+    return {
+      releasePath: `/releases/${this.releaseId}`,
+    };
+  },
+
   computed: {
-    releasePath(): string {
-      return `/releases/${this.releaseId}`;
-    },
     artistsName(): string {
       return this.artists
         .map((artist) => artist.name)
         .join(', ');
-    },
-    artistPath(): (id: string) => string {
-      return (id: string) => `/artists/${id}`;
     },
 
     isPlaying(): boolean {
@@ -145,6 +160,7 @@ export default Vue.extend({
       this.$router.push(this.releasePath);
     },
     onMediaButtonClicked() {
+      console.log('on-media-button');
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isReleaseSet) {
         this.$dispatch('player/pause');
@@ -169,14 +185,19 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
   }
+
+  &__artwork {
+    display: flex;
+    justify-content: center
+  }
   &__title {
     font-size: 0.9rem;
     padding: 12px 8px;
-    line-height: 1rem;
+    line-height: 1.2rem;
   }
   &__subtitle {
-    font-size: 0.7rem;
-    padding: 8px;
+    font-size: 0.8rem;
+    padding: 12px 8px;
     line-height: 1rem;
     margin-top: -4px!important;
   }

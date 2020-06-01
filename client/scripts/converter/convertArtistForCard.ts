@@ -8,5 +8,4 @@ export const convertArtistForCard = (avatarSize?: number) => (
   id: artist.id,
   uri: artist.uri,
   avatarSrc: getImageSrc(artist.images, avatarSize),
-  width: avatarSize,
 });

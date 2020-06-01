@@ -2,7 +2,6 @@
   <v-card
     hover
     ripple
-    tile
     :width="width"
     :class="$style.ArtistCard"
     @click="onClick"
@@ -18,10 +17,15 @@
         @on-media-button-clicked="onMediaButtonClicked"
       />
 
-      <v-card-title :class="$style.ArtistCard__title">
-        <nuxt-link :to="artistPath">
-          {{ name }}
-        </nuxt-link>
+      <v-card-title
+        :class="$style.ArtistCard__title"
+      >
+        <nuxt-link
+          class="g-ellipsis-text"
+          :to="artistPath"
+          :title="name"
+          v-text="name"
+        />
       </v-card-title>
     </div>
   </v-card>
@@ -58,7 +62,7 @@ export default Vue.extend({
     },
     width: {
       type: Number,
-      default: 160,
+      default: 180,
     },
   },
 
@@ -110,8 +114,8 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     font-size: 0.9rem;
-    padding: 12px 8px;
-    line-height: 1rem;
+    padding: 16px 8px;
+    line-height: 1.2rem;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <section :class="$style.CardSection">
     <h2 v-text="title" />
     <v-divider :class="$style.CardSection__divider" />
-    <div :class="$style.CardSection__cardContainer">
+    <div>
       <slot />
     </div>
   </section>
@@ -25,14 +25,6 @@ export default Vue.extend({
 .CardSection {
   &__divider {
     margin: 6px 0 16px;
-  }
-  &__cardContainer {
-    display: flex;
-    flex-wrap: wrap;
-    & > * {
-      margin-right: 20px;
-      margin-bottom: 20px;
-    }
   }
 }
 </style>

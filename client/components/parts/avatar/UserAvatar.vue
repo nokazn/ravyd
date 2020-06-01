@@ -76,20 +76,6 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    mediaButtonSize(): (hover: boolean) => number {
-      return (hover: boolean) => {
-        const ratio = hover
-          ? 0.375
-          : 0.3;
-
-        return this.size < 120
-          ? 120 * ratio
-          : this.size * ratio;
-      };
-    },
-  },
-
   methods: {
     onClicked() {
       this.$emit('on-media-button-clicked');
