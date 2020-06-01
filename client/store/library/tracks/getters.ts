@@ -1,15 +1,15 @@
 import { Getters } from 'vuex';
-import { LibraryState } from './state';
+import { LibraryTracksState } from './state';
 
-export type LibraryGetters = {
+export type LibraryTracksGetters = {
   trackListLength: number
 };
 
 export type RootGetters = {
-  'library/tracks/trackListLength': LibraryGetters['trackListLength']
+  'library/tracks/trackListLength': LibraryTracksGetters['trackListLength']
 };
 
-const getters: Getters<LibraryState, LibraryGetters> = {
+const getters: Getters<LibraryTracksState, LibraryTracksGetters> = {
   trackListLength(state) {
     const { trackList } = state;
     return trackList != null

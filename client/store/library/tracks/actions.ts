@@ -1,11 +1,11 @@
 import { Actions } from 'vuex';
 
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
-import { LibraryState } from './state';
-import { LibraryGetters } from './getters';
-import { LibraryMutations } from './mutations';
+import { LibraryTracksState } from './state';
+import { LibraryTracksGetters } from './getters';
+import { LibraryTracksMutations } from './mutations';
 
-export type LibraryActions = {
+export type LibraryTracksActions = {
   getSavedTrackList: (payload?: { limit: number } | undefined) => Promise<void>
   updateLatestSavedTrackList: () => Promise<void>
   removeUnsavedTracks: () => void
@@ -18,22 +18,27 @@ export type LibraryActions = {
 };
 
 export type RootActions = {
-  'library/tracks/getSavedTrackList': LibraryActions['getSavedTrackList']
-  'library/tracks/updateLatestSavedTrackList': LibraryActions['updateLatestSavedTrackList']
-  'library/tracks/removeUnsavedTracks': LibraryActions['removeUnsavedTracks']
-  'library/tracks/saveTracks': LibraryActions['saveTracks']
-  'library/tracks/removeTracks': LibraryActions['removeTracks']
-  'library/tracks/modifyTrackSavedState': LibraryActions['modifyTrackSavedState']
+  'library/tracks/getSavedTrackList': LibraryTracksActions['getSavedTrackList']
+  'library/tracks/updateLatestSavedTrackList': LibraryTracksActions['updateLatestSavedTrackList']
+  'library/tracks/removeUnsavedTracks': LibraryTracksActions['removeUnsavedTracks']
+  'library/tracks/saveTracks': LibraryTracksActions['saveTracks']
+  'library/tracks/removeTracks': LibraryTracksActions['removeTracks']
+  'library/tracks/modifyTrackSavedState': LibraryTracksActions['modifyTrackSavedState']
 };
 
-const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMutations> = {
+const actions: Actions<
+  LibraryTracksState,
+  LibraryTracksActions,
+  LibraryTracksGetters,
+  LibraryTracksMutations
+> = {
   /**
    * 指定されない場合は limit: 30 で取得
    */
   async getSavedTrackList({
     state, commit, getters, rootGetters,
   }, payload) {
-    // すでに全楽曲を指定している場合は何もしない
+    // すでに全楽曲を取得している場合は何もしない
     if (state.isFullTrackList) return;
 
     const limit = payload?.limit ?? 30;

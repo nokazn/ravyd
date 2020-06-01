@@ -28,7 +28,7 @@ declare module 'vuex' {
     auth: Auth.AuthState
     browse: Browse.BrowseState
     library: {
-      tracks: LibraryTracks.LibraryState
+      tracks: LibraryTracks.LibraryTracksState
     }
     player: Player.PlayerState
   } & Root.RootState

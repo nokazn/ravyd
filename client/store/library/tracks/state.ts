@@ -1,12 +1,12 @@
 import { App } from '~~/types';
 
-export type LibraryState = {
+export type LibraryTracksState = {
   trackList: App.PlaylistTrackDetail[] | null
   isFullTrackList: boolean
   numberOfUnupdatedTracks: number
 };
 
-const state: () => LibraryState = () => ({
+const state: () => LibraryTracksState = () => ({
   trackList: [],
   isFullTrackList: false,
   numberOfUnupdatedTracks: 0,

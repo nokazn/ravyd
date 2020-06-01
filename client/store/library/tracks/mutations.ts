@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
-import { LibraryState } from './state';
+import { LibraryTracksState } from './state';
 import { App } from '~~/types';
 
-export type LibraryMutations = {
+export type LibraryTracksMutations = {
   SET_TRACK_LIST: App.PlaylistTrackDetail[] | null
   ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[] | null
   UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[] | null
@@ -13,15 +13,15 @@ export type LibraryMutations = {
 };
 
 export type RootMutations = {
-  'library/tracks/SET_TRACK_LIST': LibraryMutations['SET_TRACK_LIST'];
-  'library/tracks/ADD_TO_TRACK_LIST': LibraryMutations['ADD_TO_TRACK_LIST'];
-  'library/tracks/UNSHIFT_TO_TRACK_LIST': LibraryMutations['UNSHIFT_TO_TRACK_LIST'];
-  'library/tracks/SET_IS_FULL_TRACK_LIST': LibraryMutations['SET_IS_FULL_TRACK_LIST'];
-  'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['INCREMENT_NUMBER_OF_UNUPDATED_TRACKS'];
-  'library/tracks/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['RESET_NUMBER_OF_UNUPDATED_TRACKS'];
+  'library/tracks/SET_TRACK_LIST': LibraryTracksMutations['SET_TRACK_LIST'];
+  'library/tracks/ADD_TO_TRACK_LIST': LibraryTracksMutations['ADD_TO_TRACK_LIST'];
+  'library/tracks/UNSHIFT_TO_TRACK_LIST': LibraryTracksMutations['UNSHIFT_TO_TRACK_LIST'];
+  'library/tracks/SET_IS_FULL_TRACK_LIST': LibraryTracksMutations['SET_IS_FULL_TRACK_LIST'];
+  'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryTracksMutations['INCREMENT_NUMBER_OF_UNUPDATED_TRACKS'];
+  'library/tracks/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryTracksMutations['RESET_NUMBER_OF_UNUPDATED_TRACKS'];
 };
 
-const mutations: Mutations<LibraryState, LibraryMutations> = {
+const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
   SET_TRACK_LIST(state, trackList) {
     state.trackList = trackList;
   },
