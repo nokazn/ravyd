@@ -73,6 +73,7 @@ const actions: Actions<
     const market = rootGetters['auth/userCountryCode'];
     if (market == null) return;
 
+    // ライブラリの情報が更新されていないものの数
     const limit = state.numberOfUnupdatedTracks;
     if (limit === 0) return;
 
@@ -109,8 +110,6 @@ const actions: Actions<
         .map(convertPlaylistTrackDetail({ isTrackSavedList }));
     commit('UNSHIFT_TO_TRACK_LIST', addedTrackList);
     commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
-
-    console.log(addedTrackList);
   },
 
   removeUnsavedTracks({ state, commit }) {

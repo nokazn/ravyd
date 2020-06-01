@@ -6,6 +6,7 @@ import * as Root from '~/store/types';
 import * as Auth from '~/store/auth/types';
 import * as Browse from '~/store/browse/types';
 import * as LibraryTracks from '~/store/library/tracks/types';
+import * as LibraryReleases from '~/store/library/releases/types';
 import * as Player from '~/store/player/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
@@ -29,6 +30,7 @@ declare module 'vuex' {
     browse: Browse.BrowseState
     library: {
       tracks: LibraryTracks.LibraryTracksState
+      releases: LibraryReleases.LibraryReleasesState
     }
     player: Player.PlayerState
   } & Root.RootState
@@ -37,18 +39,21 @@ declare module 'vuex' {
     & Auth.RootGetters
     & Browse.RootGetters
     & LibraryTracks.RootGetters
+    & LibraryReleases.RootGetters
     & Player.RootGetters
 
   type RootMutations = Root.RootMutations
     & Auth.RootMutations
     & Browse.RootMutations
     & LibraryTracks.RootMutations
+    & LibraryReleases.RootMutations
     & Player.RootMutations
 
   type RootActions = Root.RootActions
     & Auth.RootActions
     & Browse.RootActions
     & LibraryTracks.RootActions
+    & LibraryReleases.RootActions
     & Player.RootActions
 
   /**

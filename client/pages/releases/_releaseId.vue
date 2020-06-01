@@ -167,9 +167,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     this.releaseInfo.isSaved = nextSavedState;
     const albumIdList = [this.releaseInfo.id];
     if (nextSavedState) {
-      this.$spotify.library.saveAlbums({ albumIdList });
+      this.$dispatch('library/releases/saveReleases', albumIdList);
     } else {
-      this.$spotify.library.removeUserSavedAlbums({ albumIdList });
+      this.$dispatch('library/releases/removeReleases', albumIdList);
     }
   }
 
