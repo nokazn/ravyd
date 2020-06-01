@@ -98,9 +98,9 @@ export default Vue.extend({
       // API との通信の結果を待たずに先に表示を変更させておく
       this.items = modifySavedState(nextSavedState, index);
       if (nextSavedState) {
-        await this.$dispatch('library/saveTracks', [id]);
+        await this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        await this.$dispatch('library/removeTracks', [id]);
+        await this.$dispatch('library/tracks/removeTracks', [id]);
       }
 
       const [isSaved] = await this.$spotify.library.checkUserSavedTracks({

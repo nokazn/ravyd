@@ -45,12 +45,12 @@ const LIMIT_OF_TRACKS = 30 as const;
   },
 
   async fetch({ app }): Promise<void> {
-    if (app.$getters()['library/trackListLength'] === 0) {
-      await app.$dispatch('library/getSavedTrackList', { limit: LIMIT_OF_TRACKS });
+    if (app.$getters()['library/tracks/trackListLength'] === 0) {
+      await app.$dispatch('library/tracks/getSavedTrackList', { limit: LIMIT_OF_TRACKS });
     } else {
-      await app.$dispatch('library/updateLatestSavedTrackList');
+      await app.$dispatch('library/tracks/updateLatestSavedTrackList');
     }
-    app.$dispatch('library/removeUnsavedTracks');
+    app.$dispatch('library/tracks/removeUnsavedTracks');
   },
 
   head() {
@@ -63,10 +63,10 @@ export default class LibraryTracksPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
 
   get trackList(): App.PlaylistTrackDetail[] | null {
-    return this.$state().library.trackList;
+    return this.$state().library.tracks.trackList;
   }
   get isFullTrackList(): boolean {
-    return this.$state().library.isFullTrackList;
+    return this.$state().library.tracks.isFullTrackList;
   }
 
   mounted() {
@@ -76,7 +76,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          this.$dispatch('library/getSavedTrackList');
+          this.$dispatch('library/tracks/getSavedTrackList');
         }
       });
     });
@@ -85,7 +85,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 
   beforeDestroy() {
     if (this.observer != null) this.observer.disconnect();
-    this.$dispatch('library/removeUnsavedTracks');
+    this.$dispatch('library/tracks/removeUnsavedTracks');
   }
 }
 </script>

@@ -18,12 +18,12 @@ export type LibraryActions = {
 };
 
 export type RootActions = {
-  'library/getSavedTrackList': LibraryActions['getSavedTrackList']
-  'library/updateLatestSavedTrackList': LibraryActions['updateLatestSavedTrackList']
-  'library/removeUnsavedTracks': LibraryActions['removeUnsavedTracks']
-  'library/saveTracks': LibraryActions['saveTracks']
-  'library/removeTracks': LibraryActions['removeTracks']
-  'library/modifyTrackSavedState': LibraryActions['modifyTrackSavedState']
+  'library/tracks/getSavedTrackList': LibraryActions['getSavedTrackList']
+  'library/tracks/updateLatestSavedTrackList': LibraryActions['updateLatestSavedTrackList']
+  'library/tracks/removeUnsavedTracks': LibraryActions['removeUnsavedTracks']
+  'library/tracks/saveTracks': LibraryActions['saveTracks']
+  'library/tracks/removeTracks': LibraryActions['removeTracks']
+  'library/tracks/modifyTrackSavedState': LibraryActions['modifyTrackSavedState']
 };
 
 const actions: Actions<LibraryState, LibraryActions, LibraryGetters, LibraryMutations> = {

@@ -95,17 +95,14 @@ export default Vue.extend({
             {
               title: 'お気に入りの曲',
               to: '/library/tracks',
-              // icon: 'mdi-music-box-multiple',
             },
             {
               title: 'アルバム',
-              to: '/library/albums',
-              // icon: 'mdi-music-box-multiple',
+              to: '/library/releases',
             },
             {
               title: 'アーティスト',
               to: '/library/artists',
-              // icon: 'mdi-music-box-multiple',
             },
           ],
         },

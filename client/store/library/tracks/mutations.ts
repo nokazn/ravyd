@@ -13,12 +13,12 @@ export type LibraryMutations = {
 };
 
 export type RootMutations = {
-  'library/SET_TRACK_LIST': LibraryMutations['SET_TRACK_LIST'];
-  'library/ADD_TO_TRACK_LIST': LibraryMutations['ADD_TO_TRACK_LIST'];
-  'library/UNSHIFT_TO_TRACK_LIST': LibraryMutations['UNSHIFT_TO_TRACK_LIST'];
-  'library/SET_IS_FULL_TRACK_LIST': LibraryMutations['SET_IS_FULL_TRACK_LIST'];
-  'library/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['INCREMENT_NUMBER_OF_UNUPDATED_TRACKS'];
-  'library/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['RESET_NUMBER_OF_UNUPDATED_TRACKS'];
+  'library/tracks/SET_TRACK_LIST': LibraryMutations['SET_TRACK_LIST'];
+  'library/tracks/ADD_TO_TRACK_LIST': LibraryMutations['ADD_TO_TRACK_LIST'];
+  'library/tracks/UNSHIFT_TO_TRACK_LIST': LibraryMutations['UNSHIFT_TO_TRACK_LIST'];
+  'library/tracks/SET_IS_FULL_TRACK_LIST': LibraryMutations['SET_IS_FULL_TRACK_LIST'];
+  'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['INCREMENT_NUMBER_OF_UNUPDATED_TRACKS'];
+  'library/tracks/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryMutations['RESET_NUMBER_OF_UNUPDATED_TRACKS'];
 };
 
 const mutations: Mutations<LibraryState, LibraryMutations> = {

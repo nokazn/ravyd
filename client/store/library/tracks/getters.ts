@@ -6,7 +6,7 @@ export type LibraryGetters = {
 };
 
 export type RootGetters = {
-  'library/trackListLength': LibraryGetters['trackListLength']
+  'library/tracks/trackListLength': LibraryGetters['trackListLength']
 };
 
 const getters: Getters<LibraryState, LibraryGetters> = {
