@@ -4,8 +4,11 @@ import { SpotifyAPI } from '~~/types';
 export const getAlbums = (context: Context) => {
   const { app } = context;
 
+  /**
+   * albumIdList は最大 20
+   */
   return ({ albumIdList, market }: {
-    albumIdList: string[] // 最大 20
+    albumIdList: string[]
     market?: SpotifyAPI.Country
   }): Promise<{ albums: SpotifyAPI.Album[] | undefined }> => {
     const { length } = albumIdList;
@@ -20,10 +23,9 @@ export const getAlbums = (context: Context) => {
         ids,
         market,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-        return {};
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+      return {};
+    });
   };
 };

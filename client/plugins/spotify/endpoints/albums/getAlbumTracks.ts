@@ -25,10 +25,9 @@ export const getAlbumTracks = (context: Context) => {
         offset,
         market,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-        return null;
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+      return null;
+    });
   };
 };
