@@ -15,7 +15,7 @@
         <div
           :class="$style.UserMenu__container"
         >
-          <user-avatar
+          <UserAvatar
             :src="userAvatarSrc"
             :alt="userDisplayName"
             :size="32"

@@ -8,7 +8,7 @@
         v-if="artistInfo != null"
         :class="$style.ArtistIdPage__header"
       >
-        <user-avatar
+        <UserAvatar
           :size="avatarSize"
           :src="artistInfo.avatarSrc"
           :alt="artistInfo.name"
@@ -42,12 +42,12 @@
           </p>
 
           <div :class="$style.ArtistIdPage__buttons">
-            <media-control-button
+            <MediaControlButton
               :is-playing="isPlaying && isArtistSet"
               @on-clicked="onMediaControlButtonClicked"
             />
 
-            <follow-button
+            <FollowButton
               :is-following="isFollowing"
               @on-clicked="onFollowButtonClicked"
             />
@@ -56,7 +56,7 @@
       </div>
 
       <section>
-        <track-list-wrapper
+        <TrackListWrapper
           title="人気の曲"
           :omitted-length="5"
           :track-list="topTrackList"
@@ -66,7 +66,7 @@
       </section>
 
       <template v-for="{ title, items } in Object.values(releaseListMap)">
-        <cards-section
+        <CardsSection
           v-if="items.length > 0"
           :key="title"
           :title="title"
@@ -74,7 +74,7 @@
           <div
             :class="$style.ArtistIdPage__cardSection"
           >
-            <release-card
+            <ReleaseCard
               v-for="item in items"
               :key="item.id"
               v-bind="item"
@@ -93,7 +93,7 @@
             <div :class="$style.ArtistIdPage__cardSpacer" />
             <div :class="$style.ArtistIdPage__cardSpacer" />
           </div>
-        </cards-section>
+        </CardsSection>
       </template>
     </div>
   </page>

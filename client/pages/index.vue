@@ -1,41 +1,41 @@
 <template>
   <page>
     <div :class="$style.RootPage">
-      <scrollable-cards-section
+      <ScrollableCardsSection
         title="今週の新譜"
         :class="$style.RootPage__section"
       >
-        <release-card
+        <ReleaseCard
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release"
           :width="cardWidth"
         />
-      </scrollable-cards-section>
+      </ScrollableCardsSection>
 
-      <scrollable-cards-section
+      <ScrollableCardsSection
         title="お気に入りのトラック"
         :class="$style.RootPage__section"
       >
-        <release-card
+        <ReleaseCard
           v-for="release in topTrackList"
           :key="release.id"
           v-bind="release"
           :width="cardWidth"
         />
-      </scrollable-cards-section>
+      </ScrollableCardsSection>
 
-      <scrollable-cards-section
+      <ScrollableCardsSection
         title="お気に入りのアーティスト"
         :class="$style.RootPage__section"
       >
-        <artist-card
+        <ArtistCard
           v-for="artist in topArtistList"
           :key="artist.id"
           v-bind="artist"
           :width="cardWidth"
         />
-      </scrollable-cards-section>
+      </ScrollableCardsSection>
     </div>
   </page>
 </template>

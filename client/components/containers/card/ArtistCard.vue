@@ -7,7 +7,7 @@
     @click="onClick"
   >
     <div :class="$style.ArtistCard__container">
-      <user-avatar
+      <UserAvatar
         :src="avatarSrc"
         :alt="name"
         :size="width"
