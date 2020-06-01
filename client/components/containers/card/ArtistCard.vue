@@ -2,7 +2,9 @@
   <v-card
     hover
     ripple
+    :min-width="width"
     :width="width"
+    :max-width="maxWidth || width"
     :class="$style.ArtistCard"
     @click="onClick"
   >
@@ -32,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
 import { App } from '~~/types';
 
@@ -63,6 +65,10 @@ export default Vue.extend({
     width: {
       type: Number,
       default: 180,
+    },
+    maxWidth: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
   },
 
