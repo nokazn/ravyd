@@ -196,7 +196,7 @@ $gradation-width: 24px;
       content: "";
     }
     & > *:not(:last-child) {
-      margin-right: 24px;
+      margin-right: 32px;
     }
   }
 
