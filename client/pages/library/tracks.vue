@@ -13,7 +13,7 @@
       />
 
       <div
-        ref="libraryTracksPageBottom"
+        ref="loading"
         :class="$style.LibraryTracksPage__loading"
       >
         <v-progress-circular
@@ -36,7 +36,7 @@ interface Data {
   observer: IntersectionObserver | undefined
 }
 
-const TRACK_LIMIT = 30 as const;
+const LIMIT_OF_TRACKS = 30 as const;
 
 @Component({
   components: {
@@ -46,7 +46,7 @@ const TRACK_LIMIT = 30 as const;
 
   async fetch({ app }): Promise<void> {
     if (app.$getters()['library/trackListLength'] === 0) {
-      await app.$dispatch('library/getSavedTrackList', { limit: TRACK_LIMIT });
+      await app.$dispatch('library/getSavedTrackList', { limit: LIMIT_OF_TRACKS });
     } else {
       await app.$dispatch('library/updateLatestSavedTrackList');
     }
@@ -70,7 +70,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   mounted() {
-    const bottomElement = this.$refs.libraryTracksPageBottom as HTMLDivElement;
+    const loading = this.$refs.loading as HTMLDivElement;
 
     // loading が表示されたら新たに読み込む
     this.observer = new IntersectionObserver((entries) => {
@@ -80,7 +80,7 @@ export default class LibraryTracksPage extends Vue implements Data {
         }
       });
     });
-    this.observer.observe(bottomElement);
+    this.observer.observe(loading);
   }
 
   beforeDestroy() {
