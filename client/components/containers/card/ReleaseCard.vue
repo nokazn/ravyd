@@ -10,16 +10,14 @@
     :to="releasePath"
   >
     <div :class="$style.ReleaseCard__container">
-      <div :class="$style.ReleaseCard__artwork">
-        <release-artwork
-          :src="artworkSrc"
-          :alt="name"
-          :title="name"
-          is-overlayed
-          :icon="mediaIcon"
-          @on-media-button-clicked="onMediaButtonClicked"
-        />
-      </div>
+      <release-artwork
+        :src="artworkSrc"
+        :alt="name"
+        :title="name"
+        is-overlayed
+        :icon="mediaIcon"
+        @on-media-button-clicked="onMediaButtonClicked"
+      />
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link
@@ -186,10 +184,6 @@ export default Vue.extend({
     flex-direction: column;
   }
 
-  &__artwork {
-    display: flex;
-    justify-content: center
-  }
   &__title {
     font-size: 0.9rem;
     padding: 12px 8px;
