@@ -60,7 +60,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 20,
+      default: 180,
     },
     isOverlayed: {
       type: Boolean,

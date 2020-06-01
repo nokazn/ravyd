@@ -44,7 +44,7 @@ export default Vue.extend({
         const ratio = hover
           ? 0.375
           : 0.3;
-        const maxSize = 150;
+        const maxSize = 180;
 
         return this.size == null || this.size < maxSize
           ? maxSize * ratio
