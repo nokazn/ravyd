@@ -8,7 +8,11 @@ export const getReleaseInfo = async (
   { app, params }: Context,
   artworkSize: number,
 ): Promise<App.ReleaseInfo | null> => {
-  const release = await app.$spotify.albums.getAlbum({ albumId: params.releaseId });
+  const market = app.$getters()['auth/userCountryCode'];
+  const release = await app.$spotify.albums.getAlbum({
+    albumId: params.releaseId,
+    market,
+  });
   if (release == null) return null;
 
   const {
