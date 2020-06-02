@@ -9,15 +9,17 @@
     @click="onClick"
   >
     <div :class="$style.ArtistCard__container">
-      <UserAvatar
-        :src="avatarSrc"
-        :alt="name"
-        :size="width"
-        :icon="mediaIcon"
-        :title="name"
-        is-overlayed
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
+      <div :class="$style.ArtistCard__avatar">
+        <UserAvatar
+          :src="avatarSrc"
+          :alt="name"
+          :size="width"
+          :icon="mediaIcon"
+          :title="name"
+          is-overlayed
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </div>
 
       <v-card-title
         :class="$style.ArtistCard__title"
@@ -115,6 +117,11 @@ export default Vue.extend({
   &__container {
     display: flex;
     flex-direction: column;
+  }
+  &__avatar {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
   }
   &__title {
     display: flex;
