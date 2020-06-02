@@ -6,23 +6,23 @@ import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
 import { SpotifyAPI } from '~~/types';
 
-export type LibraryActions = {
+export type LibraryReleasesActions = {
   getSavedReleaseList: (payload?: { limit: number } | undefined) => Promise<void>
-  updateLatestSavedTrackList: () => Promise<void>
+  updateLatestSavedReleaseList: () => Promise<void>
   saveReleases: (albumIdList: string[]) => Promise<void>
   removeReleases: (albumIdList: string[]) => Promise<void>
-  modifyTrackSavedState: ({ albumId, isSaved }: {
+  modifyReleaseSavedState: ({ albumId, isSaved }: {
     albumId: string
     isSaved: boolean
   }) => void
 };
 
 export type RootActions = {
-  'library/releases/getSavedReleaseList': LibraryActions['getSavedReleaseList']
-  'library/releases/updateLatestSavedTrackList': LibraryActions['updateLatestSavedTrackList']
-  'library/releases/saveReleases': LibraryActions['saveReleases']
-  'library/releases/removeReleases': LibraryActions['removeReleases']
-  'library/releases/modifyTrackSavedState': LibraryActions['modifyTrackSavedState']
+  'library/releases/getSavedReleaseList': LibraryReleasesActions['getSavedReleaseList']
+  'library/releases/updateLatestSavedReleaseList': LibraryReleasesActions['updateLatestSavedReleaseList']
+  'library/releases/saveReleases': LibraryReleasesActions['saveReleases']
+  'library/releases/removeReleases': LibraryReleasesActions['removeReleases']
+  'library/releases/modifyReleaseSavedState': LibraryReleasesActions['modifyReleaseSavedState']
 };
 
 const MAX_ARTWORK_SIZE = 240;
@@ -32,7 +32,7 @@ const convertRelease = ({ album }: {
 
 const actions: Actions<
   LibraryReleasesState,
-  LibraryActions,
+  LibraryReleasesActions,
   LibraryReleasesGetters,
   LibraryReleasesMutations
 > = {
@@ -70,7 +70,7 @@ const actions: Actions<
     }
   },
 
-  async updateLatestSavedTrackList({ state, commit, rootGetters }) {
+  async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
     const market = rootGetters['auth/userCountryCode'];
     if (market == null) return;
 
@@ -97,11 +97,11 @@ const actions: Actions<
     const lastReleaseIndex = releases.items
       .findIndex(({ album }) => album.id === currentLatestReleaseId);
 
-    const addedTrackList = lastReleaseIndex === -1
+    const addedReleaseList = lastReleaseIndex === -1
       ? releases.items.map(convertRelease)
       : releases.items.slice(0, lastReleaseIndex).map(convertRelease);
 
-    commit('UNSHIFT_TO_RELEASE_LIST', addedTrackList);
+    commit('UNSHIFT_TO_RELEASE_LIST', addedReleaseList);
     commit('RESET_NUMBER_OF_UNUPDATED_RELEASES');
   },
 
@@ -109,7 +109,7 @@ const actions: Actions<
     await this.$spotify.library.saveAlbums({ albumIdList });
 
     albumIdList.forEach((albumId) => {
-      dispatch('modifyTrackSavedState', { albumId, isSaved: true });
+      dispatch('modifyReleaseSavedState', { albumId, isSaved: true });
     });
   },
 
@@ -117,21 +117,21 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList });
 
     albumIdList.forEach((albumId) => {
-      dispatch('modifyTrackSavedState', { albumId, isSaved: false });
+      dispatch('modifyReleaseSavedState', { albumId, isSaved: false });
     });
   },
 
-  async modifyTrackSavedState({ state, commit }, { albumId, isSaved }) {
+  async modifyReleaseSavedState({ state, commit }, { albumId, isSaved }) {
     const currentReleaseList = state.releaseList;
     if (currentReleaseList == null) return;
 
     const savedReleaseIndex = currentReleaseList.findIndex((release) => release.id === albumId);
     // ライブラリ一覧を更新
     if (savedReleaseIndex !== -1) {
-      const nextTrackList = [...currentReleaseList];
+      const nextReleaseList = [...currentReleaseList];
       // savedReleaseIndex から1個取り除く
-      nextTrackList.splice(savedReleaseIndex, 1);
-      commit('SET_RELEASE_LIST', nextTrackList);
+      nextReleaseList.splice(savedReleaseIndex, 1);
+      commit('SET_RELEASE_LIST', nextReleaseList);
     }
 
     const [actualIsSaved] = await this.$spotify.library.checkUserSavedAlbums({

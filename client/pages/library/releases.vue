@@ -1,19 +1,19 @@
 <template>
   <Page>
-    <div :class="$style.LibraryTracksPage">
+    <div :class="$style.LibraryReleasesPage">
       <h1
-        :class="$style.LibraryTracksPage__title"
+        :class="$style.LibraryReleasesPage__title"
         v-text="title"
       />
 
-      <div :class="$style.LibraryTracksPage__cardContainer">
+      <div :class="$style.LibraryReleasesPage__cardContainer">
         <ReleaseCard
           v-for="release in releaseList"
           :key="release.id"
           v-bind="release"
           :width="180"
           :max-width="200"
-          :class="$style.LibraryTracksPage__card"
+          :class="$style.LibraryReleasesPage__card"
         />
 
         <div :class="$style.ArtistIdPage__cardSpacer" />
@@ -28,7 +28,7 @@
 
       <div
         ref="loading"
-        :class="$style.LibraryTracksPage__loading"
+        :class="$style.LibraryReleasesPage__loading"
       >
         <v-progress-circular
           v-if="!isFullReleaseList"
@@ -63,11 +63,11 @@ const LIMIT_OF_RELEASES = 30 as const;
     if (app.$getters()['library/releases/releaseListLength'] === 0) {
       await app.$dispatch('library/releases/getSavedReleaseList', { limit: LIMIT_OF_RELEASES });
     } else {
-      await app.$dispatch('library/releases/updateLatestSavedTrackList');
+      await app.$dispatch('library/releases/updateLatestSavedReleaseList');
     }
   },
 })
-export default class LibraryTracksPage extends Vue implements Data {
+export default class LibraryReleasesPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
   title = 'お気に入りのアルバム'
 
@@ -101,7 +101,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 </script>
 
 <style lang="scss" module>
-.LibraryTracksPage {
+.LibraryReleasesPage {
   padding: 16px 3% 48px;
   & > * {
     margin-bottom: 24px;

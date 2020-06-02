@@ -16,9 +16,9 @@ export type RootMutations = {
   'library/releases/SET_RELEASE_LIST': LibraryReleasesMutations['SET_RELEASE_LIST'];
   'library/releases/ADD_TO_RELEASE_LIST': LibraryReleasesMutations['ADD_TO_RELEASE_LIST'];
   'library/releases/UNSHIFT_TO_RELEASE_LIST': LibraryReleasesMutations['UNSHIFT_TO_RELEASE_LIST'];
-  'library/releases/SET_IS_FULL_TRACK_LIST': LibraryReleasesMutations['SET_IS_FULL_RELEASE_LIST'];
-  'library/releases/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryReleasesMutations['INCREMENT_NUMBER_OF_UNUPDATED_RELEASES'];
-  'library/releases/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryReleasesMutations['RESET_NUMBER_OF_UNUPDATED_RELEASES'];
+  'library/releases/SET_IS_FULL_RELEASE_LIST': LibraryReleasesMutations['SET_IS_FULL_RELEASE_LIST'];
+  'library/releases/INCREMENT_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['INCREMENT_NUMBER_OF_UNUPDATED_RELEASES'];
+  'library/releases/RESET_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['RESET_NUMBER_OF_UNUPDATED_RELEASES'];
 };
 
 const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
@@ -49,8 +49,8 @@ const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
   },
 
   INCREMENT_NUMBER_OF_UNUPDATED_RELEASES(state) {
-    const currentNumberOfUnupdatedTracks = state.numberOfUnupdatedReleases;
-    state.numberOfUnupdatedReleases = currentNumberOfUnupdatedTracks + 1;
+    const currentNumberOfUnupdatedReleases = state.numberOfUnupdatedReleases;
+    state.numberOfUnupdatedReleases = currentNumberOfUnupdatedReleases + 1;
   },
 
   RESET_NUMBER_OF_UNUPDATED_RELEASES(state) {
