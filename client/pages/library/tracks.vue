@@ -1,9 +1,10 @@
 <template>
   <Page>
     <div :class="$style.LibraryTracksPage">
-      <h1 :class="$style.LibraryTracksPage__title">
-        お気に入りの曲
-      </h1>
+      <h1
+        :class="$style.LibraryTracksPage__title"
+        v-text="title"
+      />
 
       <PlaylistTrackTable
         v-if="trackList != null"
@@ -52,21 +53,22 @@ const LIMIT_OF_TRACKS = 30 as const;
     }
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
-
-  head() {
-    return {
-      title: 'お気に入りの曲',
-    };
-  },
 })
 export default class LibraryTracksPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
+  title = 'お気に入りの曲'
 
   get trackList(): App.PlaylistTrackDetail[] | null {
     return this.$state().library.tracks.trackList;
   }
   get isFullTrackList(): boolean {
     return this.$state().library.tracks.isFullTrackList;
+  }
+
+  head() {
+    return {
+      title: this.title,
+    };
   }
 
   mounted() {
@@ -94,7 +96,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 .LibraryTracksPage {
   padding: 16px 3% 48px;
   & > * {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
   &__table {
     width: calc((100vw - #{g-navigation-drawer-width}) * 0.94);
