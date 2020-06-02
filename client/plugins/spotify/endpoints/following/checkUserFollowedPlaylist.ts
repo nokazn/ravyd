@@ -5,18 +5,18 @@ export const checkUserFollowedPlaylist = (context: Context) => {
 
   return ({
     playlistId,
-    idList,
+    playlistIdList,
   }: {
     playlistId: string
-    idList: string[]
+    playlistIdList: string[]
   }): Promise<boolean[]> => {
-    const { length } = idList;
+    const { length } = playlistIdList;
     const maxLength = 5;
     if (length > maxLength) {
-      throw new Error(`idList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
+      throw new Error(`playlistIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
     }
 
-    const ids = idList.join(',');
+    const ids = playlistIdList.join(',');
     return app.$spotifyApi.$get(`/playlists/${playlistId}/followers/contains`, {
       params: {
         ids,

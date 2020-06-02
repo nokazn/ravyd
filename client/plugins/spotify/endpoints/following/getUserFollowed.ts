@@ -10,10 +10,10 @@ export const getUserFollowed = (context: Context) => {
     after,
   }: {
     type: 'artist'
-    limit: number
-    after: string
-  }): Promise<{ artists: SpotifyAPI.Artist[] | undefined}> => {
-    if (limit < 1 || limit > 50) {
+    limit?: number
+    after?: string
+  }): Promise<{ artists: SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined}> => {
+    if (limit != null && (limit < 1 || limit > 50)) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
     return app.$spotifyApi.$get('/me/following', {

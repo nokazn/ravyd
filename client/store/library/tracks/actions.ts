@@ -38,7 +38,7 @@ const actions: Actions<
   async getSavedTrackList({
     state, commit, getters, rootGetters,
   }, payload) {
-    // すでに全楽曲を取得している場合は何もしない
+    // すでに全データを取得している場合は何もしない
     if (state.isFullTrackList) return;
 
     const limit = payload?.limit ?? 30;
@@ -63,7 +63,7 @@ const actions: Actions<
 
     commit('ADD_TO_TRACK_LIST', trackList);
 
-    // limit 以下の個数が返ってきた場合、これをもってすべての曲が取得されたとする
+    // limit 以下の個数が返ってきた場合、これをもって全データが取得されたとする
     if (trackList.length < limit) {
       commit('SET_IS_FULL_TRACK_LIST', true);
     }
@@ -124,7 +124,10 @@ const actions: Actions<
     await this.$spotify.library.saveTracks({ trackIdList });
 
     trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', { trackId, isSaved: true });
+      dispatch('modifyTrackSavedState', {
+        trackId,
+        isSaved: true,
+      });
     });
   },
 
@@ -132,7 +135,10 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedTracks({ trackIdList });
 
     trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', { trackId, isSaved: false });
+      dispatch('modifyTrackSavedState', {
+        trackId,
+        isSaved: false,
+      });
     });
   },
 

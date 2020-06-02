@@ -224,17 +224,18 @@ export default class ArtistIdPage extends Vue implements AsyncData {
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.isFollowing = nextFollowingState;
-    const params = {
-      type: 'artist' as const,
-      idList: [this.artistInfo.id],
-    };
+
+    const artistIdList = [this.artistInfo.id];
     if (nextFollowingState) {
-      await this.$spotify.following.follow(params);
+      await this.$dispatch('library/artists/followArtists', artistIdList);
     } else {
-      await this.$spotify.following.unfollow(params);
+      await this.$dispatch('library/artists/unfollowArtists', artistIdList);
     }
-    // @todo
-    [this.isFollowing] = await this.$spotify.following.checkUserFollowed(params);
+
+    [this.isFollowing] = await this.$spotify.following.checkUserFollowed({
+      type: 'artist',
+      artistIdList,
+    });
   }
 }
 </script>

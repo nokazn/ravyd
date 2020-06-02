@@ -42,7 +42,7 @@ const actions: Actions<
   async getSavedReleaseList({
     state, commit, getters, rootGetters,
   }, payload) {
-    // すでに全リリースを取得している場合は何もしない
+    // すでに全データを取得している場合は何もしない
     if (state.isFullReleaseList) return;
 
     const limit = payload?.limit ?? 30;
@@ -64,7 +64,7 @@ const actions: Actions<
 
     commit('ADD_TO_RELEASE_LIST', releaseList);
 
-    // limit 以下の個数が返ってきた場合、これをもってすべての曲が取得されたとする
+    // limit 以下の個数が返ってきた場合、これをもって全データが取得されたとする
     if (releaseList.length < limit) {
       commit('SET_IS_FULL_RELEASE_LIST', true);
     }
@@ -109,7 +109,10 @@ const actions: Actions<
     await this.$spotify.library.saveAlbums({ albumIdList });
 
     albumIdList.forEach((albumId) => {
-      dispatch('modifyReleaseSavedState', { albumId, isSaved: true });
+      dispatch('modifyReleaseSavedState', {
+        albumId,
+        isSaved: true,
+      });
     });
   },
 
@@ -117,7 +120,10 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList });
 
     albumIdList.forEach((albumId) => {
-      dispatch('modifyReleaseSavedState', { albumId, isSaved: false });
+      dispatch('modifyReleaseSavedState', {
+        albumId,
+        isSaved: false,
+      });
     });
   },
 
@@ -125,7 +131,8 @@ const actions: Actions<
     const currentReleaseList = state.releaseList;
     if (currentReleaseList == null) return;
 
-    const savedReleaseIndex = currentReleaseList.findIndex((release) => release.id === albumId);
+    const savedReleaseIndex = currentReleaseList
+      .findIndex((release) => release.id === albumId);
     // ライブラリ一覧を更新
     if (savedReleaseIndex !== -1) {
       const nextReleaseList = [...currentReleaseList];
