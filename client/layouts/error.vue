@@ -52,7 +52,7 @@ export default Vue.extend({
 .ErrorPage {
   height: calc(100vh - #{$g-footer-height});
   &__container {
-    padding: 60px 4%;
+    padding: 16px 4%;
   }
 }
 </style>
