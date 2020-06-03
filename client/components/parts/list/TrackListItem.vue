@@ -35,15 +35,9 @@
                 $style.TrackListItem__contentTitle,
                 textColor,
               ]"
+              :title="name"
+              class="g-ellipsis-text"
               v-text="name"
-            />
-          </div>
-
-          <div :class="$style['TrackListItem__content--right']">
-            <explicit-chip v-if="explicit" />
-            <span
-              :class="$style.TrackListItem__actionDuration"
-              v-text="duration"
             />
           </div>
 
@@ -55,6 +49,13 @@
 
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
+          <explicit-chip v-if="explicit" />
+
+          <span
+            :class="$style.TrackListItem__actionDuration"
+            v-text="duration"
+          />
+
           <v-btn icon>
             <v-icon>
               mdi-dots-horizontal
@@ -214,20 +215,27 @@ export default Vue.extend({
   &__content {
     display: flex;
     justify-content: space-between;
-    &--left, &--right {
+    overflow-x: hidden;
+    &--left {
       display: flex;
       align-items: center;
+      overflow-x: hidden;
       & > * {
         margin-right: 12px;
       }
     }
     &Title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+      line-height: 1.1rem;
     }
   }
+
   &__action {
+    & > *:not(:last-child) {
+      margin-right: 12px;
+    }
     &Duration {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
     }
   }
 }
