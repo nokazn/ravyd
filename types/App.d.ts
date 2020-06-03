@@ -111,8 +111,10 @@ export namespace App {
   }
 
   export type PlaylistCardInfo = {
-    artworkSrc: string
     id: string
     name: string
+    description: string | null
+    uri: string
+    artworkSrc: string
   }
 }

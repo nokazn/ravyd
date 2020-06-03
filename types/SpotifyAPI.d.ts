@@ -281,6 +281,25 @@ export namespace SpotifyAPI {
     }
   }
 
+  export type SimplePlaylist = {
+    collaborative: boolean
+    description: string | null
+    external_urls: ExternalUrl
+    href: string
+    id: string
+    images: Image[]
+    name: string
+    owner: Auth.UserData
+    public: boolean | null
+    snapshot_id: string
+    tracks: Track
+    type: 'playlist'
+    uri: string
+  }
+  export type Playlist = SimplePlaylist & {
+    followers: Followers
+  }
+
   export type RepeatState = 'off' | 'track' | 'context'
 
   export type Restriction = {
