@@ -1,5 +1,5 @@
 <template>
-  <v-card class="two-columns-list-card">
+  <v-card :class="$style.TwoColumnsListCard">
     <v-list>
       <template
         v-for="(item, index) in itemList"
@@ -8,13 +8,9 @@
           :key="item.title"
         >
           <v-list-item-content>
-            <v-list-item-title class="two-columns-list-card__content">
-              <div>
-                {{ item.title }}
-              </div>
-              <div>
-                {{ item.value }}
-              </div>
+            <v-list-item-title :class="$style.TwoColumnsListCard__content">
+              <div v-text="item.title" />
+              <div v-text="item.value" />
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -47,8 +43,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.two-columns-list-card {
+<style lang="scss" module>
+.TwoColumnsListCard {
   &__content {
     display: grid;
     grid-template-columns: 1fr 1fr;

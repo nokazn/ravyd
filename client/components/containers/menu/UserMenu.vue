@@ -121,16 +121,6 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.user-menu__button {
-  display: flex;
-  align-items: center;
-  & > *:not(:last-child) {
-    margin-right: 6px;
-  }
-}
-</style>
-
 <style lang="scss" module>
 .UserMenu {
   &__container {
