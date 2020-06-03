@@ -27,15 +27,10 @@
       <div :class="$style.ArtistIdPage__cardSpacer" />
     </div>
 
-    <div
-      ref="loading"
-      :class="$style.LibraryArtistsPage__loading"
-    >
-      <v-progress-circular
-        v-if="!isFullArtistList"
-        indeterminate
-      />
-    </div>
+    <IntersectionLoadingCircle
+      :is-loading="!isFullArtistList"
+      @on-appeared="onLoadingCircleAppeared"
+    />
   </div>
 </template>
 
@@ -43,6 +38,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { App } from '~~/types';
 
 interface Data {
@@ -55,11 +51,14 @@ const LIMIT_OF_ARTISTS = 30 as const;
 @Component({
   components: {
     ArtistCard,
+    IntersectionLoadingCircle,
   },
 
   async fetch({ app }): Promise<void> {
     if (app.$getters()['library/artists/artistListLength'] === 0) {
-      await app.$dispatch('library/artists/getSavedArtistList', { limit: LIMIT_OF_ARTISTS });
+      await app.$dispatch('library/artists/getSavedArtistList', {
+        limit: LIMIT_OF_ARTISTS,
+      });
     } else {
       await app.$dispatch('library/artists/updateLatestSavedArtistList');
     }
@@ -82,18 +81,8 @@ export default class LibraryArtistsPage extends Vue implements Data {
     };
   }
 
-  mounted() {
-    const loading = this.$refs.loading as HTMLDivElement;
-
-    // loading が表示されたら新たに読み込む
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.$dispatch('library/artists/getSavedArtistList');
-        }
-      });
-    });
-    this.observer.observe(loading);
+  onLoadingCircleAppeared() {
+    this.$dispatch('library/artists/getSavedArtistList');
   }
 }
 </script>

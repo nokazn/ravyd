@@ -27,15 +27,10 @@
       <div :class="$style.GenreIdPage__spacer" />
     </div>
 
-    <div
-      ref="loading"
-      :class="$style.GenreIdPage__loading"
-    >
-      <v-progress-circular
-        v-if="!isFullPlaylists"
-        indeterminate
-      />
-    </div>
+    <IntersectionLoadingCircle
+      :is-loading="!isFullPlaylists"
+      @on-appeared="onLoadingCircleAppeared"
+    />
   </div>
 </template>
 
@@ -43,6 +38,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { getCategory, getCategoryPlaylist } from '~/scripts/localPlugins/genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
 import { App } from '~~/types';
@@ -54,16 +50,13 @@ interface AsyncData {
   isFullPlaylists: boolean
 }
 
-interface Data {
-  observer: IntersectionObserver | undefined
-}
-
 const MAX_IMAGE_SIZE = 220;
 const LIMIT_OF_PLAYLISTS = 30;
 
 @Component({
   components: {
     PlaylistCard,
+    IntersectionLoadingCircle,
   },
 
   validate({ params }) {
@@ -88,30 +81,11 @@ const LIMIT_OF_PLAYLISTS = 30;
     };
   },
 })
-export default class GenreIdPage extends Vue implements AsyncData, Data {
+export default class GenreIdPage extends Vue implements AsyncData {
   maxImageSize = MAX_IMAGE_SIZE
   categoryInfo: App.CategoryInfo | null = null;
   playlists: App.PlaylistCardInfo[] | null = null;
   isFullPlaylists = false;
-
-  observer: IntersectionObserver | undefined = undefined;
-
-  mounted() {
-    const loading = this.$refs.loading as HTMLDivElement;
-
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.getCategoryPlaylist();
-        }
-      });
-    });
-    this.observer.observe(loading);
-  }
-
-  beforeDestroy() {
-    if (this.observer != null) this.observer.disconnect();
-  }
 
   async getCategoryPlaylist() {
     if (this.isFullPlaylists) return;
@@ -125,7 +99,10 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
       limit: LIMIT_OF_PLAYLISTS,
       offset,
     });
-    if (playlists == null) return;
+    if (playlists == null) {
+      this.isFullPlaylists = true;
+      return;
+    }
 
     const addedPlaylists = playlists.items.map(convertPlaylistForCard(this.maxImageSize));
     this.playlists = this.playlists != null
@@ -135,6 +112,10 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
     if (playlists.next == null) {
       this.isFullPlaylists = true;
     }
+  }
+
+  onLoadingCircleAppeared() {
+    this.getCategoryPlaylist();
   }
 }
 </script>
@@ -163,12 +144,6 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
   }
   &__spacer {
     height: 0;
-  }
-
-  &__loading {
-    display: flex;
-    justify-content: center;
-    width: 100%;
   }
 }
 </style>

@@ -25,15 +25,10 @@
       <div :class="$style.ArtistIdPage__cardSpacer" />
     </div>
 
-    <div
-      ref="loading"
-      :class="$style.LibraryReleasesPage__loading"
-    >
-      <v-progress-circular
-        v-if="!isFullReleaseList"
-        indeterminate
-      />
-    </div>
+    <IntersectionLoadingCircle
+      :is-loading="!isFullReleaseList"
+      @on-appeared="onLoadingCircleAppeared"
+    />
   </div>
 </template>
 
@@ -41,10 +36,10 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { App } from '~~/types';
 
 interface Data {
-  observer: IntersectionObserver | undefined
   title: string
 }
 
@@ -53,18 +48,20 @@ const LIMIT_OF_RELEASES = 30 as const;
 @Component({
   components: {
     ReleaseCard,
+    IntersectionLoadingCircle,
   },
 
   async fetch({ app }): Promise<void> {
     if (app.$getters()['library/releases/releaseListLength'] === 0) {
-      await app.$dispatch('library/releases/getSavedReleaseList', { limit: LIMIT_OF_RELEASES });
+      await app.$dispatch('library/releases/getSavedReleaseList', {
+        limit: LIMIT_OF_RELEASES,
+      });
     } else {
       await app.$dispatch('library/releases/updateLatestSavedReleaseList');
     }
   },
 })
 export default class LibraryReleasesPage extends Vue implements Data {
-  observer: IntersectionObserver | undefined = undefined
   title = 'お気に入りのアルバム'
 
   get releaseList(): App.ReleaseCardInfo[] | null {
@@ -80,18 +77,8 @@ export default class LibraryReleasesPage extends Vue implements Data {
     };
   }
 
-  mounted() {
-    const loading = this.$refs.loading as HTMLDivElement;
-
-    // loading が表示されたら新たに読み込む
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.$dispatch('library/releases/getSavedReleaseList');
-        }
-      });
-    });
-    this.observer.observe(loading);
+  onLoadingCircleAppeared() {
+    this.$dispatch('library/releases/getSavedReleaseList');
   }
 }
 </script>

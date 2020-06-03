@@ -50,6 +50,7 @@ const actions: Actions<
     });
     if (artists == null) {
       commit('SET_ARTIST_LIST', null);
+      commit('SET_IS_FULL_ARTIST_LIST', true);
       return;
     }
 
@@ -57,8 +58,7 @@ const actions: Actions<
 
     commit('ADD_TO_ARTIST_LIST', artistList);
 
-    // limit 以下の個数が返ってきた場合、これをもって全データが取得されたとする
-    if (artistList.length < limit) {
+    if (artists.next == null) {
       commit('SET_IS_FULL_ARTIST_LIST', true);
     }
   },

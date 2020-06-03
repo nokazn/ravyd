@@ -25,6 +25,11 @@
       <div :class="$style.BrowsePage__spacer" />
       <div :class="$style.BrowsePage__spacer" />
     </div>
+
+    <IntersectionLoadingCircle
+      :is-loading="!isFullCategoryList"
+      @on-appeared="onLoadingCircleAppeared"
+    />
   </div>
 </template>
 
@@ -32,41 +37,88 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { getCategoryList } from '~/scripts/localPlugins/browse';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
-type AsyncData = {
+interface AsyncData {
   maxImageSize: number
+  isFullCategoryList: boolean
   categoryList: App.CategoryInfo[] | null
 }
 
-type Data = {
+interface Data {
   title: string
 }
+
+const MAX_IMAGE_SIZE = 220;
+const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
   components: {
     CategoryCard,
+    IntersectionLoadingCircle,
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const maxImageSize = 220;
+    const maxImageSize = MAX_IMAGE_SIZE;
     const categoryList = await getCategoryList(context, maxImageSize);
-    console.log(categoryList);
+    const isFullCategoryList = categoryList == null
+      || (categoryList != null && categoryList.length < LIMIT_OF_CATEGORIES);
 
     return {
       maxImageSize,
+      isFullCategoryList,
       categoryList,
     };
   },
 })
-export default class BrowsePage extends Vue implements Data {
-  title = '見つける'
+export default class BrowsePage extends Vue implements AsyncData, Data {
+  maxImageSize = MAX_IMAGE_SIZE;
+  isFullCategoryList = false;
+  categoryList: App.CategoryInfo[] | null = null;
+
+  title = '見つける';
 
   head() {
     return {
       title: this.title,
     };
+  }
+
+  async getCategoryList() {
+    if (this.isFullCategoryList) return;
+
+    const country = this.$getters()['auth/userCountryCode'];
+    const offset = this.categoryList?.length;
+    const { categories } = await this.$spotify.browse.getCategoryList({
+      country,
+      limit: LIMIT_OF_CATEGORIES,
+      offset,
+    });
+    if (categories == null) {
+      this.isFullCategoryList = true;
+      return;
+    }
+
+    const addedCategoryList = categories.items.map((category) => ({
+      id: category.id,
+      name: category.name,
+      artworkSrc: getImageSrc(category.icons, this.maxImageSize),
+    }));
+
+    this.categoryList = this.categoryList != null
+      ? [...this.categoryList, ...addedCategoryList]
+      : addedCategoryList;
+
+    if (categories.next == null) {
+      this.isFullCategoryList = true;
+    }
+  }
+
+  onLoadingCircleAppeared() {
+    this.getCategoryList();
   }
 }
 </script>

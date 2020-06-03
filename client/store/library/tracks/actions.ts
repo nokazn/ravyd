@@ -53,6 +53,7 @@ const actions: Actions<
     });
     if (tracks == null) {
       commit('SET_TRACK_LIST', null);
+      commit('SET_IS_FULL_TRACK_LIST', true);
       return;
     }
 
@@ -63,8 +64,7 @@ const actions: Actions<
 
     commit('ADD_TO_TRACK_LIST', trackList);
 
-    // limit 以下の個数が返ってきた場合、これをもって全データが取得されたとする
-    if (trackList.length < limit) {
+    if (tracks.next == null) {
       commit('SET_IS_FULL_TRACK_LIST', true);
     }
   },

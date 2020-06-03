@@ -12,15 +12,10 @@
       :class="$style.LibraryTracksPage__table"
     />
 
-    <div
-      ref="loading"
-      :class="$style.LibraryTracksPage__loading"
-    >
-      <v-progress-circular
-        v-if="!isFullTrackList"
-        indeterminate
-      />
-    </div>
+    <IntersectionLoadingCircle
+      :is-loading="!isFullTrackList"
+      @on-appeared="onLoadingCircleAppear"
+    />
   </div>
 </template>
 
@@ -28,6 +23,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { App } from '~~/types';
 
 interface Data {
@@ -39,6 +35,7 @@ const LIMIT_OF_TRACKS = 30 as const;
 @Component({
   components: {
     PlaylistTrackTable,
+    IntersectionLoadingCircle,
   },
 
   async fetch({ app }): Promise<void> {
@@ -67,23 +64,8 @@ export default class LibraryTracksPage extends Vue implements Data {
     };
   }
 
-  mounted() {
-    const loading = this.$refs.loading as HTMLDivElement;
-
-    // loading が表示されたら新たに読み込む
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.$dispatch('library/tracks/getSavedTrackList');
-        }
-      });
-    });
-    this.observer.observe(loading);
-  }
-
-  beforeDestroy() {
-    if (this.observer != null) this.observer.disconnect();
-    this.$dispatch('library/tracks/removeUnsavedTracks');
+  onLoadingCircleAppear() {
+    this.$dispatch('library/tracks/getSavedTrackList');
   }
 }
 </script>

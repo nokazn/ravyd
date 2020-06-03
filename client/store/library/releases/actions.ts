@@ -57,6 +57,7 @@ const actions: Actions<
     });
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
+      commit('SET_IS_FULL_RELEASE_LIST', true);
       return;
     }
 
@@ -64,8 +65,7 @@ const actions: Actions<
 
     commit('ADD_TO_RELEASE_LIST', releaseList);
 
-    // limit 以下の個数が返ってきた場合、これをもって全データが取得されたとする
-    if (releaseList.length < limit) {
+    if (releases.next == null) {
       commit('SET_IS_FULL_RELEASE_LIST', true);
     }
   },
