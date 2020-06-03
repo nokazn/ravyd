@@ -12,7 +12,7 @@
         :key="id"
         :to="artistPath(id)"
         :title="name"
-        @click.stop
+        @click.native.stop="onClicked"
       >
         {{ name }}
       </nuxt-link><span
@@ -29,6 +29,10 @@ import Vue, { PropType } from 'vue';
 
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
+
+export type On = {
+  'on-clicked': undefined
+}
 
 export default Vue.extend({
   props: {
@@ -48,6 +52,12 @@ export default Vue.extend({
   computed: {
     artistPath(): (id: string) => string {
       return (id: string) => `/artists/${id}`;
+    },
+  },
+
+  methods: {
+    onClicked() {
+      this.$emit('on-clicked');
     },
   },
 });

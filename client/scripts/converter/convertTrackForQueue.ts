@@ -13,6 +13,7 @@ export const convertTrackForQueue = (isPlaying: boolean, artworkSize?: number) =
     id: convertUriToId(artist.uri),
     name: artist.name,
   })),
-  albumName: track.album.name,
+  releaseName: track.album.name,
+  releaseId: convertUriToId(track.album.uri),
   artworkSrc: getImageSrc(track.album.images, artworkSize),
 });

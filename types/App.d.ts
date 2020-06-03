@@ -45,7 +45,8 @@ export namespace App {
       id: string
       name: string
     }[]
-    albumName: string
+    releaseName: string
+    releaseId: string
     artworkSrc: string
   }
 

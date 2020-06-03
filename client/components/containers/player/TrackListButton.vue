@@ -4,13 +4,14 @@
     top
     left
     :nudge-top="40"
+    :max-width="500"
   >
     <template #activator="{ on }">
       <v-btn
         icon
         title="再生リスト"
         v-on="on"
-        @click="onTrackListButtonClicked"
+        @click="toggleTrackList"
       >
         <v-icon :size="20">
           mdi-playlist-play
@@ -51,11 +52,13 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <span
+              <div
                 :class="{
                   [$style.DeviceSelectMenuList__listItemTitle]: true,
                   'cyan--text text--accent-2': track.isPlaying
                 }"
+                class="g-ellipsis-text"
+                :title="track.name"
                 v-text="track.name"
               />
 
@@ -65,10 +68,31 @@
                   track.isPlaying ? 'cyan--text text--accent-2' : 'grey--text text--lighten-1',
                 ]"
               >
-                <span v-text="track.albumName" />
-                <ArtistNames :artist-list="track.artistList" />
+                <nuxt-link
+                  :to="`/releases/${track.releaseId}`"
+                  :title="track.releaseName"
+                  class="g-ellipsis-text"
+                  @click.native.stop="toggleTrackList"
+                  v-text="track.releaseName"
+                />
+                <ArtistNames
+                  :artist-list="track.artistList"
+                  :title="artistNames(track.artistList)"
+                  class="g-ellipsis-text"
+                  @on-clicked="toggleTrackList"
+                />
               </v-list-item-subtitle>
             </v-list-item-content>
+
+            <v-list-item-action>
+              <v-icon
+                v-if="track.isPlaying"
+                color="cyan accent-2"
+                title="再生中"
+              >
+                mdi-volume-high
+              </v-icon>
+            </v-list-item-action>
           </v-list-item>
 
           <div :class="$style.DeviceSelectMenuList__moreButton">
@@ -97,6 +121,7 @@ import { App } from '~~/types';
 
 type Data = {
   isShown: boolean
+  artistNames: (artistList: App.SimpleArtistInfo[]) => string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
@@ -109,6 +134,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
+      artistNames: (artistList) => artistList.map((artist) => artist.name).join(', '),
       MENU_BACKGROUND_COLOR,
     };
   },
@@ -121,7 +147,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onTrackListButtonClicked() {
+    toggleTrackList() {
       this.isShown = !this.isShown;
     },
     onListItemClickedHandler(index: number, uri: string) {
@@ -149,15 +175,17 @@ export default Vue.extend({
   }
   &__listItemTitle {
     font-size: 0.9em;
+    line-height: 1.1rem;
   }
   &__listItemSubtitle {
-    font-size: 0.7em!important;
+    font-size: 0.8em!important;
+    line-height: 1.1rem!important;
   }
 
   &__moreButton {
     display: flex;
     justify-content: center;
-    margin: 4px 0;
+    margin-top: 8px;
   }
 }
 </style>

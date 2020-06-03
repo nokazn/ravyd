@@ -4,6 +4,7 @@ import { PlayerState } from './state';
 import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
+import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import { SpotifyAPI, App } from '~~/types';
 
 export type PlayerGetters = {
@@ -68,7 +69,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         name: state.trackName!,
         uri: state.trackUri!,
         artistList: state.artistList!,
-        albumName: state.albumName!,
+        releaseName: state.albumName!,
+        releaseId: convertUriToId(state.albumUri!),
         artworkSrc: getImageSrc(state.albumArtWorkList!, artworkSize),
       };
       const previousTrackList = state.previousTrackList
