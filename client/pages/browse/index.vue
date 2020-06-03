@@ -6,7 +6,7 @@
       v-if="categoryList != null"
       :class="$style.BrowsePage__categoryImageContainer"
     >
-      <CategoryImage
+      <CategoryCard
         v-for="{ id, name, artworkSrc } in categoryList"
         :id="id"
         :key="id"
@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import CategoryImage from '~/components/parts/avatar/CategoryImage.vue';
+import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import { getCategoryList } from '~/scripts/localPlugins/browse';
 import { App } from '~~/types';
 
@@ -46,7 +46,7 @@ type Data = {
 
 @Component({
   components: {
-    CategoryImage,
+    CategoryCard,
   },
 
   async asyncData(context): Promise<AsyncData> {
