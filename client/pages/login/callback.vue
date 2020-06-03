@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.progress_circular">
+  <div :class="$style.CallbackPage">
     <v-progress-circular
       indeterminate
       :size="50"
@@ -22,7 +22,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.progress_circular {
+.CallbackPage {
   width: 100%;
   height: 100%;
   display: flex;

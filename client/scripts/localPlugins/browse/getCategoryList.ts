@@ -14,7 +14,7 @@ export const getCategoryList = async (
   });
   if (categories == null) return null;
 
-  const categoryList = categories?.items.map((category) => ({
+  const categoryList = categories.items.map((category) => ({
     id: category.id,
     name: category.name,
     artworkSrc: getImageSrc(category.icons, artworkSize),
