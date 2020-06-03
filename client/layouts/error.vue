@@ -1,17 +1,12 @@
 <template>
-  <v-app
-    dark
-    :class="$style.ErrorPage"
-  >
-    <main :class="$style.ErrorPage__container">
-      <h1>
-        {{ errorMessage }}
-      </h1>
-      <NuxtLink to="/">
-        トップへ戻る
-      </NuxtLink>
-    </main>
-  </v-app>
+  <main :class="$style.ErrorPage">
+    <h1>
+      {{ errorMessage }}
+    </h1>
+    <NuxtLink to="/">
+      トップへ戻る
+    </NuxtLink>
+  </main>
 </template>
 
 <script lang="ts">
@@ -50,9 +45,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ErrorPage {
-  height: calc(100vh - #{$g-footer-height});
-  &__container {
-    padding: 16px 4%;
-  }
+  padding: 16px 4%;
 }
 </style>
