@@ -42,7 +42,7 @@ export default Vue.extend({
   },
 
   computed: {
-    userData(): SpotifyAPI.Auth.UserData | null {
+    userData(): SpotifyAPI.UserData | null {
       return this.$state().auth.userData ?? null;
     },
     itemList(): ItemList | null {

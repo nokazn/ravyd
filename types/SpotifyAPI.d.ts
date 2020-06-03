@@ -33,28 +33,6 @@ export namespace SpotifyAPI {
       expires_in: number;
       refresh_token?: string;
     }
-    type UserData = {
-      country: Country
-      display_name: string | null
-      email: string
-      explicit_content: {
-        filter_enabled: boolean
-        filter_locked: boolean
-      }
-      external_urls: {
-        [key: string]: string
-      }
-      followers: {
-        href: string | null,
-        total: number
-      }
-      href: string
-      id: string
-      images: Image[]
-      product: string
-      type: string
-      uri: string
-    }
   }
 
   export type SimpleAlbum = {
@@ -289,7 +267,7 @@ export namespace SpotifyAPI {
     id: string
     images: Image[]
     name: string
-    owner: Auth.UserData
+    owner: UserData
     public: boolean | null
     snapshot_id: string
     tracks: Track
@@ -356,5 +334,28 @@ export namespace SpotifyAPI {
     album: SimpleAlbum
     external_ids: ExternalId
     popularity: string
+  }
+
+  export type UserData = {
+    country: Country
+    display_name: string | null
+    email: string
+    explicit_content: {
+      filter_enabled: boolean
+      filter_locked: boolean
+    }
+    external_urls: {
+      [key: string]: string
+    }
+    followers: {
+      href: string | null,
+      total: number
+    }
+    href: string
+    id: string
+    images: Image[]
+    product: string
+    type: string
+    uri: string
   }
 }

@@ -5,7 +5,7 @@ import { SpotifyAPI } from '~~/types';
 
 export type AuthMutations = {
   SET_TOKEN: SpotifyAPI.Auth.TokenResponseData['access_token'] | null,
-  SET_USER_DATA: SpotifyAPI.Auth.UserData | null
+  SET_USER_DATA: SpotifyAPI.UserData | null
 }
 
 export type RootMutations = {
