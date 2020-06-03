@@ -104,7 +104,14 @@ export namespace App {
     overTwoWeeksAgo: boolean
   }
 
-  export type CategoryInfo = {
+  export type CategoryCardInfo = {
+    href: string
+    artworkSrc: string
+    id: string
+    name: string
+  }
+
+  export type PlaylistCardInfo = {
     href: string
     artworkSrc: string
     id: string

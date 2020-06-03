@@ -6,7 +6,7 @@ import { getImageSrc } from '~/scripts/converter/getImageSrc';
 export const getCategoryList = async (
   { app }: Context,
   artworkSize: number,
-): Promise<App.CategoryInfo[] | undefined> => {
+): Promise<App.CategoryCardInfo[] | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { categories } = await app.$spotify.browse.getCategoryList({
     country,
