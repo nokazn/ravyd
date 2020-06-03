@@ -103,4 +103,11 @@ export namespace App {
     title: string
     overTwoWeeksAgo: boolean
   }
+
+  export type CategoryInfo = {
+    href: string
+    artworkSrc: string
+    id: string
+    name: string
+  }
 }

@@ -105,6 +105,13 @@ export namespace SpotifyAPI {
     type TopTracks = Paging<Track>
   }
 
+  export type Category = {
+    href: string
+    icons: Image[]
+    id: string
+    name: string
+  }
+
   export type Context = {
     // @todo
     type: 'artist' | 'playlist' | 'album' | 'track' | 'episode'| string
