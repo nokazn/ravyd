@@ -37,7 +37,7 @@ import { App } from '~~/types';
 
 type AsyncData = {
   maxImageSize: number
-  categoryList: App.CategoryCardInfo[] | null
+  categoryList: App.CategoryInfo[] | null
 }
 
 type Data = {
