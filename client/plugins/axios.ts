@@ -1,32 +1,34 @@
 import { Plugin } from '@nuxt/types';
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 const plugin: Plugin = ({ $axios, app }, inject) => {
-  $axios.onRequest(() => {
-    const token = app.$state().auth.accessToken;
-    if (token == null) return;
-
-    const spotifyApi = $axios.create({
-      baseURL: process.env.spotifyUrl,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    inject('spotifyApi', spotifyApi);
-  });
-
-  $axios.onResponseError(async (err) => {
-    console.error({ err });
-    if (err.response?.status === 401) await app.$dispatch('auth/refreshAccessToken');
-  });
-
   const spotifyApi = $axios.create({
     baseURL: process.env.spotifyUrl,
+  }) as NuxtAxiosInstance;
+
+  spotifyApi.onRequest((config) => {
+    const token = app.$state().auth.accessToken;
+    // eslint-disable-next-line no-param-reassign
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
   });
+
+  spotifyApi.onResponseError((err) => {
+    console.error({ err });
+    if (err.response?.status === 401) {
+      app.$dispatch('auth/refreshAccessToken');
+    }
+  });
+
   inject('spotifyApi', spotifyApi);
 
   const serverApi = $axios.create({
     baseURL: process.env.baseUrl,
+    withCredentials: true,
   });
+
   inject('serverApi', serverApi);
 };
 

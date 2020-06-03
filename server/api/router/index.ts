@@ -13,7 +13,7 @@ router.get('/auth', async (req, res) => {
   const data = await redisClient.get(req.sessionID!);
   if (data != null) {
     const token: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
-    return res.send({ access_token: token.access_token });
+    return res.send({ accessToken: token.access_token });
   }
 
   if (process.env.SPOTIFY_CLIENT_ID == null || process.env.BASE_URL == null) {
@@ -81,7 +81,7 @@ router.get('/auth/refresh', async (req, res) => {
   return res.send(token?.access_token);
 });
 
-router.post('/auth/callback', async (req, res) => {
+router.post('/auth/login/callback', async (req, res) => {
   const { code }: { code?: string } = req.body;
 
   if (typeof code !== 'string') {
@@ -98,6 +98,7 @@ router.post('/auth/callback', async (req, res) => {
     return res.status(400).send(error || '認証時にエラーが発生しました。\n');
   }
 
+  // code と token を交換する
   const token = await getAccessToken(code);
   redisClient.set(req.sessionID!, JSON.stringify(token));
 

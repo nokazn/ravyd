@@ -35,8 +35,6 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { SpotifyAPI } from '~~/types';
-
 export default Vue.extend({
   computed: {
     isLoggedin(): boolean | null {
@@ -45,26 +43,8 @@ export default Vue.extend({
   },
 
   methods: {
-    async onAuthButtonClicked(): Promise<void> {
-      const res: SpotifyAPI.Auth.AuthorizationResponse<'access_token' | 'url'> | null = await this.$axios({
-        method: 'GET',
-        url: `${process.env.baseUrl}/api/auth`,
-      }).catch((err: Error) => {
-        console.error({ err });
-        return null;
-      });
-
-      if (res?.data.access_token != null) {
-        this.$commit('auth/SET_TOKEN', res.data.access_token);
-        await this.$dispatch('auth/getUserData');
-
-        this.$router.push('/');
-        return;
-      } if (res?.data.url != null) {
-        window.location.href = res.data.url;
-        return;
-      }
-      console.error('トークン取得時にエラーが発生しました。');
+    onAuthButtonClicked() {
+      this.$dispatch('auth/login');
     },
   },
 

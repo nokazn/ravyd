@@ -2,10 +2,8 @@ import { Merge } from '~~/types/utility-types';
 
 export namespace SpotifyAPI {
   export namespace Auth {
-    type AuthorizationResponse<K extends 'access_token' | 'url'> = {
-      data: {
-        [key in K]: string
-      }
+    type AuthorizationResponse<K extends 'accessToken' | 'url'> = {
+      [key in K]: string
     }
     type CodeRequestBody = {
       client_id: string;
