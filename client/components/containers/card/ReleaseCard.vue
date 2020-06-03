@@ -158,7 +158,6 @@ export default Vue.extend({
       this.$router.push(this.releasePath);
     },
     onMediaButtonClicked() {
-      console.log('on-media-button');
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isReleaseSet) {
         this.$dispatch('player/pause');

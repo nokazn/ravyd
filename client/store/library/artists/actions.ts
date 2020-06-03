@@ -72,7 +72,6 @@ const actions: Actions<
       type: 'artist',
       limit,
     });
-    console.log(artists);
     if (artists == null) {
       commit('SET_ARTIST_LIST', null);
       return;

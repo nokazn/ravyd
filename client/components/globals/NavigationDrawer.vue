@@ -118,12 +118,6 @@ export default Vue.extend({
       return this.$getters()['auth/userDisplayName'];
     },
   },
-
-  methods: {
-    callback(...args: any[]) {
-      console.log(args);
-    },
-  },
 });
 </script>
 
