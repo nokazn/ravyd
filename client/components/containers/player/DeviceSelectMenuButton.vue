@@ -124,7 +124,7 @@ const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
     case 'Computer':
       return 'mdi-laptop';
     case 'Smartphone':
-      return 'mdi-phone';
+      return 'mdi-cellphone';
     case 'Tablet':
       return 'mdi-tablet';
     case 'Speaker':
