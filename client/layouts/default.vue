@@ -7,6 +7,7 @@
       :class="$style.ContentContainer"
       :style="styles"
     >
+      <div :class="$style.Spacer" />
       <nuxt />
     </main>
 
@@ -48,5 +49,9 @@ export default Vue.extend({
 <style lang="scss" module>
 .ContentContainer {
   padding: 0 0 $g-footer-height $g-navigation-drawer-width;
+}
+
+.Spacer {
+  height: $g-header-height;
 }
 </style>

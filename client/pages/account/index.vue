@@ -1,47 +1,43 @@
 <template>
-  <page>
-    <div :class="$style.AccountPage">
-      <h1>アカウント</h1>
+  <div :class="$style.AccountPage">
+    <h1>アカウント</h1>
 
-      <two-columns-list-card
-        v-if="itemList"
-        :item-list="itemList"
-      />
-      <v-skeleton-loader
-        v-else
-        type="list-item"
-      />
+    <TwoColumnsListCard
+      v-if="itemList"
+      :item-list="itemList"
+    />
+    <v-skeleton-loader
+      v-else
+      type="list-item"
+    />
 
-      <v-btn
-        rounded
-        color="cyan darken-3"
-        nuxt
-        to="//www.spotify.com/jp/account/overview/"
-        target="_blank"
+    <v-btn
+      rounded
+      color="cyan darken-3"
+      nuxt
+      to="//www.spotify.com/jp/account/overview/"
+      target="_blank"
+    >
+      <span>
+        アカウント情報を編集
+      </span>
+      <v-icon
+        small
+        :class="$style.AccountPage__editAccountIcon"
       >
-        <span>
-          アカウント情報を編集
-        </span>
-        <v-icon
-          small
-          :class="$style.AccountPage__editAccountIcon"
-        >
-          mdi-open-in-new
-        </v-icon>
-      </v-btn>
-    </div>
-  </page>
+        mdi-open-in-new
+      </v-icon>
+    </v-btn>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Page from '~/components/globals/Page.vue';
 import TwoColumnsListCard, { ItemList } from '~/components/parts/list/TwoColumnsListCard.vue';
 import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
   components: {
-    Page,
     TwoColumnsListCard,
   },
 

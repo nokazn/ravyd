@@ -1,50 +1,47 @@
 <template>
-  <Page>
-    <div :class="$style.LibraryArtistsPage">
-      <h1
-        :class="$style.LibraryArtistsPage__title"
-        v-text="title"
-      />
+  <div :class="$style.LibraryArtistsPage">
+    <h1
+      :class="$style.LibraryArtistsPage__title"
+      v-text="title"
+    />
 
-      <div :class="$style.LibraryArtistsPage__cardContainer">
-        <template v-if="artistList != null">
-          <ArtistCard
-            v-for="artist in artistList"
-            :key="artist.id"
-            v-bind="artist"
-            :width="180"
-            :max-width="200"
-            :class="$style.LibraryArtistsPage__card"
-          />
-        </template>
-
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-      </div>
-
-      <div
-        ref="loading"
-        :class="$style.LibraryArtistsPage__loading"
-      >
-        <v-progress-circular
-          v-if="!isFullArtistList"
-          indeterminate
+    <div :class="$style.LibraryArtistsPage__cardContainer">
+      <template v-if="artistList != null">
+        <ArtistCard
+          v-for="artist in artistList"
+          :key="artist.id"
+          v-bind="artist"
+          :width="180"
+          :max-width="200"
+          :class="$style.LibraryArtistsPage__card"
         />
-      </div>
+      </template>
+
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
     </div>
-  </Page>
+
+    <div
+      ref="loading"
+      :class="$style.LibraryArtistsPage__loading"
+    >
+      <v-progress-circular
+        v-if="!isFullArtistList"
+        indeterminate
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import Page from '~/components/globals/Page.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import { App } from '~~/types';
 
@@ -57,7 +54,6 @@ const LIMIT_OF_ARTISTS = 30 as const;
 
 @Component({
   components: {
-    Page,
     ArtistCard,
   },
 

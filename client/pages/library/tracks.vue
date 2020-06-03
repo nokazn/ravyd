@@ -1,35 +1,32 @@
 <template>
-  <Page>
-    <div :class="$style.LibraryTracksPage">
-      <h1
-        :class="$style.LibraryTracksPage__title"
-        v-text="title"
-      />
+  <div :class="$style.LibraryTracksPage">
+    <h1
+      :class="$style.LibraryTracksPage__title"
+      v-text="title"
+    />
 
-      <PlaylistTrackTable
-        v-if="trackList != null"
-        :track-list="trackList"
-        uri=""
-        :class="$style.LibraryTracksPage__table"
-      />
+    <PlaylistTrackTable
+      v-if="trackList != null"
+      :track-list="trackList"
+      uri=""
+      :class="$style.LibraryTracksPage__table"
+    />
 
-      <div
-        ref="loading"
-        :class="$style.LibraryTracksPage__loading"
-      >
-        <v-progress-circular
-          v-if="!isFullTrackList"
-          indeterminate
-        />
-      </div>
+    <div
+      ref="loading"
+      :class="$style.LibraryTracksPage__loading"
+    >
+      <v-progress-circular
+        v-if="!isFullTrackList"
+        indeterminate
+      />
     </div>
-  </Page>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import Page from '~/components/globals/Page.vue';
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
 import { App } from '~~/types';
 
@@ -41,7 +38,6 @@ const LIMIT_OF_TRACKS = 30 as const;
 
 @Component({
   components: {
-    Page,
     PlaylistTrackTable,
   },
 

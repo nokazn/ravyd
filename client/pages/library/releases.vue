@@ -1,48 +1,45 @@
 <template>
-  <Page>
-    <div :class="$style.LibraryReleasesPage">
-      <h1
-        :class="$style.LibraryReleasesPage__title"
-        v-text="title"
+  <div :class="$style.LibraryReleasesPage">
+    <h1
+      :class="$style.LibraryReleasesPage__title"
+      v-text="title"
+    />
+
+    <div :class="$style.LibraryReleasesPage__cardContainer">
+      <ReleaseCard
+        v-for="release in releaseList"
+        :key="release.id"
+        v-bind="release"
+        :width="180"
+        :max-width="200"
+        :class="$style.LibraryReleasesPage__card"
       />
 
-      <div :class="$style.LibraryReleasesPage__cardContainer">
-        <ReleaseCard
-          v-for="release in releaseList"
-          :key="release.id"
-          v-bind="release"
-          :width="180"
-          :max-width="200"
-          :class="$style.LibraryReleasesPage__card"
-        />
-
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-        <div :class="$style.ArtistIdPage__cardSpacer" />
-      </div>
-
-      <div
-        ref="loading"
-        :class="$style.LibraryReleasesPage__loading"
-      >
-        <v-progress-circular
-          v-if="!isFullReleaseList"
-          indeterminate
-        />
-      </div>
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.ArtistIdPage__cardSpacer" />
     </div>
-  </Page>
+
+    <div
+      ref="loading"
+      :class="$style.LibraryReleasesPage__loading"
+    >
+      <v-progress-circular
+        v-if="!isFullReleaseList"
+        indeterminate
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import Page from '~/components/globals/Page.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import { App } from '~~/types';
 
@@ -55,7 +52,6 @@ const LIMIT_OF_RELEASES = 30 as const;
 
 @Component({
   components: {
-    Page,
     ReleaseCard,
   },
 

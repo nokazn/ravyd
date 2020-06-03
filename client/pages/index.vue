@@ -1,49 +1,46 @@
 <template>
-  <page>
-    <div :class="$style.RootPage">
-      <ScrollableCardsSection
-        title="今週の新譜"
-        :class="$style.RootPage__section"
-      >
-        <ReleaseCard
-          v-for="release in newReleaseList"
-          :key="release.id"
-          v-bind="release"
-          :width="cardWidth"
-        />
-      </ScrollableCardsSection>
+  <div :class="$style.RootPage">
+    <ScrollableCardsSection
+      title="今週の新譜"
+      :class="$style.RootPage__section"
+    >
+      <ReleaseCard
+        v-for="release in newReleaseList"
+        :key="release.id"
+        v-bind="release"
+        :width="cardWidth"
+      />
+    </ScrollableCardsSection>
 
-      <ScrollableCardsSection
-        title="お気に入りのトラック"
-        :class="$style.RootPage__section"
-      >
-        <ReleaseCard
-          v-for="release in topTrackList"
-          :key="release.id"
-          v-bind="release"
-          :width="cardWidth"
-        />
-      </ScrollableCardsSection>
+    <ScrollableCardsSection
+      title="お気に入りのトラック"
+      :class="$style.RootPage__section"
+    >
+      <ReleaseCard
+        v-for="release in topTrackList"
+        :key="release.id"
+        v-bind="release"
+        :width="cardWidth"
+      />
+    </ScrollableCardsSection>
 
-      <ScrollableCardsSection
-        title="お気に入りのアーティスト"
-        :class="$style.RootPage__section"
-      >
-        <ArtistCard
-          v-for="artist in topArtistList"
-          :key="artist.id"
-          v-bind="artist"
-          :width="cardWidth"
-        />
-      </ScrollableCardsSection>
-    </div>
-  </page>
+    <ScrollableCardsSection
+      title="お気に入りのアーティスト"
+      :class="$style.RootPage__section"
+    >
+      <ArtistCard
+        v-for="artist in topArtistList"
+        :key="artist.id"
+        v-bind="artist"
+        :width="cardWidth"
+      />
+    </ScrollableCardsSection>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-import Page from '~/components/globals/Page.vue';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
@@ -60,7 +57,6 @@ export type AsyncData = {
 
 export default Vue.extend({
   components: {
-    Page,
     ScrollableCardsSection,
     ReleaseCard,
     ArtistCard,
