@@ -29,9 +29,9 @@
 
         <div :class="$style.ReleaseIdPage__releaseInfoFooter">
           <div :class="$style.ReleaseIdPage__buttons">
-            <MediaControlButton
+            <ContextMediaButton
               :is-playing="isPlaying && isAlbumSet"
-              @on-clicked="onMediaControlButtonClicked"
+              @on-clicked="onContextMediaButtonClicked"
             />
 
             <FavoriteButton
@@ -83,7 +83,7 @@ import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
+import ContextMediaButton from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
@@ -103,7 +103,7 @@ export interface AsyncData {
   components: {
     ReleaseArtwork,
     ArtistNames,
-    MediaControlButton,
+    ContextMediaButton,
     FavoriteButton,
     ReleaseDate,
     ReleaseTotalTracks,
@@ -169,7 +169,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     }
   }
 
-  onMediaControlButtonClicked(nextPlayingState: boolean) {
+  onContextMediaButtonClicked(nextPlayingState: boolean) {
     if (this.releaseInfo == null) return;
 
     if (nextPlayingState) {

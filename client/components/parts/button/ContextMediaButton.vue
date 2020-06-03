@@ -2,13 +2,13 @@
   <v-btn
     color="cyan darken-3"
     rounded
-    :class="$style.MediaControlButton"
+    :class="$style.ContextMediaButton"
     @click="onClicked"
   >
-    <v-icon :class="$style.MediaControlButton__icon">
+    <v-icon :class="$style.ContextMediaButton__icon">
       {{ icon }}
     </v-icon>
-    <span :class="$style.MediaControlButton__text">
+    <span :class="$style.ContextMediaButton__text">
       {{ text }}
     </span>
   </v-btn>
@@ -47,7 +47,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.MediaControlButton {
+.ContextMediaButton {
   &__icon,
   &__text {
     margin-right: 2px;

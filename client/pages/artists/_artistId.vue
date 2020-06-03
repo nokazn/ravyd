@@ -41,9 +41,9 @@
         </p>
 
         <div :class="$style.ArtistIdPage__buttons">
-          <MediaControlButton
+          <ContextMediaButton
             :is-playing="isPlaying && isArtistSet"
-            @on-clicked="onMediaControlButtonClicked"
+            @on-clicked="onContextMediaButtonClicked"
           />
 
           <FollowButton
@@ -103,7 +103,7 @@ import { Context } from '@nuxt/types';
 import { RootGetters } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
-import MediaControlButton from '~/components/parts/button/MediaControlButton.vue';
+import ContextMediaButton from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton from '~/components/parts/button/FollowButton.vue';
 import TrackListWrapper from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
@@ -131,7 +131,7 @@ export type AsyncData = {
 @Component({
   components: {
     UserAvatar,
-    MediaControlButton,
+    ContextMediaButton,
     FollowButton,
     TrackListWrapper,
     CardsSection,
@@ -204,7 +204,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       : false;
   }
 
-  onMediaControlButtonClicked(nextPlayingState: boolean) {
+  onContextMediaButtonClicked(nextPlayingState: boolean) {
     if (this.artistInfo == null) return;
 
     if (nextPlayingState) {

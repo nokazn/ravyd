@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.MediaControler">
+  <div :class="$style.MediaController">
     <shuffle-button />
     <previous-button />
     <media-button />
@@ -29,7 +29,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.MediaControler {
+.MediaController {
   display: flex;
   align-items: center;
   justify-content: center;
