@@ -37,7 +37,7 @@ import { App } from '~~/types';
 
 type AsyncData = {
   maxImageSize: number
-  categoryList: App.CategoryCardInfo[] | undefined
+  categoryList: App.CategoryCardInfo[] | null
 }
 
 type Data = {
@@ -52,6 +52,7 @@ type Data = {
   async asyncData(context): Promise<AsyncData> {
     const maxImageSize = 220;
     const categoryList = await getCategoryList(context, maxImageSize);
+    console.log(categoryList);
 
     return {
       maxImageSize,
