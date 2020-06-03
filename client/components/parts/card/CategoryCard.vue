@@ -4,10 +4,12 @@
     hover
     tile
     nuxt
-    :to="`/categories/${id}`"
+    :to="`/genres/${id}`"
   >
     <v-img
       :src="src"
+      :alt="name"
+      :title="name"
       :width="size"
       :max-width="maxSize"
       :aspect-ratio="1"
@@ -15,7 +17,7 @@
       <div :class="$style.CategoryImage__link">
         <nuxt-link
           :key="id"
-          :to="`/categories/${id}`"
+          :to="`/genres/${id}`"
           v-text="name"
         />
       </div>
