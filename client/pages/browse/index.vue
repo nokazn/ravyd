@@ -4,7 +4,7 @@
 
     <div
       v-if="categoryList != null"
-      :class="$style.BrowsePage__categoryImageContainer"
+      :class="$style.BrowsePage__categoryCardContainer"
     >
       <CategoryCard
         v-for="{ id, name, artworkSrc } in categoryList"
@@ -13,7 +13,7 @@
         :src="artworkSrc"
         :max-size="maxImageSize"
         :name="name"
-        :class="$style.BrowsePage__categoryImage"
+        :class="$style.BrowsePage__categoryCard"
       />
 
       <div :class="$style.BrowsePage__spacer" />
@@ -78,7 +78,7 @@ export default class BrowsePage extends Vue implements Data {
   & > *:not(:last-child) {
     margin-bottom: 24px;
   }
-  &__categoryImageContainer {
+  &__categoryCardContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -90,7 +90,7 @@ export default class BrowsePage extends Vue implements Data {
       max-width: 220px;
     }
   }
-  &__categoryImage {
+  &__categoryCard {
     margin-bottom: 32px;
   }
   &__spacer {
