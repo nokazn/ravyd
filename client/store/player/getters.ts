@@ -59,7 +59,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return getters.activeDevice?.name === APP_NAME;
   },
 
-  trackQueue(state) {
+  trackQueue(state, getters) {
     return (artworkSize = 64) => {
       if (state.albumArtWorkList == null) return [];
 
@@ -70,7 +70,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         uri: state.trackUri!,
         artistList: state.artistList!,
         releaseName: state.albumName!,
-        releaseId: convertUriToId(state.albumUri!),
+        releaseId: getters.albumId!,
         artworkSrc: getImageSrc(state.albumArtWorkList!, artworkSize),
       };
       const previousTrackList = state.previousTrackList
@@ -88,7 +88,9 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   albumId(state) {
     // 最後の ":" 以降を取り出す
-    return state.albumUri?.replace(/^.+:(.+)$/, '$1') ?? null;
+    return state.albumUri != null
+      ? convertUriToId(state.albumUri)
+      : null;
   },
 
   albumArtworkSrc(state) {
