@@ -2,6 +2,7 @@
   <div :class="$style.GenreIdPage">
     <h1
       v-if="categoryInfo != null"
+      :class="$style.GenreIdPage__title"
       v-text="categoryInfo.name"
     />
 
@@ -122,10 +123,13 @@ export default class GenreIdPage extends Vue implements AsyncData {
 
 <style lang="scss" module>
 .GenreIdPage {
-  padding: 16px 6% 48px;
+  padding: 16px 3% 48px;
 
   & > *:not(:last-child) {
     margin-bottom: 24px;
+  }
+  &__title {
+    padding-left: 3%;
   }
   &__playlistCardContainer {
     display: flex;

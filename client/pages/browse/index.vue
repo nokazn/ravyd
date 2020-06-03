@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.BrowsePage">
-    <h1 v-text="title" />
+    <h1
+      :class="$style.BrowsePage__title"
+      v-text="title"
+    />
 
     <div
       v-if="categoryList != null"
@@ -125,10 +128,13 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .BrowsePage {
-  padding: 16px 6% 48px;
+  padding: 16px 3% 48px;
 
   & > *:not(:last-child) {
     margin-bottom: 24px;
+  }
+  &__title {
+    margin-left: 3%;
   }
   &__categoryCardContainer {
     display: flex;
