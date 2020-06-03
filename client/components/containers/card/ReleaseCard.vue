@@ -154,9 +154,6 @@ export default Vue.extend({
   },
 
   methods: {
-    onClick() {
-      this.$router.push(this.releasePath);
-    },
     onMediaButtonClicked() {
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isReleaseSet) {
