@@ -1,4 +1,5 @@
 import express from 'express';
+import dotenv from 'dotenv';
 
 import redisClient from '../../../db/redis';
 import { createUrl } from '../../../utils/createUrl';
@@ -6,6 +7,8 @@ import { generateRandomString } from '../../../utils/generateRandomString';
 import { getAccessToken } from '../../auth/getAccessToken';
 import { refreshAccessToken } from '../../auth/refreshAccessToken';
 import { SpotifyAPI } from '~~/types';
+
+dotenv.config();
 
 const router = express.Router();
 
