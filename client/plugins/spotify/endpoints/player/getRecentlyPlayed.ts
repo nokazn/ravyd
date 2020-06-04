@@ -15,7 +15,7 @@ export const getRecentlyPlayed = (context: Context) => {
     limit?: number // 1 ~ 50 まで指定できる
     after?: number
     before?: number
-  }): Promise<SpotifyAPI.Player.RecentlyPlayed | null> => {
+  }): Promise<SpotifyAPI.Player.RecentlyPlayed | undefined> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
@@ -28,7 +28,7 @@ export const getRecentlyPlayed = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
   };
 };

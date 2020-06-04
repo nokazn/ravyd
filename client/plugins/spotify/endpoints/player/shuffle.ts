@@ -7,14 +7,18 @@ export const shuffle = (context: Context) => {
     deviceId,
     state,
   }: {
-    deviceId: string | null
+    deviceId: string | undefined
     state: boolean
-  }): Promise<void> => app.$spotifyApi.$put('/me/player/shuffle', null, {
-    params: {
-      device_id: deviceId,
-      state,
-    },
-  }).catch((err: Error) => {
-    console.error({ err });
-  });
+  }): Promise<void> => {
+    const request = app.$spotifyApi.$put('/me/player/shuffle', undefined, {
+      params: {
+        device_id: deviceId,
+        state,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
+
+    return request;
+  };
 };

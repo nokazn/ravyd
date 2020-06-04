@@ -47,6 +47,7 @@ export type PlayerActions = {
 
 export type RootActions = {
   'player/initPlayer': PlayerActions['initPlayer']
+  'player/disconnectPlayer': PlayerActions['disconnectPlayer']
   'player/transferPlayback': PlayerActions['transferPlayback']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
@@ -135,7 +136,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         const disallowList = disallowKeys.filter((key) => disallows[key]);
 
         commit('SET_IS_PLAYING', !isPaused);
-        commit('SET_CONTEXT_URI', uri);
+        commit('SET_CONTEXT_URI', uri ?? undefined);
         commit('SET_POSITION', position);
         commit('SET_DURATION', duration);
         commit('SET_IS_SHUFFLED', isShuffled);
@@ -193,7 +194,24 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     if (playbackPlayer == null) return;
 
     playbackPlayer.disconnect();
-    commit('SET_PLAYBACK_PLAYER', null);
+
+    commit('SET_PLAYBACK_PLAYER', undefined);
+    commit('SET_DEVICE_ID', undefined);
+    commit('SET_ACTIVE_DEVICE_LIST', []);
+    commit('SET_CURRENT_TRACK', undefined);
+    commit('SET_NEXT_TRACK_LIST', []);
+    commit('SET_PREVIOUS_TRACK_LIST', []);
+    commit('SET_RECENTLY_PLAYED', undefined);
+    commit('SET_IS_SAVED_TRACK', false);
+    commit('SET_IS_PLAYING', false);
+    commit('SET_CONTEXT_URI', undefined);
+    commit('SET_POSITION', 0);
+    commit('SET_DURATION', 0);
+    commit('SET_IS_SHUFFLED', false);
+    commit('SET_REPEAT_MODE', 0);
+    commit('SET_DISALLOW_LIST', []);
+    commit('SET_VOLUME', { volumePercent: 0 });
+    commit('SET_IS_MUTED', false);
   },
 
   async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {

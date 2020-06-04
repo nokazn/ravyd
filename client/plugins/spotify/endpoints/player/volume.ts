@@ -7,14 +7,14 @@ export const volume = (context: Context) => {
     deviceId,
     volumePercent,
   }: {
-    deviceId: string | null
+    deviceId: string | undefined
     volumePercent: number
   }): Promise<void> => {
     if (volumePercent < 0 || volumePercent > 100) {
       throw new Error(`volumePercent は0 ~ 100までしか指定できませんが、${volumePercent}と指定されました。`);
     }
 
-    return app.$spotifyApi.$put('/me/player/volume', null, {
+    return app.$spotifyApi.$put('/me/player/volume', undefined, {
       params: {
         device_id: deviceId,
         volume_percent: volumePercent,

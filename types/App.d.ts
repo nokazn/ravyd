@@ -38,7 +38,7 @@ export namespace App {
   }
   export type TrackQueueInfo = {
     isPlaying: boolean
-    id: string | null
+    id: string | undefined
     name: string
     uri: string
     artistList: {

@@ -77,7 +77,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_TOKEN', accessToken);
   },
 
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
+    dispatch('player/disconnectPlayer', undefined, { root: true });
     commit('SET_TOKEN', null);
     commit('SET_USER_DATA', null);
   },

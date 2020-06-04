@@ -6,10 +6,14 @@ export const transferPlayback = (context: Context) => {
   return ({ deviceId, play }: {
     deviceId: string
     play: boolean
-  }): Promise<void> => app.$spotifyApi.$put('/me/player', {
-    device_ids: [deviceId],
-    play,
-  }).catch((err: Error) => {
-    console.error({ err });
-  });
+  }): Promise<void> => {
+    const request = app.$spotifyApi.$put('/me/player', {
+      device_ids: [deviceId],
+      play,
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
+
+    return request;
+  };
 };

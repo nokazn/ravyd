@@ -4,16 +4,16 @@ import { PlayerState } from './state';
 import type { SpotifyAPI } from '~~/types';
 
 export type PlayerMutations = {
-  SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | null
-  SET_DEVICE_ID: string
+  SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
+  SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
-  SET_CURRENT_TRACK: Spotify.Track
+  SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
-  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | null
+  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
   SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
-  SET_CONTEXT_URI: string | null
+  SET_CONTEXT_URI: string | undefined
   SET_POSITION: number
   SET_DURATION: number
   SET_IS_SHUFFLED: boolean
@@ -57,13 +57,13 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
-    state.albumArtWorkList = currentTrack.album.images;
-    state.trackName = currentTrack.name;
-    state.trackId = currentTrack.id;
-    state.trackUri = currentTrack.uri;
-    state.albumName = currentTrack.album.name;
-    state.albumUri = currentTrack.album.uri;
-    state.artistList = currentTrack.artists.map((artist) => ({
+    state.albumArtWorkList = currentTrack?.album.images;
+    state.trackName = currentTrack?.name;
+    state.trackId = currentTrack?.id ?? undefined;
+    state.trackUri = currentTrack?.uri;
+    state.albumName = currentTrack?.album.name;
+    state.albumUri = currentTrack?.album.uri;
+    state.artistList = currentTrack?.artists.map((artist) => ({
       name: artist.name,
       id: artist.uri.replace(/^.+:/g, ''),
     }));

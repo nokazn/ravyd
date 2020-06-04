@@ -14,21 +14,25 @@ export const play = (context: Context) => {
     offset,
     positionMs,
   }: {
-    deviceId: string | null
+    deviceId: string | undefined
     contextUri?: string
     trackUriList?: string[]
     offset?: { uri: string } | { position: number }
     positionMs?: number
-  }): Promise<void> => app.$spotifyApi.$put('/me/player/play', {
-    context_uri: contextUri,
-    uris: trackUriList,
-    offset,
-    position_ms: positionMs,
-  }, {
-    params: {
-      device_id: deviceId,
-    },
-  }).catch((err: Error) => {
-    console.error({ err });
-  });
+  }): Promise<void> => {
+    const request = app.$spotifyApi.$put('/me/player/play', {
+      context_uri: contextUri,
+      uris: trackUriList,
+      offset,
+      position_ms: positionMs,
+    }, {
+      params: {
+        device_id: deviceId,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+    });
+
+    return request;
+  };
 };

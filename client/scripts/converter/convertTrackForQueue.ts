@@ -6,7 +6,7 @@ export const convertTrackForQueue = (isPlaying: boolean, artworkSize?: number) =
   track: Spotify.Track,
 ): App.TrackQueueInfo => ({
   isPlaying,
-  id: track.id,
+  id: track.id ?? undefined,
   name: track.name,
   uri: track.uri,
   artistList: track.artists.map((artist) => ({

@@ -133,7 +133,7 @@ export default Vue.extend({
     albumId(): RootGetters['player/albumId'] {
       return this.$getters()['player/albumId'];
     },
-    artistList(): App.SimpleArtistInfo[] | null {
+    artistList(): App.SimpleArtistInfo[] | undefined {
       return this.$state().player.artistList;
     },
     isSavedTrack(): boolean {

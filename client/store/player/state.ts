@@ -1,20 +1,20 @@
 import type { SpotifyAPI, App } from '~~/types';
 
 export type PlayerState = {
-  playbackPlayer: Spotify.SpotifyPlayer | null
-  deviceId: string | null
+  playbackPlayer: Spotify.SpotifyPlayer | undefined
+  deviceId: string | undefined
   activeDeviceList: SpotifyAPI.Device[]
-  contextUri: string | null
-  trackName: string | null
-  trackId: string | null
-  trackUri: string | null
-  albumName: string | null
-  albumUri: string | null
-  albumArtWorkList: SpotifyAPI.Image[] | null
-  artistList: App.SimpleArtistInfo[] | null
+  contextUri: string | undefined
+  trackName: string | undefined
+  trackId: string | undefined
+  trackUri: string | undefined
+  albumName: string | undefined
+  albumUri: string | undefined
+  albumArtWorkList: SpotifyAPI.Image[] | undefined
+  artistList: App.SimpleArtistInfo[] | undefined
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
-  recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | null
+  recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
   isSavedTrack: boolean
   isPlaying: boolean
   position: number
@@ -27,20 +27,20 @@ export type PlayerState = {
 }
 
 const state = (): PlayerState => ({
-  playbackPlayer: null,
-  deviceId: null,
+  playbackPlayer: undefined,
+  deviceId: undefined,
   activeDeviceList: [],
-  albumArtWorkList: null,
-  contextUri: null,
-  trackName: null,
-  trackId: null,
-  trackUri: null,
-  albumName: null,
-  albumUri: null,
+  albumArtWorkList: undefined,
+  contextUri: undefined,
+  trackName: undefined,
+  trackId: undefined,
+  trackUri: undefined,
+  albumName: undefined,
+  albumUri: undefined,
   artistList: [],
   nextTrackList: [],
   previousTrackList: [],
-  recentlyPlayed: null,
+  recentlyPlayed: undefined,
   isSavedTrack: false,
   isPlaying: false,
   position: 0,
