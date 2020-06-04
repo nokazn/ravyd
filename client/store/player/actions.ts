@@ -104,7 +104,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('authentication_error', async (err) => {
         console.error({ err });
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
-        if (rootState.auth.accessToken == null) dispatch('auth/logout', undefined, { root: true });
+        if (rootState.auth.accessToken == null) {
+          dispatch('auth/logout', undefined, { root: true });
+        }
       });
 
       // Playback status updates

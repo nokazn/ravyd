@@ -5,7 +5,6 @@ const config: Configuration = {
   mode: 'universal',
   srcDir: './client/',
   rootDir: './',
-  // Headers of the page
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',
@@ -26,60 +25,38 @@ const config: Configuration = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  // Customize the progress-bar color
   loading: { color: '#fff' },
-  // Global CSS
   css: [
     './assets/global.scss',
   ],
-  // Plugins to load before mounting the App
   serverMiddleware: [
     '~~/server/api/',
   ],
   plugins: [
-    {
-      src: '~/plugins/inject-dayjs',
-    },
-    {
-      src: '~/plugins/inject-vuex',
-    },
-    {
-      src: '~/plugins/axios',
-    },
-    {
-      src: '~/plugins/spotify',
-    },
-    {
-      src: '~/plugins/vuetify',
-    },
-    {
-      src: '~/plugins/vuex-persist',
-      mode: 'client',
-    },
+    { src: '~/plugins/inject-dayjs' },
+    { src: '~/plugins/inject-vuex' },
+    { src: '~/plugins/axios' },
+    { src: '~/plugins/spotify' },
+    { src: '~/plugins/vuetify' },
+    { src: '~/plugins/vuex-persist', mode: 'client' },
   ],
   router: {
     middleware: 'auth',
   },
-  // Nuxt.js dev-modules
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     '@nuxtjs/vuetify',
     '@nuxt/typescript-build',
   ],
-  // Nuxt.js modules
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
   ],
   env: {
     baseUrl: process.env.BASE_URL || 'http://127.0.0.1:3000',
     spotifyUrl: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
-  // Axios module configuration (https://axios.nuxtjs.org/options)
   axios: {
     baseURL: process.env.baseUrl,
     browserBaseURL: process.env.SpotifyUrl,
@@ -90,7 +67,6 @@ const config: Configuration = {
       Accept: 'application/json',
     },
   },
-  // vuetify module configuration (https://github.com/nuxt-community/vuetify-module)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     icons: {
@@ -111,7 +87,6 @@ const config: Configuration = {
       },
     },
   },
-  // webpack build configuration
   build: {
     babel: {
       presets({ isServer }) {

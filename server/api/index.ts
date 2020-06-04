@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-// '@' のような alias は serverMiddleware では動作しない
+// @ のような alias は serverMiddleware では動作しない
 import session from '../auth/session';
 import router from './router';
 
