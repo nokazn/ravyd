@@ -4,8 +4,8 @@ import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type AuthMutations = {
-  SET_TOKEN: SpotifyAPI.Auth.TokenResponseData['access_token'] | null,
-  SET_USER_DATA: SpotifyAPI.UserData | null
+  SET_TOKEN: SpotifyAPI.Auth.TokenResponseData['access_token'] | undefined,
+  SET_USER_DATA: SpotifyAPI.UserData |undefined
 }
 
 export type RootMutations = {

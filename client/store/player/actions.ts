@@ -71,21 +71,23 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     getters,
     dispatch,
     rootState,
+    rootGetters,
   }) {
-    const token = rootState.auth.accessToken;
-    if (token == null) {
+    const isLoggedin = rootGetters['auth/isLoggedin'];
+    if (!isLoggedin) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
 
     window.onSpotifyWebPlaybackSDKReady = async () => {
       // player が登録されていないときのみ初期化
-      if (getters.isPlayerConnected) return;
+      if (getters.isPlayerConnected || window.Spotify == null) return;
 
       const player = new Spotify.Player({
         name: APP_NAME,
-        getOAuthToken: (cb) => {
-          cb(token);
+        getOAuthToken: (callback) => {
+          const accessToken = rootState.auth.accessToken as string;
+          callback(accessToken);
         },
       });
 
@@ -105,9 +107,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('authentication_error', async (err) => {
         console.error({ err });
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
-        if (rootState.auth.accessToken == null) {
-          dispatch('auth/logout', undefined, { root: true });
-        }
       });
 
       // Playback status updates

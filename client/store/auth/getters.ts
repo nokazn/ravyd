@@ -19,7 +19,7 @@ export type RootGetters = {
 
 const getters: Getters<AuthState, AuthGetters> = {
   isLoggedin(state) {
-    return state.userData != null;
+    return state.accessToken != null && state.userData != null;
   },
 
   userDisplayName(state: AuthState) {

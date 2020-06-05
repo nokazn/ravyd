@@ -12,7 +12,24 @@ dotenv.config();
 
 const router = express.Router();
 
+/**
+ * @return { accessToken: string | undefined }
+ */
 router.get('/auth', async (req, res) => {
+  const data = await redisClient.get(req.sessionID!);
+  const token: SpotifyAPI.Auth.TokenResponseData = data != null
+    ? JSON.parse(data)
+    : {};
+
+  res.send({ accessToken: token.access_token });
+});
+
+/**
+ * @return {
+ *  { accessToken: string } | { uri: string } | { message: string }
+ * }
+ */
+router.post('/auth/login', async (req, res) => {
   const data = await redisClient.get(req.sessionID!);
   if (data != null) {
     const token: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
@@ -27,7 +44,7 @@ router.get('/auth', async (req, res) => {
         baseUrl: process.env.BASE_URL,
       }, null, 2),
     );
-    return res.status(500).send('エラーが発生しました。\n');
+    return res.status(500).send({ message: 'エラーが発生しました。' });
   }
 
   const baseUrl = 'https://accounts.spotify.com/authorize';
@@ -50,6 +67,7 @@ router.get('/auth', async (req, res) => {
     'user-follow-read',
     'user-follow-modify',
   ].join(' ');
+
   const url = createUrl(baseUrl, {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: 'code',
@@ -61,17 +79,49 @@ router.get('/auth', async (req, res) => {
   return res.send({ url });
 });
 
-router.get('/auth/refresh', async (req, res) => {
+/**
+ * @return {
+ *   { accessToken: string } | { message: string }
+ * }
+ */
+router.post('/auth/login/callback', async (req, res) => {
+  const { code }: { code?: string } = req.body;
+
+  if (typeof code !== 'string') {
+    const { error }: { error?: string } = req.query;
+    console.error(
+      'code が取得できませんでした。',
+      JSON.stringify({ body: req.body, code }, null, 2),
+    );
+
+    return res.status(400).send({ message: error ?? '認証時にエラーが発生しました。\n' });
+  }
+
+  // code と token を交換する
+  const token = await getAccessToken(code);
+  redisClient.set(req.sessionID!, JSON.stringify(token));
+
+  return res.send({ accessToken: token?.access_token });
+});
+
+/**
+ * @todo
+ * @return {
+ *  { accessToken: string } | { message: string }
+ * }
+ */
+router.post('/auth/refresh', async (req, res) => {
   const data = await redisClient.get(req.sessionID!);
   if (data == null) {
-    return res.redirect('/auth');
+    return res.status(400).send({ message: 'トークンを更新できませんでした。\n' });
   }
 
   const currentToken: SpotifyAPI.Auth.TokenResponseData = JSON.parse(data);
   const token = await refreshAccessToken(currentToken.refresh_token!);
   if (token == null) {
-    return res.redirect('/auth');
+    return res.status(400).send({ message: 'トークンを更新できませんでした。\n' });
   }
+
   console.log({
     token,
     currentToken,
@@ -81,38 +131,20 @@ router.get('/auth/refresh', async (req, res) => {
     ...token,
   }));
 
-  return res.send(token?.access_token);
+  return res.send({ accessToken: token.access_token });
 });
 
-router.post('/auth/login/callback', async (req, res) => {
-  const { code }: { code?: string } = req.body;
 
-  if (typeof code !== 'string') {
-    const { error }: { error?: string } = req.query;
-    console.error(
-      'code が取得できませんでした。',
-      JSON.stringify({
-        // req,
-        // res,
-        code,
-      }, null, 2),
-    );
-
-    return res.status(400).send(error || '認証時にエラーが発生しました。\n');
+/**
+ * @return { void }
+ */
+router.post('/auth/logout', async (req) => {
+  if (req.session != null) {
+    req.session.destroy((err: Error) => {
+      console.error({ err });
+    });
   }
-
-  // code と token を交換する
-  const token = await getAccessToken(code);
-  redisClient.set(req.sessionID!, JSON.stringify(token));
-
-  return res
-    .cookie('accessToken', token?.access_token, {
-      maxAge: 1000 * 60 * 15,
-      secure: true,
-      httpOnly: true,
-      sameSite: 'lax',
-    })
-    .send(token?.access_token);
+  await redisClient.del(req.sessionID!);
 });
 
 export default router;

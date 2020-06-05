@@ -17,6 +17,6 @@ export default session({
     secure: process.env.NODE_ENV === 'production',
     sameSite: true,
     // 10分のみ有効
-    maxAge: 1000 * 60 * 1,
+    maxAge: 1000 * 60 * 10,
   },
 });

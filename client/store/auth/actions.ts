@@ -8,6 +8,7 @@ export type AuthActions = {
   login: () => Promise<void>
   exchangeCodeToAccessToken: (code: string) => Promise<void>
   getUserData: () => Promise<void>
+  getAccessToken: () => Promise<void>
   refreshAccessToken: () => Promise<void>
   logout: () => void
 }
@@ -16,14 +17,15 @@ export type RootActions = {
   'auth/login': AuthActions['login']
   'auth/exchangeCodeToAccessToken': AuthActions['exchangeCodeToAccessToken']
   'auth/getUserData': AuthActions['getUserData']
+  'auth/getAccessToken': AuthActions['getAccessToken']
   'auth/refreshAccessToken': AuthActions['refreshAccessToken']
   'auth/logout': AuthActions['logout']
 }
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
-    const data: SpotifyAPI.Auth.AuthorizationResponse<'accessToken' | 'url'> | null = await this.$serverApi.$get(
-      '/api/auth',
+    const data: SpotifyAPI.Auth.AuthorizationResponse | null = await this.$serverApi.$post(
+      '/api/auth/login',
     ).catch((err: Error) => {
       console.error({ err });
       return null;
@@ -47,13 +49,23 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const accessToken: SpotifyAPI.Auth.TokenResponseData['access_token'] = await this.$serverApi.$post(
+    const { accessToken }: { accessToken?: string } = await this.$serverApi.$post(
       '/api/auth/login/callback',
       { code },
     ).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return {};
     });
+
+    commit('SET_TOKEN', accessToken);
+  },
+
+  async getAccessToken({ commit }) {
+    const { accessToken }: { accessToken?: string } = await this.$serverApi.$get('/api/auth')
+      .catch((err) => {
+        console.error({ err });
+        return {};
+      });
 
     commit('SET_TOKEN', accessToken);
   },
@@ -66,21 +78,25 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_USER_DATA', userData);
   },
 
-  async refreshAccessToken({ commit }) {
-    const accessToken: SpotifyAPI.Auth.TokenResponseData['access_token'] | null = await this.$serverApi.$get(
+  async refreshAccessToken({ commit, dispatch }) {
+    const { accessToken }: { accessToken?: string } = await this.$serverApi.$post(
       '/api/auth/refresh',
     ).catch((err: Error) => {
       console.error(err);
-      return null;
+      return {};
     });
 
     commit('SET_TOKEN', accessToken);
+
+    if (accessToken == null) {
+      dispatch('logout');
+    }
   },
 
   logout({ commit, dispatch }) {
     dispatch('player/disconnectPlayer', undefined, { root: true });
-    commit('SET_TOKEN', null);
-    commit('SET_USER_DATA', null);
+    commit('SET_TOKEN', undefined);
+    commit('SET_USER_DATA', undefined);
   },
 };
 

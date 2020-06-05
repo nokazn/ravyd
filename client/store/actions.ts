@@ -11,6 +11,11 @@ export type RootActions = {
 }
 
 const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
+  async nuxtServerInit({ dispatch }) {
+    await dispatch('auth/getAccessToken', undefined, { root: true });
+    await dispatch('auth/getUserData', undefined, { root: true });
+  },
+
   async extractDominantBackgroundColor({ commit }, src) {
     const colors = await extractDominantColors(src);
     const backgroundPallet = colors?.DarkMuted;
