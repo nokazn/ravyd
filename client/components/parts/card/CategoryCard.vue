@@ -18,6 +18,7 @@
         <nuxt-link
           :key="id"
           :to="`/genres/${id}`"
+          class="g-ellipsis-text"
           v-text="name"
         />
       </div>
