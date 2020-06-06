@@ -22,3 +22,9 @@ declare module '@nuxt/types/app' {
     $serverApi: NuxtAxiosInstance
   }
 }
+
+declare global {
+  interface Window {
+    onNuxtReady: (callback: () => void) => void;
+  }
+}
