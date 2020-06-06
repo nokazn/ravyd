@@ -7,7 +7,17 @@ export const getAccessToken = (
   const redirectUrl = process.env.BASE_URL;
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (redirectUrl == null || clientId == null || clientSecret == null) return null;
+  if (redirectUrl == null || clientId == null || clientSecret == null) {
+    console.error(
+      '環境変数が設定されていません。',
+      JSON.stringify({
+        redirectUrl,
+        clientId,
+        clientSecret,
+      }, null, 2),
+    );
+    return null;
+  }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
   const params: SpotifyAPI.Auth.TokenRequestBody = {
@@ -17,9 +27,7 @@ export const getAccessToken = (
     redirect_uri: `${redirectUrl}/login/callback`,
   };
 
-  return axios({
-    url: baseUrl,
-    method: 'POST',
+  return axios.post(baseUrl, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

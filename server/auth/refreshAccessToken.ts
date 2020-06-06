@@ -6,7 +6,16 @@ export const refreshAccessToken = (
 ): Promise<SpotifyAPI.Auth.TokenResponseData> | null => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (clientId == null || clientSecret == null) return null;
+  if (clientId == null || clientSecret == null) {
+    console.error(
+      '環境変数が設定されていません。',
+      JSON.stringify({
+        clientId,
+        clientSecret,
+      }, null, 2),
+    );
+    return null;
+  }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
   const params: SpotifyAPI.Auth.RefreshTokenRequestParams = {
@@ -14,9 +23,7 @@ export const refreshAccessToken = (
     refresh_token,
   };
 
-  return axios({
-    url: baseUrl,
-    method: 'POST',
+  return axios.post(baseUrl, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

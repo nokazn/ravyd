@@ -5,6 +5,7 @@ import { SpotifyAPI } from '~~/types';
 
 export type AuthGetters = {
   isLoggedin: boolean | null
+  isTokenExpired: () => boolean
   userDisplayName: string | null
   userAvatarSrc: string| null
   userCountryCode: SpotifyAPI.Country | undefined
@@ -12,6 +13,7 @@ export type AuthGetters = {
 
 export type RootGetters = {
   'auth/isLoggedin': AuthGetters['isLoggedin']
+  'auth/isTokenExpired': AuthGetters['isTokenExpired']
   'auth/userDisplayName': AuthGetters['userDisplayName']
   'auth/userAvatarSrc': AuthGetters['userAvatarSrc']
   'auth/userCountryCode': AuthGetters['userCountryCode']
@@ -20,6 +22,12 @@ export type RootGetters = {
 const getters: Getters<AuthState, AuthGetters> = {
   isLoggedin(state) {
     return state.accessToken != null && state.userData != null;
+  },
+
+  isTokenExpired(state) {
+    return () => (state.expireMillis != null
+      ? Date.now() > state.expireMillis
+      : false);
   },
 
   userDisplayName(state: AuthState) {

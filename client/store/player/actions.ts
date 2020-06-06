@@ -70,7 +70,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit,
     getters,
     dispatch,
-    rootState,
     rootGetters,
   }) {
     const isLoggedin = rootGetters['auth/isLoggedin'];
@@ -85,13 +84,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       const player = new Spotify.Player({
         name: APP_NAME,
-        getOAuthToken: (callback) => {
-          const accessToken = rootState.auth.accessToken as string;
+        // アクセストークンの更新が必要になったら呼ばれる
+        getOAuthToken: async (callback) => {
+          const { accessToken }: { accessToken :string } = await this.$serverApi.$get('/api/auth')
+            .catch((err) => {
+              console.error({ err });
+              return {};
+            });
           callback(accessToken);
         },
       });
 
-      // Error handling
+      // エラーが発生した場合
       const errorList: Spotify.ErrorTypes[] = [
         'initialization_error',
         'account_error',
@@ -99,7 +103,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       ];
       errorList.forEach((errorType) => {
         player.addListener(errorType, (err) => {
-          console.error(err);
+          console.error({ errorType, err });
         });
       });
 
@@ -109,7 +113,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
       });
 
-      // Playback status updates
       player.addListener('player_state_changed', ((playerState) => {
         // playerState は Nullable
         if (playerState == null) return;
@@ -151,7 +154,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         if (trackId != null && trackId !== lastTrackId) dispatch('checkTrackSavedState', trackId);
       }));
 
-      // Ready
       player.addListener('ready', async ({ device_id }) => {
         // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
         await dispatch('pause', { isInitializing: true });
@@ -174,12 +176,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log('Ready with this device 🎉');
       });
 
-      // Not Ready
       player.addListener('not_ready', ({ device_id }) => {
         console.log('This device has gone offline 😴', device_id);
       });
 
-      // Connect to the player
       await player.connect();
 
       commit('SET_PLAYBACK_PLAYER', player);

@@ -24,18 +24,17 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
-    const data: SpotifyAPI.Auth.AuthorizationResponse | null = await this.$serverApi.$post(
+    const data: SpotifyAPI.Auth.AuthorizationResponse = await this.$serverApi.$post(
       '/api/auth/login',
     ).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return {};
     });
-    if (data == null) {
-      throw new Error('ログイン時にエラーが発生しました。');
-    }
 
-    if (data.accessToken != null) {
+    if (data.accessToken != null && data.expireIn != null) {
       commit('SET_TOKEN', data.accessToken);
+      commit('SET_EXPIRE_MILLIS', data.expireIn);
+
       await dispatch('getUserData');
       // @todo
       this.$router.push('/');
@@ -49,25 +48,31 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const { accessToken }: { accessToken?: string } = await this.$serverApi.$post(
-      '/api/auth/login/callback',
-      { code },
-    ).catch((err: Error) => {
-      console.error({ err });
-      return {};
-    });
+    const { accessToken, expireIn }: {
+      accessToken?: string
+      expireIn?: number
+    } = await this.$serverApi.$post('/api/auth/login/callback', { code })
+      .catch((err: Error) => {
+        console.error({ err });
+        return {};
+      });
 
     commit('SET_TOKEN', accessToken);
+    commit('SET_EXPIRE_MILLIS', expireIn);
   },
 
   async getAccessToken({ commit }) {
-    const { accessToken }: { accessToken?: string } = await this.$serverApi.$get('/api/auth')
+    const { accessToken, expireIn }: {
+      accessToken?: string
+      expireIn: number
+    } = await this.$serverApi.$get('/api/auth')
       .catch((err) => {
         console.error({ err });
         return {};
       });
 
     commit('SET_TOKEN', accessToken);
+    commit('SET_EXPIRE_MILLIS', expireIn);
   },
 
   async getUserData({ state, commit }): Promise<void> {
@@ -78,15 +83,23 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_USER_DATA', userData);
   },
 
-  async refreshAccessToken({ commit, dispatch }) {
-    const { accessToken }: { accessToken?: string } = await this.$serverApi.$post(
-      '/api/auth/refresh',
-    ).catch((err: Error) => {
-      console.error(err);
-      return {};
-    });
+  async refreshAccessToken({ getters, commit, dispatch }) {
+    if (!getters.isTokenExpired()) return;
+
+    // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
+    commit('SET_EXPIRE_MILLIS', undefined);
+
+    const { accessToken, expireIn }: {
+      accessToken?: string
+      expireIn: number
+    } = await this.$serverApi.$post('/api/auth/refresh')
+      .catch((err: Error) => {
+        console.error({ err });
+        return {};
+      });
 
     commit('SET_TOKEN', accessToken);
+    commit('SET_EXPIRE_MILLIS', expireIn);
 
     if (accessToken == null) {
       dispatch('logout');

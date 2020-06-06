@@ -15,10 +15,17 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
     };
   });
 
+  spotifyApi.onResponse(() => {
+    app.$dispatch('auth/refreshAccessToken');
+  });
+
   spotifyApi.onResponseError((err) => {
     console.error({ err });
     if (err.response?.status === 401) {
       app.$dispatch('auth/refreshAccessToken');
+      if (!app.$getters()['auth/isLoggedin']) {
+        app.$dispatch('auth/logout');
+      }
     }
   });
 
