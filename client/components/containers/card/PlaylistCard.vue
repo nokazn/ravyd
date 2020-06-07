@@ -1,47 +1,49 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="card"
-    boilerplate
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-  />
-  <v-card
-    v-else
-    hover
-    ripple
-    nuxt
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-    :class="$style.PlaylistCard"
-    :to="playlistPath"
-  >
-    <div :class="$style.PlaylistCard__container">
-      <release-artwork
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
-        is-overlayed
-        :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
-
-      <v-card-title :class="$style.PlaylistCard__title">
-        <span
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="card"
+      boilerplate
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+    />
+    <v-card
+      v-else
+      hover
+      ripple
+      nuxt
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+      :class="$style.PlaylistCard"
+      :to="playlistPath"
+    >
+      <div :class="$style.PlaylistCard__container">
+        <release-artwork
+          :src="artworkSrc"
+          :alt="name"
           :title="name"
-          class="g-ellipsis-text"
-          v-text="name"
+          is-overlayed
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
         />
-      </v-card-title>
 
-      <v-card-subtitle
-        :class="$style.PlaylistCard__text"
-        v-text="description"
-      />
-    </div>
-  </v-card>
+        <v-card-title :class="$style.PlaylistCard__title">
+          <span
+            :title="name"
+            class="g-ellipsis-text"
+            v-text="name"
+          />
+        </v-card-title>
+
+        <v-card-subtitle
+          :class="$style.PlaylistCard__text"
+          v-text="description"
+        />
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">

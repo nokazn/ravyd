@@ -1,40 +1,42 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="image"
-    boilerplate
-    :width="height"
-    :min-width="size"
-    :max-width="maxSize || size"
-    :height="size"
-    :min-height="size"
-    :max-height="maxSize || size"
-  />
-  <v-card
-    v-else
-    ripple
-    hover
-    tile
-    nuxt
-    :to="`/genres/${id}`"
-  >
-    <v-img
-      :src="src"
-      :alt="name"
-      :title="name"
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="image"
+      boilerplate
       :width="size"
-      :max-width="maxSize"
-      :aspect-ratio="1"
+      :min-width="size"
+      :max-width="maxSize || size"
+      :height="size"
+      :min-height="size"
+      :max-height="maxSize || size"
+    />
+    <v-card
+      v-else
+      ripple
+      hover
+      tile
+      nuxt
+      :to="`/genres/${id}`"
     >
-      <div :class="$style.CategoryImage__link">
-        <span
-          class="g-ellipsis-text"
-          :title="name"
-          v-text="name"
-        />
-      </div>
-    </v-img>
-  </v-card>
+      <v-img
+        :src="src"
+        :alt="name"
+        :title="name"
+        :width="size"
+        :max-width="maxSize"
+        :aspect-ratio="1"
+      >
+        <div :class="$style.CategoryImage__link">
+          <span
+            class="g-ellipsis-text"
+            :title="name"
+            v-text="name"
+          />
+        </div>
+      </v-img>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">

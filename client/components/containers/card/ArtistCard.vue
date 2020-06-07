@@ -1,46 +1,48 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="card"
-    boilerplate
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-  />
-  <v-card
-    v-else
-    hover
-    ripple
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-    :class="$style.ArtistCard"
-    @click="onClick"
-  >
-    <div :class="$style.ArtistCard__container">
-      <div :class="$style.ArtistCard__avatar">
-        <UserAvatar
-          :src="avatarSrc"
-          :alt="name"
-          :size="width"
-          :icon="mediaIcon"
-          :title="name"
-          is-overlayed
-          @on-media-button-clicked="onMediaButtonClicked"
-        />
-      </div>
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="card"
+      boilerplate
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+    />
+    <v-card
+      v-else
+      hover
+      ripple
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+      :class="$style.ArtistCard"
+      @click="onClick"
+    >
+      <div :class="$style.ArtistCard__container">
+        <div :class="$style.ArtistCard__avatar">
+          <UserAvatar
+            :src="avatarSrc"
+            :alt="name"
+            :size="width"
+            :icon="mediaIcon"
+            :title="name"
+            is-overlayed
+            @on-media-button-clicked="onMediaButtonClicked"
+          />
+        </div>
 
-      <v-card-title
-        :class="$style.ArtistCard__title"
-      >
-        <span
-          class="g-ellipsis-text"
-          :title="name"
-          v-text="name"
-        />
-      </v-card-title>
-    </div>
-  </v-card>
+        <v-card-title
+          :class="$style.ArtistCard__title"
+        >
+          <span
+            class="g-ellipsis-text"
+            :title="name"
+            v-text="name"
+          />
+        </v-card-title>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
