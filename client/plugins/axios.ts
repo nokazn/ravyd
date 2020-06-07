@@ -3,7 +3,7 @@ import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 const plugin: Plugin = ({ $axios, app }, inject) => {
   const spotifyApi = $axios.create({
-    baseURL: process.env.spotifyUrl,
+    baseURL: process.env.SPOTIFY_URL,
   }) as NuxtAxiosInstance;
 
   spotifyApi.onRequest((config) => {
@@ -13,6 +13,7 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
       ...config.headers,
       Authorization: `Bearer ${accessToken}`,
     };
+    console.log('header is updated!', { accessToken });
   });
 
   spotifyApi.onResponse(() => {
@@ -32,7 +33,7 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   inject('spotifyApi', spotifyApi);
 
   const serverApi = $axios.create({
-    baseURL: process.env.baseUrl,
+    baseURL: process.env.BASE_URL,
     withCredentials: true,
   });
 

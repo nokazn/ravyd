@@ -1,5 +1,5 @@
-import { Configuration } from '@nuxt/types';
 import colors from 'vuetify/es5/util/colors';
+import { Configuration } from '@nuxt/types';
 
 const config: Configuration = {
   mode: 'universal',
@@ -25,7 +25,6 @@ const config: Configuration = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  loading: { color: '#fff' },
   css: [
     './assets/global.scss',
   ],
@@ -54,12 +53,12 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
   ],
   env: {
-    baseUrl: process.env.BASE_URL || 'http://127.0.0.1:3000',
-    spotifyUrl: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
+    BASE_URL: process.env.BASE_URL || 'http://127.0.0.1:3000',
+    SPOTIFY_URL: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
   axios: {
-    baseURL: process.env.baseUrl,
-    browserBaseURL: process.env.SpotifyUrl,
+    baseURL: process.env.BASE_URL || 'http://127.0.0.1:3000',
+    browserBaseURL: process.env.SPOTIFY_URL,
     progress: false,
     retry: 3,
     debug: process.env.NODE_ENV === 'development',
@@ -87,10 +86,12 @@ const config: Configuration = {
       },
     },
   },
+  loading: { color: '#fff' },
   build: {
     babel: {
       presets({ isServer }) {
         return [
+          // corejs のバージョンの競合を防ぐ
           [
             '@nuxt/babel-preset-app',
             {
