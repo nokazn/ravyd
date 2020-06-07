@@ -151,7 +151,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         const trackId = currentTrack.id;
         // trackId 変わったときだけチェック
-        if (trackId != null && trackId !== lastTrackId) dispatch('checkTrackSavedState', trackId);
+        if (trackId != null && trackId !== lastTrackId) {
+          dispatch('checkTrackSavedState', trackId);
+        }
       }));
 
       player.addListener('ready', async ({ device_id }) => {

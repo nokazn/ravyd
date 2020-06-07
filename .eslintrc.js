@@ -5,7 +5,7 @@ module.exports = {
     browser: true,
   },
   globals: {
-    Spotify: 'readonly'
+    Spotify: 'readonly',
   },
   extends: [
     // @nuxtjs などを含む

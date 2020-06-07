@@ -14,6 +14,7 @@ export type PlayerGetters = {
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
   albumId: string | null
   albumArtworkSrc: (minSize?: number) => string | null
+  hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
   isArtistSet: (artistId: string) => boolean
@@ -32,6 +33,7 @@ export type RootGetters = {
   ['player/trackQueue']: PlayerGetters['trackQueue']
   ['player/albumId']: PlayerGetters['albumId']
   ['player/albumArtworkSrc']: PlayerGetters['albumArtworkSrc']
+  ['player/hasTrack']: PlayerGetters['hasTrack']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
   ['player/isArtistSet']: PlayerGetters['isArtistSet']
@@ -97,6 +99,15 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return (minSize?: number) => (state.albumArtWorkList != null
       ? getImageSrc(state.albumArtWorkList, minSize)
       : null);
+  },
+
+  hasTrack(state) {
+    return state.trackId != null
+      && state.trackName != null
+      && state.trackUri != null
+      && state.albumName != null
+      && state.albumUri != null
+      && state.artistList != null;
   },
 
   isTrackSet(state) {
