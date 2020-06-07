@@ -1,5 +1,14 @@
 <template>
+  <v-skeleton-loader
+    v-if="!isLoaded"
+    type="card"
+    boilerplate
+    :width="width"
+    :min-width="width"
+    :max-width="maxWidth || width"
+  />
   <v-card
+    v-else
     hover
     ripple
     nuxt
@@ -45,6 +54,7 @@ export type PlaylistCardInfo = App.PlaylistCardInfo
 
 export type Data = {
   playlistPath: string
+  isLoaded: boolean
 }
 
 export default Vue.extend({
@@ -86,6 +96,7 @@ export default Vue.extend({
   data(): Data {
     return {
       playlistPath: `/playlists/${this.id}`,
+      isLoaded: false,
     };
   },
 
@@ -104,6 +115,10 @@ export default Vue.extend({
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
+  },
+
+  mounted() {
+    this.isLoaded = true;
   },
 
   methods: {

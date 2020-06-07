@@ -1,9 +1,18 @@
 <template>
+  <v-skeleton-loader
+    v-if="!isLoaded"
+    type="card"
+    boilerplate
+    :width="width"
+    :min-width="width"
+    :max-width="maxWidth || width"
+  />
   <v-card
+    v-else
     hover
     ripple
-    :min-width="width"
     :width="width"
+    :min-width="width"
     :max-width="maxWidth || width"
     :class="$style.ArtistCard"
     @click="onClick"
@@ -43,6 +52,7 @@ export type ArtistCardInfo = App.ArtistCardInfo
 
 export type Data = {
   artistPath: string
+  isLoaded: boolean
 }
 
 export default Vue.extend({
@@ -80,6 +90,7 @@ export default Vue.extend({
   data(): Data {
     return {
       artistPath: `/artists/${this.id}`,
+      isLoaded: false,
     };
   },
 
@@ -96,6 +107,10 @@ export default Vue.extend({
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
+  },
+
+  mounted() {
+    this.isLoaded = true;
   },
 
   methods: {

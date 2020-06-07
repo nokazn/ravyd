@@ -9,6 +9,7 @@
       :max-width="size"
       :aspect-ratio="1"
       :class="{ 'g-box-shadow': shadow }"
+      @load="onLoaded"
     >
       <avatar-overlay
         v-if="isOverlayed && hover"
@@ -29,6 +30,11 @@ export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
 export type Data = {
   isMediaButtonPushed: boolean
+}
+
+export type On = {
+  'on-media-button-clicked': void
+  'on-loaded': void
 }
 
 export default Vue.extend({
@@ -66,6 +72,9 @@ export default Vue.extend({
   methods: {
     onClicked() {
       this.$emit('on-media-button-clicked');
+    },
+    onLoaded() {
+      this.$emit('on-loaded');
     },
   },
 });

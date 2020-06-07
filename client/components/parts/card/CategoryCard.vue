@@ -1,5 +1,17 @@
 <template>
+  <v-skeleton-loader
+    v-if="!isLoaded"
+    type="image"
+    boilerplate
+    :width="height"
+    :min-width="size"
+    :max-width="maxSize || size"
+    :height="size"
+    :min-height="size"
+    :max-height="maxSize || size"
+  />
   <v-card
+    v-else
     ripple
     hover
     tile
@@ -28,6 +40,10 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export type Data = {
+  isLoaded: boolean
+}
+
 export default Vue.extend({
   props: {
     id: {
@@ -50,6 +66,16 @@ export default Vue.extend({
       type: Number,
       default: undefined,
     },
+  },
+
+  data(): Data {
+    return {
+      isLoaded: false,
+    };
+  },
+
+  mounted() {
+    this.isLoaded = true;
   },
 });
 </script>
