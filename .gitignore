@@ -90,3 +90,9 @@ sw.*
 *.swp
 
 TODO.md
+
+# Certification files
+*.pem
+*.key
+*.cer
+*.crt

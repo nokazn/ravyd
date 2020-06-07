@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import { Configuration } from '@nuxt/types';
 
@@ -53,11 +55,11 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
   ],
   env: {
-    BASE_URL: process.env.BASE_URL || 'http://127.0.0.1:3000',
+    BASE_URL: process.env.BASE_URL || 'https://127.0.0.1:3000',
     SPOTIFY_URL: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
   axios: {
-    baseURL: process.env.BASE_URL || 'http://127.0.0.1:3000',
+    baseURL: process.env.BASE_URL || 'https://127.0.0.1:3000',
     browserBaseURL: process.env.SPOTIFY_URL,
     progress: false,
     retry: 3,
@@ -87,6 +89,12 @@ const config: Configuration = {
     },
   },
   loading: { color: '#fff' },
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
+    },
+  },
   build: {
     babel: {
       presets({ isServer }) {
