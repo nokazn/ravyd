@@ -13,8 +13,7 @@ export default session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    // 本番環境の場合は https のみ許可
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     httpOnly: true,
     sameSite: true,
     // 60分間有効
