@@ -2,22 +2,23 @@
   <v-card
     hover
     ripple
-    nuxt
     :width="width"
     :min-width="width"
     :max-width="maxWidth || width"
     :class="$style.ReleaseCard"
-    :to="releasePath"
+    @click="onCardClicked"
   >
     <div :class="$style.ReleaseCard__container">
-      <release-artwork
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
-        is-overlayed
-        :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
+      <nuxt-link :to="releasePath">
+        <release-artwork
+          :src="artworkSrc"
+          :alt="name"
+          :title="name"
+          is-overlayed
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </nuxt-link>
 
       <v-card-title :class="$style.ReleaseCard__title">
         <nuxt-link
@@ -154,6 +155,9 @@ export default Vue.extend({
   },
 
   methods: {
+    onCardClicked() {
+      this.$router.push(this.releasePath);
+    },
     onMediaButtonClicked() {
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isReleaseSet) {

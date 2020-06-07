@@ -24,9 +24,8 @@
       <v-card-title
         :class="$style.ArtistCard__title"
       >
-        <nuxt-link
+        <span
           class="g-ellipsis-text"
-          :to="artistPath"
           :title="name"
           v-text="name"
         />
@@ -41,6 +40,10 @@ import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue'
 import { App } from '~~/types';
 
 export type ArtistCardInfo = App.ArtistCardInfo
+
+export type Data = {
+  artistPath: string
+}
 
 export default Vue.extend({
   components: {
@@ -74,11 +77,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artistPath(): string {
-      return `/artists/${this.id}`;
-    },
+  data(): Data {
+    return {
+      artistPath: `/artists/${this.id}`,
+    };
+  },
 
+  computed: {
     isPlaying(): boolean {
       return this.$state().player.isPlaying;
     },

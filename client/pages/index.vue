@@ -4,12 +4,14 @@
       title="今週の新譜"
       :class="$style.RootPage__section"
     >
-      <ReleaseCard
-        v-for="release in newReleaseList"
-        :key="release.id"
-        v-bind="release"
-        :width="cardWidth"
-      />
+      <template v-if="newReleaseList != null">
+        <ReleaseCard
+          v-for="release in newReleaseList"
+          :key="release.id"
+          v-bind="release"
+          :width="cardWidth"
+        />
+      </template>
     </ScrollableCardsSection>
 
     <ScrollableCardsSection

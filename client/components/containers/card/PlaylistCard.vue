@@ -20,8 +20,7 @@
       />
 
       <v-card-title :class="$style.PlaylistCard__title">
-        <nuxt-link
-          :to="playlistPath"
+        <span
           :title="name"
           class="g-ellipsis-text"
           v-text="name"
@@ -30,7 +29,7 @@
 
       <v-card-subtitle
         :class="$style.PlaylistCard__text"
-        v-html="description"
+        v-text="description"
       />
     </div>
   </v-card>

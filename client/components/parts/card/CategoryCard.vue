@@ -15,10 +15,9 @@
       :aspect-ratio="1"
     >
       <div :class="$style.CategoryImage__link">
-        <nuxt-link
-          :key="id"
-          :to="`/genres/${id}`"
+        <span
           class="g-ellipsis-text"
+          :title="name"
           v-text="name"
         />
       </div>
