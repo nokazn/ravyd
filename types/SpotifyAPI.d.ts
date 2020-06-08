@@ -281,6 +281,16 @@ export namespace SpotifyAPI {
   export type Playlist = SimplePlaylist & {
     followers: Followers
   }
+  export type PlaylistTrack = {
+    added_at: string // timestamp
+    added_by: UserData
+    is_local: boolean
+    // @todo
+    track: Track | Episode
+  }
+  export type PlaylistSnapshot = {
+    snapshot_id: string
+  }
 
   export type RepeatState = 'off' | 'track' | 'context'
 

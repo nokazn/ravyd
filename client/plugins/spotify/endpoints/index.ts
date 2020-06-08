@@ -6,6 +6,7 @@ import { browse } from './browse';
 import { following } from './following';
 import { library } from './library';
 import { player } from './player';
+import { playlists } from './playlists';
 import { top } from './top';
 import { user } from './user';
 
@@ -16,6 +17,7 @@ export const endpoints = (context: Context) => ({
   following: following(context),
   library: library(context),
   player: player(context),
+  playlists: playlists(context),
   top: top(context),
   user: user(context),
 });
