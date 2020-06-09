@@ -1,7 +1,7 @@
 <template>
   <span
     :title="title"
-    :class="$style.ReleaseLabel"
+    class="subtext--text"
   >
     <v-icon
       :size="size"
@@ -45,9 +45,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ReleaseLabel {
-  color: $g-subtitle-color;
-}
-</style>

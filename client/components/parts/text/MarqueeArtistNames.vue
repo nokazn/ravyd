@@ -1,7 +1,8 @@
 <template>
   <div
     :title="title"
-    :class="[$style.MarqueeArtistNames, 'g-text-gradation']"
+    :class="$style.MarqueeArtistNames"
+    class="g-text-gradation subtext--text"
   >
     <div
       id="marqueeArtistNameLink"
@@ -132,7 +133,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .MarqueeArtistNames {
-  color: $g-subtitle-color;
   font-size: 0.7rem;
   line-height: 1rem;
   padding: 0 8px;

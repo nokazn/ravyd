@@ -4,6 +4,7 @@
       v-for="copyright in parsedCopyrightList"
       :key="copyright"
       :class="$style.Copyrights__item"
+      class="subtext--text"
     >
       {{ copyright }}
     </small>
@@ -65,12 +66,8 @@ export default Vue.extend({
 <style lang="scss" module>
 .Copyrights {
   &__item {
-    color: $g-subtitle-color;
     display: block;
-    font-size: 0.7em;
-    &:not(:last-child) {
-      margin-bottom: 2px;
-    }
+    font-size: 0.7rem;
   }
 }
 </style>

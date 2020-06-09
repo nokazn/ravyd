@@ -1,7 +1,7 @@
 <template>
   <span
-    :class="$style.ReleaseDate"
     :title="title"
+    class="subtext--text"
   >
     <v-icon
       :size="size"
@@ -50,9 +50,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ReleaseDate {
-  color: $g-subtitle-color;
-}
-</style>

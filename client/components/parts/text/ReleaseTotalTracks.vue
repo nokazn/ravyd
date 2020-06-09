@@ -1,7 +1,7 @@
 <template>
   <span
     :title="title"
-    :class="$style.ReleaseTotalTracks"
+    class="subtext--text"
   >
     <v-icon
       :size="size"
@@ -51,9 +51,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ReleaseTotalTracks {
-  color: $g-subtitle-color;
-}
-</style>
