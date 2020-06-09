@@ -31,11 +31,11 @@
 
             <nuxt-link
               :to="path"
+              :title="name"
               :class="[
                 $style.TrackListItem__contentTitle,
                 textColor,
               ]"
-              :title="name"
               class="g-ellipsis-text"
               v-text="name"
             />
@@ -185,7 +185,7 @@ export default Vue.extend({
   computed: {
     textColor(): string | undefined {
       return this.isTrackSet
-        ? 'cyan--text text--accent-2'
+        ? 'active--text'
         : undefined;
     },
   },

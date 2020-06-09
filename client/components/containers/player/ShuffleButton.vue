@@ -17,7 +17,7 @@ import Vue from 'vue';
 import { RootGetters } from 'vuex';
 
 export type ShuffleButton = {
-  color: 'cyan' | 'grey lighten-1',
+  color: 'active-icon' | 'inactive',
   title: 'シャッフル再生' | 'シャッフル再生しない'
 }
 
@@ -26,11 +26,11 @@ export default Vue.extend({
     shuffleButton(): ShuffleButton {
       return this.$state().player.isShuffled
         ? {
-          color: 'cyan',
+          color: 'active-icon',
           title: 'シャッフル再生しない',
         }
         : {
-          color: 'grey lighten-1',
+          color: 'inactive',
           title: 'シャッフル再生',
         };
     },

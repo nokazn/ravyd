@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    color="cyan darken-3"
+    color="success"
     rounded
     :class="$style.ContextMediaButton"
     @click="onClicked"

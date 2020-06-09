@@ -115,8 +115,8 @@ type DeviceInfo = {
   subtitle: string
   isActive: boolean
   icon: string
-  color: 'cyan accent-2' | undefined
-  textClass: 'cyan--text text--accent-2' | undefined
+  color: 'active' | undefined
+  textClass: 'active--text' | undefined
 }
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
@@ -160,7 +160,7 @@ export default Vue.extend({
   computed: {
     deviceButtonColor(): string | undefined {
       return this.$getters()['player/isTheAppPlaying']
-        ? 'cyan'
+        ? 'active-icon'
         : undefined;
     },
     deviceItemList(): DeviceInfo[] {
@@ -172,8 +172,8 @@ export default Vue.extend({
         title: device.is_active ? '再生中のデバイス' : device.name,
         subtitle: device.is_active ? device.name : 'Spotify Connect',
         icon: deviceIcon(device.type),
-        color: device.is_active ? 'cyan accent-2' : undefined,
-        textClass: device.is_active ? 'cyan--text text--accent-2' : undefined,
+        color: device.is_active ? 'active' : undefined,
+        textClass: device.is_active ? 'active--text' : undefined,
       }));
     },
   },

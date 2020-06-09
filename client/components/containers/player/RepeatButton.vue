@@ -18,7 +18,7 @@ import Vue from 'vue';
 export type RepeatButton = {
   icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once'
   title: 'リピート再生しない' | 'リピート再生' | '曲をリピート再生'
-  color: 'cyan' | 'grey lighten-1'
+  color: 'active-icon' | 'inactive'
 }
 
 export default Vue.extend({
@@ -35,19 +35,19 @@ export default Vue.extend({
         case 0:
           return {
             icon: 'mdi-repeat-off',
-            color: 'grey lighten-1',
+            color: 'inactive',
             title: 'リピート再生',
           };
         case 1:
           return {
             icon: 'mdi-repeat',
-            color: 'cyan',
+            color: 'active-icon',
             title: '曲をリピート再生',
           };
         default:
           return {
             icon: 'mdi-repeat-once',
-            color: 'cyan',
+            color: 'active-icon',
             title: 'リピート再生しない',
           };
       }

@@ -53,10 +53,10 @@
 
             <v-list-item-content>
               <div
-                :class="{
-                  [$style.DeviceSelectMenuList__listItemTitle]: true,
-                  'cyan--text text--accent-2': track.isPlaying
-                }"
+                :class="[
+                  $style.DeviceSelectMenuList__listItemTitle,
+                  trackNameColor(track.isPlaying),
+                ]"
                 class="g-ellipsis-text"
                 :title="track.name"
                 v-text="track.name"
@@ -65,7 +65,7 @@
               <v-list-item-subtitle
                 :class="[
                   $style.DeviceSelectMenuList__listItemSubtitle,
-                  track.isPlaying ? 'cyan--text text--accent-2' : 'grey--text text--lighten-1',
+                  subtitleColor(track.isPlaying),
                 ]"
               >
                 <nuxt-link
@@ -87,7 +87,7 @@
             <v-list-item-action>
               <v-icon
                 v-if="track.isPlaying"
-                color="cyan accent-2"
+                color="active"
                 title="再生中"
               >
                 mdi-volume-high
@@ -121,6 +121,8 @@ import { App } from '~~/types';
 
 type Data = {
   isShown: boolean
+  trackNameColor: (isPlaying: boolean) => string | undefined
+  subtitleColor: (isPlaying: boolean) => string | undefined
   artistNames: (artistList: App.SimpleArtistInfo[]) => string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
@@ -134,6 +136,8 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
+      trackNameColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : undefined),
+      subtitleColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : 'subtext--text'),
       artistNames: (artistList) => artistList.map((artist) => artist.name).join(', '),
       MENU_BACKGROUND_COLOR,
     };

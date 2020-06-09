@@ -13,7 +13,7 @@
 
     <v-slider
       v-model="volume"
-      color="cyan"
+      color="active-icon"
       thumb-color="white"
       hide-details
       dense

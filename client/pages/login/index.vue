@@ -12,7 +12,7 @@
 
       <v-btn
         rounded
-        color="cyan darken-3"
+        color="success"
         :class="$style.LoginCard__button"
         @click="onAuthButtonClicked"
       >

@@ -129,13 +129,13 @@ export default Vue.extend({
   computed: {
     titleColor(): string | undefined {
       return this.isTrackSet
-        ? 'cyan--text  text--accent-2'
+        ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
       return this.isTrackSet
-        ? 'cyan--text text--accent-2'
-        : 'grey--text';
+        ? 'active--text'
+        : 'subtext--text';
     },
   },
 

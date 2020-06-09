@@ -97,7 +97,7 @@ export default Vue.extend({
   computed: {
     titleColor(): string | undefined {
       return this.isTrackSet
-        ? 'cyan--text  text--accent-2'
+        ? 'active--text'
         : undefined;
     },
   },
