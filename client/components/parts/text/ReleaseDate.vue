@@ -5,7 +5,7 @@
   >
     <v-icon
       :size="size"
-      color="grey lighten-1"
+      color="subtext"
     >
       mdi-calendar
     </v-icon>

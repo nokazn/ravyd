@@ -10,7 +10,7 @@
     <template #header.duration>
       <v-icon
         :size="16"
-        color="grey"
+        color="subtext"
         title="再生時間"
       >
         mdi-clock-outline
@@ -20,7 +20,7 @@
     <template #header.addedAt>
       <v-icon
         :size="16"
-        color="grey"
+        color="subtext"
         title="保存した日"
       >
         mdi-calendar-outline

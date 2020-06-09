@@ -1,12 +1,12 @@
 <template>
   <td :colspan="colspan">
     <v-icon
-      color="grey"
+      color="subtext"
       :size="16"
     >
       mdi-album
     </v-icon>
-    <span class="grey--text">{{ discNumber }}</span>
+    <span class="subtext--text">{{ discNumber }}</span>
   </td>
 </template>
 
