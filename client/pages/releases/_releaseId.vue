@@ -13,8 +13,8 @@
         shadow
       />
 
-      <div :class="$style.ReleaseIdPage__releaseInfo">
-        <div :class="$style.ReleaseIdPage__releaseType">
+      <div>
+        <div class="g-small-text">
           {{ releaseInfo.albumType }}
         </div>
 
@@ -22,10 +22,7 @@
           {{ releaseInfo.name }}
         </h1>
 
-        <ArtistNames
-          :artist-list="releaseInfo.artistList"
-          :class="$style.ReleaseIdPage__artistsName"
-        />
+        <ArtistNames :artist-list="releaseInfo.artistList" />
 
         <div :class="$style.ReleaseIdPage__releaseInfoFooter">
           <div :class="$style.ReleaseIdPage__buttons">
@@ -189,20 +186,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   padding: 16px 6% 48px;
   &__header {
     display: flex;
-    margin-bottom: 24px;
+    align-items: flex-end;
+    margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px;
     }
-  }
-
-  &__releaseInfo {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  &__releaseType {
-    font-size: 10px;
   }
 
   &__releaseName {
@@ -211,27 +199,23 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     line-height: 1.2em;
   }
 
-  &__artistsName {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-
   &__releaseInfoFooter {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
+    margin-top: 12px;
+  }
+  &__buttons {
+    margin-right: 24px;
     & > *:not(:last-child) {
-      margin-right: 24px;
-    }
-    & > *:last-child {
-      margin-top: 12px;
+      margin-right: 12px;
     }
   }
-  &__buttons > *:not(:last-child) {
-    margin-right: 12px;
-  }
-  &__releaseDetail > *:not(:last-child) {
-    margin-right: 8px;
+  &__releaseDetail {
+    margin-top: 12px;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 
   &__trackList {

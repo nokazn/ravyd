@@ -16,11 +16,8 @@
         shadow
       />
       <div>
-        <div
-          title="認証済アーティスト"
-          :class="$style.ArtistIdPage__type"
-        >
-          <span>
+        <div title="認証済アーティスト">
+          <span class="g-small-text">
             アーティスト
           </span>
           <v-icon
@@ -36,9 +33,7 @@
           {{ artistInfo.name }}
         </h1>
 
-        <p>
-          {{ artistInfo.followersText }}
-        </p>
+        <p>{{ artistInfo.followersText }}</p>
 
         <div :class="$style.ArtistIdPage__buttons">
           <ContextMediaButton
@@ -247,9 +242,6 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     & > *:not(:last-child) {
       margin-right: 24px
     }
-  }
-  &__type {
-    font-size: 12px;
   }
   &__verifiedIrtistIcon {
     margin-bottom: 2px;
