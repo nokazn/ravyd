@@ -9,7 +9,7 @@ export const followPlaylist = (context: Context) => {
   }: {
     playlistId: string
     isPublic?: boolean
-  }): Promise<void> => app.$spotifyApi.$put(`/playlist/${playlistId}/followers`, null, {
+  }): Promise<void> => app.$spotifyApi.$put(`/playlists/${playlistId}/followers`, null, {
     params: {
       isPublic,
     },

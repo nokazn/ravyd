@@ -9,7 +9,7 @@ export const unfollowPlaylist = (context: Context) => {
   }: {
     playlistId: string
     isPublic?: boolean
-  }): Promise<void> => app.$spotifyApi.$delete(`/playlist/${playlistId}/followers`, {
+  }): Promise<void> => app.$spotifyApi.$delete(`/playlists/${playlistId}/followers`, {
     params: {
       isPublic,
     },
