@@ -274,7 +274,7 @@ export namespace SpotifyAPI {
     owner: UserData
     public: boolean | null
     snapshot_id: string
-    tracks: Track
+    tracks: Paging<PlaylistTrack>
     type: 'playlist'
     uri: string
   }
@@ -285,8 +285,7 @@ export namespace SpotifyAPI {
     added_at: string // timestamp
     added_by: UserData
     is_local: boolean
-    // @todo
-    track: Track | Episode
+    track: Track
   }
   export type PlaylistSnapshot = {
     snapshot_id: string

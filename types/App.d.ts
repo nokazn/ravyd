@@ -118,4 +118,16 @@ export namespace App {
     uri: string
     artworkSrc: string
   }
+  export type PlaylistInfo = {
+    id: string
+    name: string
+    description: string | null
+    uri: string
+    artworkSrc: string
+    owner: SpotifyAPI.UserData
+    totalTracks: number
+    durationMs: number
+    isFollowing: boolean | undefined
+    followersText: string
+  }
 }

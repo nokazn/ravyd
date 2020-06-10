@@ -5,6 +5,7 @@ import { createPlaylist } from './createPlaylist';
 import { editPlaylistDetail } from './editPlaylistDetail';
 import { getListOfCurrentUserPlaylist } from './getListOfCurrentUserPlaylist';
 import { getListOfUserPlaylist } from './getListOfUserPlaylist';
+import { getPlaylist } from './getPlaylist';
 import { getPlaylistArtwork } from './getPlaylistArtwork';
 import { getPlaylistItems } from './getPlaylistItems';
 import { removePlaylistItems } from './removePlaylistItems';
@@ -18,6 +19,7 @@ export const playlists = (context: Context) => ({
   editPlaylistDetail: editPlaylistDetail(context),
   getListOfCurrentUserPlaylist: getListOfCurrentUserPlaylist(context),
   getListOfUserPlaylist: getListOfUserPlaylist(context),
+  getPlaylist: getPlaylist(context),
   getPlaylistArtwork: getPlaylistArtwork(context),
   getPlaylistItems: getPlaylistItems(context),
   removePlaylistItems: removePlaylistItems(context),

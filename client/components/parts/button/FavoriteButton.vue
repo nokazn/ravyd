@@ -22,6 +22,12 @@ type ButtonProps = {
 
 export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: boolean
+}
+
 export default Vue.extend({
   props: {
     isFavorited: {
@@ -78,7 +84,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-clicked', !this.isFavorited);
+      this.$emit(ON_CLICKED, !this.isFavorited);
     },
   },
 });

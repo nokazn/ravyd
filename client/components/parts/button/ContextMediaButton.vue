@@ -17,6 +17,12 @@
 <script lang="ts">
 import Vue from 'vue';
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: boolean
+}
+
 export default Vue.extend({
   props: {
     isPlaying: {
@@ -40,7 +46,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-clicked', !this.isPlaying);
+      this.$emit(ON_CLICKED, !this.isPlaying);
     },
   },
 });
