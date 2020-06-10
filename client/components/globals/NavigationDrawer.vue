@@ -6,8 +6,9 @@
     :mobile-break-point="768"
     :width="200"
     :class="$style.NavigationDrawer"
+    class="NavigationDrawer"
   >
-    <v-list>
+    <v-list :class="$style.NavigationDrawer__list">
       <div :class="$style.NavigationDrawer__header">
         <UserMenu />
       </div>
@@ -33,17 +34,41 @@
           dense
         >
           <v-list-item-icon v-if="icon != null">
-            <v-icon>{{ icon }}</v-icon>
+            <v-icon v-text="icon" />
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title v-text="title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+
+      <v-list-item-group :class="$style.NavigationDrawer__lastGroup">
+        <v-divider :class="$style.NavigationDrawer__divider" />
+
+        <v-list-item
+          dense
+          @click="onPlaylistButtonClicked"
+        >
+          <v-list-item-icon>
+            <v-icon>
+              mdi-plus-circle
+            </v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-list-item-title>
-              {{ title }}
+              新規プレイリスト
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
     </v-list>
+
+    <CreatePlaylistModal
+      :is-shown="createPlaylistModal"
+      @on-changed="onCreatePlaylistModalChanged"
+    />
   </v-navigation-drawer>
 </template>
 
@@ -52,6 +77,7 @@ import Vue from 'vue';
 import { RootGetters } from 'vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
+import CreatePlaylistModal, { On } from '~/components/containers/modal/createPlaylistModal.vue';
 import { NAVIGATION_DRAWER_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
@@ -64,11 +90,13 @@ type Data = {
       icon?: string
     }[]
   }[]
+  createPlaylistModal: boolean
 }
 
 export default Vue.extend({
   components: {
     UserMenu,
+    CreatePlaylistModal,
   },
 
   data(): Data {
@@ -107,6 +135,7 @@ export default Vue.extend({
           ],
         },
       ],
+      createPlaylistModal: false,
     };
   },
 
@@ -116,6 +145,15 @@ export default Vue.extend({
     },
     userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];
+    },
+  },
+
+  methods: {
+    onPlaylistButtonClicked() {
+      this.createPlaylistModal = true;
+    },
+    onCreatePlaylistModalChanged(isShown: On['on-changed']) {
+      this.createPlaylistModal = isShown;
     },
   },
 });
@@ -131,12 +169,24 @@ export default Vue.extend({
       margin-right: 8px;
     }
   }
+
+  &__list {
+    height: 100%;
+  }
+
   &__divider {
     margin: 12px 0;
   }
 
   &__subheader {
     font-size: 12px;
+  }
+
+  &__lastGroup {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0
   }
 }
 </style>

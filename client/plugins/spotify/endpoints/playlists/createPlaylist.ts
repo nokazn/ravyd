@@ -19,7 +19,7 @@ export const createPlaylist = (context: Context) => {
   }): Promise<SpotifyAPI.Playlist | null> => {
     const request = app.$spotifyApi.$post(`/users/${userId}/playlists`, {
       name,
-      isPublic,
+      public: isPublic,
       collaborative,
       description,
     }).catch((err: Error) => {
