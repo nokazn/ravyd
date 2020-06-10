@@ -32,6 +32,12 @@ export type Data = {
   updateInterval: ReturnType<typeof setInterval> | null
 }
 
+const ON_CHANGED = 'on-changed';
+
+export type On = {
+  [ON_CHANGED]: number
+}
+
 export default Vue.extend({
   data(): Data {
     return {
@@ -88,12 +94,12 @@ export default Vue.extend({
 
   methods: {
     onEnd(value: number) {
-      this.$emit('on-change', value);
+      this.$emit(ON_CHANGED, value);
     },
     onMouseup() {
       // setter の後に実行させたい
       setTimeout(() => {
-        this.$emit('on-change', this.position);
+        this.$emit(ON_CHANGED, this.position);
       }, 0);
     },
     updatePosition() {

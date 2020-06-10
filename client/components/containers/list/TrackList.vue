@@ -8,7 +8,7 @@
         v-show="track.index < length"
         :key="`${track.id}-divider`"
       />
-      <track-list-item
+      <TrackListItem
         v-show="track.index < length"
         :key="track.id"
         :is-playing-track="isPlayingTrack(track.id)"
@@ -18,8 +18,6 @@
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />
     </template>
-  </v-list>
-</template>
   </v-list>
 </template>
 
@@ -77,7 +75,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked({ id, index }: On.OnMediaButtonClicked) {
+    onMediaButtonClicked({ id, index }: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
       } else {
@@ -89,7 +87,7 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked({ nextSavedState, id, index }: On.OnFavoriteButtonClicked) {
+    async onFavoriteButtonClicked({ nextSavedState, id, index }: On['on-favorite-button-clicked']) {
       const modifySavedState = (isSaved: boolean, i: number) => this.items
         .map((item, j) => (j === i
           ? { ...item, isSaved }

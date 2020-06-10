@@ -28,6 +28,12 @@ export type FollowText = 'フォロー'
   | 'フォローしない'
   | 'フォロー中'
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: boolean
+}
+
 export default Vue.extend({
   props: {
     isFollowing: {
@@ -58,7 +64,7 @@ export default Vue.extend({
   },
   methods: {
     onClicked() {
-      this.$emit('on-clicked', !this.isFollowing);
+      this.$emit(ON_CLICKED, !this.isFollowing);
     },
   },
 });

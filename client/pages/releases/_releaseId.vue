@@ -80,8 +80,8 @@ import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import ContextMediaButton from '~/components/parts/button/ContextMediaButton.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
+import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
+import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
@@ -154,7 +154,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
       : false;
   }
 
-  onFavoriteButtonClicked(nextSavedState: boolean) {
+  onFavoriteButtonClicked(nextSavedState: OnMediaButton['on-clicked']) {
     if (this.releaseInfo == null) return;
 
     this.releaseInfo.isSaved = nextSavedState;
@@ -166,7 +166,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     }
   }
 
-  onContextMediaButtonClicked(nextPlayingState: boolean) {
+  onContextMediaButtonClicked(nextPlayingState: OnFavorite['on-clicked']) {
     if (this.releaseInfo == null) return;
 
     if (nextPlayingState) {

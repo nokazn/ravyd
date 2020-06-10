@@ -98,8 +98,8 @@ import { Context } from '@nuxt/types';
 import { RootGetters } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
-import ContextMediaButton from '~/components/parts/button/ContextMediaButton.vue';
-import FollowButton from '~/components/parts/button/FollowButton.vue';
+import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
+import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import TrackListWrapper from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
@@ -199,7 +199,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       : false;
   }
 
-  onContextMediaButtonClicked(nextPlayingState: boolean) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
     if (this.artistInfo == null) return;
 
     if (nextPlayingState) {
@@ -210,7 +210,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       this.$dispatch('player/pause');
     }
   }
-  async onFollowButtonClicked(nextFollowingState: boolean) {
+  async onFollowButtonClicked(nextFollowingState: OnFollow['on-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

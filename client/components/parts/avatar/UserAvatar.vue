@@ -15,7 +15,7 @@
         :aspect-ratio="1"
         @load="onLoaded"
       >
-        <avatar-overlay
+        <AvatarOverlay
           :hover="isOverlayed && hover"
           :size="size"
           :icon="icon"
@@ -23,6 +23,7 @@
         />
       </v-img>
     </v-avatar>
+
     <v-icon
       v-else
       :size="size"
@@ -39,9 +40,12 @@ import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
+const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+const ON_LOADED = 'on-loaded';
+
 export type On = {
-  'on-media-button-clicked': void
-  'on-loaded': void
+  ON_MEDIA_BUTTON_CLICKED: void
+  ON_LOADED: void
 }
 
 export default Vue.extend({
@@ -84,10 +88,10 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-media-button-clicked');
+      this.$emit(ON_MEDIA_BUTTON_CLICKED);
     },
     onLoaded() {
-      this.$emit('on-loaded');
+      this.$emit(ON_LOADED);
     },
   },
 });

@@ -17,8 +17,10 @@ export type Data = {
   observer: IntersectionObserver | undefined
 }
 
+const ON_APPEARED = 'on-appeared';
+
 export type On = {
-  'on-appeared': undefined
+  [ON_APPEARED]: void
 }
 
 export default Vue.extend({
@@ -42,7 +44,7 @@ export default Vue.extend({
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          this.$emit('on-appeared');
+          this.$emit(ON_APPEARED);
         }
       });
     });

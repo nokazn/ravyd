@@ -23,6 +23,12 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: void
+}
+
 export default Vue.extend({
   props: {
     hover: {
@@ -55,7 +61,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-clicked');
+      this.$emit(ON_CLICKED);
     },
   },
 });

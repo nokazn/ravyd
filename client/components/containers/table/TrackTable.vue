@@ -46,7 +46,7 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
+import TrackTableRow, { On } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import { App } from '~~/types';
 
@@ -137,7 +137,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: App.TrackDetail) {
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -149,7 +149,7 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: App.TrackDetail) {
+    async onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;
       const modifySavedState = (isSaved: boolean, index: number) => this.items
         .map((item, i) => (i === index
@@ -170,7 +170,7 @@ export default Vue.extend({
       // 実際の状態と異なれば戻す
       if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, row.index);
     },
-    onRowClicked({ id }: App.TrackDetail) {
+    onRowClicked({ id }: On['on-row-clicked']) {
       this.activeRowId = id;
     },
   },

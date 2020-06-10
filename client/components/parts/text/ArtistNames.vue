@@ -30,8 +30,10 @@ import Vue, { PropType } from 'vue';
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
+const ON_CLICKED = 'on-clicked';
+
 export type On = {
-  'on-clicked': undefined
+  [ON_CLICKED]: void
 }
 
 export default Vue.extend({
@@ -57,7 +59,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-clicked');
+      this.$emit(ON_CLICKED);
     },
   },
 });

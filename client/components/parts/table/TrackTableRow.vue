@@ -64,6 +64,16 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import { App } from '~~/types';
 
+const ON_ROW_CLICKED = 'on-row-clicked';
+const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_ROW_CLICKED]: App.TrackDetail
+  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail
+  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
+}
+
 export default Vue.extend({
   components: {
     TrackListMediaButton,
@@ -104,13 +114,13 @@ export default Vue.extend({
 
   methods: {
     onRowClicked() {
-      this.$emit('on-row-clicked', this.item);
+      this.$emit(ON_ROW_CLICKED, this.item);
     },
     onMediaButtonClicked() {
-      this.$emit('on-media-button-clicked', this.item);
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
     },
     onFavoriteButtonClicked() {
-      this.$emit('on-favorite-button-clicked', this.item);
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
     },
   },
 });

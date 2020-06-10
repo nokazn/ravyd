@@ -8,7 +8,7 @@
   >
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
-        <release-artwork
+        <ReleaseArtwork
           v-if="hasAlbumArtwork"
           :src="albumArtWorkSrc(64)"
           :size="64"
@@ -18,20 +18,20 @@
         />
 
         <div :class="$style.Footer__trackInfo">
-          <marquee-release-name
+          <MarqueeReleaseName
             v-if="trackName != null"
             :name="trackName"
             :release-id="albumId"
           />
 
-          <marquee-artist-names
+          <MarqueeArtistNames
             v-if="artistList != null"
             :artist-list="artistList"
           />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
-          <favorite-button
+          <FavoriteButton
             :is-favorited="isSavedTrack"
             :size="20"
             @on-clicked="onFavoriteButtonClicked"
@@ -42,9 +42,9 @@
       <div :class="$style.Footer__center">
         <seek-bar
           :class="$style.Footer__seekBar"
-          @on-change="onSeekbarChanged"
+          @on-changed="onSeekbarChanged"
         />
-        <media-controllers-wrapper :class="$style.Footer__mediaControllers" />
+        <MediaControllersWrapper :class="$style.Footer__mediaControllers" />
       </div>
 
       <div :class="$style.Footer__right">
@@ -64,8 +64,8 @@
           </v-btn>
         </div>
 
-        <volume-slider
-          @on-change="onVolumuChanged"
+        <VolumeSlider
+          @on-changed="onVolumuChanged"
         />
       </div>
     </div>
@@ -79,12 +79,12 @@ import { RootState, RootGetters } from 'vuex';
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import MarqueeReleaseName from '~/components/parts/text/MarqueeReleaseName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import SeekBar from '~/components/containers/player/SeekBar.vue';
+import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
+import SeekBar, { On as OnSeek } from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
 import TrackListButton from '~/components/containers/player/TrackListButton.vue';
-import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
+import VolumeSlider, { On as OnVolume } from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
@@ -148,7 +148,7 @@ export default Vue.extend({
   },
 
   methods: {
-    async onFavoriteButtonClicked(isSaved: boolean) {
+    async onFavoriteButtonClicked(isSaved: OnFavorite['on-clicked']) {
       if (this.trackId == null) return;
 
       // API との通信の結果を待たずに先に表示を変更させておく
@@ -159,10 +159,10 @@ export default Vue.extend({
         await this.$dispatch('library/tracks/removeTracks', [this.trackId]);
       }
     },
-    onSeekbarChanged(position: number) {
+    onSeekbarChanged(position: OnSeek['on-changed']) {
       this.$dispatch('player/seek', position);
     },
-    onVolumuChanged(volumePercent: number) {
+    onVolumuChanged(volumePercent: OnVolume['on-changed']) {
       this.$dispatch('player/volume', { volumePercent });
     },
   },

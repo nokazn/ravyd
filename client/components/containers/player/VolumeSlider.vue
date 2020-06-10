@@ -32,6 +32,12 @@ export type VolumeButton = {
   title: 'ミュート' | 'ミュートを解除'
 }
 
+const ON_CHANGED = 'on-changed';
+
+export type On = {
+  [ON_CHANGED]: number
+}
+
 export default Vue.extend({
   computed: {
     volume: {
@@ -71,11 +77,11 @@ export default Vue.extend({
 
   methods: {
     onEnd(value: number) {
-      this.$emit('on-change', value);
+      this.$emit(ON_CHANGED, value);
     },
     onMouseup() {
       setTimeout(() => {
-        this.$emit('on-change', this.volume);
+        this.$emit(ON_CHANGED, this.volume);
       }, 0);
     },
     onVolumeButtonClicked() {

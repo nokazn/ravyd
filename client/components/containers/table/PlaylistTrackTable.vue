@@ -122,7 +122,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: On) {
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -134,7 +134,7 @@ export default Vue.extend({
         });
       }
     },
-    onFavoriteButtonClicked(row: On) {
+    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;
       if (nextSavedState) {
         this.$dispatch('library/tracks/saveTracks', [row.id]);
@@ -142,7 +142,7 @@ export default Vue.extend({
         this.$dispatch('library/tracks/removeTracks', [row.id]);
       }
     },
-    onRowClicked({ id }: On) {
+    onRowClicked({ id }: On['on-row-clicked']) {
       this.activeRowId = id;
     },
   },

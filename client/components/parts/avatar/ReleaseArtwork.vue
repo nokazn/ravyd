@@ -11,7 +11,7 @@
       :class="{ 'g-box-shadow': shadow }"
       @load="onLoaded"
     >
-      <avatar-overlay
+      <AvatarOverlay
         v-if="isOverlayed && hover"
         :hover="hover"
         :size="size"
@@ -32,9 +32,12 @@ export type Data = {
   isMediaButtonPushed: boolean
 }
 
+const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+const ON_LOADED = 'on-loaded';
+
 export type On = {
-  'on-media-button-clicked': void
-  'on-loaded': void
+  [ON_MEDIA_BUTTON_CLICKED]: void
+  [ON_LOADED]: void
 }
 
 export default Vue.extend({
@@ -71,10 +74,10 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-media-button-clicked');
+      this.$emit(ON_MEDIA_BUTTON_CLICKED);
     },
     onLoaded() {
-      this.$emit('on-loaded');
+      this.$emit(ON_LOADED);
     },
   },
 });

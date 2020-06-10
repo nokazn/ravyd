@@ -142,7 +142,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     const userId = this.$state().auth.userData?.id;
     if (this.playlistInfo == null || userId == null) return;
 
-    // 先に表示を変える
+    // API との通信の結果を待たずに先に表示を変更させておく
     this.playlistInfo.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {

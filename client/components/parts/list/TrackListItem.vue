@@ -6,7 +6,7 @@
       class="track-list-item"
     >
       <v-list-item-avatar tile>
-        <release-artwork
+        <ReleaseArtwork
           :src="artworkSrc"
           :size="40"
           :alt="name"
@@ -17,14 +17,14 @@
       <v-list-item-content>
         <div :class="$style.TrackListItem__content">
           <div :class="$style['TrackListItem__content--left']">
-            <track-list-media-button
+            <TrackListMediaButton
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
               :track-number="trackIndex"
               @on-clicked="onMediaButtonClicked"
             />
 
-            <favorite-button
+            <FavoriteButton
               :is-favorited="isSaved"
               @on-clicked="onFavoriteButtonClicked"
             />
@@ -42,14 +42,14 @@
           </div>
 
           <v-list-item-subtitle v-if="hasSubtitle">
-            <artist-names :artist-list="artistList" />
+            <ArtistNames :artist-list="artistList" />
           </v-list-item-subtitle>
         </div>
       </v-list-item-content>
 
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
-          <explicit-chip v-if="explicit" />
+          <ExplicitChip v-if="explicit" />
 
           <span
             :class="$style.TrackListItem__actionDuration"
@@ -85,12 +85,15 @@ export type Data = {
   trackIndex: number
 }
 
-export namespace On {
-  export type OnMediaButtonClicked = {
+const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_MEDIA_BUTTON_CLICKED]: {
     index: number
     id: string
   }
-  export type OnFavoriteButtonClicked = {
+  [ON_FAVORITE_BUTTON_CLICKED]: {
     index: number
     id: string
     nextSavedState: boolean
@@ -192,14 +195,14 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      this.$emit('on-media-button-clicked', {
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, {
         id: this.id,
         index: this.index,
       });
     },
     onFavoriteButtonClicked(nextSavedState: boolean) {
       const { id, index } = this;
-      this.$emit('on-favorite-button-clicked', {
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, {
         nextSavedState,
         id,
         index,
