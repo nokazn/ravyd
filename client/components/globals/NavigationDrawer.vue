@@ -77,7 +77,7 @@ import Vue from 'vue';
 import { RootGetters } from 'vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
-import CreatePlaylistModal, { On } from '~/components/containers/modal/createPlaylistModal.vue';
+import CreatePlaylistModal, { On } from '~/components/containers/modal/CreatePlaylistModal.vue';
 import { NAVIGATION_DRAWER_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
