@@ -1,6 +1,7 @@
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
+  // TrackListTable component
   export type TrackDetail = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
@@ -19,6 +20,7 @@ export namespace App {
     isSaved: boolean
     duration: string
   }
+  // PlaylistTrackTable component
   export type PlaylistTrackDetail = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
@@ -50,18 +52,7 @@ export namespace App {
     artworkSrc: string
   }
 
-  export type ReleaseCardInfo = {
-    type: 'album' | 'track'
-    releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
-    name: string //  track または album の name
-    id: string //  track または album の id
-    releaseId: string
-    uri: string
-    artists: App.SimpleArtistInfo[]
-    releaseYear?: string
-    artworkSrc: string
-  }
-  // /releases/{release_id}
+  // /releases/:releaseId page
   export type ReleaseInfo = {
     albumType: 'アルバム' | 'シングル' | 'コンピレーション'
     artistList: App.SimpleArtistInfo[]
@@ -78,10 +69,29 @@ export namespace App {
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
   }
+  export type ReleaseCardInfo = {
+    type: 'album' | 'track'
+    releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
+    name: string //  track または album の name
+    id: string //  track または album の id
+    releaseId: string
+    uri: string
+    artists: App.SimpleArtistInfo[]
+    releaseYear?: string
+    artworkSrc: string
+  }
 
   export type SimpleArtistInfo = {
     name: string
     id: string
+  }
+  // /artists/:artistId page
+  export type ArtistInfo = {
+    name: string
+    id: string
+    uri: string
+    avatarSrc: string
+    followersText: string
   }
   export type ArtistCardInfo = {
     name: string
@@ -89,13 +99,26 @@ export namespace App {
     uri: string
     avatarSrc: string
   }
-  // /artists/{artist_id}
-  export type ArtistInfo = {
-    name: string
+
+  // /playlists/:playlistId page
+  export type PlaylistInfo = {
     id: string
+    name: string
+    description: string | null
     uri: string
-    avatarSrc: string
+    artworkSrc: string
+    owner: SpotifyAPI.UserData
+    totalTracks: number
+    durationMs: number
+    isFollowing: boolean | undefined
     followersText: string
+  }
+  export type PlaylistCardInfo = {
+    id: string
+    name: string
+    description: string | null
+    uri: string
+    artworkSrc: string
   }
 
   export type AddedAtInfo = {
@@ -109,25 +132,5 @@ export namespace App {
     id: string
     name: string
     artworkSrc: string
-  }
-
-  export type PlaylistCardInfo = {
-    id: string
-    name: string
-    description: string | null
-    uri: string
-    artworkSrc: string
-  }
-  export type PlaylistInfo = {
-    id: string
-    name: string
-    description: string | null
-    uri: string
-    artworkSrc: string
-    owner: SpotifyAPI.UserData
-    totalTracks: number
-    durationMs: number
-    isFollowing: boolean | undefined
-    followersText: string
   }
 }
