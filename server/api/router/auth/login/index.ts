@@ -67,6 +67,7 @@ export const login = (req: Request, res: Response) => {
       'user-modify-playback-state',
       'playlist-modify-public',
       'playlist-modify-private',
+      'ugc-image-upload',
       'user-library-read',
       'user-library-modify',
       'user-top-read',
