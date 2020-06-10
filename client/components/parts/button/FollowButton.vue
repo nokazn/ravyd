@@ -2,7 +2,7 @@
   <v-hover #default="{ hover }">
     <v-btn
       rounded
-      :outlined="!isFollowing"
+      outlined
       :width="180"
       @click="onClicked"
     >
