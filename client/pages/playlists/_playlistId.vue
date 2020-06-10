@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.PlaylistIdPage">
+  <div
+    :class="$style.PlaylistIdPage"
+    :style="styles"
+  >
     <div :class="$style.PlaylistIdPage__header">
       <ReleaseArtwork
         :src="playlistInfo.artworkSrc"
@@ -62,6 +65,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -101,6 +105,10 @@ interface AsyncData {
       await getTrackList(context),
     ]);
 
+    if (playlistInfo != null) {
+      context.app.$dispatch('extractDominantBackgroundColor', playlistInfo.artworkSrc);
+    }
+
     return {
       artworkSize,
       playlistInfo,
@@ -119,6 +127,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     };
   }
 
+  beforeDestroy() {
+    this.$dispatch('resetBackgroundColor');
+  }
+
+  get styles(): RootGetters['backgroundStyles'] {
+    return this.$getters().backgroundStyles;
+  }
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }
