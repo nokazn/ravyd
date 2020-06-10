@@ -9,6 +9,7 @@
     >
       mdi-clock-outline
     </v-icon>
+
     <span :style="textStyles">
       {{ duration }}
     </span>
