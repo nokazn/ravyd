@@ -60,10 +60,10 @@
       </div>
     </div>
 
-    <TrackListTable
+    <TrackTable
       :track-list="releaseInfo.trackList"
       :uri="releaseInfo.uri"
-      :class="$style.ReleaseIdPage__trackList"
+      :class="$style.ReleaseIdPage__trackTable"
     />
 
     <Copyrights
@@ -87,7 +87,7 @@ import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
-import TrackListTable from '~/components/containers/table/TrackListTable.vue';
+import TrackTable from '~/components/containers/table/TrackTable.vue';
 import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 import { App } from '~~/types';
 
@@ -106,7 +106,7 @@ export interface AsyncData {
     ReleaseTotalTracks,
     ReleaseDuration,
     ReleaseLabel,
-    TrackListTable,
+    TrackTable,
     Copyrights,
   },
 
@@ -218,7 +218,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     }
   }
 
-  &__trackList {
+  &__trackTable {
     margin-bottom: 16px;
   }
 }

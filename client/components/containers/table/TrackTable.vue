@@ -6,8 +6,8 @@
     disable-pagination
     disable-sort
     hide-default-footer
-    :class="$style.TrackListTable"
-    class="TrackListTable"
+    :class="$style.TrackTable"
+    class="TrackTable"
   >
     <template #header.duration>
       <v-icon
@@ -20,7 +20,7 @@
     </template>
 
     <template #group.header="{ group }">
-      <track-list-table-group-header
+      <TrackTableGroupHeader
         v-if="hasMultipleDiscs"
         :disc-number="group"
         :colspan="headers.length"
@@ -28,7 +28,7 @@
     </template>
 
     <template #item="{ item }">
-      <track-list-table-row
+      <TrackTableRow
         :item="item"
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
@@ -46,8 +46,8 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackListTableRow from '~/components/parts/table/TrackListTableRow.vue';
-import TrackListTableGroupHeader from '~/components/parts/table/TrackListTableGroupHeader.vue';
+import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
+import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import { App } from '~~/types';
 
 export type Data = {
@@ -58,8 +58,8 @@ export type Data = {
 
 export default Vue.extend({
   components: {
-    TrackListTableRow,
-    TrackListTableGroupHeader,
+    TrackTableRow,
+    TrackTableGroupHeader,
   },
 
   props: {
@@ -178,7 +178,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.TrackListTable {
+.TrackTable {
   // 表の背景を透過にする
   background-color: rgba(0, 0, 0, 0)!important;
   // 表全体の背景と同じ色にする
@@ -197,7 +197,7 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.TrackListTable {
+.TrackTable {
   .v-row-group__header {
     // 表全体の背景と同じ色にする
       background: inherit!important;

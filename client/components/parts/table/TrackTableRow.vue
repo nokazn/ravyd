@@ -2,7 +2,7 @@
   <v-hover #default="{ hover: isRowHovered }">
     <tr
       :id="item.hash"
-      :class="$style.TrackListTableRow"
+      :class="$style.TrackTableRow"
       :data-is-active="isActive"
       :data-is-track-set="isTrackSet"
       @click="onRowClicked"
@@ -24,7 +24,7 @@
       </td>
 
       <td :title="item.name">
-        <div :class="$style.TrackListTableRow__content">
+        <div :class="$style.TrackTableRow__content">
           <span
             class="g-ellipsis-text"
             :class="titleColor"
@@ -117,7 +117,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.TrackListTableRow {
+.TrackTableRow {
   cursor: pointer;
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
