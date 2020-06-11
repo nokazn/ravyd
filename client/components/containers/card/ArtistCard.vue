@@ -25,6 +25,8 @@
             :alt="name"
             :size="width"
             :icon="mediaIcon"
+            default-user-icon="mdi-account-music"
+            small-icon
             :title="name"
             is-overlayed
             @on-media-button-clicked="onMediaButtonClicked"

@@ -10,10 +10,15 @@ const computeAbsoluteRatioDiff = (
 /**
  * minSize より大きいギリギリのサイズの画像の URL を返す
  */
-export const getImageSrc = (imageList: SpotifyAPI.Image[], minSize?: number) => {
+export const getImageSrc = (
+  imageList: SpotifyAPI.Image[],
+  minSize?: number,
+): string | undefined => {
+  if (imageList.length === 0) return undefined;
+
   if (minSize == null) return imageList[0].url;
 
-  const appropriateImage = imageList.reduce((prev, curr) => {
+  const appropriateImage: SpotifyAPI.Image = imageList.reduce((prev, curr) => {
     if (prev == null) return curr;
 
     const prevDiff = computeAbsoluteRatioDiff(prev.width, minSize);
@@ -23,5 +28,5 @@ export const getImageSrc = (imageList: SpotifyAPI.Image[], minSize?: number) => 
       : prev;
   });
 
-  return appropriateImage.url;
+  return appropriateImage?.url;
 };

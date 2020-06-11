@@ -20,6 +20,7 @@
       :to="`/genres/${id}`"
     >
       <v-img
+        v-if="src != null"
         :src="src"
         :alt="name"
         :title="name"
@@ -35,12 +36,28 @@
           />
         </div>
       </v-img>
+
+      <v-sheet
+        v-else
+        :title="name"
+        :height="size || 200"
+        :width="size"
+        :max-width="maxSize"
+      >
+        <div :class="$style.CategoryImage__link">
+          <span
+            class="g-ellipsis-text"
+            :title="name"
+            v-text="name"
+          />
+        </div>
+      </v-sheet>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 export type Data = {
   isLoaded: boolean
@@ -57,7 +74,7 @@ export default Vue.extend({
       required: true,
     },
     src: {
-      type: String,
+      type: String as PropType<string | undefined>,
       required: true,
     },
     size: {

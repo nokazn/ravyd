@@ -37,11 +37,13 @@ html {
 /**
  * デフォルトのリンクのスタイル
  */
-.v-application a {
-  color: inherit;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
+.v-application {
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -60,12 +62,18 @@ html {
   }
 }
 
+/**
+ * あふれた文字を省略
+ */
 .g-ellipsis-text {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow-x: hidden;
 }
 
+/**
+ * 周りに影をつける
+ */
 .g-box-shadow {
   box-shadow: 0 0 8px 8px rgba($g-background-color, .2);
 }

@@ -1,6 +1,7 @@
 <template>
   <v-hover #default="{ hover }">
     <v-img
+      v-if="src != null"
       :src="src"
       :alt="alt"
       :height="size"
@@ -19,6 +20,16 @@
         @on-clicked="onClicked"
       />
     </v-img>
+    <v-sheet
+      v-else
+      :min-width="size || 180"
+      :min-height="size || 180"
+      :class="$style.ReleaseArtwork__noArtwork"
+    >
+      <v-icon :size="noArtworkIconSize">
+        mdi-music
+      </v-icon>
+    </v-sheet>
   </v-hover>
 </template>
 
@@ -29,7 +40,7 @@ import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
 export type Data = {
-  isMediaButtonPushed: boolean
+  noArtworkIconSize: number
 }
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -47,8 +58,8 @@ export default Vue.extend({
 
   props: {
     src: {
-      type: String,
-      required: true,
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
     alt: {
       type: String,
@@ -72,6 +83,14 @@ export default Vue.extend({
     },
   },
 
+  data(): Data {
+    return {
+      noArtworkIconSize: this.size != null
+        ? this.size * 0.4
+        : 60,
+    };
+  },
+
   methods: {
     onClicked() {
       this.$emit(ON_MEDIA_BUTTON_CLICKED);
@@ -82,3 +101,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.ReleaseArtwork{
+  &__noArtwork {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+</style>

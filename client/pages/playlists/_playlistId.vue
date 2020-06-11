@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="playlistInfo != null"
     :class="$style.PlaylistIdPage"
     :style="styles"
   >
@@ -123,7 +124,7 @@ interface AsyncData {
     const isFullTrackList = trackList == null
       || (trackList != null && trackList.length < LIMIT_OF_TRACKS);
 
-    if (playlistInfo != null) {
+    if (playlistInfo?.artworkSrc != null) {
       context.app.$dispatch('extractDominantBackgroundColor', playlistInfo.artworkSrc);
     }
 

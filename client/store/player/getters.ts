@@ -13,7 +13,7 @@ export type PlayerGetters = {
   isTheAppPlaying: boolean
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
   albumId: string | null
-  albumArtworkSrc: (minSize?: number) => string | null
+  albumArtworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
   isAlbumSet: (albumId: string) => boolean
@@ -98,7 +98,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   albumArtworkSrc(state) {
     return (minSize?: number) => (state.albumArtWorkList != null
       ? getImageSrc(state.albumArtWorkList, minSize)
-      : null);
+      : undefined);
   },
 
   hasTrack(state) {

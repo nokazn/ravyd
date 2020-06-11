@@ -1,7 +1,7 @@
 <template>
   <v-hover #default="{ hover }">
     <v-avatar
-      v-if="src"
+      v-if="src != null"
       :size="size"
       :class="{ 'g-box-shadow': shadow }"
     >
@@ -24,13 +24,16 @@
       </v-img>
     </v-avatar>
 
-    <v-icon
+    <v-sheet
       v-else
-      :size="size"
-      class="user-avatar"
+      :min-width="size"
+      :min-height="size"
+      :class="$style.UserAvatar__noAvatar"
     >
-      {{ defaultUserIcon }}
-    </v-icon>
+      <v-icon :size="noAvatarIconSize">
+        {{ defaultUserIcon }}
+      </v-icon>
+    </v-sheet>
   </v-hover>
 </template>
 
@@ -39,6 +42,10 @@ import Vue, { PropType } from 'vue';
 import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
+
+export type Data = {
+  noAvatarIconSize: number
+}
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
@@ -55,10 +62,8 @@ export default Vue.extend({
 
   props: {
     src: {
-      required: true,
-      validator(value) {
-        return typeof value === 'string' || value == null;
-      },
+      type: String,
+      default: undefined,
     },
     alt: {
       type: String,
@@ -80,10 +85,22 @@ export default Vue.extend({
       type: String,
       default: 'mdi-account-circle-outline',
     },
+    smallIcon: {
+      type: Boolean,
+      default: false,
+    },
     shadow: {
       type: Boolean,
       default: false,
     },
+  },
+
+  data(): Data {
+    return {
+      noAvatarIconSize: this.smallIcon
+        ? this.size * 0.6
+        : this.size,
+    };
   },
 
   methods: {
@@ -96,3 +113,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.UserAvatar{
+  &__noAvatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+</style>

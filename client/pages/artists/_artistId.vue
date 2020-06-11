@@ -153,7 +153,7 @@ export type AsyncData = {
       getTopTrackList(context, topTrackArtworkSize),
     ] as const);
 
-    if (artistInfo != null) {
+    if (artistInfo?.avatarSrc != null) {
       context.app.$dispatch('extractDominantBackgroundColor', artistInfo.avatarSrc);
     }
 

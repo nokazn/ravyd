@@ -121,7 +121,7 @@ export default Vue.extend({
         ? albumArtWorkList.length > 0
         : false;
     },
-    albumArtWorkSrc(): (size: number) => string | null {
+    albumArtWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['player/albumArtworkSrc'](size);
     },
     trackName(): RootState['player']['trackName'] {

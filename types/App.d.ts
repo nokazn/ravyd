@@ -49,7 +49,7 @@ export namespace App {
     }[]
     releaseName: string
     releaseId: string
-    artworkSrc: string
+    artworkSrc: string | undefined
   }
 
   // /releases/:releaseId page
@@ -62,7 +62,7 @@ export namespace App {
     uri: string
     releaseDate: string
     releaseDatePrecision: string
-    artworkSrc: string
+    artworkSrc: string | undefined
     trackList: App.TrackDetail[]
     totalTracks: number
     durationMs: number
@@ -78,7 +78,7 @@ export namespace App {
     uri: string
     artists: App.SimpleArtistInfo[]
     releaseYear?: string
-    artworkSrc: string
+    artworkSrc: string | undefined
   }
 
   export type SimpleArtistInfo = {
@@ -90,14 +90,14 @@ export namespace App {
     name: string
     id: string
     uri: string
-    avatarSrc: string
+    avatarSrc: string | undefined
     followersText: string
   }
   export type ArtistCardInfo = {
     name: string
     id: string
     uri: string
-    avatarSrc: string
+    avatarSrc: string | undefined
   }
 
   // /playlists/:playlistId page
@@ -106,7 +106,7 @@ export namespace App {
     name: string
     description: string | null
     uri: string
-    artworkSrc: string
+    artworkSrc: string | undefined
     owner: SpotifyAPI.UserData
     totalTracks: number
     durationMs: number
@@ -118,7 +118,7 @@ export namespace App {
     name: string
     description: string | null
     uri: string
-    artworkSrc: string
+    artworkSrc: string | undefined
   }
 
   export type AddedAtInfo = {
@@ -131,6 +131,6 @@ export namespace App {
   export type CategoryInfo = {
     id: string
     name: string
-    artworkSrc: string
+    artworkSrc: string | undefined
   }
 }

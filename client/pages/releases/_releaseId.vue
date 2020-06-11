@@ -118,7 +118,7 @@ export interface AsyncData {
     const artworkSize = 220;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
 
-    if (releaseInfo != null) {
+    if (releaseInfo?.artworkSrc != null) {
       context.app.$dispatch('extractDominantBackgroundColor', releaseInfo.artworkSrc);
     }
 
