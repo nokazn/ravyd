@@ -22,6 +22,10 @@
           {{ playlistInfo.name }}
         </h1>
 
+        <p class="subtext--text">
+          {{ playlistInfo.description }}
+        </p>
+
         <UserName :user="playlistInfo.owner" />
 
         <div :class="$style.PlaylistIdPage__playlistInfoFooter">
@@ -57,13 +61,14 @@
     </div>
 
     <PlaylistTrackTable
-      v-if="trackList != null"
+      v-if="playlistTrackInfo != null"
+      :track-list="playlistTrackInfo.trackList"
       :uri="playlistInfo.uri"
-      :track-list="trackList"
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullTrackList"
+      v-if="playlistTrackInfo != null"
+      :is-loading="!playlistTrackInfo.isFullTrackList"
       @on-appeared="getTrackList"
     />
   </div>
@@ -83,7 +88,7 @@ import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getPlaylistInfo, getTrackList } from '~/scripts/localPlugins/_playlistId';
+import { getPlaylistInfo, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { App } from '~~/types';
 
@@ -93,8 +98,7 @@ const LIMIT_OF_TRACKS = 30;
 interface AsyncData {
   artworkSize: typeof ARTWORK_SIZE
   playlistInfo: App.PlaylistInfo | null
-  trackList: App.PlaylistTrackDetail[] | null
-  isFullTrackList: boolean
+  playlistTrackInfo: App.PlaylistTrackInfo | null
 }
 
 @Component({
@@ -116,13 +120,10 @@ interface AsyncData {
 
   async asyncData(context): Promise<AsyncData> {
     const artworkSize = ARTWORK_SIZE;
-    const [playlistInfo, trackList] = await Promise.all([
+    const [playlistInfo, playlistTrackInfo] = await Promise.all([
       await getPlaylistInfo(context, artworkSize),
-      await getTrackList(context, LIMIT_OF_TRACKS),
+      await getPlaylistTrackInfo(context, LIMIT_OF_TRACKS),
     ]);
-
-    const isFullTrackList = trackList == null
-      || (trackList != null && trackList.length < LIMIT_OF_TRACKS);
 
     if (playlistInfo?.artworkSrc != null) {
       context.app.$dispatch('extractDominantBackgroundColor', playlistInfo.artworkSrc);
@@ -131,16 +132,14 @@ interface AsyncData {
     return {
       artworkSize,
       playlistInfo,
-      trackList,
-      isFullTrackList,
+      playlistTrackInfo,
     };
   },
 })
 export default class PlaylistIdPage extends Vue implements AsyncData {
   artworkSize: typeof ARTWORK_SIZE = ARTWORK_SIZE;
   playlistInfo: App.PlaylistInfo | null = null;
-  trackList: App.PlaylistTrackDetail[] | null = null;
-  isFullTrackList = false;
+  playlistTrackInfo: App.PlaylistTrackInfo | null = null;
 
   head() {
     return {
@@ -166,10 +165,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
    * localPlugins の getTrackList と同じ処理で、スクロールが下限に到達したとき呼ばれる
    */
   async getTrackList() {
-    if (this.isFullTrackList) return;
+    if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
 
+    const currentTrackList = this.playlistTrackInfo.trackList;
     const { playlistId } = this.$route.params;
-    const offset = this.trackList?.length;
+    const offset = currentTrackList.length;
     const market = this.$getters()['auth/userCountryCode'];
     const tracks = await this.$spotify.playlists.getPlaylistItems({
       playlistId,
@@ -178,21 +178,21 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
       market,
     });
     if (tracks == null) {
-      this.isFullTrackList = true;
+      this.playlistTrackInfo.isFullTrackList = true;
       return;
     }
 
-    const trackIdList = tracks.items.map(({ track }) => track.id);
+    const filteredTrackList = tracks.items
+      .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
+    const trackIdList = filteredTrackList.map(({ track }) => track.id);
     const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({
       trackIdList,
     });
-    const addedTrackList = tracks.items.map(convertPlaylistTrackDetail({ isTrackSavedList }));
-    this.trackList = this.trackList != null
-      ? [...this.trackList, ...addedTrackList]
-      : addedTrackList;
+    const addedTrackList = filteredTrackList.map(convertPlaylistTrackDetail({ isTrackSavedList }));
+    this.playlistTrackInfo.trackList = [...currentTrackList, ...addedTrackList];
 
     if (tracks.next == null) {
-      this.isFullTrackList = true;
+      this.playlistTrackInfo.isFullTrackList = true;
     }
   }
 

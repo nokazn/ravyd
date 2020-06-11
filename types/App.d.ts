@@ -106,12 +106,19 @@ export namespace App {
     name: string
     description: string | null
     uri: string
-    artworkSrc: string | undefined
     owner: SpotifyAPI.UserData
-    totalTracks: number
+    artworkSrc: string | undefined
     durationMs: number
+    totalTracks: number
     isFollowing: boolean | undefined
     followersText: string
+  }
+  export type PlaylistTrackInfo = {
+    trackList: PlaylistTrackDetail[]
+    isFullTrackList: boolean
+  }
+  export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {
+    track: SpotifyAPI.Track
   }
   export type PlaylistCardInfo = {
     id: string

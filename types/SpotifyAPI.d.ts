@@ -285,7 +285,7 @@ export namespace SpotifyAPI {
     added_at: string // timestamp
     added_by: UserData
     is_local: boolean
-    track: Track
+    track: Track | null
   }
   export type PlaylistSnapshot = {
     snapshot_id: string

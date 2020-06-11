@@ -32,14 +32,10 @@ export const getPlaylistInfo = async (
 
   const artworkSrc = getImageSrc(images, artworkSize);
 
-  const durationMs = tracks.items.reduce((prev, { track }) => track.duration_ms + prev, 0);
-
-  tracks.items.reduce((prev, { track }) => {
-    console.log({ prev, curr: track });
-    return track.duration_ms + prev;
-  }, 0);
-
-  const totalTracks = tracks.items.length;
+  const filteredTrackList = tracks.items
+    .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
+  const totalTracks = filteredTrackList.length;
+  const durationMs = filteredTrackList.reduce((prev, { track }) => track.duration_ms + prev, 0);
 
   // owner が自分の場合はフォローボタンは表示しない
   const [isFollowing] = owner.id === userId
@@ -56,8 +52,8 @@ export const getPlaylistInfo = async (
     name,
     description,
     uri,
-    artworkSrc,
     owner,
+    artworkSrc,
     totalTracks,
     durationMs,
     isFollowing,
