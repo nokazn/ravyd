@@ -45,7 +45,7 @@ const actions: Actions<
     const market = rootGetters['auth/userCountryCode'];
     if (market == null) return;
 
-    const offset = getters.trackListLength + 1;
+    const offset = getters.trackListLength;
     const tracks = await this.$spotify.library.getUserSavedTracks({
       limit,
       offset,
@@ -59,8 +59,10 @@ const actions: Actions<
 
     // 保存された楽曲を取得しているので isSaved はすべて true
     const isTrackSavedList = new Array(tracks.items.length).fill(true);
-    const trackList = tracks.items
-      .map(convertPlaylistTrackDetail({ isTrackSavedList }));
+    const trackList = tracks.items.map(convertPlaylistTrackDetail({
+      isTrackSavedList,
+      offset,
+    }));
 
     commit('ADD_TO_TRACK_LIST', trackList);
 
