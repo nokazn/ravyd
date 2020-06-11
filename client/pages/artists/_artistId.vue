@@ -113,6 +113,10 @@ import {
 import { BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
+const AVATAR_SIZE = 220;
+const ARTWORK_MAX_SIZE = 180;
+const TOP_TRACK_ARTWORK_SIZE = 64;
+
 export type AsyncData = {
   avatarSize: number
   topTrackArtworkSize: number
@@ -138,9 +142,9 @@ export type AsyncData = {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const artworkMaxSize = 180;
-    const avatarSize = 220;
-    const topTrackArtworkSize = 64;
+    const artworkMaxSize = ARTWORK_MAX_SIZE;
+    const avatarSize = AVATAR_SIZE;
+    const topTrackArtworkSize = TOP_TRACK_ARTWORK_SIZE;
     const [
       releaseListMap,
       artistInfo,
@@ -169,13 +173,13 @@ export type AsyncData = {
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData {
-  avatarSize = 220
-  topTrackArtworkSize = 64
-  releaseListMap: ArtistReleaseInfo | null = null
-  artistInfo: App.ArtistInfo | null = null
-  isFollowing = false
-  topTrackList: App.TrackDetail[] | null = null
-  listColor: typeof BACKGROUND_COLOR = BACKGROUND_COLOR
+  avatarSize = AVATAR_SIZE;
+  topTrackArtworkSize = TOP_TRACK_ARTWORK_SIZE;
+  releaseListMap: ArtistReleaseInfo | null = null;
+  artistInfo: App.ArtistInfo | null = null;
+  isFollowing = false;
+  topTrackList: App.TrackDetail[] | null = null;
+  listColor: typeof BACKGROUND_COLOR = BACKGROUND_COLOR;
 
   head() {
     return {

@@ -82,7 +82,9 @@ export default class LibraryArtistsPage extends Vue implements Data {
   }
 
   onLoadingCircleAppeared() {
-    this.$dispatch('library/artists/getSavedArtistList');
+    this.$dispatch('library/artists/getSavedArtistList', {
+      limit: LIMIT_OF_ARTISTS,
+    });
   }
 }
 </script>

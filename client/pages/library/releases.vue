@@ -78,7 +78,9 @@ export default class LibraryReleasesPage extends Vue implements Data {
   }
 
   onLoadingCircleAppeared() {
-    this.$dispatch('library/releases/getSavedReleaseList');
+    this.$dispatch('library/releases/getSavedReleaseList', {
+      limit: LIMIT_OF_RELEASES,
+    });
   }
 }
 </script>

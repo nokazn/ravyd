@@ -8,7 +8,7 @@
       <ReleaseArtwork
         :src="releaseInfo.artworkSrc"
         :alt="releaseInfo.name"
-        :size="220"
+        :size="artworkSize"
         :title="releaseInfo.name"
         shadow
       />
@@ -91,6 +91,8 @@ import TrackTable from '~/components/containers/table/TrackTable.vue';
 import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 import { App } from '~~/types';
 
+const ARTWORK_SIZE = 220;
+
 export interface AsyncData {
   artworkSize: number
   releaseInfo: App.ReleaseInfo | null
@@ -115,7 +117,7 @@ export interface AsyncData {
   },
 
   async asyncData(context: Context): Promise<AsyncData> {
-    const artworkSize = 220;
+    const artworkSize = ARTWORK_SIZE;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
 
     if (releaseInfo?.artworkSrc != null) {
@@ -129,7 +131,7 @@ export interface AsyncData {
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData {
-  artworkSize = 220
+  artworkSize = ARTWORK_SIZE
   releaseInfo: App.ReleaseInfo | null = null
 
   head() {

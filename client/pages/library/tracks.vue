@@ -66,7 +66,9 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   onLoadingCircleAppear() {
-    this.$dispatch('library/tracks/getSavedTrackList');
+    this.$dispatch('library/tracks/getSavedTrackList', {
+      limit: LIMIT_OF_TRACKS,
+    });
   }
 }
 </script>
