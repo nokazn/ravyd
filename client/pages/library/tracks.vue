@@ -28,6 +28,7 @@ import { App } from '~~/types';
 
 interface Data {
   observer: IntersectionObserver | undefined
+  title: string
 }
 
 const LIMIT_OF_TRACKS = 30 as const;

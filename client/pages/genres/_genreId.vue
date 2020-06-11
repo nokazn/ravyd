@@ -30,7 +30,7 @@
 
     <IntersectionLoadingCircle
       :is-loading="!isFullPlaylists"
-      @on-appeared="onLoadingCircleAppeared"
+      @on-appeared="getCategoryPlaylist"
     />
   </div>
 </template>
@@ -88,6 +88,9 @@ export default class GenreIdPage extends Vue implements AsyncData {
   playlists: App.PlaylistCardInfo[] | null = null;
   isFullPlaylists = false;
 
+  /**
+   * localPlugins の getCategoryPlaylist と同じ処理で、スクロールが下限に到達したとき呼ばれる
+   */
   async getCategoryPlaylist() {
     if (this.isFullPlaylists) return;
 
@@ -113,10 +116,6 @@ export default class GenreIdPage extends Vue implements AsyncData {
     if (playlists.next == null) {
       this.isFullPlaylists = true;
     }
-  }
-
-  onLoadingCircleAppeared() {
-    this.getCategoryPlaylist();
   }
 }
 </script>
