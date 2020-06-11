@@ -37,10 +37,9 @@
           />
         </v-card-title>
 
-        <v-card-subtitle
-          :class="$style.PlaylistCard__text"
-          v-text="description"
-        />
+        <v-card-subtitle :class="$style.PlaylistCard__text">
+          {{ description }}
+        </v-card-subtitle>
       </div>
     </v-card>
   </div>

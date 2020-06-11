@@ -17,7 +17,6 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
       ...config.headers,
       Authorization: `Bearer ${accessToken}`,
     };
-    console.log('header is updated!', { accessToken });
   });
 
   spotifyApi.onResponse(() => {

@@ -141,7 +141,6 @@ export default Vue.extend({
 
       const fileReader = new FileReader();
       fileReader.addEventListener('load', async () => {
-        console.log(fileReader.result);
         await this.$spotify.playlists.uploadPlaylistArtwork({
           playlistId: playlist.id,
           artwork: fileReader.result as string,
