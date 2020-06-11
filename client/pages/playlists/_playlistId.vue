@@ -39,7 +39,7 @@
               v-if="playlistInfo.isFollowing != null"
               :is-favorited="playlistInfo.isFollowing"
               outlined
-              @on-clicked="onFavoriteButtonClicked"
+              @on-clicked="onFollowButtonClicked"
             />
           </div>
 
@@ -64,6 +64,7 @@
       v-if="playlistTrackInfo != null"
       :track-list="playlistTrackInfo.trackList"
       :uri="playlistInfo.uri"
+      @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
     <IntersectionLoadingCircle
@@ -79,10 +80,10 @@ import { Vue, Component } from 'nuxt-property-decorator';
 import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
-import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
+import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
-import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
+import FavoriteButton, { On as OnFollowButton } from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
@@ -188,7 +189,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({
       trackIdList,
     });
-    const addedTrackList = filteredTrackList.map(convertPlaylistTrackDetail({ isTrackSavedList }));
+    const addedTrackList = filteredTrackList.map(convertPlaylistTrackDetail({
+      isTrackSavedList,
+      offset,
+    }));
     this.playlistTrackInfo.trackList = [...currentTrackList, ...addedTrackList];
 
     if (tracks.next == null) {
@@ -208,7 +212,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     }
   }
 
-  async onFavoriteButtonClicked(nextFollowingState: OnFavoriteButton['on-clicked']) {
+  async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {
     const userId = this.$state().auth.userData?.id;
     if (this.playlistInfo == null || userId == null) return;
 
@@ -226,6 +230,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
       playlistId,
       userIdList: [userId],
     });
+  }
+
+  onFavoriteTrackButtonClicked(row: OnTable['on-favorite-button-clicked']) {
+    if (this.playlistTrackInfo == null) return;
+
+    const nextTrackList = [...this.playlistTrackInfo.trackList];
+    nextTrackList[row.index].isSaved = !row.isSaved;
+    this.playlistTrackInfo = {
+      ...this.playlistTrackInfo,
+      trackList: nextTrackList,
+    };
   }
 }
 </script>

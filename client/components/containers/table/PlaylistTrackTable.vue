@@ -46,13 +46,19 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import PlaylistTrackTableRow, { On } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
   activeRowId: string | null
 };
+
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
+}
 
 export default Vue.extend({
   components: {
@@ -122,7 +128,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: On['on-media-button-clicked']) {
+    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -134,15 +140,19 @@ export default Vue.extend({
         });
       }
     },
-    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;
+
+      const params: On['on-favorite-button-clicked'] = row;
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
+
       if (nextSavedState) {
         this.$dispatch('library/tracks/saveTracks', [row.id]);
       } else {
         this.$dispatch('library/tracks/removeTracks', [row.id]);
       }
     },
-    onRowClicked({ id }: On['on-row-clicked']) {
+    onRowClicked({ id }: OnRow['on-row-clicked']) {
       this.activeRowId = id;
     },
   },
