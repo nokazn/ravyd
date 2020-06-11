@@ -22,9 +22,10 @@
           {{ playlistInfo.name }}
         </h1>
 
-        <p class="subtext--text">
-          {{ playlistInfo.description }}
-        </p>
+        <p
+          class="subtext--text"
+          v-html="playlistInfo.description"
+        />
 
         <UserName :user="playlistInfo.owner" />
 
