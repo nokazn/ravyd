@@ -57,12 +57,12 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
-    state.albumArtWorkList = currentTrack?.album.images;
+    state.artWorkList = currentTrack?.album.images;
     state.trackName = currentTrack?.name;
     state.trackId = currentTrack?.id ?? undefined;
     state.trackUri = currentTrack?.uri;
-    state.albumName = currentTrack?.album.name;
-    state.albumUri = currentTrack?.album.uri;
+    state.releaseName = currentTrack?.album.name;
+    state.releaseUri = currentTrack?.album.uri;
     state.artistList = currentTrack?.artists.map((artist) => ({
       name: artist.name,
       id: artist.uri.replace(/^.+:/g, ''),

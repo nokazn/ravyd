@@ -5,18 +5,18 @@ export type PlayerState = {
   deviceId: string | undefined
   activeDeviceList: SpotifyAPI.Device[]
   contextUri: string | undefined
-  trackName: string | undefined
   trackId: string | undefined
+  trackName: string | undefined
   trackUri: string | undefined
-  albumName: string | undefined
-  albumUri: string | undefined
-  albumArtWorkList: SpotifyAPI.Image[] | undefined
+  releaseName: string | undefined
+  releaseUri: string | undefined
+  artWorkList: SpotifyAPI.Image[] | undefined
   artistList: App.SimpleArtistInfo[] | undefined
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
-  isSavedTrack: boolean
   isPlaying: boolean
+  isSavedTrack: boolean
   position: number
   duration: number
   isShuffled: boolean
@@ -30,19 +30,19 @@ const state = (): PlayerState => ({
   playbackPlayer: undefined,
   deviceId: undefined,
   activeDeviceList: [],
-  albumArtWorkList: undefined,
+  artWorkList: undefined,
   contextUri: undefined,
-  trackName: undefined,
   trackId: undefined,
+  trackName: undefined,
   trackUri: undefined,
-  albumName: undefined,
-  albumUri: undefined,
+  releaseName: undefined,
+  releaseUri: undefined,
   artistList: [],
   nextTrackList: [],
   previousTrackList: [],
   recentlyPlayed: undefined,
-  isSavedTrack: false,
   isPlaying: false,
+  isSavedTrack: false,
   position: 0,
   duration: 0,
   isShuffled: false,

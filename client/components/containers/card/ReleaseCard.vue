@@ -158,7 +158,7 @@ export default Vue.extend({
     isReleaseSet(): boolean {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
       return (this.uri.includes('track') && this.$getters()['player/isTrackSet'](this.id))
-        || (this.uri.includes('album') && this.$getters()['player/isAlbumSet'](this.id));
+        || (this.uri.includes('album') && this.$getters()['player/isReleaseSet'](this.id));
     },
 
     mediaIcon(): MediaIcon {

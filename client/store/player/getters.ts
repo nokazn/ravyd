@@ -12,11 +12,11 @@ export type PlayerGetters = {
   activeDevice: SpotifyAPI.Device | null
   isTheAppPlaying: boolean
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
-  albumId: string | null
-  albumArtworkSrc: (minSize?: number) => string | undefined
+  releaseId: string | null
+  artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
-  isAlbumSet: (albumId: string) => boolean
+  isReleaseSet: (releaseId: string) => boolean
   isArtistSet: (artistId: string) => boolean
   repeatState: SpotifyAPI.RepeatState
   isPreviousDisallowed: boolean
@@ -31,11 +31,11 @@ export type RootGetters = {
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/isTheAppPlaying']: PlayerGetters['isTheAppPlaying']
   ['player/trackQueue']: PlayerGetters['trackQueue']
-  ['player/albumId']: PlayerGetters['albumId']
-  ['player/albumArtworkSrc']: PlayerGetters['albumArtworkSrc']
+  ['player/releaseId']: PlayerGetters['releaseId']
+  ['player/artworkSrc']: PlayerGetters['artworkSrc']
   ['player/hasTrack']: PlayerGetters['hasTrack']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
-  ['player/isAlbumSet']: PlayerGetters['isAlbumSet']
+  ['player/isReleaseSet']: PlayerGetters['isReleaseSet']
   ['player/isArtistSet']: PlayerGetters['isArtistSet']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
@@ -63,7 +63,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   trackQueue(state, getters) {
     return (artworkSize = 64) => {
-      if (state.albumArtWorkList == null) return [];
+      // @todo ???
+      if (state.artWorkList == null) return [];
 
       const currentTrack = {
         isPlaying: true,
@@ -71,9 +72,9 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         name: state.trackName!,
         uri: state.trackUri!,
         artistList: state.artistList!,
-        releaseName: state.albumName!,
-        releaseId: getters.albumId!,
-        artworkSrc: getImageSrc(state.albumArtWorkList!, artworkSize),
+        releaseName: state.releaseName!,
+        releaseId: getters.releaseId!,
+        artworkSrc: getImageSrc(state.artWorkList!, artworkSize),
       };
       const previousTrackList = state.previousTrackList
         .map(convertTrackForQueue(false, artworkSize));
@@ -88,16 +89,16 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     };
   },
 
-  albumId(state) {
+  releaseId(state) {
     // 最後の ":" 以降を取り出す
-    return state.albumUri != null
-      ? convertUriToId(state.albumUri)
+    return state.releaseUri != null
+      ? convertUriToId(state.releaseUri)
       : null;
   },
 
-  albumArtworkSrc(state) {
-    return (minSize?: number) => (state.albumArtWorkList != null
-      ? getImageSrc(state.albumArtWorkList, minSize)
+  artworkSrc(state) {
+    return (minSize?: number) => (state.artWorkList != null
+      ? getImageSrc(state.artWorkList, minSize)
       : undefined);
   },
 
@@ -105,8 +106,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return state.trackId != null
       && state.trackName != null
       && state.trackUri != null
-      && state.albumName != null
-      && state.albumUri != null
+      && state.releaseName != null
+      && state.releaseUri != null
       && state.artistList != null;
   },
 
@@ -114,8 +115,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return (trackId) => state.trackId === trackId;
   },
 
-  isAlbumSet(_state, getters) {
-    return (albumId) => getters.albumId === albumId;
+  isReleaseSet(_state, getters) {
+    return (releaseId) => getters.releaseId === releaseId;
   },
 
   isArtistSet(state) {

@@ -27,7 +27,7 @@
         <div :class="$style.ReleaseIdPage__releaseInfoFooter">
           <div :class="$style.ReleaseIdPage__buttons">
             <ContextMediaButton
-              :is-playing="isPlaying && isAlbumSet"
+              :is-playing="isPlaying && isReleaseSet"
               @on-clicked="onContextMediaButtonClicked"
             />
 
@@ -148,9 +148,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }
-  get isAlbumSet(): boolean {
+  get isReleaseSet(): boolean {
     return this.releaseInfo != null
-      ? this.$getters()['player/isAlbumSet'](this.releaseInfo.id)
+      ? this.$getters()['player/isReleaseSet'](this.releaseInfo.id)
       : false;
   }
 
@@ -158,11 +158,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     if (this.releaseInfo == null) return;
 
     this.releaseInfo.isSaved = nextSavedState;
-    const albumIdList = [this.releaseInfo.id];
+    const releaseIdList = [this.releaseInfo.id];
     if (nextSavedState) {
-      this.$dispatch('library/releases/saveReleases', albumIdList);
+      this.$dispatch('library/releases/saveReleases', releaseIdList);
     } else {
-      this.$dispatch('library/releases/removeReleases', albumIdList);
+      this.$dispatch('library/releases/removeReleases', releaseIdList);
     }
   }
 
@@ -171,7 +171,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
 
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
-      this.$dispatch('player/play', this.isAlbumSet
+      this.$dispatch('player/play', this.isReleaseSet
         ? undefined
         : { contextUri: this.releaseInfo.uri });
     } else {

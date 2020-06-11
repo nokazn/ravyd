@@ -9,8 +9,7 @@
     <div :class="$style.Footer__container">
       <div :class="$style.Footer__left">
         <ReleaseArtwork
-          v-if="hasAlbumArtwork"
-          :src="albumArtWorkSrc(64)"
+          :src="artWorkSrc(64)"
           :size="64"
           :alt="trackName"
           :title="trackName"
@@ -21,7 +20,7 @@
           <MarqueeReleaseName
             v-if="trackName != null"
             :name="trackName"
-            :release-id="albumId"
+            :release-id="releaseId"
           />
 
           <MarqueeArtistNames
@@ -86,7 +85,6 @@ import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectM
 import TrackListButton from '~/components/containers/player/TrackListButton.vue';
 import VolumeSlider, { On as OnVolume } from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
-import { App } from '~~/types';
 
 type Data = {
   FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
@@ -114,15 +112,8 @@ export default Vue.extend({
   },
 
   computed: {
-    // @todo any[] で推論されてしまう
-    hasAlbumArtwork(): boolean {
-      const { albumArtWorkList } = this.$state().player;
-      return albumArtWorkList != null
-        ? albumArtWorkList.length > 0
-        : false;
-    },
-    albumArtWorkSrc(): (size: number) => string | undefined {
-      return (size: number) => this.$getters()['player/albumArtworkSrc'](size);
+    artWorkSrc(): (size: number) => string | undefined {
+      return (size: number) => this.$getters()['player/artworkSrc'](size);
     },
     trackName(): RootState['player']['trackName'] {
       return this.$state().player.trackName;
@@ -130,13 +121,13 @@ export default Vue.extend({
     trackId(): RootState['player']['trackId'] {
       return this.$state().player.trackId;
     },
-    albumId(): RootGetters['player/albumId'] {
-      return this.$getters()['player/albumId'];
+    releaseId(): RootGetters['player/releaseId'] {
+      return this.$getters()['player/releaseId'];
     },
-    artistList(): App.SimpleArtistInfo[] | undefined {
+    artistList(): RootState['player']['artistList'] {
       return this.$state().player.artistList;
     },
-    isSavedTrack(): boolean {
+    isSavedTrack(): RootState['player']['isSavedTrack'] {
       return this.$state().player.isSavedTrack;
     },
   },
