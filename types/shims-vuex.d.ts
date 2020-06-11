@@ -15,6 +15,10 @@ import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
+    $state: () => RootState
+    $getters: () => RootGetters
+    $commit: SFCCommit
+    $dispatch: SFCDispatch
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance,
     $spotify: SpotifyEndpoints

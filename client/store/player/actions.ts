@@ -66,7 +66,6 @@ export type RootActions = {
 
 const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
   initPlayer({
-    state,
     commit,
     getters,
     dispatch,
@@ -133,9 +132,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           },
           disallows,
         } = playerState;
-        const lastTrackId = state.trackId;
         const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
         const disallowList = disallowKeys.filter((key) => disallows[key]);
+
+        const lastTrackId = this.$state().player.trackId;
+        const trackId = currentTrack.id;
+        // trackId 変わったときだけチェック
+        if (trackId != null && trackId !== lastTrackId) {
+          dispatch('checkTrackSavedState', trackId);
+        }
 
         commit('SET_IS_PLAYING', !isPaused);
         commit('SET_CONTEXT_URI', uri ?? undefined);
@@ -148,12 +153,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_NEXT_TRACK_LIST', nextTracks);
         commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
         commit('SET_DISALLOW_LIST', disallowList);
-
-        const trackId = currentTrack.id;
-        // trackId 変わったときだけチェック
-        if (trackId != null && trackId !== lastTrackId) {
-          dispatch('checkTrackSavedState', trackId);
-        }
       }));
 
       player.addListener('ready', async ({ device_id }) => {
