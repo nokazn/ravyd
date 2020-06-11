@@ -116,7 +116,7 @@ export default Vue.extend({
       return (size: number) => this.$getters()['player/artworkSrc'](size);
     },
     trackName(): RootState['player']['trackName'] {
-      return this.$state().player.trackName;
+      return this.$state().player.trackName ?? '';
     },
     trackId(): RootState['player']['trackId'] {
       return this.$state().player.trackId;
