@@ -18,7 +18,7 @@ export type PlayerGetters = {
   isTrackSet: (trackId: string) => boolean
   isReleaseSet: (releaseId: string) => boolean
   isArtistSet: (artistId: string) => boolean
-  repeatState: SpotifyAPI.RepeatState
+  repeatState: SpotifyAPI.RepeatState | undefined
   isPreviousDisallowed: boolean
   isShuffleDisallowed: boolean
   isRepeatContextDisallowed: boolean
@@ -128,7 +128,9 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   repeatState(state) {
-    return REPEAT_STATE_LIST[state.repeatMode];
+    return state.repeatMode != null
+      ? REPEAT_STATE_LIST[state.repeatMode]
+      : undefined;
   },
 
   isPreviousDisallowed(state) {

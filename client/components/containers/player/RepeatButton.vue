@@ -32,23 +32,23 @@ export default Vue.extend({
   computed: {
     repeatButton(): RepeatButton {
       switch (this.$state().player.repeatMode) {
-        case 0:
-          return {
-            icon: 'mdi-repeat-off',
-            color: 'inactive',
-            title: 'リピート再生',
-          };
         case 1:
           return {
             icon: 'mdi-repeat',
             color: 'active-icon',
             title: '曲をリピート再生',
           };
-        default:
+        case 2:
           return {
             icon: 'mdi-repeat-once',
             color: 'active-icon',
             title: 'リピート再生しない',
+          };
+        default:
+          return {
+            icon: 'mdi-repeat-off',
+            color: 'inactive',
+            title: 'リピート再生',
           };
       }
     },

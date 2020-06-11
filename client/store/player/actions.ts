@@ -124,7 +124,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           duration,
           paused: isPaused,
           shuffle: isShuffled,
-          // repeat_mode: repeatMode,
+          repeat_mode: repeatMode,
           track_window: {
             current_track: currentTrack,
             next_tracks: nextTracks,
@@ -147,12 +147,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION', position);
         commit('SET_DURATION', duration);
         commit('SET_IS_SHUFFLED', isShuffled);
-        // 表示がちらつくので、player/repeat 内で commit する
-        // commit('SET_REPEAT_MODE', repeatMode);
         commit('SET_CURRENT_TRACK', currentTrack);
         commit('SET_NEXT_TRACK_LIST', nextTracks);
         commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
         commit('SET_DISALLOW_LIST', disallowList);
+
+        // 表示がちらつくので、初回以外は player/repeat 内で commit する
+        if (this.$state().player.repeatMode == null) {
+          commit('SET_REPEAT_MODE', repeatMode);
+        }
       }));
 
       player.addListener('ready', async ({ device_id }) => {
@@ -330,6 +333,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async repeat({ state, commit }) {
+    // 初回読み込み時は undefined
+    if (state.repeatMode == null) return;
+
     const { deviceId } = state;
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
     await this.$spotify.player.repeat({
