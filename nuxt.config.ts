@@ -62,10 +62,12 @@ const config: Configuration = {
     baseURL: process.env.BASE_URL || 'https://127.0.0.1:3000',
     browserBaseURL: process.env.SPOTIFY_URL,
     progress: false,
-    retry: 3,
+    retry: true,
     debug: process.env.NODE_ENV === 'development',
     headers: {
-      Accept: 'application/json',
+      common: {
+        Accept: 'application/json',
+      },
     },
   },
   vuetify: {
