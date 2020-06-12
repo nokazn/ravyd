@@ -1,4 +1,4 @@
-FROM node:13.10-alpine
+FROM node:12.18.0-alpine
 
 ENV PROJECT_ROOTDIR /app/
 
@@ -6,7 +6,7 @@ WORKDIR $PROJECT_ROOTDIR
 
 COPY package.json yarn.lock $PROJECT_ROOTDIR
 
-RUN yarn install
+RUN apk add python make g++ && yarn install
 
 COPY . $PROJECT_ROOTDIR
 
