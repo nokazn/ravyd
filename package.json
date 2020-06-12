@@ -4,6 +4,9 @@
   "description": "",
   "author": "nokazn",
   "private": true,
+  "engines": {
+    "node": "12.18.0"
+  },
   "scripts": {
     "dev": "nuxt-ts",
     "build": "nuxt-ts build",
