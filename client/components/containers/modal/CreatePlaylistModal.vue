@@ -2,11 +2,24 @@
   <v-dialog
     v-model="modal"
     :max-width="600"
+    :class="$style.CreatePlaylistModal"
   >
     <v-card>
-      <v-card-title>
-        プレイリストの作成
-      </v-card-title>
+      <div :class="$style.CreatePlaylistModal__title">
+        <v-card-title>
+          プレイリストの作成
+        </v-card-title>
+
+        <v-btn
+          icon
+          title="閉じる"
+          @click="onCloseButtonClicked"
+        >
+          <v-icon>
+            mdi-close
+          </v-icon>
+        </v-btn>
+      </div>
 
       <v-card-text>
         <div>
@@ -49,7 +62,7 @@
             :min-width="90"
             @click="onCloseButtonClicked"
           >
-            閉じる
+            キャンセル
           </v-btn>
 
           <v-btn
@@ -163,6 +176,15 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .CreatePlaylistModal {
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    & > *:last-child {
+      margin-right: 8px;
+    }
+  }
   &__action {
     padding: 12px;
     width: 100%;
