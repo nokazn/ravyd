@@ -13,7 +13,7 @@
         shadow
       />
 
-      <div>
+      <div :class="$style.ReleaseIdPage__info">
         <div class="g-small-text">
           {{ releaseInfo.albumType }}
         </div>
@@ -188,11 +188,16 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
   padding: 16px 6% 48px;
   &__header {
     display: flex;
-    align-items: flex-end;
     margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px;
     }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   &__releaseName {

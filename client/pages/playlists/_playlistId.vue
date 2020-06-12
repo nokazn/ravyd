@@ -13,7 +13,7 @@
         shadow
       />
 
-      <div>
+      <div :class="$style.PlaylistIdPage__info">
         <div class="g-small-text">
           プレイリスト
         </div>
@@ -251,7 +251,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
   padding: 16px 6% 48px;
   &__header {
     display: flex;
-    align-items: flex-end;
     margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px;
@@ -261,12 +260,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     }
   }
 
+  &__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
   &__playlistName {
     font-size: 40px;
     margin: 8px 0;
     line-height: 1.2em;
   }
-
   &__playlistInfoFooter {
     display: flex;
     flex-wrap: wrap;

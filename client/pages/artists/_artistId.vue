@@ -15,7 +15,7 @@
         default-user-icon="mdi-account-music"
         shadow
       />
-      <div>
+      <div :class="$style.ArtistIdPage__info">
         <div title="認証済アーティスト">
           <span class="g-small-text">
             アーティスト
@@ -241,12 +241,18 @@ export default class ArtistIdPage extends Vue implements AsyncData {
 
   &__header {
     display: flex;
-    align-items: flex-end;
     margin-bottom: 32px;
     & > *:not(:last-child) {
       margin-right: 24px
     }
   }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
   &__verifiedIrtistIcon {
     margin-bottom: 2px;
   }
