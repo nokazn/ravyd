@@ -1,7 +1,10 @@
 <template>
   <v-hover #default="{ hover: isRowHovered }">
     <tr
-      :class="$style.TrackListTableRow"
+      :class="{
+        [$style.TrackListTableRow]: true,
+        'inactive--text': !item.isPlayable
+      }"
       :data-is-active="isActive"
       :data-is-track-set="isTrackSet"
       @click="onRowClicked"
@@ -14,6 +17,7 @@
           <PlaylistMediaButton
             :is-hovered="isRowHovered"
             :is-playing-track="isPlayingTrack"
+            :disabled="!item.isPlayable"
             @on-clicked="onMediaButtonClicked"
           />
           <FavoriteButton
@@ -73,6 +77,7 @@
         <v-btn
           icon
           size="small"
+          :disabled="!item.isPlayable"
           title="メニュー"
         >
           <v-icon>
@@ -136,11 +141,13 @@ export default Vue.extend({
 
   computed: {
     titleColor(): string | undefined {
+      if (!this.item.isPlayable) return 'inactive--text';
       return this.isTrackSet
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
+      if (!this.item.isPlayable) return 'inactive--text';
       return this.isTrackSet
         ? 'active--text'
         : 'subtext--text';

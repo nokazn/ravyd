@@ -1,9 +1,11 @@
 <template>
   <v-btn
     icon
+    :disabled="disabled"
+    :title="mediaButton.title"
     @click="onClick"
   >
-    <v-icon :title="mediaButton.title">
+    <v-icon>
       {{ mediaButton.icon }}
     </v-icon>
   </v-btn>
@@ -14,7 +16,7 @@ import Vue from 'vue';
 
 export type MediaButton = {
   icon: 'mdi-play' | 'mdi-pause' | 'mdi-volume-high'
-  title: '再生' | '停止' | '再生中'
+  title: '再生' | '停止' | '再生中' | '再生できない項目'
 }
 
 export default Vue.extend({
@@ -27,10 +29,21 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
     mediaButton(): MediaButton {
+      if (this.disabled) {
+        return {
+          icon: 'mdi-play',
+          title: '再生できない項目',
+        };
+      }
+
       if (!this.isPlayingTrack) {
         return {
           icon: 'mdi-play',

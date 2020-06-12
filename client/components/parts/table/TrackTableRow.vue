@@ -2,7 +2,10 @@
   <v-hover #default="{ hover: isRowHovered }">
     <tr
       :id="item.hash"
-      :class="$style.TrackTableRow"
+      :class="{
+        [$style.TrackTableRow]: true,
+        'inactive--text': !item.isPlayable
+      }"
       :data-is-active="isActive"
       :data-is-track-set="isTrackSet"
       @click="onRowClicked"
@@ -12,6 +15,7 @@
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
           :track-number="item.trackNumber"
+          :disabled="!item.isPlayable"
           @on-clicked="onMediaButtonClicked"
         />
       </td>
@@ -19,6 +23,7 @@
       <td>
         <FavoriteButton
           :is-favorited="item.isSaved"
+          :disableda="!item.isPlayable"
           @on-clicked="onFavoriteButtonClicked"
         />
       </td>
@@ -45,6 +50,7 @@
         <v-btn
           icon
           size="small"
+          :disabled="!item.isPlayable"
           title="メニュー"
         >
           <v-icon>

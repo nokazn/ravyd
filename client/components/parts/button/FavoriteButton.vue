@@ -2,6 +2,7 @@
   <v-btn
     icon
     v-bind="buttonProps"
+    :disabled="disabled"
     :title="title"
     @click="onClicked"
   >
@@ -39,6 +40,10 @@ export default Vue.extend({
       default: undefined,
     },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

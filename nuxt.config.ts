@@ -89,7 +89,7 @@ const config: Configuration = {
           active: colors.cyan.accent2,
           'active-icon': colors.cyan.base,
           subtext: colors.grey.lighten1,
-          inactive: colors.grey.lighten1,
+          inactive: colors.grey.darken1,
         },
       },
     },

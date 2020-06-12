@@ -1,7 +1,7 @@
 <template>
   <span :class="$style.TrackListMediaButton">
     <v-btn
-      v-if="isHovered"
+      v-if="isHovered && !disabled"
       outlined
       small
       icon
@@ -13,13 +13,17 @@
     </v-btn>
 
     <v-icon
-      v-else-if="isPlayingTrack"
+      v-else-if="isPlayingTrack && !disabled"
       title="再生中"
     >
       mdi-volume-high
     </v-icon>
 
-    <span v-else-if="trackNumber != null">
+    <span
+      v-else-if="trackNumber != null"
+      :title="disabledTitle"
+      :class="{ 'inactive--text': disabled }"
+    >
       {{ trackNumber }}
     </span>
   </span>
@@ -31,6 +35,10 @@ import Vue from 'vue';
 export type MediaButton = {
   icon: 'mdi-play' | 'mdi-pause'
   title: '再生' | '停止'
+}
+
+export type Data = {
+  disabledTitle: string | undefined
 }
 
 export default Vue.extend({
@@ -47,6 +55,16 @@ export default Vue.extend({
       type: Number,
       default: undefined,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data(): Data {
+    return {
+      disabledTitle: this.disabled ? '再生できない項目' : undefined,
+    };
   },
 
   computed: {

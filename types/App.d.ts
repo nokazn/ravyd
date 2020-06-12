@@ -17,6 +17,7 @@ export namespace App {
       id: SpotifyAPI.Artist['id'],
     }[]
     explicit: boolean
+    isPlayable: boolean
     isSaved: boolean
     duration: string
   }
@@ -34,6 +35,7 @@ export namespace App {
       id: SpotifyAPI.Artist['id'],
     }[]
     explicit: boolean
+    isPlayable: boolean
     isSaved: boolean
     duration: string
     addedAt: AddedAtInfo

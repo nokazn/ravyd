@@ -29,6 +29,7 @@ export const convertTrackDetail = ({
       id: artist.id,
     })),
     explicit: track.explicit,
+    isPlayable: track.is_playable,
     isSaved: isTrackSavedList[index],
     duration: elapsedTime(track.duration_ms),
   };
