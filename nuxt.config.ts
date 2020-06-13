@@ -96,10 +96,12 @@ const config: Configuration = {
   },
   loading: { color: '#fff' },
   server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
-    },
+    https: process.env.NODE_ENV === 'development'
+      ? {
+        key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
+        cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
+      }
+      : undefined,
   },
   build: {
     babel: {
