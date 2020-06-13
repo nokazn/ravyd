@@ -80,7 +80,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     margin-bottom: 16px;
   }
   &__table {
-    width: calc((100vw - #{g-navigation-drawer-width}) * 0.94);
+    width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }
   &__loading {
     display: flex;
