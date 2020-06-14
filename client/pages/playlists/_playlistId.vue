@@ -2,7 +2,6 @@
   <div
     v-if="playlistInfo != null"
     :class="$style.PlaylistIdPage"
-    :style="styles"
   >
     <div :class="$style.PlaylistIdPage__header">
       <ReleaseArtwork
@@ -78,7 +77,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootGetters } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -153,9 +151,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     this.$dispatch('resetBackgroundColor');
   }
 
-  get styles(): RootGetters['backgroundStyles'] {
-    return this.$getters().backgroundStyles;
-  }
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }

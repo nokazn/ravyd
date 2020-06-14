@@ -1,7 +1,6 @@
 <template>
   <div
     :class="$style.ArtistIdPage"
-    :style="styles"
   >
     <div
       v-if="artistInfo != null"
@@ -95,7 +94,6 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootGetters } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -157,10 +155,6 @@ export type AsyncData = {
       getTopTrackList(context, topTrackArtworkSize),
     ] as const);
 
-    if (artistInfo?.avatarSrc != null) {
-      context.app.$dispatch('extractDominantBackgroundColor', artistInfo.avatarSrc);
-    }
-
     return {
       avatarSize,
       topTrackArtworkSize,
@@ -187,13 +181,6 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     };
   }
 
-  beforeDestroy() {
-    this.$dispatch('resetBackgroundColor');
-  }
-
-  get styles(): RootGetters['backgroundStyles'] {
-    return this.$getters().backgroundStyles;
-  }
   get isPlaying(): boolean {
     return this.$state().player.isPlaying;
   }

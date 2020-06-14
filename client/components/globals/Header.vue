@@ -48,7 +48,7 @@
 import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
-import { HEADER_BACKGROUND_COLOR, BACKGROUND_RGB_LIST } from '~/variables';
+import { HEADER_BACKGROUND_COLOR, DEFAULT_DOMINANT_RGB_LIST } from '~/variables';
 
 type Data = {
   HEADER_BACKGROUND_COLOR: typeof HEADER_BACKGROUND_COLOR
@@ -73,9 +73,9 @@ export default Vue.extend({
     styles(): { backgroundColor: string } {
       const rgbList = this.$state().dominantBackgroundColor?.rgb
         ?.map((color) => Math.round(color))
-          ?? BACKGROUND_RGB_LIST;
+          ?? DEFAULT_DOMINANT_RGB_LIST;
 
-      return { backgroundColor: `rgba(${rgbList.join(', ')}, 0.7)` };
+      return { backgroundColor: `rgba(${rgbList.join(',')},0.7)` };
     },
   },
 

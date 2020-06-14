@@ -1,6 +1,7 @@
 import { SpotifyAPI } from '~~/types';
 
-export const BACKGROUND_RGB_LIST = [12, 12, 12];
+export const DEFAULT_DOMINANT_COLOR = '#3c3c3c';
+export const DEFAULT_DOMINANT_RGB_LIST = [60, 60, 60];
 export const BACKGROUND_COLOR = '#121212';
 export const HEADER_BACKGROUND_COLOR = '#121212';
 export const FOOTER_BACKGROUND_COLOR = '#323232';
