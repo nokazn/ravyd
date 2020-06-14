@@ -18,19 +18,20 @@
 
         <div :class="$style.Footer__trackInfo">
           <MarqueeReleaseName
-            v-if="trackName != null"
+            v-if="hasTrack"
             :name="trackName"
             :release-id="releaseId"
           />
 
           <MarqueeArtistNames
-            v-if="artistList != null"
+            v-if="hasTrack"
             :artist-list="artistList"
           />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
           <FavoriteButton
+            v-if="hasTrack"
             :is-favorited="isSavedTrack"
             :size="20"
             @on-clicked="onFavoriteButtonClicked"
@@ -112,6 +113,9 @@ export default Vue.extend({
   },
 
   computed: {
+    hasTrack(): RootGetters['player/hasTrack'] {
+      return this.$getters()['player/hasTrack'];
+    },
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['player/artworkSrc'](size);
     },
