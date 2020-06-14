@@ -3,12 +3,13 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.nuxt.dev
     container_name: nuxt
     tty: true
     ports:
       - 3000:3000
-    env_file: .env-docker
+    env_file: 
+      - .env
     depends_on:
       - redis
     volumes:
