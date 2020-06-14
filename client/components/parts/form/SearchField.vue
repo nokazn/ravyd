@@ -6,33 +6,48 @@
       hide-details
       rounded
       light
-      background-color="grey lighten-4"
+      background-color="white"
       :height="height"
       title="検索"
-      :class="$style.SearchField"
+      :class="{
+        [$style.SearchField]: true,
+        'g-box-shadow': isFocused || isHovered
+      }"
+      @focus="handleIsFocused(true)"
+      @mouseover="handleIsHovered(true)"
+      @blur="handleIsFocused(false)"
+      @mouseout="handleIsHovered(false)"
     >
       <template #prepend-inner>
-        <v-icon
-          :size="iconSize"
-          color="grey darken-4"
-          title="検索"
+        <div
           :class="$style.SearchField__prependInnerIcon"
+          :style="iconStyles"
         >
-          mdi-magnify
-        </v-icon>
+          <v-icon
+            :size="iconSize"
+            color="grey darken-4"
+            title="検索"
+          >
+            mdi-magnify
+          </v-icon>
+        </div>
       </template>
 
       <template #append>
-        <v-icon
-          v-show="value !== ''"
-          :size="iconSize"
-          color="grey darken-1"
+        <div
           :class="$style.SearchField__clearIcon"
-          title="消去"
-          @click="clearText"
+          :style="iconStyles"
         >
-          mdi-close
-        </v-icon>
+          <v-icon
+            v-show="value !== ''"
+            :size="iconSize"
+            color="grey darken-1"
+            title="消去"
+            @click="clearText"
+          >
+            mdi-close
+          </v-icon>
+        </div>
       </template>
     </v-text-field>
   </div>
@@ -40,6 +55,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
+export type Data = {
+  isFocused: boolean
+  isHovered: boolean
+  iconSize: number
+  iconStyles: { height: string }
+}
 
 export default Vue.extend({
   props: {
@@ -53,6 +75,15 @@ export default Vue.extend({
     },
   },
 
+  data(): Data {
+    return {
+      isFocused: false,
+      isHovered: false,
+      iconSize: (this.height * 4) / 5,
+      iconStyles: { height: `${this.height}px` },
+    };
+  },
+
   computed: {
     text: {
       get(): string {
@@ -62,14 +93,17 @@ export default Vue.extend({
         this.$emit('input', value);
       },
     },
-    iconSize(): number {
-      return (this.height * 2) / 3;
-    },
   },
 
   methods: {
     clearText() {
       this.text = '';
+    },
+    handleIsFocused(isFocused: boolean) {
+      this.isFocused = isFocused;
+    },
+    handleIsHovered(isHovered: boolean) {
+      this.isHovered = isHovered;
     },
   },
 });
@@ -80,18 +114,25 @@ export default Vue.extend({
   min-width: 140px;
   max-width: 180px;
   position: relative;
+  height: 100%;
   &__prependInnerIcon {
-    margin-left: -16px;
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -12px;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
   }
   &__clearIcon {
     cursor: pointer;
-    margin-right: -16px;
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -12px;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
   }
 }
 </style>
