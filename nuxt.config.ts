@@ -52,7 +52,10 @@ const config: Configuration = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv',
+    [
+      '@nuxtjs/dotenv',
+      { filename: process.env.NODE_ENV === 'production' ? './.env.prod' : './.env.dev' },
+    ],
   ],
   env: {
     BASE_URL: process.env.BASE_URL || 'https://127.0.0.1:3000',
