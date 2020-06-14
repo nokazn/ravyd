@@ -3,10 +3,23 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const host = process.env.REDIS_URL;
+const port = process.env.REDIS_PORT;
+const password = process.env.REDIS_PASSWORD;
+
+if (host == null || port == null || password == null) {
+  console.error({
+    host,
+    port,
+    password,
+  });
+  throw new Error('redis 初期化の際に必要な環境変数が設定されていません。');
+}
+
 const client = new Redis({
-  port: 6379,
-  host: process.env.REDIS_URL,
-  password: process.env.REDIS_PASSWORD,
+  host,
+  port: parseFloat(port),
+  password,
 });
 
 client.on('connect', () => {
