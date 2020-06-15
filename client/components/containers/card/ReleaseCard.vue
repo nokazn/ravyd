@@ -182,13 +182,13 @@ export default Vue.extend({
         this.$dispatch('player/pause');
       } else {
         // トラックとアルバムのカードで場合分け
-        const uri = this.uri.includes('track')
+        const params = this.uri.includes('track')
           ? { trackUriList: [this.uri] }
           : { contextUri: this.uri };
         // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
         this.$dispatch('player/play', this.isReleaseSet
           ? undefined
-          : uri);
+          : params);
       }
     },
   },

@@ -75,15 +75,13 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked({ id, index }: On['on-media-button-clicked']) {
+    onMediaButtonClicked({ id, uri }: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
       } else {
         this.$dispatch('player/play', {
           trackUriList: this.trackUriList,
-          offset: {
-            position: index,
-          },
+          offset: { uri },
         });
       }
     },

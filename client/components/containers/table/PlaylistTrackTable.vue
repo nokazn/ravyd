@@ -128,14 +128,15 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
-      if (this.isPlayingTrack(row.id)) {
+    onMediaButtonClicked({ id, index }: OnRow['on-media-button-clicked']) {
+      if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
       } else {
+        // uri で指定すると、403 画変える場合がある
         this.$dispatch('player/play', {
           contextUri: this.uri,
           offset: {
-            uri: row.uri,
+            position: index,
           },
         });
       }

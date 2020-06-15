@@ -92,6 +92,7 @@ export type On = {
   [ON_MEDIA_BUTTON_CLICKED]: {
     index: number
     id: string
+    uri: string
   }
   [ON_FAVORITE_BUTTON_CLICKED]: {
     index: number
@@ -196,16 +197,17 @@ export default Vue.extend({
   methods: {
     onMediaButtonClicked() {
       this.$emit(ON_MEDIA_BUTTON_CLICKED, {
-        id: this.id,
         index: this.index,
+        id: this.id,
+        uri: this.uri,
       });
     },
     onFavoriteButtonClicked(nextSavedState: boolean) {
       const { id, index } = this;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, {
-        nextSavedState,
-        id,
         index,
+        id,
+        nextSavedState,
       });
     },
   },
