@@ -63,9 +63,6 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   trackQueue(state, getters) {
     return (artworkSize = 64) => {
-      // @todo ???
-      if (state.artWorkList == null) return [];
-
       const currentTrack = {
         isPlaying: true,
         id: state.trackId,
