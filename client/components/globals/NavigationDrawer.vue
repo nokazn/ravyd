@@ -3,7 +3,7 @@
     app
     permanent
     :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
-    :mobile-break-point="768"
+    :mobile-breakpoint="768"
     :width="200"
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
