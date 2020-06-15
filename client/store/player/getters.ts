@@ -63,15 +63,18 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   trackQueue(state, getters) {
     return (artworkSize = 64) => {
+      if (!getters.hasTrack) return [];
+
+      // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在
       const currentTrack = {
         isPlaying: true,
         id: state.trackId,
         name: state.trackName!,
         uri: state.trackUri!,
-        artistList: state.artistList!,
-        releaseName: state.releaseName!,
         releaseId: getters.releaseId!,
-        artworkSrc: getImageSrc(state.artWorkList!, artworkSize),
+        releaseName: state.releaseName!,
+        artistList: state.artistList!,
+        artworkSrc: getImageSrc(state.artWorkList, artworkSize),
       };
       const previousTrackList = state.previousTrackList
         .map(convertTrackForQueue(false, artworkSize));
