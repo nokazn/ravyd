@@ -1,6 +1,12 @@
+import { Swatch } from 'node-vibrant/lib/color';
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
+  export type DominantColorInfo = {
+    hex: Swatch['hex']
+    rgb: Swatch['rgb']
+  }
+
   // TrackTable component
   export type SimpleTrackDetail = {
     index: number

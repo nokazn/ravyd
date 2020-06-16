@@ -68,17 +68,17 @@ export default class LibraryArtistsPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
   title = 'お気に入りのアーティスト'
 
+  head() {
+    return {
+      title: this.title,
+    };
+  }
+
   get artistList(): App.ArtistCardInfo[] | null {
     return this.$state().library.artists.artistList;
   }
   get isFullArtistList(): boolean {
     return this.$state().library.artists.isFullArtistList;
-  }
-
-  head() {
-    return {
-      title: this.title,
-    };
   }
 
   onLoadingCircleAppeared() {

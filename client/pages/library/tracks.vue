@@ -51,6 +51,12 @@ export default class LibraryTracksPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
   title = 'お気に入りの曲'
 
+  head() {
+    return {
+      title: this.title,
+    };
+  }
+
   get trackList(): App.PlaylistTrackDetail[] | null {
     return this.$state().library.tracks.trackList;
   }
@@ -58,10 +64,11 @@ export default class LibraryTracksPage extends Vue implements Data {
     return this.$state().library.tracks.isFullTrackList;
   }
 
-  head() {
-    return {
-      title: this.title,
-    };
+  mounted() {
+    this.$dispatch('setDefaultDominantBackgroundColor');
+  }
+  beforeDestroy() {
+    this.$dispatch('resetDominantBackgroundColor');
   }
 
   onLoadingCircleAppear() {

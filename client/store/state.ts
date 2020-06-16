@@ -1,7 +1,7 @@
-import { Swatch } from 'node-vibrant/lib/color';
+import { App } from '~~/types';
 
 export type RootState = {
-  dominantBackgroundColor: Swatch | undefined
+  dominantBackgroundColor: App.DominantColorInfo | undefined
 }
 
 const state = (): RootState => ({

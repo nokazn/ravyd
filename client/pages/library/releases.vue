@@ -64,17 +64,17 @@ const LIMIT_OF_RELEASES = 30 as const;
 export default class LibraryReleasesPage extends Vue implements Data {
   title = 'お気に入りのアルバム'
 
+  head() {
+    return {
+      title: this.title,
+    };
+  }
+
   get releaseList(): App.ReleaseCardInfo[] | null {
     return this.$state().library.releases.releaseList;
   }
   get isFullReleaseList(): boolean {
     return this.$state().library.releases.isFullReleaseList;
-  }
-
-  head() {
-    return {
-      title: this.title,
-    };
   }
 
   onLoadingCircleAppeared() {

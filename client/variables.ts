@@ -1,9 +1,14 @@
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, App } from '~~/types';
 
-export const DEFAULT_DOMINANT_COLOR = '#3c3c3c';
-export const DEFAULT_DOMINANT_RGB_LIST = [60, 60, 60];
+const rgb: [number, number, number] = [60, 60, 60];
+export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
+  hex: '#3c3c3c',
+  rgb,
+} as const;
+
 export const BACKGROUND_COLOR = '#121212';
-export const HEADER_BACKGROUND_COLOR = '#121212';
+// #121212 を10進数の配列にしたもの
+export const HEADER_BACKGROUND_COLOR_RGB = [18, 18, 18] as const;
 export const FOOTER_BACKGROUND_COLOR = '#323232';
 export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#161616';
 export const MENU_BACKGROUND_COLOR = '#323232';

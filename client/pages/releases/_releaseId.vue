@@ -118,10 +118,6 @@ export interface AsyncData {
     const artworkSize = ARTWORK_SIZE;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
 
-    if (releaseInfo?.artworkSrc != null) {
-      context.app.$dispatch('extractDominantBackgroundColor', releaseInfo.artworkSrc);
-    }
-
     return {
       artworkSize,
       releaseInfo,
@@ -138,8 +134,13 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     };
   }
 
+  mounted() {
+    if (this.releaseInfo?.artworkSrc != null) {
+      this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
+    }
+  }
   beforeDestroy() {
-    this.$dispatch('resetBackgroundColor');
+    this.$dispatch('resetDominantBackgroundColor');
   }
 
   get isPlaying(): boolean {

@@ -1,13 +1,15 @@
 import { Actions } from 'vuex';
 
 import { extractDominantColors } from '~/scripts/images/extractDominantColors';
+import { DEFAULT_DOMINANT_COLOR } from '~/variables';
 import { RootState } from './state';
 import { RootGetters } from './getters';
 import { RootMutations } from './mutations';
 
 export type RootActions = {
   extractDominantBackgroundColor: (src: string) => Promise<void>
-  resetBackgroundColor: () => void
+  setDefaultDominantBackgroundColor: () => void
+  resetDominantBackgroundColor: () => void
 }
 
 const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
@@ -18,12 +20,14 @@ const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
 
   async extractDominantBackgroundColor({ commit }, src) {
     const colors = await extractDominantColors(src);
-    const backgroundPallet = colors?.DarkMuted;
 
-    commit('SET_DOMINANT_BACKGROUND_COLOR', backgroundPallet, { root: true });
+    commit('SET_DOMINANT_BACKGROUND_COLOR', colors?.DarkMuted, { root: true });
+  },
+  setDefaultDominantBackgroundColor({ commit }) {
+    commit('SET_DOMINANT_BACKGROUND_COLOR', DEFAULT_DOMINANT_COLOR, { root: true });
   },
 
-  resetBackgroundColor({ commit }) {
+  resetDominantBackgroundColor({ commit }) {
     commit('SET_DOMINANT_BACKGROUND_COLOR', undefined, { root: true });
   },
 };

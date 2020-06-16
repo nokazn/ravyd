@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
-import { Swatch } from 'node-vibrant/lib/color';
 
+import { App } from '~~/types';
 import { RootState } from './state';
 
 export type RootMutations = {
-  SET_DOMINANT_BACKGROUND_COLOR: Swatch | undefined
+  SET_DOMINANT_BACKGROUND_COLOR: App.DominantColorInfo | undefined
 }
 
 const mutations: Mutations<RootState, RootMutations> = {

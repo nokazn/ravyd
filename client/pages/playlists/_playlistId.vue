@@ -125,10 +125,6 @@ interface AsyncData {
       await getPlaylistTrackInfo(context, LIMIT_OF_TRACKS),
     ]);
 
-    if (playlistInfo?.artworkSrc != null) {
-      context.app.$dispatch('extractDominantBackgroundColor', playlistInfo.artworkSrc);
-    }
-
     return {
       artworkSize,
       playlistInfo,
@@ -147,8 +143,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     };
   }
 
+  mounted() {
+    if (this.playlistInfo?.artworkSrc != null) {
+      this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
+    }
+  }
   beforeDestroy() {
-    this.$dispatch('resetBackgroundColor');
+    this.$dispatch('resetDominantBackgroundColor');
   }
 
   get isPlaying(): boolean {

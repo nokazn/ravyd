@@ -48,10 +48,10 @@
 import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
-import { HEADER_BACKGROUND_COLOR, DEFAULT_DOMINANT_RGB_LIST } from '~/variables';
+import { HEADER_BACKGROUND_COLOR_RGB } from '~/variables';
+import { App } from '~~/types';
 
 type Data = {
-  HEADER_BACKGROUND_COLOR: typeof HEADER_BACKGROUND_COLOR
   searchWords: string
   elevation: number
 }
@@ -63,7 +63,6 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      HEADER_BACKGROUND_COLOR,
       searchWords: '',
       elevation: 0,
     };
@@ -72,10 +71,9 @@ export default Vue.extend({
   computed: {
     styles(): { backgroundColor: string } {
       const rgbList = this.$state().dominantBackgroundColor?.rgb
-        ?.map((color) => Math.round(color))
-          ?? DEFAULT_DOMINANT_RGB_LIST;
+        ?.map(Math.round) as App.DominantColorInfo['rgb'] ?? HEADER_BACKGROUND_COLOR_RGB;
 
-      return { backgroundColor: `rgba(${rgbList.join(',')},0.7)` };
+      return { backgroundColor: `rgba(${rgbList.join(',')},0.6)` };
     },
   },
 

@@ -190,6 +190,13 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       : false;
   }
 
+  mounted() {
+    this.$dispatch('setDefaultDominantBackgroundColor');
+  }
+  beforeDestroy() {
+    this.$dispatch('resetDominantBackgroundColor');
+  }
+
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
     if (this.artistInfo == null) return;
 
