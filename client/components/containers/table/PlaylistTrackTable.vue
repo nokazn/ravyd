@@ -131,6 +131,12 @@ export default Vue.extend({
   },
 
   methods: {
+    setCustomContext() {
+      this.$dispatch('player/setCustomContext', {
+        contextUri: this.uri,
+        trackUriList: this.trackUriList,
+      });
+    },
     onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
@@ -147,11 +153,8 @@ export default Vue.extend({
           trackUriList: this.trackUriList,
           offset: { uri },
         });
-      // TrackQueueButton でトラックを選択するとき index を求めるために customContext を保持しておく
-      this.$dispatch('player/setCustomContext', {
-        contextUri: this.uri,
-        trackUriList: this.trackUriList,
-      });
+
+      this.setCustomContext();
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;

@@ -75,6 +75,12 @@ export default Vue.extend({
   },
 
   methods: {
+    setCustomContext() {
+      this.$dispatch('player/setCustomContext', {
+        contextUri: this.uri,
+        trackUriList: this.trackUriList,
+      });
+    },
     // id, uri は track のパラメータで、this.uri は context のパラメータ
     onMediaButtonClicked({ id, uri }: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
@@ -84,10 +90,7 @@ export default Vue.extend({
           trackUriList: this.trackUriList,
           offset: { uri },
         });
-        this.$dispatch('player/setCustomContext', {
-          contextUri: this.uri,
-          trackUriList: this.trackUriList,
-        });
+        this.setCustomContext();
       }
     },
     async onFavoriteButtonClicked({ nextSavedState, id, index }: On['on-favorite-button-clicked']) {
