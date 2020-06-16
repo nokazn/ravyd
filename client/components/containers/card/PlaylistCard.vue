@@ -37,10 +37,12 @@
           />
         </v-card-title>
 
-        <v-card-subtitle
-          :class="$style.PlaylistCard__text"
-          v-html="description"
-        />
+        <v-card-subtitle :class="$style.PlaylistCard__text">
+          <span
+            :title="description"
+            v-html="description"
+          />
+        </v-card-subtitle>
       </div>
     </v-card>
   </div>
@@ -149,14 +151,18 @@ export default Vue.extend({
 
   &__title {
     font-size: 0.9rem;
-    padding: 12px 8px;
     line-height: 1.2rem;
   }
   &__text {
-    font-size: 0.8rem;
-    padding: 12px 8px;
+    font-size: 0.75rem;
     line-height: 1rem;
-    margin-top: -4px!important;
+    margin-top: -8px!important;
+    & > * {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
   }
 }
 </style>

@@ -213,14 +213,12 @@ export default Vue.extend({
 
   &__title {
     font-size: 0.9rem;
-    padding: 12px 8px;
     line-height: 1.2rem;
   }
   &__subtitle {
     font-size: 0.8rem;
-    padding: 12px 8px;
     line-height: 1rem;
-    margin-top: -4px!important;
+    margin-top: -8px!important;
   }
 }
 </style>
