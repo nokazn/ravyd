@@ -34,13 +34,13 @@
 
         <v-list-item-group>
           <v-list-item
-            v-for="(track, index) in trackQueue"
+            v-for="(track) in trackQueue"
             :key="track.id"
             dense
             three-line
             :input-value="track.id"
             :class="$style.DeviceSelectMenuList__listItem"
-            @click="onListItemClickedHandler(index, track.uri)"
+            @click="listItemHandler(track.uri)"
           >
             <v-list-item-avatar tile>
               <ReleaseArtwork
@@ -154,29 +154,26 @@ export default Vue.extend({
     toggleTrackList() {
       this.isShown = !this.isShown;
     },
-    onListItemClickedHandler(index: number, uri: string) {
-      const { contextUri } = this.$state().player;
+    listItemHandler(uri: string) {
+      const { contextUri, customTrackUriList } = this.$state().player;
+
+      // album と playlist は contextUri + offset で操作できる
       if (contextUri != null && /album|playlist/.test(contextUri)) {
+        // @todo プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
         this.$dispatch('player/play', {
           contextUri,
-          offset: { uri },
+          offset: customTrackUriList != null && contextUri.includes('playlist')
+            ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === uri) }
+            : { uri },
         });
       } else {
-        const isNotTrackQueueEnough = this.$getters()['player/isNotTrackQueueEnough'];
-        const trackUriList = isNotTrackQueueEnough
-          // @todo any[] | undefined で推論されてしまう
-          ? (this.$state().player.customTrackQueueList as App.TrackDetail[])
-            .map((track) => track.uri)
+        // playback-sdk の contextUri が不適当かどうかで場合分け
+        const trackUriList = contextUri == null && customTrackUriList != null
+          ? customTrackUriList
           : this.trackQueue.map((track) => track.uri);
-        // customTrackQueueList をパラメータとして送信する場合、customTrackQueueList の index を求める必要がある
-        const offset = {
-          position: isNotTrackQueueEnough
-            ? trackUriList.findIndex((trackUri) => trackUri === uri)
-            : index,
-        };
         this.$dispatch('player/play', {
           trackUriList,
-          offset,
+          offset: { uri },
         });
       }
     },

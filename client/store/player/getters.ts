@@ -11,7 +11,6 @@ export type PlayerGetters = {
   isPlayerConnected: boolean
   activeDevice: SpotifyAPI.Device | null
   isTheAppPlaying: boolean
-  isNotTrackQueueEnough: boolean
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
   releaseId: string | null
   artworkSrc: (minSize?: number) => string | undefined
@@ -31,7 +30,6 @@ export type RootGetters = {
   ['player/isPlayerConnected']: PlayerGetters['isPlayerConnected']
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/isTheAppPlaying']: PlayerGetters['isTheAppPlaying']
-  ['player/isNotTrackQueueEnough']: PlayerGetters['isNotTrackQueueEnough']
   ['player/trackQueue']: PlayerGetters['trackQueue']
   ['player/releaseId']: PlayerGetters['releaseId']
   ['player/artworkSrc']: PlayerGetters['artworkSrc']
@@ -61,14 +59,6 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isTheAppPlaying(_state, getters) {
     return getters.activeDevice?.name === APP_NAME;
-  },
-
-  /**
-   * play した際のパラメータを trackUriList で指定したとき有効になる
-   */
-  isNotTrackQueueEnough(state) {
-    return state.contextUri == null
-      && state.customTrackQueueList != null;
   },
 
   trackQueue(state, getters) {

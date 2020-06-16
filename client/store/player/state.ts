@@ -13,7 +13,7 @@ export type PlayerState = {
   artWorkList: SpotifyAPI.Image[] | undefined
   artistList: App.SimpleArtistInfo[] | undefined
   customContextUri: string | undefined
-  customTrackQueueList: App.TrackDetail[] | undefined
+  customTrackUriList: string[] | undefined
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
@@ -41,7 +41,7 @@ const state = (): PlayerState => ({
   releaseUri: undefined,
   artistList: [],
   customContextUri: undefined,
-  customTrackQueueList: undefined,
+  customTrackUriList: undefined,
   nextTrackList: [],
   previousTrackList: [],
   recentlyPlayed: undefined,

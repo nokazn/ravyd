@@ -84,9 +84,9 @@ export default Vue.extend({
           trackUriList: this.trackUriList,
           offset: { uri },
         });
-        this.$dispatch('player/setCustomTrackQueue', {
+        this.$dispatch('player/setCustomContext', {
           contextUri: this.uri,
-          trackList: this.trackList,
+          trackUriList: this.trackUriList,
         });
       }
     },

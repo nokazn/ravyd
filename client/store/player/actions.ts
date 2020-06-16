@@ -4,7 +4,7 @@ import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
-import { SpotifyAPI, App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -15,11 +15,11 @@ export type PlayerActions = {
     play?: boolean
   }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
-  setCustomTrackQueue: (params: {
+  setCustomContext: (params: {
     contextUri?: string
-    trackList?: App.TrackDetail[] | undefined
+    trackUriList: string[]
   }) => void
-  resetCustomTrackQueue: () => void
+  resetCustomContext: () => void
   play: (payload?: ({
     contextUri: string
     trackUriList?: undefined
@@ -55,7 +55,7 @@ export type RootActions = {
   'player/disconnectPlayer': PlayerActions['disconnectPlayer']
   'player/transferPlayback': PlayerActions['transferPlayback']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
-  'player/setCustomTrackQueue': PlayerActions['setCustomTrackQueue']
+  'player/setCustomContext': PlayerActions['setCustomContext']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
@@ -259,17 +259,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     if (playingDevice?.id != null) commit('SET_DEVICE_ID', playingDevice.id);
   },
 
-  setCustomTrackQueue({ commit }, { contextUri, trackList }) {
-    if (trackList != null) {
-      commit('SET_CUSTOM_TRACK_QUEUE_LIST', trackList);
+  setCustomContext({ commit }, { contextUri, trackUriList }) {
+    if (contextUri != null) {
+      commit('SET_CUSTOM_CONTEXT_URI', contextUri);
     }
-
-    commit('SET_CUSTOM_CONTEXT_URI', contextUri);
+    commit('SET_CUSTOM_TRACK_URI_LIST', trackUriList);
   },
 
-  resetCustomTrackQueue({ commit }) {
+  resetCustomContext({ commit }) {
     commit('SET_CUSTOM_CONTEXT_URI', undefined);
-    commit('SET_CUSTOM_TRACK_QUEUE_LIST', undefined);
+    commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
   },
 
   async getRecentlyPlayed({ commit }, limit = 20) {

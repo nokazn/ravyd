@@ -51,6 +51,7 @@ import { App } from '~~/types';
 export type Data = {
   headers: DataTableHeader[]
   activeRowId: string | null
+  trackUriList: string[]
 };
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -109,10 +110,13 @@ export default Vue.extend({
         filterable: false,
       },
     ];
+    const trackUriList = this.trackList.map((track) => track.uri);
+
 
     return {
       headers,
       activeRowId: null,
+      trackUriList,
     };
   },
 
@@ -130,19 +134,24 @@ export default Vue.extend({
     onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
-      } else {
-        const params = this.uri != null
-          // プレイリスト再生の際 position を uri で指定すると、403 が返る場合がある
-          ? {
-            contextUri: this.uri,
-            offset: { position: index },
-          }
-          : {
-            trackUriList: this.trackList.map((track) => track.uri),
-            offset: { uri },
-          };
-        this.$dispatch('player/play', params);
+        return;
       }
+
+      // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
+      this.$dispatch('player/play', this.uri != null
+        ? {
+          contextUri: this.uri,
+          offset: { position: index },
+        }
+        : {
+          trackUriList: this.trackUriList,
+          offset: { uri },
+        });
+      // TrackQueueButton でトラックを選択するとき index を求めるために customContext を保持しておく
+      this.$dispatch('player/setCustomContext', {
+        contextUri: this.uri,
+        trackUriList: this.trackUriList,
+      });
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;
