@@ -84,11 +84,12 @@ export namespace App {
   export type ReleaseCardInfo = {
     type: 'album' | 'track'
     releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
-    name: string //  track または album の name
-    id: string //  track または album の id
     releaseId: string
+    id: string //  track または album の id
+    name: string //  track または album の name
     uri: string
     artists: App.SimpleArtistInfo[]
+    hash?: string
     releaseYear?: string
     artworkSrc: string | undefined
   }

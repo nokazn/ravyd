@@ -12,11 +12,12 @@
       v-else
       hover
       ripple
+      nuxt
+      :to="artistPath"
       :width="width"
       :min-width="width"
       :max-width="maxWidth || width"
       :class="$style.ArtistCard"
-      @click="onClick"
     >
       <div :class="$style.ArtistCard__container">
         <div :class="$style.ArtistCard__avatar">
@@ -118,9 +119,6 @@ export default Vue.extend({
   },
 
   methods: {
-    onClick() {
-      this.$router.push(this.artistPath);
-    },
     onMediaButtonClicked() {
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isArtistSet) {

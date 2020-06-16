@@ -75,6 +75,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RawLocation } from 'vue-router';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { hasProp } from '~~/utils/hasProp';
@@ -83,8 +84,9 @@ import { App } from '~~/types';
 export type ReleaseCardInfo = App.ReleaseCardInfo
 
 export type Data = {
-  releasePath: string
   isLoaded: boolean
+  releasePath: RawLocation
+  artistsName: string
 }
 
 export default Vue.extend({
@@ -116,6 +118,10 @@ export default Vue.extend({
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
+    hash: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
     releaseYear: {
       type: String,
       default: undefined,
@@ -139,19 +145,22 @@ export default Vue.extend({
   },
 
   data(): Data {
+    const releasePath = {
+      path: `/releases/${this.releaseId}`,
+      hash: this.hash,
+    };
+    const artistsName = this.artists
+      .map((artist) => artist.name)
+      .join(', ');
+
     return {
-      releasePath: `/releases/${this.releaseId}`,
       isLoaded: false,
+      releasePath,
+      artistsName,
     };
   },
 
   computed: {
-    artistsName(): string {
-      return this.artists
-        .map((artist) => artist.name)
-        .join(', ');
-    },
-
     isPlaying(): boolean {
       return this.$state().player.isPlaying;
     },
