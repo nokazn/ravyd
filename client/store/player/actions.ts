@@ -162,6 +162,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         if (this.$state().player.repeatMode == null) {
           commit('SET_REPEAT_MODE', repeatMode);
         }
+        // playback-sdk から提供される uri が存在する場合は customContext をリセット
+        if (uri != null) {
+          dispatch('resetCustomContext');
+        }
       }));
 
       player.addListener('ready', async ({ device_id }) => {
@@ -279,7 +283,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   /**
    * contextUri が album/playlist の時のみに offset.uri が有効
-   * contextUri と offset.position が指定された場合呼び出す前に isRestartingTracks のチェックが必要
+   * contextUri と offset.position が指定された場合、呼び出す前に isRestartingTracks のチェックが必要
    */
   async play({ state, commit }, payload?) {
     const { deviceId } = state;
@@ -288,14 +292,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     const offset = payload?.offset;
 
     const isNotUriPassed = contextUri == null && trackUriList == null;
-    const isRestartingContext = state.trackUri === offset?.uri;
-    const isRestartingTracks = trackUriList != null
+    const isRestartingTracks = (
+      trackUriList != null
       && offset?.position != null
-      && state.trackUri === trackUriList[offset.position];
+      && state.trackUri === trackUriList[offset.position]
+    ) || state.trackUri === offset?.uri;
 
     await this.$spotify.player.play(
       // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
-      isNotUriPassed || isRestartingContext || isRestartingTracks
+      isNotUriPassed || isRestartingTracks
         ? {
           deviceId,
           positionMs: state.position,

@@ -167,7 +167,7 @@ export default Vue.extend({
             : { uri },
         });
       } else {
-        // playback-sdk の contextUri が不適当かどうかで場合分け
+        // playback-sdk から提供される contextUri が不適当かどうかで場合分け
         const trackUriList = contextUri == null && customTrackUriList != null
           ? customTrackUriList
           : this.trackQueue.map((track) => track.uri);
