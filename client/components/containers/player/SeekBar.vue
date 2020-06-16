@@ -69,7 +69,7 @@ export default Vue.extend({
     seekbarColor(): string {
       return this.isPlaying
         ? 'active-icon'
-        : 'grey';
+        : 'inactive';
     },
   },
 
@@ -103,7 +103,7 @@ export default Vue.extend({
       }, 0);
     },
     updatePosition() {
-      const intervalMs = 300;
+      const intervalMs = 500;
       if (this.updateInterval != null) clearInterval(this.updateInterval);
       this.updateInterval = setInterval(() => {
         // position が duration より大きい値になった場合は次の曲に移る
