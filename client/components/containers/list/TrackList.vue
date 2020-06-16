@@ -75,6 +75,7 @@ export default Vue.extend({
   },
 
   methods: {
+    // id, uri は track のパラメータで、this.uri は context のパラメータ
     onMediaButtonClicked({ id, uri }: On['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
@@ -82,6 +83,10 @@ export default Vue.extend({
         this.$dispatch('player/play', {
           trackUriList: this.trackUriList,
           offset: { uri },
+        });
+        this.$dispatch('player/setCustomTrackQueue', {
+          contextUri: this.uri,
+          trackList: this.trackList,
         });
       }
     },

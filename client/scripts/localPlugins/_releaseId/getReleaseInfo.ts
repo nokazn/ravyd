@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
 import { convertAlbumType } from '~/scripts/converter/convertAlbumType';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
+import { convertSimpleTrackDetail } from '~/scripts/converter/convertSimpleTrackDetail';
 import { App } from '~~/types';
 
 export const getReleaseInfo = async (
@@ -47,7 +47,7 @@ export const getReleaseInfo = async (
     app.$spotify.library.checkUserSavedAlbums({ albumIdList }),
   ] as const);
 
-  const trackList = tracks.items.map(convertTrackDetail({ isTrackSavedList }));
+  const trackList = tracks.items.map(convertSimpleTrackDetail({ isTrackSavedList }));
 
   const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
 

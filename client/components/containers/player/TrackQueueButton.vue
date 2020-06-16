@@ -116,7 +116,7 @@ import Vue from 'vue';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { MENU_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
@@ -145,7 +145,7 @@ export default Vue.extend({
 
   computed: {
     trackQueue(): App.TrackQueueInfo[] {
-      const artworkSize = 64;
+      const artworkSize = TRACK_QUEUE_ARTWORK_SIZE;
       return this.$getters()['player/trackQueue'](artworkSize);
     },
   },
@@ -162,9 +162,21 @@ export default Vue.extend({
           offset: { uri },
         });
       } else {
+        const isNotTrackQueueEnough = this.$getters()['player/isNotTrackQueueEnough'];
+        const trackUriList = isNotTrackQueueEnough
+          // @todo any[] | undefined で推論されてしまう
+          ? (this.$state().player.customTrackQueueList as App.TrackDetail[])
+            .map((track) => track.uri)
+          : this.trackQueue.map((track) => track.uri);
+        // customTrackQueueList をパラメータとして送信する場合、customTrackQueueList の index を求める必要がある
+        const offset = {
+          position: isNotTrackQueueEnough
+            ? trackUriList.findIndex((trackUri) => trackUri === uri)
+            : index,
+        };
         this.$dispatch('player/play', {
-          trackUriList: this.trackQueue.map((track) => track.uri),
-          offset: { position: index },
+          trackUriList,
+          offset,
         });
       }
     },

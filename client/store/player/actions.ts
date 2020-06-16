@@ -4,7 +4,7 @@ import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, App } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -15,17 +15,22 @@ export type PlayerActions = {
     play?: boolean
   }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
-  play: (payload?: {
+  setCustomTrackQueue: (params: {
+    contextUri?: string
+    trackList?: App.TrackDetail[] | undefined
+  }) => void
+  resetCustomTrackQueue: () => void
+  play: (payload?: ({
     contextUri: string
     trackUriList?: undefined
-    offset?: {
-      uri: string
-      position?: undefined
-    }
   } | {
     contextUri?: undefined
     trackUriList: string[]
+  }) & {
     offset?: {
+      uri: string
+      position?: undefined
+    } | {
       uri?: undefined
       position: number
     }
@@ -50,6 +55,7 @@ export type RootActions = {
   'player/disconnectPlayer': PlayerActions['disconnectPlayer']
   'player/transferPlayback': PlayerActions['transferPlayback']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
+  'player/setCustomTrackQueue': PlayerActions['setCustomTrackQueue']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
@@ -253,6 +259,19 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     if (playingDevice?.id != null) commit('SET_DEVICE_ID', playingDevice.id);
   },
 
+  setCustomTrackQueue({ commit }, { contextUri, trackList }) {
+    if (trackList != null) {
+      commit('SET_CUSTOM_TRACK_QUEUE_LIST', trackList);
+    }
+
+    commit('SET_CUSTOM_CONTEXT_URI', contextUri);
+  },
+
+  resetCustomTrackQueue({ commit }) {
+    commit('SET_CUSTOM_CONTEXT_URI', undefined);
+    commit('SET_CUSTOM_TRACK_QUEUE_LIST', undefined);
+  },
+
   async getRecentlyPlayed({ commit }, limit = 20) {
     const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit });
 
@@ -261,7 +280,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   /**
    * contextUri が album/playlist の時のみに offset.uri が有効
-   * trackUriList が指定された時のみに offset.position が有効
+   * contextUri と offset.position が指定された場合呼び出す前に isRestartingTracks のチェックが必要
    */
   async play({ state, commit }, payload?) {
     const { deviceId } = state;

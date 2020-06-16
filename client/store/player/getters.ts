@@ -1,7 +1,7 @@
 import { Getters } from 'vuex';
 
 import { PlayerState } from './state';
-import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
+import { REPEAT_STATE_LIST, APP_NAME, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
@@ -11,6 +11,7 @@ export type PlayerGetters = {
   isPlayerConnected: boolean
   activeDevice: SpotifyAPI.Device | null
   isTheAppPlaying: boolean
+  isNotTrackQueueEnough: boolean
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
   releaseId: string | null
   artworkSrc: (minSize?: number) => string | undefined
@@ -30,6 +31,7 @@ export type RootGetters = {
   ['player/isPlayerConnected']: PlayerGetters['isPlayerConnected']
   ['player/activeDevice']: PlayerGetters['activeDevice']
   ['player/isTheAppPlaying']: PlayerGetters['isTheAppPlaying']
+  ['player/isNotTrackQueueEnough']: PlayerGetters['isNotTrackQueueEnough']
   ['player/trackQueue']: PlayerGetters['trackQueue']
   ['player/releaseId']: PlayerGetters['releaseId']
   ['player/artworkSrc']: PlayerGetters['artworkSrc']
@@ -61,8 +63,16 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return getters.activeDevice?.name === APP_NAME;
   },
 
+  /**
+   * play した際のパラメータを trackUriList で指定したとき有効になる
+   */
+  isNotTrackQueueEnough(state) {
+    return state.contextUri == null
+      && state.customTrackQueueList != null;
+  },
+
   trackQueue(state, getters) {
-    return (artworkSize = 64) => {
+    return (artworkSize = TRACK_QUEUE_ARTWORK_SIZE) => {
       if (!getters.hasTrack) return [];
 
       // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在

@@ -1,14 +1,12 @@
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
-  // TrackListTable component
-  export type TrackDetail = {
+  // TrackTable component
+  export type SimpleTrackDetail = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
-    artworkSrc?: string
-    releaseId?: string
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
     hash: string
@@ -20,6 +18,12 @@ export namespace App {
     isPlayable: boolean
     isSaved: boolean
     duration: string
+  }
+  // TrackList component
+  export type TrackDetail = SimpleTrackDetail & {
+    artworkSrc: string | undefined
+    releaseId: string
+    releaseName: string
   }
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = {
@@ -65,7 +69,7 @@ export namespace App {
     releaseDate: string
     releaseDatePrecision: string
     artworkSrc: string | undefined
-    trackList: App.TrackDetail[]
+    trackList: App.SimpleTrackDetail[]
     totalTracks: number
     durationMs: number
     copyrightList: SpotifyAPI.Copyright[]

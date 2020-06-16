@@ -1,14 +1,10 @@
 import { elapsedTime } from '~~/utils/elapsedTime';
 import { App, SpotifyAPI } from '~~/types';
-import { getImageSrc } from './getImageSrc';
 
-export const convertTrackDetail = ({ isTrackSavedList, artworkSize }: {
-  isTrackSavedList: boolean[]
-  artworkSize?: number
-}) => (
-  track: SpotifyAPI.Track,
+export const convertSimpleTrackDetail = ({ isTrackSavedList }: { isTrackSavedList: boolean[] }) => (
+  track: SpotifyAPI.SimpleTrack,
   index: number,
-): App.TrackDetail => {
+): App.SimpleTrackDetail => {
   const detail = {
     index,
     name: track.name,
@@ -25,9 +21,6 @@ export const convertTrackDetail = ({ isTrackSavedList, artworkSize }: {
     isPlayable: track.is_playable,
     isSaved: isTrackSavedList[index],
     duration: elapsedTime(track.duration_ms),
-    artworkSrc: getImageSrc(track.album.images, artworkSize),
-    releaseId: track.album.id,
-    releaseName: track.album.name,
   };
 
   return detail;

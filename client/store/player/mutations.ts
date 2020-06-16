@@ -1,12 +1,14 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
 import { PlayerState } from './state';
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI, App } from '~~/types';
 
 export type PlayerMutations = {
   SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
+  SET_CUSTOM_CONTEXT_URI: string | undefined
+  SET_CUSTOM_TRACK_QUEUE_LIST: App.TrackDetail[] | undefined
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
@@ -27,6 +29,8 @@ export type RootMutations = {
   ['player/SET_PLAYBACK_PLAYER']: PlayerMutations['SET_PLAYBACK_PLAYER']
   ['player/SET_DEVICE_ID']: PlayerMutations['SET_DEVICE_ID']
   ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
+  ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
+  ['player/SET_CUSTOM_TRACK_QUEUE_LIST']: PlayerMutations['SET_CUSTOM_TRACK_QUEUE_LIST']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
@@ -54,6 +58,14 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_ACTIVE_DEVICE_LIST(state, deviceList) {
     state.activeDeviceList = deviceList;
+  },
+
+  SET_CUSTOM_CONTEXT_URI(state, contextUri) {
+    state.customContextUri = contextUri;
+  },
+
+  SET_CUSTOM_TRACK_QUEUE_LIST(state, trackQueueList) {
+    state.customTrackQueueList = trackQueueList;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {

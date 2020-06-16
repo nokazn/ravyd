@@ -15,3 +15,5 @@ export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
 ];
 
 export const APP_NAME = 'spotify-player';
+
+export const TRACK_QUEUE_ARTWORK_SIZE = 40;
