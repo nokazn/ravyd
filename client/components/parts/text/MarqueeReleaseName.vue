@@ -113,7 +113,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .ReleaseName {
   color: $g-title-color;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   line-height: 1rem;
   padding: {
     right: 8px;
