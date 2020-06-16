@@ -33,7 +33,6 @@
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
-        :uri="uri"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"

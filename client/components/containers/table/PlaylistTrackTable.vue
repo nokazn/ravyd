@@ -33,7 +33,6 @@
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
-        :uri="uri"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -71,8 +70,8 @@ export default Vue.extend({
       required: true,
     },
     uri: {
-      type: String,
-      required: true,
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
   },
 
@@ -128,17 +127,21 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked({ id, index }: OnRow['on-media-button-clicked']) {
+    onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
       } else {
-        // uri で指定すると、403 画変える場合がある
-        this.$dispatch('player/play', {
-          contextUri: this.uri,
-          offset: {
-            position: index,
-          },
-        });
+        const params = this.uri != null
+          // プレイリスト再生の際 position を uri で指定すると、403 が返る場合がある
+          ? {
+            contextUri: this.uri,
+            offset: { position: index },
+          }
+          : {
+            trackUriList: this.trackList.map((track) => track.uri),
+            offset: { uri },
+          };
+        this.$dispatch('player/play', params);
       }
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {

@@ -8,7 +8,6 @@
     <PlaylistTrackTable
       v-if="trackList != null"
       :track-list="trackList"
-      uri=""
       :class="$style.LibraryTracksPage__table"
     />
 

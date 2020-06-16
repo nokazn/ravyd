@@ -129,10 +129,6 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    uri: {
-      type: String,
-      required: true,
-    },
     isActive: {
       type: Boolean,
       required: true,
