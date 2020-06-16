@@ -51,7 +51,6 @@ import { App } from '~~/types';
 export type Data = {
   headers: DataTableHeader[]
   activeRowId: string | null
-  trackUriList: string[]
 };
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -110,13 +109,10 @@ export default Vue.extend({
         filterable: false,
       },
     ];
-    const trackUriList = this.trackList.map((track) => track.uri);
-
 
     return {
       headers,
       activeRowId: null,
-      trackUriList,
     };
   },
 
@@ -131,10 +127,10 @@ export default Vue.extend({
   },
 
   methods: {
-    setCustomContext() {
+    setCustomContext(trackUriList: string[]) {
       this.$dispatch('player/setCustomContext', {
         contextUri: this.uri,
-        trackUriList: this.trackUriList,
+        trackUriList,
       });
     },
     onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
@@ -143,6 +139,8 @@ export default Vue.extend({
         return;
       }
 
+      // trackUriList は更新されうる
+      const trackUriList = this.trackList.map((track) => track.uri);
       // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
       this.$dispatch('player/play', this.uri != null
         ? {
@@ -150,11 +148,11 @@ export default Vue.extend({
           offset: { position: index },
         }
         : {
-          trackUriList: this.trackUriList,
+          trackUriList,
           offset: { uri },
         });
 
-      this.setCustomContext();
+      this.setCustomContext(trackUriList);
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       const nextSavedState = !row.isSaved;

@@ -283,7 +283,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   /**
    * contextUri が album/playlist の時のみに offset.uri が有効
-   * contextUri と offset.position が指定された場合、呼び出す前に isRestartingTracks のチェックが必要
+   * offset.position は playlist を再生する場合のみ?
    */
   async play({ state, commit }, payload?) {
     const { deviceId } = state;

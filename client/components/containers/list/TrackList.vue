@@ -56,6 +56,7 @@ export default Vue.extend({
   },
 
   data(): Data {
+    // trackUriList は更新されることがない
     const trackUriList = this.trackList.map((track) => track.uri);
     return {
       items: this.trackList,
