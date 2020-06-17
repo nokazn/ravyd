@@ -125,7 +125,9 @@ export default Vue.extend({
   methods: {
     onLeftButtonClicked() {
       const leftSideElementRight = this.cardList
-        .find((element) => element.isVisible)!.element.getBoundingClientRect().right;
+        .find((element) => element.isVisible)?.element.getBoundingClientRect().right;
+      if (leftSideElementRight == null) return;
+
       const cardsWrapperRef = this.$refs.cardsWrapper as HTMLDivElement;
       // ラッパーの右端の絶対位置 - 余白
       const rightSideEdgeRight = cardsWrapperRef
