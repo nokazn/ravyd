@@ -4,11 +4,11 @@ import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type AuthGetters = {
-  isLoggedin: boolean | null
+  isLoggedin: boolean | undefined
   isTokenExpired: () => boolean
   userId: string | undefined
-  userDisplayName: string | null
-  userAvatarSrc: string| null
+  userDisplayName: string | undefined
+  userAvatarSrc: string| undefined
   userCountryCode: SpotifyAPI.Country | undefined
 }
 
@@ -37,13 +37,11 @@ const getters: Getters<AuthState, AuthGetters> = {
   },
 
   userDisplayName(state) {
-    return state.userData?.display_name ?? state.userData?.email ?? null;
+    return state.userData?.display_name ?? state.userData?.email;
   },
 
   userAvatarSrc(state) {
-    return state.userData?.images != null
-      ? state.userData?.images[0]?.url ?? null
-      : null;
+    return state.userData?.images?.[0]?.url;
   },
 
   userCountryCode(state) {

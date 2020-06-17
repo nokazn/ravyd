@@ -69,6 +69,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootGetters } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
@@ -108,13 +109,13 @@ export default Vue.extend({
   },
 
   computed: {
-    isLoggedin(): boolean | null {
+    isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
-    userAvatarSrc(): string | null {
+    userAvatarSrc(): RootGetters['auth/userAvatarSrc'] {
       return this.$getters()['auth/userAvatarSrc'];
     },
-    userDisplayName(): string | null {
+    userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];
     },
   },

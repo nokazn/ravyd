@@ -34,10 +34,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootGetters } from 'vuex';
 
 export default Vue.extend({
   computed: {
-    isLoggedin(): boolean | null {
+    isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
   },
