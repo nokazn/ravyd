@@ -83,7 +83,9 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_USER_DATA', userData);
   },
 
-  async refreshAccessToken({ getters, commit, dispatch }) {
+  async refreshAccessToken({
+    state, getters, commit, dispatch,
+  }) {
     if (!getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
@@ -104,6 +106,19 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (accessToken == null) {
       dispatch('logout');
     }
+
+    if (state.refreshTokenTimerId != null) {
+      clearTimeout(state.refreshTokenTimerId);
+    }
+    // 50 分後にまだトークンが更新されてなかった場合更新
+    const time = 1000 * 60 * 50;
+    const refreshTokenTimer = setTimeout(() => {
+      // time 経過後の状態を取得するため、引数の getters ではなく context から呼び出している
+      if (this.$getters()['auth/isTokenExpired']) {
+        dispatch('refreshAccessToken');
+      }
+    }, time);
+    commit('SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer);
   },
 
   logout({ commit, dispatch }) {
