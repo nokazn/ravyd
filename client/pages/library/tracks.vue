@@ -12,7 +12,9 @@
 
     <PlaylistTrackTable
       v-if="trackList != null"
-      v-bind="trackTableInfo"
+      :track-list="trackList"
+      :uri="uri"
+      custom
       :class="$style.LibraryTracksPage__table"
     />
 
@@ -36,11 +38,8 @@ import { App } from '~~/types';
 interface Data {
   observer: IntersectionObserver | undefined
   title: string
-  trackTableInfo: {
-    trackList: App.PlaylistTrackDetail[] | null
-    uri: string
-    custom: true
-  }
+  trackList: App.PlaylistTrackDetail[] | null
+  uri: string
 }
 
 const LIMIT_OF_TRACKS = 30 as const;
@@ -62,15 +61,11 @@ const LIMIT_OF_TRACKS = 30 as const;
   },
 })
 export default class LibraryTracksPage extends Vue implements Data {
-  observer: IntersectionObserver | undefined = undefined
-  title = 'お気に入りの曲'
-  trackTableInfo = {
-    trackList: this.trackList,
-    // @non-null ログイン中なので userId は必ず存在
-    uri: generateCollectionContextUri(this.$getters()['auth/userId']!),
-    // uri は指定するが、contextUri をパラメータとして送信しない
-    custom: true as const,
-  }
+  observer: IntersectionObserver | undefined = undefined;
+  title = 'お気に入りの曲';
+  // @non-null ログイン中なので userId は必ず存在
+  uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
+  // uri は指定するが、contextUri をパラメータとして送信しない
 
   head() {
     return {
@@ -78,14 +73,14 @@ export default class LibraryTracksPage extends Vue implements Data {
     };
   }
 
-  get trackList(): App.PlaylistTrackDetail[] | null {
+  get trackList(): RootState['library']['tracks']['trackList'] {
     return this.$state().library.tracks.trackList;
   }
-  get isFullTrackList(): boolean {
+  get isFullTrackList(): RootState['library']['tracks']['isFullTrackList'] {
     return this.$state().library.tracks.isFullTrackList;
   }
   get isPlaylistSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.trackTableInfo.uri);
+    return this.$getters()['player/isContextSet'](this.uri);
   }
   get isPlaying(): RootState['player']['isPlaying'] {
     return this.$state().player.isPlaying;
@@ -114,7 +109,7 @@ export default class LibraryTracksPage extends Vue implements Data {
       ? undefined
       : { trackUriList });
     this.$dispatch('player/setCustomContext', {
-      contextUri: this.trackTableInfo.uri,
+      contextUri: this.uri,
       trackUriList,
     });
   }
