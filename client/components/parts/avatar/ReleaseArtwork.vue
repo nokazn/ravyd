@@ -103,7 +103,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ReleaseArtwork{
+.ReleaseArtwork {
   &__noArtwork {
     display: flex;
     justify-content: center;

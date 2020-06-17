@@ -88,6 +88,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
 <style lang="scss" module>
 .LibraryReleasesPage {
   padding: 16px 3% 48px;
+
   & > * {
     margin-bottom: 24px;
   }
@@ -96,6 +97,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+
     & > * {
       margin-left: 16px;
       margin-right: 16px;
@@ -104,6 +106,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
       max-width: 200px;
     }
   }
+
   &__card {
     margin-bottom: 32px;
   }

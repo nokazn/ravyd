@@ -82,12 +82,15 @@ export default class LibraryTracksPage extends Vue implements Data {
 <style lang="scss" module>
 .LibraryTracksPage {
   padding: 16px 3% 48px;
+
   & > * {
     margin-bottom: 16px;
   }
+
   &__table {
     width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }
+
   &__loading {
     display: flex;
     justify-content: center;

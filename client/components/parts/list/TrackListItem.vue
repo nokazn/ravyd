@@ -216,19 +216,23 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListItem {
-  padding: .3em 0;
+  padding: 0.3em 0;
+
   &__content {
     display: flex;
     justify-content: space-between;
     overflow-x: hidden;
+
     &--left {
       display: flex;
       align-items: center;
       overflow-x: hidden;
+
       & > * {
         margin-right: 12px;
       }
     }
+
     &Title {
       font-size: 0.9rem;
       line-height: 1.1rem;
@@ -239,6 +243,7 @@ export default Vue.extend({
     & > *:not(:last-child) {
       margin-right: 12px;
     }
+
     &Duration {
       font-size: 0.8rem;
     }
@@ -247,18 +252,20 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.track-list-item .v-list-item{
+.track-list-item .v-list-item {
   &__avatar {
-    margin-top: 0!important;
-    margin-bottom: 0!important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
+
   &__content {
-    padding-top: 0!important;
-    padding-bottom: 0!important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
+
   &__action {
-    margin-top: 0!important;
-    margin-bottom: 0!important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
 }
 </style>

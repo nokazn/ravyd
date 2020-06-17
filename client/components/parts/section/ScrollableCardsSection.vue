@@ -36,6 +36,7 @@ export default Vue.extend({
     margin-left: 40px;
     margin-bottom: 6px;
   }
+
   &__divider {
     margin: 0 40px 16px;
   }

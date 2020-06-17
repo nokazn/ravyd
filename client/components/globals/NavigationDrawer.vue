@@ -162,9 +162,11 @@ export default Vue.extend({
 <style lang="scss" module>
 .NavigationDrawer {
   z-index: z-index-of(navigation-drawer);
+
   &__header {
     padding: 8px 12px;
     font-size: 12px;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }
@@ -186,7 +188,7 @@ export default Vue.extend({
     position: absolute;
     bottom: 12px;
     left: 0;
-    right: 0
+    right: 0;
   }
 }
 </style>

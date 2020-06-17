@@ -71,9 +71,11 @@ export default Vue.extend({
     justify-content: center;
     align-items: center;
     padding: 16px;
+
     & > *:not(:last-child) {
       margin-bottom: 28px;
     }
+
     &__signupText {
       font-size: 12px;
     }

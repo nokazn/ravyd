@@ -123,9 +123,6 @@ export default class GenreIdPage extends Vue implements AsyncData {
 <style lang="scss" module>
 .GenreIdPage {
   padding: 16px 3% 48px;
-  & > *:not(:last-child) {
-    margin-bottom: 24px;
-  }
 
   &__title {
     padding-left: 3%;
@@ -135,6 +132,7 @@ export default class GenreIdPage extends Vue implements AsyncData {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
     & > * {
       margin-left: 16px;
       margin-right: 16px;
@@ -143,11 +141,17 @@ export default class GenreIdPage extends Vue implements AsyncData {
       max-width: 220px;
     }
   }
+
   &__playlistCard {
     margin-bottom: 32px;
   }
+
   &__spacer {
     height: 0;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 24px;
   }
 }
 </style>

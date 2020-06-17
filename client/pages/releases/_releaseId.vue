@@ -182,9 +182,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
 <style lang="scss" module>
 .ReleaseIdPage {
   padding: 16px 6% 48px;
+
   &__header {
     display: flex;
     margin-bottom: 32px;
+
     & > *:not(:last-child) {
       margin-right: 24px;
     }
@@ -208,14 +210,18 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     align-items: flex-end;
     margin-top: 12px;
   }
+
   &__buttons {
     margin-right: 24px;
+
     & > *:not(:last-child) {
       margin-right: 12px;
     }
   }
+
   &__releaseDetail {
     margin-top: 12px;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }

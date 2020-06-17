@@ -168,12 +168,14 @@ export default Vue.extend({
 .TrackListTableRow {
   cursor: pointer;
   padding: 16px 0;
+
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
   }
 
   &__buttons {
     display: flex;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }
@@ -184,9 +186,11 @@ export default Vue.extend({
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }
+
     &Subtitle {
       margin-top: 0.2rem;
       font-size: 0.8rem;
@@ -194,9 +198,9 @@ export default Vue.extend({
   }
 
   &__smallText {
-    font-size: 0.75rem!important;
+    font-size: 0.75rem !important;
     white-space: nowrap;
-    padding: 0 4px!important;
+    padding: 0 4px !important;
   }
 }
 </style>

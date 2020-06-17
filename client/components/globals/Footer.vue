@@ -167,6 +167,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .Footer {
   z-index: z-index-of(footer);
+
   &__container {
     display: grid;
     justify-content: space-between;
@@ -174,23 +175,28 @@ export default Vue.extend({
     position: relative;
     width: 100%;
   }
+
   &__left {
     display: flex;
     height: 100%;
     margin-left: 4%;
+
     & > *:not(:last-child) {
       margin-right: 4px;
     }
   }
+
   &__trackInfo {
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow-x: hidden;
+
     & > *:not(:last-child) {
       margin-bottom: 8px;
     }
   }
+
   &__favoriteButton {
     display: flex;
     align-items: center;
@@ -205,9 +211,11 @@ export default Vue.extend({
     width: 40vw;
     transform: translate(-50%, -50%);
   }
+
   &__seekBar {
     width: 40vw;
   }
+
   &__mediaControllers {
     margin-top: -20px;
   }
@@ -218,6 +226,7 @@ export default Vue.extend({
     align-items: flex-end;
     justify-content: center;
     margin-right: 8%;
+
     & > *:not(:last-child) {
       margin-right: 4px;
     }

@@ -202,12 +202,14 @@ export default Vue.extend({
     align-items: center;
     margin: 0 12px;
   }
+
   &__listItemTitle {
-    font-size: 0.9em!important;
-    margin-bottom: 6px!important;
+    font-size: 0.9em !important;
+    margin-bottom: 6px !important;
   }
+
   &__listItemSubtitle {
-    font-size: 0.8em!important;
+    font-size: 0.8em !important;
   }
 }
 </style>

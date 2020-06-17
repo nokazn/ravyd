@@ -68,11 +68,13 @@ export default Vue.extend({
 <style lang="scss" module>
 .ArtistNames {
   white-space: nowrap;
+
   & > * {
     display: inline-block;
   }
+
   &__comma {
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
 }
 

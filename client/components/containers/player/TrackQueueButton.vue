@@ -186,13 +186,15 @@ export default Vue.extend({
   &__header {
     margin-left: 12px;
   }
+
   &__listItemTitle {
     font-size: 0.9em;
     line-height: 1.1rem;
   }
+
   &__listItemSubtitle {
-    font-size: 0.8em!important;
-    line-height: 1.1rem!important;
+    font-size: 0.8em !important;
+    line-height: 1.1rem !important;
   }
 
   &__moreButton {

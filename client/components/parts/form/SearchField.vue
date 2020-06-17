@@ -112,27 +112,23 @@ export default Vue.extend({
 <style lang="scss" module>
 .SearchField {
   min-width: 140px;
-  max-width: 180px;
+  max-width: 200px;
   position: relative;
   height: 100%;
+
   &__prependInnerIcon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-left: -12px;
-    // position: absolute;
-    // top: 0;
-    // left: 0;
   }
+
   &__clearIcon {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-right: -12px;
-    // position: absolute;
-    // top: 0;
-    // left: 0;
   }
 }
 </style>

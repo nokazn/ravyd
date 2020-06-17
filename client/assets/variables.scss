@@ -3,7 +3,7 @@
 /**
  * color
  */
-$g-title-color: #ffffff;
+$g-title-color: #fff;
 $g-subtitle-color: rgba(255, 255, 255, 0.7);
 
 $g-background-color: #121212;
@@ -20,13 +20,14 @@ $g-navigation-drawer-width: 200px;
 /**
  * z-index
  */
- $__layer-map: (
+$__layer-map: (
   header: 1000,
   navigation-drawer: 1000,
   footer: 1000,
   floating-button: 101,
   text-gradation: 100,
 );
+
 @function z-index-of($key) {
   @return map-get($__layer-map, $key);
 }
@@ -39,6 +40,7 @@ $g-navigation-drawer-width: 200px;
   .fade-leave-active {
     transition: opacity #{$seconds}s;
   }
+
   .fade-enter,
   .fade-leave-to {
     opacity: 0;
@@ -53,6 +55,7 @@ $g-navigation-drawer-width: 200px;
     from {
       transform: translateX(0%);
     }
+
     to {
       transform: translateX(-100%);
     }

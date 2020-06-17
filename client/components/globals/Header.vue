@@ -98,18 +98,21 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Header {
-  z-index: z-index-of(header)!important;
+  z-index: z-index-of(header) !important;
   backdrop-filter: blur(16px);
+
   &__container {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin: 0 8px;
+
     & > * {
       display: flex;
       align-items: center;
     }
   }
+
   &__searchField {
     margin-left: 20px;
   }

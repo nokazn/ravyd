@@ -97,6 +97,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .RootPage {
   padding: 16px 0 48px;
+
   &__section:not(:last-child) {
     margin-bottom: 40px;
   }

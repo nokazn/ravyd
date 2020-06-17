@@ -179,16 +179,18 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackTable {
   // 表の背景を透過にする
-  background-color: rgba(0, 0, 0, 0)!important;
+  background-color: rgba(0, 0, 0, 0) !important;
   // 表全体の背景と同じ色にする
   table {
     // 表と列の幅を最初の行のセルの幅に固定して設定
-    table-layout:fixed;
+    table-layout: fixed;
+
     tr {
-      td, th {
+      td,
+      th {
         padding: 0 8px;
         // 列の幅をデフォルトの 48px から少し狭める
-        height: 44px!important;
+        height: 44px !important;
       }
     }
   }
@@ -199,7 +201,7 @@ export default Vue.extend({
 .TrackTable {
   .v-row-group__header {
     // 表全体の背景と同じ色にする
-      background: inherit!important;
+    background: inherit !important;
   }
 }
 </style>

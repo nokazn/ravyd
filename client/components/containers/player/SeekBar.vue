@@ -121,8 +121,9 @@ export default Vue.extend({
 <style lang="scss" module>
 .SeekBar {
   width: 100%;
+
   &__mss {
-    font-size: .75rem;
+    font-size: 0.75rem;
     margin-top: -4px;
     display: flex;
     justify-content: space-between;

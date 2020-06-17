@@ -245,12 +245,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
 <style lang="scss" module>
 .PlaylistIdPage {
   padding: 16px 6% 48px;
+
   &__header {
     display: flex;
     margin-bottom: 32px;
+
     & > *:not(:last-child) {
       margin-right: 24px;
     }
+
     & > *:last-child {
       width: 100%;
     }
@@ -267,20 +270,25 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     margin: 8px 0;
     line-height: 1.2em;
   }
+
   &__playlistInfoFooter {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     margin-top: 12px;
   }
+
   &__buttons {
     margin-right: 24px;
+
     & > *:not(:last-child) {
       margin-right: 12px;
     }
   }
+
   &__playlistDetail {
     margin-top: 12px;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }

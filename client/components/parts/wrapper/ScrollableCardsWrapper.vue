@@ -166,23 +166,28 @@ export default Vue.extend({
 <style lang="scss" module>
 $total-side-padding: 40px;
 $gradation-width: 24px;
+
 .CardsWrapper {
   margin: 0 ($total-side-padding - $gradation-width);
   position: relative;
   scroll-behavior: smooth;
+
   &__icon {
     // 親に position: relative 以外が指定されている場合は親要素が基準になる
     position: absolute;
     top: 45%;
     transform: translateY(-50%);
     z-index: z-index-of(floating-button);
+
     &--left {
       left: -12px;
     }
+
     &--right {
       right: -12px;
     }
   }
+
   &__container {
     display: flex;
     overflow-x: auto;
@@ -195,13 +200,14 @@ $gradation-width: 24px;
       padding-right: $gradation-width;
       content: "";
     }
+
     & > *:not(:last-child) {
       margin-right: 32px;
     }
   }
 
   // 左のグラデーション
-  &::before{
+  &::before {
     display: block;
     position: absolute;
     top: 0;
@@ -209,16 +215,17 @@ $gradation-width: 24px;
     height: 100%;
     width: $gradation-width;
     content: "";
-    background-image: linear-gradient(
-      to right,
-      rgba($g-background-color, 1),
-      rgba($g-background-color, 0),
-    );
+    background-image:
+      linear-gradient(
+        to right,
+        rgba($g-background-color, 1),
+        rgba($g-background-color, 0),
+      );
     z-index: z-index-of(text-gradation);
   }
 
   // 右のグラデーション
-  &::after{
+  &::after {
     display: block;
     position: absolute;
     top: 0;
@@ -226,16 +233,17 @@ $gradation-width: 24px;
     height: 100%;
     width: $gradation-width;
     content: "";
-    background-image: linear-gradient(
-      to left,
-      rgba($g-background-color, 1),
-      rgba($g-background-color, 0),
-    );
+    background-image:
+      linear-gradient(
+        to left,
+        rgba($g-background-color, 1),
+        rgba($g-background-color, 0),
+      );
     z-index: z-index-of(text-gradation);
   }
 }
 </style>
 
 <style lang="scss" scoped>
-@include fade-transition(.3);
+@include fade-transition(0.3);
 </style>

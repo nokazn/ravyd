@@ -153,10 +153,12 @@ export default Vue.extend({
     font-size: 0.9rem;
     line-height: 1.2rem;
   }
+
   &__text {
     font-size: 0.75rem;
     line-height: 1rem;
-    margin-top: -8px!important;
+    margin-top: -8px !important;
+
     & > * {
       overflow: hidden;
       display: -webkit-box;

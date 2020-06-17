@@ -66,6 +66,7 @@ export default Vue.extend({
 .ShowAllButton {
   & > * {
     font-size: 0.9em;
+
     &:not(:last-child) {
       margin-right: 8px;
     }

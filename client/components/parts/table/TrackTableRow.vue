@@ -131,6 +131,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackTableRow {
   cursor: pointer;
+
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
   }
@@ -138,6 +139,7 @@ export default Vue.extend({
   &__content {
     display: flex;
     justify-content: space-between;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }

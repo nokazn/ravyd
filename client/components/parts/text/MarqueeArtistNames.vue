@@ -138,6 +138,7 @@ export default Vue.extend({
   padding: 0 8px;
   white-space: nowrap;
   position: relative;
+
   & > * {
     display: inline-block;
   }

@@ -127,11 +127,14 @@ export default Vue.extend({
     cursor: pointer;
     display: flex;
     align-items: center;
+
     & > *:not(:last-child) {
       margin-right: 8px;
     }
+
     .UserMenu__userDisplayName {
       font-size: 1.1em;
+
       &:hover {
         text-decoration: underline;
       }

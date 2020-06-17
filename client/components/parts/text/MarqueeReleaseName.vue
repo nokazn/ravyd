@@ -119,8 +119,10 @@ export default Vue.extend({
     right: 8px;
     left: 8px;
   };
+
   white-space: nowrap;
   position: relative;
+
   & > * {
     display: inline-block;
   }

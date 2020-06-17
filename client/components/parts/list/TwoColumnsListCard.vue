@@ -48,6 +48,7 @@ export default Vue.extend({
   &__content {
     display: grid;
     grid-template-columns: 1fr 1fr;
+
     & > *:first-child {
       color: #bdbdbd;
       font-size: 0.9em;

@@ -233,11 +233,31 @@ export default class ArtistIdPage extends Vue implements AsyncData {
 .ArtistIdPage {
   padding: 16px 6% 48px;
 
+  &__cardSection {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    // card と cardSpacer 両方に適用
+    & > * {
+      margin-left: 16px;
+      margin-right: 16px;
+      flex: 1 0 180px;
+      min-width: 180px;
+      max-width: 240px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 32px;
+    }
+  }
+
   &__header {
     display: flex;
     margin-bottom: 32px;
+
     & > *:not(:last-child) {
-      margin-right: 24px
+      margin-right: 24px;
     }
   }
 
@@ -250,11 +270,13 @@ export default class ArtistIdPage extends Vue implements AsyncData {
   &__verifiedIrtistIcon {
     margin-bottom: 2px;
   }
+
   &__artistName {
     font-size: 40px;
     margin: 8px 0;
     line-height: 1.2em;
   }
+
   &__buttons > *:not(:last-child) {
     margin-right: 12px;
   }
@@ -263,25 +285,10 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     margin-bottom: 32px;
   }
 
-  &__cardSection {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    &:not(:last-child) {
-      margin-bottom: 32px;
-    }
-    // card と cardSpacer 両方に適用
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-  }
   &__card {
     margin-bottom: 32px;
   }
+
   // 最終行の余りの部分を埋める
   &__cardSpacer {
     height: 0;

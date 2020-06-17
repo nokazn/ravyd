@@ -176,12 +176,15 @@ export default Vue.extend({
 <style lang="scss" module>
 .PlaylistTrackTable {
   // 表の背景を透過にする
-  background-color: rgba(0, 0, 0, 0)!important;
+  background-color: rgba(0, 0, 0, 0) !important;
+
   table {
     // 表と列の幅を最初の行のセルの幅に固定して設定
-    table-layout:fixed;
+    table-layout: fixed;
+
     tr {
-      td, th {
+      td,
+      th {
         padding: 0 8px;
       }
     }

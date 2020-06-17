@@ -215,10 +215,11 @@ export default Vue.extend({
     font-size: 0.9rem;
     line-height: 1.2rem;
   }
+
   &__subtitle {
     font-size: 0.8rem;
     line-height: 1rem;
-    margin-top: -8px!important;
+    margin-top: -8px !important;
   }
 }
 </style>

@@ -54,6 +54,7 @@ const config: Configuration = {
     '@nuxtjs/dotenv',
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/stylelint-module',
   ],
   modules: [
     '@nuxtjs/axios',
@@ -97,6 +98,10 @@ const config: Configuration = {
         },
       },
     },
+  },
+  stylelint: {
+    configFile: './.stylelintrc.js',
+    fix: true,
   },
   server: {
     https: process.env.NODE_ENV === 'development'

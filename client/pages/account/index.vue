@@ -77,9 +77,11 @@ export default Vue.extend({
 .AccountPage {
   min-width: 300px;
   margin: 24px 6%;
+
   & > *:not(:last-child) {
     margin-bottom: 24px;
   }
+
   &__editAccountIcon {
     margin-left: 8px;
   }

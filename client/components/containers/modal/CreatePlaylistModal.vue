@@ -181,15 +181,18 @@ export default Vue.extend({
     justify-content: space-between;
     align-items: center;
     width: 100%;
+
     & > *:last-child {
       margin-right: 8px;
     }
   }
+
   &__action {
     padding: 12px;
     width: 100%;
     display: flex;
     justify-content: flex-end;
+
     & > *:not(:last-child) {
       margin-right: 12px;
     }

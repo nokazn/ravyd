@@ -92,6 +92,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
 <style lang="scss" module>
 .LibraryArtistsPage {
   padding: 16px 3% 48px;
+
   & > * {
     margin-bottom: 24px;
   }
@@ -100,6 +101,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+
     & > * {
       margin-left: 16px;
       margin-right: 16px;
@@ -108,6 +110,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
       max-width: 200px;
     }
   }
+
   &__card {
     margin-bottom: 32px;
   }

@@ -115,7 +115,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.UserAvatar{
+.UserAvatar {
   &__noAvatar {
     display: flex;
     justify-content: center;

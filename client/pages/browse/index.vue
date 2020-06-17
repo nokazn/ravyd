@@ -130,16 +130,15 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
 .BrowsePage {
   padding: 16px 3% 48px;
 
-  & > *:not(:last-child) {
-    margin-bottom: 24px;
-  }
   &__title {
     margin-left: 3%;
   }
+
   &__categoryCardContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
     & > * {
       margin-left: 16px;
       margin-right: 16px;
@@ -148,11 +147,17 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
       max-width: 220px;
     }
   }
+
   &__categoryCard {
     margin-bottom: 32px;
   }
+
   &__spacer {
     height: 0;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 24px;
   }
 }
 </style>

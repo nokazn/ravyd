@@ -141,11 +141,13 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
   }
+
   &__avatar {
     display: flex;
     justify-content: center;
     margin-top: 8px;
   }
+
   &__title {
     display: flex;
     justify-content: center;
