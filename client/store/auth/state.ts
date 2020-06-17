@@ -3,7 +3,7 @@ import { SpotifyAPI } from '~~/types';
 export type AuthState = {
   accessToken: string | undefined;
   expireMillis: number | undefined
-  userData: SpotifyAPI.UserData | null | undefined;
+  userData: SpotifyAPI.UserData | undefined;
 }
 
 const state = (): AuthState => ({

@@ -50,7 +50,7 @@ import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  activeRowId: string | null
+  activeRowId: string | undefined
 };
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -117,7 +117,7 @@ export default Vue.extend({
 
     return {
       headers,
-      activeRowId: null,
+      activeRowId: undefined,
     };
   },
 

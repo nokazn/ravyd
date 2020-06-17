@@ -10,7 +10,7 @@ export const getPlaylistInfo = async (
 ): Promise<App.PlaylistInfo | null> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
-  const userId = app.$state().auth.userData?.id;
+  const userId = app.$getters()['auth/userId'];
   if (market == null || userId == null) return null;
 
   const playlistInfo = await app.$spotify.playlists.getPlaylist({

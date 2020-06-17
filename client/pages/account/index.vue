@@ -33,8 +33,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootState } from 'vuex';
+
 import TwoColumnsListCard, { ItemList } from '~/components/parts/list/TwoColumnsListCard.vue';
-import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
   components: {
@@ -42,26 +43,26 @@ export default Vue.extend({
   },
 
   computed: {
-    userData(): SpotifyAPI.UserData | null {
-      return this.$state().auth.userData ?? null;
+    userData(): RootState['auth']['userData'] {
+      return this.$state().auth.userData;
     },
-    itemList(): ItemList | null {
-      return this.userData != null
-        ? [
-          {
-            title: 'ユーザー名',
-            value: this.userData.display_name,
-          },
-          {
-            title: 'メールアドレス',
-            value: this.userData.email,
-          },
-          {
-            title: '国',
-            value: this.userData.country,
-          },
-        ]
-        : null;
+    itemList(): ItemList | undefined {
+      if (this.userData == null) return undefined;
+
+      return [
+        {
+          title: 'ユーザー名',
+          value: this.userData.display_name,
+        },
+        {
+          title: 'メールアドレス',
+          value: this.userData.email,
+        },
+        {
+          title: '国',
+          value: this.userData.country,
+        },
+      ];
     },
   },
 

@@ -20,9 +20,9 @@ import { sleep } from '~~/utils/sleep';
 
 type Data = {
   isHovered: boolean
-  animationTimeoutId: ReturnType<typeof setTimeout> | null
-  parentWidth: number | null
-  linkWidth: number | null
+  animationTimeoutId: ReturnType<typeof setTimeout> | undefined
+  parentWidth: number | undefined
+  linkWidth: number | undefined
 };
 
 export default Vue.extend({
@@ -40,9 +40,9 @@ export default Vue.extend({
   data(): Data {
     return {
       isHovered: false,
-      animationTimeoutId: null,
-      parentWidth: null,
-      linkWidth: null,
+      animationTimeoutId: undefined,
+      parentWidth: undefined,
+      linkWidth: undefined,
     };
   },
 
@@ -50,17 +50,17 @@ export default Vue.extend({
     releasePath(): string {
       return `/releases/${this.releaseId}`;
     },
-    marqueeSeconds(): number | null {
-      if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return null;
-      if (this.linkWidth < this.parentWidth * 0.95) return null;
+    marqueeSeconds(): number | undefined {
+      if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return undefined;
+      if (this.linkWidth < this.parentWidth * 0.95) return undefined;
 
       const widthPerSeconds = 30;
       return Math.ceil((this.linkWidth / widthPerSeconds));
     },
-    marqueeStyles(): { animation: string } | null {
+    marqueeStyles(): { animation: string } | undefined {
       return this.marqueeSeconds != null
         ? { animation: `marquee ${this.marqueeSeconds}s linear 1` }
-        : null;
+        : undefined;
     },
   },
 
@@ -78,9 +78,9 @@ export default Vue.extend({
         return;
       }
 
-      this.linkWidth = linkEle?.clientWidth ?? null;
-      const parentElement = linkEle?.parentElement;
-      this.parentWidth = parentElement?.clientWidth ?? null;
+      this.linkWidth = linkEle.clientWidth;
+      const { parentElement } = linkEle;
+      this.parentWidth = parentElement?.clientWidth;
     },
     async onHovered() {
       this.calculateWidth();
@@ -103,7 +103,7 @@ export default Vue.extend({
     },
     clearTimeout() {
       if (this.animationTimeoutId != null) clearTimeout(this.animationTimeoutId);
-      this.animationTimeoutId = null;
+      this.animationTimeoutId = undefined;
       this.isHovered = false;
     },
   },

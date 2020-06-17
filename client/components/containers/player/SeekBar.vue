@@ -29,7 +29,7 @@ import Vue from 'vue';
 import { RootState } from 'vuex';
 
 export type Data = {
-  updateInterval: ReturnType<typeof setInterval> | null
+  updateInterval: ReturnType<typeof setInterval> | undefined
 }
 
 const ON_CHANGED = 'on-changed';
@@ -41,7 +41,7 @@ export type On = {
 export default Vue.extend({
   data(): Data {
     return {
-      updateInterval: null,
+      updateInterval: undefined,
     };
   },
 
@@ -112,7 +112,7 @@ export default Vue.extend({
     },
     clearInterval() {
       if (this.updateInterval != null) clearInterval(this.updateInterval);
-      this.updateInterval = null;
+      this.updateInterval = undefined;
     },
   },
 });
