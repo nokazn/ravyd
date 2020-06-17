@@ -201,6 +201,7 @@ export default Vue.extend({
     &Content {
       display: grid;
       grid-template-columns: auto 20px;
+      column-gap: 12px;
 
       & > *:first-child {
         overflow-x: hidden;
