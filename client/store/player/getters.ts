@@ -16,8 +16,7 @@ export type PlayerGetters = {
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
-  isReleaseSet: (releaseId: string) => boolean
-  isArtistSet: (artistId: string) => boolean
+  isContextSet: (uri: string | undefined) => boolean
   repeatState: SpotifyAPI.RepeatState | undefined
   isPreviousDisallowed: boolean
   isShuffleDisallowed: boolean
@@ -35,8 +34,7 @@ export type RootGetters = {
   ['player/artworkSrc']: PlayerGetters['artworkSrc']
   ['player/hasTrack']: PlayerGetters['hasTrack']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
-  ['player/isReleaseSet']: PlayerGetters['isReleaseSet']
-  ['player/isArtistSet']: PlayerGetters['isArtistSet']
+  ['player/isContextSet']: PlayerGetters['isContextSet']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
   ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
@@ -112,15 +110,17 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   isTrackSet(state) {
+    // id を指定
     return (trackId) => state.trackId === trackId;
   },
 
-  isReleaseSet(_state, getters) {
-    return (releaseId) => getters.releaseId === releaseId;
-  },
-
-  isArtistSet(state) {
-    return (artistId) => state.artistList?.some((artist) => artist.id === artistId) ?? false;
+  isContextSet(state) {
+    /**
+     * uri を指定
+     * アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
+     */
+    return (uri) => uri != null
+      && (state.contextUri === uri || state.customContextUri === uri);
   },
 
   isShuffleDisallowed(state) {

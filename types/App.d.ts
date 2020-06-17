@@ -85,9 +85,9 @@ export namespace App {
     type: 'album' | 'track'
     releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
     releaseId: string
-    id: string //  track または album の id
-    name: string //  track または album の name
-    uri: string
+    id: string // track または album の id
+    name: string // track または album の name
+    uri: string // track または album の name
     artists: App.SimpleArtistInfo[]
     hash?: string
     releaseYear?: string

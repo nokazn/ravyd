@@ -31,7 +31,7 @@
         <div :class="$style.PlaylistIdPage__playlistInfoFooter">
           <div :class="$style.PlaylistIdPage__buttons">
             <ContextMediaButton
-              :is-playing="isPlaying && isPlaylistSet"
+              :is-playing="isPlaylistSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
 
@@ -77,6 +77,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import { RootState } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -152,11 +153,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     this.$dispatch('resetDominantBackgroundColor');
   }
 
-  get isPlaying(): boolean {
-    return this.$state().player.isPlaying;
-  }
   get isPlaylistSet(): boolean {
-    return this.$state().player.contextUri === this.playlistInfo?.uri;
+    return this.$getters()['player/isContextSet'](this.playlistInfo?.uri);
+  }
+  get isPlaying(): RootState['player']['isPlaying'] {
+    return this.$state().player.isPlaying;
   }
 
   /**

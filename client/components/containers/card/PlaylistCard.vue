@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RootState } from 'vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { App } from '~~/types';
@@ -105,13 +106,11 @@ export default Vue.extend({
   },
 
   computed: {
-    isPlaying(): boolean {
-      return this.$state().player.isPlaying;
-    },
-    // @todo
     isPlaylistSet(): boolean {
-      // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
-      return false;
+      return this.$getters()['player/isContextSet'](this.uri);
+    },
+    isPlaying(): RootState['player']['isPlaying'] {
+      return this.$state().player.isPlaying;
     },
 
     mediaIcon(): MediaIcon {

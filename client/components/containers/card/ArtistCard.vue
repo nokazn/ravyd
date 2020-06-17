@@ -50,6 +50,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RootState } from 'vuex';
+
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
 import { App } from '~~/types';
 
@@ -100,11 +102,11 @@ export default Vue.extend({
   },
 
   computed: {
-    isPlaying(): boolean {
+    isPlaying(): RootState['player']['isPlaying'] {
       return this.$state().player.isPlaying;
     },
     isArtistSet(): boolean {
-      return this.$getters()['player/isArtistSet'](this.id);
+      return this.$getters()['player/isContextSet'](this.uri);
     },
 
     mediaIcon(): MediaIcon {

@@ -76,6 +76,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
+import { RootState } from 'vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { hasProp } from '~~/utils/hasProp';
@@ -95,6 +96,10 @@ export default Vue.extend({
   },
 
   props: {
+    type: {
+      type: String as PropType<App.ReleaseCardInfo['type']>,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -161,15 +166,14 @@ export default Vue.extend({
   },
 
   computed: {
-    isPlaying(): boolean {
-      return this.$state().player.isPlaying;
-    },
     isReleaseSet(): boolean {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
-      return (this.uri.includes('track') && this.$getters()['player/isTrackSet'](this.id))
-        || (this.uri.includes('album') && this.$getters()['player/isReleaseSet'](this.id));
+      return (this.type === 'track' && this.$getters()['player/isTrackSet'](this.id))
+        || (this.type === 'album' && this.$getters()['player/isContextSet'](this.uri));
     },
-
+    isPlaying(): RootState['player']['isPlaying'] {
+      return this.$state().player.isPlaying;
+    },
     mediaIcon(): MediaIcon {
       return this.isPlaying && this.isReleaseSet
         ? 'mdi-pause-circle'
@@ -191,7 +195,7 @@ export default Vue.extend({
         this.$dispatch('player/pause');
       } else {
         // トラックとアルバムのカードで場合分け
-        const params = this.uri.includes('track')
+        const params = this.type === 'track'
           ? { trackUriList: [this.uri] }
           : { contextUri: this.uri };
         // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する

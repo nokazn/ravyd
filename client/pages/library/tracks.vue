@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import { RootState } from 'vuex';
 
 import ContextMediaButton, { On } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -84,9 +85,9 @@ export default class LibraryTracksPage extends Vue implements Data {
     return this.$state().library.tracks.isFullTrackList;
   }
   get isPlaylistSet(): boolean {
-    return this.$state().player.customContextUri === this.trackTableInfo.uri;
+    return this.$getters()['player/isContextSet'](this.trackTableInfo.uri);
   }
-  get isPlaying(): boolean {
+  get isPlaying(): RootState['player']['isPlaying'] {
     return this.$state().player.isPlaying;
   }
 

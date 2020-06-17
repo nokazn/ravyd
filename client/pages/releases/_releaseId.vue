@@ -26,7 +26,7 @@
         <div :class="$style.ReleaseIdPage__releaseInfoFooter">
           <div :class="$style.ReleaseIdPage__buttons">
             <ContextMediaButton
-              :is-playing="isPlaying && isReleaseSet"
+              :is-playing="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
 
@@ -75,6 +75,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
+import { RootState } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -143,13 +144,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData {
     this.$dispatch('resetDominantBackgroundColor');
   }
 
-  get isPlaying(): boolean {
-    return this.$state().player.isPlaying;
-  }
   get isReleaseSet(): boolean {
-    return this.releaseInfo != null
-      ? this.$getters()['player/isReleaseSet'](this.releaseInfo.id)
-      : false;
+    return this.$getters()['player/isContextSet'](this.releaseInfo?.uri);
+  }
+  get isPlaying(): RootState['player']['isPlaying'] {
+    return this.$state().player.isPlaying;
   }
 
   onFavoriteButtonClicked(nextSavedState: OnMediaButton['on-clicked']) {

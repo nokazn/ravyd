@@ -36,7 +36,7 @@
 
         <div :class="$style.ArtistIdPage__buttons">
           <ContextMediaButton
-            :is-playing="isPlaying && isArtistSet"
+            :is-playing="isArtistSet && isPlaying "
             @on-clicked="onContextMediaButtonClicked"
           />
 
@@ -94,6 +94,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
+import { RootState } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -181,13 +182,11 @@ export default class ArtistIdPage extends Vue implements AsyncData {
     };
   }
 
-  get isPlaying(): boolean {
-    return this.$state().player.isPlaying;
-  }
   get isArtistSet(): boolean {
-    return this.artistInfo != null
-      ? this.$getters()['player/isArtistSet'](this.artistInfo.id)
-      : false;
+    return this.$getters()['player/isContextSet'](this.artistInfo?.uri);
+  }
+  get isPlaying(): RootState['player']['isPlaying'] {
+    return this.$state().player.isPlaying;
   }
 
   mounted() {
