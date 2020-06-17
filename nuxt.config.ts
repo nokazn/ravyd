@@ -44,23 +44,21 @@ const config: Configuration = {
   router: {
     middleware: 'auth',
   },
-  buildModules: [
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify',
-    '@nuxt/typescript-build',
-  ],
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/pwa',
-    [
-      '@nuxtjs/dotenv',
-      { filename: process.env.NODE_ENV === 'production' ? './.env.prod' : './.env.dev' },
-    ],
-  ],
   env: {
     BASE_URL: process.env.BASE_URL || 'https://127.0.0.1:3000',
     SPOTIFY_URL: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
+  loading: { color: '#fff' },
+  buildModules: [
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/dotenv',
+    '@nuxt/typescript-build',
+    '@nuxtjs/vuetify',
+  ],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/pwa',
+  ],
   axios: {
     baseURL: process.env.BASE_URL || 'https://127.0.0.1:3000',
     browserBaseURL: process.env.SPOTIFY_URL,
@@ -72,6 +70,9 @@ const config: Configuration = {
         Accept: 'application/json',
       },
     },
+  },
+  dotenv: {
+    filename: process.env.NODE_ENV === 'production' ? './.env.prod' : './.env.dev',
   },
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -97,7 +98,6 @@ const config: Configuration = {
       },
     },
   },
-  loading: { color: '#fff' },
   server: {
     https: process.env.NODE_ENV === 'development'
       ? {
