@@ -51,47 +51,57 @@
               />
             </v-list-item-avatar>
 
-            <v-list-item-content>
-              <div
-                :class="[
-                  $style.DeviceSelectMenuList__listItemTitle,
-                  trackNameColor(track.isPlaying),
-                ]"
-                class="g-ellipsis-text"
-                :title="track.name"
-                v-text="track.name"
-              />
-
-              <v-list-item-subtitle
-                :class="[
-                  $style.DeviceSelectMenuList__listItemSubtitle,
-                  subtitleColor(track.isPlaying),
-                ]"
-              >
-                <nuxt-link
-                  :to="`/releases/${track.releaseId}`"
-                  :title="track.releaseName"
+            <v-list-item-content :class="$style.DeviceSelectMenuList__listItemContent">
+              <div>
+                <div
+                  :class="[
+                    $style.DeviceSelectMenuList__listItemTitle,
+                    trackNameColor(track.isPlaying),
+                  ]"
                   class="g-ellipsis-text"
-                  @click.native.stop="toggleTrackList"
-                  v-text="track.releaseName"
+                  :title="track.name"
+                  v-text="track.name"
                 />
-                <ArtistNames
-                  :artist-list="track.artistList"
-                  :title="artistNames(track.artistList)"
-                  class="g-ellipsis-text"
-                  @on-clicked="toggleTrackList"
-                />
-              </v-list-item-subtitle>
-            </v-list-item-content>
 
-            <v-list-item-action>
+                <v-list-item-subtitle
+                  :class="[
+                    $style.DeviceSelectMenuList__listItemSubtitle,
+                    subtextColor(track.isPlaying),
+                  ]"
+                >
+                  <nuxt-link
+                    :to="`/releases/${track.releaseId}`"
+                    :title="track.releaseName"
+                    class="g-ellipsis-text"
+                    @click.native.stop="toggleTrackList"
+                    v-text="track.releaseName"
+                  />
+                  <ArtistNames
+                    :artist-list="track.artistList"
+                    :title="artistNames(track.artistList)"
+                    class="g-ellipsis-text"
+                    @on-clicked="toggleTrackList"
+                  />
+                </v-list-item-subtitle>
+              </div>
+
               <v-icon
                 v-if="track.isPlaying"
+                :size="20"
                 color="active"
                 title="再生中"
               >
                 mdi-volume-high
               </v-icon>
+            </v-list-item-content>
+
+            <v-list-item-action>
+              <span
+                class="g-small-text"
+                :class="subtextColor(track.isPlaying)"
+              >
+                {{ track.duration }}
+              </span>
             </v-list-item-action>
           </v-list-item>
 
@@ -122,7 +132,7 @@ import { App } from '~~/types';
 type Data = {
   isShown: boolean
   trackNameColor: (isPlaying: boolean) => string | undefined
-  subtitleColor: (isPlaying: boolean) => string | undefined
+  subtextColor: (isPlaying: boolean) => string | undefined
   artistNames: (artistList: App.SimpleArtistInfo[]) => string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
@@ -137,7 +147,7 @@ export default Vue.extend({
     return {
       isShown: false,
       trackNameColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : undefined),
-      subtitleColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : 'subtext--text'),
+      subtextColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : 'subtext--text'),
       artistNames: (artistList) => artistList.map((artist) => artist.name).join(', '),
       MENU_BACKGROUND_COLOR,
     };
@@ -187,14 +197,25 @@ export default Vue.extend({
     margin-left: 12px;
   }
 
-  &__listItemTitle {
-    font-size: 0.9em;
-    line-height: 1.1rem;
-  }
+  &__listItem {
+    &Content {
+      display: grid;
+      grid-template-columns: auto 20px;
 
-  &__listItemSubtitle {
-    font-size: 0.8em !important;
-    line-height: 1.1rem !important;
+      & > *:first-child {
+        overflow-x: hidden;
+      }
+    }
+
+    &Title {
+      font-size: 0.9em;
+      line-height: 1.1rem;
+    }
+
+    &Subtitle {
+      font-size: 0.8em !important;
+      line-height: 1.1rem !important;
+    }
   }
 
   &__moreButton {

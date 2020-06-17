@@ -1,5 +1,6 @@
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { elapsedTime } from '~~/utils/elapsedTime';
 import { TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { App, SpotifyAPI } from '~~/types';
 
@@ -22,6 +23,8 @@ export const convertTrackForQueue = (
     releaseName: track.album.name,
     releaseId: convertUriToId(track.album.uri),
     artworkSrc: getImageSrc(track.album.images, artworkSize),
+    // @ts-ignore @todo
+    duration: elapsedTime(track.duration_ms as number),
   };
 
   return info;
