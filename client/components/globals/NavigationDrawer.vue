@@ -22,23 +22,28 @@
         <v-subheader
           v-if="subtitle != null"
           :class="$style.NavigationDrawer__subheader"
-          v-text="subtitle"
-        />
+        >
+          {{ subtitle }}
+        </v-subheader>
 
         <v-list-item
-          v-for="{ icon, title, to } in items"
-          :key="title"
+          v-for="{ icon, name, to } in items"
+          :key="name"
           link
           nuxt
           :to="to"
           dense
         >
           <v-list-item-icon v-if="icon != null">
-            <v-icon v-text="icon" />
+            <v-icon :title="name">
+              {{ icon }}
+            </v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title v-text="title" />
+            <v-list-item-title>
+              {{ name }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -51,7 +56,7 @@
           @click="onPlaylistButtonClicked"
         >
           <v-list-item-icon>
-            <v-icon>
+            <v-icon title="新規プレイリスト">
               mdi-plus-circle
             </v-icon>
           </v-list-item-icon>
@@ -85,7 +90,7 @@ type Data = {
   navigationDrawerItemLists: {
     subtitle?: string
     items: {
-      title: string
+      name: string
       to: string
       icon?: string
     }[]
@@ -106,12 +111,12 @@ export default Vue.extend({
         {
           items: [
             {
-              title: 'ホーム',
+              name: 'ホーム',
               to: '/',
               icon: 'mdi-home-variant',
             },
             {
-              title: '見つける',
+              name: '見つける',
               to: '/browse',
               icon: 'mdi-binoculars',
             },
@@ -121,15 +126,15 @@ export default Vue.extend({
           subtitle: 'ライブラリ',
           items: [
             {
-              title: 'お気に入りの曲',
+              name: 'お気に入りの曲',
               to: '/library/tracks',
             },
             {
-              title: 'アルバム',
+              name: 'アルバム',
               to: '/library/releases',
             },
             {
-              title: 'アーティスト',
+              name: 'アーティスト',
               to: '/library/artists',
             },
           ],
