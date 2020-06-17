@@ -73,6 +73,11 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
+    // customContext を使用するか (uri は指定するけど contextUri を渡したくない場合)
+    custom: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data(): Data {
@@ -142,7 +147,7 @@ export default Vue.extend({
       // trackUriList は更新されうる
       const trackUriList = this.trackList.map((track) => track.uri);
       // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-      this.$dispatch('player/play', this.uri != null
+      this.$dispatch('player/play', !this.custom && this.uri != null
         ? {
           contextUri: this.uri,
           offset: { position: index },

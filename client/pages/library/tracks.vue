@@ -5,9 +5,14 @@
       v-text="title"
     />
 
+    <ContextMediaButton
+      :is-playing="isPlaylistSet && isPlaying"
+      @on-clicked="onContextMediaButtonClicked"
+    />
+
     <PlaylistTrackTable
       v-if="trackList != null"
-      :track-list="trackList"
+      v-bind="trackTableInfo"
       :class="$style.LibraryTracksPage__table"
     />
 
@@ -21,19 +26,27 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import ContextMediaButton, { On } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
 import { App } from '~~/types';
 
 interface Data {
   observer: IntersectionObserver | undefined
   title: string
+  trackTableInfo: {
+    trackList: App.PlaylistTrackDetail[] | null
+    uri: string
+    custom: true
+  }
 }
 
 const LIMIT_OF_TRACKS = 30 as const;
 
 @Component({
   components: {
+    ContextMediaButton,
     PlaylistTrackTable,
     IntersectionLoadingCircle,
   },
@@ -50,6 +63,13 @@ const LIMIT_OF_TRACKS = 30 as const;
 export default class LibraryTracksPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined
   title = 'お気に入りの曲'
+  trackTableInfo = {
+    trackList: this.trackList,
+    // @non-null ログイン中なので userId は必ず存在
+    uri: generateCollectionContextUri(this.$getters()['auth/userId']!),
+    // uri は指定するが、contextUri をパラメータとして送信しない
+    custom: true as const,
+  }
 
   head() {
     return {
@@ -63,12 +83,39 @@ export default class LibraryTracksPage extends Vue implements Data {
   get isFullTrackList(): boolean {
     return this.$state().library.tracks.isFullTrackList;
   }
+  get isPlaylistSet(): boolean {
+    return this.$state().player.customContextUri === this.trackTableInfo.uri;
+  }
+  get isPlaying(): boolean {
+    return this.$state().player.isPlaying;
+  }
 
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
   }
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
+  }
+
+  onContextMediaButtonClicked(nextPlayingState: On['on-clicked']) {
+    // 停止
+    if (!nextPlayingState) {
+      this.$dispatch('player/pause');
+      return;
+    }
+
+    if (this.trackList == null) return;
+
+    // 再生
+    const trackUriList = this.trackList.map((track) => track.uri);
+    // uri を contextUri に指定しても再生できないため uris で指定
+    this.$dispatch('player/play', this.isPlaylistSet
+      ? undefined
+      : { trackUriList });
+    this.$dispatch('player/setCustomContext', {
+      contextUri: this.trackTableInfo.uri,
+      trackUriList,
+    });
   }
 
   onLoadingCircleAppear() {
