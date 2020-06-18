@@ -1,2 +1,2 @@
 export * from './getPlaylistInfo';
-export * from './getPlaylistTrackInfo';
+export * from './getPlaylistTrackInfoHandler';

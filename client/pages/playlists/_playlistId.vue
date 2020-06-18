@@ -70,7 +70,7 @@
     <IntersectionLoadingCircle
       v-if="playlistTrackInfo != null"
       :is-loading="!playlistTrackInfo.isFullTrackList"
-      @on-appeared="getTrackList"
+      @on-appeared="appendTrackList"
     />
   </div>
 </template>
@@ -89,8 +89,7 @@ import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getPlaylistInfo, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
-import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
+import { getPlaylistInfo, getPlaylistTrackInfoHandler } from '~/scripts/localPlugins/_playlistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
@@ -101,6 +100,7 @@ interface AsyncData {
   artworkSize: typeof ARTWORK_SIZE
   playlistInfo: App.PlaylistInfo | undefined
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
+  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
 }
 
 interface Data {
@@ -126,15 +126,17 @@ interface Data {
 
   async asyncData(context): Promise<AsyncData> {
     const artworkSize = ARTWORK_SIZE;
+    const getPlaylistTrackInfo = getPlaylistTrackInfoHandler(context);
     const [playlistInfo, playlistTrackInfo] = await Promise.all([
       await getPlaylistInfo(context, artworkSize),
-      await getPlaylistTrackInfo(context, LIMIT_OF_TRACKS),
+      await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
     ]);
 
     return {
       artworkSize,
       playlistInfo,
       playlistTrackInfo,
+      getPlaylistTrackInfo,
     };
   },
 })
@@ -142,6 +144,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   artworkSize: typeof ARTWORK_SIZE = ARTWORK_SIZE;
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
+  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined
 
   mutationUnsubscribe: (() => void) | undefined = undefined
 
@@ -185,42 +188,27 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     return this.$state().player.isPlaying;
   }
 
-  /**
-   * localPlugins の getTrackList と同じ処理で、スクロールが下限に到達したとき呼ばれる
-   */
-  async getTrackList() {
-    if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
+  async appendTrackList() {
+    if (this.playlistTrackInfo == null
+      || this.playlistTrackInfo.isFullTrackList
+      || this.getPlaylistTrackInfo == null) return;
 
     const currentTrackList = this.playlistTrackInfo.trackList;
-    const { playlistId } = this.$route.params;
     const offset = currentTrackList.length;
-    const market = this.$getters()['auth/userCountryCode'];
-    const tracks = await this.$spotify.playlists.getPlaylistItems({
-      playlistId,
+    const trackInfo = await this.getPlaylistTrackInfo({
       limit: LIMIT_OF_TRACKS,
       offset,
-      market,
     });
-    if (tracks == null) {
+    if (trackInfo == null) {
       this.playlistTrackInfo.isFullTrackList = true;
       return;
     }
 
-    const filteredTrackList = tracks.items
-      .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
-    const trackIdList = filteredTrackList.map(({ track }) => track.id);
-    const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({
-      trackIdList,
-    });
-    const addedTrackList = filteredTrackList.map(convertPlaylistTrackDetail({
-      isTrackSavedList,
-      offset,
-    }));
-    this.playlistTrackInfo.trackList = [...currentTrackList, ...addedTrackList];
-
-    if (tracks.next == null) {
-      this.playlistTrackInfo.isFullTrackList = true;
-    }
+    this.playlistTrackInfo = {
+      ...this.playlistTrackInfo,
+      trackList: [...currentTrackList, ...trackInfo.trackList],
+      isFullTrackList: trackInfo.isFullTrackList,
+    };
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {

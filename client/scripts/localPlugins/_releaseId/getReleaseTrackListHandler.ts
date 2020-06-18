@@ -2,9 +2,9 @@ import { Context } from '@nuxt/types';
 import { convertSimpleTrackDetail } from '~/scripts/converter/convertSimpleTrackDetail';
 import { App } from '~~/types';
 
-export const getReleaseTrackList = ({ app, params }: Context) => async (
+export const getReleaseTrackListHandler = ({ app, params }: Context) => async (
   {
-    limit, offset: currentOffset, totalTracks,
+    limit, offset, totalTracks,
   } : {
     limit: number
     offset: number
@@ -12,13 +12,13 @@ export const getReleaseTrackList = ({ app, params }: Context) => async (
   },
 ): Promise<App.SimpleTrackDetail[]> => {
   const market = app.$getters()['auth/userCountryCode'];
-  const unacquiredCounts = totalTracks - currentOffset;
+  const unacquiredCounts = totalTracks - offset;
   const handlerCounts = Math.ceil(unacquiredCounts / limit);
 
   const handler = async (index: number) => {
     const tracks = await app.$spotify.albums.getAlbumTracks({
       albumId: params.releaseId,
-      offset: currentOffset + index * limit,
+      offset: offset + index * limit,
       market,
       limit,
     });
@@ -26,7 +26,10 @@ export const getReleaseTrackList = ({ app, params }: Context) => async (
 
     const trackIdList = tracks.items.map((track) => track.id);
     const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });
-    const partialTrackList = tracks.items.map((convertSimpleTrackDetail({ isTrackSavedList })));
+    const partialTrackList = tracks.items.map((convertSimpleTrackDetail({
+      isTrackSavedList,
+      offset,
+    })));
 
     return partialTrackList;
   };

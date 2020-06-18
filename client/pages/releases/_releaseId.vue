@@ -89,20 +89,17 @@ import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 
-import { getReleaseInfo, getReleaseTrackList } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo, getReleaseTrackListHandler } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
+const LIMIT_OF_TRACKS = 50;
 
 interface AsyncData {
   artworkSize: number
   releaseInfo: App.ReleaseInfo | undefined
-  getReleaseTrackList: ((payload: {
-    limit: number
-    offset: number
-    totalTracks: number
-  }) => Promise<App.SimpleTrackDetail[]>) | undefined
+  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined
 }
 
 interface Data {
@@ -131,11 +128,12 @@ interface Data {
   async asyncData(context: Context): Promise<AsyncData> {
     const artworkSize = ARTWORK_SIZE;
     const releaseInfo = await getReleaseInfo(context, artworkSize);
+    const getReleaseTrackList = getReleaseTrackListHandler(context);
 
     return {
       artworkSize,
       releaseInfo,
-      getReleaseTrackList: getReleaseTrackList(context),
+      getReleaseTrackList,
     };
   },
 })
@@ -143,11 +141,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   artworkSize = ARTWORK_SIZE
   releaseInfo: App.ReleaseInfo | undefined = undefined
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined
-  getReleaseTrackList: ((payload: {
-    limit: number
-    offset: number
-    totalTracks: number
-  }) => Promise<App.SimpleTrackDetail[]>) | undefined = undefined
+  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined = undefined
 
   mutationUnsubscribe: (() => void) | undefined = undefined
 
@@ -198,7 +192,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       return;
     }
 
-    const limit = 50;
+    const limit = LIMIT_OF_TRACKS;
     const offset = this.releaseInfo.trackList.length;
     const { totalTracks } = this.releaseInfo;
     const trackList = await this.getReleaseTrackList({

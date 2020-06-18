@@ -6,16 +6,15 @@ import { App } from '~~/types';
 /**
  * limit は 0 ~ 50
  */
-export const getPlaylistTrackInfo = async (
-  { app, params }: Context,
-  limit: number,
+export const getPlaylistTrackInfoHandler = ({ app, params }: Context) => async (
+  { limit, offset = 0 }: { limit: number, offset?: number },
 ): Promise<App.PlaylistTrackInfo | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
   const tracks = await app.$spotify.playlists.getPlaylistItems({
     playlistId,
     limit,
-    offset: 0,
+    offset,
     market,
   });
   if (tracks == null) return undefined;
@@ -26,7 +25,10 @@ export const getPlaylistTrackInfo = async (
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({
     trackIdList,
   });
-  const trackList = filteredTrackList.map(convertPlaylistTrackDetail({ isTrackSavedList }));
+  const trackList = filteredTrackList.map(convertPlaylistTrackDetail({
+    isTrackSavedList,
+    offset,
+  }));
 
   const isFullTrackList = tracks.next == null;
 

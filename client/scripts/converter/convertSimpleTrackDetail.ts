@@ -1,12 +1,14 @@
 import { elapsedTime } from '~~/utils/elapsedTime';
 import { App, SpotifyAPI } from '~~/types';
 
-export const convertSimpleTrackDetail = ({ isTrackSavedList }: { isTrackSavedList: boolean[] }) => (
+export const convertSimpleTrackDetail = (
+  { isTrackSavedList, offset = 0 }: { isTrackSavedList: boolean[], offset?: number },
+) => (
   track: SpotifyAPI.SimpleTrack,
   index: number,
 ): App.SimpleTrackDetail => {
   const detail = {
-    index,
+    index: index + offset,
     name: track.name,
     id: track.id,
     uri: track.uri,
