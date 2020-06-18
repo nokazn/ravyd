@@ -1,36 +1,36 @@
 import { Context } from '@nuxt/types';
-import { convertAlbumType } from '~/scripts/converter/convertAlbumType';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
 import { convertSimpleTrackDetail } from '~/scripts/converter/convertSimpleTrackDetail';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 export const getReleaseInfo = async (
   { app, params }: Context,
   artworkSize: number,
-): Promise<App.ReleaseInfo | null> => {
+): Promise<App.ReleaseInfo | undefined> => {
   const market = app.$getters()['auth/userCountryCode'];
   const release = await app.$spotify.albums.getAlbum({
     albumId: params.releaseId,
     market,
   });
-  if (release == null) return null;
+  if (release == null) return undefined;
 
   const {
     album_type,
-    artists,
-    label,
-    name,
     id,
+    name,
     uri,
+    artists,
     release_date: releaseDate,
     release_date_precision: releaseDatePrecision,
-    tracks,
     total_tracks: totalTracks,
+    label,
     images,
+    tracks,
     copyrights: copyrightList,
   } = release;
 
-  const albumType = convertAlbumType(album_type);
+  const releaseType = convertReleaseType(album_type);
 
   const artistList = artists.map((artist) => ({
     id: artist.id,
@@ -38,33 +38,31 @@ export const getReleaseInfo = async (
   }));
 
   const artworkSrc = getImageSrc(images, artworkSize);
-
   const trackIdList = tracks.items.map((track) => track.id);
-  const albumIdList = [id];
-  const [isTrackSavedList, [isSaved]] = await Promise.all([
-    // @todo 50 トラック超えた時
+  const [[isSaved], isTrackSavedList] = await Promise.all([
+    app.$spotify.library.checkUserSavedAlbums({ albumIdList: [id] }),
     app.$spotify.library.checkUserSavedTracks({ trackIdList }),
-    app.$spotify.library.checkUserSavedAlbums({ albumIdList }),
-  ] as const);
+  ]);
 
   const trackList = tracks.items.map(convertSimpleTrackDetail({ isTrackSavedList }));
-
-  const durationMs = tracks.items.reduce((prev, track) => track.duration_ms + prev, 0);
+  const isFullTrackList = tracks.next == null;
+  const durationMs = tracks.items.reduce((prev, curr) => prev + curr.duration_ms, 0);
 
   return {
-    albumType,
-    artistList,
-    label,
-    name,
+    releaseType,
     id,
+    name,
     uri,
+    artistList,
     releaseDate,
     releaseDatePrecision,
     artworkSrc,
-    trackList,
     totalTracks,
     durationMs,
+    label,
     copyrightList,
     isSaved,
+    trackList,
+    isFullTrackList,
   };
 };

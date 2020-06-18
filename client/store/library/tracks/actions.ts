@@ -151,26 +151,36 @@ const actions: Actions<
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
     // ライブラリ一覧を更新
     if (savedTrackIndex !== -1) {
-      const nextTrackList = [...currentTrackList];
-      nextTrackList[savedTrackIndex] = {
+      const trackList = [...currentTrackList];
+      trackList[savedTrackIndex] = {
         ...currentTrackList[savedTrackIndex],
         isSaved,
       };
-      commit('SET_TRACK_LIST', nextTrackList);
+      commit('SET_TRACK_LIST', trackList);
     }
 
     // プレイヤーを更新
-    dispatch('player/modifyTrackSavedState', { trackId, isSaved }, { root: true });
+    dispatch('player/modifyTrackSavedState', {
+      trackId,
+      isSaved,
+    }, { root: true });
 
     const [actualIsSaved] = await this.$spotify.library.checkUserSavedTracks({
       trackIdList: [trackId],
     });
+
+    commit('SET_ACTUAL_IS_SAVED', [trackId, actualIsSaved]);
+
     // 実際の状態と異なれば戻す
     if (isSaved !== actualIsSaved) {
       // ライブラリ一覧を戻す
       commit('SET_TRACK_LIST', currentTrackList);
+
       // プレイヤーを戻す
-      dispatch('player/modifyTrackSavedState', { trackId, isSaved: actualIsSaved }, { root: true });
+      dispatch('player/modifyTrackSavedState', {
+        trackId,
+        isSaved: actualIsSaved,
+      }, { root: true });
     }
 
     // ライブラリ一覧に表示されてない曲を保存した場合

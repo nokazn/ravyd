@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="items"
+    :items="trackList"
     group-by="discNumber"
     disable-pagination
     disable-sort
@@ -45,15 +45,20 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackTableRow, { On } from '~/components/parts/table/TrackTableRow.vue';
+import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  items: App.TrackDetail[]
   activeRowId: string | undefined
 };
+
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
+}
 
 export default Vue.extend({
   components: {
@@ -103,14 +108,11 @@ export default Vue.extend({
         align: 'center' as const,
       },
     ];
-    const items = this.trackList;
-
     const hash = this.$route.hash.replace('#', '');
-    const activeRowId = items.find((item) => item.hash === hash)?.id;
+    const activeRowId = this.trackList.find((item) => item.hash === hash)?.id;
 
     return {
       headers,
-      items,
       activeRowId,
     };
   },
@@ -125,7 +127,7 @@ export default Vue.extend({
     },
     hasMultipleDiscs(): boolean {
       const discNumberList = Array.from(
-        new Set(this.items.map((item) => item.discNumber)),
+        new Set(this.trackList.map((track) => track.discNumber)),
       );
 
       return discNumberList.length > 1;
@@ -136,7 +138,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onMediaButtonClicked(row: On['on-media-button-clicked']) {
+    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('player/pause');
       } else {
@@ -148,28 +150,20 @@ export default Vue.extend({
         });
       }
     },
-    async onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
-      const nextSavedState = !row.isSaved;
-      const modifySavedState = (isSaved: boolean, index: number) => this.items
-        .map((item, i) => (i === index
-          ? { ...item, isSaved }
-          : item));
+    // row をコピーしたものを参照する
+    async onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
+      const params: On['on-favorite-button-clicked'] = row;
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
-      // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifySavedState(nextSavedState, row.index);
+      const { id, isSaved } = row;
+      const nextSavedState = !isSaved;
       if (nextSavedState) {
-        await this.$dispatch('library/tracks/saveTracks', [row.id]);
+        await this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        await this.$dispatch('library/tracks/removeTracks', [row.id]);
+        await this.$dispatch('library/tracks/removeTracks', [id]);
       }
-
-      const [isSaved] = await this.$spotify.library.checkUserSavedTracks({
-        trackIdList: [row.id],
-      });
-      // 実際の状態と異なれば戻す
-      if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, row.index);
     },
-    onRowClicked({ id }: On['on-row-clicked']) {
+    onRowClicked({ id }: OnRow['on-row-clicked']) {
       this.activeRowId = id;
     },
   },

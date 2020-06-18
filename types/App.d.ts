@@ -67,21 +67,28 @@ export namespace App {
 
   // /releases/:releaseId page
   export type ReleaseInfo = {
-    albumType: 'アルバム' | 'シングル' | 'コンピレーション'
-    artistList: App.SimpleArtistInfo[]
-    label: string
-    name: string
+    releaseType: 'アルバム' | 'シングル' | 'コンピレーション'
     id: string
+    name: string
     uri: string
+    artistList: App.SimpleArtistInfo[]
     releaseDate: string
     releaseDatePrecision: string
-    artworkSrc: string | undefined
-    trackList: App.SimpleTrackDetail[]
     totalTracks: number
     durationMs: number
+    label: string
+    artworkSrc: string | undefined
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
+    trackList: App.SimpleTrackDetail[]
+    isFullTrackList: boolean
   }
+  export type ReleaseTrackInfo = {
+    trackList: App.SimpleTrackDetail[]
+    isFullTrackList: boolean
+    durationMs: number
+  }
+
   export type ReleaseCardInfo = {
     type: 'album' | 'track'
     releaseType: 'album' | 'single' | 'compilation' | 'appears_on'

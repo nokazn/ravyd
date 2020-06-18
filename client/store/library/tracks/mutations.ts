@@ -10,6 +10,8 @@ export type LibraryTracksMutations = {
   SET_IS_FULL_TRACK_LIST: boolean
   INCREMENT_NUMBER_OF_UNUPDATED_TRACKS: void
   RESET_NUMBER_OF_UNUPDATED_TRACKS: void
+  SET_ACTUAL_IS_SAVED: [string, boolean],
+  DELETE_ACTUAL_IS_SAVED: string,
 };
 
 export type RootMutations = {
@@ -19,6 +21,8 @@ export type RootMutations = {
   'library/tracks/SET_IS_FULL_TRACK_LIST': LibraryTracksMutations['SET_IS_FULL_TRACK_LIST'];
   'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS': LibraryTracksMutations['INCREMENT_NUMBER_OF_UNUPDATED_TRACKS'];
   'library/tracks/RESET_NUMBER_OF_UNUPDATED_TRACKS': LibraryTracksMutations['RESET_NUMBER_OF_UNUPDATED_TRACKS'];
+  'library/tracks/SET_ACTUAL_IS_SAVED': LibraryTracksMutations['SET_ACTUAL_IS_SAVED'];
+  'library/tracks/DELETE_ACTUAL_IS_SAVED': LibraryTracksMutations['DELETE_ACTUAL_IS_SAVED'];
 };
 
 const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
@@ -55,6 +59,14 @@ const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
 
   RESET_NUMBER_OF_UNUPDATED_TRACKS(state) {
     state.numberOfUnupdatedTracks = 0;
+  },
+
+  SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
+    state.actualIsSavedMap.set(key, isSaved);
+  },
+
+  DELETE_ACTUAL_IS_SAVED(state, key) {
+    state.actualIsSavedMap.delete(key);
   },
 };
 
