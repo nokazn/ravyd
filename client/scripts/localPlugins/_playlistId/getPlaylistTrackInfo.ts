@@ -9,7 +9,7 @@ import { App } from '~~/types';
 export const getPlaylistTrackInfo = async (
   { app, params }: Context,
   limit: number,
-): Promise<App.PlaylistTrackInfo | null> => {
+): Promise<App.PlaylistTrackInfo | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
   const tracks = await app.$spotify.playlists.getPlaylistItems({
@@ -18,7 +18,7 @@ export const getPlaylistTrackInfo = async (
     offset: 0,
     market,
   });
-  if (tracks == null) return null;
+  if (tracks == null) return undefined;
 
   const filteredTrackList = tracks.items
     .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];

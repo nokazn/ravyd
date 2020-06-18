@@ -7,17 +7,17 @@ import { App } from '~~/types';
 export const getPlaylistInfo = async (
   { app, params }: Context,
   artworkSize: number,
-): Promise<App.PlaylistInfo | null> => {
+): Promise<App.PlaylistInfo | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
   const userId = app.$getters()['auth/userId'];
-  if (market == null || userId == null) return null;
+  if (market == null || userId == null) return undefined;
 
   const playlistInfo = await app.$spotify.playlists.getPlaylist({
     playlistId,
     market,
   });
-  if (playlistInfo == null) return null;
+  if (playlistInfo == null) return undefined;
 
   const {
     id,

@@ -77,7 +77,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'vuex';
+import { RootState, RootMutations } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -91,6 +91,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 
 import { getPlaylistInfo, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
+import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
@@ -98,8 +99,12 @@ const LIMIT_OF_TRACKS = 30;
 
 interface AsyncData {
   artworkSize: typeof ARTWORK_SIZE
-  playlistInfo: App.PlaylistInfo | null
-  playlistTrackInfo: App.PlaylistTrackInfo | null
+  playlistInfo: App.PlaylistInfo | undefined
+  playlistTrackInfo: App.PlaylistTrackInfo | undefined
+}
+
+interface Data {
+  mutationUnsubscribe: (() => void) | undefined
 }
 
 @Component({
@@ -133,10 +138,12 @@ interface AsyncData {
     };
   },
 })
-export default class PlaylistIdPage extends Vue implements AsyncData {
+export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   artworkSize: typeof ARTWORK_SIZE = ARTWORK_SIZE;
-  playlistInfo: App.PlaylistInfo | null = null;
-  playlistTrackInfo: App.PlaylistTrackInfo | null = null;
+  playlistInfo: App.PlaylistInfo | undefined = undefined;
+  playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
+
+  mutationUnsubscribe: (() => void) | undefined = undefined
 
   head() {
     return {
@@ -148,7 +155,25 @@ export default class PlaylistIdPage extends Vue implements AsyncData {
     if (this.playlistInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
     }
+
+    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+      if (this.playlistTrackInfo == null) return;
+
+      const type = mutation.type as keyof RootMutations;
+      if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
+
+      const trackList = checkTrackSavedState<App.PlaylistTrackDetail>(mutation as {
+        type: typeof type
+        payload: RootMutations[typeof type]
+      }, this.$commit)(this.playlistTrackInfo.trackList);
+
+      this.playlistTrackInfo = {
+        ...this.playlistTrackInfo,
+        trackList,
+      };
+    });
   }
+
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
   }

@@ -90,6 +90,7 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 
 import { getReleaseInfo, getReleaseTrackList } from '~/scripts/localPlugins/_releaseId';
+import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
@@ -169,22 +170,15 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       const type = mutation.type as keyof RootMutations;
       if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
 
-      // library/tracks/SET_ACTUAL_IS_SAVED を subscribe
-      const [id, isSaved] = mutation.payload as RootMutations['library/tracks/SET_ACTUAL_IS_SAVED'];
-      // @todo パフォーマンス
-      const trackList = [...this.releaseInfo.trackList].map((track) => {
-        const actualTrack = track.id === id
-          ? { ...track, isSaved }
-          : track;
-        return actualTrack;
-      });
+      const trackList = checkTrackSavedState<App.SimpleTrackDetail>(mutation as {
+        type: typeof type
+        payload: RootMutations[typeof type]
+      }, this.$commit)(this.releaseInfo.trackList);
 
       this.releaseInfo = {
         ...this.releaseInfo,
         trackList,
       };
-
-      this.$commit('library/tracks/DELETE_ACTUAL_IS_SAVED', id);
     });
   }
 

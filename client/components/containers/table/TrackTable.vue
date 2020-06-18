@@ -151,16 +151,16 @@ export default Vue.extend({
       }
     },
     // row をコピーしたものを参照する
-    async onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
       const params: On['on-favorite-button-clicked'] = row;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
       const { id, isSaved } = row;
       const nextSavedState = !isSaved;
       if (nextSavedState) {
-        await this.$dispatch('library/tracks/saveTracks', [id]);
+        this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        await this.$dispatch('library/tracks/removeTracks', [id]);
+        this.$dispatch('library/tracks/removeTracks', [id]);
       }
     },
     onRowClicked({ id }: OnRow['on-row-clicked']) {
@@ -172,9 +172,9 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackTable {
-  // 表の背景を透過にする
+  // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
-  // 表全体の背景と同じ色にする
+
   table {
     // 表と列の幅を最初の行のセルの幅に固定して設定
     table-layout: fixed;

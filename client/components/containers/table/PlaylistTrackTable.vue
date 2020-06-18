@@ -159,16 +159,17 @@ export default Vue.extend({
 
       this.setCustomContext(trackUriList);
     },
-    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
-      const nextSavedState = !row.isSaved;
-
+    // row をコピーしたものを参照する
+    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
       const params: On['on-favorite-button-clicked'] = row;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
+      const { id, isSaved } = row;
+      const nextSavedState = !isSaved;
       if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [row.id]);
+        this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        this.$dispatch('library/tracks/removeTracks', [row.id]);
+        this.$dispatch('library/tracks/removeTracks', [id]);
       }
     },
     onRowClicked({ id }: OnRow['on-row-clicked']) {
@@ -180,7 +181,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .PlaylistTrackTable {
-  // 表の背景を透過にする
+  // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
 
   table {
