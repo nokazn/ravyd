@@ -16,7 +16,7 @@ import Vue from 'vue';
 export default Vue.extend({
   props: {
     discNumber: {
-      type: String,
+      type: Number,
       required: true,
     },
     colspan: {
