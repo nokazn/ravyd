@@ -1,19 +1,23 @@
 <template>
   <v-menu
     v-model="isShown"
-    top
+    bottom
     left
-    :nudge-top="40"
+    :nudge-bottom="40"
+    :nudge-left="20"
+    :min-width="400"
     :max-width="500"
   >
     <template #activator="{ on }">
       <v-btn
         icon
+        :width="36"
+        :height="36"
         title="再生リスト"
         v-on="on"
         @click="toggleTrackList"
       >
-        <v-icon :size="20">
+        <v-icon>
           mdi-playlist-play
         </v-icon>
       </v-btn>
@@ -38,7 +42,8 @@
             :key="track.id"
             dense
             three-line
-            :input-value="track.id"
+            :input-valuea="track.id"
+            :title="`${track.name} を再生`"
             :class="$style.DeviceSelectMenuList__listItem"
             @click="listItemHandler(track.uri)"
           >
@@ -59,7 +64,6 @@
                     trackNameColor(track.isPlaying),
                   ]"
                   class="g-ellipsis-text"
-                  :title="track.name"
                   v-text="track.name"
                 />
 
@@ -105,11 +109,14 @@
             </v-list-item-action>
           </v-list-item>
 
+          <v-divider />
+
           <div :class="$style.DeviceSelectMenuList__moreButton">
             <v-btn
               rounded
               text
               small
+              nuxt
               to="/queue"
             >
               すべて表示

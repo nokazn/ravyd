@@ -33,12 +33,10 @@ import ContextMediaButton, { On } from '~/components/parts/button/ContextMediaBu
 import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
-import { App } from '~~/types';
 
 interface Data {
   observer: IntersectionObserver | undefined
   title: string
-  trackList: App.PlaylistTrackDetail[] | null
   uri: string
 }
 
@@ -65,7 +63,6 @@ export default class LibraryTracksPage extends Vue implements Data {
   title = 'お気に入りの曲';
   // @non-null ログイン中なので userId は必ず存在
   uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
-  // uri は指定するが、contextUri をパラメータとして送信しない
 
   head() {
     return {

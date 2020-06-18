@@ -49,8 +49,6 @@
 
       <div :class="$style.Footer__right">
         <div>
-          <TrackQueueButton />
-
           <DeviceSelectMenuButton />
 
           <v-btn
@@ -83,7 +81,6 @@ import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/Favo
 import SeekBar, { On as OnSeek } from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
-import TrackQueueButton from '~/components/containers/player/TrackQueueButton.vue';
 import VolumeSlider, { On as OnVolume } from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
@@ -100,7 +97,6 @@ export default Vue.extend({
     FavoriteButton,
     SeekBar,
     MediaControllersWrapper,
-    TrackQueueButton,
     DeviceSelectMenuButton,
     VolumeSlider,
   },
