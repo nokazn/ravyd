@@ -120,10 +120,6 @@ export default Vue.extend({
     CreatePlaylistModal,
   },
 
-  async fetch({ app }) {
-    await app.$dispatch('playlists/getPlaylists');
-  },
-
   data(): Data {
     return {
       NAVIGATION_DRAWER_BACKGROUND_COLOR,
@@ -153,7 +149,7 @@ export default Vue.extend({
           {
             name: 'お気に入りの曲',
             to: '/library/tracks',
-            icon: 'mdi-music-box-multiple-outline',
+            icon: 'mdi-music-box-multiple',
           },
           {
             name: 'アルバム',
@@ -192,6 +188,10 @@ export default Vue.extend({
     userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];
     },
+  },
+
+  mounted() {
+    this.$dispatch('playlists/getPlaylists');
   },
 
   methods: {
