@@ -38,6 +38,7 @@
             link
             nuxt
             :to="to"
+            :title="name"
             dense
             :class="{
               [$style.NavigationDrawer__denseItem]: scroll
