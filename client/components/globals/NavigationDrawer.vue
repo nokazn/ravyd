@@ -111,7 +111,7 @@ type NavigationDrawerItemLists = {
     to: string
     icon?: string
   }[]
-  scroll?: true
+  scroll?: boolean
 }[]
 
 export default Vue.extend({
@@ -153,14 +153,17 @@ export default Vue.extend({
           {
             name: 'お気に入りの曲',
             to: '/library/tracks',
+            icon: 'mdi-music-box-multiple-outline',
           },
           {
             name: 'アルバム',
             to: '/library/releases',
+            icon: 'mdi-album',
           },
           {
             name: 'アーティスト',
             to: '/library/artists',
+            icon: 'mdi-account-music',
           },
         ],
       };
@@ -224,6 +227,8 @@ export default Vue.extend({
   &__group--scroll {
     overflow-y: scroll;
     flex: 1 0;
+    margin: -12px 0;
+    padding: 12px 0;
   }
 
   &__denseItem {
@@ -231,12 +236,12 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin: 8px 0;
+    margin: 12px 0;
   }
 
   &__subheader {
     font-size: 12px;
-    height: 32px;
+    height: 28px;
   }
 }
 </style>
