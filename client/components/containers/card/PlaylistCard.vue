@@ -33,8 +33,9 @@
           <span
             :title="name"
             class="g-ellipsis-text"
-            v-text="name"
-          />
+          >
+            {{ name }}
+          </span>
         </v-card-title>
 
         <v-card-subtitle :class="$style.PlaylistCard__text">

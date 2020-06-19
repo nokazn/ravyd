@@ -1,7 +1,10 @@
 <template>
   <div :class="$style.TrackListWrapper">
     <div :class="$style.TrackListWrapper__header">
-      <h2 v-text="title" />
+      <h2>
+        {{ title }}
+      </h2>
+
       <show-all-button
         :is-omitted="isOmmited"
         :omitted-length="omittedLength"

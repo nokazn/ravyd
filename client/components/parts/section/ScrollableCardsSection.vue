@@ -1,10 +1,11 @@
 <template>
   <section :class="$style.ScrollableCardSection">
-    <h2
-      :class="$style.ScrollableCardSection__title"
-      v-text="title"
-    />
+    <h2 :class="$style.ScrollableCardSection__title">
+      {{ title }}
+    </h2>
+
     <v-divider :class="$style.ScrollableCardSection__divider" />
+
     <scrollable-cards-wrapper :class="$style.ScrollableCardSection__cardContainer">
       <slot />
     </scrollable-cards-wrapper>

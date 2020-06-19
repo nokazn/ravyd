@@ -1,9 +1,8 @@
 <template>
   <div :class="$style.LibraryArtistsPage">
-    <h1
-      :class="$style.LibraryArtistsPage__title"
-      v-text="title"
-    />
+    <h1 :class="$style.LibraryArtistsPage__title">
+      {{ title }}
+    </h1>
 
     <div :class="$style.LibraryArtistsPage__cardContainer">
       <template v-if="artistList != null">

@@ -37,8 +37,9 @@
                 textColor,
               ]"
               class="g-ellipsis-text"
-              v-text="name"
-            />
+            >
+              {{ name }}
+            </nuxt-link>
           </div>
 
           <v-list-item-subtitle v-if="hasSubtitle">
@@ -51,10 +52,9 @@
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="explicit" />
 
-          <span
-            :class="$style.TrackListItem__actionDuration"
-            v-text="duration"
-          />
+          <span :class="$style.TrackListItem__actionDuration">
+            {{ duration }}
+          </span>
 
           <v-btn icon>
             <v-icon>

@@ -1,9 +1,8 @@
 <template>
   <div :class="$style.LibraryTracksPage">
-    <h1
-      :class="$style.LibraryTracksPage__title"
-      v-text="title"
-    />
+    <h1 :class="$style.LibraryTracksPage__title">
+      {{ title }}
+    </h1>
 
     <ContextMediaButton
       :is-playing="isPlaylistSet && isPlaying"

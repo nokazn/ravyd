@@ -64,8 +64,9 @@
                     trackNameColor(track.isPlaying),
                   ]"
                   class="g-ellipsis-text"
-                  v-text="track.name"
-                />
+                >
+                  {{ track.name }}
+                </div>
 
                 <v-list-item-subtitle
                   :class="[
@@ -78,8 +79,10 @@
                     :title="track.releaseName"
                     class="g-ellipsis-text"
                     @click.native.stop="toggleTrackList"
-                    v-text="track.releaseName"
-                  />
+                  >
+                    {{ track.releaseName }}
+                  </nuxt-link>
+
                   <ArtistNames
                     :artist-list="track.artistList"
                     :title="artistNames(track.artistList)"

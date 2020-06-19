@@ -1,7 +1,11 @@
 <template>
   <section :class="$style.CardSection">
-    <h2 v-text="title" />
+    <h2>
+      {{ title }}
+    </h2>
+
     <v-divider :class="$style.CardSection__divider" />
+
     <div>
       <slot />
     </div>

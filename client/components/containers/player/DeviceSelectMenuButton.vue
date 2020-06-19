@@ -59,8 +59,9 @@
               <v-icon
                 :size="32"
                 :color="device.color"
-                v-text="device.icon"
-              />
+              >
+                {{ device.icon }}
+              </v-icon>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -69,8 +70,9 @@
                   $style.DeviceSelectMenuList__listItemTitle,
                   device.textClass
                 ]"
-                v-text="device.title"
-              />
+              >
+                {{ device.title }}
+              </v-list-item-title>
 
               <v-list-item-subtitle
                 :class="[

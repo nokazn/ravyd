@@ -7,11 +7,13 @@
     @click="onClicked"
   >
     <div :class="$style.ShowAllButton">
-      <v-icon
-        small
-        v-text="showAllButton.icon"
-      />
-      <span v-text="showAllButton.text" />
+      <v-icon small>
+        {{ showAllButton.icon }}
+      </v-icon>
+
+      <span>
+        {{ showAllButton.text }}
+      </span>
     </div>
   </v-btn>
 </template>

@@ -33,18 +33,18 @@
           <span
             class="g-ellipsis-text"
             :class="titleColor"
-            v-text="item.name"
-          />
+          >
+            {{ item.name }}
+          </span>
           <ExplicitChip
             v-if="item.explicit"
           />
         </div>
       </td>
 
-      <td
-        class="text-center"
-        v-text="item.duration"
-      />
+      <td class="text-center">
+        {{ item.duration }}
+      </td>
 
       <td>
         <v-btn

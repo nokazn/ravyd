@@ -40,8 +40,9 @@
           <span
             class="g-ellipsis-text"
             :title="name"
-            v-text="name"
-          />
+          >
+            {{ name }}
+          </span>
         </v-card-title>
       </div>
     </v-card>

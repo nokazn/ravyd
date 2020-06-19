@@ -36,8 +36,9 @@
             :to="releasePath"
             :title="name"
             class="g-ellipsis-text"
-            v-text="name"
-          />
+          >
+            {{ name }}
+          </nuxt-link>
         </v-card-title>
 
         <v-card-subtitle
@@ -62,8 +63,9 @@
                 :to="`/artists/${artistId}`"
                 :title="artistsName"
                 @click.native.stop
-                v-text="artistName"
-              /><span
+              >
+                {{ artistName }}
+              </nuxt-link><span
                 v-if="index !== artists.length - 1"
                 :key="`${artistId}-comma`"
               >, </span>

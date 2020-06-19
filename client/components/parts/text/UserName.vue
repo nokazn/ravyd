@@ -2,8 +2,9 @@
   <nuxt-link
     v-if="user != null && text != null"
     :to="to"
-    v-text="text"
-  />
+  >
+    {{ text }}
+  </nuxt-link>
 </template>
 
 <script lang="ts">

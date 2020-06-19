@@ -9,8 +9,13 @@
         >
           <v-list-item-content>
             <v-list-item-title :class="$style.TwoColumnsListCard__content">
-              <div v-text="item.title" />
-              <div v-text="item.value" />
+              <div>
+                {{ item.title }}
+              </div>
+
+              <div>
+                {{ item.value }}
+              </div>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>

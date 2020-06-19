@@ -33,8 +33,9 @@
             <div
               class="g-ellipsis-text"
               :title="item.name"
-              v-text="item.name"
-            />
+            >
+              {{ item.name }}
+            </div>
 
             <div
               :class="[$style.TrackListTableRow__contentSubtitle, subtitleColor]"
@@ -44,12 +45,15 @@
                 inline
                 :artist-list="item.artistList"
               />
-              ・
+
+              <span>・</span>
+
               <nuxt-link
                 :to="`/releases/${item.releaseId}`"
                 :title="item.releaseName"
-                v-text="item.releaseName"
-              />
+              >
+                {{ item.releaseName }}
+              </nuxt-link>
             </div>
           </div>
 
@@ -75,8 +79,9 @@
       <td
         :class="$style.TrackListTableRow__smallText"
         class="text-center"
-        v-text="item.duration"
-      />
+      >
+        {{ item.duration }}
+      </td>
 
       <td>
         <v-btn

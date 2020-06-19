@@ -1,9 +1,8 @@
 <template>
   <div :class="$style.BrowsePage">
-    <h1
-      :class="$style.BrowsePage__title"
-      v-text="title"
-    />
+    <h1 :class="$style.BrowsePage__title">
+      {{ title }}
+    </h1>
 
     <div
       v-if="categoryList != null"

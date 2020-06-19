@@ -1,9 +1,8 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <h1
-      :class="$style.LibraryReleasesPage__title"
-      v-text="title"
-    />
+    <h1 :class="$style.LibraryReleasesPage__title">
+      {{ title }}
+    </h1>
 
     <div :class="$style.LibraryReleasesPage__cardContainer">
       <ReleaseCard

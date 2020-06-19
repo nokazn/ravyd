@@ -3,8 +3,9 @@
     <h1
       v-if="categoryInfo != null"
       :class="$style.GenreIdPage__title"
-      v-text="categoryInfo.name"
-    />
+    >
+      {{ categoryInfo.name }}
+    </h1>
 
     <div
       v-if="playlists != null"

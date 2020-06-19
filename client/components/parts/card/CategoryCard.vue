@@ -32,8 +32,9 @@
           <span
             class="g-ellipsis-text"
             :title="name"
-            v-text="name"
-          />
+          >
+            {{ name }}
+          </span>
         </div>
       </v-img>
 
@@ -48,8 +49,9 @@
           <span
             class="g-ellipsis-text"
             :title="name"
-            v-text="name"
-          />
+          >
+            {{ name }}
+          </span>
         </div>
       </v-sheet>
     </v-card>
