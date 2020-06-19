@@ -70,6 +70,25 @@ html {
 }
 
 /**
+ * スクロールバー
+ */
+.g-custom-scroll-bar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $g-background-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #5a5a5a;
+    border-radius: 8px;
+  }
+}
+
+/**
  * あふれた文字を省略
  */
 .g-ellipsis-text {

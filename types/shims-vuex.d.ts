@@ -4,7 +4,7 @@ import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '~/store/types';
 import * as Auth from '~/store/auth/types';
-import * as Browse from '~/store/browse/types';
+import * as Playlists from '~/store/playlists/types';
 import * as LibraryTracks from '~/store/library/tracks/types';
 import * as LibraryReleases from '~/store/library/releases/types';
 import * as LibraryArtists from '~/store/library/artists/types';
@@ -32,7 +32,7 @@ declare module 'vuex' {
    */
   type RootState = {
     auth: Auth.AuthState
-    browse: Browse.BrowseState
+    playlists: Playlists.PlaylistsState
     library: {
       tracks: LibraryTracks.LibraryTracksState
       releases: LibraryReleases.LibraryReleasesState
@@ -43,7 +43,7 @@ declare module 'vuex' {
 
   type RootGetters = Root.RootGetters
     & Auth.RootGetters
-    & Browse.RootGetters
+    & Playlists.RootGetters
     & LibraryTracks.RootGetters
     & LibraryReleases.RootGetters
     & LibraryArtists.RootGetters
@@ -51,7 +51,7 @@ declare module 'vuex' {
 
   type RootMutations = Root.RootMutations
     & Auth.RootMutations
-    & Browse.RootMutations
+    & Playlists.RootMutations
     & LibraryTracks.RootMutations
     & LibraryReleases.RootMutations
     & LibraryArtists.RootMutations
@@ -59,7 +59,7 @@ declare module 'vuex' {
 
   type RootActions = Root.RootActions
     & Auth.RootActions
-    & Browse.RootActions
+    & Playlists.RootActions
     & LibraryTracks.RootActions
     & LibraryReleases.RootActions
     & LibraryArtists.RootActions
