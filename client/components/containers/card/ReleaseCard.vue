@@ -45,7 +45,9 @@
           class="g-ellipsis-text"
         >
           <template v-if="yearSubtitle">
-            <span v-text="releaseYear" />
+            <time :datetime="releaseYear">
+              {{ releaseYear }}
+            </time>
           </template>
 
           <template v-else>

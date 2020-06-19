@@ -9,9 +9,12 @@
     >
       mdi-calendar
     </v-icon>
-    <span :style="textStyles">
+    <time
+      :datetime="datetime"
+      :style="textStyles"
+    >
       {{ date }}
-    </span>
+    </time>
   </span>
 </template>
 
@@ -21,6 +24,7 @@ import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
 
 export type Data = {
   date: string
+  datetime: string
   title: string
   textStyles: { fontSize: string }
 }
@@ -46,7 +50,10 @@ export default Vue.extend({
 
   data(): Data {
     const { releaseDate, releaseDatePrecision } = this;
-    const date = convertReleaseDate({ releaseDate, releaseDatePrecision });
+    const date = convertReleaseDate({
+      releaseDate,
+      releaseDatePrecision,
+    });
     const title = `${date}リリース`;
     const textStyles = {
       fontSize: `${this.size * 0.8}px`,
@@ -54,6 +61,7 @@ export default Vue.extend({
 
     return {
       date,
+      datetime: releaseDate,
       title,
       textStyles,
     };
