@@ -393,10 +393,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async checkTrackSavedState({ state, commit }, trackId?) {
-    if (state.trackId == null) return;
+    const id = trackId ?? state.trackId;
+    if (id == null) return;
+    const trackIdList = [id];
 
     const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
-      trackIdList: [trackId ?? state.trackId],
+      trackIdList,
     });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
