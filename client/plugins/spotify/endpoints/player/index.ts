@@ -1,6 +1,7 @@
 import { Context } from '@nuxt/types';
 
 import { getActiveDeviceList } from './getActiveDeviceList';
+import { getCurrentlyPlaying } from './getCurrentlyPlaying';
 import { getRecentlyPlayed } from './getRecentlyPlayed';
 import { next } from './next';
 import { pause } from './pause';
@@ -14,6 +15,7 @@ import { transferPlayback } from './transferPlayback';
 
 export const player = (context: Context) => ({
   getActiveDeviceList: getActiveDeviceList(context),
+  getCurrentlyPlaying: getCurrentlyPlaying(context),
   getRecentlyPlayed: getRecentlyPlayed(context),
   next: next(context),
   pause: pause(context),

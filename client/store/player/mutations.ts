@@ -9,10 +9,11 @@ export type PlayerMutations = {
   SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
+  SET_CURRENTLY_PLAYING: SpotifyAPI.Player.CurrentlyPlaying | undefined
+  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
-  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
   SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
   SET_CONTEXT_URI: string | undefined
@@ -31,10 +32,10 @@ export type RootMutations = {
   ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
   ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
   ['player/SET_CUSTOM_TRACK_URI_LIST']: PlayerMutations['SET_CUSTOM_TRACK_URI_LIST']
+  ['player/SET_CURRENTLY_PLAYING']: PlayerMutations['SET_CURRENTLY_PLAYING']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
-  ['player/SET_RECENTLY_PLAYED']: PlayerMutations['SET_RECENTLY_PLAYED']
   ['player/SET_IS_SAVED_TRACK']: PlayerMutations['SET_IS_SAVED_TRACK']
   ['player/SET_IS_PLAYING']: PlayerMutations['SET_IS_PLAYING']
   ['player/SET_CONTEXT_URI']: PlayerMutations['SET_CONTEXT_URI']
@@ -68,6 +69,14 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.customTrackUriList = trackUriList;
   },
 
+  SET_CURRENTLY_PLAYING(state, currentlyPlaying) {
+    state.currentlyPlaying = currentlyPlaying;
+  },
+
+  SET_RECENTLY_PLAYED(state, recentlyPlayed) {
+    state.recentlyPlayed = recentlyPlayed;
+  },
+
   SET_CURRENT_TRACK(state, currentTrack) {
     state.artWorkList = currentTrack?.album.images;
     state.trackName = currentTrack?.name;
@@ -87,10 +96,6 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_PREVIOUS_TRACK_LIST(state, previousTrackList) {
     state.previousTrackList = previousTrackList;
-  },
-
-  SET_RECENTLY_PLAYED(state, recentLyPlayed) {
-    state.recentlyPlayed = recentLyPlayed;
   },
 
   SET_IS_SAVED_TRACK(state, isSavedTrack) {

@@ -9,7 +9,6 @@ import { SpotifyAPI } from '~~/types';
 export type PlayerActions = {
   initPlayer: () => void
   disconnectPlayer: () => void
-  getRecentlyPlayed: (limit?: number) => Promise<void>
   transferPlayback: ({ deviceId, play }: {
     deviceId: string
     play?: boolean
@@ -20,6 +19,7 @@ export type PlayerActions = {
     trackUriList: string[]
   }) => void
   resetCustomContext: () => void
+  getRecentlyPlayed: () => Promise<void>
   play: (payload?: ({
     contextUri: string
     trackUriList?: undefined
@@ -214,6 +214,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CURRENT_TRACK', undefined);
     commit('SET_NEXT_TRACK_LIST', []);
     commit('SET_PREVIOUS_TRACK_LIST', []);
+    commit('SET_CURRENTLY_PLAYING', undefined);
     commit('SET_RECENTLY_PLAYED', undefined);
     commit('SET_IS_SAVED_TRACK', false);
     commit('SET_IS_PLAYING', false);
@@ -275,8 +276,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
   },
 
-  async getRecentlyPlayed({ commit }, limit = 20) {
-    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit });
+  async getRecentlyPlayed({ commit }) {
+    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({});
 
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
