@@ -55,12 +55,12 @@ export namespace App {
     id: string | undefined
     name: string
     uri: string
+    releaseName: string
+    releaseId: string
     artistList: {
       id: string
       name: string
     }[]
-    releaseName: string
-    releaseId: string
     artworkSrc: string | undefined
     duration: string
   }
@@ -150,10 +150,9 @@ export namespace App {
   }
 
   export type AddedAtInfo = {
-    fromNow: string
-    yyyymd: string
+    text: string | undefined
     title: string
-    overTwoWeeksAgo: boolean
+    dateTime: string
   }
 
   export type CategoryInfo = {

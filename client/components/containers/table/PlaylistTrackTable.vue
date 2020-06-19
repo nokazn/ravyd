@@ -30,6 +30,7 @@
     <template #item="{ item }">
       <PlaylistTrackTableRow
         :item="item"
+        :added-at="addedAt"
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
@@ -78,42 +79,60 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    addedAt: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data(): Data {
-    const headers = [
-      {
-        text: '',
-        value: 'isSaved',
-        width: 96,
-        sortable: false,
-        filterable: false,
-      },
-      {
-        text: 'タイトル',
-        value: 'name',
-      },
-      {
-        text: '',
-        value: 'addedAt',
-        width: 72,
-        align: 'center' as const,
-      },
-      {
-        text: '',
-        value: 'duration',
-        width: 72,
-        align: 'center' as const,
-      },
-      {
-        text: '',
-        value: 'menu',
-        width: 60,
-        align: 'center' as const,
-        sortable: false,
-        filterable: false,
-      },
-    ];
+    const isSavedColumn = {
+      text: '',
+      value: 'isSaved',
+      width: 96,
+      sortable: false,
+      filterable: false,
+    };
+    const titleColumn = {
+      text: 'タイトル',
+      value: 'name',
+    };
+    const addedAtColumn = {
+      text: '',
+      value: 'addedAt',
+      width: 72,
+      align: 'center' as const,
+    };
+    const durationColumn = {
+      text: '',
+      value: 'duration',
+      width: 72,
+      align: 'center' as const,
+    };
+    const menuColumn = {
+      text: '',
+      value: 'menu',
+      width: 60,
+      align: 'center' as const,
+      sortable: false,
+      filterable: false,
+    };
+
+    // addedAt が有効かどうか
+    const headers = this.addedAt
+      ? [
+        isSavedColumn,
+        titleColumn,
+        addedAtColumn,
+        durationColumn,
+        menuColumn,
+      ]
+      : [
+        isSavedColumn,
+        titleColumn,
+        durationColumn,
+        menuColumn,
+      ];
 
     return {
       headers,

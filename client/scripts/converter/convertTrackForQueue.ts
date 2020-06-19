@@ -16,12 +16,12 @@ export const convertTrackForQueue = (
     id: track.id ?? undefined,
     name: track.name,
     uri: track.uri,
+    releaseName: track.album.name,
+    releaseId: convertUriToId(track.album.uri),
     artistList: artists.map((artist) => ({
       id: convertUriToId(artist.uri),
       name: artist.name,
     })),
-    releaseName: track.album.name,
-    releaseId: convertUriToId(track.album.uri),
     artworkSrc: getImageSrc(track.album.images, artworkSize),
     // @ts-ignore @todo
     duration: elapsedTime(track.duration_ms as number),

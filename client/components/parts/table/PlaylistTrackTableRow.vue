@@ -64,7 +64,12 @@
         :class="$style.TrackListTableRow__smallText"
         class="text-center"
       >
-        {{ item.addedAt.overTwoWeeksAgo ? item.addedAt.yyyymd : item.addedAt.fromNow }}
+        <time
+          v-if="item.addedAt.text"
+          :datetime="item.addedAt.text"
+        >
+          {{ item.addedAt.text }}
+        </time>
       </td>
 
       <td
@@ -132,6 +137,10 @@ export default Vue.extend({
     isActive: {
       type: Boolean,
       required: true,
+    },
+    addedAt: {
+      type: Boolean,
+      default: true,
     },
   },
 
