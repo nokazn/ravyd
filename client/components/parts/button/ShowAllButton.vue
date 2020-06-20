@@ -26,13 +26,19 @@ export type ShowALlButton = {
   text: string
 }
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: void
+}
+
 export default Vue.extend({
   props: {
-    isOmitted: {
+    isAbbreviated: {
       type: Boolean,
       required: true,
     },
-    omittedLength: {
+    abbreviatedLength: {
       type: Number,
       required: true,
     },
@@ -44,13 +50,13 @@ export default Vue.extend({
 
   computed: {
     showAllButton(): ShowALlButton {
-      return this.isOmitted
+      return this.isAbbreviated
         ? {
           text: 'すべて表示',
           icon: 'mdi-chevron-down',
         }
         : {
-          text: `${this.omittedLength}${this.unit}のみ表示`,
+          text: `${this.abbreviatedLength}${this.unit}のみ表示`,
           icon: 'mdi-chevron-up',
         };
     },
@@ -58,7 +64,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit('on-clicked');
+      this.$emit(ON_CLICKED);
     },
   },
 });

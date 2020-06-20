@@ -3,7 +3,7 @@
     dense
     :color="BACKGROUND_COLOR"
   >
-    <template v-for="track in items">
+    <template v-for="track in trackList">
       <v-divider
         v-show="track.index < length"
         :key="`${track.id}-divider`"
@@ -24,15 +24,20 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackListItem, { TrackDetail, On } from '~/components/parts/list/TrackListItem.vue';
+import TrackListItem, { TrackDetail, On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
 import { BACKGROUND_COLOR } from '~/variables';
 
 export { TrackDetail } from '~/components/parts/list/TrackListItem.vue';
 
 export type Data = {
-  items: TrackDetail[]
   trackUriList: string[]
   BACKGROUND_COLOR: typeof BACKGROUND_COLOR
+}
+
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked']
 }
 
 export default Vue.extend({
@@ -59,7 +64,6 @@ export default Vue.extend({
     // trackUriList は更新されることがない
     const trackUriList = this.trackList.map((track) => track.uri);
     return {
-      items: this.trackList,
       trackUriList,
       BACKGROUND_COLOR,
     };
@@ -76,14 +80,8 @@ export default Vue.extend({
   },
 
   methods: {
-    setCustomContext() {
-      this.$dispatch('player/setCustomContext', {
-        contextUri: this.uri,
-        trackUriList: this.trackUriList,
-      });
-    },
     // id, uri は track のパラメータで、this.uri は context のパラメータ
-    onMediaButtonClicked({ id, uri }: On['on-media-button-clicked']) {
+    onMediaButtonClicked({ id, uri }: OnListItem['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
         this.$dispatch('player/pause');
       } else {
@@ -91,28 +89,25 @@ export default Vue.extend({
           trackUriList: this.trackUriList,
           offset: { uri },
         });
-        this.setCustomContext();
+        this.$dispatch('player/setCustomContext', {
+          contextUri: this.uri,
+          trackUriList: this.trackUriList,
+        });
       }
     },
-    async onFavoriteButtonClicked({ nextSavedState, id, index }: On['on-favorite-button-clicked']) {
-      const modifySavedState = (isSaved: boolean, i: number) => this.items
-        .map((item, j) => (j === i
-          ? { ...item, isSaved }
-          : item));
+
+    // row をコピーしたものを参照する
+    async onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
+      const params: On['on-favorite-button-clicked'] = row;
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
       // API との通信の結果を待たずに先に表示を変更させておく
-      this.items = modifySavedState(nextSavedState, index);
+      const { id, nextSavedState } = row;
       if (nextSavedState) {
         await this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
         await this.$dispatch('library/tracks/removeTracks', [id]);
       }
-
-      const [isSaved] = await this.$spotify.library.checkUserSavedTracks({
-        trackIdList: [id],
-      });
-      // 実際の状態と異なれば戻す
-      if (isSaved !== nextSavedState) this.items = modifySavedState(isSaved, index);
     },
   },
 });

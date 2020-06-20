@@ -48,13 +48,14 @@
       </div>
     </div>
 
-    <section>
+    <section v-if="artistInfo != null && topTrackList != null">
       <TrackListWrapper
-        title="人気の曲"
-        :omitted-length="5"
+        :abbreviated-length="ABBREVIATED_TOP_TRACK_LENGTH"
         :track-list="topTrackList"
         :uri="artistInfo.uri"
+        title="人気の曲"
         :class="$style.ArtistIdPage__trackListSection"
+        @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
       />
     </section>
 
@@ -99,7 +100,7 @@ import { RootState } from 'vuex';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
-import TrackListWrapper from '~/components/parts/wrapper/TrackListWrapper.vue';
+import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import {
@@ -109,21 +110,24 @@ import {
   getTopTrackList,
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
-import { BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
 const ARTWORK_MAX_SIZE = 180;
 const TOP_TRACK_ARTWORK_SIZE = 64;
+const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 
 export type AsyncData = {
   avatarSize: number
   topTrackArtworkSize: number
-  releaseListMap: ArtistReleaseInfo | null
   artistInfo: App.ArtistInfo | null
   isFollowing: boolean
+  releaseListMap: ArtistReleaseInfo | null
   topTrackList: App.TrackDetail[] | null
-  listColor: typeof BACKGROUND_COLOR
+}
+
+export type Data = {
+  ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
 @Component({
@@ -163,18 +167,18 @@ export type AsyncData = {
       artistInfo,
       isFollowing,
       topTrackList,
-      listColor: BACKGROUND_COLOR,
     };
   },
 })
-export default class ArtistIdPage extends Vue implements AsyncData {
+export default class ArtistIdPage extends Vue implements AsyncData, Data {
   avatarSize = AVATAR_SIZE;
   topTrackArtworkSize = TOP_TRACK_ARTWORK_SIZE;
   releaseListMap: ArtistReleaseInfo | null = null;
   artistInfo: App.ArtistInfo | null = null;
   isFollowing = false;
   topTrackList: App.TrackDetail[] | null = null;
-  listColor: typeof BACKGROUND_COLOR = BACKGROUND_COLOR;
+
+  ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
 
   head() {
     return {
@@ -207,6 +211,7 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       this.$dispatch('player/pause');
     }
   }
+
   async onFollowButtonClicked(nextFollowingState: OnFollow['on-clicked']) {
     if (this.artistInfo == null) return;
 
@@ -224,6 +229,14 @@ export default class ArtistIdPage extends Vue implements AsyncData {
       type: 'artist',
       artistIdList,
     });
+  }
+
+  onFavoriteTrackButtonClicked({ index, nextSavedState }: OnList['on-favorite-button-clicked']) {
+    if (this.topTrackList == null) return;
+
+    const topTrackList = [...this.topTrackList];
+    topTrackList[index].isSaved = nextSavedState;
+    this.topTrackList = topTrackList;
   }
 }
 </script>

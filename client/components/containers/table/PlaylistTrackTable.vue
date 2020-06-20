@@ -57,7 +57,7 @@ export type Data = {
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
+  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
 }
 
 export default Vue.extend({

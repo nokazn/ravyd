@@ -5,17 +5,18 @@
         {{ title }}
       </h2>
 
-      <show-all-button
-        :is-omitted="isOmmited"
-        :omitted-length="omittedLength"
+      <ShowAllButton
+        :is-abbreviated="isAbbreviated"
+        :abbreviated-length="abbreviatedLength"
         @on-clicked="onShowAllButtonClicked"
       />
     </div>
 
-    <track-list
+    <TrackList
       :track-list="trackList"
-      :length="length"
+      :length="trackLength"
       :uri="uri"
+      @on-favorite-button-clicked="onFavoriteButtonClicked"
     />
   </div>
 </template>
@@ -24,12 +25,16 @@
 import Vue, { PropType } from 'vue';
 
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
-import TrackList, { TrackDetail } from '~/components/containers/list/TrackList.vue';
-
-export { TrackDetail } from '~/components/containers/list/TrackList.vue';
+import TrackList, { TrackDetail, On as OnList } from '~/components/containers/list/TrackList.vue';
 
 export type Data = {
-  isOmmited: boolean
+  isAbbreviated: boolean
+}
+
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+export type On = {
+  [ON_FAVORITE_BUTTON_CLICKED]: OnList['on-favorite-button-clicked']
 }
 
 export default Vue.extend({
@@ -39,11 +44,7 @@ export default Vue.extend({
   },
 
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    omittedLength: {
+    abbreviatedLength: {
       type: Number,
       required: true,
     },
@@ -55,25 +56,32 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
   },
 
   data(): Data {
     return {
-      isOmmited: true,
+      isAbbreviated: true,
     };
   },
 
   computed: {
-    length(): number {
-      return this.isOmmited
-        ? this.omittedLength
+    trackLength(): number {
+      return this.isAbbreviated
+        ? this.abbreviatedLength
         : this.trackList.length;
     },
   },
 
   methods: {
     onShowAllButtonClicked() {
-      this.isOmmited = !this.isOmmited;
+      this.isAbbreviated = !this.isAbbreviated;
+    },
+    onFavoriteButtonClicked({ ...row }: OnList['on-favorite-button-clicked']) {
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
