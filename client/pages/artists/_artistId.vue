@@ -7,7 +7,7 @@
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
-        :size="avatarSize"
+        :size="AVATAR_SIZE"
         :src="artistInfo.avatarSrc"
         :alt="artistInfo.name"
         :title="artistInfo.name"
@@ -119,8 +119,8 @@ const TOP_TRACK_ARTWORK_SIZE = 64;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 
 export type AsyncData = {
-  avatarSize: number
-  topTrackArtworkSize: number
+  AVATAR_SIZE: number
+  TOP_TRACK_ARTWORK_SIZE: number
   artistInfo: App.ArtistInfo | null
   isFollowing: boolean
   releaseListMap: ArtistReleaseInfo | null
@@ -148,8 +148,6 @@ export type Data = {
 
   async asyncData(context): Promise<AsyncData> {
     const artworkMaxSize = ARTWORK_MAX_SIZE;
-    const avatarSize = AVATAR_SIZE;
-    const topTrackArtworkSize = TOP_TRACK_ARTWORK_SIZE;
     const [
       releaseListMap,
       artistInfo,
@@ -157,14 +155,14 @@ export type Data = {
       topTrackList,
     ] = await Promise.all([
       getReleaseListMap(context, artworkMaxSize),
-      getArtistInfo(context, avatarSize),
+      getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
-      getTopTrackList(context, topTrackArtworkSize),
+      getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
     ] as const);
 
     return {
-      avatarSize,
-      topTrackArtworkSize,
+      AVATAR_SIZE,
+      TOP_TRACK_ARTWORK_SIZE,
       releaseListMap,
       artistInfo,
       isFollowing,
@@ -173,8 +171,8 @@ export type Data = {
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
-  avatarSize = AVATAR_SIZE;
-  topTrackArtworkSize = TOP_TRACK_ARTWORK_SIZE;
+  AVATAR_SIZE = AVATAR_SIZE;
+  TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
   releaseListMap: ArtistReleaseInfo | null = null;
   artistInfo: App.ArtistInfo | null = null;
   isFollowing = false;

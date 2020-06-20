@@ -7,7 +7,7 @@
       <ReleaseArtwork
         :src="releaseInfo.artworkSrc"
         :alt="releaseInfo.name"
-        :size="artworkSize"
+        :size="ARTWORK_SIZE"
         :title="releaseInfo.name"
         shadow
       />
@@ -97,7 +97,7 @@ const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 50;
 
 interface AsyncData {
-  artworkSize: number
+  ARTWORK_SIZE: number
   releaseInfo: App.ReleaseInfo | undefined
   getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined
 }
@@ -126,19 +126,18 @@ interface Data {
   },
 
   async asyncData(context: Context): Promise<AsyncData> {
-    const artworkSize = ARTWORK_SIZE;
-    const releaseInfo = await getReleaseInfo(context, artworkSize);
+    const releaseInfo = await getReleaseInfo(context, ARTWORK_SIZE);
     const getReleaseTrackList = getReleaseTrackListHandler(context);
 
     return {
-      artworkSize,
+      ARTWORK_SIZE,
       releaseInfo,
       getReleaseTrackList,
     };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
-  artworkSize = ARTWORK_SIZE
+  ARTWORK_SIZE = ARTWORK_SIZE
   releaseInfo: App.ReleaseInfo | undefined = undefined
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined
   getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined = undefined

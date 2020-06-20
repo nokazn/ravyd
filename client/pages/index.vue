@@ -9,7 +9,7 @@
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release"
-          :width="cardWidth"
+          :width="CARD_WIDTH"
         />
       </template>
     </ScrollableCardsSection>
@@ -22,7 +22,7 @@
         v-for="release in topTrackList"
         :key="release.id"
         v-bind="release"
-        :width="cardWidth"
+        :width="CARD_WIDTH"
       />
     </ScrollableCardsSection>
 
@@ -34,7 +34,7 @@
         v-for="artist in topArtistList"
         :key="artist.id"
         v-bind="artist"
-        :width="cardWidth"
+        :width="CARD_WIDTH"
       />
     </ScrollableCardsSection>
   </div>
@@ -50,8 +50,10 @@ import { convertTrackForCard } from '~/scripts/converter/convertTrackForCard';
 import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
+const CARD_WIDTH = 180;
+
 export type AsyncData = {
-  cardWidth: number
+  CARD_WIDTH: number
   topArtistList: ArtistCardInfo[] | undefined
   topTrackList: ReleaseCardInfo[] | undefined
   newReleaseList: ReleaseCardInfo[] | undefined
@@ -71,15 +73,14 @@ export default Vue.extend({
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ]);
-    const cardWidth = 180;
-    const topArtistList = topArtists?.items.map(convertArtistForCard(cardWidth));
-    const topTrackList = topTracks?.items.map(convertTrackForCard(cardWidth));
-    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard(cardWidth));
+    const topArtistList = topArtists?.items.map(convertArtistForCard(CARD_WIDTH));
+    const topTrackList = topTracks?.items.map(convertTrackForCard(CARD_WIDTH));
+    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard(CARD_WIDTH));
 
     app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
 
     return {
-      cardWidth,
+      CARD_WIDTH,
       topArtistList,
       topTrackList,
       newReleaseList,

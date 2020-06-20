@@ -7,7 +7,7 @@
       <ReleaseArtwork
         :src="playlistInfo.artworkSrc"
         :alt="playlistInfo.name"
-        :size="artworkSize"
+        :size="ARTWORK_SIZE"
         :title="playlistInfo.name"
         shadow
       />
@@ -97,7 +97,7 @@ const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
 
 interface AsyncData {
-  artworkSize: typeof ARTWORK_SIZE
+  ARTWORK_SIZE: number
   playlistInfo: App.PlaylistInfo | undefined
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
@@ -125,15 +125,14 @@ interface Data {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const artworkSize = ARTWORK_SIZE;
     const getPlaylistTrackInfo = getPlaylistTrackInfoHandler(context);
     const [playlistInfo, playlistTrackInfo] = await Promise.all([
-      await getPlaylistInfo(context, artworkSize),
+      await getPlaylistInfo(context, ARTWORK_SIZE),
       await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
     ]);
 
     return {
-      artworkSize,
+      ARTWORK_SIZE,
       playlistInfo,
       playlistTrackInfo,
       getPlaylistTrackInfo,
@@ -141,7 +140,7 @@ interface Data {
   },
 })
 export default class PlaylistIdPage extends Vue implements AsyncData, Data {
-  artworkSize: typeof ARTWORK_SIZE = ARTWORK_SIZE;
+  ARTWORK_SIZE = ARTWORK_SIZE;
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined

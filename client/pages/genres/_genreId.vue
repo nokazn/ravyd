@@ -15,7 +15,7 @@
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :max-width="maxImageSize"
+        :max-width="MAX_IMAGE_SIZE"
         :class="$style.GenreIdPage__playlistCard"
       />
 
@@ -46,7 +46,7 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 import { App } from '~~/types';
 
 interface AsyncData {
-  maxImageSize: number
+  MAX_IMAGE_SIZE: number
   categoryInfo: App.CategoryInfo | null
   playlists: App.PlaylistCardInfo[] | null
   isFullPlaylists: boolean
@@ -66,17 +66,16 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const maxImageSize = MAX_IMAGE_SIZE;
     const [categoryInfo, playlists] = await Promise.all([
-      getCategory(context, maxImageSize),
-      getCategoryPlaylist(context, maxImageSize, LIMIT_OF_PLAYLISTS),
+      getCategory(context, MAX_IMAGE_SIZE),
+      getCategoryPlaylist(context, MAX_IMAGE_SIZE, LIMIT_OF_PLAYLISTS),
     ]);
 
     const isFullPlaylists = playlists == null
       || (playlists != null && playlists.length < LIMIT_OF_PLAYLISTS);
 
     return {
-      maxImageSize,
+      MAX_IMAGE_SIZE,
       isFullPlaylists,
       categoryInfo,
       playlists,
@@ -84,7 +83,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 })
 export default class GenreIdPage extends Vue implements AsyncData {
-  maxImageSize = MAX_IMAGE_SIZE
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE
   categoryInfo: App.CategoryInfo | null = null;
   playlists: App.PlaylistCardInfo[] | null = null;
   isFullPlaylists = false;
@@ -109,7 +108,7 @@ export default class GenreIdPage extends Vue implements AsyncData {
       return;
     }
 
-    const addedPlaylists = playlists.items.map(convertPlaylistForCard(this.maxImageSize));
+    const addedPlaylists = playlists.items.map(convertPlaylistForCard(this.MAX_IMAGE_SIZE));
     this.playlists = this.playlists != null
       ? [...this.playlists, ...addedPlaylists]
       : addedPlaylists;
