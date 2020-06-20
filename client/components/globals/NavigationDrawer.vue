@@ -33,8 +33,8 @@
           </v-subheader>
 
           <v-list-item
-            v-for="{ icon, name, to } in items"
-            :key="name"
+            v-for="{ icon, id, name, to } in items"
+            :key="id"
             link
             nuxt
             :to="to"
@@ -143,6 +143,7 @@ export default Vue.extend({
           },
         ],
       };
+
       const libraryList = {
         subtitle: 'ライブラリ',
         items: [
@@ -163,13 +164,16 @@ export default Vue.extend({
           },
         ],
       };
+
       const playlistItems = this.$state().playlists.playlists?.map((playlist) => {
         const to = `/playlists/${playlist.id}`;
         return {
+          id: playlist.id,
           name: playlist.name,
           to,
         };
       });
+
       const playlists = playlistItems != null
         ? {
           subtitle: 'プレイリスト',
