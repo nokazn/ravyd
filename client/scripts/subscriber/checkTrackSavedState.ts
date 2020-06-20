@@ -7,10 +7,12 @@ type MutationPayload = {
   type: MutationType
   payload: RootMutations[MutationType]
 }
+type TrackInfo = App.SimpleTrackDetail | App.TrackDetail | App.PlaylistTrackDetail
 
 // library/tracks/SET_ACTUAL_IS_SAVED を subscribe
-export const checkTrackSavedState = <T extends App.SimpleTrackDetail | App.PlaylistTrackDetail>(
-  mutation: MutationPayload, $commit: SFCCommit,
+export const checkTrackSavedState = <T extends TrackInfo>(
+  mutation: MutationPayload,
+  $commit: SFCCommit,
 ) => (currentTrackList: T[]): T[] => {
     const [id, isSaved] = mutation.payload;
     // @todo パフォーマンス

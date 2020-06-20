@@ -95,7 +95,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootState } from 'vuex';
+import { RootState, RootMutations } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -110,6 +110,7 @@ import {
   getTopTrackList,
   getIsFollowing,
 } from '~/scripts/localPlugins/_artistId';
+import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
@@ -127,6 +128,7 @@ export type AsyncData = {
 }
 
 export type Data = {
+  mutationUnsubscribe: (() => void) | undefined
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
@@ -178,6 +180,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   isFollowing = false;
   topTrackList: App.TrackDetail[] | null = null;
 
+  mutationUnsubscribe: (() => void) | undefined = undefined;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
 
   head() {
@@ -195,9 +198,28 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
+
+    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+      if (this.topTrackList == null) return;
+
+      const type = mutation.type as keyof RootMutations;
+      if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
+
+      const topTrackList = checkTrackSavedState<App.TrackDetail>(mutation as {
+        type: typeof type
+        payload: RootMutations[typeof type]
+      }, this.$commit)(this.topTrackList);
+
+      this.topTrackList = topTrackList;
+    });
   }
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
+
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
+    }
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
