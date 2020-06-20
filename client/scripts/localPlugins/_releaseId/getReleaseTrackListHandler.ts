@@ -15,10 +15,10 @@ export const getReleaseTrackListHandler = ({ app, params }: Context) => async (
   const unacquiredCounts = totalTracks - offset;
   const handlerCounts = Math.ceil(unacquiredCounts / limit);
 
-  const handler = async (index: number) => {
+  const handler = async (index: number): Promise<App.SimpleTrackDetail[]> => {
     const tracks = await app.$spotify.albums.getAlbumTracks({
       albumId: params.releaseId,
-      offset: offset + index * limit,
+      offset: offset + limit * index,
       market,
       limit,
     });

@@ -93,7 +93,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
 import CreatePlaylistModal, { On } from '~/components/containers/modal/CreatePlaylistModal.vue';
@@ -128,6 +128,9 @@ export default Vue.extend({
   },
 
   computed: {
+    listOfPlaylists(): RootState['playlists']['playlists'] {
+      return this.$state().playlists.playlists;
+    },
     navigationDrawerItemLists(): NavigationDrawerItemLists {
       const mainList = {
         items: [
@@ -165,7 +168,7 @@ export default Vue.extend({
         ],
       };
 
-      const playlistItems = this.$state().playlists.playlists?.map((playlist) => {
+      const playlistItems = this.listOfPlaylists?.map((playlist) => {
         const to = `/playlists/${playlist.id}`;
         return {
           id: playlist.id,
@@ -195,7 +198,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.$dispatch('playlists/getPlaylists');
+    this.$dispatch('playlists/getAllPlaylists');
   },
 
   methods: {
