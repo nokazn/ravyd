@@ -9,8 +9,7 @@
         v-for="release in releaseList"
         :key="release.id"
         v-bind="release"
-        :width="180"
-        :max-width="200"
+        :max-width="240"
         :class="$style.LibraryReleasesPage__card"
       />
 
@@ -102,7 +101,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
       margin-right: 16px;
       flex: 1 0 180px;
       min-width: 180px;
-      max-width: 200px;
+      max-width: 240px;
     }
   }
 

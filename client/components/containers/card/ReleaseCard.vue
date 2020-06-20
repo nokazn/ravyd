@@ -21,10 +21,13 @@
     >
       <div :class="$style.ReleaseCard__container">
         <nuxt-link :to="releasePath">
-          <release-artwork
+          <ReleaseArtwork
             :src="artworkSrc"
             :alt="name"
             :title="name"
+            :min-size="minWidth || width"
+            :size="width"
+            :max-size="maxWidth || width"
             is-overlayed
             :icon="mediaIcon"
             @on-media-button-clicked="onMediaButtonClicked"
@@ -140,6 +143,10 @@ export default Vue.extend({
       required: true,
     },
     width: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    minWidth: {
       type: Number as PropType<number | undefined>,
       default: undefined,
     },

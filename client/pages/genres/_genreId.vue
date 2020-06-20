@@ -15,6 +15,7 @@
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
+        :min-width="MIN_IMAGE_SIZE"
         :max-width="MAX_IMAGE_SIZE"
         :class="$style.GenreIdPage__playlistCard"
       />
@@ -46,13 +47,15 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 import { App } from '~~/types';
 
 interface AsyncData {
+  MIN_IMAGE_SIZE: number
   MAX_IMAGE_SIZE: number
   categoryInfo: App.CategoryInfo | null
   playlists: App.PlaylistCardInfo[] | null
   isFullPlaylists: boolean
 }
 
-const MAX_IMAGE_SIZE = 220;
+const MIN_IMAGE_SIZE = 180;
+const MAX_IMAGE_SIZE = 240;
 const LIMIT_OF_PLAYLISTS = 30;
 
 @Component({
@@ -75,6 +78,7 @@ const LIMIT_OF_PLAYLISTS = 30;
       || (playlists != null && playlists.length < LIMIT_OF_PLAYLISTS);
 
     return {
+      MIN_IMAGE_SIZE,
       MAX_IMAGE_SIZE,
       isFullPlaylists,
       categoryInfo,
@@ -83,6 +87,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 })
 export default class GenreIdPage extends Vue implements AsyncData {
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE
   MAX_IMAGE_SIZE = MAX_IMAGE_SIZE
   categoryInfo: App.CategoryInfo | null = null;
   playlists: App.PlaylistCardInfo[] | null = null;
@@ -138,7 +143,7 @@ export default class GenreIdPage extends Vue implements AsyncData {
       margin-right: 16px;
       flex: 1 0 180px;
       min-width: 180px;
-      max-width: 220px;
+      max-width: 240px;
     }
   }
 

@@ -13,6 +13,7 @@
         :id="id"
         :key="id"
         :src="artworkSrc"
+        :min-size="MIN_IMAGE_SIZE"
         :max-size="MAX_IMAGE_SIZE"
         :name="name"
         :class="$style.BrowsePage__categoryCard"
@@ -45,6 +46,7 @@ import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 interface AsyncData {
+  MIN_IMAGE_SIZE: number
   MAX_IMAGE_SIZE: number
   isFullCategoryList: boolean
   categoryList: App.CategoryInfo[] | null
@@ -54,7 +56,8 @@ interface Data {
   title: string
 }
 
-const MAX_IMAGE_SIZE = 220;
+const MIN_IMAGE_SIZE = 180;
+const MAX_IMAGE_SIZE = 240;
 const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
@@ -69,6 +72,7 @@ const LIMIT_OF_CATEGORIES = 30;
       || (categoryList != null && categoryList.length < LIMIT_OF_CATEGORIES);
 
     return {
+      MIN_IMAGE_SIZE,
       MAX_IMAGE_SIZE,
       isFullCategoryList,
       categoryList,
@@ -76,6 +80,7 @@ const LIMIT_OF_CATEGORIES = 30;
   },
 })
 export default class BrowsePage extends Vue implements AsyncData, Data {
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
   MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
   isFullCategoryList = false;
   categoryList: App.CategoryInfo[] | null = null;

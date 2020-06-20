@@ -5,7 +5,7 @@
       type="card"
       boilerplate
       :width="width"
-      :min-width="width"
+      :min-width="minWidth || width"
       :max-width="maxWidth || width"
     />
     <v-card
@@ -15,7 +15,7 @@
       nuxt
       :to="artistPath"
       :width="width"
-      :min-width="width"
+      :min-width="minWidth || width"
       :max-width="maxWidth || width"
       :class="$style.ArtistCard"
     >
@@ -25,6 +25,8 @@
             :src="avatarSrc"
             :alt="name"
             :size="width"
+            :min-size="minWidth"
+            :max-size="maxWidth"
             :icon="mediaIcon"
             default-user-icon="mdi-account-music"
             small-icon
@@ -86,8 +88,12 @@ export default Vue.extend({
       required: true,
     },
     width: {
-      type: Number,
-      default: 180,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    minWidth: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
     maxWidth: {
       type: Number as PropType<number | undefined>,

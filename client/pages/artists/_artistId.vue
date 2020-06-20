@@ -72,8 +72,8 @@
             v-for="item in items"
             :key="item.id"
             v-bind="item"
-            :width="180"
-            :max-width="240"
+            :min-width="ARTWORK_MIN_SIZE"
+            :max-width="ARTWORK_MAX_SIZE"
             year-subtitle
             :class="$style.ArtistIdPage__card"
           />
@@ -114,17 +114,20 @@ import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState'
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
-const ARTWORK_MAX_SIZE = 180;
-const TOP_TRACK_ARTWORK_SIZE = 64;
+const TOP_TRACK_ARTWORK_SIZE = 40;
+const ARTWORK_MIN_SIZE = 180;
+const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 
 export type AsyncData = {
+  artistInfo: App.ArtistInfo | undefined
+  isFollowing: boolean
+  topTrackList: App.TrackDetail[] | undefined
+  releaseListMap: ArtistReleaseInfo | undefined
   AVATAR_SIZE: number
   TOP_TRACK_ARTWORK_SIZE: number
-  artistInfo: App.ArtistInfo | null
-  isFollowing: boolean
-  releaseListMap: ArtistReleaseInfo | null
-  topTrackList: App.TrackDetail[] | null
+  ARTWORK_MIN_SIZE: number
+  ARTWORK_MAX_SIZE: number
 }
 
 export type Data = {
@@ -147,36 +150,40 @@ export type Data = {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const artworkMaxSize = ARTWORK_MAX_SIZE;
     const [
-      releaseListMap,
       artistInfo,
       isFollowing,
       topTrackList,
+      releaseListMap,
     ] = await Promise.all([
-      getReleaseListMap(context, artworkMaxSize),
       getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
       getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
+      getReleaseListMap(context, ARTWORK_MAX_SIZE),
     ] as const);
 
     return {
-      AVATAR_SIZE,
-      TOP_TRACK_ARTWORK_SIZE,
-      releaseListMap,
       artistInfo,
       isFollowing,
       topTrackList,
+      releaseListMap,
+      AVATAR_SIZE,
+      TOP_TRACK_ARTWORK_SIZE,
+      ARTWORK_MIN_SIZE,
+      ARTWORK_MAX_SIZE,
     };
   },
 })
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
+  artistInfo: App.ArtistInfo | undefined = undefined;
+  isFollowing = false;
+  topTrackList: App.TrackDetail[] | undefined = undefined;
+  releaseListMap: ArtistReleaseInfo | undefined = undefined;
+
   AVATAR_SIZE = AVATAR_SIZE;
   TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
-  releaseListMap: ArtistReleaseInfo | null = null;
-  artistInfo: App.ArtistInfo | null = null;
-  isFollowing = false;
-  topTrackList: App.TrackDetail[] | null = null;
+  ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
+  ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;

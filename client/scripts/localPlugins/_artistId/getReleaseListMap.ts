@@ -7,27 +7,31 @@ export type ArtistReleaseInfo = {
   albums: {
     title: 'アルバム'
     items: App.ReleaseCardInfo[] | undefined
+    isFull: boolean
   }
   singles: {
     title: 'シングル・EP'
     items: App.ReleaseCardInfo[] | undefined
+    isFull: boolean
   }
   compilations: {
     title: 'コンピレーション'
     items: App.ReleaseCardInfo[] | undefined
+    isFull: boolean
   }
   appearsOns: {
     title: '参加作品'
     items: App.ReleaseCardInfo[] | undefined
+    isFull: boolean
   }
 }
 
 export const getReleaseListMap = async (
   { app, params }: Context,
   artworkSize: number,
-): Promise<ArtistReleaseInfo | null> => {
+): Promise<ArtistReleaseInfo | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
-  if (country == null) return null;
+  if (country == null) return undefined;
 
   const getArtistReleases = (
     releaseType: App.ReleaseCardInfo['releaseType'],
@@ -52,22 +56,31 @@ export const getReleaseListMap = async (
   const compilationList = compilations?.items.map(convertReleaseForCard(artworkSize));
   const appearsOnList = appearsOns?.items.map(convertReleaseForCard(artworkSize));
 
+  const isFullAlbumList = albums?.next == null;
+  const isFullSingleList = singles?.next == null;
+  const isFullCompilationList = compilations?.next == null;
+  const isFullAppearsOnList = appearsOns?.next == null;
+
   return {
     albums: {
       title: 'アルバム',
       items: albumList,
+      isFull: isFullAlbumList,
     },
     singles: {
       title: 'シングル・EP',
       items: singleList,
+      isFull: isFullSingleList,
     },
     compilations: {
       title: 'コンピレーション',
       items: compilationList,
+      isFull: isFullCompilationList,
     },
     appearsOns: {
       title: '参加作品',
       items: appearsOnList,
+      isFull: isFullAppearsOnList,
     },
   };
 };

@@ -4,10 +4,12 @@
       v-if="src != null"
       :src="src"
       :alt="alt"
-      :height="size"
+      :min-width="minSize || size"
+      :min-height="minSize || size"
       :width="size"
-      :max-height="size"
-      :max-width="size"
+      :height="size"
+      :max-width="maxSize || size"
+      :max-height="maxSize || size"
       :aspect-ratio="1"
       :class="{ 'g-box-shadow': shadow }"
       @load="onLoaded"
@@ -20,10 +22,15 @@
         @on-clicked="onClicked"
       />
     </v-img>
+
     <v-sheet
       v-else
-      :min-width="size || 180"
-      :min-height="size || 180"
+      :min-width="minSize || size"
+      :min-height="minSize || size"
+      :width="size"
+      :height="size"
+      :max-width="maxSize || size"
+      :max-height="maxSize || size"
       :class="$style.ReleaseArtwork__noArtwork"
     >
       <v-icon :size="noArtworkIconSize">
@@ -69,6 +76,14 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
+    minSize: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    maxSize: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
     icon: {
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
@@ -84,10 +99,13 @@ export default Vue.extend({
   },
 
   data(): Data {
+    const baseSize = this.size ?? this.minSize;
+    const noArtworkIconSize = baseSize != null
+      ? baseSize * 0.4
+      : 60;
+
     return {
-      noArtworkIconSize: this.size != null
-        ? this.size * 0.4
-        : 60,
+      noArtworkIconSize,
     };
   },
 

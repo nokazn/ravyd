@@ -10,8 +10,8 @@
           v-for="artist in artistList"
           :key="artist.id"
           v-bind="artist"
-          :width="180"
-          :max-width="200"
+          :min-width="180"
+          :max-width="240"
           :class="$style.LibraryArtistsPage__card"
         />
       </template>
@@ -106,7 +106,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
       margin-right: 16px;
       flex: 1 0 180px;
       min-width: 180px;
-      max-width: 200px;
+      max-width: 240px;
     }
   }
 

@@ -6,15 +6,15 @@ import { App } from '~~/types';
 export const getTopTrackList = async (
   { app, params }: Context,
   artworkSize: number,
-): Promise<App.TrackDetail[] | null> => {
+): Promise<App.TrackDetail[] | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
-  if (country == null) return null;
+  if (country == null) return undefined;
 
   const { tracks } = await app.$spotify.artists.getArtistTopTracks({
     artistId: params.artistId,
     country,
   });
-  if (tracks == null) return null;
+  if (tracks == null) return undefined;
 
   const trackIdList = tracks.map((track) => track.id);
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });

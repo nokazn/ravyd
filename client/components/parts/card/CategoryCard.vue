@@ -4,11 +4,11 @@
       v-if="!isLoaded"
       type="image"
       boilerplate
+      :min-width="minSize || size"
+      :min-height="minSize || size"
       :width="size"
-      :min-width="size"
-      :max-width="maxSize || size"
       :height="size"
-      :min-height="size"
+      :max-width="maxSize || size"
       :max-height="maxSize || size"
     />
     <v-card
@@ -24,8 +24,12 @@
         :src="src"
         :alt="name"
         :title="name"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
         :width="size"
-        :max-width="maxSize"
+        :height="size"
+        :max-width="maxSize || size"
+        :max-height="maxSize || size"
         :aspect-ratio="1"
       >
         <div :class="$style.CategoryImage__link">
@@ -41,9 +45,12 @@
       <v-sheet
         v-else
         :title="name"
-        :height="size || 200"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
         :width="size"
-        :max-width="maxSize"
+        :height="size"
+        :max-width="maxSize || size"
+        :max-height="maxSize || size"
       >
         <div :class="$style.CategoryImage__link">
           <span
@@ -80,11 +87,15 @@ export default Vue.extend({
       required: true,
     },
     size: {
-      type: Number,
+      type: Number as PropType<number | undefined >,
+      default: undefined,
+    },
+    minSize: {
+      type: Number as PropType<number | undefined >,
       default: undefined,
     },
     maxSize: {
-      type: Number,
+      type: Number as PropType<number | undefined >,
       default: undefined,
     },
   },

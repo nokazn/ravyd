@@ -4,8 +4,8 @@
       v-if="!isLoaded"
       type="card"
       boilerplate
+      :min-width="minWidth || width"
       :width="width"
-      :min-width="width"
       :max-width="maxWidth || width"
     />
     <v-card
@@ -13,17 +13,20 @@
       hover
       ripple
       nuxt
+      :min-width="minWidth || width"
       :width="width"
-      :min-width="width"
       :max-width="maxWidth || width"
       :class="$style.PlaylistCard"
       :to="playlistPath"
     >
       <div :class="$style.PlaylistCard__container">
-        <release-artwork
+        <ReleaseArtwork
           :src="artworkSrc"
           :alt="name"
           :title="name"
+          :min-size="minWidth || width"
+          :size="width"
+          :max-size="maxWidth || width"
           is-overlayed
           :icon="mediaIcon"
           @on-media-button-clicked="onMediaButtonClicked"
@@ -90,6 +93,10 @@ export default Vue.extend({
       required: true,
     },
     width: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    minWidth: {
       type: Number as PropType<number | undefined>,
       default: undefined,
     },

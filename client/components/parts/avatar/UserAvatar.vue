@@ -2,16 +2,22 @@
   <v-hover #default="{ hover }">
     <v-avatar
       v-if="src != null"
+      :min-width="minSize || size"
+      :min-height="minSize || size"
       :size="size"
+      :max-width="maxSize || size"
+      :max-height="maxSize || size"
       :class="{ 'g-box-shadow': shadow }"
     >
       <v-img
         :src="src"
         alt="user-avaar"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
         :height="size"
         :width="size"
-        :max-height="size"
-        :max-width="size"
+        :max-height="maxSize || size"
+        :max-width="maxSize || size"
         :aspect-ratio="1"
         @load="onLoaded"
       >
@@ -74,8 +80,16 @@ export default Vue.extend({
       default: 'mdi-play-circle',
     },
     size: {
-      type: Number,
-      default: 180,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    minSize: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    maxSize: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
     isOverlayed: {
       type: Boolean,
@@ -96,10 +110,17 @@ export default Vue.extend({
   },
 
   data(): Data {
+    const noAvatarIconSize = (): number => {
+      const baseSize = this.size ?? this.minSize;
+      if (baseSize == null) return 60;
+
+      return this.smallIcon
+        ? baseSize * 0.4
+        : baseSize;
+    };
+
     return {
-      noAvatarIconSize: this.smallIcon
-        ? this.size * 0.6
-        : this.size,
+      noAvatarIconSize: noAvatarIconSize(),
     };
   },
 

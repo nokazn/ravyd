@@ -6,11 +6,11 @@ import { App } from '~~/types';
 export const getArtistInfo = async (
   { app, params }: Context,
   avatarSize: number,
-): Promise<App.ArtistInfo | null> => {
+): Promise<App.ArtistInfo | undefined> => {
   const artist = await app.$spotify.artists.getArtist({
     artistId: params.artistId,
   });
-  if (artist == null) return null;
+  if (artist == null) return undefined;
 
   const {
     name,
