@@ -101,7 +101,6 @@ export default Vue.extend({
       const params: On['on-favorite-button-clicked'] = row;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
-      // API との通信の結果を待たずに先に表示を変更させておく
       const { id, nextSavedState } = row;
       if (nextSavedState) {
         await this.$dispatch('library/tracks/saveTracks', [id]);
