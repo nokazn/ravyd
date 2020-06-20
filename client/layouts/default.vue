@@ -12,6 +12,8 @@
     </main>
 
     <Footer v-if="isLoggedin" />
+
+    <portal-target name="snackbar" />
   </v-app>
 </template>
 

@@ -6,11 +6,17 @@ import { PlaylistsMutations } from './mutations';
 export type PlaylistsActions = {
   getPlaylists: (payload?: { offset?: number, limit?: number }) => Promise<void>
   getAllPlaylists: () => Promise<void>
+  createPlaylist: (payload: {
+    name: string
+    description: string
+    isPublic: boolean
+  }) => Promise<void>
 }
 
 export type RootActions = {
   'playlists/getPlaylists': PlaylistsActions['getPlaylists']
   'playlists/getAllPlaylists': PlaylistsActions['getAllPlaylists']
+  'playlists/createPlaylist': PlaylistsActions['createPlaylist']
 }
 
 const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
@@ -57,6 +63,23 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       ...firstListOfPlaylists.items,
       ...listOfPlaylists,
     ]);
+  },
+
+  async createPlaylist({ commit, rootGetters }, { name, description, isPublic }) {
+    const userId = rootGetters['auth/userId'];
+    if (userId == null) return;
+
+    const playlist = await this.$spotify.playlists.createPlaylist({
+      userId,
+      name,
+      description,
+      isPublic,
+    });
+    if (playlist == null) {
+      throw new Error('プレイリストの作成に失敗しました。');
+    }
+
+    commit('ADD_PLAYLIST', playlist);
   },
 };
 

@@ -59,6 +59,7 @@ const config: Configuration = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    'portal-vue/nuxt',
   ],
   axios: {
     baseURL: process.env.BASE_URL || 'https://127.0.0.1:3000',

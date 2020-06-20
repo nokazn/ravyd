@@ -16,7 +16,7 @@ export const createPlaylist = (context: Context) => {
     isPublic?: boolean
     collaborative?: boolean
     description?: string
-  }): Promise<SpotifyAPI.Playlist | null> => {
+  }): Promise<SpotifyAPI.Playlist | undefined> => {
     const request = app.$spotifyApi.$post(`/users/${userId}/playlists`, {
       name,
       public: isPublic,
@@ -24,7 +24,7 @@ export const createPlaylist = (context: Context) => {
       description,
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 
     return request;
