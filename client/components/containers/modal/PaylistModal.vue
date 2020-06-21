@@ -3,12 +3,12 @@
     <v-dialog
       v-model="modal"
       :max-width="600"
-      :class="$style.CreatePlaylistModal"
+      :class="$style.PlaylistModal"
     >
       <v-card>
-        <div :class="$style.CreatePlaylistModal__title">
+        <div :class="$style.PlaylistModal__title">
           <v-card-title>
-            プレイリストの作成
+            プレイリストの{{ detailOfMethod }}
           </v-card-title>
 
           <v-btn
@@ -23,13 +23,17 @@
         </div>
 
         <v-card-text>
-          <div>
+          <v-form
+            ref="form"
+            v-model="isValid"
+          >
             <v-text-field
               v-model="playlistName"
               autofocus
               label="名前"
               clearable
               required
+              :rules="playlistNameRules"
             />
 
             <v-textarea
@@ -52,11 +56,11 @@
               v-model="isPrivatePlaylist"
               label="プレイリストを非公開にする"
             />
-          </div>
+          </v-form>
         </v-card-text>
 
         <v-card-actions>
-          <div :class="$style.CreatePlaylistModal__action">
+          <div :class="$style.PlaylistModal__action">
             <v-btn
               text
               rounded
@@ -74,7 +78,7 @@
               :disabled="!isValid"
               @click="createPlaylist"
             >
-              作成
+              {{ resultOfMethod || detailOfMethod }}
             </v-btn>
           </div>
         </v-card-actions>
@@ -89,16 +93,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import { RootMutations } from 'vuex';
 
 import Snackbar, { On as OnSnackbar, SnackbarType } from '~/components/globals/Snackbar.vue';
 
 export type Data = {
+  isValid: boolean
   playlistName: string
   playlistDescription: string
   playlistArtwork: Blob | undefined
   isPrivatePlaylist: boolean
+  playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
   snackbar: {
     isShown: boolean
@@ -108,7 +114,14 @@ export type Data = {
   mutationUnsubscriber: (() => void) | undefined
 }
 
-const ON_CHANGED = 'on-changed';
+type Form = {
+  name: string,
+  description: string,
+  artwork: Blob | undefined,
+  isPrivate: boolean
+}
+
+export const ON_CHANGED = 'on-changed';
 
 export type On = {
   [ON_CHANGED]: boolean
@@ -124,14 +137,35 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
+    form: {
+      type: Object as PropType<Form | undefined>,
+      default: undefined,
+    },
+    detailOfMethod: {
+      type: String,
+      required: true,
+    },
+    resultOfMethod: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
   },
 
   data(): Data {
+    const playlistName = this.form?.name ?? '';
+    const playlistDescription = this.form?.description ?? '';
+    const playlistArtwork = this.form?.artwork;
+    const isPrivatePlaylist = this.form?.isPrivate ?? false;
+
     return {
-      playlistName: '',
-      playlistDescription: '',
-      playlistArtwork: undefined,
-      isPrivatePlaylist: false,
+      isValid: playlistName !== '',
+      playlistName,
+      playlistDescription,
+      playlistArtwork,
+      isPrivatePlaylist,
+      playlistNameRules: [
+        (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
+      ],
       isLoading: false,
       snackbar: {
         isShown: false,
@@ -148,11 +182,12 @@ export default Vue.extend({
         return this.isShown;
       },
       set(isShown: boolean) {
+        if (!isShown && this.$refs.form != null) {
+          // モーダルを閉じたときにバリデーションをリセット
+          (this.$refs.form as Vue & { resetValidation(): void }).resetValidation();
+        }
         this.$emit(ON_CHANGED, isShown);
       },
-    },
-    isValid(): boolean {
-      return this.playlistName !== '';
     },
   },
 
@@ -172,7 +207,7 @@ export default Vue.extend({
           artwork: fileReader.result as string,
         }).then(() => {
           this.modal = false;
-          this.showSnackbar('primary', 'プレイリストを作成しました。');
+          this.showSnackbar('primary', `プレイリストを${this.resultOfMethod || this.detailOfMethod}しました。`);
           this.resetForm();
         }).catch(() => {
           this.showSnackbar('error', '画像のアップロードに失敗しました。');
@@ -233,7 +268,7 @@ export default Vue.extend({
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
-          this.showSnackbar('primary', 'プレイリストを作成しました。');
+          this.showSnackbar('primary', `プレイリストを${this.resultOfMethod || this.detailOfMethod}しました。`);
           this.resetForm();
         }
       }).catch((err: Error) => {
@@ -250,7 +285,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.CreatePlaylistModal {
+.PlaylistModal {
   z-index: z-index-of(modal);
 
   &__title {
