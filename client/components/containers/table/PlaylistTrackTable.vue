@@ -163,6 +163,11 @@ export default Vue.extend({
         return;
       }
 
+      if (this.isTrackSet(id)) {
+        this.$dispatch('player/play');
+        return;
+      }
+
       // trackUriList は更新されうる
       const trackUriList = this.trackList.map((track) => track.uri);
       // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
