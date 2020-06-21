@@ -50,7 +50,7 @@ import { convertTrackForCard } from '~/scripts/converter/convertTrackForCard';
 import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
-const CARD_WIDTH = 180;
+const CARD_WIDTH = 200;
 
 export type AsyncData = {
   CARD_WIDTH: number
