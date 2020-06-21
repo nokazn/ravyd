@@ -15,6 +15,8 @@ export const convertPlaylistTrackDetail = (
     uri: track.uri,
     releaseId: track.album.id,
     releaseName: track.album.name,
+    trackNumber: track.track_number,
+    discNumber: track.disc_number,
     hash: `${track.disc_number}-${track.track_number}`,
     artistList: track.artists.map((artist) => ({
       name: artist.name,

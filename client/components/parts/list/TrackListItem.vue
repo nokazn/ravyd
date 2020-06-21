@@ -29,22 +29,28 @@
               @on-clicked="onFavoriteButtonClicked"
             />
 
-            <nuxt-link
-              :to="path"
-              :title="name"
-              :class="[
-                $style.TrackListItem__contentTitle,
-                textColor,
-              ]"
+            <span
+              :class="$style.TrackListItem__contentTitle"
               class="g-ellipsis-text"
             >
-              {{ name }}
-            </nuxt-link>
-          </div>
+              <nuxt-link
+                :to="path"
+                :title="name"
+                :class="textColor"
+              >
+                {{ name }}
+              </nuxt-link>
 
-          <v-list-item-subtitle v-if="hasSubtitle">
-            <ArtistNames :artist-list="artistList" />
-          </v-list-item-subtitle>
+              <template v-if="artistList.length > 0">
+                <span :class="subtextColor">-</span>
+                <ArtistNames
+                  :artist-list="artistList"
+                  inline
+                  :class="subtextColor"
+                />
+              </template>
+            </span>
+          </div>
         </div>
       </v-list-item-content>
 
@@ -162,10 +168,6 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    hasSubtitle: {
-      type: Boolean,
-      default: false,
-    },
     isPlayingTrack: {
       type: Boolean,
       required: true,
@@ -191,6 +193,11 @@ export default Vue.extend({
       return this.isTrackSet
         ? 'active--text'
         : undefined;
+    },
+    subtextColor(): string | undefined {
+      return this.isTrackSet
+        ? 'active--text'
+        : 'subtext--text';
     },
   },
 
@@ -236,6 +243,10 @@ export default Vue.extend({
     &Title {
       font-size: 0.9rem;
       line-height: 1.1rem;
+
+      & > *:not(:last-child) {
+        margin-right: 4px;
+      }
     }
   }
 

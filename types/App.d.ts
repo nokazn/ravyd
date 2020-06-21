@@ -7,8 +7,8 @@ export namespace App {
     rgb: Swatch['rgb']
   }
 
-  // TrackTable component
-  export type SimpleTrackDetail = {
+  // @todo
+  type TrackDetailBase = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
@@ -16,40 +16,23 @@ export namespace App {
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
     hash: string
-    artistList: {
-      name: SpotifyAPI.Artist['name'],
-      id: SpotifyAPI.Artist['id'],
-    }[]
+    artistList: SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
     isSaved: boolean
     duration: string
-  }
-  // TrackList component
-  export type TrackDetail = SimpleTrackDetail & {
-    artworkSrc: string | undefined
     releaseId: string
     releaseName: string
+  }
+  // TrackTable, TrackList component
+  export type TrackDetail = TrackDetailBase & {
+    artworkSrc: string | undefined
   }
   // PlaylistTrackTable component
-  export type PlaylistTrackDetail = {
-    index: number
-    id: SpotifyAPI.SimpleTrack['id']
-    name: SpotifyAPI.SimpleTrack['name']
-    uri: SpotifyAPI.SimpleTrack['uri']
-    releaseId: string
-    releaseName: string
-    hash: string
-    artistList: {
-      name: SpotifyAPI.Artist['name'],
-      id: SpotifyAPI.Artist['id'],
-    }[]
-    explicit: boolean
-    isPlayable: boolean
-    isSaved: boolean
-    duration: string
+  export type PlaylistTrackDetail = TrackDetailBase & {
     addedAt: AddedAtInfo
   }
+
   export type TrackQueueInfo = {
     isPlaying: boolean
     id: string | undefined
@@ -80,11 +63,11 @@ export namespace App {
     artworkSrc: string | undefined
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
-    trackList: App.SimpleTrackDetail[]
+    trackList: App.TrackDetail[]
     isFullTrackList: boolean
   }
   export type ReleaseTrackInfo = {
-    trackList: App.SimpleTrackDetail[]
+    trackList: App.TrackDetail[]
     isFullTrackList: boolean
     durationMs: number
   }

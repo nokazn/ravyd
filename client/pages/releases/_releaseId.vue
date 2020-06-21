@@ -76,7 +76,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootState, RootMutations } from 'vuex';
+import { RootState, RootMutations, ExtendedMutationPayload } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -157,21 +157,30 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
     }
 
-    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+    const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
       if (this.releaseInfo == null) return;
 
-      const type = mutation.type as keyof RootMutations;
-      if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
-
-      const trackList = checkTrackSavedState<App.SimpleTrackDetail>(mutation as {
-        type: typeof type
-        payload: RootMutations[typeof type]
-      }, this.$commit)(this.releaseInfo.trackList);
+      const trackList = checkTrackSavedState<App.TrackDetail>(
+        mutationPayload,
+        this.$commit,
+      )(this.releaseInfo.trackList);
 
       this.releaseInfo = {
         ...this.releaseInfo,
         trackList,
       };
+    };
+
+    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+      const type = mutation.type as keyof RootMutations;
+      switch (type) {
+        case 'library/tracks/SET_ACTUAL_IS_SAVED':
+          subscribeTrack(mutation as ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>);
+          break;
+
+        default:
+          break;
+      }
     });
   }
 
@@ -198,6 +207,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       limit,
       offset,
       totalTracks,
+      releaseId: this.releaseInfo.id,
+      releaseName: this.releaseInfo.name,
+      artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
+      artworkSrc: this.releaseInfo.artworkSrc,
     });
 
 

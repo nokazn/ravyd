@@ -1,17 +1,12 @@
 // import { RootMutations } from 'vuex';
-import { RootMutations, SFCCommit } from 'vuex';
+import { ExtendedMutationPayload, SFCCommit } from 'vuex';
 import { App } from '~~/types';
 
-type MutationType = 'library/tracks/SET_ACTUAL_IS_SAVED'
-type MutationPayload = {
-  type: MutationType
-  payload: RootMutations[MutationType]
-}
-type TrackInfo = App.SimpleTrackDetail | App.TrackDetail | App.PlaylistTrackDetail
+type TrackInfo = App.TrackDetail | App.PlaylistTrackDetail
 
 // library/tracks/SET_ACTUAL_IS_SAVED を subscribe
 export const checkTrackSavedState = <T extends TrackInfo>(
-  mutation: MutationPayload,
+  mutation: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>,
   $commit: SFCCommit,
 ) => (currentTrackList: T[]): T[] => {
     const [id, isSaved] = mutation.payload;

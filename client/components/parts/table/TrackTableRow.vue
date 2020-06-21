@@ -32,10 +32,22 @@
         <div :class="$style.TrackTableRow__content">
           <span
             class="g-ellipsis-text"
-            :class="titleColor"
+            :class="$style.TrackTableRow__contentTitle"
           >
-            {{ item.name }}
+            <span :class="titleColor">
+              {{ item.name }}
+            </span>
+
+            <template v-if="item.artistList.length > 0">
+              <span :class="subtextColor">-</span>
+              <ArtistNames
+                :artist-list="item.artistList"
+                inline
+                :class="subtextColor"
+              />
+            </template>
           </span>
+
           <ExplicitChip
             v-if="item.explicit"
           />
@@ -66,8 +78,9 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
-import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
+import ArtistNames from '~/components/parts/text/ArtistNames.vue';
+import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -80,16 +93,19 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
+export type Item = App.TrackDetail
+
 export default Vue.extend({
   components: {
     TrackListMediaButton,
-    ExplicitChip,
     FavoriteButton,
+    ArtistNames,
+    ExplicitChip,
   },
 
   props: {
     item: {
-      type: Object as PropType<App.TrackDetail>,
+      type: Object as PropType<Item>,
       required: true,
     },
     isTrackSet: {
@@ -111,6 +127,11 @@ export default Vue.extend({
       return this.isTrackSet
         ? 'active--text'
         : undefined;
+    },
+    subtextColor(): string | undefined {
+      return this.isTrackSet
+        ? 'active--text'
+        : 'subtext--text';
     },
   },
 
@@ -142,6 +163,12 @@ export default Vue.extend({
 
     & > *:not(:last-child) {
       margin-right: 8px;
+    }
+
+    &Title {
+      & > *:not(:last-child) {
+        margin-right: 4px;
+      }
     }
   }
 }
