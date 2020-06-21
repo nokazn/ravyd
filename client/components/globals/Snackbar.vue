@@ -3,7 +3,7 @@
     <v-snackbar
       v-model="snackbar"
       :color="type"
-      bottom
+      top
       :class="$style.Snackbar"
     >
       {{ message }}
@@ -65,6 +65,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Snackbar {
-  z-index: z-index-of(snackbar);
+  z-index: z-index-of(snackbar) !important;
 }
 </style>
