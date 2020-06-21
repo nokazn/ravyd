@@ -224,8 +224,7 @@ export default Vue.extend({
     }
 
     &Subtitle {
-      font-size: 0.8em !important;
-      line-height: 1.1rem !important;
+      font-size: 0.75em !important;
     }
   }
 
