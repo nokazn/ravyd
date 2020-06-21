@@ -2,6 +2,7 @@
   <v-btn
     color="success"
     rounded
+    :disabled="disabled"
     :class="$style.ContextMediaButton"
     @click="onClicked"
   >
@@ -28,6 +29,10 @@ export default Vue.extend({
     isPlaying: {
       type: Boolean,
       required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 

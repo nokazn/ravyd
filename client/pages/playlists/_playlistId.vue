@@ -42,6 +42,7 @@
           <div :class="$style.PlaylistIdPage__buttons">
             <ContextMediaButton
               :is-playing="isPlaylistSet && isPlaying"
+              :disabled="!hasTracks"
               @on-clicked="onContextMediaButtonClicked"
             />
 
@@ -247,6 +248,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   get isOwnPlaylist(): boolean {
     return this.playlistInfo != null
       ? this.playlistInfo?.owner.id === this.$getters()['auth/userId']
+      : false;
+  }
+  get hasTracks(): boolean {
+    return this.playlistTrackInfo != null
+      ? this.playlistTrackInfo.trackList.length > 0
       : false;
   }
   get editPlaylistForm(): Form | undefined {

@@ -21,6 +21,13 @@ export const getPlaylistTrackInfoHandler = ({ app, params }: Context) => async (
 
   const filteredTrackList = tracks.items
     .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
+  if (filteredTrackList.length === 0) {
+    return {
+      trackList: [],
+      isFullTrackList: true,
+    };
+  }
+
   const trackIdList = filteredTrackList.map(({ track }) => track.id);
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({
     trackIdList,
