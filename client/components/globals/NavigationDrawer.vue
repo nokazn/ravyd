@@ -33,26 +33,39 @@
           </v-subheader>
 
           <v-list-item
-            v-for="{ icon, id, name, to } in items"
-            :key="id"
+            v-for="item in items"
+            :key="item.id"
             link
             nuxt
-            :to="to"
-            :title="name"
+            :to="item.to"
+            :title="item.name"
             dense
             :class="{
               [$style.NavigationDrawer__denseItem]: scroll,
             }"
           >
-            <v-list-item-icon v-if="icon != null">
-              <v-icon :title="name">
-                {{ icon }}
+            <v-list-item-icon v-if="item.icon != null">
+              <v-icon :title="item.name">
+                {{ item.icon }}
               </v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>
-                {{ name }}
+              <v-list-item-title
+                :class="{
+                  'active--text': isActiveContext(item.uri),
+                  [$style.NavigationDrawer__itemTitle]: true,
+                }"
+              >
+                <span class="g-ellipsis-text">
+                  {{ item.name }}
+                </span>
+                <v-icon
+                  v-if="isActiveContext(item.uri)"
+                  small
+                >
+                  mdi-volume-high
+                </v-icon>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -110,6 +123,7 @@ type NavigationDrawerItemLists = {
     name: string
     to: string
     icon?: string
+    uri?: string
   }[]
   scroll?: boolean
 }[]
@@ -174,6 +188,7 @@ export default Vue.extend({
           id: playlist.id,
           name: playlist.name,
           to,
+          uri: playlist.uri,
         };
       });
 
@@ -194,6 +209,11 @@ export default Vue.extend({
     },
     userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];
+    },
+    isActiveContext(): (uri: string) => boolean {
+      return (uri: string) => (uri != null
+        ? this.$getters()['player/contextUri'] === uri
+        : false);
     },
   },
 
@@ -236,6 +256,11 @@ export default Vue.extend({
     flex: 1 0;
     margin: -12px 0;
     padding: 12px 0;
+  }
+
+  &__itemTitle {
+    display: flex;
+    justify-content: space-between;
   }
 
   &__denseItem {

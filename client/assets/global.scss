@@ -52,6 +52,12 @@ html {
       text-decoration: underline;
     }
   }
+
+  .v-list {
+    a:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .v-btn--outlined {
