@@ -292,6 +292,7 @@ export default Vue.extend({
           this.resetForm();
         }
       }).catch((err: Error) => {
+        console.error({ err });
         this.showSnackbar('error', err.message);
       });
     },

@@ -96,10 +96,11 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
-      // 空文字列の場合は undefined にする
+      // @to-do 空文字列を渡せない
       description: description || undefined,
       isPublic,
-    }).catch(() => {
+    }).catch((err: Error) => {
+      console.error(err.message);
       throw new Error('プレイリストの更新に失敗しました。');
     });
 
