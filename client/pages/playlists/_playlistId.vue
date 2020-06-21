@@ -92,7 +92,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootMutations } from 'vuex';
+import { RootState, RootMutations, ExtendedMutationPayload } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -118,7 +118,6 @@ interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
-  editPlaylistForm: Form | undefined
 }
 
 interface Data {
@@ -151,22 +150,12 @@ interface Data {
       await getPlaylistInfo(context, ARTWORK_SIZE),
       await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
     ]);
-    const editPlaylistForm = playlistInfo != null
-      ? {
-        playlistId: context.params.playlistId,
-        name: playlistInfo.name,
-        description: playlistInfo.description ?? '',
-        artworkSrc: playlistInfo.artworkSrc,
-        isPrivate: playlistInfo.isPublic != null ? !playlistInfo.isPublic : false,
-      }
-      : undefined;
 
     return {
       ARTWORK_SIZE,
       playlistInfo,
       playlistTrackInfo,
       getPlaylistTrackInfo,
-      editPlaylistForm,
     };
   },
 })
@@ -175,7 +164,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined;
-  editPlaylistForm: Form | undefined = undefined;
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -191,21 +179,48 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
     }
 
-    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+    // トラックを保存/削除した後呼ばれる
+    const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
       if (this.playlistTrackInfo == null) return;
 
-      const type = mutation.type as keyof RootMutations;
-      if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
-
-      const trackList = checkTrackSavedState<App.PlaylistTrackDetail>(mutation as {
-        type: typeof type
-        payload: RootMutations[typeof type]
-      }, this.$commit)(this.playlistTrackInfo.trackList);
+      const trackList = checkTrackSavedState<App.PlaylistTrackDetail>(
+        mutationPayload,
+        this.$commit,
+      )(this.playlistTrackInfo.trackList);
 
       this.playlistTrackInfo = {
         ...this.playlistTrackInfo,
         trackList,
       };
+    };
+
+    // プレイリストを編集した後呼ばれる
+    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
+      if (this.playlistInfo == null) return;
+
+      const { name, description, isPublic } = mutationPayload.payload;
+      this.playlistInfo = {
+        ...this.playlistInfo,
+        name,
+        description,
+        isPublic,
+      };
+    };
+
+    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+      const type = mutation.type as keyof RootMutations;
+      switch (type) {
+        case 'library/tracks/SET_ACTUAL_IS_SAVED':
+          subscribeTrack(mutation as ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>);
+          break;
+
+        case 'playlists/EDIT_PLAYLIST':
+          subscribePlaylist(mutation as ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>);
+          break;
+
+        default:
+          break;
+      }
     });
   }
 
@@ -223,6 +238,23 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     return this.playlistInfo != null
       ? this.playlistInfo?.owner.id === this.$getters()['auth/userId']
       : false;
+  }
+  get editPlaylistForm(): Form | undefined {
+    if (this.playlistInfo == null) return undefined;
+
+    const {
+      name, description, artworkSrc, isPublic,
+    } = this.playlistInfo;
+
+    return {
+      playlistId: this.$route.params.playlistId,
+      name,
+      description: description ?? '',
+      artworkSrc,
+      isPrivate: isPublic != null
+        ? !isPublic
+        : false,
+    };
   }
 
   async appendTrackList() {

@@ -296,10 +296,10 @@ export default Vue.extend({
       });
     },
     resetForm() {
-      this.playlistName = '';
-      this.playlistDescription = '';
+      this.playlistName = this.form?.name ?? '';
+      this.playlistDescription = this.form?.description ?? '';
       this.playlistArtwork = undefined;
-      this.isPrivatePlaylist = false;
+      this.isPrivatePlaylist = this.form?.isPrivate ?? false;
     },
   },
 });

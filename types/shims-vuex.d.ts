@@ -110,6 +110,12 @@ declare module 'vuex' {
     ...payload: SFCCommitArguments<T>,
   ) => void
 
+  // subscribe したときのコールバックの引数
+  type ExtendedMutationPayload<T extends keyof RootMutations> = {
+    type: T
+    payload: RootMutations[T]
+  }
+
   type ExtendedDispatchArguments<
     A extends ActionMethodMap,
     T extends keyof Merge<A, RootActions>
