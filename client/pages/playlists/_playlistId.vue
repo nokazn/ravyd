@@ -35,8 +35,23 @@
               @on-clicked="onContextMediaButtonClicked"
             />
 
+            <template v-if="isOwnPlaylist">
+              <CircleButton
+                outlined
+                title="編集する"
+                @on-clicked="editPlaylistModal = true"
+              >
+                mdi-pencil
+              </CircleButton>
+              <EditPlaylistModal
+                :is-shown="editPlaylistModal"
+                :form="editPlaylistForm"
+                @on-changed="onEditPlaylistModalChanged"
+              />
+            </template>
+
             <FavoriteButton
-              v-if="playlistInfo.isFollowing != null"
+              v-else
               :is-favorited="playlistInfo.isFollowing"
               outlined
               @on-clicked="onFollowButtonClicked"
@@ -83,10 +98,12 @@ import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFollowButton } from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
+import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 import { getPlaylistInfo, getPlaylistTrackInfoHandler } from '~/scripts/localPlugins/_playlistId';
@@ -101,9 +118,11 @@ interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
+  editPlaylistForm: Form | undefined
 }
 
 interface Data {
+  editPlaylistModal: boolean
   mutationUnsubscribe: (() => void) | undefined
 }
 
@@ -113,10 +132,12 @@ interface Data {
     PlaylistTrackTable,
     UserName,
     ContextMediaButton,
+    CircleButton,
     FavoriteButton,
     ReleaseTotalTracks,
     ReleaseDuration,
     Followers,
+    EditPlaylistModal,
     IntersectionLoadingCircle,
   },
 
@@ -130,12 +151,22 @@ interface Data {
       await getPlaylistInfo(context, ARTWORK_SIZE),
       await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
     ]);
+    const editPlaylistForm = playlistInfo != null
+      ? {
+        playlistId: context.params.playlistId,
+        name: playlistInfo.name,
+        description: playlistInfo.description ?? '',
+        artworkSrc: playlistInfo.artworkSrc,
+        isPrivate: playlistInfo.isPublic != null ? !playlistInfo.isPublic : false,
+      }
+      : undefined;
 
     return {
       ARTWORK_SIZE,
       playlistInfo,
       playlistTrackInfo,
       getPlaylistTrackInfo,
+      editPlaylistForm,
     };
   },
 })
@@ -143,9 +174,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   ARTWORK_SIZE = ARTWORK_SIZE;
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
-  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined
+  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined;
+  editPlaylistForm: Form | undefined = undefined;
 
-  mutationUnsubscribe: (() => void) | undefined = undefined
+  editPlaylistModal = false;
+  mutationUnsubscribe: (() => void) | undefined = undefined;
 
   head() {
     return {
@@ -186,6 +219,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   get isPlaying(): RootState['player']['isPlaying'] {
     return this.$state().player.isPlaying;
   }
+  get isOwnPlaylist(): boolean {
+    return this.playlistInfo != null
+      ? this.playlistInfo?.owner.id === this.$getters()['auth/userId']
+      : false;
+  }
 
   async appendTrackList() {
     if (this.playlistTrackInfo == null
@@ -220,6 +258,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     } else {
       this.$dispatch('player/pause');
     }
+  }
+
+  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed']) {
+    this.editPlaylistModal = isShown;
   }
 
   async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {

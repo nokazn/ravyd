@@ -11,12 +11,19 @@ export type PlaylistsActions = {
     description: string
     isPublic: boolean
   }) => Promise<void>
+  editPlaylist: (payload: {
+    playlistId: string
+    name: string
+    description: string
+    isPublic: boolean
+  }) => Promise<void>
 }
 
 export type RootActions = {
   'playlists/getPlaylists': PlaylistsActions['getPlaylists']
   'playlists/getAllPlaylists': PlaylistsActions['getAllPlaylists']
   'playlists/createPlaylist': PlaylistsActions['createPlaylist']
+  'playlists/editPlaylist': PlaylistsActions['editPlaylist']
 }
 
 const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
@@ -72,7 +79,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     const playlist = await this.$spotify.playlists.createPlaylist({
       userId,
       name,
-      description,
+      // 空文字列の場合は undefined にする
+      description: description || undefined,
       isPublic,
     });
     if (playlist == null) {
@@ -80,6 +88,35 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
 
     commit('ADD_PLAYLIST', playlist);
+  },
+
+  async editPlaylist({ state, commit }, {
+    playlistId, name, description, isPublic,
+  }) {
+    await this.$spotify.playlists.editPlaylistDetail({
+      playlistId,
+      name,
+      // 空文字列の場合は undefined にする
+      description: description || undefined,
+      isPublic,
+    }).catch(() => {
+      throw new Error('プレイリストの更新に失敗しました。');
+    });
+
+    const { playlists } = state;
+    const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
+    if (index == null || index === -1) {
+      throw new Error('プレイリスト一覧の更新に失敗しました。');
+    }
+
+    commit('EDIT_PLAYLIST', {
+      index,
+      id: playlistId,
+      name,
+      // 空文字列の場合は null にする
+      description: description || null,
+      isPublic,
+    });
   },
 };
 

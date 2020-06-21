@@ -2,18 +2,27 @@
   <PlaylistModal
     :is-shown="isShown"
     :handler="handler"
-    detail-text="作成"
+    detail-text="編集"
+    result-text="更新"
+    :form="form"
     @on-changed="onChanged"
   />
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
-import PlaylistModal, { On as OnModal, ON_CHANGED, Handler } from '~/components/containers/modal/PaylistModal.vue';
+import PlaylistModal, {
+  On as OnModal,
+  ON_CHANGED,
+  Form,
+  Handler,
+} from '~/components/containers/modal/PaylistModal.vue';
+
+export { Form } from '~/components/containers/modal/PaylistModal.vue';
 
 export type Data = {
-  handler: Handler<'create'>
+  handler: Handler<'edit'>
 }
 
 export type On = {
@@ -30,10 +39,14 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
+    form: {
+      type: Object as PropType<Form | undefined>,
+      default: undefined,
+    },
   },
 
   data(): Data {
-    const handler = (payload: Parameters<Handler<'create'>>[0]) => this.$dispatch('playlists/createPlaylist', payload);
+    const handler = (payload: Parameters<Handler<'edit'>>[0]) => this.$dispatch('playlists/editPlaylist', payload);
 
     return {
       handler,

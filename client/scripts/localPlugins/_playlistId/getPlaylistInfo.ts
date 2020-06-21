@@ -28,6 +28,7 @@ export const getPlaylistInfo = async (
     tracks,
     owner,
     followers,
+    public: isPublic,
   } = playlistInfo;
 
   const artworkSrc = getImageSrc(images, artworkSize);
@@ -57,6 +58,7 @@ export const getPlaylistInfo = async (
     totalTracks,
     durationMs,
     isFollowing,
+    isPublic,
     followersText,
   };
 };

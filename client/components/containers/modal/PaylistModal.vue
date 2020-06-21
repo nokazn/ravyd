@@ -34,6 +34,7 @@
               clearable
               required
               :rules="playlistNameRules"
+              @keydown.enter.prevent
             />
 
             <v-textarea
@@ -114,12 +115,26 @@ export type Data = {
   mutationUnsubscriber: (() => void) | undefined
 }
 
-type Form = {
+export type Form = {
+  playlistId: string
   name: string,
   description: string,
-  artwork: Blob | undefined,
+  artworkSrc: string | undefined,
   isPrivate: boolean
 }
+
+export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' ?
+  {
+    playlistId: string,
+    name: string
+    description: string
+    isPublic: boolean
+  }
+  : {
+    name: string
+    description: string
+    isPublic: boolean
+  }) => Promise<void>
 
 export const ON_CHANGED = 'on-changed';
 
@@ -141,6 +156,10 @@ export default Vue.extend({
       type: Object as PropType<Form | undefined>,
       default: undefined,
     },
+    handler: {
+      type: Function as PropType<Handler<'create' | 'edit'>>,
+      required: true,
+    },
     detailText: {
       type: String,
       required: true,
@@ -154,7 +173,7 @@ export default Vue.extend({
   data(): Data {
     const playlistName = this.form?.name ?? '';
     const playlistDescription = this.form?.description ?? '';
-    const playlistArtwork = this.form?.artwork;
+    const playlistArtwork = undefined;
     const isPrivatePlaylist = this.form?.isPrivate ?? false;
 
     return {
@@ -194,7 +213,7 @@ export default Vue.extend({
   mounted() {
     this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
       const type = mutation.type as keyof RootMutations;
-      if (type !== 'playlists/ADD_PLAYLIST') return;
+      if (type !== 'playlists/ADD_PLAYLIST' && type !== 'playlists/EDIT_PLAYLIST') return;
       if (this.playlistArtwork == null) {
         return;
       }
@@ -261,7 +280,8 @@ export default Vue.extend({
 
       this.isLoading = true;
 
-      this.$dispatch('playlists/createPlaylist', {
+      this.handler({
+        playlistId: this.form?.playlistId,
         name: this.playlistName,
         description: this.playlistDescription,
         isPublic: !this.isPrivatePlaylist,
@@ -278,6 +298,7 @@ export default Vue.extend({
     resetForm() {
       this.playlistName = '';
       this.playlistDescription = '';
+      this.playlistArtwork = undefined;
       this.isPrivatePlaylist = false;
     },
   },

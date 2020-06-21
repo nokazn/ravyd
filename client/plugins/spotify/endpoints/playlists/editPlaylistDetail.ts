@@ -18,11 +18,12 @@ export const editPlaylistDetail = (context: Context) => {
   }): Promise<void> => {
     const request = app.$spotifyApi.$put(`/playlists/${playlistId}`, {
       name,
-      isPublic,
+      public: isPublic,
       collaborative,
       description,
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;

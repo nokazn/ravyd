@@ -132,6 +132,7 @@ export namespace App {
     durationMs: number
     totalTracks: number
     isFollowing: boolean | undefined
+    isPublic: boolean | null
     followersText: string
   }
   export type PlaylistTrackInfo = {
