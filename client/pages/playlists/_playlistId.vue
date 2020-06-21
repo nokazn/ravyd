@@ -26,7 +26,9 @@
           v-html="playlistInfo.description"
         />
 
-        <UserName :user="playlistInfo.owner" />
+        <div>
+          <UserName :user="playlistInfo.owner" />
+        </div>
 
         <div :class="$style.PlaylistIdPage__playlistInfoFooter">
           <div :class="$style.PlaylistIdPage__buttons">
@@ -340,14 +342,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     & > *:not(:last-child) {
       margin-right: 24px;
     }
-
-    & > *:last-child {
-      width: 100%;
-    }
   }
 
   &__info {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     justify-content: flex-end;
   }
