@@ -1,7 +1,7 @@
 <template>
   <PlaylistModal
     :is-shown="isShown"
-    detail-of-method="作成"
+    detail-text="作成"
     @on-changed="onChanged"
   />
 </template>

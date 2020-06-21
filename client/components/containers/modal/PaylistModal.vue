@@ -8,7 +8,7 @@
       <v-card>
         <div :class="$style.PlaylistModal__title">
           <v-card-title>
-            プレイリストの{{ detailOfMethod }}
+            プレイリストの{{ detailText }}
           </v-card-title>
 
           <v-btn
@@ -78,7 +78,7 @@
               :disabled="!isValid"
               @click="createPlaylist"
             >
-              {{ resultOfMethod || detailOfMethod }}
+              {{ resultText || detailText }}
             </v-btn>
           </div>
         </v-card-actions>
@@ -141,11 +141,11 @@ export default Vue.extend({
       type: Object as PropType<Form | undefined>,
       default: undefined,
     },
-    detailOfMethod: {
+    detailText: {
       type: String,
       required: true,
     },
-    resultOfMethod: {
+    resultText: {
       type: String as PropType<string | undefined>,
       default: undefined,
     },
@@ -207,7 +207,7 @@ export default Vue.extend({
           artwork: fileReader.result as string,
         }).then(() => {
           this.modal = false;
-          this.showSnackbar('primary', `プレイリストを${this.resultOfMethod || this.detailOfMethod}しました。`);
+          this.showSnackbar('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }).catch(() => {
           this.showSnackbar('error', '画像のアップロードに失敗しました。');
@@ -268,7 +268,7 @@ export default Vue.extend({
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
-          this.showSnackbar('primary', `プレイリストを${this.resultOfMethod || this.detailOfMethod}しました。`);
+          this.showSnackbar('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }
       }).catch((err: Error) => {
