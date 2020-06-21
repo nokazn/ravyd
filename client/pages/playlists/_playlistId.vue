@@ -15,6 +15,14 @@
       <div :class="$style.PlaylistIdPage__info">
         <div class="g-small-text">
           プレイリスト
+          <v-icon
+            v-if="!playlistInfo.isPublic"
+            small
+            color="subtext"
+            title="非公開のプレイリスト"
+          >
+            mdi-lock
+          </v-icon>
         </div>
 
         <h1 :class="$style.PlaylistIdPage__playlistName">
