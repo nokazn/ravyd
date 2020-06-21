@@ -42,7 +42,9 @@
             dense
             :class="{
               [$style.NavigationDrawer__denseItem]: scroll,
+              'g-no-text-decoration': true,
             }"
+            class="g-no-text-decoration"
           >
             <v-list-item-icon v-if="item.icon != null">
               <v-icon :title="item.name">

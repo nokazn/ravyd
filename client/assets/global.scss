@@ -43,20 +43,26 @@ html {
 /**
  * デフォルトのリンクのスタイル
  */
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .v-application {
   a {
     color: inherit;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
+}
 
-  .v-list {
-    a:hover {
-      text-decoration: none;
-    }
+/**
+ * アイコンに下線がひかれる場合などに適用
+ */
+.g-no-text-decoration {
+  &:hover {
+    text-decoration: none;
   }
 }
 
