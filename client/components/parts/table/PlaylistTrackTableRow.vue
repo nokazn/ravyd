@@ -20,6 +20,7 @@
             :disabled="!item.isPlayable"
             @on-clicked="onMediaButtonClicked"
           />
+
           <FavoriteButton
             :is-favorited="item.isSaved"
             @on-clicked="onFavoriteButtonClicked"
@@ -27,10 +28,11 @@
         </div>
       </td>
 
-      <td :class="titleColor">
+      <td>
         <div :class="$style.TrackListTableRow__content">
           <div class="g-ellipsis-text">
             <div
+              :class="titleColor"
               class="g-ellipsis-text"
               :title="item.name"
             >

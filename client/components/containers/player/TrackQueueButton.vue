@@ -220,7 +220,7 @@ export default Vue.extend({
 
     &Title {
       font-size: 0.9em;
-      line-height: 1.1rem;
+      line-height: 1.2rem;
     }
 
     &Subtitle {
