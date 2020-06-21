@@ -34,8 +34,8 @@ export type PlayerActions = {
       uri?: undefined
       position: number
     }
-  }) => Promise<void>
-  pause: (payload?: { isInitializing: boolean }) => Promise<void>
+  }) => void
+  pause: (payload?: { isInitializing: boolean }) => void
   seek: (positionMs: number) => Promise<void>
   next: () => Promise<void>
   previous: () => Promise<void>
@@ -286,7 +286,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  async play({ state, commit }, payload?) {
+  play({ state, commit }, payload?) {
     const { deviceId } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -299,7 +299,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       && state.trackUri === trackUriList[offset.position]
     ) || state.trackUri === offset?.uri;
 
-    await this.$spotify.player.play(
+    this.$spotify.player.play(
       // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
       isNotUriPassed || isRestartingTracks
         ? {
@@ -312,19 +312,27 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           trackUriList,
           offset,
         },
-    );
-
-    commit('SET_IS_PLAYING', true);
+    ).then(() => {
+      commit('SET_IS_PLAYING', true);
+    }).catch((err) => {
+      console.error({ err });
+    });
   },
 
-  async pause({ state, commit }, payload = { isInitializing: false }) {
+  pause({ state, commit }, payload = { isInitializing: false }) {
     const { deviceId } = state;
-    const isInitializing = payload?.isInitializing;
-    await this.$spotify.player.pause(isInitializing
+    const { isInitializing } = payload;
+    const params = isInitializing
       ? { isInitializing }
-      : { deviceId });
+      : { deviceId };
 
-    commit('SET_IS_PLAYING', false);
+    this.$spotify.player.pause(params)
+      .then(() => {
+        commit('SET_IS_PLAYING', false);
+      })
+      .catch((err) => {
+        console.error({ err });
+      });
   },
 
   async seek({ state }, positionMs) {

@@ -22,6 +22,7 @@ export const pause = (context: Context) => {
         console.log('Not found another active device.');
       } else {
         console.error({ err });
+        throw new Error(err.message);
       }
     });
 
