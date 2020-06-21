@@ -41,7 +41,7 @@
             :title="name"
             dense
             :class="{
-              [$style.NavigationDrawer__denseItem]: scroll
+              [$style.NavigationDrawer__denseItem]: scroll,
             }"
           >
             <v-list-item-icon v-if="icon != null">
@@ -243,7 +243,7 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin: 12px 0;
+    margin: 10px 0;
   }
 
   &__subheader {
