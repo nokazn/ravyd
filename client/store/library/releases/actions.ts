@@ -11,8 +11,8 @@ export type LibraryReleasesActions = {
   updateLatestSavedReleaseList: () => Promise<void>
   saveReleases: (albumIdList: string[]) => Promise<void>
   removeReleases: (albumIdList: string[]) => Promise<void>
-  modifyReleaseSavedState: ({ albumId, isSaved }: {
-    albumId: string
+  modifyReleaseSavedState: ({ releaseId, isSaved }: {
+    releaseId: string
     isSaved: boolean
   }) => void
 };
@@ -108,9 +108,9 @@ const actions: Actions<
   async saveReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.saveAlbums({ albumIdList });
 
-    albumIdList.forEach((albumId) => {
+    albumIdList.forEach((releaseId) => {
       dispatch('modifyReleaseSavedState', {
-        albumId,
+        releaseId,
         isSaved: true,
       });
     });
@@ -119,20 +119,20 @@ const actions: Actions<
   async removeReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList });
 
-    albumIdList.forEach((albumId) => {
+    albumIdList.forEach((releaseId) => {
       dispatch('modifyReleaseSavedState', {
-        albumId,
+        releaseId,
         isSaved: false,
       });
     });
   },
 
-  async modifyReleaseSavedState({ state, commit }, { albumId, isSaved }) {
+  async modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
     const currentReleaseList = state.releaseList;
     if (currentReleaseList == null) return;
 
     const savedReleaseIndex = currentReleaseList
-      .findIndex((release) => release.id === albumId);
+      .findIndex((release) => release.id === releaseId);
     // ライブラリ一覧を更新
     if (savedReleaseIndex !== -1) {
       const nextReleaseList = [...currentReleaseList];
@@ -142,8 +142,11 @@ const actions: Actions<
     }
 
     const [actualIsSaved] = await this.$spotify.library.checkUserSavedAlbums({
-      albumIdList: [albumId],
+      albumIdList: [releaseId],
     });
+
+    commit('SET_ACTUAL_IS_SAVED', [releaseId, actualIsSaved]);
+
     // 実際の状態と異なれば戻す
     if (isSaved !== actualIsSaved) {
       // ライブラリ一覧を戻す

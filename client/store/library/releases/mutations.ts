@@ -10,6 +10,8 @@ export type LibraryReleasesMutations = {
   SET_IS_FULL_RELEASE_LIST: boolean
   INCREMENT_NUMBER_OF_UNUPDATED_RELEASES: void
   RESET_NUMBER_OF_UNUPDATED_RELEASES: void
+  SET_ACTUAL_IS_SAVED: [string, boolean],
+  DELETE_ACTUAL_IS_SAVED: string,
 };
 
 export type RootMutations = {
@@ -19,6 +21,8 @@ export type RootMutations = {
   'library/releases/SET_IS_FULL_RELEASE_LIST': LibraryReleasesMutations['SET_IS_FULL_RELEASE_LIST'];
   'library/releases/INCREMENT_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['INCREMENT_NUMBER_OF_UNUPDATED_RELEASES'];
   'library/releases/RESET_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['RESET_NUMBER_OF_UNUPDATED_RELEASES'];
+  'library/releases/SET_ACTUAL_IS_SAVED': LibraryReleasesMutations['SET_ACTUAL_IS_SAVED'];
+  'library/releases/DELETE_ACTUAL_IS_SAVED': LibraryReleasesMutations['DELETE_ACTUAL_IS_SAVED'];
 };
 
 const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
@@ -55,6 +59,14 @@ const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
 
   RESET_NUMBER_OF_UNUPDATED_RELEASES(state) {
     state.numberOfUnupdatedReleases = 0;
+  },
+
+  SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
+    state.actualIsSavedMap.set(key, isSaved);
+  },
+
+  DELETE_ACTUAL_IS_SAVED(state, key) {
+    state.actualIsSavedMap.delete(key);
   },
 };
 

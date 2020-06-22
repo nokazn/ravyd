@@ -171,11 +171,25 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       };
     };
 
+    const subscribeRelease = (mutationPayload: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
+      if (this.releaseInfo == null) return;
+
+      const [releaseId, isSaved] = mutationPayload.payload;
+      if (releaseId === this.releaseInfo.id) {
+        this.releaseInfo.isSaved = isSaved;
+        this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
+      }
+    };
+
     this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
       const type = mutation.type as keyof RootMutations;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        case 'library/releases/SET_ACTUAL_IS_SAVED':
+          subscribeRelease(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
@@ -244,6 +258,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   onFavoriteButtonClicked(nextSavedState: OnMediaButton['on-clicked']) {
     if (this.releaseInfo == null) return;
 
+    // API との通信の結果を待たずに先に表示を変更させておく
     this.releaseInfo.isSaved = nextSavedState;
     const releaseIdList = [this.releaseInfo.id];
     if (nextSavedState) {
