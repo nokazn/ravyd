@@ -223,6 +223,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       const [artistId, isFollowing] = mutationPayload.payload;
       if (artistId === this.artistInfo.id) {
         this.isFollowing = isFollowing;
+        this.$commit('library/artists/DELETE_ACTUAL_IS_SAVED', artistId);
       }
     };
 
