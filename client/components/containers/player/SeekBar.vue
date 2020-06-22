@@ -1,25 +1,27 @@
 <template>
   <div :class="$style.SeekBar">
     <v-slider
-      v-model="position"
+      v-model="positionMs"
       dense
       hide-details
-      :color="seekbarColor"
       thumb-color="white"
-      :max="duration"
+      :color="seekbarColor"
+      :max="maxMs"
       :class="$style.SeekBar__slider"
       @end="onEnd"
       @mouseup="onMouseup"
     />
 
     <div :class="$style.SeekBar__mss">
-      <span v-if="position != null">
-        {{ positionMss }}
-      </span>
+      <TrackTime
+        :time-ms="positionMs"
+        :class="$style['SeekBar__mss--left']"
+      />
 
-      <span v-if="duration">
-        {{ durationMss }}
-      </span>
+      <TrackTime
+        :time-ms="durationMs"
+        :class="$style['SeekBar__mss--right']"
+      />
     </div>
   </div>
 </template>
@@ -27,6 +29,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { RootState } from 'vuex';
+
+import TrackTime from '~/components/parts/text/TrackTime.vue';
 
 export type Data = {
   updateInterval: ReturnType<typeof setInterval> | undefined
@@ -39,6 +43,10 @@ export type On = {
 }
 
 export default Vue.extend({
+  components: {
+    TrackTime,
+  },
+
   data(): Data {
     return {
       updateInterval: undefined,
@@ -46,22 +54,19 @@ export default Vue.extend({
   },
 
   computed: {
-    position: {
-      get(): RootState['player']['position'] {
-        return this.$state().player.position;
+    positionMs: {
+      get(): RootState['player']['positionMs'] {
+        return this.$state().player.positionMs;
       },
-      set(value: number) {
-        this.$commit('player/SET_POSITION', value);
+      set(positionMs: number) {
+        this.$commit('player/SET_POSITION_MS', positionMs);
       },
     },
-    positionMss(): string {
-      return this.$dayjs(this.position).format('m:ss');
-    },
-    duration(): RootState['player']['durationMs'] {
+    durationMs(): RootState['player']['durationMs'] {
       return this.$state().player.durationMs;
     },
-    durationMss(): string {
-      return this.$dayjs(this.duration).format('m:ss');
+    maxMs(): number {
+      return this.durationMs || 1;
     },
     isPlaying(): RootState['player']['isPlaying'] {
       return this.$state().player.isPlaying;
@@ -74,7 +79,7 @@ export default Vue.extend({
   },
 
   watch: {
-    // curr の引数の型指定をすると $state 等の型推論が効かなくなる
+    // @todo curr の引数の型指定をすると $state 等の型推論が効かなくなる
     isPlaying(curr): void {
       if (curr === true) {
         this.updatePosition();
@@ -99,15 +104,18 @@ export default Vue.extend({
     onMouseup() {
       // setter の後に実行させたい
       setTimeout(() => {
-        this.$emit(ON_CHANGED, this.position);
+        this.$emit(ON_CHANGED, this.positionMs);
       }, 0);
     },
     updatePosition() {
       const intervalMs = 500;
-      if (this.updateInterval != null) clearInterval(this.updateInterval);
+      if (this.updateInterval != null) {
+        clearInterval(this.updateInterval);
+      }
+
       this.updateInterval = setInterval(() => {
-        // position が duration より大きい値になった場合は次の曲に移る
-        this.$commit('player/SET_POSITION', this.$state().player.position + intervalMs);
+        // positionMs が durationMs より大きい値になった場合は次の曲に移る
+        this.$commit('player/SET_POSITION_MS', this.positionMs + intervalMs);
       }, intervalMs);
     },
     clearInterval() {
@@ -125,8 +133,15 @@ export default Vue.extend({
   &__mss {
     font-size: 0.75rem;
     margin-top: -4px;
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+
+    & > * {
+      position: absolute;
+    }
+
+    &--right {
+      right: 0;
+    }
   }
 }
 </style>

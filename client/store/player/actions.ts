@@ -150,7 +150,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         commit('SET_IS_PLAYING', !isPaused);
         commit('SET_CONTEXT_URI', uri ?? undefined);
-        commit('SET_POSITION', position);
+        commit('SET_POSITION_MS', position);
         commit('SET_DURATION_MS', duration);
         commit('SET_IS_SHUFFLED', isShuffled);
         commit('SET_CURRENT_TRACK', currentTrack);
@@ -219,7 +219,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_SAVED_TRACK', false);
     commit('SET_IS_PLAYING', false);
     commit('SET_CONTEXT_URI', undefined);
-    commit('SET_POSITION', 0);
+    commit('SET_POSITION_MS', 0);
     commit('SET_DURATION_MS', 0);
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
@@ -304,7 +304,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       isNotUriPassed || isRestartingTracks
         ? {
           deviceId,
-          positionMs: state.position,
+          positionMs: state.positionMs,
         }
         : {
           deviceId,

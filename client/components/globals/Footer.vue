@@ -44,7 +44,8 @@
           :class="$style.Footer__seekBar"
           @on-changed="onSeekbarChanged"
         />
-        <MediaControllersWrapper :class="$style.Footer__mediaControllers" />
+
+        <MediaControllersWrapper />
       </div>
 
       <div :class="$style.Footer__right">
@@ -210,10 +211,6 @@ export default Vue.extend({
 
   &__seekBar {
     width: 40vw;
-  }
-
-  &__mediaControllers {
-    margin-top: -20px;
   }
 
   &__right {

@@ -17,7 +17,7 @@ export type PlayerMutations = {
   SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
   SET_CONTEXT_URI: string | undefined
-  SET_POSITION: number
+  SET_POSITION_MS: number
   SET_DURATION_MS: number
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
@@ -39,7 +39,7 @@ export type RootMutations = {
   ['player/SET_IS_SAVED_TRACK']: PlayerMutations['SET_IS_SAVED_TRACK']
   ['player/SET_IS_PLAYING']: PlayerMutations['SET_IS_PLAYING']
   ['player/SET_CONTEXT_URI']: PlayerMutations['SET_CONTEXT_URI']
-  ['player/SET_POSITION']: PlayerMutations['SET_POSITION']
+  ['player/SET_POSITION_MS']: PlayerMutations['SET_POSITION_MS']
   ['player/SET_DURATION_MS']: PlayerMutations['SET_DURATION_MS']
   ['player/SET_IS_SHUFFLED']: PlayerMutations['SET_IS_SHUFFLED']
   ['player/SET_REPEAT_MODE']: PlayerMutations['SET_REPEAT_MODE']
@@ -110,8 +110,8 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.contextUri = uri;
   },
 
-  SET_POSITION(state, position) {
-    state.position = position;
+  SET_POSITION_MS(state, positionMs) {
+    state.positionMs = positionMs;
   },
 
   SET_DURATION_MS(state, durationMs) {
