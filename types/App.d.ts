@@ -107,8 +107,8 @@ export namespace App {
   }
 
   export type ArtistCardInfo = {
-    name: string
     id: string
+    name: string
     uri: string
     avatarSrc: string | undefined
     externalUrls: SpotifyAPI.ExternalUrl
@@ -118,20 +118,23 @@ export namespace App {
   export type PlaylistInfo = {
     id: string
     name: string
-    description: string | null
     uri: string
-    owner: SpotifyAPI.UserData
+    description: string | null
+    isCollaborative: boolean
     artworkSrc: string | undefined
+    owner: SpotifyAPI.UserData
     durationMs: number
     totalTracks: number
     isFollowing: boolean | undefined
     isPublic: boolean | null
     followersText: string
+    externalUrls: SpotifyAPI.ExternalUrl
   }
   export type PlaylistTrackInfo = {
     trackList: PlaylistTrackDetail[]
     isFullTrackList: boolean
   }
+  // track から null を排除
   export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {
     track: SpotifyAPI.Track
   }
@@ -139,9 +142,10 @@ export namespace App {
   export type PlaylistCardInfo = {
     id: string
     name: string
-    description: string | null
     uri: string
+    description: string | null
     artworkSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
 
   export type AddedAtInfo = {
