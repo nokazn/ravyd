@@ -205,8 +205,18 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       };
     };
 
+    const subscribeFollowedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUAL_IS_SAVED'>) => {
+      if (this.playlistInfo == null) return;
+
+      const [playlistId, isFollowing] = mutationPayload.payload;
+      if (playlistId === this.playlistInfo.id) {
+        this.playlistInfo.isFollowing = isFollowing;
+        this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
+      }
+    };
+
     // プレイリストを編集した後呼ばれる
-    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
+    const subscribeEditedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
       if (this.playlistInfo == null) return;
 
       const {
@@ -229,8 +239,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
+        case 'playlists/SET_ACTUAL_IS_SAVED':
+          subscribeFollowedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
         case 'playlists/EDIT_PLAYLIST':
-          subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
+          subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
@@ -317,23 +331,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {
-    const userId = this.$getters()['auth/userId'];
-    if (this.playlistInfo == null || userId == null) return;
+    if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.playlistInfo.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
       await this.$spotify.following.followPlaylist({ playlistId });
+      this.$dispatch('playlists/followPlaylist', playlistId);
     } else {
-      await this.$spotify.following.unfollowPlaylist({ playlistId });
+      this.$dispatch('playlists/unfollowPlaylist', playlistId);
     }
-
-    // 実際の状態にする
-    [this.playlistInfo.isFollowing] = await this.$spotify.following.checkUserFollowedPlaylist({
-      playlistId,
-      userIdList: [userId],
-    });
   }
 
   onFavoriteTrackButtonClicked(row: OnTable['on-favorite-button-clicked']) {

@@ -13,12 +13,18 @@ export type PlaylistsMutations = {
     description: string | null
     isPublic: boolean
   }
+  REMOVE_PLAYLIST: string
+  SET_ACTUAL_IS_SAVED: [string, boolean],
+  DELETE_ACTUAL_IS_SAVED: string,
 }
 
 export type RootMutations = {
   'playlists/SET_PLAYLISTS': PlaylistsMutations['SET_PLAYLISTS']
   'playlists/ADD_PLAYLIST': PlaylistsMutations['ADD_PLAYLIST']
   'playlists/EDIT_PLAYLIST': PlaylistsMutations['EDIT_PLAYLIST']
+  'playlists/REMOVE_PLAYLIST': PlaylistsMutations['REMOVE_PLAYLIST']
+  'playlists/SET_ACTUAL_IS_SAVED': PlaylistsMutations['SET_ACTUAL_IS_SAVED']
+  'playlists/DELETE_ACTUAL_IS_SAVED': PlaylistsMutations['DELETE_ACTUAL_IS_SAVED']
 }
 
 const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
@@ -48,6 +54,26 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
       public: isPublic,
     };
     state.playlists = modifiedPlaylists;
+  },
+
+  REMOVE_PLAYLIST(state, playlistId) {
+    const { playlists } = state;
+    if (playlists == null) return;
+
+    const modifiedPlaylists = [...playlists];
+    const index = modifiedPlaylists.findIndex((playlist) => playlist.id === playlistId);
+    if (index === -1) return;
+
+    modifiedPlaylists.splice(index, 1);
+    state.playlists = modifiedPlaylists;
+  },
+
+  SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
+    state.actualIsSavedMap.set(key, isSaved);
+  },
+
+  DELETE_ACTUAL_IS_SAVED(state, key) {
+    state.actualIsSavedMap.delete(key);
   },
 };
 
