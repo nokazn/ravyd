@@ -57,8 +57,8 @@ export default Vue.extend({
     positionMss(): string {
       return this.$dayjs(this.position).format('m:ss');
     },
-    duration(): RootState['player']['duration'] {
-      return this.$state().player.duration;
+    duration(): RootState['player']['durationMs'] {
+      return this.$state().player.durationMs;
     },
     durationMss(): string {
       return this.$dayjs(this.duration).format('m:ss');

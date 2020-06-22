@@ -4,7 +4,6 @@ import { PlayerState } from './state';
 import { REPEAT_STATE_LIST, APP_NAME, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
-import { elapsedTime } from '~~/utils/elapsedTime';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import { SpotifyAPI, App } from '~~/types';
 
@@ -74,7 +73,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         releaseName: state.releaseName!,
         artistList: state.artistList!,
         artworkSrc: getImageSrc(state.artWorkList, artworkSize),
-        duration: elapsedTime(state.duration),
+        durationMs: state.durationMs,
       };
       const previousTrackList = state.previousTrackList
         .map(convertTrackForQueue(false, artworkSize));

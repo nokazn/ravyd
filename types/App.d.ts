@@ -46,7 +46,7 @@ export namespace App {
       name: string
     }[]
     artworkSrc: string | undefined
-    duration: string
+    durationMs: number | undefined
   }
 
   // /releases/:releaseId page

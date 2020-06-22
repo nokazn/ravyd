@@ -21,7 +21,7 @@ export type PlayerState = {
   isPlaying: boolean
   isSavedTrack: boolean
   position: number
-  duration: number
+  durationMs: number
   isShuffled: boolean
   repeatMode: 0 | 1 | 2 | undefined
   disallowList: string[]
@@ -50,7 +50,7 @@ const state = (): PlayerState => ({
   isPlaying: false,
   isSavedTrack: false,
   position: 0,
-  duration: 0,
+  durationMs: 0,
   isShuffled: false,
   repeatMode: undefined,
   disallowList: [],

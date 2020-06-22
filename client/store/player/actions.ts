@@ -151,7 +151,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_IS_PLAYING', !isPaused);
         commit('SET_CONTEXT_URI', uri ?? undefined);
         commit('SET_POSITION', position);
-        commit('SET_DURATION', duration);
+        commit('SET_DURATION_MS', duration);
         commit('SET_IS_SHUFFLED', isShuffled);
         commit('SET_CURRENT_TRACK', currentTrack);
         commit('SET_NEXT_TRACK_LIST', nextTracks);
@@ -220,7 +220,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_PLAYING', false);
     commit('SET_CONTEXT_URI', undefined);
     commit('SET_POSITION', 0);
-    commit('SET_DURATION', 0);
+    commit('SET_DURATION_MS', 0);
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
     commit('SET_DISALLOW_LIST', []);
