@@ -82,7 +82,7 @@
         :class="$style.TrackListTableRow__smallText"
         class="text-center"
       >
-        <TrackDuration :duration-ms="item.durationMs" />
+        <TrackTime :time-ms="item.durationMs" />
       </td>
 
       <td>
@@ -108,7 +108,7 @@ import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.v
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
-import TrackDuration from '~/components/parts/text/TrackDuration.vue';
+import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -127,7 +127,7 @@ export default Vue.extend({
     FavoriteButton,
     ArtistNames,
     ExplicitChip,
-    TrackDuration,
+    TrackTime,
   },
 
   props: {

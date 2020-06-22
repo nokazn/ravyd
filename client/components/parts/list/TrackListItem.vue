@@ -58,7 +58,7 @@
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="explicit" />
 
-          <TrackDuration :duration-ms="durationMs" />
+          <TrackTime :time-ms="durationMs" />
 
           <v-btn icon>
             <v-icon>
@@ -79,7 +79,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
-import TrackDuration from '~/components/parts/text/TrackDuration.vue';
+import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
@@ -113,7 +113,7 @@ export default Vue.extend({
     TrackListMediaButton,
     FavoriteButton,
     ExplicitChip,
-    TrackDuration,
+    TrackTime,
   },
 
   props: {

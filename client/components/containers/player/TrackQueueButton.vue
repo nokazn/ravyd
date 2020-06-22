@@ -103,8 +103,8 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <TrackDuration
-                :duration-ms="track.durationMs"
+              <TrackTime
+                :time-ms="track.durationMs"
                 :class="subtextColor(track.isPlaying)"
               />
             </v-list-item-action>
@@ -134,7 +134,7 @@ import Vue from 'vue';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import TrackDuration from '~/components/parts/text/TrackDuration.vue';
+import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
 
@@ -150,7 +150,7 @@ export default Vue.extend({
   components: {
     ReleaseArtwork,
     ArtistNames,
-    TrackDuration,
+    TrackTime,
   },
 
   data(): Data {
