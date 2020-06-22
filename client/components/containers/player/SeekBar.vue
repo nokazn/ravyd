@@ -113,8 +113,8 @@ export default Vue.extend({
       }
 
       this.updateInterval = setInterval(() => {
-        // positionMs が durationMs より大きい値になった場合は次の曲に移る
-        this.$commit('player/SET_POSITION_MS', this.positionMs + intervalMs);
+        // positionMs が durationMs より大きい値になった場合は自動的に 0 に戻る
+        this.$commit('player/ADD_POSITION_MS', intervalMs);
       }, intervalMs);
     },
     clearInterval() {
