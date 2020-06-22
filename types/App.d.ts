@@ -7,8 +7,8 @@ export namespace App {
     rgb: Swatch['rgb']
   }
 
-  // @todo
-  type TrackDetailBase = {
+  // TrackTable, TrackList component
+  export type TrackDetail = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
@@ -19,17 +19,18 @@ export namespace App {
     artistList: SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
-    isSaved: boolean
     duration: string
+    externalIds?: SpotifyAPI.ExternalId
+    externalUrls: SpotifyAPI.ExternalUrl
+    previewUrl: string
+    isSaved: boolean
     releaseId: string
     releaseName: string
-  }
-  // TrackTable, TrackList component
-  export type TrackDetail = TrackDetailBase & {
-    artworkSrc: string | undefined
+    // artworkList: SpotifyAPI.Image[]
+    artworkSrc?: string | undefined
   }
   // PlaylistTrackTable component
-  export type PlaylistTrackDetail = TrackDetailBase & {
+  export type PlaylistTrackDetail = TrackDetail & {
     addedAt: AddedAtInfo
   }
 
