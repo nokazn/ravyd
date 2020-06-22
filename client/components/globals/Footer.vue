@@ -42,7 +42,6 @@
       <div :class="$style.Footer__center">
         <seek-bar
           :class="$style.Footer__seekBar"
-          @on-changed="onSeekbarChanged"
         />
 
         <MediaControllersWrapper />
@@ -79,7 +78,7 @@ import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import MarqueeReleaseName from '~/components/parts/text/MarqueeReleaseName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
-import SeekBar, { On as OnSeek } from '~/components/containers/player/SeekBar.vue';
+import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
 import VolumeSlider, { On as OnVolume } from '~/components/containers/player/VolumeSlider.vue';
@@ -116,7 +115,7 @@ export default Vue.extend({
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['player/artworkSrc'](size);
     },
-    trackName(): RootState['player']['trackName'] {
+    trackName(): string {
       return this.$state().player.trackName ?? '';
     },
     trackId(): RootState['player']['trackId'] {
@@ -150,9 +149,6 @@ export default Vue.extend({
       } else {
         await this.$dispatch('library/tracks/removeTracks', [this.trackId]);
       }
-    },
-    onSeekbarChanged(position: OnSeek['on-changed']) {
-      this.$dispatch('player/seek', position);
     },
     onVolumuChanged(volumePercent: OnVolume['on-changed']) {
       this.$dispatch('player/volume', { volumePercent });

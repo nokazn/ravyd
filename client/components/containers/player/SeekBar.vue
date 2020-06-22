@@ -8,8 +8,7 @@
       :color="seekbarColor"
       :max="maxMs"
       :class="$style.SeekBar__slider"
-      @end="onEnd"
-      @mouseup="onMouseup"
+      @change="onChange"
     />
 
     <div :class="$style.SeekBar__mss">
@@ -28,18 +27,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import debounce from 'lodash/debounce';
 import { RootState } from 'vuex';
 
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 
 export type Data = {
+  debounceSetter: (positionMs: number) => void
   updateInterval: ReturnType<typeof setInterval> | undefined
-}
-
-const ON_CHANGED = 'on-changed';
-
-export type On = {
-  [ON_CHANGED]: number
 }
 
 export default Vue.extend({
@@ -48,7 +43,13 @@ export default Vue.extend({
   },
 
   data(): Data {
+    const interval = 300;
+    const debounceSetter = debounce((positionMs: number) => {
+      this.$commit('player/SET_POSITION_MS', positionMs);
+    }, interval);
+
     return {
+      debounceSetter,
       updateInterval: undefined,
     };
   },
@@ -59,7 +60,7 @@ export default Vue.extend({
         return this.$state().player.positionMs;
       },
       set(positionMs: number) {
-        this.$commit('player/SET_POSITION_MS', positionMs);
+        this.debounceSetter(positionMs);
       },
     },
     durationMs(): RootState['player']['durationMs'] {
@@ -98,13 +99,11 @@ export default Vue.extend({
   },
 
   methods: {
-    onEnd(value: number) {
-      this.$emit(ON_CHANGED, value);
-    },
-    onMouseup() {
+    onChange(positionMs: number) {
       // setter の後に実行させたい
       setTimeout(() => {
-        this.$emit(ON_CHANGED, this.positionMs);
+        console.log('onchange');
+        this.$dispatch('player/seek', positionMs);
       }, 0);
     },
     updatePosition() {

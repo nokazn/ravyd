@@ -26,8 +26,8 @@ export default Vue.extend({
   },
 
   computed: {
-    position(): RootState['player']['position'] {
-      return this.$state().player.position;
+    position(): RootState['player']['positionMs'] {
+      return this.$state().player.positionMs;
     },
     isPreviousDisallowed(): boolean {
       return this.$getters()['player/isPreviousDisallowed'] && this.position < 1000;
