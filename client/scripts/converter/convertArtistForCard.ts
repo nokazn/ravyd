@@ -3,9 +3,14 @@ import { SpotifyAPI, App } from '~~/types';
 
 export const convertArtistForCard = (avatarSize?: number) => (
   artist: SpotifyAPI.Artist,
-): App.ArtistCardInfo => ({
-  name: artist.name,
-  id: artist.id,
-  uri: artist.uri,
-  avatarSrc: getImageSrc(artist.images, avatarSize),
-});
+): App.ArtistCardInfo => {
+  const info = {
+    name: artist.name,
+    id: artist.id,
+    uri: artist.uri,
+    avatarSrc: getImageSrc(artist.images, avatarSize),
+    externalUrls: artist.external_urls,
+  };
+
+  return info;
+};

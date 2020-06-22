@@ -28,6 +28,9 @@ export const getReleaseInfo = async (
     images,
     tracks,
     copyrights: copyrightList,
+    external_urls: externalUrls,
+    genres: genreList,
+
   } = release;
 
   const releaseType = convertReleaseType(album_type);
@@ -76,6 +79,8 @@ export const getReleaseInfo = async (
     copyrightList,
     isSaved,
     trackList,
+    externalUrls,
+    genreList,
     isFullTrackList,
   };
 };

@@ -65,6 +65,8 @@ export namespace App {
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
     trackList: App.TrackDetail[]
+    externalUrls: SpotifyAPI.ExternalUrl
+    genreList: string[]
     isFullTrackList: boolean
   }
   export type ReleaseTrackInfo = {
@@ -73,18 +75,22 @@ export namespace App {
     durationMs: number
   }
 
-  export type ReleaseCardInfo = {
-    type: 'album' | 'track'
+  type CardType = 'album' | 'track'
+  type ReleaseCardInfoBase<T extends CardType> = {
+    type: T
     releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
-    releaseId: string
+    releaseId: string // id と同じ場合 (track のカードの場合) もある
     id: string // track または album の id
     name: string // track または album の name
     uri: string // track または album の name
     artists: App.SimpleArtistInfo[]
-    hash?: string
-    releaseYear?: string
     artworkSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
+  export type ReleaseCardInfo<T extends CardType = CardType> = ReleaseCardInfoBase<T>
+    & (T extends 'album'
+      ? { releaseYear: string }
+      : { hash: string })
 
   export type SimpleArtistInfo = {
     name: string
@@ -97,12 +103,15 @@ export namespace App {
     uri: string
     avatarSrc: string | undefined
     followersText: string
+    externalUrls: SpotifyAPI.ExternalUrl
   }
+
   export type ArtistCardInfo = {
     name: string
     id: string
     uri: string
     avatarSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
 
   // /playlists/:playlistId page
@@ -126,6 +135,7 @@ export namespace App {
   export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {
     track: SpotifyAPI.Track
   }
+
   export type PlaylistCardInfo = {
     id: string
     name: string
