@@ -141,6 +141,9 @@ const actions: Actions<
       type: 'artist',
       artistIdList: [artistId],
     });
+
+    commit('SET_ACTUAL_IS_SAVED', [artistId, actualIsSaved]);
+
     // 実際の状態と異なれば戻す
     if (isSaved !== actualIsSaved) {
       // ライブラリ一覧を戻す

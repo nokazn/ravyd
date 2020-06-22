@@ -175,7 +175,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       const type = mutation.type as keyof RootMutations;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
-          subscribeTrack(mutation as ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>);
+          subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:

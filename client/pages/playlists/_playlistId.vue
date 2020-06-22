@@ -209,24 +209,28 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
       if (this.playlistInfo == null) return;
 
-      const { name, description, isPublic } = mutationPayload.payload;
-      this.playlistInfo = {
-        ...this.playlistInfo,
-        name,
-        description,
-        isPublic,
-      };
+      const {
+        id, name, description, isPublic,
+      } = mutationPayload.payload;
+      if (id === this.playlistInfo.id) {
+        this.playlistInfo = {
+          ...this.playlistInfo,
+          name,
+          description,
+          isPublic,
+        };
+      }
     };
 
     this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
       const type = mutation.type as keyof RootMutations;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
-          subscribeTrack(mutation as ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>);
+          subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         case 'playlists/EDIT_PLAYLIST':
-          subscribePlaylist(mutation as ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>);
+          subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
