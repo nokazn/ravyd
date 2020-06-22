@@ -1,4 +1,3 @@
-import { elapsedTime } from '~~/utils/elapsedTime';
 import { App, SpotifyAPI } from '~~/types';
 import { getImageSrc } from './getImageSrc';
 
@@ -56,7 +55,7 @@ export const convertTrackDetail = <
       artistList,
       explicit: track.explicit,
       isPlayable: track.is_playable,
-      duration: elapsedTime(track.duration_ms),
+      durationMs: track.duration_ms,
       externalUrls: track.external_urls,
       previewUrl: track.preview_url,
       isSaved: isTrackSavedList[index],

@@ -1,4 +1,3 @@
-import { elapsedTime } from '~~/utils/elapsedTime';
 import { convertAddedAt } from '~/scripts/converter/convertAddedAt';
 import { App, SpotifyAPI } from '~~/types';
 
@@ -28,7 +27,7 @@ export const convertPlaylistTrackDetail = (
     })),
     explicit: track.explicit,
     isPlayable: track.is_playable,
-    duration: elapsedTime(track.duration_ms),
+    durationMs: track.duration_ms,
     externalIds: track.external_ids,
     externalUrls: track.external_urls,
     previewUrl: track.preview_url,

@@ -58,9 +58,7 @@
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="explicit" />
 
-          <span :class="$style.TrackListItem__actionDuration">
-            {{ duration }}
-          </span>
+          <TrackDuration :duration-ms="durationMs" />
 
           <v-btn icon>
             <v-icon>
@@ -81,6 +79,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
+import TrackDuration from '~/components/parts/text/TrackDuration.vue';
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
@@ -114,6 +113,7 @@ export default Vue.extend({
     TrackListMediaButton,
     FavoriteButton,
     ExplicitChip,
+    TrackDuration,
   },
 
   props: {
@@ -164,8 +164,8 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    duration: {
-      type: String,
+    durationMs: {
+      type: Number,
       required: true,
     },
     isPlayingTrack: {
@@ -253,10 +253,6 @@ export default Vue.extend({
   &__action {
     & > *:not(:last-child) {
       margin-right: 12px;
-    }
-
-    &Duration {
-      font-size: 0.8rem;
     }
   }
 }

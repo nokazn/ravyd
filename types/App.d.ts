@@ -19,7 +19,7 @@ export namespace App {
     artistList: SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
-    duration: string
+    durationMs: number
     externalIds?: SpotifyAPI.ExternalId
     externalUrls: SpotifyAPI.ExternalUrl
     previewUrl: string
