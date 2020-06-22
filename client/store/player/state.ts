@@ -20,8 +20,8 @@ export type PlayerState = {
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
   isPlaying: boolean
   isSavedTrack: boolean
-  position: number
-  duration: number
+  positionMs: number
+  durationMs: number
   isShuffled: boolean
   repeatMode: 0 | 1 | 2 | undefined
   disallowList: string[]
@@ -49,8 +49,8 @@ const state = (): PlayerState => ({
   recentlyPlayed: undefined,
   isPlaying: false,
   isSavedTrack: false,
-  position: 0,
-  duration: 0,
+  positionMs: 0,
+  durationMs: 0,
   isShuffled: false,
   repeatMode: undefined,
   disallowList: [],

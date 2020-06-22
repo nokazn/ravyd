@@ -4,7 +4,6 @@ import { PlayerState } from './state';
 import { REPEAT_STATE_LIST, APP_NAME, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
-import { elapsedTime } from '~~/utils/elapsedTime';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import { SpotifyAPI, App } from '~~/types';
 
@@ -17,6 +16,7 @@ export type PlayerGetters = {
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
+  contextUri: string | undefined
   isContextSet: (uri: string | undefined) => boolean
   repeatState: SpotifyAPI.RepeatState | undefined
   isPreviousDisallowed: boolean
@@ -35,6 +35,7 @@ export type RootGetters = {
   ['player/artworkSrc']: PlayerGetters['artworkSrc']
   ['player/hasTrack']: PlayerGetters['hasTrack']
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
+  ['player/contextUri']: PlayerGetters['contextUri']
   ['player/isContextSet']: PlayerGetters['isContextSet']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
@@ -74,7 +75,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         releaseName: state.releaseName!,
         artistList: state.artistList!,
         artworkSrc: getImageSrc(state.artWorkList, artworkSize),
-        duration: elapsedTime(state.duration),
+        durationMs: state.durationMs,
       };
       const previousTrackList = state.previousTrackList
         .map(convertTrackForQueue(false, artworkSize));
@@ -116,13 +117,16 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return (trackId) => state.trackId === trackId;
   },
 
-  isContextSet(state) {
+  contextUri(state) {
+    return state.contextUri ?? state.customContextUri;
+  },
+
+  isContextSet(_, getters) {
     /**
      * uri を指定
      * アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
      */
-    return (uri) => uri != null
-      && (state.contextUri === uri || state.customContextUri === uri);
+    return (uri) => uri != null && (getters.contextUri === uri);
   },
 
   isShuffleDisallowed(state) {

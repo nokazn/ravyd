@@ -1,67 +1,73 @@
 <template>
   <div :class="$style.SeekBar">
     <v-slider
-      v-model="position"
+      v-model="positionMs"
       dense
       hide-details
-      :color="seekbarColor"
       thumb-color="white"
-      :max="duration"
+      :color="seekbarColor"
+      :max="maxMs"
       :class="$style.SeekBar__slider"
-      @end="onEnd"
-      @mouseup="onMouseup"
+      @change="onChange"
     />
 
     <div :class="$style.SeekBar__mss">
-      <span v-if="position != null">
-        {{ positionMss }}
-      </span>
+      <TrackTime
+        :time-ms="positionMs"
+        :class="$style['SeekBar__mss--left']"
+      />
 
-      <span v-if="duration">
-        {{ durationMss }}
-      </span>
+      <TrackTime
+        :time-ms="durationMs"
+        :class="$style['SeekBar__mss--right']"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import debounce from 'lodash/debounce';
 import { RootState } from 'vuex';
 
+import TrackTime from '~/components/parts/text/TrackTime.vue';
+
 export type Data = {
+  debounceSetter: (positionMs: number) => void
   updateInterval: ReturnType<typeof setInterval> | undefined
 }
 
-const ON_CHANGED = 'on-changed';
-
-export type On = {
-  [ON_CHANGED]: number
-}
-
 export default Vue.extend({
+  components: {
+    TrackTime,
+  },
+
   data(): Data {
+    const interval = 300;
+    const debounceSetter = debounce((positionMs: number) => {
+      this.$commit('player/SET_POSITION_MS', positionMs);
+    }, interval);
+
     return {
+      debounceSetter,
       updateInterval: undefined,
     };
   },
 
   computed: {
-    position: {
-      get(): RootState['player']['position'] {
-        return this.$state().player.position;
+    positionMs: {
+      get(): RootState['player']['positionMs'] {
+        return this.$state().player.positionMs;
       },
-      set(value: number) {
-        this.$commit('player/SET_POSITION', value);
+      set(positionMs: number) {
+        this.debounceSetter(positionMs);
       },
     },
-    positionMss(): string {
-      return this.$dayjs(this.position).format('m:ss');
+    durationMs(): RootState['player']['durationMs'] {
+      return this.$state().player.durationMs;
     },
-    duration(): RootState['player']['duration'] {
-      return this.$state().player.duration;
-    },
-    durationMss(): string {
-      return this.$dayjs(this.duration).format('m:ss');
+    maxMs(): number {
+      return this.durationMs || 1;
     },
     isPlaying(): RootState['player']['isPlaying'] {
       return this.$state().player.isPlaying;
@@ -74,7 +80,7 @@ export default Vue.extend({
   },
 
   watch: {
-    // curr の引数の型指定をすると $state 等の型推論が効かなくなる
+    // @todo curr の引数の型指定をすると $state 等の型推論が効かなくなる
     isPlaying(curr): void {
       if (curr === true) {
         this.updatePosition();
@@ -93,21 +99,22 @@ export default Vue.extend({
   },
 
   methods: {
-    onEnd(value: number) {
-      this.$emit(ON_CHANGED, value);
-    },
-    onMouseup() {
+    onChange(positionMs: number) {
       // setter の後に実行させたい
       setTimeout(() => {
-        this.$emit(ON_CHANGED, this.position);
+        console.log('onchange');
+        this.$dispatch('player/seek', positionMs);
       }, 0);
     },
     updatePosition() {
       const intervalMs = 500;
-      if (this.updateInterval != null) clearInterval(this.updateInterval);
+      if (this.updateInterval != null) {
+        clearInterval(this.updateInterval);
+      }
+
       this.updateInterval = setInterval(() => {
-        // position が duration より大きい値になった場合は次の曲に移る
-        this.$commit('player/SET_POSITION', this.$state().player.position + intervalMs);
+        // positionMs が durationMs より大きい値になった場合は自動的に 0 に戻る
+        this.$commit('player/ADD_POSITION_MS', intervalMs);
       }, intervalMs);
     },
     clearInterval() {
@@ -125,8 +132,15 @@ export default Vue.extend({
   &__mss {
     font-size: 0.75rem;
     margin-top: -4px;
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+
+    & > * {
+      position: absolute;
+    }
+
+    &--right {
+      right: 0;
+    }
   }
 }
 </style>

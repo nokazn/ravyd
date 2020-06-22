@@ -22,13 +22,15 @@ export const getPlaylistInfo = async (
   const {
     id,
     name,
-    description,
     uri,
+    description,
+    collaborative: isCollaborative,
     images,
     tracks,
     owner,
     followers,
     public: isPublic,
+    external_urls: externalUrls,
   } = playlistInfo;
 
   const artworkSrc = getImageSrc(images, artworkSize);
@@ -51,8 +53,9 @@ export const getPlaylistInfo = async (
   return {
     id,
     name,
-    description,
     uri,
+    description,
+    isCollaborative,
     owner,
     artworkSrc,
     totalTracks,
@@ -60,5 +63,6 @@ export const getPlaylistInfo = async (
     isFollowing,
     isPublic,
     followersText,
+    externalUrls,
   };
 };

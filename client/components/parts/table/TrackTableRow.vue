@@ -55,7 +55,9 @@
       </td>
 
       <td class="text-center">
-        {{ item.duration }}
+        <TrackTime
+          :time-ms="item.durationMs"
+        />
       </td>
 
       <td>
@@ -81,6 +83,7 @@ import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
+import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -101,6 +104,7 @@ export default Vue.extend({
     FavoriteButton,
     ArtistNames,
     ExplicitChip,
+    TrackTime,
   },
 
   props: {

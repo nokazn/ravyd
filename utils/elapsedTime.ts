@@ -1,5 +1,8 @@
 const twoDigits = (num: number) => num.toString().padStart(2, '0');
 
+/**
+ * 1時間以上の場合は H:mm:ss 、そうでない場合は m:ss
+ */
 export const elapsedTime = (timeMs: number): string => {
   const timeSeconds = timeMs / 1000;
   const hours = Math.floor(timeSeconds / 60 / 60);

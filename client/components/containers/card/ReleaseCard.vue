@@ -48,8 +48,11 @@
           :class="$style.ReleaseCard__subtitle"
           class="g-ellipsis-text"
         >
-          <template v-if="yearSubtitle">
-            <time :datetime="releaseYear">
+          <template v-if="discograpy">
+            <time
+              v-if="releaseYear != null"
+              :datetime="releaseYear"
+            >
               {{ releaseYear }}
             </time>
           </template>
@@ -135,7 +138,7 @@ export default Vue.extend({
       default: undefined,
     },
     releaseYear: {
-      type: String,
+      type: String as PropType<string | undefined>,
       default: undefined,
     },
     artworkSrc: {
@@ -154,7 +157,8 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-    yearSubtitle: {
+    // subtitle を releaseYear にする
+    discograpy: {
       type: Boolean,
       default: false,
     },
@@ -202,18 +206,20 @@ export default Vue.extend({
     },
     onMediaButtonClicked() {
       // 現在再生中のトラック/アルバムの場合
-      if (this.isPlaying && this.isReleaseSet) {
-        this.$dispatch('player/pause');
-      } else {
-        // トラックとアルバムのカードで場合分け
-        const params = this.type === 'track'
-          ? { trackUriList: [this.uri] }
-          : { contextUri: this.uri };
-        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-        this.$dispatch('player/play', this.isReleaseSet
-          ? undefined
-          : params);
+      if (this.isReleaseSet) {
+        this.$dispatch(this.isPlaying
+          ? 'player/pause'
+          : 'player/play');
+
+        return;
       }
+
+      // トラックとアルバムのカードで場合分け
+      const params = this.type === 'track'
+        ? { trackUriList: [this.uri] }
+        : { contextUri: this.uri };
+      // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
+      this.$dispatch('player/play', params);
     },
   },
 });

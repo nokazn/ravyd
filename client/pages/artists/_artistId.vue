@@ -74,7 +74,7 @@
             v-bind="item"
             :min-width="ARTWORK_MIN_SIZE"
             :max-width="ARTWORK_MAX_SIZE"
-            year-subtitle
+            discograpy
             :class="$style.ArtistIdPage__card"
           />
 

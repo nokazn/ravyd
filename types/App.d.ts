@@ -7,8 +7,8 @@ export namespace App {
     rgb: Swatch['rgb']
   }
 
-  // @todo
-  type TrackDetailBase = {
+  // TrackTable, TrackList component
+  export type TrackDetail = {
     index: number
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
@@ -19,17 +19,18 @@ export namespace App {
     artistList: SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
+    durationMs: number
+    externalIds?: SpotifyAPI.ExternalId
+    externalUrls: SpotifyAPI.ExternalUrl
+    previewUrl: string
     isSaved: boolean
-    duration: string
     releaseId: string
     releaseName: string
-  }
-  // TrackTable, TrackList component
-  export type TrackDetail = TrackDetailBase & {
-    artworkSrc: string | undefined
+    // artworkList: SpotifyAPI.Image[]
+    artworkSrc?: string | undefined
   }
   // PlaylistTrackTable component
-  export type PlaylistTrackDetail = TrackDetailBase & {
+  export type PlaylistTrackDetail = TrackDetail & {
     addedAt: AddedAtInfo
   }
 
@@ -45,7 +46,7 @@ export namespace App {
       name: string
     }[]
     artworkSrc: string | undefined
-    duration: string
+    durationMs: number | undefined
   }
 
   // /releases/:releaseId page
@@ -64,6 +65,8 @@ export namespace App {
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
     trackList: App.TrackDetail[]
+    externalUrls: SpotifyAPI.ExternalUrl
+    genreList: string[]
     isFullTrackList: boolean
   }
   export type ReleaseTrackInfo = {
@@ -72,18 +75,22 @@ export namespace App {
     durationMs: number
   }
 
-  export type ReleaseCardInfo = {
-    type: 'album' | 'track'
+  type CardType = 'album' | 'track'
+  type ReleaseCardInfoBase<T extends CardType> = {
+    type: T
     releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
-    releaseId: string
+    releaseId: string // id と同じ場合 (track のカードの場合) もある
     id: string // track または album の id
     name: string // track または album の name
     uri: string // track または album の name
     artists: App.SimpleArtistInfo[]
-    hash?: string
-    releaseYear?: string
     artworkSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
+  export type ReleaseCardInfo<T extends CardType = CardType> = ReleaseCardInfoBase<T>
+    & (T extends 'album'
+      ? { releaseYear: string }
+      : { hash: string })
 
   export type SimpleArtistInfo = {
     name: string
@@ -96,41 +103,49 @@ export namespace App {
     uri: string
     avatarSrc: string | undefined
     followersText: string
+    externalUrls: SpotifyAPI.ExternalUrl
   }
+
   export type ArtistCardInfo = {
-    name: string
     id: string
+    name: string
     uri: string
     avatarSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
 
   // /playlists/:playlistId page
   export type PlaylistInfo = {
     id: string
     name: string
-    description: string | null
     uri: string
-    owner: SpotifyAPI.UserData
+    description: string | null
+    isCollaborative: boolean
     artworkSrc: string | undefined
+    owner: SpotifyAPI.UserData
     durationMs: number
     totalTracks: number
     isFollowing: boolean | undefined
     isPublic: boolean | null
     followersText: string
+    externalUrls: SpotifyAPI.ExternalUrl
   }
   export type PlaylistTrackInfo = {
     trackList: PlaylistTrackDetail[]
     isFullTrackList: boolean
   }
+  // track から null を排除
   export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {
     track: SpotifyAPI.Track
   }
+
   export type PlaylistCardInfo = {
     id: string
     name: string
-    description: string | null
     uri: string
+    description: string | null
     artworkSrc: string | undefined
+    externalUrls: SpotifyAPI.ExternalUrl
   }
 
   export type AddedAtInfo = {

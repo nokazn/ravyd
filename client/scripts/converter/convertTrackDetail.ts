@@ -1,4 +1,3 @@
-import { elapsedTime } from '~~/utils/elapsedTime';
 import { App, SpotifyAPI } from '~~/types';
 import { getImageSrc } from './getImageSrc';
 
@@ -35,7 +34,7 @@ export const convertTrackDetail = <
     track: T,
     index: number,
   ): App.TrackDetail => {
-    // artistIdList が undefined のときは SpotifyAPI.Track
+    // artistIdList が undefined のとき track は SpotifyAPI.Track
     const releaseArtistIdList = artistIdList
       ?? (track as SpotifyAPI.Track).album.artists.map((artist) => artist.id);
     const artistList = track.artists
@@ -56,8 +55,10 @@ export const convertTrackDetail = <
       artistList,
       explicit: track.explicit,
       isPlayable: track.is_playable,
+      durationMs: track.duration_ms,
+      externalUrls: track.external_urls,
+      previewUrl: track.preview_url,
       isSaved: isTrackSavedList[index],
-      duration: elapsedTime(track.duration_ms),
       releaseId: releaseId ?? (track as SpotifyAPI.Track).album.id,
       releaseName: releaseName ?? (track as SpotifyAPI.Track).album.name,
       artworkSrc: artworkSrc ?? getImageSrc((track as SpotifyAPI.Track).album.images, artworkSize),
