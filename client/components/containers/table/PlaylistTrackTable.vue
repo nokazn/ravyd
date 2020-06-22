@@ -86,6 +86,7 @@ export default Vue.extend({
   },
 
   data(): Data {
+    // 左右の padding: 8px を含めた幅
     const isSavedColumn = {
       text: '',
       value: 'isSaved',
@@ -215,7 +216,7 @@ export default Vue.extend({
     tr {
       td,
       th {
-        padding: 0 8px;
+        padding: 0 8px !important;
       }
     }
   }

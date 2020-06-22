@@ -77,36 +77,36 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const headers = [
-      {
-        text: '#',
-        value: 'index',
-        width: 44,
-        align: 'center' as const,
-      },
-      {
-        text: '',
-        value: 'isSaved',
-        width: 52,
-        align: 'center' as const,
-      },
-      {
-        text: 'タイトル',
-        value: 'name',
-      },
-      {
-        text: '',
-        value: 'duration',
-        width: 60,
-        align: 'center' as const,
-      },
-      {
-        text: '',
-        value: 'menu',
-        width: 60,
-        align: 'center' as const,
-      },
-    ];
+    // 左右の padding: 8px を含めた幅
+    const indexColumn = {
+      text: '#',
+      value: 'index',
+      width: 44,
+      align: 'center' as const,
+    };
+    const isSavedColumn = {
+      text: '',
+      value: 'isSaved',
+      width: 52,
+      align: 'center' as const,
+    };
+    const nameColumn = {
+      text: 'タイトル',
+      value: 'name',
+    };
+    const durationColumn = {
+      text: '',
+      value: 'duration',
+      width: 60,
+      align: 'center' as const,
+    };
+    const menuColumn = {
+      text: '',
+      value: 'menu',
+      width: 60,
+      align: 'center' as const,
+    };
+    const headers = [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     const hash = this.$route.hash.replace('#', '');
     const activeRowId = this.trackList.find((item) => item.hash === hash)?.id;
 
@@ -181,7 +181,7 @@ export default Vue.extend({
     tr {
       td,
       th {
-        padding: 0 8px;
+        padding: 0 8px !important;
         // 列の幅をデフォルトの 48px から少し狭める
         height: 44px !important;
       }
