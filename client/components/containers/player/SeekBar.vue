@@ -113,11 +113,8 @@ export default Vue.extend({
     },
     onChange(positionMs: number) {
       this.$commit('player/SET_POSITION_MS', positionMs);
-      // setter の後に実行させたい
-      setTimeout(() => {
-        this.$dispatch('player/seek', positionMs);
-        this.updatePosition();
-      }, 0);
+      this.$dispatch('player/seek', positionMs);
+      this.updatePosition();
     },
     updatePosition() {
       const intervalMs = 500;
