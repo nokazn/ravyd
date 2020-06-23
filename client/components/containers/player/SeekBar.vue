@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.SeekBar">
     <v-slider
-      v-model="positionMs"
+      v-model="value"
       dense
       hide-details
       thumb-color="white"
@@ -13,59 +13,49 @@
     />
 
     <div :class="$style.SeekBar__mss">
-      <TrackTime
-        :time-ms="positionMs"
-        :class="$style['SeekBar__mss--left']"
-      />
+      <span :class="$style['SeekBar__mss--left']">
+        {{ positionMss }}
+      </span>
 
-      <TrackTime
-        :time-ms="durationMs"
-        :class="$style['SeekBar__mss--right']"
-      />
+      <span :class="$style['SeekBar__mss--right']">
+        {{ durationMss }}
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import debounce from 'lodash/debounce';
-import { RootState } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'vuex';
 
-import TrackTime from '~/components/parts/text/TrackTime.vue';
+import { mssTime } from '~~/utils/mssTime';
 
 export type Data = {
-  debounceSetter: (positionMs: number) => void
+  value: number
   updateInterval: ReturnType<typeof setInterval> | undefined
+  mutationUnsubscribe: (() => void) | undefined
 }
 
 export default Vue.extend({
-  components: {
-    TrackTime,
-  },
-
   data(): Data {
-    const interval = 300;
-    const debounceSetter = debounce((positionMs: number) => {
-      this.$commit('player/SET_POSITION_MS', positionMs);
-    }, interval);
+    const value = 0;
 
     return {
-      debounceSetter,
+      value,
       updateInterval: undefined,
+      mutationUnsubscribe: undefined,
     };
   },
 
   computed: {
-    positionMs: {
-      get(): RootState['player']['positionMs'] {
-        return this.$state().player.positionMs;
-      },
-      set(positionMs: number) {
-        this.debounceSetter(positionMs);
-      },
+    positionMss(): string {
+      return mssTime(this.value);
     },
     durationMs(): RootState['player']['durationMs'] {
       return this.$state().player.durationMs;
+    },
+    durationMss(): string {
+      return mssTime(this.durationMs);
     },
     maxMs(): number {
       return this.durationMs || 1;
@@ -92,7 +82,25 @@ export default Vue.extend({
   },
 
   mounted() {
-    if (this.isPlaying) this.updatePosition();
+    if (this.isPlaying) {
+      this.updatePosition();
+    }
+
+    const subscribePositionMs = (mutationPayload: ExtendedMutationPayload<'player/SET_POSITION_MS'>) => {
+      this.value = mutationPayload.payload;
+    };
+
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
+      const { type } = mutation;
+      switch (type) {
+        case 'player/SET_POSITION_MS':
+          subscribePositionMs(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        default:
+          break;
+      }
+    });
   },
 
   beforeDestroy() {
@@ -104,6 +112,7 @@ export default Vue.extend({
       this.clearInterval();
     },
     onChange(positionMs: number) {
+      this.$commit('player/SET_POSITION_MS', positionMs);
       // setter の後に実行させたい
       setTimeout(() => {
         this.$dispatch('player/seek', positionMs);
@@ -117,7 +126,7 @@ export default Vue.extend({
       }
 
       this.updateInterval = setInterval(() => {
-        this.$commit('player/ADD_POSITION_MS', intervalMs);
+        this.value += intervalMs;
       }, intervalMs);
     },
     clearInterval() {
