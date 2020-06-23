@@ -50,9 +50,18 @@ const LIMIT_OF_TRACKS = 30 as const;
 
   async fetch({ app }): Promise<void> {
     if (app.$getters()['library/tracks/trackListLength'] === 0) {
-      await app.$dispatch('library/tracks/getSavedTrackList', { limit: LIMIT_OF_TRACKS });
+      await app.$dispatch('library/tracks/getSavedTrackList', {
+        limit: LIMIT_OF_TRACKS,
+      }).catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', err.message);
+      });
     } else {
-      await app.$dispatch('library/tracks/updateLatestSavedTrackList');
+      await app.$dispatch('library/tracks/updateLatestSavedTrackList')
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     }
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
@@ -113,6 +122,9 @@ export default class LibraryTracksPage extends Vue implements Data {
   onLoadingCircleAppear() {
     this.$dispatch('library/tracks/getSavedTrackList', {
       limit: LIMIT_OF_TRACKS,
+    }).catch((err: Error) => {
+      console.error({ err });
+      this.$toast.show('error', err.message);
     });
   }
 }

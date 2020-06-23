@@ -17,6 +17,7 @@ export const removeUserSavedShows = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
   };
 };

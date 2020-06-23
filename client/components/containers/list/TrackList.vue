@@ -97,15 +97,23 @@ export default Vue.extend({
     },
 
     // row をコピーしたものを参照する
-    async onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
       const params: On['on-favorite-button-clicked'] = row;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
 
       const { id, nextSavedState } = row;
       if (nextSavedState) {
-        await this.$dispatch('library/tracks/saveTracks', [id]);
+        this.$dispatch('library/tracks/saveTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       } else {
-        await this.$dispatch('library/tracks/removeTracks', [id]);
+        this.$dispatch('library/tracks/removeTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       }
     },
   },
