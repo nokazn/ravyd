@@ -59,7 +59,7 @@ const actions: Actions<
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
       commit('SET_IS_FULL_RELEASE_LIST', true);
-      throw new Error('お気に入りのアルバムを取得できませんでした。');
+      throw new Error('お気に入りのアルバムの一覧を取得できませんでした。');
     }
 
     const releaseList = releases.items.map(convertRelease);
@@ -75,13 +75,11 @@ const actions: Actions<
    * 未更新分を追加
    */
   async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
-    const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
-
     // ライブラリの情報が更新されていないものの数
     const limit = state.numberOfUnupdatedReleases;
     if (limit === 0) return;
 
+    const market = rootGetters['auth/userCountryCode'];
     const releases = await this.$spotify.library.getUserSavedAlbums({
       limit,
       market,
@@ -89,7 +87,7 @@ const actions: Actions<
     // 追加分が取得できなければリセットする
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
-      throw new Error('お気に入りのアルバムを更新できませんでした。');
+      throw new Error('お気に入りのアルバムの一覧を更新できませんでした。');
     }
 
     const currentReleaseList = state.releaseList;
