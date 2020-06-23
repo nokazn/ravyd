@@ -46,9 +46,8 @@ const actions: Actions<
     if (state.isFullReleaseList) return;
 
     const limit = payload?.limit ?? 30;
-    const market = rootGetters['auth/userCountryCode'];
-
     const offset = getters.releaseListLength;
+    const market = rootGetters['auth/userCountryCode'];
     const releases = await this.$spotify.library.getUserSavedAlbums({
       limit,
       offset,
@@ -84,6 +83,7 @@ const actions: Actions<
       limit,
       market,
     });
+    // @todo
     // 追加分が取得できなければリセットする
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
