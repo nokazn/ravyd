@@ -192,7 +192,11 @@ export default Vue.extend({
   mounted() {
     // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
     const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
-      if (this.playlistArtwork == null) return;
+      if (this.playlistArtwork == null) {
+        this.modal = false;
+        this.isLoading = false;
+        return;
+      }
 
       const playlist = mutationPayload.payload;
       const fileReader = new FileReader();
@@ -205,8 +209,9 @@ export default Vue.extend({
           this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }).catch(() => {
-          this.isLoading = false;
           this.$toast.show('error', '画像のアップロードに失敗しました。');
+        }).finally(() => {
+          this.isLoading = false;
         });
       });
 
