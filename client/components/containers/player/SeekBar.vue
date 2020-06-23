@@ -8,6 +8,7 @@
       :color="seekbarColor"
       :max="maxMs"
       :class="$style.SeekBar__slider"
+      @mousedown="onMouseDown"
       @change="onChange"
     />
 
@@ -99,11 +100,14 @@ export default Vue.extend({
   },
 
   methods: {
+    onMouseDown() {
+      this.clearInterval();
+    },
     onChange(positionMs: number) {
       // setter の後に実行させたい
       setTimeout(() => {
-        console.log('onchange');
         this.$dispatch('player/seek', positionMs);
+        this.updatePosition();
       }, 0);
     },
     updatePosition() {
@@ -113,13 +117,14 @@ export default Vue.extend({
       }
 
       this.updateInterval = setInterval(() => {
-        // positionMs が durationMs より大きい値になった場合は自動的に 0 に戻る
         this.$commit('player/ADD_POSITION_MS', intervalMs);
       }, intervalMs);
     },
     clearInterval() {
-      if (this.updateInterval != null) clearInterval(this.updateInterval);
-      this.updateInterval = undefined;
+      if (this.updateInterval != null) {
+        clearInterval(this.updateInterval);
+        this.updateInterval = undefined;
+      }
     },
   },
 });
