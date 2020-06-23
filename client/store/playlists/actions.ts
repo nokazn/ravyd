@@ -50,9 +50,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
 
     if (firstListOfPlaylists == null) {
       commit('SET_PLAYLISTS', firstListOfPlaylists);
-      return;
+      throw new Error('プレイリストの一覧を取得できませんでした。');
     }
 
+    // offset: index から limit 件取得
     const handler = async (index: number) => {
       const playlists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
         offset: limit * (index + 1),
