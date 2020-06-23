@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RootMutations } from 'vuex';
+import { RootMutations, ExtendedMutationPayload } from 'vuex';
 
 export type Data = {
   isValid: boolean
@@ -190,14 +190,11 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
-      const type = mutation.type as keyof RootMutations;
-      if (type !== 'playlists/ADD_PLAYLIST' && type !== 'playlists/EDIT_PLAYLIST') return;
-      if (this.playlistArtwork == null) {
-        return;
-      }
+    // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
+    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
+      if (this.playlistArtwork == null) return;
 
-      const playlist = mutation.payload as RootMutations[typeof type];
+      const playlist = mutationPayload.payload;
       const fileReader = new FileReader();
       fileReader.addEventListener('load', () => {
         this.$spotify.playlists.uploadPlaylistArtwork({
@@ -208,6 +205,7 @@ export default Vue.extend({
           this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }).catch(() => {
+          this.isLoading = false;
           this.$toast.show('error', '画像のアップロードに失敗しました。');
         });
       });
@@ -215,10 +213,24 @@ export default Vue.extend({
       // @todo
       fileReader.addEventListener('error', (err) => {
         console.warn(err);
+        this.isLoading = false;
         this.$toast.show('error', '画像の読み込みに失敗しました。');
       });
 
       fileReader.readAsDataURL(this.playlistArtwork);
+    };
+
+    this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
+      const type = mutation.type as keyof RootMutations;
+      switch (type) {
+        case 'playlists/ADD_PLAYLIST':
+        case 'playlists/EDIT_PLAYLIST':
+          subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        default:
+          break;
+      }
     });
   },
 
@@ -252,6 +264,7 @@ export default Vue.extend({
         }
       }).catch((err: Error) => {
         console.error({ err });
+        this.isLoading = false;
         this.$toast.show('error', err.message);
       });
     },
