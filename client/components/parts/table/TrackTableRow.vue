@@ -1,7 +1,6 @@
 <template>
   <v-hover #default="{ hover: isRowHovered }">
     <tr
-      :id="item.hash"
       :class="{
         [$style.TrackTableRow]: true,
         'inactive--text': !item.isPlayable
