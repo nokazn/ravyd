@@ -5,9 +5,10 @@ export const removeUserSavedAlbums = (context: Context) => {
 
   return ({ albumIdList }: { albumIdList: string[] }): Promise<void> => {
     const { length } = albumIdList;
+    const minLength = 1;
     const maxLength = 20;
-    if (length > maxLength) {
-      throw new Error(`albumIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
+    if (minLength < length || length > maxLength) {
+      throw new Error(`albumIdList は${minLength}~${maxLength}個しか指定できませんが、${length}個指定されました。`);
     }
 
     const ids = albumIdList.join(',');
@@ -17,6 +18,7 @@ export const removeUserSavedAlbums = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
   };
 };

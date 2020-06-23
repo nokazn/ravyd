@@ -47,18 +47,19 @@ const actions: Actions<
 
     const limit = payload?.limit ?? 30;
     const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
 
-    const offset = getters.releaseListLength + 1;
+    const offset = getters.releaseListLength;
     const releases = await this.$spotify.library.getUserSavedAlbums({
       limit,
       offset,
       market,
     });
+    // @todo
+    // 取得できなければリセットする
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
       commit('SET_IS_FULL_RELEASE_LIST', true);
-      return;
+      throw new Error('お気に入りのアルバムを取得できませんでした。');
     }
 
     const releaseList = releases.items.map(convertRelease);
@@ -70,6 +71,9 @@ const actions: Actions<
     }
   },
 
+  /**
+   * 未更新分を追加
+   */
   async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
     const market = rootGetters['auth/userCountryCode'];
     if (market == null) return;
@@ -82,17 +86,21 @@ const actions: Actions<
       limit,
       market,
     });
+    // 追加分が取得できなければリセットする
     if (releases == null) {
       commit('SET_RELEASE_LIST', null);
-      return;
+      throw new Error('お気に入りのアルバムを更新できませんでした。');
     }
 
     const currentReleaseList = state.releaseList;
+    // 現在のライブラリが未取得ならそのままセット
     if (currentReleaseList == null) {
       commit('SET_RELEASE_LIST', releases.items.map(convertRelease));
       return;
     }
 
+    // @todo lastRelease の位置まで取得すべき?
+    // 現在のライブラリの先頭があるかどうか
     const currentLatestReleaseId = currentReleaseList[0].id;
     const lastReleaseIndex = releases.items
       .findIndex(({ album }) => album.id === currentLatestReleaseId);
@@ -106,7 +114,11 @@ const actions: Actions<
   },
 
   async saveReleases({ dispatch }, albumIdList) {
-    await this.$spotify.library.saveAlbums({ albumIdList });
+    await this.$spotify.library.saveAlbums({ albumIdList })
+      .catch((err) => {
+        console.error(err.message);
+        throw new Error('ライブラリにアルバムを保存できませんでした。');
+      });
 
     albumIdList.forEach((releaseId) => {
       dispatch('modifyReleaseSavedState', {
@@ -117,7 +129,11 @@ const actions: Actions<
   },
 
   async removeReleases({ dispatch }, albumIdList) {
-    await this.$spotify.library.removeUserSavedAlbums({ albumIdList });
+    await this.$spotify.library.removeUserSavedAlbums({ albumIdList })
+      .catch((err) => {
+        console.error(err.message);
+        throw new Error('ライブラリからアルバムを削除できませんでした。');
+      });
 
     albumIdList.forEach((releaseId) => {
       dispatch('modifyReleaseSavedState', {
@@ -127,13 +143,13 @@ const actions: Actions<
     });
   },
 
-  async modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
+  modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
     const currentReleaseList = state.releaseList;
     if (currentReleaseList == null) return;
 
     const savedReleaseIndex = currentReleaseList
       .findIndex((release) => release.id === releaseId);
-    // ライブラリ一覧を更新
+    // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedReleaseIndex !== -1) {
       const nextReleaseList = [...currentReleaseList];
       // savedReleaseIndex から1個取り除く
@@ -141,22 +157,12 @@ const actions: Actions<
       commit('SET_RELEASE_LIST', nextReleaseList);
     }
 
-    const [actualIsSaved] = await this.$spotify.library.checkUserSavedAlbums({
-      albumIdList: [releaseId],
-    });
-
-    commit('SET_ACTUAL_IS_SAVED', [releaseId, actualIsSaved]);
-
-    // 実際の状態と異なれば戻す
-    if (isSaved !== actualIsSaved) {
-      // ライブラリ一覧を戻す
-      commit('SET_RELEASE_LIST', currentReleaseList);
-    }
-
     // ライブラリ一覧に表示されてないリリースを保存した場合
-    if (isSaved && savedReleaseIndex === -1 && isSaved === actualIsSaved) {
+    if (isSaved && savedReleaseIndex === -1) {
       commit('INCREMENT_NUMBER_OF_UNUPDATED_RELEASES');
     }
+
+    commit('SET_ACTUAL_IS_SAVED', [releaseId, isSaved]);
   },
 };
 
