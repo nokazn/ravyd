@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { ToastType } from '~/plugins/inject-toast';
+import { ToastType } from '~/plugins/toast';
 
 const ON_CHANGED = 'on-changed';
 

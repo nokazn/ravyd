@@ -12,7 +12,7 @@ import * as Player from '~/store/player/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import { Toast } from '~/plugins/inject-toast';
+import { Toast } from '~/plugins/toast';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
