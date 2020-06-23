@@ -43,7 +43,6 @@ const actions: Actions<
 
     const limit = payload?.limit ?? 30;
     const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
 
     const offset = getters.trackListLength;
     const tracks = await this.$spotify.library.getUserSavedTracks({
@@ -72,13 +71,11 @@ const actions: Actions<
   },
 
   async updateLatestSavedTrackList({ state, commit, rootGetters }) {
-    const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
-
     // ライブラリの情報が更新されていないものの数
     const limit = state.numberOfUnupdatedTracks;
     if (limit === 0) return;
 
+    const market = rootGetters['auth/userCountryCode'];
     const tracks = await this.$spotify.library.getUserSavedTracks({
       limit,
       market,
