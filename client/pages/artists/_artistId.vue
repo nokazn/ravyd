@@ -272,9 +272,17 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     const artistIdList = [this.artistInfo.id];
     if (nextFollowingState) {
-      await this.$dispatch('library/artists/followArtists', artistIdList);
+      await this.$dispatch('library/artists/followArtists', artistIdList)
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     } else {
-      await this.$dispatch('library/artists/unfollowArtists', artistIdList);
+      await this.$dispatch('library/artists/unfollowArtists', artistIdList)
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     }
   }
 
