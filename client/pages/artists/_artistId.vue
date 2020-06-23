@@ -95,7 +95,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootState, RootMutations, ExtendedMutationPayload } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -227,9 +227,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       }
     };
 
-    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
-      const type = mutation.type as keyof RootMutations;
-
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
+      const { type } = mutation;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);

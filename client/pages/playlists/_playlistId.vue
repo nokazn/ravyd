@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootMutations, ExtendedMutationPayload } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -232,8 +232,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       }
     };
 
-    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
-      const type = mutation.type as keyof RootMutations;
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
+      const { type } = mutation;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);

@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RootMutations, ExtendedMutationPayload } from 'vuex';
+import { ExtendedMutationPayload } from 'vuex';
 
 export type Data = {
   isValid: boolean
@@ -225,8 +225,8 @@ export default Vue.extend({
       fileReader.readAsDataURL(this.playlistArtwork);
     };
 
-    this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
-      const type = mutation.type as keyof RootMutations;
+    this.mutationUnsubscriber = this.$subscribe((mutation) => {
+      const { type } = mutation;
       switch (type) {
         case 'playlists/ADD_PLAYLIST':
         case 'playlists/EDIT_PLAYLIST':

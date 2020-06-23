@@ -19,6 +19,7 @@ declare module 'vuex/types/index' {
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
+    $subscribe: ExtendedSubscribe
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance,
     $spotify: SpotifyEndpoints
@@ -110,12 +111,6 @@ declare module 'vuex' {
     ...payload: SFCCommitArguments<T>,
   ) => void
 
-  // subscribe したときのコールバックの引数
-  type ExtendedMutationPayload<T extends keyof RootMutations> = {
-    type: T
-    payload: RootMutations[T]
-  }
-
   type ExtendedDispatchArguments<
     A extends ActionMethodMap,
     T extends keyof Merge<A, RootActions>
@@ -178,10 +173,22 @@ declare module 'vuex' {
     ) => void | Promise<void>
   }
 
-  // Dispatch と Commit に互換性がない
-  interface ExtendedStore extends Omit<Store<RootState>, 'dispatch' | 'commit'> {
+  // subscribe したときのコールバックの引数
+  type ExtendedMutationPayload<T extends keyof RootMutations> = {
+    type: T
+    payload: RootMutations[T]
+  }
+
+  type ExtendedSubscribe = <P extends ExtendedMutationPayload<keyof RootMutations>>(
+    fn: (mutation: P, state: RootState) => void | Promise<void>,
+    options?: SubscribeOptions
+  ) => () => void
+
+  // dispatch と commit と subscribe に互換性がない
+  interface ExtendedStore extends Omit<Store<RootState>, 'dispatch' | 'commit' | 'subscribe'> {
     getters: RootGetters
     commit: ExtendedCommit<RootMutations>
     dispatch: ExtendedDispatch<RootActions>
+    subscribe: ExtendedSubscribe
   }
 }

@@ -3,6 +3,7 @@ import {
   RootGetters,
   SFCCommit,
   SFCDispatch,
+  ExtendedSubscribe,
 } from 'vuex';
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
@@ -16,6 +17,7 @@ declare module 'vue/types/vue' {
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
+    $subscribe: ExtendedSubscribe
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
     $spotify: SpotifyEndpoints
