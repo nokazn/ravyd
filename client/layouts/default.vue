@@ -13,8 +13,6 @@
 
     <Footer v-if="isLoggedin" />
 
-    <portal-target name="snackbar" />
-
     <Toast
       v-bind="$toast"
       @on-changed="onToastChanged"
