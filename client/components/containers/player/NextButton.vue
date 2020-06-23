@@ -23,6 +23,7 @@ export default Vue.extend({
   },
   methods: {
     onClicked() {
+      this.$commit('player/SET_POSITION_MS', 0);
       this.$dispatch('player/next');
     },
   },
