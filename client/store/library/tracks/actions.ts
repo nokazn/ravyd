@@ -49,11 +49,7 @@ const actions: Actions<
       offset,
       market,
     });
-    // @todo
-    // 取得できなければリセットする
     if (tracks == null) {
-      commit('SET_TRACK_LIST', null);
-      commit('SET_IS_FULL_TRACK_LIST', true);
       throw new Error('お気に入りのトラックの一覧を取得できませんでした。');
     }
 
@@ -84,10 +80,7 @@ const actions: Actions<
       limit,
       market,
     });
-    // @todo
-    // 追加分が取得できなければリセットする
     if (tracks == null) {
-      commit('SET_TRACK_LIST', null);
       throw new Error('お気に入りのトラックの一覧を更新できませんでした。');
     }
 

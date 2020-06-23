@@ -38,6 +38,9 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       limit,
       offset,
     });
+    if (playlists == null) {
+      throw new Error('プレイリストの一覧を取得できませんでした。');
+    }
 
     commit('SET_PLAYLISTS', playlists?.items);
   },
@@ -49,7 +52,6 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (firstListOfPlaylists == null) {
-      commit('SET_PLAYLISTS', firstListOfPlaylists);
       throw new Error('プレイリストの一覧を取得できませんでした。');
     }
 
@@ -101,7 +103,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
-      // @to-do 空文字列を渡せない
+      // @todo 空文字列を渡せない
       description: description || undefined,
       isPublic,
     }).catch((err: Error) => {

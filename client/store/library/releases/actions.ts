@@ -53,16 +53,11 @@ const actions: Actions<
       offset,
       market,
     });
-    // @todo
-    // 取得できなければリセットする
     if (releases == null) {
-      commit('SET_RELEASE_LIST', null);
-      commit('SET_IS_FULL_RELEASE_LIST', true);
       throw new Error('お気に入りのアルバムの一覧を取得できませんでした。');
     }
 
     const releaseList = releases.items.map(convertRelease);
-
     commit('ADD_TO_RELEASE_LIST', releaseList);
 
     if (releases.next == null) {
@@ -83,10 +78,7 @@ const actions: Actions<
       limit,
       market,
     });
-    // @todo
-    // 追加分が取得できなければリセットする
     if (releases == null) {
-      commit('SET_RELEASE_LIST', null);
       throw new Error('お気に入りのアルバムの一覧を更新できませんでした。');
     }
 

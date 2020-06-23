@@ -48,10 +48,7 @@ const actions: Actions<
       limit,
       after,
     });
-    // 取得できなければリセットする
     if (artists == null) {
-      commit('SET_ARTIST_LIST', null);
-      commit('SET_IS_FULL_ARTIST_LIST', true);
       throw new Error('フォロー中のアーティストの一覧を取得できませんでした。');
     }
 
@@ -76,9 +73,7 @@ const actions: Actions<
       type: 'artist',
       limit,
     });
-    // 追加分が取得できなければリセットする
     if (artists == null) {
-      commit('SET_ARTIST_LIST', null);
       throw new Error('フォロー中のアーティストの一覧を更新できませんでした。');
     }
 
