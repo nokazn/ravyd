@@ -294,7 +294,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   async appendTrackList() {
     if (this.playlistTrackInfo == null
       || this.playlistTrackInfo.isFullTrackList
-      || this.getPlaylistTrackInfo == null) return;
+      || typeof this.getPlaylistTrackInfo !== 'function') return;
 
     const currentTrackList = this.playlistTrackInfo.trackList;
     const offset = currentTrackList.length;
