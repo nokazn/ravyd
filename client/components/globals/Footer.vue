@@ -62,9 +62,7 @@
           </v-btn>
         </div>
 
-        <VolumeSlider
-          @on-changed="onVolumuChanged"
-        />
+        <VolumeSlider />
       </div>
     </div>
   </v-footer>
@@ -81,7 +79,7 @@ import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/Favo
 import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import DeviceSelectMenuButton from '~/components/containers/player/DeviceSelectMenuButton.vue';
-import VolumeSlider, { On as OnVolume } from '~/components/containers/player/VolumeSlider.vue';
+import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
@@ -157,9 +155,6 @@ export default Vue.extend({
             this.$toast.show('error', err.message);
           });
       }
-    },
-    onVolumuChanged(volumePercent: OnVolume['on-changed']) {
-      this.$dispatch('player/volume', { volumePercent });
     },
   },
 });

@@ -12,79 +12,94 @@
     </v-btn>
 
     <v-slider
-      v-model="volume"
+      v-model="volumePercent"
       color="active-icon"
       thumb-color="white"
       hide-details
       dense
-      @end="onEnd"
-      @mouseup="onMouseup"
+      @change="onChange"
     />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'vuex';
+
+type Data = {
+  volumePercent: number
+  volumeButton: VolumeButton
+  mutationUnsubscribe: (() => void) | undefined
+}
 
 export type VolumeButton = {
   icon: 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
   title: 'ミュート' | 'ミュートを解除'
 }
 
-const ON_CHANGED = 'on-changed';
+const volumeButton = (volumePercent: number): VolumeButton => {
+  const volumeIconList: Array<VolumeButton['icon']> = [
+    'mdi-volume-mute',
+    'mdi-volume-low',
+    'mdi-volume-medium',
+    'mdi-volume-high',
+    'mdi-volume-high',
+  ];
+  const index = Math.min(
+    Math.floor((volumePercent / 100) * volumeIconList.length),
+    volumeIconList.length - 1,
+  );
+  const icon = volumeIconList[index];
+  const title = volumePercent === 0
+    ? 'ミュートを解除'
+    : 'ミュート';
 
-export type On = {
-  [ON_CHANGED]: number
-}
+  return {
+    icon,
+    title,
+  };
+};
 
 export default Vue.extend({
-  computed: {
-    volume: {
-      get(): RootGetters['player/volume'] {
-        return this.$getters()['player/volume'];
-      },
-      set(volumePercent: number) {
-        this.$commit('player/SET_VOLUME', { volumePercent });
-      },
-    },
-    isMuted(): boolean {
-      return this.$state().player.isMuted;
-    },
-    volumeButton(): VolumeButton {
-      const volumeIconList: Array<VolumeButton['icon']> = [
-        'mdi-volume-mute',
-        'mdi-volume-low',
-        'mdi-volume-medium',
-        'mdi-volume-high',
-        'mdi-volume-high',
-      ];
-      const index = Math.min(
-        Math.floor((this.volume / 100) * volumeIconList.length),
-        volumeIconList.length - 1,
-      );
-      const icon = volumeIconList[index];
-      const title = this.volume === 0
-        ? 'ミュートを解除'
-        : 'ミュート';
+  data(): Data {
+    return {
+      volumePercent: 0,
+      mutationUnsubscribe: undefined,
+      volumeButton: volumeButton(100),
+    };
+  },
 
-      return {
-        icon,
-        title,
-      };
+  computed: {
+    isMuted(): RootState['player']['isMuted'] {
+      return this.$state().player.isMuted;
     },
   },
 
+  mounted() {
+    const subscribeVolume = (mutationPayload: ExtendedMutationPayload<'player/SET_VOLUME'>) => {
+      this.volumePercent = mutationPayload.payload.volumePercent;
+    };
+
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
+      const { type } = mutation;
+      switch (type) {
+        case 'player/SET_VOLUME':
+          subscribeVolume(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        default:
+          break;
+      }
+    });
+  },
+
   methods: {
-    onEnd(value: number) {
-      this.$emit(ON_CHANGED, value);
-    },
-    onMouseup() {
-      setTimeout(() => {
-        this.$emit(ON_CHANGED, this.volume);
-      }, 0);
+    onChange(volumePercent: number) {
+      this.$commit('player/SET_VOLUME', { volumePercent });
+      this.volumeButton = volumeButton(volumePercent);
     },
     onVolumeButtonClicked() {
+      this.volumePercent = 0;
       this.$dispatch('player/mute');
     },
   },

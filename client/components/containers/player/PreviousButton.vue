@@ -5,7 +5,6 @@
     :disabled="isPreviousDisallowed"
     title="前の曲"
     @click="onPreivousClicked"
-    @dblclick="onPreviousDoubleClicked"
   >
     <v-icon :size="size">
       mdi-skip-previous
@@ -17,12 +16,22 @@
 import Vue from 'vue';
 import { RootState } from 'vuex';
 
+type Data = {
+  firstClicked: boolean
+}
+
 export default Vue.extend({
   props: {
     size: {
       type: Number,
       default: 28,
     },
+  },
+
+  data(): Data {
+    return {
+      firstClicked: false,
+    };
   },
 
   computed: {
@@ -36,15 +45,19 @@ export default Vue.extend({
 
   methods: {
     onPreivousClicked() {
-      // position が 0:01 未満のときに前の曲に戻る
-      if (this.position < 1000) {
+      this.$commit('player/SET_POSITION_MS', 0);
+      // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
+      if (this.firstClicked) {
         this.$dispatch('player/previous');
       } else {
+        this.firstClicked = true;
+        const interval = 1000;
+        setTimeout(() => {
+          this.firstClicked = false;
+        }, interval);
+
         this.$dispatch('player/seek', 0);
       }
-    },
-    onPreviousDoubleClicked() {
-      this.$dispatch('player/previous');
     },
   },
 });
