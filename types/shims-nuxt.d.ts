@@ -6,6 +6,7 @@ import {
 } from 'vuex';
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import { Toast } from '~/plugins/inject-toast';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
 
@@ -20,6 +21,7 @@ declare module '@nuxt/types/app' {
     $spotifyApi: NuxtAxiosInstance
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
+    $toast: Toast
   }
 }
 

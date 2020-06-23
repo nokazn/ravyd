@@ -40,6 +40,7 @@ const config: Configuration = {
     { src: '~/plugins/spotify' },
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/inject-toast' },
   ],
   router: {
     middleware: 'auth',
