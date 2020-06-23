@@ -13,7 +13,10 @@
 
     <Footer v-if="isLoggedin" />
 
-    <portal-target name="snackbar" />
+    <Toast
+      v-bind="$toast"
+      @on-changed="onToastChanged"
+    />
   </v-app>
 </template>
 
@@ -24,12 +27,14 @@ import { RootGetters } from 'vuex';
 import Header from '@/components/globals/Header.vue';
 import NavigationDrawer from '@/components/globals/NavigationDrawer.vue';
 import Footer from '@/components/globals/Footer.vue';
+import Toast, { On as OnToast } from '@/components/globals/Toast.vue';
 
 export default Vue.extend({
   components: {
     Header,
     NavigationDrawer,
     Footer,
+    Toast,
   },
 
   computed: {
@@ -44,6 +49,12 @@ export default Vue.extend({
   // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
   mounted() {
     this.$dispatch('player/initPlayer');
+  },
+
+  methods: {
+    onToastChanged(isShown: OnToast['on-changed']) {
+      this.$toast.change(isShown);
+    },
   },
 });
 </script>

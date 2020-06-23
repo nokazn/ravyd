@@ -10,6 +10,8 @@ export type LibraryArtistsMutations = {
   SET_IS_FULL_ARTIST_LIST: boolean
   INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS: void
   RESET_NUMBER_OF_UNUPDATED_ARTISTS: void
+  SET_ACTUAL_IS_SAVED: [string, boolean],
+  DELETE_ACTUAL_IS_SAVED: string,
 };
 
 export type RootMutations = {
@@ -19,6 +21,8 @@ export type RootMutations = {
   'library/artists/SET_IS_FULL_ARTIST_LIST': LibraryArtistsMutations['SET_IS_FULL_ARTIST_LIST'];
   'library/artists/INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS'];
   'library/artists/RESET_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['RESET_NUMBER_OF_UNUPDATED_ARTISTS'];
+  'library/artists/SET_ACTUAL_IS_SAVED': LibraryArtistsMutations['SET_ACTUAL_IS_SAVED'];
+  'library/artists/DELETE_ACTUAL_IS_SAVED': LibraryArtistsMutations['DELETE_ACTUAL_IS_SAVED'];
 };
 
 const mutations: Mutations<LibraryArtistsState, LibraryArtistsMutations> = {
@@ -55,6 +59,14 @@ const mutations: Mutations<LibraryArtistsState, LibraryArtistsMutations> = {
 
   RESET_NUMBER_OF_UNUPDATED_ARTISTS(state) {
     state.numberOfUnupdatedArtist = 0;
+  },
+
+  SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
+    state.actualIsSavedMap.set(key, isSaved);
+  },
+
+  DELETE_ACTUAL_IS_SAVED(state, key) {
+    state.actualIsSavedMap.delete(key);
   },
 };
 

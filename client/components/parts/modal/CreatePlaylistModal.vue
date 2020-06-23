@@ -33,7 +33,11 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const handler = (payload: Parameters<Handler<'create'>>[0]) => this.$dispatch('playlists/createPlaylist', payload);
+    const handler = (payload: Parameters<Handler<'create'>>[0]) => this.$dispatch('playlists/createPlaylist', payload)
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', err.message);
+      });
 
     return {
       handler,

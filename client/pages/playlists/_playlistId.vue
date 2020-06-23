@@ -205,28 +205,46 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       };
     };
 
-    // プレイリストを編集した後呼ばれる
-    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
+    const subscribeFollowedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUAL_IS_SAVED'>) => {
       if (this.playlistInfo == null) return;
 
-      const { name, description, isPublic } = mutationPayload.payload;
-      this.playlistInfo = {
-        ...this.playlistInfo,
-        name,
-        description,
-        isPublic,
-      };
+      const [playlistId, isFollowing] = mutationPayload.payload;
+      if (playlistId === this.playlistInfo.id) {
+        this.playlistInfo.isFollowing = isFollowing;
+        this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
+      }
+    };
+
+    // プレイリストを編集した後呼ばれる
+    const subscribeEditedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
+      if (this.playlistInfo == null) return;
+
+      const {
+        id, name, description, isPublic,
+      } = mutationPayload.payload;
+      if (id === this.playlistInfo.id) {
+        this.playlistInfo = {
+          ...this.playlistInfo,
+          name,
+          description,
+          isPublic,
+        };
+      }
     };
 
     this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
       const type = mutation.type as keyof RootMutations;
       switch (type) {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
-          subscribeTrack(mutation as ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>);
+          subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        case 'playlists/SET_ACTUAL_IS_SAVED':
+          subscribeFollowedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         case 'playlists/EDIT_PLAYLIST':
-          subscribePlaylist(mutation as ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>);
+          subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
@@ -276,7 +294,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   async appendTrackList() {
     if (this.playlistTrackInfo == null
       || this.playlistTrackInfo.isFullTrackList
-      || this.getPlaylistTrackInfo == null) return;
+      || typeof this.getPlaylistTrackInfo !== 'function') return;
 
     const currentTrackList = this.playlistTrackInfo.trackList;
     const offset = currentTrackList.length;
@@ -313,23 +331,25 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {
-    const userId = this.$getters()['auth/userId'];
-    if (this.playlistInfo == null || userId == null) return;
+    if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.playlistInfo.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
       await this.$spotify.following.followPlaylist({ playlistId });
+      this.$dispatch('playlists/followPlaylist', playlistId)
+        .catch((err) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     } else {
-      await this.$spotify.following.unfollowPlaylist({ playlistId });
+      this.$dispatch('playlists/unfollowPlaylist', playlistId)
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     }
-
-    // 実際の状態にする
-    [this.playlistInfo.isFollowing] = await this.$spotify.following.checkUserFollowedPlaylist({
-      playlistId,
-      userIdList: [userId],
-    });
   }
 
   onFavoriteTrackButtonClicked(row: OnTable['on-favorite-button-clicked']) {

@@ -14,8 +14,8 @@ export const getUserSavedTracks = (context: Context) => {
   }: {
     limit?: number
     offset?: number
-    market: SpotifyAPI.Country
-  }): Promise<SpotifyAPI.LibraryOf<'track'> | null> => {
+    market?: SpotifyAPI.Country
+  }): Promise<SpotifyAPI.LibraryOf<'track'> | undefined> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
@@ -28,7 +28,7 @@ export const getUserSavedTracks = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
   };
 };

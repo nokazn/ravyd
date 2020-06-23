@@ -95,7 +95,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootState, RootMutations } from 'vuex';
+import { RootState, RootMutations, ExtendedMutationPayload } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -204,20 +204,45 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
 
-    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
+    // トラックを保存/削除した後呼ばれる
+    const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
       if (this.topTrackList == null) return;
 
+      const trackList = checkTrackSavedState<App.TrackDetail>(
+        mutationPayload,
+        this.$commit,
+      )(this.topTrackList);
+
+      this.topTrackList = trackList;
+    };
+
+    // アーティストを編集した後呼ばれる
+    const subscribeArtist = (mutationPayload: ExtendedMutationPayload<'library/artists/SET_ACTUAL_IS_SAVED'>) => {
+      if (this.artistInfo == null) return;
+
+      const [artistId, isFollowing] = mutationPayload.payload;
+      if (artistId === this.artistInfo.id) {
+        this.isFollowing = isFollowing;
+        this.$commit('library/artists/DELETE_ACTUAL_IS_SAVED', artistId);
+      }
+    };
+
+    this.mutationUnsubscribe = this.$store.subscribe((mutation) => {
       const type = mutation.type as keyof RootMutations;
-      if (type !== 'library/tracks/SET_ACTUAL_IS_SAVED') return;
 
-      const topTrackList = checkTrackSavedState<App.TrackDetail>(mutation as {
-        type: typeof type
-        payload: RootMutations[typeof type]
-      }, this.$commit)(this.topTrackList);
-
-      this.topTrackList = topTrackList;
+      switch (type) {
+        case 'library/tracks/SET_ACTUAL_IS_SAVED':
+          subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+        case 'library/artists/SET_ACTUAL_IS_SAVED':
+          subscribeArtist(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+        default:
+          break;
+      }
     });
   }
+
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
 
@@ -247,15 +272,18 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     const artistIdList = [this.artistInfo.id];
     if (nextFollowingState) {
-      await this.$dispatch('library/artists/followArtists', artistIdList);
+      await this.$dispatch('library/artists/followArtists', artistIdList)
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     } else {
-      await this.$dispatch('library/artists/unfollowArtists', artistIdList);
+      await this.$dispatch('library/artists/unfollowArtists', artistIdList)
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
     }
-
-    [this.isFollowing] = await this.$spotify.following.checkUserFollowed({
-      type: 'artist',
-      artistIdList,
-    });
   }
 
   onFavoriteTrackButtonClicked({ index, nextSavedState }: OnList['on-favorite-button-clicked']) {

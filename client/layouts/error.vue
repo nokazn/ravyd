@@ -37,6 +37,10 @@ export default Vue.extend({
     };
   },
 
+  mounted() {
+    console.error(this.error);
+  },
+
   head(): { title: string } {
     return { title: this.errorMessage };
   },

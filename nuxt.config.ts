@@ -34,12 +34,13 @@ const config: Configuration = {
     '~~/server/api/',
   ],
   plugins: [
-    { src: '~/plugins/inject-dayjs' },
-    { src: '~/plugins/inject-vuex' },
+    { src: '~/plugins/dayjs' },
+    { src: '~/plugins/vuex' },
     { src: '~/plugins/axios' },
     { src: '~/plugins/spotify' },
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/toast' },
   ],
   router: {
     middleware: 'auth',

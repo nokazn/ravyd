@@ -85,19 +85,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <Snackbar
-      v-bind="snackbar"
-      @on-changed="onSnackbarChanged"
-    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RootMutations } from 'vuex';
-
-import Snackbar, { On as OnSnackbar, SnackbarType } from '~/components/globals/Snackbar.vue';
+import { RootMutations, ExtendedMutationPayload } from 'vuex';
 
 export type Data = {
   isValid: boolean
@@ -107,11 +100,6 @@ export type Data = {
   isPrivatePlaylist: boolean
   playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
-  snackbar: {
-    isShown: boolean
-    type: SnackbarType
-    message: string
-  }
   mutationUnsubscriber: (() => void) | undefined
 }
 
@@ -143,10 +131,6 @@ export type On = {
 }
 
 export default Vue.extend({
-  components: {
-    Snackbar,
-  },
-
   props: {
     isShown: {
       type: Boolean,
@@ -186,11 +170,6 @@ export default Vue.extend({
         (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
       ],
       isLoading: false,
-      snackbar: {
-        isShown: false,
-        type: undefined,
-        message: '',
-      },
       mutationUnsubscriber: undefined,
     };
   },
@@ -211,14 +190,15 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
-      const type = mutation.type as keyof RootMutations;
-      if (type !== 'playlists/ADD_PLAYLIST' && type !== 'playlists/EDIT_PLAYLIST') return;
+    // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
+    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
       if (this.playlistArtwork == null) {
+        this.modal = false;
+        this.isLoading = false;
         return;
       }
 
-      const playlist = mutation.payload as RootMutations[typeof type];
+      const playlist = mutationPayload.payload;
       const fileReader = new FileReader();
       fileReader.addEventListener('load', () => {
         this.$spotify.playlists.uploadPlaylistArtwork({
@@ -226,20 +206,36 @@ export default Vue.extend({
           artwork: fileReader.result as string,
         }).then(() => {
           this.modal = false;
-          this.showSnackbar('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
+          this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }).catch(() => {
-          this.showSnackbar('error', '画像のアップロードに失敗しました。');
+          this.$toast.show('error', '画像のアップロードに失敗しました。');
+        }).finally(() => {
+          this.isLoading = false;
         });
       });
 
       // @todo
       fileReader.addEventListener('error', (err) => {
         console.warn(err);
-        this.showSnackbar('error', '画像の読み込みに失敗しました。');
+        this.isLoading = false;
+        this.$toast.show('error', '画像の読み込みに失敗しました。');
       });
 
       fileReader.readAsDataURL(this.playlistArtwork);
+    };
+
+    this.mutationUnsubscriber = this.$store.subscribe((mutation) => {
+      const type = mutation.type as keyof RootMutations;
+      switch (type) {
+        case 'playlists/ADD_PLAYLIST':
+        case 'playlists/EDIT_PLAYLIST':
+          subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        default:
+          break;
+      }
     });
   },
 
@@ -253,26 +249,6 @@ export default Vue.extend({
   methods: {
     onCloseButtonClicked() {
       this.$emit(ON_CHANGED, false);
-    },
-    showSnackbar(type: NonNullable<SnackbarType>, message: string) {
-      this.isLoading = false;
-      this.snackbar = {
-        isShown: true,
-        type,
-        message,
-      };
-    },
-    onSnackbarChanged(isShown: OnSnackbar['on-changed']) {
-      this.snackbar = isShown
-        ? {
-          ...this.snackbar,
-          isShown,
-        }
-        : {
-          type: undefined,
-          message: '',
-          isShown,
-        };
     },
     createPlaylist() {
       const userId = this.$getters()['auth/userId'];
@@ -288,12 +264,13 @@ export default Vue.extend({
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
-          this.showSnackbar('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
+          this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }
       }).catch((err: Error) => {
         console.error({ err });
-        this.showSnackbar('error', err.message);
+        this.isLoading = false;
+        this.$toast.show('error', err.message);
       });
     },
     resetForm() {

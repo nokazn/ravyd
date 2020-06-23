@@ -49,9 +49,7 @@ const actions: Actions<
       after,
     });
     if (artists == null) {
-      commit('SET_ARTIST_LIST', null);
-      commit('SET_IS_FULL_ARTIST_LIST', true);
-      return;
+      throw new Error('フォロー中のアーティストの一覧を取得できませんでした。');
     }
 
     const artistList = artists.items.map(convertArtist);
@@ -63,6 +61,9 @@ const actions: Actions<
     }
   },
 
+  /**
+   * 未更新分を追加
+   */
   async updateLatestSavedArtistList({ state, commit }) {
     // ライブラリの情報が更新されていないものの数
     const limit = state.numberOfUnupdatedArtist;
@@ -73,16 +74,18 @@ const actions: Actions<
       limit,
     });
     if (artists == null) {
-      commit('SET_ARTIST_LIST', null);
-      return;
+      throw new Error('フォロー中のアーティストの一覧を更新できませんでした。');
     }
 
     const currentArtistList = state.artistList;
+    // 現在のライブラリが未取得ならそのままセット
     if (currentArtistList == null) {
       commit('SET_ARTIST_LIST', artists.items.map(convertArtist));
       return;
     }
 
+    // @todo lastRelease の位置まで取得すべき?
+    // 現在のライブラリの先頭があるかどうか
     const currentLatestArtistId = currentArtistList[0].id;
     const lastArtistIndex = artists.items
       .findIndex((artist) => artist.id === currentLatestArtistId);
@@ -99,6 +102,9 @@ const actions: Actions<
     await this.$spotify.following.follow({
       type: 'artist',
       artistIdList,
+    }).catch((err: Error) => {
+      console.error({ err });
+      throw new Error('フォローに失敗しました。');
     });
 
     artistIdList.forEach((artistId) => {
@@ -113,6 +119,9 @@ const actions: Actions<
     await this.$spotify.following.unfollow({
       type: 'artist',
       artistIdList,
+    }).catch((err: Error) => {
+      console.error({ err });
+      throw new Error('フォローの解除に失敗しました。');
     });
 
     artistIdList.forEach((artistId) => {
@@ -123,13 +132,13 @@ const actions: Actions<
     });
   },
 
-  async modifyArtistSavedState({ state, commit }, { artistId, isSaved }) {
+  modifyArtistSavedState({ state, commit }, { artistId, isSaved }) {
     const currentArtistList = state.artistList;
     if (currentArtistList == null) return;
 
     const savedArtistIndex = currentArtistList
       .findIndex((artist) => artist.id === artistId);
-    // ライブラリ一覧を更新
+    // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedArtistIndex !== -1) {
       const nextArtistList = [...currentArtistList];
       // savedArtistIndex から1個取り除く
@@ -137,20 +146,12 @@ const actions: Actions<
       commit('SET_ARTIST_LIST', nextArtistList);
     }
 
-    const [actualIsSaved] = await this.$spotify.following.checkUserFollowed({
-      type: 'artist',
-      artistIdList: [artistId],
-    });
-    // 実際の状態と異なれば戻す
-    if (isSaved !== actualIsSaved) {
-      // ライブラリ一覧を戻す
-      commit('SET_ARTIST_LIST', currentArtistList);
-    }
-
     // ライブラリ一覧に表示されてないリリースを保存した場合
-    if (isSaved && savedArtistIndex === -1 && isSaved === actualIsSaved) {
+    if (isSaved && savedArtistIndex === -1) {
       commit('INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS');
     }
+
+    commit('SET_ACTUAL_IS_SAVED', [artistId, isSaved]);
   },
 };
 

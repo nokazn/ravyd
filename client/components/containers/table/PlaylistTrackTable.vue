@@ -192,9 +192,17 @@ export default Vue.extend({
       const { id, isSaved } = row;
       const nextSavedState = !isSaved;
       if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [id]);
+        this.$dispatch('library/tracks/saveTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       } else {
-        this.$dispatch('library/tracks/removeTracks', [id]);
+        this.$dispatch('library/tracks/removeTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       }
     },
     onRowClicked({ id }: OnRow['on-row-clicked']) {

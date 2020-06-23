@@ -17,6 +17,8 @@ export type PlaylistsActions = {
     description: string
     isPublic: boolean
   }) => Promise<void>
+  followPlaylist: (playlistId: string) => Promise<void>
+  unfollowPlaylist: (playlistId: string) => Promise<void>
 }
 
 export type RootActions = {
@@ -24,6 +26,8 @@ export type RootActions = {
   'playlists/getAllPlaylists': PlaylistsActions['getAllPlaylists']
   'playlists/createPlaylist': PlaylistsActions['createPlaylist']
   'playlists/editPlaylist': PlaylistsActions['editPlaylist']
+  'playlists/followPlaylist': PlaylistsActions['followPlaylist']
+  'playlists/unfollowPlaylist': PlaylistsActions['unfollowPlaylist']
 }
 
 const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
@@ -34,6 +38,9 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       limit,
       offset,
     });
+    if (playlists == null) {
+      throw new Error('プレイリストの一覧を取得できませんでした。');
+    }
 
     commit('SET_PLAYLISTS', playlists?.items);
   },
@@ -45,10 +52,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (firstListOfPlaylists == null) {
-      commit('SET_PLAYLISTS', firstListOfPlaylists);
-      return;
+      throw new Error('プレイリストの一覧を取得できませんでした。');
     }
 
+    // offset: index から limit 件取得
     const handler = async (index: number) => {
       const playlists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
         offset: limit * (index + 1),
@@ -96,7 +103,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
-      // @to-do 空文字列を渡せない
+      // @todo 空文字列を渡せない
       description: description || undefined,
       isPublic,
     }).catch((err: Error) => {
@@ -118,6 +125,44 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       description: description || null,
       isPublic,
     });
+  },
+
+  async followPlaylist({ state, commit, rootGetters }, playlistId) {
+    await this.$spotify.following.followPlaylist({ playlistId })
+      .catch((err: Error) => {
+        throw new Error(err.message);
+      });
+
+    const currentPlaylists = state.playlists;
+    if (currentPlaylists != null) {
+      const savedPlaylist = currentPlaylists.find((item) => item.id === playlistId);
+      // すでに一覧に存在する場合
+      if (savedPlaylist != null) {
+        commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+        return;
+      }
+    }
+
+    const market = rootGetters['auth/userCountryCode'];
+    const playlist = await this.$spotify.playlists.getPlaylist({
+      playlistId,
+      market,
+    });
+
+    if (playlist != null) {
+      commit('ADD_PLAYLIST', playlist);
+      commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+    }
+  },
+
+  async unfollowPlaylist({ commit }, playlistId) {
+    await this.$spotify.following.unfollowPlaylist({ playlistId })
+      .catch((err: Error) => {
+        throw new Error(err.message);
+      });
+
+    commit('REMOVE_PLAYLIST', playlistId);
+    commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
   },
 };
 

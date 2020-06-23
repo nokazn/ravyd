@@ -9,11 +9,16 @@ export const followPlaylist = (context: Context) => {
   }: {
     playlistId: string
     isPublic?: boolean
-  }): Promise<void> => app.$spotifyApi.$put(`/playlists/${playlistId}/followers`, null, {
-    params: {
-      isPublic,
-    },
-  }).catch((err: Error) => {
-    console.error({ err });
-  });
+  }): Promise<void> => {
+    const request = app.$spotifyApi.$put(`/playlists/${playlistId}/followers`, null, {
+      params: {
+        isPublic,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+      throw new Error(err.message);
+    });
+
+    return request;
+  };
 };

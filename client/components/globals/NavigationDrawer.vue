@@ -220,7 +220,11 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.$dispatch('playlists/getAllPlaylists');
+    this.$dispatch('playlists/getAllPlaylists')
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', err.message);
+      });
   },
 
   methods: {

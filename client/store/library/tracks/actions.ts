@@ -42,19 +42,15 @@ const actions: Actions<
     if (state.isFullTrackList) return;
 
     const limit = payload?.limit ?? 30;
-    const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
-
     const offset = getters.trackListLength;
+    const market = rootGetters['auth/userCountryCode'];
     const tracks = await this.$spotify.library.getUserSavedTracks({
       limit,
       offset,
       market,
     });
     if (tracks == null) {
-      commit('SET_TRACK_LIST', null);
-      commit('SET_IS_FULL_TRACK_LIST', true);
-      return;
+      throw new Error('お気に入りのトラックの一覧を取得できませんでした。');
     }
 
     // 保存された楽曲を取得しているので isSaved はすべて true
@@ -71,26 +67,25 @@ const actions: Actions<
     }
   },
 
+  /**
+   * 未更新分を追加
+   */
   async updateLatestSavedTrackList({ state, commit, rootGetters }) {
-    const market = rootGetters['auth/userCountryCode'];
-    if (market == null) return;
-
     // ライブラリの情報が更新されていないものの数
     const limit = state.numberOfUnupdatedTracks;
     if (limit === 0) return;
 
+    const market = rootGetters['auth/userCountryCode'];
     const tracks = await this.$spotify.library.getUserSavedTracks({
       limit,
       market,
     });
     if (tracks == null) {
-      commit('SET_TRACK_LIST', null);
-      return;
+      throw new Error('お気に入りのトラックの一覧を更新できませんでした。');
     }
 
     // 保存された楽曲を取得しているので isSaved はすべて true
     const isTrackSavedList = new Array(tracks.items.length).fill(true);
-
     const currentTrackList = state.trackList;
     if (currentTrackList == null) {
       commit('SET_TRACK_LIST', tracks.items.map(
@@ -103,7 +98,8 @@ const actions: Actions<
     const lastTrackIndex = tracks.items
       .findIndex(({ track }) => track.id === currentLatestTrackId);
 
-    // @todo
+    // @todo lastRelease の位置まで取得すべき?
+    // 現在のライブラリの先頭があるかどうか// @todo
     const addedTrackList = lastTrackIndex === -1
       ? tracks.items
         .map(convertPlaylistTrackDetail({ isTrackSavedList }))
@@ -123,7 +119,11 @@ const actions: Actions<
   },
 
   async saveTracks({ dispatch }, trackIdList) {
-    await this.$spotify.library.saveTracks({ trackIdList });
+    await this.$spotify.library.saveTracks({ trackIdList })
+      .catch((err) => {
+        console.error({ err });
+        throw new Error('ライブラリにトラックを保存できませんでした。');
+      });
 
     trackIdList.forEach((trackId) => {
       dispatch('modifyTrackSavedState', {
@@ -134,7 +134,11 @@ const actions: Actions<
   },
 
   async removeTracks({ dispatch }, trackIdList) {
-    await this.$spotify.library.removeUserSavedTracks({ trackIdList });
+    await this.$spotify.library.removeUserSavedTracks({ trackIdList })
+      .catch((err) => {
+        console.error({ err });
+        throw new Error('ライブラリからトラックを削除できませんでした。');
+      });
 
     trackIdList.forEach((trackId) => {
       dispatch('modifyTrackSavedState', {
@@ -144,12 +148,12 @@ const actions: Actions<
     });
   },
 
-  async modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
+  modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
     const currentTrackList = state.trackList;
     if (currentTrackList == null) return;
 
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
-    // ライブラリ一覧を更新
+    // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedTrackIndex !== -1) {
       const trackList = [...currentTrackList];
       trackList[savedTrackIndex] = {
@@ -160,33 +164,14 @@ const actions: Actions<
     }
 
     // プレイヤーを更新
-    dispatch('player/modifyTrackSavedState', {
-      trackId,
-      isSaved,
-    }, { root: true });
-
-    const [actualIsSaved] = await this.$spotify.library.checkUserSavedTracks({
-      trackIdList: [trackId],
-    });
-
-    commit('SET_ACTUAL_IS_SAVED', [trackId, actualIsSaved]);
-
-    // 実際の状態と異なれば戻す
-    if (isSaved !== actualIsSaved) {
-      // ライブラリ一覧を戻す
-      commit('SET_TRACK_LIST', currentTrackList);
-
-      // プレイヤーを戻す
-      dispatch('player/modifyTrackSavedState', {
-        trackId,
-        isSaved: actualIsSaved,
-      }, { root: true });
-    }
+    dispatch('player/modifyTrackSavedState', { trackId, isSaved }, { root: true });
 
     // ライブラリ一覧に表示されてない曲を保存した場合
-    if (isSaved && savedTrackIndex === -1 && isSaved === actualIsSaved) {
+    if (isSaved && savedTrackIndex === -1) {
       commit('INCREMENT_NUMBER_OF_UNUPDATED_TRACKS');
     }
+
+    commit('SET_ACTUAL_IS_SAVED', [trackId, isSaved]);
   },
 };
 
