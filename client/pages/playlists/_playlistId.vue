@@ -30,6 +30,7 @@
         </h1>
 
         <p
+          v-if="playlistInfo.description"
           class="subtext--text"
           v-html="playlistInfo.description"
         />
