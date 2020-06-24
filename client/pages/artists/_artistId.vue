@@ -14,36 +14,50 @@
         default-user-icon="mdi-account-music"
         shadow
       />
-      <div :class="$style.ArtistIdPage__info">
-        <div title="認証済アーティスト">
-          <span class="g-small-text">
+
+      <div :class="$style.Info">
+        <HashTags
+          :tag-list="artistInfo.genreList"
+          :class="$style.Info__hashTags"
+        />
+
+        <div>
+          <span
+            title="認証済アーティスト"
+            class="g-small-text"
+          >
             アーティスト
           </span>
           <v-icon
             :size="14"
             color="light-blue"
-            :class="$style.ArtistIdPage__verifiedIrtistIcon"
+            title="認証済アーティスト"
+            :class="$style.Info__verifiedArtistIcon"
           >
             mdi-check-decagram
           </v-icon>
         </div>
 
-        <h1 :class="$style.ArtistIdPage__artistName">
+        <h1 :class="$style.Info__artistName">
           {{ artistInfo.name }}
         </h1>
 
-        <p>{{ artistInfo.followersText }}</p>
+        <div :class="$style.Info__footer">
+          <p>
+            {{ artistInfo.followersText }}
+          </p>
 
-        <div :class="$style.ArtistIdPage__buttons">
-          <ContextMediaButton
-            :is-playing="isArtistSet && isPlaying "
-            @on-clicked="onContextMediaButtonClicked"
-          />
+          <div :class="$style.Info__buttons">
+            <ContextMediaButton
+              :is-playing="isArtistSet && isPlaying "
+              @on-clicked="onContextMediaButtonClicked"
+            />
 
-          <FollowButton
-            :is-following="isFollowing"
-            @on-clicked="onFollowButtonClicked"
-          />
+            <FollowButton
+              :is-following="isFollowing"
+              @on-clicked="onFollowButtonClicked"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -59,33 +73,44 @@
       />
     </section>
 
-    <template v-for="{ title, items } in Object.values(releaseListMap)">
+    <template v-for="[key, releaseInfo] in Object.entries(releaseListMap)">
       <CardsSection
-        v-if="items.length > 0"
-        :key="title"
-        :title="title"
+        v-if="releaseInfo.items.length > 0"
+        :key="key"
+        :title="releaseInfo.title"
+        :class="$style.CardSection"
       >
-        <div
-          :class="$style.ArtistIdPage__cardSection"
-        >
-          <ReleaseCard
-            v-for="item in items"
-            :key="item.id"
-            v-bind="item"
-            :min-width="ARTWORK_MIN_SIZE"
-            :max-width="ARTWORK_MAX_SIZE"
-            discograpy
-            :class="$style.ArtistIdPage__card"
-          />
+        <div :class="$style.CardSection__wrapper">
+          <template v-for="(item, index) in releaseInfo.items">
+            <ReleaseCard
+              v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
+              :key="item.id"
+              v-bind="item"
+              :min-width="ARTWORK_MIN_SIZE"
+              :max-width="ARTWORK_MAX_SIZE"
+              discograpy
+              :class="$style.CardSection__card"
+            />
+          </template>
 
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+        </div>
+
+        <div
+          v-if="releaseInfo.total > ABBREVIATED_RELEASE_LENGTH"
+          :class="$style.CardSection__buttonWrapper"
+        >
+          <ShowAllReleaseButton
+            :is-abbreviated="releaseInfo.isAbbreviated"
+            @on-clicked="onShowAllButtonClicked(key)"
+          />
         </div>
       </CardsSection>
     </template>
@@ -98,17 +123,22 @@ import { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import HashTags from '~/components/parts/chip/HashTags.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import ShowAllReleaseButton from '~/components/parts/button/ShowAllReleaseButton.vue';
+
 import {
   getReleaseListMap,
   ArtistReleaseInfo,
   getArtistInfo,
   getTopTrackList,
   getIsFollowing,
+  getReleaseListHandler,
+  ReleaseType,
 } from '~/scripts/localPlugins/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
@@ -118,16 +148,19 @@ const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
 const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
+const ABBREVIATED_RELEASE_LENGTH = 10;
 
 export type AsyncData = {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | undefined
-  releaseListMap: ArtistReleaseInfo | undefined
+  releaseListMap: ArtistReleaseInfo
+  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined
   AVATAR_SIZE: number
   TOP_TRACK_ARTWORK_SIZE: number
   ARTWORK_MIN_SIZE: number
   ARTWORK_MAX_SIZE: number
+  ABBREVIATED_RELEASE_LENGTH: number
 }
 
 export type Data = {
@@ -138,11 +171,13 @@ export type Data = {
 @Component({
   components: {
     UserAvatar,
+    HashTags,
     ContextMediaButton,
     FollowButton,
     TrackListWrapper,
     CardsSection,
     ReleaseCard,
+    ShowAllReleaseButton,
   },
 
   validate({ params }: Context) {
@@ -159,18 +194,21 @@ export type Data = {
       getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
       getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
-      getReleaseListMap(context, ARTWORK_MAX_SIZE),
+      getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
+    const getReleaseList = getReleaseListHandler(context);
 
     return {
       artistInfo,
       isFollowing,
       topTrackList,
       releaseListMap,
+      getReleaseList,
       AVATAR_SIZE,
       TOP_TRACK_ARTWORK_SIZE,
       ARTWORK_MIN_SIZE,
       ARTWORK_MAX_SIZE,
+      ABBREVIATED_RELEASE_LENGTH,
     };
   },
 })
@@ -178,12 +216,43 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
   topTrackList: App.TrackDetail[] | undefined = undefined;
-  releaseListMap: ArtistReleaseInfo | undefined = undefined;
+  releaseListMap: ArtistReleaseInfo = {
+    album: {
+      title: 'アルバム',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    single: {
+      title: 'シングル・EP',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    compilation: {
+      title: 'コンピレーション',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    appears_on: {
+      title: '参加作品',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+  };
+  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined = undefined
 
   AVATAR_SIZE = AVATAR_SIZE;
   TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
   ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
   ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
+  ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
@@ -244,7 +313,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
-
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -292,6 +360,34 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     topTrackList[index].isSaved = nextSavedState;
     this.topTrackList = topTrackList;
   }
+
+  async onShowAllButtonClicked(type: ReleaseType) {
+    const currentReleaseList = this.releaseListMap[type];
+    if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
+
+    // すべて表示されている場合
+    if (!currentReleaseList.isAbbreviated) {
+      this.$set(this.releaseListMap[type], 'isAbbreviated', true);
+      return;
+    }
+
+    const offset = currentReleaseList.items.length;
+    const counts = currentReleaseList.total - offset;
+    // 追加で取得するコンテンツがある場合
+    if (counts > 0) {
+      const releaseList = await this.getReleaseList({
+        type,
+        artworkSize: this.ARTWORK_MAX_SIZE,
+        counts,
+        offset,
+      });
+
+      this.$set(this.releaseListMap[type], 'items', [...currentReleaseList.items, ...releaseList]);
+      this.$set(this.releaseListMap[type], 'isFull', true);
+    }
+
+    this.$set(this.releaseListMap[type], 'isAbbreviated', false);
+  }
 }
 </script>
 
@@ -299,65 +395,86 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 .ArtistIdPage {
   padding: 16px 6% 48px;
 
-  &__cardSection {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    // card と cardSpacer 両方に適用
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &:not(:last-child) {
-      margin-bottom: 32px;
-    }
-  }
-
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 220px auto;
+    grid-column-gap: 24px;
     margin-bottom: 32px;
-
-    & > *:not(:last-child) {
-      margin-right: 24px;
-    }
-  }
-
-  &__info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  &__verifiedIrtistIcon {
-    margin-bottom: 2px;
-  }
-
-  &__artistName {
-    font-size: 40px;
-    margin: 8px 0;
-    line-height: 1.2em;
-  }
-
-  &__buttons > *:not(:last-child) {
-    margin-right: 12px;
   }
 
   &__trackListSection {
     margin-bottom: 32px;
   }
 
-  &__card {
-    margin-bottom: 32px;
+  .CardSection {
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+
+    &__wrapper {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      // card と spacer 両方に適用
+      & > * {
+        margin-left: 16px;
+        margin-right: 16px;
+        flex: 1 0 180px;
+        min-width: 180px;
+        max-width: 240px;
+      }
+    }
+
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    // 最終行の余りの部分を埋める
+    &__spacer {
+      height: 0;
+    }
+
+    &__buttonWrapper {
+      margin-top: -8px;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__buttonIcon {
+      margin-right: 4px;
+    }
   }
 
-  // 最終行の余りの部分を埋める
-  &__cardSpacer {
-    height: 0;
+  .Info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &__hashTags {
+      // border-radius の分だけ右にあるように見えてしまうので調整
+      margin-left: -8px;
+      margin-bottom: 12px;
+    }
+
+    &__verifiedArtistIcon {
+      margin-bottom: 2px;
+    }
+
+    &__artistName {
+      font-size: 40px;
+      margin: 8px 0;
+      line-height: 1.2em;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
   }
 }
 </style>

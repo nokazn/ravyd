@@ -6,7 +6,7 @@
     :min-width="120"
     @click="onClicked"
   >
-    <div :class="$style.ShowAllButton">
+    <div :class="$style.ShowAllTracksButton">
       <v-icon small>
         {{ showAllButton.icon }}
       </v-icon>
@@ -71,12 +71,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ShowAllButton {
+.ShowAllTracksButton {
   & > * {
     font-size: 0.9em;
 
     &:not(:last-child) {
-      margin-right: 8px;
+      margin-right: 4px;
     }
   }
 }

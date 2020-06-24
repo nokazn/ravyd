@@ -18,6 +18,7 @@ export const getArtistInfo = async (
     uri,
     images,
     followers,
+    genres: genreList,
     external_urls: externalUrls,
   } = artist;
   const avatarSrc = getImageSrc(images, avatarSize);
@@ -29,6 +30,7 @@ export const getArtistInfo = async (
     uri,
     avatarSrc,
     followersText,
+    genreList,
     externalUrls,
   };
 };

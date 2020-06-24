@@ -1,86 +1,65 @@
 import { Context } from '@nuxt/types';
 
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
-import { App } from '~~/types';
+import {
+  TITLE_MAP,
+  ReleaseType,
+  ReleaseTitle,
+  ReleaseInfo,
+} from './index';
 
 export type ArtistReleaseInfo = {
-  albums: {
-    title: 'アルバム'
-    items: App.ReleaseCardInfo[] | undefined
-    isFull: boolean
-  }
-  singles: {
-    title: 'シングル・EP'
-    items: App.ReleaseCardInfo[] | undefined
-    isFull: boolean
-  }
-  compilations: {
-    title: 'コンピレーション'
-    items: App.ReleaseCardInfo[] | undefined
-    isFull: boolean
-  }
-  appearsOns: {
-    title: '参加作品'
-    items: App.ReleaseCardInfo[] | undefined
-    isFull: boolean
-  }
+  [k in ReleaseType]: ReleaseInfo<k>
 }
 
-export const getReleaseListMap = async (
-  { app, params }: Context,
+const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
+  releaseType: T,
   artworkSize: number,
-): Promise<ArtistReleaseInfo | undefined> => {
-  const country = app.$getters()['auth/userCountryCode'];
-  if (country == null) return undefined;
+  limit: number,
+  offset?: number,
+): Promise<ReleaseInfo<T>> => {
+  const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 
-  const getArtistReleases = (
-    releaseType: App.ReleaseCardInfo['releaseType'],
-    offset?: number,
-  ) => app.$spotify.artists.getArtistAlbums({
+  const country = app.$getters()['auth/userCountryCode'];
+  const releases = await app.$spotify.artists.getArtistAlbums({
     artistId: params.artistId,
     country,
-    limit: 20,
     includeGroupList: [releaseType],
+    limit,
     offset,
   });
+  const items = releases?.items.map(convertReleaseForCard(artworkSize)) ?? [];
 
-  const [albums, singles, compilations, appearsOns] = await Promise.all([
-    getArtistReleases('album'),
-    getArtistReleases('single'),
-    getArtistReleases('compilation'),
-    getArtistReleases('appears_on'),
-  ] as const);
-
-  const albumList = albums?.items.map(convertReleaseForCard(artworkSize));
-  const singleList = singles?.items.map(convertReleaseForCard(artworkSize));
-  const compilationList = compilations?.items.map(convertReleaseForCard(artworkSize));
-  const appearsOnList = appearsOns?.items.map(convertReleaseForCard(artworkSize));
-
-  const isFullAlbumList = albums?.next == null;
-  const isFullSingleList = singles?.next == null;
-  const isFullCompilationList = compilations?.next == null;
-  const isFullAppearsOnList = appearsOns?.next == null;
+  const isFull = releases?.next == null;
+  const total = releases?.total ?? 0;
 
   return {
-    albums: {
-      title: 'アルバム',
-      items: albumList,
-      isFull: isFullAlbumList,
-    },
-    singles: {
-      title: 'シングル・EP',
-      items: singleList,
-      isFull: isFullSingleList,
-    },
-    compilations: {
-      title: 'コンピレーション',
-      items: compilationList,
-      isFull: isFullCompilationList,
-    },
-    appearsOns: {
-      title: '参加作品',
-      items: appearsOnList,
-      isFull: isFullAppearsOnList,
-    },
+    title,
+    items,
+    isFull,
+    total,
+    isAbbreviated: true,
+  };
+};
+
+export const getReleaseListMap = async (
+  context: Context,
+  artworkSize: number,
+  limit: number,
+): Promise<ArtistReleaseInfo> => {
+  const getReleaseList = getReleaseListHandler(context);
+
+  const [album, single, compilation, appears_on] = await Promise.all([
+    getReleaseList('album', artworkSize, limit),
+    getReleaseList('single', artworkSize, limit),
+    getReleaseList('compilation', artworkSize, limit),
+    getReleaseList('appears_on', artworkSize, limit),
+  ] as const);
+
+  return {
+    album,
+    single,
+    compilation,
+    appears_on,
   };
 };

@@ -5,10 +5,10 @@
         {{ title }}
       </h2>
 
-      <ShowAllButton
+      <ShowAllTracksButton
         :is-abbreviated="isAbbreviated"
         :abbreviated-length="abbreviatedLength"
-        @on-clicked="onShowAllButtonClicked"
+        @on-clicked="onShowAllTracksButtonClicked"
       />
     </div>
 
@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
+import ShowAllTracksButton from '~/components/parts/button/ShowAllTracksButton.vue';
 import TrackList, { TrackDetail, On as OnList } from '~/components/containers/list/TrackList.vue';
 
 export type Data = {
@@ -39,7 +39,7 @@ export type On = {
 
 export default Vue.extend({
   components: {
-    ShowAllButton,
+    ShowAllTracksButton,
     TrackList,
   },
 
@@ -77,7 +77,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onShowAllButtonClicked() {
+    onShowAllTracksButtonClicked() {
       this.isAbbreviated = !this.isAbbreviated;
     },
     onFavoriteButtonClicked({ ...row }: OnList['on-favorite-button-clicked']) {
