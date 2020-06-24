@@ -383,6 +383,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     await this.$spotify.player.volume({
       deviceId,
       volumePercent,
+    }).catch((err: Error) => {
+      console.error({ err });
+      throw new Error('ボリュームが変更できませんでした。');
     });
 
     commit('SET_VOLUME', { volumePercent });
@@ -395,6 +398,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     await this.$spotify.player.volume({
       deviceId,
       volumePercent,
+    }).catch((err: Error) => {
+      console.error({ err });
+      throw new Error('ボリュームをミュートにできませんでした。');
     });
 
     commit('SET_IS_MUTED', nextMuteState);

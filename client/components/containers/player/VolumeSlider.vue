@@ -24,10 +24,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 type Data = {
   volumePercent: number
+  debounceSetter: (positionMs: number) => number
   volumeButton: VolumeButton
   mutationUnsubscribe: (() => void) | undefined
 }
@@ -62,8 +64,12 @@ const volumeButton = (volumePercent: number): VolumeButton => {
 
 export default Vue.extend({
   data(): Data {
+    const interval = 100;
+    const debounceSetter = debounce((positionMs: number) => positionMs, interval);
+
     return {
       volumePercent: 0,
+      debounceSetter,
       mutationUnsubscribe: undefined,
       volumeButton: volumeButton(100),
     };
@@ -76,8 +82,13 @@ export default Vue.extend({
   },
 
   mounted() {
-    const subscribeVolume = (mutationPayload: ExtendedMutationPayload<'player/SET_VOLUME'>) => {
-      this.volumePercent = mutationPayload.payload.volumePercent;
+    const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'player/SET_VOLUME'>) => {
+      this.volumePercent = volumePercent;
+    };
+    const subscribeMuteState = ({ payload: isMuted }: ExtendedMutationPayload<'player/SET_IS_MUTED'>) => {
+      if (!isMuted) {
+        this.volumePercent = this.$state().player.volume;
+      }
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
@@ -85,6 +96,10 @@ export default Vue.extend({
       switch (type) {
         case 'player/SET_VOLUME':
           subscribeVolume(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        case 'player/SET_IS_MUTED':
+          subscribeMuteState(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
@@ -95,12 +110,20 @@ export default Vue.extend({
 
   methods: {
     onChange(volumePercent: number) {
-      this.$commit('player/SET_VOLUME', { volumePercent });
+      this.$dispatch('player/volume', { volumePercent })
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('warning', err.message);
+        });
       this.volumeButton = volumeButton(volumePercent);
     },
     onVolumeButtonClicked() {
+      this.$dispatch('player/mute')
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('warning', err.message);
+        });
       this.volumePercent = 0;
-      this.$dispatch('player/mute');
     },
   },
 });
