@@ -2,12 +2,16 @@
   <div :class="$style.VolumeSlider">
     <v-btn
       icon
-      small
-      :title="volumeButton.title"
+      :width="32"
+      :height="32"
+      :title="volumeButtonTitle"
       @click="onVolumeButtonClicked"
     >
-      <v-icon small>
-        {{ volumeButton.icon }}
+      <v-icon
+        :size="20"
+        :color="volumeButtonColor"
+      >
+        {{ volumeButtonIcon }}
       </v-icon>
     </v-btn>
 
@@ -30,17 +34,16 @@ import { RootState, ExtendedMutationPayload } from 'vuex';
 type Data = {
   volumePercent: number
   debounceSetter: (positionMs: number) => number
-  volumeButton: VolumeButton
+  volumeButtonIcon: VolumeButtonIcon
   mutationUnsubscribe: (() => void) | undefined
 }
 
-export type VolumeButton = {
-  icon: 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
-  title: 'ミュート' | 'ミュートを解除'
-}
+type VolumeButtonIcon = 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
 
-const volumeButton = (volumePercent: number): VolumeButton => {
-  const volumeIconList: Array<VolumeButton['icon']> = [
+const volumeButtonIcon = (volumePercent: number, isMuted: boolean): VolumeButtonIcon => {
+  if (isMuted) return 'mdi-volume-mute';
+
+  const volumeIconList: Array<VolumeButtonIcon> = [
     'mdi-volume-mute',
     'mdi-volume-low',
     'mdi-volume-medium',
@@ -51,27 +54,21 @@ const volumeButton = (volumePercent: number): VolumeButton => {
     Math.floor((volumePercent / 100) * volumeIconList.length),
     volumeIconList.length - 1,
   );
-  const icon = volumeIconList[index];
-  const title = volumePercent === 0
-    ? 'ミュートを解除'
-    : 'ミュート';
 
-  return {
-    icon,
-    title,
-  };
+  return volumeIconList[index];
 };
 
 export default Vue.extend({
   data(): Data {
+    const volumePercent = 100;
     const interval = 100;
     const debounceSetter = debounce((positionMs: number) => positionMs, interval);
 
     return {
-      volumePercent: 0,
+      volumePercent,
       debounceSetter,
       mutationUnsubscribe: undefined,
-      volumeButton: volumeButton(100),
+      volumeButtonIcon: volumeButtonIcon(volumePercent, false),
     };
   },
 
@@ -79,16 +76,27 @@ export default Vue.extend({
     isMuted(): RootState['player']['isMuted'] {
       return this.$state().player.isMuted;
     },
+    volumeButtonTitle(): string {
+      return this.isMuted
+        ? 'ミュートを解除'
+        : 'ミュート';
+    },
+    volumeButtonColor(): string | undefined {
+      return this.isMuted
+        ? 'inactive'
+        : undefined;
+    },
   },
 
   mounted() {
     const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'player/SET_VOLUME'>) => {
       this.volumePercent = volumePercent;
+      this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
     const subscribeMuteState = ({ payload: isMuted }: ExtendedMutationPayload<'player/SET_IS_MUTED'>) => {
-      if (!isMuted) {
-        this.volumePercent = this.$state().player.volume;
-      }
+      const volumePercent = this.$state().player.volume;
+      this.volumePercent = isMuted ? 0 : volumePercent;
+      this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
@@ -115,7 +123,6 @@ export default Vue.extend({
           console.error({ err });
           this.$toast.show('warning', err.message);
         });
-      this.volumeButton = volumeButton(volumePercent);
     },
     onVolumeButtonClicked() {
       this.$dispatch('player/mute')
@@ -123,7 +130,6 @@ export default Vue.extend({
           console.error({ err });
           this.$toast.show('warning', err.message);
         });
-      this.volumePercent = 0;
     },
   },
 });
@@ -134,6 +140,6 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 130px;
+  min-width: 140px;
 }
 </style>
