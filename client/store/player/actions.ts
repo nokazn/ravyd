@@ -379,7 +379,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async volume({ state, commit }, { volumePercent }) {
-    const { deviceId } = state;
+    const { deviceId, volume } = state;
+    if (volume === volumePercent) return;
+
     await this.$spotify.player.volume({
       deviceId,
       volumePercent,
@@ -394,14 +396,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async mute({ state, commit }) {
     const { isMuted, deviceId, volume } = state;
     const nextMuteState = !isMuted;
-    const volumePercent = nextMuteState ? 0 : volume;
-    await this.$spotify.player.volume({
-      deviceId,
-      volumePercent,
-    }).catch((err: Error) => {
-      console.error({ err });
-      throw new Error('ボリュームをミュートにできませんでした。');
-    });
+    if (volume !== 0) {
+      const volumePercent = nextMuteState ? 0 : volume;
+      await this.$spotify.player.volume({
+        deviceId,
+        volumePercent,
+      }).catch((err: Error) => {
+        console.error({ err });
+        throw new Error('ボリュームをミュートにできませんでした。');
+      });
+    }
 
     commit('SET_IS_MUTED', nextMuteState);
   },
