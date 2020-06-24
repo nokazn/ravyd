@@ -62,23 +62,25 @@
       />
     </section>
 
-    <template v-for="{ title, items, isFull } in Object.values(releaseListMap)">
+    <template v-for="[key, releaseInfo] in Object.entries(releaseListMap)">
       <CardsSection
-        v-if="items.length > 0"
-        :key="title"
-        :title="title"
+        v-if="releaseInfo.items.length > 0"
+        :key="key"
+        :title="releaseInfo.title"
         :class="$style.CardSection"
       >
         <div :class="$style.CardSection__wrapper">
-          <ReleaseCard
-            v-for="item in items"
-            :key="item.id"
-            v-bind="item"
-            :min-width="ARTWORK_MIN_SIZE"
-            :max-width="ARTWORK_MAX_SIZE"
-            discograpy
-            :class="$style.CardSection__card"
-          />
+          <template v-for="(item, index) in releaseInfo.items">
+            <ReleaseCard
+              v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
+              :key="item.id"
+              v-bind="item"
+              :min-width="ARTWORK_MIN_SIZE"
+              :max-width="ARTWORK_MAX_SIZE"
+              discograpy
+              :class="$style.CardSection__card"
+            />
+          </template>
 
           <div :class="$style.CradSection__spacer" />
           <div :class="$style.CradSection__spacer" />
@@ -91,22 +93,13 @@
         </div>
 
         <div
-          v-if="!isFull"
+          v-if="releaseInfo.total > ABBREVIATED_RELEASE_LENGTH"
           :class="$style.CardSection__buttonWrapper"
         >
-          <v-btn
-            rounded
-            :width="200"
-            text
-          >
-            <v-icon :class="$style.CardSection__buttonIcon">
-              mdi-chevron-down
-            </v-icon>
-
-            <span>
-              すべて表示
-            </span>
-          </v-btn>
+          <ShowAllReleaseButton
+            :is-abbreviated="releaseInfo.isAbbreviated"
+            @on-clicked="onShowAllButtonClicked(key)"
+          />
         </div>
       </CardsSection>
     </template>
@@ -124,12 +117,16 @@ import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowBu
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import ShowAllReleaseButton from '~/components/parts/button/ShowAllReleaseButton.vue';
+
 import {
   getReleaseListMap,
   ArtistReleaseInfo,
   getArtistInfo,
   getTopTrackList,
   getIsFollowing,
+  getReleaseListHandler,
+  ReleaseType,
 } from '~/scripts/localPlugins/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
@@ -139,16 +136,19 @@ const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
 const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
+const ABBREVIATED_RELEASE_LENGTH = 10;
 
 export type AsyncData = {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | undefined
-  releaseListMap: ArtistReleaseInfo | undefined
+  releaseListMap: ArtistReleaseInfo
+  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined
   AVATAR_SIZE: number
   TOP_TRACK_ARTWORK_SIZE: number
   ARTWORK_MIN_SIZE: number
   ARTWORK_MAX_SIZE: number
+  ABBREVIATED_RELEASE_LENGTH: number
 }
 
 export type Data = {
@@ -164,6 +164,7 @@ export type Data = {
     TrackListWrapper,
     CardsSection,
     ReleaseCard,
+    ShowAllReleaseButton,
   },
 
   validate({ params }: Context) {
@@ -180,18 +181,21 @@ export type Data = {
       getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
       getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
-      getReleaseListMap(context, ARTWORK_MAX_SIZE),
+      getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
+    const getReleaseList = getReleaseListHandler(context);
 
     return {
       artistInfo,
       isFollowing,
       topTrackList,
       releaseListMap,
+      getReleaseList,
       AVATAR_SIZE,
       TOP_TRACK_ARTWORK_SIZE,
       ARTWORK_MIN_SIZE,
       ARTWORK_MAX_SIZE,
+      ABBREVIATED_RELEASE_LENGTH,
     };
   },
 })
@@ -199,12 +203,43 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
   topTrackList: App.TrackDetail[] | undefined = undefined;
-  releaseListMap: ArtistReleaseInfo | undefined = undefined;
+  releaseListMap: ArtistReleaseInfo = {
+    album: {
+      title: 'アルバム',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    single: {
+      title: 'シングル・EP',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    compilation: {
+      title: 'コンピレーション',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+    appears_on: {
+      title: '参加作品',
+      items: [],
+      isFull: false,
+      isAbbreviated: true,
+      total: 0,
+    },
+  };
+  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined = undefined
 
   AVATAR_SIZE = AVATAR_SIZE;
   TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
   ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
   ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
+  ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
@@ -311,6 +346,33 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     const topTrackList = [...this.topTrackList];
     topTrackList[index].isSaved = nextSavedState;
     this.topTrackList = topTrackList;
+  }
+
+  async onShowAllButtonClicked(key: ReleaseType) {
+    const currentReleaseList = this.releaseListMap[key];
+    if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
+
+    // すべて表示されている場合
+    if (!currentReleaseList.isAbbreviated) {
+      this.$set(this.releaseListMap[key], 'isAbbreviated', true);
+      return;
+    }
+
+    const offset = currentReleaseList.items.length;
+    const limit = currentReleaseList.total - offset;
+    // 追加で取得するコンテンツがない場合
+    if (limit < 1) return;
+
+    const { items, isFull } = await this.getReleaseList(
+      key,
+      this.ARTWORK_MAX_SIZE,
+      limit,
+      offset,
+    );
+
+    this.$set(this.releaseListMap[key], 'items', [...currentReleaseList.items, ...items]);
+    this.$set(this.releaseListMap[key], 'isFull', isFull);
+    this.$set(this.releaseListMap[key], 'isAbbreviated', false);
   }
 }
 </script>

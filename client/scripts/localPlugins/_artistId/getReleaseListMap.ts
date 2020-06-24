@@ -10,14 +10,15 @@ export type ArtistReleaseInfo = {
 export const getReleaseListMap = async (
   context: Context,
   artworkSize: number,
-): Promise<ArtistReleaseInfo | undefined> => {
+  limit: number,
+): Promise<ArtistReleaseInfo> => {
   const getReleaseList = getReleaseListHandler(context);
 
   const [album, single, compilation, appears_on] = await Promise.all([
-    getReleaseList('album', artworkSize),
-    getReleaseList('single', artworkSize),
-    getReleaseList('compilation', artworkSize),
-    getReleaseList('appears_on', artworkSize),
+    getReleaseList('album', artworkSize, limit),
+    getReleaseList('single', artworkSize, limit),
+    getReleaseList('compilation', artworkSize, limit),
+    getReleaseList('appears_on', artworkSize, limit),
   ] as const);
 
   return {

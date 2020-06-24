@@ -14,13 +14,16 @@ export type ReleaseType = keyof typeof titleMap
 export type ReleaseTitle<T extends ReleaseType> = typeof titleMap[T]
 export type ReleaseInfo<T extends ReleaseType> = {
   title: ReleaseTitle<T>
-  items: App.ReleaseCardInfo[] | undefined
+  items: App.ReleaseCardInfo[]
   isFull: boolean
+  total: number
+  isAbbreviated: boolean
 }
 
 export const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
   releaseType: T,
   artworkSize: number,
+  limit: number,
   offset?: number,
 ): Promise<ReleaseInfo<T>> => {
   const title: ReleaseTitle<T> = titleMap[releaseType];
@@ -29,17 +32,21 @@ export const getReleaseListHandler = ({ app, params }: Context) => async <T exte
   const releases = await app.$spotify.artists.getArtistAlbums({
     artistId: params.artistId,
     country,
-    limit: 20,
     includeGroupList: [releaseType],
+    limit,
     offset,
   });
-  const items = releases?.items.map(convertReleaseForCard(artworkSize));
+
+  const items = releases?.items.map(convertReleaseForCard(artworkSize)) ?? [];
 
   const isFull = releases?.next == null;
+  const total = releases?.total ?? 0;
 
   return {
     title,
     items,
     isFull,
+    total,
+    isAbbreviated: true,
   };
 };
