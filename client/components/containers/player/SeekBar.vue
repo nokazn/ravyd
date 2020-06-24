@@ -130,7 +130,9 @@ export default Vue.extend({
     onChange(positionMs: number) {
       this.$commit('player/SET_POSITION_MS', positionMs);
       this.$dispatch('player/seek', positionMs);
-      this.updatePosition();
+      if (this.isPlaying) {
+        this.updatePosition();
+      }
     },
     updatePosition() {
       const intervalMs = 500;
