@@ -118,6 +118,10 @@ export default Vue.extend({
 
   beforeDestroy() {
     this.clearInterval();
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
+    }
   },
 
   methods: {

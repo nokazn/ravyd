@@ -255,6 +255,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
+    }
   }
 
   get isPlaylistSet(): boolean {

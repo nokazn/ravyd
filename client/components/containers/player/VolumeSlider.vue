@@ -116,6 +116,13 @@ export default Vue.extend({
     });
   },
 
+  beforeDestroy() {
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
+    }
+  },
+
   methods: {
     onChange(volumePercent: number) {
       this.$dispatch('player/volume', { volumePercent })
