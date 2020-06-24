@@ -1,6 +1,6 @@
 <template>
   <v-overlay
-    v-if="hover"
+    v-show="hover"
     absolute
     :opacity="0.7"
   >

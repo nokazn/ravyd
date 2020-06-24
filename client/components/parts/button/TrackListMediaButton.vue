@@ -1,31 +1,35 @@
 <template>
   <span :class="$style.TrackListMediaButton">
-    <v-btn
-      v-if="isHovered && !disabled"
-      outlined
-      small
-      icon
-      @click="onClick"
-    >
-      <v-icon :title="mediaButton.title">
-        {{ mediaButton.icon }}
+    <template v-if="!disabled">
+      <v-btn
+        v-show="isHovered"
+        outlined
+        small
+        icon
+        @click="onClick"
+      >
+        <v-icon :title="mediaButton.title">
+          {{ mediaButton.icon }}
+        </v-icon>
+      </v-btn>
+
+      <v-icon
+        v-show="!isHovered && isPlayingTrack"
+        title="再生中"
+      >
+        mdi-volume-high
       </v-icon>
-    </v-btn>
+    </template>
 
-    <v-icon
-      v-else-if="isPlayingTrack && !disabled"
-      title="再生中"
-    >
-      mdi-volume-high
-    </v-icon>
-
-    <span
-      v-else-if="trackNumber != null"
-      :title="disabledTitle"
-      :class="{ 'inactive--text': disabled }"
-    >
-      {{ trackNumber }}
-    </span>
+    <template v-if="trackNumber != null">
+      <span
+        v-show="disabled || (!isHovered && !isPlayingTrack)"
+        :title="disabledTitle"
+        :class="{ 'inactive--text': disabled }"
+      >
+        {{ trackNumber }}
+      </span>
+    </template>
   </span>
 </template>
 

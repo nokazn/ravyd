@@ -81,7 +81,7 @@
                 ]"
               >
                 <v-icon
-                  v-if="device.isActive"
+                  v-show="device.isActive"
                   :color="device.color"
                   :size="16"
                 >
