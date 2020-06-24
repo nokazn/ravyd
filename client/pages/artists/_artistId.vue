@@ -16,13 +16,22 @@
       />
 
       <div :class="$style.Info">
-        <div title="認証済アーティスト">
-          <span class="g-small-text">
+        <HashTags
+          :tag-list="artistInfo.genreList"
+          :class="$style.Info__hashTags"
+        />
+
+        <div>
+          <span
+            title="認証済アーティスト"
+            class="g-small-text"
+          >
             アーティスト
           </span>
           <v-icon
             :size="14"
             color="light-blue"
+            title="認証済アーティスト"
             :class="$style.Info__verifiedArtistIcon"
           >
             mdi-check-decagram
@@ -33,20 +42,22 @@
           {{ artistInfo.name }}
         </h1>
 
-        <p>
-          {{ artistInfo.followersText }}
-        </p>
+        <div :class="$style.Info__footer">
+          <p>
+            {{ artistInfo.followersText }}
+          </p>
 
-        <div :class="$style.Info__buttons">
-          <ContextMediaButton
-            :is-playing="isArtistSet && isPlaying "
-            @on-clicked="onContextMediaButtonClicked"
-          />
+          <div :class="$style.Info__buttons">
+            <ContextMediaButton
+              :is-playing="isArtistSet && isPlaying "
+              @on-clicked="onContextMediaButtonClicked"
+            />
 
-          <FollowButton
-            :is-following="isFollowing"
-            @on-clicked="onFollowButtonClicked"
-          />
+            <FollowButton
+              :is-following="isFollowing"
+              @on-clicked="onFollowButtonClicked"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -112,6 +123,7 @@ import { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import HashTags from '~/components/parts/chip/HashTags.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
@@ -159,6 +171,7 @@ export type Data = {
 @Component({
   components: {
     UserAvatar,
+    HashTags,
     ContextMediaButton,
     FollowButton,
     TrackListWrapper,
@@ -383,12 +396,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   padding: 16px 6% 48px;
 
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 220px auto;
+    grid-column-gap: 24px;
     margin-bottom: 32px;
-
-    & > *:not(:last-child) {
-      margin-right: 24px;
-    }
   }
 
   &__trackListSection {
@@ -440,6 +451,12 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     flex-direction: column;
     justify-content: flex-end;
 
+    &__hashTags {
+      // border-radius の分だけ右にあるように見えてしまうので調整
+      margin-left: -8px;
+      margin-bottom: 12px;
+    }
+
     &__verifiedArtistIcon {
       margin-bottom: 2px;
     }
@@ -450,8 +467,13 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       line-height: 1.2em;
     }
 
-    &__buttons > *:not(:last-child) {
-      margin-right: 12px;
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
     }
   }
 }
