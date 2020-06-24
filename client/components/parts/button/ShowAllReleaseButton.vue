@@ -3,17 +3,15 @@
     rounded
     text
     :width="width"
-    :class="$style.ShowAllReleaseButton"
     @click="onClicked"
   >
-    <v-icon :class="$style.ShowAllReleaseButton__icon">
+    <v-icon left>
       {{ showAllButton.icon }}
     </v-icon>
 
     <span>
       {{ showAllButton.text }}
     </span>
-    </div>
   </v-btn>
 </template>
 
@@ -64,11 +62,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ShowAllReleaseButton {
-  &__icon {
-    margin-right: 4px;
-  }
-}
-</style>

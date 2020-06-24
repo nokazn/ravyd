@@ -23,7 +23,7 @@
       </span>
       <v-icon
         small
-        :class="$style.AccountPage__editAccountIcon"
+        right
       >
         mdi-open-in-new
       </v-icon>
@@ -81,10 +81,6 @@ export default Vue.extend({
 
   & > *:not(:last-child) {
     margin-bottom: 24px;
-  }
-
-  &__editAccountIcon {
-    margin-left: 8px;
   }
 }
 </style>

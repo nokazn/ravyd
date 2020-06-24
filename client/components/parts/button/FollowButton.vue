@@ -8,7 +8,7 @@
     >
       <v-icon
         :size="18"
-        :class="$style.FollowButton__icon"
+        left
       >
         {{ followIcon(hover) }}
       </v-icon>
@@ -69,9 +69,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.FollowButton__icon {
-  margin-right: 8px;
-}
-</style>

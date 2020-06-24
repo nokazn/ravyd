@@ -3,13 +3,12 @@
     color="success"
     rounded
     :disabled="disabled"
-    :class="$style.ContextMediaButton"
     @click="onClicked"
   >
-    <v-icon :class="$style.ContextMediaButton__icon">
+    <v-icon left>
       {{ icon }}
     </v-icon>
-    <span :class="$style.ContextMediaButton__text">
+    <span>
       {{ text }}
     </span>
   </v-btn>
@@ -56,12 +55,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ContextMediaButton {
-  &__icon,
-  &__text {
-    margin-right: 2px;
-  }
-}
-</style>

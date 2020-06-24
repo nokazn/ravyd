@@ -7,7 +7,10 @@
     @click="onClicked"
   >
     <div :class="$style.ShowAllTracksButton">
-      <v-icon small>
+      <v-icon
+        small
+        left
+      >
         {{ showAllButton.icon }}
       </v-icon>
 
@@ -74,10 +77,6 @@ export default Vue.extend({
 .ShowAllTracksButton {
   & > * {
     font-size: 0.9em;
-
-    &:not(:last-child) {
-      margin-right: 4px;
-    }
   }
 }
 </style>
