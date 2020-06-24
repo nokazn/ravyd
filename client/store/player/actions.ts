@@ -185,7 +185,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           dispatch('getActiveDeviceList'),
         ] as const);
 
-        commit('SET_VOLUME', { volumePercent: volume * 100 });
+        commit('SET_VOLUME_PERCENT', { volumePercent: volume * 100 });
 
         console.log('Ready with this device 🎉');
       });
@@ -224,7 +224,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
     commit('SET_DISALLOW_LIST', []);
-    commit('SET_VOLUME', { volumePercent: 0 });
+    commit('SET_VOLUME_PERCENT', { volumePercent: 0 });
     commit('SET_IS_MUTED', false);
   },
 
@@ -379,8 +379,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async volume({ state, commit }, { volumePercent }) {
-    const { deviceId, volume } = state;
-    if (volume === volumePercent) return;
+    const { deviceId, volumePercent: currentVolumePercent } = state;
+    if (currentVolumePercent === volumePercent) return;
 
     await this.$spotify.player.volume({
       deviceId,
@@ -390,14 +390,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       throw new Error('ボリュームが変更できませんでした。');
     });
 
-    commit('SET_VOLUME', { volumePercent });
+    commit('SET_VOLUME_PERCENT', { volumePercent });
   },
 
   async mute({ state, commit }) {
-    const { isMuted, deviceId, volume } = state;
+    const { isMuted, deviceId, volumePercent: currentVolumePercent } = state;
     const nextMuteState = !isMuted;
-    if (volume !== 0) {
-      const volumePercent = nextMuteState ? 0 : volume;
+    if (currentVolumePercent !== 0) {
+      const volumePercent = nextMuteState ? 0 : currentVolumePercent;
       await this.$spotify.player.volume({
         deviceId,
         volumePercent,

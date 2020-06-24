@@ -89,12 +89,12 @@ export default Vue.extend({
   },
 
   mounted() {
-    const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'player/SET_VOLUME'>) => {
+    const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'player/SET_VOLUME_PERCENT'>) => {
       this.volumePercent = volumePercent;
       this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
     const subscribeMuteState = ({ payload: isMuted }: ExtendedMutationPayload<'player/SET_IS_MUTED'>) => {
-      const volumePercent = this.$state().player.volume;
+      const { volumePercent } = this.$state().player;
       this.volumePercent = isMuted ? 0 : volumePercent;
       this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
@@ -102,7 +102,7 @@ export default Vue.extend({
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
-        case 'player/SET_VOLUME':
+        case 'player/SET_VOLUME_PERCENT':
           subscribeVolume(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
