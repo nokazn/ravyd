@@ -25,62 +25,54 @@ export type ArtistReleaseInfo = {
     isFull: boolean
   }
 }
+type ArtistReleaseTitle = ArtistReleaseInfo[keyof ArtistReleaseInfo]['title']
 
 export const getReleaseListMap = async (
   { app, params }: Context,
   artworkSize: number,
 ): Promise<ArtistReleaseInfo | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
-  if (country == null) return undefined;
 
-  const getArtistReleases = (
+  const getArtistReleases = async <T extends ArtistReleaseTitle>(
     releaseType: App.ReleaseCardInfo['releaseType'],
     offset?: number,
-  ) => app.$spotify.artists.getArtistAlbums({
-    artistId: params.artistId,
-    country,
-    limit: 20,
-    includeGroupList: [releaseType],
-    offset,
-  });
+  ) => {
+    const title = ({
+      album: 'アルバム',
+      single: 'シングル・EP',
+      compilation: 'コンピレーション',
+      appears_on: '参加作品',
+    })[releaseType] as T;
+
+    const releases = await app.$spotify.artists.getArtistAlbums({
+      artistId: params.artistId,
+      country,
+      limit: 20,
+      includeGroupList: [releaseType],
+      offset,
+    });
+    const items = releases?.items.map(convertReleaseForCard(artworkSize));
+
+    const isFull = releases?.next == null;
+
+    return {
+      title,
+      items,
+      isFull,
+    };
+  };
 
   const [albums, singles, compilations, appearsOns] = await Promise.all([
-    getArtistReleases('album'),
-    getArtistReleases('single'),
-    getArtistReleases('compilation'),
-    getArtistReleases('appears_on'),
+    getArtistReleases<'アルバム'>('album'),
+    getArtistReleases<'シングル・EP'>('single'),
+    getArtistReleases<'コンピレーション'>('compilation'),
+    getArtistReleases<'参加作品'>('appears_on'),
   ] as const);
 
-  const albumList = albums?.items.map(convertReleaseForCard(artworkSize));
-  const singleList = singles?.items.map(convertReleaseForCard(artworkSize));
-  const compilationList = compilations?.items.map(convertReleaseForCard(artworkSize));
-  const appearsOnList = appearsOns?.items.map(convertReleaseForCard(artworkSize));
-
-  const isFullAlbumList = albums?.next == null;
-  const isFullSingleList = singles?.next == null;
-  const isFullCompilationList = compilations?.next == null;
-  const isFullAppearsOnList = appearsOns?.next == null;
-
   return {
-    albums: {
-      title: 'アルバム',
-      items: albumList,
-      isFull: isFullAlbumList,
-    },
-    singles: {
-      title: 'シングル・EP',
-      items: singleList,
-      isFull: isFullSingleList,
-    },
-    compilations: {
-      title: 'コンピレーション',
-      items: compilationList,
-      isFull: isFullCompilationList,
-    },
-    appearsOns: {
-      title: '参加作品',
-      items: appearsOnList,
-      isFull: isFullAppearsOnList,
-    },
+    albums,
+    singles,
+    compilations,
+    appearsOns,
   };
 };

@@ -244,7 +244,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   beforeDestroy() {
     this.$dispatch('resetDominantBackgroundColor');
-
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
