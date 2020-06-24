@@ -14,13 +14,15 @@
       :class="{ 'g-box-shadow': shadow }"
       @load="onLoaded"
     >
-      <AvatarOverlay
-        v-if="isOverlayed && hover"
-        :hover="hover"
-        :size="size"
-        :icon="icon"
-        @on-clicked="onClicked"
-      />
+      <template v-if="isOverlayed">
+        <AvatarOverlay
+          v-show="hover"
+          :hover="hover"
+          :size="size"
+          :icon="icon"
+          @on-clicked="onClicked"
+        />
+      </template>
     </v-img>
 
     <v-sheet

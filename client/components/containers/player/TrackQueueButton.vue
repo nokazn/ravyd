@@ -93,7 +93,7 @@
               </div>
 
               <v-icon
-                v-if="track.isPlaying"
+                v-show="track.isPlaying"
                 :size="20"
                 color="active"
                 title="再生中"
