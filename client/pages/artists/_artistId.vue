@@ -14,7 +14,8 @@
         default-user-icon="mdi-account-music"
         shadow
       />
-      <div :class="$style.ArtistIdPage__info">
+
+      <div :class="$style.Info">
         <div title="認証済アーティスト">
           <span class="g-small-text">
             アーティスト
@@ -22,19 +23,21 @@
           <v-icon
             :size="14"
             color="light-blue"
-            :class="$style.ArtistIdPage__verifiedIrtistIcon"
+            :class="$style.Info__verifiedArtistIcon"
           >
             mdi-check-decagram
           </v-icon>
         </div>
 
-        <h1 :class="$style.ArtistIdPage__artistName">
+        <h1 :class="$style.Info__artistName">
           {{ artistInfo.name }}
         </h1>
 
-        <p>{{ artistInfo.followersText }}</p>
+        <p>
+          {{ artistInfo.followersText }}
+        </p>
 
-        <div :class="$style.ArtistIdPage__buttons">
+        <div :class="$style.Info__buttons">
           <ContextMediaButton
             :is-playing="isArtistSet && isPlaying "
             @on-clicked="onContextMediaButtonClicked"
@@ -59,15 +62,14 @@
       />
     </section>
 
-    <template v-for="{ title, items } in Object.values(releaseListMap)">
+    <template v-for="{ title, items, isFull } in Object.values(releaseListMap)">
       <CardsSection
         v-if="items.length > 0"
         :key="title"
         :title="title"
+        :class="$style.CardSection"
       >
-        <div
-          :class="$style.ArtistIdPage__cardSection"
-        >
+        <div :class="$style.CardSection__wrapper">
           <ReleaseCard
             v-for="item in items"
             :key="item.id"
@@ -75,17 +77,36 @@
             :min-width="ARTWORK_MIN_SIZE"
             :max-width="ARTWORK_MAX_SIZE"
             discograpy
-            :class="$style.ArtistIdPage__card"
+            :class="$style.CardSection__card"
           />
 
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
-          <div :class="$style.ArtistIdPage__cardSpacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+          <div :class="$style.CradSection__spacer" />
+        </div>
+
+        <div
+          v-if="!isFull"
+          :class="$style.CardSection__buttonWrapper"
+        >
+          <v-btn
+            rounded
+            :width="200"
+            text
+          >
+            <v-icon :class="$style.CardSection__buttonIcon">
+              mdi-chevron-down
+            </v-icon>
+
+            <span>
+              すべて表示
+            </span>
+          </v-btn>
         </div>
       </CardsSection>
     </template>
@@ -298,25 +319,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 .ArtistIdPage {
   padding: 16px 6% 48px;
 
-  &__cardSection {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    // card と cardSpacer 両方に適用
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &:not(:last-child) {
-      margin-bottom: 32px;
-    }
-  }
-
   &__header {
     display: flex;
     margin-bottom: 32px;
@@ -326,37 +328,68 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  &__info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  &__verifiedIrtistIcon {
-    margin-bottom: 2px;
-  }
-
-  &__artistName {
-    font-size: 40px;
-    margin: 8px 0;
-    line-height: 1.2em;
-  }
-
-  &__buttons > *:not(:last-child) {
-    margin-right: 12px;
-  }
-
   &__trackListSection {
     margin-bottom: 32px;
   }
 
-  &__card {
-    margin-bottom: 32px;
+  .CardSection {
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+
+    &__wrapper {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      // card と spacer 両方に適用
+      & > * {
+        margin-left: 16px;
+        margin-right: 16px;
+        flex: 1 0 180px;
+        min-width: 180px;
+        max-width: 240px;
+      }
+    }
+
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    // 最終行の余りの部分を埋める
+    &__spacer {
+      height: 0;
+    }
+
+    &__buttonWrapper {
+      margin-top: -8px;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__buttonIcon {
+      margin-right: 4px;
+    }
   }
 
-  // 最終行の余りの部分を埋める
-  &__cardSpacer {
-    height: 0;
+  .Info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &__verifiedArtistIcon {
+      margin-bottom: 2px;
+    }
+
+    &__artistName {
+      font-size: 40px;
+      margin: 8px 0;
+      line-height: 1.2em;
+    }
+
+    &__buttons > *:not(:last-child) {
+      margin-right: 12px;
+    }
   }
 }
 </style>

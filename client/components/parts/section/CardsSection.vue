@@ -6,9 +6,7 @@
 
     <v-divider :class="$style.CardSection__divider" />
 
-    <div>
-      <slot />
-    </div>
+    <slot />
   </section>
 </template>
 
