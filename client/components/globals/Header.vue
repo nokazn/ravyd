@@ -51,7 +51,7 @@ import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
 import TrackQueueButton from '~/components/containers/player/TrackQueueButton.vue';
-import { HEADER_BACKGROUND_COLOR_RGB } from '~/variables';
+import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
@@ -75,7 +75,7 @@ export default Vue.extend({
   computed: {
     styles(): { backgroundColor: string } {
       const rgbList = this.$state().dominantBackgroundColor?.rgb
-        ?.map(Math.round) as App.DominantColorInfo['rgb'] ?? HEADER_BACKGROUND_COLOR_RGB;
+        ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColorInfo['rgb'] ?? HEADER_BACKGROUND_COLOR_RGB;
 
       return { backgroundColor: `rgba(${rgbList.join(',')},0.6)` };
     },

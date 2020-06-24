@@ -21,7 +21,7 @@ const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
   async extractDominantBackgroundColor({ commit }, src) {
     const colors = await extractDominantColors(src);
 
-    commit('SET_DOMINANT_BACKGROUND_COLOR', colors?.DarkMuted, { root: true });
+    commit('SET_DOMINANT_BACKGROUND_COLOR', colors?.Muted, { root: true });
   },
   setDefaultDominantBackgroundColor({ commit }) {
     commit('SET_DOMINANT_BACKGROUND_COLOR', DEFAULT_DOMINANT_COLOR, { root: true });
