@@ -6,6 +6,7 @@
     disable-pagination
     disable-sort
     hide-default-footer
+    no-data-text="トラックがありません。"
     :class="$style.TrackTable"
     class="TrackTable"
   >

@@ -4,6 +4,7 @@
     :items="trackList"
     disable-pagination
     hide-default-footer
+    :no-data-text="noDataText"
     :class="$style.PlaylistTrackTable"
     class="PlaylistTrackTable"
   >
@@ -73,6 +74,10 @@ export default Vue.extend({
     uri: {
       type: String as PropType<string | undefined>,
       default: undefined,
+    },
+    noDataText: {
+      type: String,
+      default: 'まだトラックが追加されていません。',
     },
     // customContext を使用するか (uri は指定するけど contextUri を渡したくない場合)
     custom: {
