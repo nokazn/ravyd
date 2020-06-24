@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.SeekBar">
     <v-slider
-      v-model="value"
+      :value="value"
       dense
       hide-details
       thumb-color="white"
@@ -9,12 +9,13 @@
       :max="maxMs"
       :class="$style.SeekBar__slider"
       @mousedown="onMouseDown"
+      @input="onInput"
       @change="onChange"
     />
 
     <div :class="$style.SeekBar__mss">
       <span :class="$style['SeekBar__mss--left']">
-        {{ positionMss }}
+        {{ positionMinutes }}:{{ positionSeconds }}
       </span>
 
       <span :class="$style['SeekBar__mss--right']">
@@ -26,12 +27,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import { mssTime } from '~~/utils/mssTime';
 
 export type Data = {
   value: number
+  debounceSetter: (positionMs: number) => number
   updateInterval: ReturnType<typeof setInterval> | undefined
   mutationUnsubscribe: (() => void) | undefined
 }
@@ -39,24 +42,34 @@ export type Data = {
 export default Vue.extend({
   data(): Data {
     const value = 0;
+    const interval = 10;
+    const debounceSetter = debounce((positionMs: number) => positionMs, interval);
 
     return {
       value,
+      debounceSetter,
       updateInterval: undefined,
       mutationUnsubscribe: undefined,
     };
   },
 
   computed: {
-    positionMss(): string {
-      return mssTime(this.value);
+    // @todo this.value が undefined になるときがある
+    positionMinutes(): string {
+      return Math.floor((this.value ?? 0) / 1000 / 60).toString();
     },
+    // @todo this.value が undefined になるときがある
+    positionSeconds(): string {
+      return Math.floor(((this.value ?? 0) / 1000) % 60).toString().padStart(2, '0');
+    },
+
     durationMs(): RootState['player']['durationMs'] {
       return this.$state().player.durationMs;
     },
     durationMss(): string {
       return mssTime(this.durationMs);
     },
+
     maxMs(): number {
       return this.durationMs || 1;
     },
@@ -110,6 +123,9 @@ export default Vue.extend({
   methods: {
     onMouseDown() {
       this.clearInterval();
+    },
+    onInput(positionMs: number) {
+      this.value = this.debounceSetter(positionMs);
     },
     onChange(positionMs: number) {
       this.$commit('player/SET_POSITION_MS', positionMs);
