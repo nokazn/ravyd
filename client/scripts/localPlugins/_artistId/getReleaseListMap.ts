@@ -1,11 +1,46 @@
 import { Context } from '@nuxt/types';
 
-import { getReleaseListHandler } from '~/scripts/localPlugins/_artistId';
-import { ReleaseInfo, ReleaseType } from './getReleaseListHandler';
+import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import {
+  TITLE_MAP,
+  ReleaseType,
+  ReleaseTitle,
+  ReleaseInfo,
+} from './index';
 
 export type ArtistReleaseInfo = {
   [k in ReleaseType]: ReleaseInfo<k>
 }
+
+const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
+  releaseType: T,
+  artworkSize: number,
+  limit: number,
+  offset?: number,
+): Promise<ReleaseInfo<T>> => {
+  const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
+
+  const country = app.$getters()['auth/userCountryCode'];
+  const releases = await app.$spotify.artists.getArtistAlbums({
+    artistId: params.artistId,
+    country,
+    includeGroupList: [releaseType],
+    limit,
+    offset,
+  });
+  const items = releases?.items.map(convertReleaseForCard(artworkSize)) ?? [];
+
+  const isFull = releases?.next == null;
+  const total = releases?.total ?? 0;
+
+  return {
+    title,
+    items,
+    isFull,
+    total,
+    isAbbreviated: true,
+  };
+};
 
 export const getReleaseListMap = async (
   context: Context,

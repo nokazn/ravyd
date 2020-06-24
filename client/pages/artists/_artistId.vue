@@ -348,31 +348,32 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     this.topTrackList = topTrackList;
   }
 
-  async onShowAllButtonClicked(key: ReleaseType) {
-    const currentReleaseList = this.releaseListMap[key];
+  async onShowAllButtonClicked(type: ReleaseType) {
+    const currentReleaseList = this.releaseListMap[type];
     if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
 
     // すべて表示されている場合
     if (!currentReleaseList.isAbbreviated) {
-      this.$set(this.releaseListMap[key], 'isAbbreviated', true);
+      this.$set(this.releaseListMap[type], 'isAbbreviated', true);
       return;
     }
 
     const offset = currentReleaseList.items.length;
-    const limit = currentReleaseList.total - offset;
-    // 追加で取得するコンテンツがない場合
-    if (limit < 1) return;
+    const counts = currentReleaseList.total - offset;
+    // 追加で取得するコンテンツがある場合
+    if (counts > 0) {
+      const releaseList = await this.getReleaseList({
+        type,
+        artworkSize: this.ARTWORK_MAX_SIZE,
+        counts,
+        offset,
+      });
 
-    const { items, isFull } = await this.getReleaseList(
-      key,
-      this.ARTWORK_MAX_SIZE,
-      limit,
-      offset,
-    );
+      this.$set(this.releaseListMap[type], 'items', [...currentReleaseList.items, ...releaseList]);
+      this.$set(this.releaseListMap[type], 'isFull', true);
+    }
 
-    this.$set(this.releaseListMap[key], 'items', [...currentReleaseList.items, ...items]);
-    this.$set(this.releaseListMap[key], 'isFull', isFull);
-    this.$set(this.releaseListMap[key], 'isAbbreviated', false);
+    this.$set(this.releaseListMap[type], 'isAbbreviated', false);
   }
 }
 </script>
