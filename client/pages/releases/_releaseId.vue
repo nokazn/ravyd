@@ -57,6 +57,7 @@
 
             <ReleaseDuration
               :duration-ms="releaseInfo.durationMs"
+              :is-full="releaseInfo.isFullTrackList"
             />
 
             <ReleaseLabel
@@ -236,9 +237,13 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
         artworkSrc: this.releaseInfo.artworkSrc,
       });
 
+      const durationMs = trackList
+        .reduce((prev, curr) => prev + curr.durationMs, this.releaseInfo.durationMs);
+
       this.releaseInfo = {
         ...this.releaseInfo,
         trackList: [...this.releaseInfo.trackList, ...trackList],
+        durationMs,
         isFullTrackList: true,
       };
     }
