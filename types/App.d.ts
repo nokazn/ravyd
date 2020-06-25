@@ -51,7 +51,7 @@ export namespace App {
 
   // /releases/:releaseId page
   export type ReleaseInfo = {
-    releaseType: 'アルバム' | 'シングル' | 'コンピレーション'
+    releaseType: 'アルバム' | 'シングル' | 'EP' | 'コンピレーション'
     id: string
     name: string
     uri: string

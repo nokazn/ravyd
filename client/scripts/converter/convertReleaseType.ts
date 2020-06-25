@@ -2,11 +2,13 @@ import { SpotifyAPI, App } from '~~/types';
 
 export const convertReleaseType = (
   releaseType: SpotifyAPI.Album['album_type'],
+  totalTracks: number,
 ): App.ReleaseInfo['releaseType'] => {
   const albumTypeMap = {
-    album: 'アルバム' as const,
-    single: 'シングル' as const,
-    compilation: 'コンピレーション' as const,
+    album: 'アルバム',
+    // 4曲以上収録の場合は EP と表記
+    single: totalTracks > 3 ? 'EP' : 'シングル',
+    compilation: 'コンピレーション',
   } as const;
 
   return albumTypeMap[releaseType];
