@@ -12,19 +12,27 @@
         shadow
       />
 
-      <div :class="$style.ReleaseIdPage__info">
+      <div :class="$style.Info">
+        <HashTags
+          :tag-list="releaseInfo.genreList"
+          color="subtext"
+          text-color="white"
+          outlined
+          :class="$style.Info__hashTags"
+        />
+
         <div class="g-small-text">
           {{ releaseInfo.releaseType }}
         </div>
 
-        <h1 :class="$style.ReleaseIdPage__releaseName">
+        <h1 :class="$style.Info__releaseName">
           {{ releaseInfo.name }}
         </h1>
 
         <ArtistNames :artist-list="releaseInfo.artistList" />
 
-        <div :class="$style.ReleaseIdPage__releaseInfoFooter">
-          <div :class="$style.ReleaseIdPage__buttons">
+        <div :class="$style.Info__footer">
+          <div :class="$style.Info__buttons">
             <ContextMediaButton
               :is-playing="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
@@ -37,7 +45,7 @@
             />
           </div>
 
-          <div :class="$style.ReleaseIdPage__releaseDetail">
+          <div :class="$style.Info__detail">
             <ReleaseDate
               :release-date="releaseInfo.releaseDate"
               :release-date-precision="releaseInfo.releaseDatePrecision"
@@ -49,6 +57,7 @@
 
             <ReleaseDuration
               :duration-ms="releaseInfo.durationMs"
+              :is-full="releaseInfo.isFullTrackList"
             />
 
             <ReleaseLabel
@@ -66,10 +75,14 @@
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
-    <Copyrights
-      :copyright-list="releaseInfo.copyrightList"
-      :class="$style.ReleaseIdPage__copyrights"
-    />
+    <div :class="$style.ReleaseIdPage__progressCircular">
+      <v-progress-circular
+        v-if="!releaseInfo.isFullTrackList"
+        indeterminate
+      />
+    </div>
+
+    <Copyrights :copyright-list="releaseInfo.copyrightList" />
   </div>
 </template>
 
@@ -79,6 +92,7 @@ import { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import HashTags from '~/components/parts/chip/HashTags.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
@@ -89,27 +103,26 @@ import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 
-import { getReleaseInfo, getReleaseTrackListHandler } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo, getTrackListHandler } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
-const LIMIT_OF_TRACKS = 50;
 
 interface AsyncData {
-  ARTWORK_SIZE: number
   releaseInfo: App.ReleaseInfo | undefined
-  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined
+  getTrackList: ReturnType<typeof getTrackListHandler> | undefined
+  ARTWORK_SIZE: number
 }
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
 }
 
-
 @Component({
   components: {
     ReleaseArtwork,
+    HashTags,
     ArtistNames,
     ContextMediaButton,
     FavoriteButton,
@@ -127,22 +140,22 @@ interface Data {
 
   async asyncData(context: Context): Promise<AsyncData> {
     const releaseInfo = await getReleaseInfo(context, ARTWORK_SIZE);
-    const getReleaseTrackList = getReleaseTrackListHandler(context);
+    const getTrackList = getTrackListHandler(context);
 
     return {
-      ARTWORK_SIZE,
       releaseInfo,
-      getReleaseTrackList,
+      getTrackList,
+      ARTWORK_SIZE,
     };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
-  ARTWORK_SIZE = ARTWORK_SIZE
-  releaseInfo: App.ReleaseInfo | undefined = undefined
-  releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined
-  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined = undefined
+  releaseInfo: App.ReleaseInfo | undefined = undefined;
+  releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
+  getTrackList: ReturnType<typeof getTrackListHandler> | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
 
-  mutationUnsubscribe: (() => void) | undefined = undefined
+  mutationUnsubscribe: (() => void) | undefined = undefined;
 
   head() {
     return {
@@ -151,7 +164,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
-    this.getReleaseTrackInfo();
+    this.appendTrackList();
 
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
@@ -171,10 +184,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       };
     };
 
-    const subscribeRelease = (mutationPayload: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
+    const subscribeRelease = ({ payload: [releaseId, isSaved] }: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
       if (this.releaseInfo == null) return;
 
-      const [releaseId, isSaved] = mutationPayload.payload;
       if (releaseId === this.releaseInfo.id) {
         this.releaseInfo.isSaved = isSaved;
         this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
@@ -206,32 +218,35 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  async getReleaseTrackInfo() {
+  async appendTrackList() {
     if (this.releaseInfo == null
       || this.releaseInfo.isFullTrackList
-      || this.getReleaseTrackList == null) {
+      || this.getTrackList == null) {
       return;
     }
 
-    const limit = LIMIT_OF_TRACKS;
     const offset = this.releaseInfo.trackList.length;
-    const { totalTracks } = this.releaseInfo;
-    const trackList = await this.getReleaseTrackList({
-      limit,
-      offset,
-      totalTracks,
-      releaseId: this.releaseInfo.id,
-      releaseName: this.releaseInfo.name,
-      artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
-      artworkSrc: this.releaseInfo.artworkSrc,
-    });
+    const counts = this.releaseInfo.totalTracks - offset;
+    if (counts > 0) {
+      const trackList = await this.getTrackList({
+        offset,
+        counts,
+        releaseId: this.releaseInfo.id,
+        releaseName: this.releaseInfo.name,
+        artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
+        artworkSrc: this.releaseInfo.artworkSrc,
+      });
 
+      const durationMs = trackList
+        .reduce((prev, curr) => prev + curr.durationMs, this.releaseInfo.durationMs);
 
-    this.releaseInfo = {
-      ...this.releaseInfo,
-      trackList: [...this.releaseInfo.trackList, ...trackList],
-      isFullTrackList: true,
-    };
+      this.releaseInfo = {
+        ...this.releaseInfo,
+        trackList: [...this.releaseInfo.trackList, ...trackList],
+        durationMs,
+        isFullTrackList: true,
+      };
+    }
   }
 
   get isReleaseSet(): boolean {
@@ -291,51 +306,64 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   padding: 16px 6% 48px;
 
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 220px auto;
+    grid-column-gap: 24px;
     margin-bottom: 32px;
-
-    & > *:not(:last-child) {
-      margin-right: 24px;
-    }
   }
 
-  &__info {
+  .Info {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-  }
 
-  &__releaseName {
-    font-size: 40px;
-    margin: 8px 0;
-    line-height: 1.2em;
-  }
-
-  &__releaseInfoFooter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    margin-top: 12px;
-  }
-
-  &__buttons {
-    margin-right: 24px;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
+    &__hashTags {
+      // border-radius の分だけ右にあるように見えてしまうので調整
+      margin-left: -8px;
+      margin-bottom: 12px;
     }
-  }
 
-  &__releaseDetail {
-    margin-top: 12px;
+    &__releaseName {
+      font-size: 40px;
+      margin: 8px 0;
+      line-height: 1.2em;
+    }
 
-    & > *:not(:last-child) {
-      margin-right: 8px;
+    &__footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-top: 12px;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      margin-right: 24px;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+
+    &__detail {
+      margin-top: 12px;
+
+      & > *:not(:last-child) {
+        margin-right: 8px;
+      }
     }
   }
 
   &__trackTable {
     margin-bottom: 16px;
+  }
+
+  &__progressCircular {
+    display: flex;
+    justify-content: center;
+    margin: 12px 0;
+    width: 100%;
   }
 }
 </style>

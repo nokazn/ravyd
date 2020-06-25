@@ -1,6 +1,6 @@
 <template>
   <span
-    :title="title"
+    :title="duration.title"
     class="subtext--text"
   >
     <v-icon
@@ -11,7 +11,7 @@
     </v-icon>
 
     <span :style="textStyles">
-      {{ duration }}
+      {{ duration.text }}
     </span>
   </span>
 </template>
@@ -20,9 +20,12 @@
 import Vue from 'vue';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
-export type Data = {
-  duration: string
+type Duration = {
+  text: string
   title: string
+}
+
+export type Data = {
   textStyles: { fontSize: string }
 }
 
@@ -32,6 +35,10 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
+    isFull: {
+      type: Boolean,
+      default: true,
+    },
     size: {
       type: Number,
       default: 16,
@@ -39,15 +46,25 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const duration = elapsedTimeInJapanese(this.durationMs);
-    const title = `全${duration}`;
     const textStyles = { fontSize: `${this.size * 0.8}px` };
 
     return {
-      duration,
-      title,
       textStyles,
     };
+  },
+
+  computed: {
+    duration(): { text: string, title: string } {
+      const elapsedTime = elapsedTimeInJapanese(this.durationMs);
+      const text = this.isFull
+        ? elapsedTime
+        : `${elapsedTime} + α`;
+
+      return {
+        text,
+        title: `全${text}`,
+      };
+    },
   },
 });
 </script>

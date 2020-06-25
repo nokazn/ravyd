@@ -2,19 +2,17 @@ import { Context } from '@nuxt/types';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { App, SpotifyAPI } from '~~/types';
 
-export const getReleaseTrackListHandler = ({ app, params }: Context) => async (
+export const getTrackListHandler = ({ app, params }: Context) => async (
   {
-    limit,
     offset,
-    totalTracks,
+    counts,
     releaseId,
     releaseName,
     artistIdList,
     artworkSrc,
   } : {
-    limit: number
     offset: number
-    totalTracks: number
+    counts: number
     releaseId: string
     releaseName: string
     artistIdList: string[]
@@ -22,15 +20,15 @@ export const getReleaseTrackListHandler = ({ app, params }: Context) => async (
   },
 ): Promise<App.TrackDetail[]> => {
   const market = app.$getters()['auth/userCountryCode'];
-  const unacquiredCounts = totalTracks - offset;
-  const handlerCounts = Math.ceil(unacquiredCounts / limit);
+  const limit = 50;
+  const handlerCounts = Math.ceil(counts / limit);
 
   const handler = async (index: number): Promise<App.TrackDetail[]> => {
     const tracks = await app.$spotify.albums.getAlbumTracks({
       albumId: params.releaseId,
-      offset: offset + limit * index,
       market,
       limit,
+      offset: offset + limit * index,
     });
     if (tracks == null) return [];
 

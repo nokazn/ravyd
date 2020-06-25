@@ -30,10 +30,9 @@ export const getReleaseInfo = async (
     copyrights: copyrightList,
     external_urls: externalUrls,
     genres: genreList,
-
   } = release;
 
-  const releaseType = convertReleaseType(album_type);
+  const releaseType = convertReleaseType(album_type, totalTracks);
 
   const artistList = artists.map((artist) => ({
     id: artist.id,

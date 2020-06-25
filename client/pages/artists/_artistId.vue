@@ -18,6 +18,7 @@
       <div :class="$style.Info">
         <HashTags
           :tag-list="artistInfo.genreList"
+          outlined
           :class="$style.Info__hashTags"
         />
 
