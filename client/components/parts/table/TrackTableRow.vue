@@ -6,7 +6,6 @@
         'inactive--text': !item.isPlayable
       }"
       :data-is-active="isActive"
-      :data-is-track-set="isTrackSet"
       @click="onRowClicked"
     >
       <td class="text-center">
