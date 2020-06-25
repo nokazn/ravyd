@@ -9,7 +9,7 @@ export type RootGetters = {
 
 const getters: Getters<RootState, RootGetters> = {
   backgroundStyles(state) {
-    const gradationHeight = 300;
+    const gradationHeight = 320;
     const rgb = state.dominantBackgroundColor?.rgb
       .map((color) => color * DARKEN_FILTER_RATIO)
       .join(',');
