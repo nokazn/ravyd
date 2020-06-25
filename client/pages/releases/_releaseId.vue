@@ -74,6 +74,13 @@
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
+    <div :class="$style.ReleaseIdPage__progressCircular">
+      <v-progress-circular
+        v-if="!releaseInfo.isFullTrackList"
+        indeterminate
+      />
+    </div>
+
     <Copyrights :copyright-list="releaseInfo.copyrightList" />
   </div>
 </template>
@@ -95,23 +102,21 @@ import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 
-import { getReleaseInfo, getReleaseTrackListHandler } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo, getTrackListHandler } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
-const LIMIT_OF_TRACKS = 50;
 
 interface AsyncData {
-  ARTWORK_SIZE: number
   releaseInfo: App.ReleaseInfo | undefined
-  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined
+  getTrackList: ReturnType<typeof getTrackListHandler> | undefined
+  ARTWORK_SIZE: number
 }
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
 }
-
 
 @Component({
   components: {
@@ -134,22 +139,22 @@ interface Data {
 
   async asyncData(context: Context): Promise<AsyncData> {
     const releaseInfo = await getReleaseInfo(context, ARTWORK_SIZE);
-    const getReleaseTrackList = getReleaseTrackListHandler(context);
+    const getTrackList = getTrackListHandler(context);
 
     return {
-      ARTWORK_SIZE,
       releaseInfo,
-      getReleaseTrackList,
+      getTrackList,
+      ARTWORK_SIZE,
     };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
-  ARTWORK_SIZE = ARTWORK_SIZE
-  releaseInfo: App.ReleaseInfo | undefined = undefined
-  releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined
-  getReleaseTrackList: ReturnType<typeof getReleaseTrackListHandler> | undefined = undefined
+  releaseInfo: App.ReleaseInfo | undefined = undefined;
+  releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
+  getTrackList: ReturnType<typeof getTrackListHandler> | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
 
-  mutationUnsubscribe: (() => void) | undefined = undefined
+  mutationUnsubscribe: (() => void) | undefined = undefined;
 
   head() {
     return {
@@ -158,7 +163,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
-    this.getReleaseTrackInfo();
+    this.appendTrackList();
 
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
@@ -178,10 +183,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       };
     };
 
-    const subscribeRelease = (mutationPayload: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
+    const subscribeRelease = ({ payload: [releaseId, isSaved] }: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
       if (this.releaseInfo == null) return;
 
-      const [releaseId, isSaved] = mutationPayload.payload;
       if (releaseId === this.releaseInfo.id) {
         this.releaseInfo.isSaved = isSaved;
         this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
@@ -213,32 +217,31 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  async getReleaseTrackInfo() {
+  async appendTrackList() {
     if (this.releaseInfo == null
       || this.releaseInfo.isFullTrackList
-      || this.getReleaseTrackList == null) {
+      || this.getTrackList == null) {
       return;
     }
 
-    const limit = LIMIT_OF_TRACKS;
     const offset = this.releaseInfo.trackList.length;
-    const { totalTracks } = this.releaseInfo;
-    const trackList = await this.getReleaseTrackList({
-      limit,
-      offset,
-      totalTracks,
-      releaseId: this.releaseInfo.id,
-      releaseName: this.releaseInfo.name,
-      artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
-      artworkSrc: this.releaseInfo.artworkSrc,
-    });
+    const counts = this.releaseInfo.totalTracks - offset;
+    if (counts > 0) {
+      const trackList = await this.getTrackList({
+        offset,
+        counts,
+        releaseId: this.releaseInfo.id,
+        releaseName: this.releaseInfo.name,
+        artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
+        artworkSrc: this.releaseInfo.artworkSrc,
+      });
 
-
-    this.releaseInfo = {
-      ...this.releaseInfo,
-      trackList: [...this.releaseInfo.trackList, ...trackList],
-      isFullTrackList: true,
-    };
+      this.releaseInfo = {
+        ...this.releaseInfo,
+        trackList: [...this.releaseInfo.trackList, ...trackList],
+        isFullTrackList: true,
+      };
+    }
   }
 
   get isReleaseSet(): boolean {
@@ -349,6 +352,13 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__trackTable {
     margin-bottom: 16px;
+  }
+
+  &__progressCircular {
+    display: flex;
+    justify-content: center;
+    margin: 12px 0;
+    width: 100%;
   }
 }
 </style>

@@ -1,2 +1,2 @@
 export * from './getReleaseInfo';
-export * from './getReleaseTrackListHandler';
+export * from './getTrackListHandler';
