@@ -36,9 +36,10 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   return {
     title,
     items,
-    isFull,
     total,
+    isFull,
     isAbbreviated: true,
+    isFetching: false,
   };
 };
 

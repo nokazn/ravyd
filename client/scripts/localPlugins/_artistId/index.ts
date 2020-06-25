@@ -12,9 +12,10 @@ export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T]
 export type ReleaseInfo<T extends ReleaseType> = {
   title: ReleaseTitle<T>
   items: App.ReleaseCardInfo[]
-  isFull: boolean
   total: number
+  isFull: boolean
   isAbbreviated: boolean
+  isFetching: boolean
 }
 
 export * from './getReleaseListMap';

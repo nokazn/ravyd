@@ -74,10 +74,10 @@
       />
     </section>
 
-    <template v-for="[key, releaseInfo] in Object.entries(releaseListMap)">
+    <template v-for="[type, releaseInfo] in Object.entries(releaseListMap)">
       <CardsSection
         v-if="releaseInfo.items.length > 0"
-        :key="key"
+        :key="type"
         :title="releaseInfo.title"
         :class="$style.CardSection"
       >
@@ -110,7 +110,8 @@
         >
           <ShowAllReleaseButton
             :is-abbreviated="releaseInfo.isAbbreviated"
-            @on-clicked="onShowAllButtonClicked(key)"
+            @on-clicked="onShowAllButtonClicked(type)"
+            @mouseenter.native="getAllReleaseList(type)"
           />
         </div>
       </CardsSection>
@@ -221,30 +222,34 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     album: {
       title: 'アルバム',
       items: [],
+      total: 0,
       isFull: false,
       isAbbreviated: true,
-      total: 0,
+      isFetching: false,
     },
     single: {
       title: 'シングル・EP',
       items: [],
+      total: 0,
       isFull: false,
       isAbbreviated: true,
-      total: 0,
+      isFetching: false,
     },
     compilation: {
       title: 'コンピレーション',
       items: [],
+      total: 0,
       isFull: false,
       isAbbreviated: true,
-      total: 0,
+      isFetching: false,
     },
     appears_on: {
       title: '参加作品',
       items: [],
+      total: 0,
       isFull: false,
       isAbbreviated: true,
-      total: 0,
+      isFetching: false,
     },
   };
   getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined = undefined
@@ -362,20 +367,19 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     this.topTrackList = topTrackList;
   }
 
-  async onShowAllButtonClicked(type: ReleaseType) {
+  async getAllReleaseList(type: ReleaseType) {
     const currentReleaseList = this.releaseListMap[type];
-    if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
-
-    // すべて表示されている場合
-    if (!currentReleaseList.isAbbreviated) {
-      this.$set(this.releaseListMap[type], 'isAbbreviated', true);
-      return;
-    }
+    // すでにすべて表示されてるか取得済みの場合は何もしない
+    if (!currentReleaseList.isAbbreviated
+      || currentReleaseList.isFull
+      || currentReleaseList == null
+      || typeof this.getReleaseList !== 'function') return;
 
     const offset = currentReleaseList.items.length;
     const counts = currentReleaseList.total - offset;
-    // 追加で取得するコンテンツがある場合
-    if (counts > 0) {
+    // 追加で取得するコンテンツがあり、取得中でない場合
+    if (counts > 0 && !currentReleaseList.isFetching) {
+      this.$set(this.releaseListMap[type], 'isFetching', true);
       const releaseList = await this.getReleaseList({
         type,
         artworkSize: this.ARTWORK_MAX_SIZE,
@@ -385,9 +389,20 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
       this.$set(this.releaseListMap[type], 'items', [...currentReleaseList.items, ...releaseList]);
       this.$set(this.releaseListMap[type], 'isFull', true);
+      this.$set(this.releaseListMap[type], 'isFetching', false);
     }
+  }
 
-    this.$set(this.releaseListMap[type], 'isAbbreviated', false);
+  async onShowAllButtonClicked(type: ReleaseType) {
+    const currentReleaseList = this.releaseListMap[type];
+    if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
+
+    if (currentReleaseList.isAbbreviated) {
+      await this.getAllReleaseList(type);
+      this.$set(this.releaseListMap[type], 'isAbbreviated', false);
+    } else {
+      this.$set(this.releaseListMap[type], 'isAbbreviated', true);
+    }
   }
 }
 </script>
