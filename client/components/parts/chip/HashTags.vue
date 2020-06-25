@@ -2,11 +2,12 @@
   <div :class="$style.HashTags">
     <template v-for="tag in tagList">
       <v-chip
-        v-if="tag != null"
+        v-if="tag"
         :key="tag"
         small
-        outlined
-        text-color="subtext"
+        :color="color"
+        :text-color="textColor"
+        :outlined="outlined"
         :title="`# ${tag.toUpperCase()}`"
       >
         # {{ tag.toUpperCase() }}
@@ -23,6 +24,18 @@ export default Vue.extend({
     tagList: {
       type: Array as PropType<string[]>,
       required: true,
+    },
+    color: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
+    textColor: {
+      type: String,
+      default: 'subtext',
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
     },
   },
 });

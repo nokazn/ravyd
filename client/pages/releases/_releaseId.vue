@@ -15,6 +15,9 @@
       <div :class="$style.Info">
         <HashTags
           :tag-list="releaseInfo.genreList"
+          color="subtext"
+          text-color="white"
+          outlined
           :class="$style.Info__hashTags"
         />
 
