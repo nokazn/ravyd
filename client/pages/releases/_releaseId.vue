@@ -12,19 +12,24 @@
         shadow
       />
 
-      <div :class="$style.ReleaseIdPage__info">
+      <div :class="$style.Info">
+        <HashTags
+          :tag-list="releaseInfo.genreList"
+          :class="$style.Info__hashTags"
+        />
+
         <div class="g-small-text">
           {{ releaseInfo.releaseType }}
         </div>
 
-        <h1 :class="$style.ReleaseIdPage__releaseName">
+        <h1 :class="$style.Info__releaseName">
           {{ releaseInfo.name }}
         </h1>
 
         <ArtistNames :artist-list="releaseInfo.artistList" />
 
-        <div :class="$style.ReleaseIdPage__releaseInfoFooter">
-          <div :class="$style.ReleaseIdPage__buttons">
+        <div :class="$style.Info__footer">
+          <div :class="$style.Info__buttons">
             <ContextMediaButton
               :is-playing="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
@@ -37,7 +42,7 @@
             />
           </div>
 
-          <div :class="$style.ReleaseIdPage__releaseDetail">
+          <div :class="$style.Info__detail">
             <ReleaseDate
               :release-date="releaseInfo.releaseDate"
               :release-date-precision="releaseInfo.releaseDatePrecision"
@@ -66,10 +71,7 @@
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
-    <Copyrights
-      :copyright-list="releaseInfo.copyrightList"
-      :class="$style.ReleaseIdPage__copyrights"
-    />
+    <Copyrights :copyright-list="releaseInfo.copyrightList" />
   </div>
 </template>
 
@@ -79,6 +81,7 @@ import { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import HashTags from '~/components/parts/chip/HashTags.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
@@ -110,6 +113,7 @@ interface Data {
 @Component({
   components: {
     ReleaseArtwork,
+    HashTags,
     ArtistNames,
     ContextMediaButton,
     FavoriteButton,
@@ -291,46 +295,52 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   padding: 16px 6% 48px;
 
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 220px auto;
+    grid-column-gap: 24px;
     margin-bottom: 32px;
-
-    & > *:not(:last-child) {
-      margin-right: 24px;
-    }
   }
 
-  &__info {
+  .Info {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-  }
 
-  &__releaseName {
-    font-size: 40px;
-    margin: 8px 0;
-    line-height: 1.2em;
-  }
-
-  &__releaseInfoFooter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    margin-top: 12px;
-  }
-
-  &__buttons {
-    margin-right: 24px;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
+    &__hashTags {
+      // border-radius の分だけ右にあるように見えてしまうので調整
+      margin-left: -8px;
+      margin-bottom: 12px;
     }
-  }
 
-  &__releaseDetail {
-    margin-top: 12px;
+    &__releaseName {
+      font-size: 40px;
+      margin: 8px 0;
+      line-height: 1.2em;
+    }
 
-    & > *:not(:last-child) {
-      margin-right: 8px;
+    &__footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-top: 12px;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      margin-right: 24px;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+
+    &__detail {
+      margin-top: 12px;
+
+      & > *:not(:last-child) {
+        margin-right: 8px;
+      }
     }
   }
 
