@@ -28,7 +28,7 @@
       </td>
 
       <td>
-        <div :class="$style.TrackListTableRow__content">
+        <div :class="$style.Content">
           <div class="g-ellipsis-text">
             <div
               :class="titleColor"
@@ -39,7 +39,7 @@
             </div>
 
             <div
-              :class="[$style.TrackListTableRow__contentSubtitle, subtitleColor]"
+              :class="[$style.Content__subtitle, subtitleColor]"
               class="g-ellipsis-text"
             >
               <ArtistNames
@@ -47,7 +47,7 @@
                 :artist-list="item.artistList"
               />
 
-              <span>・</span>
+              <span :class="$style['Content__subtitle--divider']">-</span>
 
               <nuxt-link
                 :to="`/releases/${item.releaseId}`"
@@ -198,7 +198,13 @@ export default Vue.extend({
     }
   }
 
-  &__content {
+  &__smallText {
+    font-size: 0.75rem !important;
+    white-space: nowrap;
+    padding: 0 4px !important;
+  }
+
+  .Content {
     padding: 12px 0;
     display: flex;
     align-items: center;
@@ -208,16 +214,14 @@ export default Vue.extend({
       margin-right: 8px;
     }
 
-    &Subtitle {
+    &__subtitle {
       margin-top: 0.2rem;
       font-size: 0.8rem;
-    }
-  }
 
-  &__smallText {
-    font-size: 0.75rem !important;
-    white-space: nowrap;
-    padding: 0 4px !important;
+      &--divider {
+        margin: 0 0.2rem;
+      }
+    }
   }
 }
 </style>
