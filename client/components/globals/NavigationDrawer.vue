@@ -8,7 +8,10 @@
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
   >
-    <v-list :class="$style.NavigationDrawer__list">
+    <v-list
+      :class="$style.NavigationDrawer__list"
+      class="g-custom-scroll-bar"
+    >
       <div :class="$style.NavigationDrawer__header">
         <UserMenu />
       </div>
@@ -16,68 +19,26 @@
       <v-divider :class="$style.NavigationDrawer__divider" />
 
       <template
-        v-for="({ subtitle, items, scroll }, index) in navigationDrawerItemLists"
+        v-for="({ items, name, subtitle, scroll }) in navigationGroupList"
       >
-        <v-list-item-group
-          :key="index"
-          :class="{
-            [$style['NavigationDrawer__group--scroll']]: scroll,
-            'g-custom-scroll-bar': scroll,
-          }"
-        >
-          <v-subheader
-            v-if="subtitle != null"
-            :class="$style.NavigationDrawer__subheader"
-          >
-            {{ subtitle }}
-          </v-subheader>
-
-          <v-list-item
-            v-for="item in items"
-            :key="item.id"
-            link
-            nuxt
-            :to="item.to"
-            :title="item.name"
-            dense
-            :class="{
-              [$style.NavigationDrawer__denseItem]: scroll,
-              'g-no-text-decoration': true,
-            }"
-            class="g-no-text-decoration"
-          >
-            <v-list-item-icon v-if="item.icon != null">
-              <v-icon :title="item.name">
-                {{ item.icon }}
-              </v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title
-                :class="{
-                  'active--text': isActiveContext(item.uri),
-                  [$style.NavigationDrawer__itemTitle]: true,
-                }"
-              >
-                <span class="g-ellipsis-text">
-                  {{ item.name }}
-                </span>
-                <v-icon
-                  v-if="isActiveContext(item.uri)"
-                  small
-                >
-                  mdi-volume-high
-                </v-icon>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
+        <NavigationListItemGroup
+          :key="name"
+          :items="items"
+          :subtitle="subtitle"
+          :scroll="scroll"
+        />
 
         <v-divider
-          :key="`${index}-divider`"
+          :key="`${name}-divider`"
           :class="$style.NavigationDrawer__divider"
         />
       </template>
+
+      <NavigationListItemGroup
+        v-bind="playlistGroup"
+      />
+
+      <v-divider :class="$style.NavigationDrawer__divider" />
 
       <v-list-item-group>
         <v-list-item
@@ -111,35 +72,75 @@ import Vue from 'vue';
 import { RootState, RootGetters } from 'vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
+import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
 import { NAVIGATION_DRAWER_BACKGROUND_COLOR } from '~/variables';
 
-type Data = {
-  NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
-  createPlaylistModal: boolean
+type NavigationGroup = {
+  items: Item[]
+  name: string
+  subtitle?: string
+  scroll?: boolean
 }
 
-type NavigationDrawerItemLists = {
-  subtitle?: string
-  items: {
-    name: string
-    to: string
-    icon?: string
-    uri?: string
-  }[]
-  scroll?: boolean
-}[]
+type Data = {
+  navigationGroupList: NavigationGroup[]
+  createPlaylistModal: boolean
+  NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
+}
 
 export default Vue.extend({
   components: {
     UserMenu,
+    NavigationListItemGroup,
     CreatePlaylistModal,
   },
 
   data(): Data {
+    const mainGroup = {
+      items: [
+        {
+          name: 'ホーム',
+          to: '/',
+          icon: 'mdi-home-variant',
+        },
+        {
+          name: '見つける',
+          to: '/browse',
+          icon: 'mdi-binoculars',
+        },
+      ],
+      name: 'main',
+    };
+
+    const libraryGroup = {
+      subtitle: 'ライブラリ',
+      items: [
+        {
+          name: 'お気に入りの曲',
+          to: '/library/tracks',
+          icon: 'mdi-music-box-multiple',
+        },
+        {
+          name: 'アルバム',
+          to: '/library/releases',
+          icon: 'mdi-album',
+        },
+        {
+          name: 'アーティスト',
+          to: '/library/artists',
+          icon: 'mdi-account-music',
+        },
+      ],
+      name: 'library',
+    };
+
+    const navigationGroupList = [mainGroup, libraryGroup];
+
     return {
-      NAVIGATION_DRAWER_BACKGROUND_COLOR,
+      navigationGroupList,
       createPlaylistModal: false,
+      NAVIGATION_DRAWER_BACKGROUND_COLOR,
     };
   },
 
@@ -147,75 +148,36 @@ export default Vue.extend({
     listOfPlaylists(): RootState['playlists']['playlists'] {
       return this.$state().playlists.playlists;
     },
-    navigationDrawerItemLists(): NavigationDrawerItemLists {
-      const mainList = {
-        items: [
-          {
-            name: 'ホーム',
-            to: '/',
-            icon: 'mdi-home-variant',
-          },
-          {
-            name: '見つける',
-            to: '/browse',
-            icon: 'mdi-binoculars',
-          },
-        ],
-      };
-
-      const libraryList = {
-        subtitle: 'ライブラリ',
-        items: [
-          {
-            name: 'お気に入りの曲',
-            to: '/library/tracks',
-            icon: 'mdi-music-box-multiple',
-          },
-          {
-            name: 'アルバム',
-            to: '/library/releases',
-            icon: 'mdi-album',
-          },
-          {
-            name: 'アーティスト',
-            to: '/library/artists',
-            icon: 'mdi-account-music',
-          },
-        ],
-      };
-
+    playlistGroup(): NavigationGroup {
       const playlistItems = this.listOfPlaylists?.map((playlist) => {
         const to = `/playlists/${playlist.id}`;
         return {
           id: playlist.id,
           name: playlist.name,
           to,
-          uri: playlist.uri,
+          isActive: this.isActiveContext(playlist.uri),
         };
       });
 
-      const playlists = playlistItems != null
-        ? {
-          subtitle: 'プレイリスト',
-          items: playlistItems,
-          scroll: true,
-        }
-        : undefined;
+      const playlists = {
+        items: playlistItems ?? [],
+        name: 'playlist',
+        subtitle: 'プレイリスト',
+        scroll: true,
+      };
 
-      return playlists != null
-        ? [mainList, libraryList, playlists]
-        : [mainList, libraryList];
+      return playlists;
+    },
+    isActiveContext(): (uri: string) => boolean {
+      return (uri: string) => (uri != null
+        ? this.$getters()['player/contextUri'] === uri
+        : false);
     },
     userAvatarSrc(): RootGetters['auth/userAvatarSrc'] {
       return this.$getters()['auth/userAvatarSrc'];
     },
     userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];
-    },
-    isActiveContext(): (uri: string) => boolean {
-      return (uri: string) => (uri != null
-        ? this.$getters()['player/contextUri'] === uri
-        : false);
     },
   },
 
@@ -246,6 +208,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     height: calc(100vh - #{$g-footer-height});
+    overflow-y: auto;
   }
 
   &__header {
@@ -255,22 +218,6 @@ export default Vue.extend({
     & > *:not(:last-child) {
       margin-right: 8px;
     }
-  }
-
-  &__group--scroll {
-    overflow-y: scroll;
-    flex: 1 0;
-    margin: -12px 0;
-    padding: 12px 0;
-  }
-
-  &__itemTitle {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__denseItem {
-    min-height: 36px;
   }
 
   &__divider {
