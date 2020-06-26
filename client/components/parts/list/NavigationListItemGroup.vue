@@ -6,7 +6,7 @@
   >
     <v-subheader
       v-if="subtitle != null"
-      :class="$style.NavigationDrawer__subheader"
+      :class="$style.NavigationDrawerListItemGroup__subheader"
     >
       {{ subtitle }}
     </v-subheader>
