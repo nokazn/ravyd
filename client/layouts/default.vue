@@ -24,9 +24,11 @@
       v-else
       :class="$style.ProgressCircular"
     >
-      <v-progress-circular
-        indeterminate
-      />
+      <transition name="fade">
+        <v-progress-circular
+          indeterminate
+        />
+      </transition>
     </main>
   </v-app>
 </template>
