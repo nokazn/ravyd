@@ -59,7 +59,7 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-nuxt": ">=0.4.2",
     "jest": "^24.1.0",
-    "stylelint": "^13.6.0",
+    "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.17.2",
     "vue-jest": "^4.0.0-0"
