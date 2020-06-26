@@ -15,6 +15,7 @@ export const getTopTrackList = async (
     country,
   });
   if (tracks == null) return undefined;
+  if (tracks.length === 0) return [];
 
   const trackIdList = tracks.map((track) => track.id);
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });

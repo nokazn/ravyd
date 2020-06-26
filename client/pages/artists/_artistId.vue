@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <section v-if="artistInfo != null && topTrackList != null">
+    <section v-if="artistInfo != null && topTrackList != null && topTrackList.length > 0">
       <TrackListWrapper
         :abbreviated-length="ABBREVIATED_TOP_TRACK_LENGTH"
         :track-list="topTrackList"

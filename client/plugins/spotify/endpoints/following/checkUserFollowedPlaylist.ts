@@ -12,6 +12,9 @@ export const checkUserFollowedPlaylist = (context: Context) => {
   }): Promise<boolean[]> => {
     const { length } = userIdList;
     const maxLength = 5;
+    if (length === 0) {
+      return Promise.resolve([]);
+    }
     if (length > maxLength) {
       throw new Error(`userIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
     }

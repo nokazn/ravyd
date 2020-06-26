@@ -6,6 +6,9 @@ export const checkUserSavedAlbums = (context: Context) => {
   return ({ albumIdList }: { albumIdList: string[] }): Promise<boolean[]> => {
     const { length } = albumIdList;
     const maxLength = 50;
+    if (length === 0) {
+      return Promise.resolve([]);
+    }
     if (length > maxLength) {
       throw new Error(`albumIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
     }

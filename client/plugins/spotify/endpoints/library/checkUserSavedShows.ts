@@ -6,6 +6,9 @@ export const checkUserSavedShows = (context: Context) => {
   return ({ showIdList }: { showIdList: string[] }): Promise<boolean[]> => {
     const { length } = showIdList;
     const maxLength = 50;
+    if (length === 0) {
+      return Promise.resolve([]);
+    }
     if (length > maxLength) {
       throw new Error(`showIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
     }
