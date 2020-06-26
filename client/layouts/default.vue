@@ -1,34 +1,33 @@
 <template>
   <v-app dark>
-    <Header v-if="isLoggedin" />
-    <NavigationDrawer v-if="isLoggedin" />
+    <template v-if="onLoaded">
+      <Header v-if="isLoggedin" />
+      <NavigationDrawer v-if="isLoggedin" />
+
+      <main
+        :class="$style.ContentContainer"
+        :style="styles"
+      >
+        <div :class="$style.Spacer" />
+        <nuxt />
+      </main>
+
+      <Footer v-if="isLoggedin" />
+
+      <Toast
+        v-bind="$toast"
+        @on-changed="onToastChanged"
+      />
+    </template>
 
     <main
-      :class="$style.ContentContainer"
-      :style="styles"
+      v-else
+      :class="$style.ProgressCircular"
     >
-      <div :class="$style.Spacer" />
-
-      <transition name="fade">
-        <nuxt v-if="onLoaded" />
-
-        <div
-          v-else
-          :class="$style.ProgressCircular"
-        >
-          <v-progress-circular
-            indeterminate
-          />
-        </div>
-      </transition>
+      <v-progress-circular
+        indeterminate
+      />
     </main>
-
-    <Footer v-if="isLoggedin" />
-
-    <Toast
-      v-bind="$toast"
-      @on-changed="onToastChanged"
-    />
   </v-app>
 </template>
 
@@ -96,7 +95,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
+  height: 100vh;
 }
 </style>
 
