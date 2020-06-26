@@ -189,6 +189,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   mounted() {
     if (this.playlistInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
+    } else {
+      this.$dispatch('setDefaultDominantBackgroundColor');
     }
 
     // トラックを保存/削除した後呼ばれる

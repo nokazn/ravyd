@@ -168,6 +168,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
+    } else {
+      this.$dispatch('setDefaultDominantBackgroundColor');
     }
 
     const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
