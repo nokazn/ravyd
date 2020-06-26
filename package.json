@@ -35,7 +35,7 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
-    "@babel/compat-data": "^7.9.0",
+    "@babel/compat-data": "^7.10.3",
     "@babel/preset-env": "^7.9.0",
     "@babel/runtime-corejs3": "^7.9.6",
     "@mdi/font": "^5.3.45",
