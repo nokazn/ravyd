@@ -19,13 +19,12 @@
       <v-divider :class="$style.NavigationDrawer__divider" />
 
       <template
-        v-for="({ items, name, subtitle, scroll }) in navigationGroupList"
+        v-for="({ items, name, subtitle }) in navigationGroupList"
       >
         <NavigationListItemGroup
           :key="name"
           :items="items"
           :subtitle="subtitle"
-          :scroll="scroll"
         />
 
         <v-divider
@@ -36,6 +35,7 @@
 
       <NavigationListItemGroup
         v-bind="playlistGroup"
+        @on-loaded="onPlaylistGroupLoaded"
       />
 
       <v-divider :class="$style.NavigationDrawer__divider" />
@@ -181,15 +181,14 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    this.$dispatch('playlists/getAllPlaylists')
-      .catch((err: Error) => {
-        console.error({ err });
-        this.$toast.show('error', err.message);
-      });
-  },
-
   methods: {
+    onPlaylistGroupLoaded() {
+      this.$dispatch('playlists/getAllPlaylists')
+        .catch((err: Error) => {
+          console.error({ err });
+          this.$toast.show('error', err.message);
+        });
+    },
     onPlaylistButtonClicked() {
       this.createPlaylistModal = true;
     },
