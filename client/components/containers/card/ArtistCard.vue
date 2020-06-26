@@ -56,9 +56,6 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'vuex';
 
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
-import { App } from '~~/types';
-
-export type ArtistCardInfo = App.ArtistCardInfo
 
 export type Data = {
   artistPath: string

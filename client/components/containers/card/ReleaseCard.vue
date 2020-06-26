@@ -92,8 +92,6 @@ import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtw
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
-export type ReleaseCardInfo = App.ReleaseCardInfo
-
 export type Data = {
   isLoaded: boolean
   releasePath: RawLocation

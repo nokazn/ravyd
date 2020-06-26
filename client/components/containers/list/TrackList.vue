@@ -24,10 +24,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackListItem, { TrackDetail, On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
+import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
 import { BACKGROUND_COLOR } from '~/variables';
-
-export { TrackDetail } from '~/components/parts/list/TrackListItem.vue';
+import { App } from '~~/types';
 
 export type Data = {
   trackUriList: string[]
@@ -47,7 +46,7 @@ export default Vue.extend({
 
   props: {
     trackList: {
-      type: Array as PropType<TrackDetail[]>,
+      type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
     uri: {

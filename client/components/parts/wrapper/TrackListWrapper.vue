@@ -25,7 +25,8 @@
 import Vue, { PropType } from 'vue';
 
 import ShowAllTracksButton from '~/components/parts/button/ShowAllTracksButton.vue';
-import TrackList, { TrackDetail, On as OnList } from '~/components/containers/list/TrackList.vue';
+import TrackList, { On as OnList } from '~/components/containers/list/TrackList.vue';
+import { App } from '~~/types';
 
 export type Data = {
   isAbbreviated: boolean
@@ -49,7 +50,7 @@ export default Vue.extend({
       required: true,
     },
     trackList: {
-      type: Array as PropType<TrackDetail[]>,
+      type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
     uri: {

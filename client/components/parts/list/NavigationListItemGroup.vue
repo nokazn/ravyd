@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import NavigationListItem, { Item as A } from '~/components/parts/list/NavigationListItem.vue';
+import NavigationListItem, { Item } from '~/components/parts/list/NavigationListItem.vue';
 
 export { Item } from '~/components/parts/list/NavigationListItem.vue';
 
@@ -51,7 +51,7 @@ export default Vue.extend({
 
   props: {
     items: {
-      type: Array as PropType<A[]>,
+      type: Array as PropType<Item[]>,
       required: true,
     },
     subtitle: {

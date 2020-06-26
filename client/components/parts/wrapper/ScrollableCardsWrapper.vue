@@ -55,9 +55,6 @@
 import Vue from 'vue';
 import debounce from 'lodash/debounce';
 
-export { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
-export { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
-
 const CARDS_WRAPPER_MARGIN = 24;
 
 export type Data = {

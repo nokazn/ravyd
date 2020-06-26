@@ -83,8 +83,6 @@ import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
-export type TrackDetail = App.TrackDetail
-
 export type Data = {
   path: string
   trackIndex: number

@@ -44,19 +44,20 @@
 import Vue from 'vue';
 
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
-import ReleaseCard, { ReleaseCardInfo } from '~/components/containers/card/ReleaseCard.vue';
-import ArtistCard, { ArtistCardInfo } from '~/components/containers/card/ArtistCard.vue';
+import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import { convertTrackForCard } from '~/scripts/converter/convertTrackForCard';
 import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { App } from '~~/types';
 
 const CARD_WIDTH = 200;
 
 export type AsyncData = {
   CARD_WIDTH: number
-  topArtistList: ArtistCardInfo[] | undefined
-  topTrackList: ReleaseCardInfo[] | undefined
-  newReleaseList: ReleaseCardInfo[] | undefined
+  topArtistList: App.ArtistCardInfo[] | undefined
+  topTrackList: App.ReleaseCardInfo[] | undefined
+  newReleaseList: App.ReleaseCardInfo[] | undefined
 }
 
 export default Vue.extend({
