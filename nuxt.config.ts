@@ -82,6 +82,9 @@ const config: Configuration = {
     icons: {
       iconfont: 'mdi',
     },
+    defaultAssets: {
+      icons: false,
+    },
     theme: {
       dark: true,
       themes: {
@@ -106,7 +109,7 @@ const config: Configuration = {
     fix: true,
   },
   server: {
-    https: process.env.NODE_ENV === 'development'
+    https: process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production'
       ? {
         key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
         cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
@@ -114,6 +117,7 @@ const config: Configuration = {
       : undefined,
   },
   build: {
+    analyze: true,
     babel: {
       presets({ isServer }) {
         return [
