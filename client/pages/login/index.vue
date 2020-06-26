@@ -43,6 +43,10 @@ export default Vue.extend({
     },
   },
 
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  },
+
   methods: {
     onAuthButtonClicked() {
       this.$dispatch('auth/login');

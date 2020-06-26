@@ -94,9 +94,6 @@ export default class LibraryTracksPage extends Vue implements Data {
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
   }
-  beforeDestroy() {
-    this.$dispatch('resetDominantBackgroundColor');
-  }
 
   onContextMediaButtonClicked(nextPlayingState: On['on-clicked']) {
     // 停止

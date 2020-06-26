@@ -93,7 +93,12 @@ export default class GenreIdPage extends Vue implements AsyncData {
   playlists: App.PlaylistCardInfo[] | null = null;
   isFullPlaylists = false;
 
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  }
+
   /**
+   * @todo リファクタリング
    * localPlugins の getCategoryPlaylist と同じ処理で、スクロールが下限に到達したとき呼ばれる
    */
   async getCategoryPlaylist() {

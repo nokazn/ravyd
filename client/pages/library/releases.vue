@@ -82,6 +82,10 @@ export default class LibraryReleasesPage extends Vue implements Data {
     return this.$state().library.releases.isFullReleaseList;
   }
 
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  }
+
   onLoadingCircleAppeared() {
     this.$dispatch('library/releases/getSavedReleaseList', {
       limit: LIMIT_OF_RELEASES,

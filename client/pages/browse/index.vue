@@ -93,6 +93,10 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
     };
   }
 
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  }
+
   async getCategoryList() {
     if (this.isFullCategoryList) return;
 

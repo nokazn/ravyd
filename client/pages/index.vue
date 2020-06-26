@@ -88,6 +88,10 @@ export default Vue.extend({
     };
   },
 
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  },
+
   head() {
     return {
       title: 'ホーム',
