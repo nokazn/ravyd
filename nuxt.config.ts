@@ -1,9 +1,10 @@
+/* eslint-disable no-param-reassign */
 import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import { Configuration } from '@nuxt/types';
 
-const config: Configuration = {
+const nuxtConfig: Configuration = {
   mode: 'universal',
   srcDir: './client/',
   rootDir: './',
@@ -133,7 +134,31 @@ const config: Configuration = {
         ];
       },
     },
-    // extend(webpackConfig) {},
+    extend(config, { isDev, isClient }) {
+      config.module = config.module ?? { rules: [] };
+
+      if (isDev && isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/,
+        });
+      }
+
+      // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
+      config.output = config.output ?? {};
+      config.output.globalObject = 'this';
+
+      if (isClient) {
+        config.module.rules.push({
+          // @todo ts?
+          test: /\.worker\.(js|ts)$/,
+          loader: 'worker-loader',
+          exclude: /node_modules/,
+        });
+      }
+    },
   },
   typescript: {
     typeCheck: {
@@ -142,4 +167,4 @@ const config: Configuration = {
   },
 };
 
-export default config;
+export default nuxtConfig;
