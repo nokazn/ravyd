@@ -152,10 +152,8 @@ const nuxtConfig: Configuration = {
 
       if (isClient) {
         config.module.rules.push({
-          // @todo ts?
-          test: /\.worker\.(js|ts)$/,
+          test: /bundle\.worker\.js$/,
           loader: 'worker-loader',
-          exclude: /node_modules/,
         });
       }
     },
