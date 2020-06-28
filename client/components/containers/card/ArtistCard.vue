@@ -56,6 +56,7 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'vuex';
 
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
+import { SpotifyAPI } from '~~/types';
 
 export type Data = {
   artistPath: string
@@ -82,6 +83,10 @@ export default Vue.extend({
     },
     avatarSrc: {
       type: String,
+      required: true,
+    },
+    externalUrls: {
+      type: Object as PropType<SpotifyAPI.ExternalUrls>,
       required: true,
     },
     width: {

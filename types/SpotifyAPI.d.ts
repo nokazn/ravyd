@@ -46,7 +46,7 @@ export namespace SpotifyAPI {
     artists: Artist[]
     available_markets: Country[]
     copyrights: Copyright[]
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     images: Image[]
@@ -67,7 +67,7 @@ export namespace SpotifyAPI {
   } & Omit<SimpleAlbum, 'album_group'>
 
   export type SimpleArtist = {
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     name: string
@@ -98,7 +98,7 @@ export namespace SpotifyAPI {
     // @todo
     type: 'artist' | 'playlist' | 'album' | 'track' | 'episode'| string
     href: string
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     uri: string
   }
 
@@ -135,7 +135,7 @@ export namespace SpotifyAPI {
     description: string
     duration_ms: number
     explicit: boolean
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     images: Image[]
@@ -156,7 +156,7 @@ export namespace SpotifyAPI {
     description: string
     explicit: boolean
     episodes: SimpleShow[]
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     images: Image[]
@@ -179,7 +179,7 @@ export namespace SpotifyAPI {
   }>
 
   // @todo
-  export type ExternalUrl = Merge<{
+  export type ExternalUrls = Merge<{
     spotify?: string
   }, {
     [k: string]: string
@@ -207,7 +207,7 @@ export namespace SpotifyAPI {
   }>
 
   export type LinkedTrack = {
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     type: 'track'
@@ -266,7 +266,7 @@ export namespace SpotifyAPI {
   export type SimplePlaylist = {
     collaborative: boolean
     description: string | null
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     images: Image[]
@@ -308,7 +308,7 @@ export namespace SpotifyAPI {
     copyrights: Copyright[]
     description: string
     explicit: boolean
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     images: Image[]
@@ -330,7 +330,7 @@ export namespace SpotifyAPI {
     disc_number: number
     duration_ms: number
     explicit: boolean
-    external_urls: ExternalUrl
+    external_urls: ExternalUrls
     href: string
     id: string
     is_playable: boolean

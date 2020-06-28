@@ -57,7 +57,7 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
 export type PlaylistCardInfo = App.PlaylistCardInfo
 
@@ -90,6 +90,10 @@ export default Vue.extend({
     },
     artworkSrc: {
       type: String,
+      required: true,
+    },
+    externalUrls: {
+      type: Object as PropType<SpotifyAPI.ExternalUrls>,
       required: true,
     },
     width: {
