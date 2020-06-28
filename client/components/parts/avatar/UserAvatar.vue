@@ -32,8 +32,12 @@
 
     <v-sheet
       v-else
-      :min-width="size"
-      :min-height="size"
+      :min-width="minSize || size"
+      :min-height="minSize || size"
+      :width="size"
+      :height="size"
+      :max-width="maxSize || size"
+      :max-height="maxSize || size"
       :class="$style.UserAvatar__noAvatar"
     >
       <v-icon :size="noAvatarIconSize">
