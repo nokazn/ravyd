@@ -39,8 +39,8 @@
 
         <v-list-item-group>
           <v-list-item
-            v-for="(track) in trackQueue"
-            :key="track.id"
+            v-for="(track, index) in trackQueue"
+            :key="`${track.id}-${index}`"
             dense
             three-line
             :input-valuea="track.id"
