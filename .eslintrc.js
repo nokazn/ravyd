@@ -32,8 +32,9 @@ module.exports = {
       js: 'never',
       ts: 'never',
       json: 'never',
-      vue: 'always',
       scss: 'never',
+      vue: 'always',
+      worker: 'always',
     }],
     // @todo
     'import/no-unresolved': 0,

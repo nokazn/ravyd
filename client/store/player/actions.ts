@@ -56,6 +56,7 @@ export type RootActions = {
   'player/transferPlayback': PlayerActions['transferPlayback']
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
   'player/setCustomContext': PlayerActions['setCustomContext']
+  'player/resetCustomContext': PlayerActions['resetCustomContext']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']

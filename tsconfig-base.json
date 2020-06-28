@@ -1,0 +1,80 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "esnext",
+    "lib": [
+      "ESNext",
+      "ESNext.AsyncIterable",
+      "DOM"
+    ],
+    "resolveJsonModule": true,
+    "allowJs": true,
+    
+    // "checkJs": true,
+    // "jsx": "preserve",
+    // "declaration": true,
+    // "declarationMap": true,
+    "sourceMap": true,
+    // "outFile": "./",
+    // "outDir": "./",
+    // "rootDir": "./",
+    // "composite": true,
+    // "tsBuildInfoFile": "./",
+    // "removeComments": true,
+    "noEmit": true,
+    // "importHelpers": true,
+    // "downlevelIteration": true,
+    // "isolatedModules": true,
+
+    "strict": true,
+
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noImplicitReturns": true,
+    // "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    // "baseUrl": "./",
+    "paths": {
+      "~/*": [
+        "./client/*"
+      ],
+      "@/*": [
+        "./client/*"
+      ],
+      "~~/*": [
+        "./*"
+      ],
+      "@@/*": [
+        "./*"
+      ]
+    },
+    // "rootDirs": [],
+    // "typeRoots": [],
+    "types": [
+      "@types/node",
+      "@nuxt/types",
+      "@nuxtjs/axios",
+      "vuetify",
+      "@types/spotify-web-playback-sdk"
+    ],
+    // "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    // "preserveSymlinks": true,
+    // "allowUmdGlobalAccess": true,
+
+    // "sourceRoot": "",
+    // "mapRoot": "",
+    // "inlineSourceMap": true,
+    // "inlineSources": true,
+
+    "experimentalDecorators": true,
+    // "emitDecoratorMetadata": true,
+
+    // "forceConsistentCasingInFileNames": true,
+  },
+  "exclude": [
+    "node_modules"
+  ],
+}

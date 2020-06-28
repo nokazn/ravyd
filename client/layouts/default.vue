@@ -72,7 +72,6 @@ export default Vue.extend({
   // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
   mounted() {
     this.onLoaded = true;
-    console.log('on-loaded');
     this.$dispatch('player/initPlayer');
   },
 
