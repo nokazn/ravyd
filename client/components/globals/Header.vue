@@ -39,9 +39,7 @@
         />
       </div>
 
-      <div :class="$style.Header__right">
-        <TrackQueueButton />
-      </div>
+      <div :class="$style.Header__right" />
     </div>
   </v-app-bar>
 </template>
@@ -50,7 +48,6 @@
 import Vue from 'vue';
 
 import SearchField from '~/components/parts/form/SearchField.vue';
-import TrackQueueButton from '~/components/containers/player/TrackQueueButton.vue';
 import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
 import { App } from '~~/types';
 
@@ -62,7 +59,6 @@ type Data = {
 export default Vue.extend({
   components: {
     SearchField,
-    TrackQueueButton,
   },
 
   data(): Data {

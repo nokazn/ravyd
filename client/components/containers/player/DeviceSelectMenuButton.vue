@@ -1,19 +1,22 @@
 <template>
   <v-menu
+    :key="deviceItemList.length"
     v-model="isShown"
     top
     left
-    :nudge-top="40"
+    offset-y
   >
     <template #activator="{ on }">
       <v-btn
         icon
         :color="deviceButtonColor"
         title="デバイスを選択"
+        :width="36"
+        :height="36"
         v-on="on"
         @click="onDeviceButtonClicked"
       >
-        <v-icon :size="20">
+        <v-icon>
           mdi-devices
         </v-icon>
       </v-btn>

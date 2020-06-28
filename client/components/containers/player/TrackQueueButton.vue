@@ -1,12 +1,13 @@
 <template>
   <v-menu
+    :key="trackQueue.length"
     v-model="isShown"
-    bottom
+    top
     left
-    :nudge-bottom="40"
-    :nudge-left="20"
+    offset-y
     :min-width="400"
     :max-width="500"
+    :content-class="CUSTOM_CLASS"
   >
     <template #activator="{ on }">
       <v-btn
@@ -138,11 +139,14 @@ import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
 
+const CUSTOM_CLASS = 'track-queue-content';
+
 type Data = {
   isShown: boolean
   trackNameColor: (isPlaying: boolean) => string | undefined
   subtextColor: (isPlaying: boolean) => string | undefined
   artistNames: (artistList: App.SimpleArtistInfo[]) => string
+  CUSTOM_CLASS: string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
@@ -159,14 +163,14 @@ export default Vue.extend({
       trackNameColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : undefined),
       subtextColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : 'subtext--text'),
       artistNames: (artistList) => artistList.map((artist) => artist.name).join(', '),
+      CUSTOM_CLASS,
       MENU_BACKGROUND_COLOR,
     };
   },
 
   computed: {
     trackQueue(): App.TrackQueueInfo[] {
-      const artworkSize = TRACK_QUEUE_ARTWORK_SIZE;
-      return this.$getters()['player/trackQueue'](artworkSize);
+      return this.$getters()['player/trackQueue'](TRACK_QUEUE_ARTWORK_SIZE);
     },
   },
 
