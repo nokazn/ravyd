@@ -149,7 +149,7 @@ export default Vue.extend({
       return this.$state().playlists.playlists;
     },
     playlistGroup(): NavigationGroup {
-      const playlistItems = this.listOfPlaylists?.map((playlist) => {
+      const items = this.listOfPlaylists?.map((playlist) => {
         const to = `/playlists/${playlist.id}`;
         return {
           id: playlist.id,
@@ -157,12 +157,15 @@ export default Vue.extend({
           to,
           isActive: this.isActiveContext(playlist.uri),
         };
-      });
+      }) ?? [];
+      const subtitle = items.length > 0
+        ? `プレイリスト (${items.length})`
+        : 'プレイリスト';
 
       const playlists = {
-        items: playlistItems ?? [],
+        items,
         name: 'playlist',
-        subtitle: 'プレイリスト',
+        subtitle,
         scroll: true,
       };
 
