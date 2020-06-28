@@ -39,7 +39,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/runtime-corejs3": "^7.9.6",
     "@mdi/font": "^5.3.45",
-    "@nuxt/typescript-build": "^0.6.0",
+    "@nuxt/typescript-build": "^1.0.3",
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
