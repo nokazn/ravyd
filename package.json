@@ -37,7 +37,7 @@
   "devDependencies": {
     "@babel/compat-data": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
-    "@babel/runtime-corejs3": "^7.9.6",
+    "@babel/runtime-corejs3": "^7.10.3",
     "@mdi/font": "^5.3.45",
     "@nuxt/typescript-build": "^0.6.0",
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
