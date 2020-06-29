@@ -4,6 +4,7 @@
     bottom
     right
     offset-y
+    :nudge-bottom="4"
     :close-on-click="false"
     :close-on-content-click="false"
     :min-width="600"
