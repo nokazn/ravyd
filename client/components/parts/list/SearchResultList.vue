@@ -8,7 +8,6 @@
     :close-on-content-click="false"
     :min-width="600"
     :max-width="700"
-    :max-height="400"
     :z-index="10000"
   >
     <template #activator="{ on }">
@@ -24,25 +23,44 @@
         subheader
         :color="MENU_BACKGROUND_COLOR"
       >
-        <template v-for="{ title, items } in itemInfoList">
-          <template v-if="items.length > 0">
-            <v-subheader :key="`${title}-subheader`">
-              {{ title }}
-            </v-subheader>
+        <div
+          class="g-custom-scroll-bar"
+          :class="$style.SearchResultList__content"
+        >
+          <template v-for="{ title, items } in itemInfoList">
+            <template v-if="items.length > 0">
+              <v-subheader :key="`${title}-subheader`">
+                {{ title }}
+              </v-subheader>
 
-            <v-divider :key="`${title}-divider`" />
+              <v-divider :key="`${title}-divider`" />
 
-            <v-list-item-group
-              :key="title"
-            >
-              <SearchResultListItem
-                v-for="item in items"
-                :key="item.id"
-                v-bind="item"
-              />
-            </v-list-item-group>
+              <v-list-item-group
+                :key="title"
+              >
+                <SearchResultListItem
+                  v-for="item in items"
+                  :key="item.id"
+                  v-bind="item"
+                />
+              </v-list-item-group>
+            </template>
           </template>
-        </template>
+        </div>
+
+        <v-divider />
+
+        <div :class="$style.SearchResultList__moreButton">
+          <v-btn
+            rounded
+            text
+            small
+            nuxt
+            to="/search"
+          >
+            詳細検索
+          </v-btn>
+        </div>
       </v-list>
     </v-card>
   </v-menu>
@@ -145,3 +163,18 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.SearchResultList {
+  &__content {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  &__moreButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}
+</style>
