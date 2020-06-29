@@ -292,7 +292,15 @@ export namespace SpotifyAPI {
   }
 
   // @todo
-  export type SearchResult = {
+  type SearchTypes = {
+    album: 'albums',
+    artist: 'artists',
+    track: 'tracks',
+    playlist: 'playlists',
+    show: 'shows',
+    episode: 'episodes',
+  };
+  type SearchResultBase = {
     albums?: Paging<SimpleAlbum>
     artists?: Paging<Artist>
     tracks?: Paging<Track>
@@ -300,6 +308,11 @@ export namespace SpotifyAPI {
     shows?: Paging<SimpleShow>
     episodes?: Paging<Episode>
   }
+  export type SearchType = keyof SearchTypes
+  // キーが T のものを抜き出す
+  export type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
+    SearchResultBase, SearchTypes[T]
+  >>
 
   export type RepeatState = 'off' | 'track' | 'context'
 

@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    v-model="text"
+    v-model="query"
     dense
     hide-details
     rounded
@@ -16,7 +16,7 @@
     @mouseover="handleIsHovered(true)"
     @blur="handleIsFocused(false)"
     @mouseout="handleIsHovered(false)"
-    @input="debouncer"
+    @input="debouncedEmitter"
   >
     <template #prepend-inner>
       <div
@@ -39,7 +39,7 @@
         :style="iconStyles"
       >
         <v-icon
-          v-show="text !== ''"
+          v-show="query !== ''"
           :size="iconSize"
           color="grey darken-1"
           title="消去"
@@ -56,16 +56,20 @@
 import Vue from 'vue';
 import debounce from 'lodash/debounce';
 import { Cancelable } from 'lodash';
-import { SpotifyAPI } from '~~/types';
 
-export type Data = {
-  text: string
-  result: SpotifyAPI.SearchResult
-  isFocused: boolean
+import { $searchForm } from '~/observable/searchFormState';
+
+type Data = {
   isHovered: boolean
   iconSize: number
   iconStyles: { height: string }
-  debouncer: ((query: string) => Promise<void>) & Cancelable
+  debouncedEmitter: ((query: string) => void) & Cancelable
+}
+
+const ON_INPUT = 'on-input';
+
+export type On = {
+  [ON_INPUT]: string
 }
 
 export default Vue.extend({
@@ -77,38 +81,46 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const interval = 1000;
-    const debouncer = debounce(async (query: string) => {
-      if (!query) return;
-
-      const res = await this.$spotify.search.searchItems({
-        query,
-        typeList: ['album'],
-      });
-
-      console.log(res);
+    const interval = 700;
+    const debouncedEmitter = debounce((query: string) => {
+      if (query) {
+        this.$emit(ON_INPUT, query);
+      }
     }, interval);
 
     return {
-      text: '',
-      result: {},
-      isFocused: false,
       isHovered: false,
       iconSize: (this.height * 4) / 5,
       iconStyles: { height: `${this.height}px` },
-      debouncer,
+      debouncedEmitter,
     };
   },
 
   computed: {
+    query: {
+      get(): string {
+        return $searchForm.query;
+      },
+      set(query: string) {
+        $searchForm.setQuery(query);
+      },
+    },
+    isFocused: {
+      get(): boolean {
+        return $searchForm.isFocused;
+      },
+      set(isFocused: boolean) {
+        $searchForm.setIsFocused(isFocused);
+      },
+    },
   },
 
   methods: {
     clearText() {
-      this.text = '';
+      $searchForm.setQuery('');
     },
     handleIsFocused(isFocused: boolean) {
-      this.isFocused = isFocused;
+      $searchForm.setIsFocused(isFocused);
     },
     handleIsHovered(isHovered: boolean) {
       this.isHovered = isHovered;

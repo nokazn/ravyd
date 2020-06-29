@@ -33,11 +33,9 @@
           </v-icon>
         </v-btn>
 
-        <div>
-          <search-field
-            :class="$style.Header__searchField"
-          />
-        </div>
+        <SearchForm
+          :class="$style.Header__searchForm"
+        />
       </div>
 
       <div :class="$style.Header__right" />
@@ -48,7 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import SearchField from '~/components/containers/form/SearchField.vue';
+import SearchForm from '~/components/containers/form/SearchForm.vue';
 import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
 import { App } from '~~/types';
 
@@ -58,7 +56,7 @@ type Data = {
 
 export default Vue.extend({
   components: {
-    SearchField,
+    SearchForm,
   },
 
   data(): Data {
@@ -112,7 +110,7 @@ export default Vue.extend({
     }
   }
 
-  &__searchField {
+  &__searchForm {
     margin-left: 20px;
   }
 }

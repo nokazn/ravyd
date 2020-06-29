@@ -4,22 +4,24 @@ import { SpotifyAPI } from '~~/types';
 export const searchItems = (context: Context) => {
   const { app } = context;
 
-  return ({
+  return <T extends SpotifyAPI.SearchType[]>({
     query,
     typeList,
     market,
-    limit,
-    offset,
+    limit = 20,
+    offset = 0,
     includeExternal,
   }: {
     query: string
-    typeList: Array<'album' | 'artist' | 'playlist' | 'track' | 'show' | 'episode'>
+    typeList: T
     market?: SpotifyAPI.Country
     limit?: number
     offset?: number
     includeExternal?: 'audio'
-  }): Promise<SpotifyAPI.SearchResult | undefined> => {
-    if (!query) return Promise.resolve(undefined);
+  }): Promise<
+    SpotifyAPI.SearchResult<T extends [SpotifyAPI.SearchType] ? T[0] : T[number]>
+  > => {
+    if (query === '') return Promise.resolve({});
 
     const q = encodeURIComponent(query);
     const request = app.$spotifyApi.$get('/search', {
@@ -33,7 +35,7 @@ export const searchItems = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return undefined;
+      return {};
     });
 
     return request;
