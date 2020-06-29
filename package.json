@@ -19,7 +19,7 @@
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
   },
   "dependencies": {
-    "@nuxt/typescript-runtime": "^0.4.0",
+    "@nuxt/typescript-runtime": "^0.4.10",
     "@nuxtjs/axios": "^5.9.5",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.0.0-0",
