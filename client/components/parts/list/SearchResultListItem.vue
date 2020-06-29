@@ -13,6 +13,8 @@
         :alt="name"
         :title="name"
         :size="40"
+        default-user-icon="mdi-account-music"
+        small-icon
       />
       <ReleaseArtwork
         v-else
