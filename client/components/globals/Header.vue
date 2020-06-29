@@ -33,10 +33,11 @@
           </v-icon>
         </v-btn>
 
-        <search-field
-          v-model="searchWords"
-          :class="$style.Header__searchField"
-        />
+        <div>
+          <search-field
+            :class="$style.Header__searchField"
+          />
+        </div>
       </div>
 
       <div :class="$style.Header__right" />
@@ -47,12 +48,11 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import SearchField from '~/components/parts/form/SearchField.vue';
+import SearchField from '~/components/containers/form/SearchField.vue';
 import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
-  searchWords: string
   elevation: number
 }
 
@@ -63,7 +63,6 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      searchWords: '',
       elevation: 0,
     };
   },

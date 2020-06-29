@@ -291,6 +291,16 @@ export namespace SpotifyAPI {
     snapshot_id: string
   }
 
+  // @todo
+  export type SearchResult = {
+    albums?: Paging<SimpleAlbum>
+    artists?: Paging<Artist>
+    tracks?: Paging<Track>
+    playlists?: Paging<SimplePlaylist>
+    shows?: Paging<SimpleShow>
+    episodes?: Paging<Episode>
+  }
+
   export type RepeatState = 'off' | 'track' | 'context'
 
   export type Restriction = {
