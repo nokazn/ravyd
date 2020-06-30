@@ -19,7 +19,7 @@
     @blur="handleIsFocused(false)"
   >
     <template #prepend-inner>
-      <div :class="$style.SearchForm__prependInnerIcon">
+      <div :class="$style.SearchField__prependInnerIcon">
         <v-icon
           :size="28"
           color="grey darken-4"
@@ -31,7 +31,7 @@
     </template>
 
     <template #append>
-      <div :class="$style.SearchForm__clearIcon">
+      <div :class="$style.SearchField__clearIcon">
         <v-icon
           v-show="query !== ''"
           :size="28"
@@ -152,7 +152,9 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.SearchForm {
+.SearchField {
+  width: 240px;
+
   &__prependInnerIcon {
     display: inline-flex;
     align-items: center;
