@@ -8,6 +8,7 @@ import {
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { Toast } from '~/plugins/toast';
+import { Overlay } from '~/plugins/overlay';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
 
@@ -23,5 +24,6 @@ declare module 'vue/types/vue' {
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
     $toast: Toast
+    $overlay: Overlay
   }
 }

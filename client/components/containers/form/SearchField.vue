@@ -77,6 +77,7 @@ export default Vue.extend({
         this.$dispatch('search/searchAllItems', { query });
         // クエリが更新されたらメニューを閉じていても再表示
         $searchForm.handleMenu(true);
+        this.$overlay.change(true);
       }
     }, interval);
 
@@ -124,6 +125,7 @@ export default Vue.extend({
 
       // フォーカスの有無でメニューの表示が決まる
       this.menu = isFocused;
+      this.$overlay.change(isFocused);
     },
     handleIsHovered(isHovered: boolean) {
       this.isHovered = isHovered;

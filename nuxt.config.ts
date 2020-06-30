@@ -42,6 +42,7 @@ const nuxtConfig: Configuration = {
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/toast' },
+    { src: '~/plugins/overlay' },
   ],
   router: {
     middleware: 'auth',
