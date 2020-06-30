@@ -5,6 +5,7 @@
     :to="to"
     :two-line="artistList != null"
     :title="name"
+    @click.native="onClicked"
   >
     <v-list-item-avatar tile>
       <UserAvatar
@@ -34,6 +35,7 @@
         <ArtistNames
           :artist-list="artistList"
           class="g-ellipsis-text"
+          @on-clicked="onClicked"
         />
       </v-list-item-subtitle>
     </v-list-item-content>
@@ -50,6 +52,12 @@ import { SpotifyAPI, App } from '~~/types';
 
 type Data = {
   to: string
+}
+
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: void
 }
 
 export default Vue.extend({
@@ -106,6 +114,12 @@ export default Vue.extend({
     return {
       to,
     };
+  },
+
+  methods: {
+    onClicked() {
+      this.$emit(ON_CLICKED);
+    },
   },
 });
 </script>

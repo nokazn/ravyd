@@ -7,13 +7,7 @@
       :playlists="playlists"
       :shows="shows"
       :episodes="episodes"
-    >
-      <template #activator>
-        <SearchField
-          @on-input="onInput"
-        />
-      </template>
-    </SearchResultList>
+    />
   </div>
 </template>
 
@@ -21,14 +15,12 @@
 import Vue from 'vue';
 import { RootGetters } from 'vuex';
 
-import SearchField, { On as OnSearch } from '~/components/parts/form/SearchField.vue';
 import SearchResultList from '~/components/parts/list/SearchResultList.vue';
 
 const MAX_LIST_LENGT = 5;
 
 export default Vue.extend({
   components: {
-    SearchField,
     SearchResultList,
   },
 
@@ -50,12 +42,6 @@ export default Vue.extend({
     },
     episodes(): RootGetters['search/episodes'] {
       return this.$getters()['search/episodes'].slice(0, MAX_LIST_LENGT);
-    },
-  },
-
-  methods: {
-    onInput(query: OnSearch['on-input']) {
-      this.$dispatch('search/searchAllItems', { query });
     },
   },
 });
