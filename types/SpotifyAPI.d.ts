@@ -306,7 +306,7 @@ export namespace SpotifyAPI {
     tracks?: Paging<Track>
     playlists?: Paging<SimplePlaylist>
     shows?: Paging<SimpleShow>
-    episodes?: Paging<Episode>
+    episodes?: Paging<Episode | null>
   }
   export type SearchType = keyof SearchTypes
   // キーが T のものを抜き出す

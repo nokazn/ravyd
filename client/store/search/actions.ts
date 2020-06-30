@@ -73,13 +73,15 @@ const actions: Actions<SearchState, SearchActions, SearchGetters, SearchMutation
       limit,
       offset,
     });
+    const filteredEpisodes = episodes?.items
+      .filter((episode) => episode != null) as SpotifyAPI.Episode[] | undefined;
 
     commit('SET_ALBUMS', albums?.items);
     commit('SET_ARTISTS', artists?.items);
     commit('SET_TRACKS', tracks?.items);
     commit('SET_PLAYLISTS', playlists?.items);
     commit('SET_SHOWS', shows?.items);
-    commit('SET_EPISODES', episodes?.items);
+    commit('SET_EPISODES', filteredEpisodes);
   },
 
   async searchAlbums({ commit }, params) {
@@ -114,8 +116,10 @@ const actions: Actions<SearchState, SearchActions, SearchGetters, SearchMutation
 
   async searchEpisodes({ commit }, params) {
     const { episodes } = await searchEachItemHandler(this.app, 'episode')(params) ?? {};
+    const filteredEpisodes = episodes?.items
+      .filter((episode) => episode != null) as SpotifyAPI.Episode[] | undefined;
 
-    commit('SET_EPISODES', episodes?.items);
+    commit('SET_EPISODES', filteredEpisodes);
   },
 };
 
