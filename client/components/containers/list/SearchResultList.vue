@@ -47,7 +47,14 @@
               small
               nuxt
               to="/search"
+              class="g-no-text-decoration"
             >
+              <v-icon
+                left
+                small
+              >
+                mdi-magnify
+              </v-icon>
               もっと見る
             </v-btn>
           </div>
