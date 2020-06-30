@@ -33,9 +33,11 @@
           </v-icon>
         </v-btn>
 
-        <SearchForm
-          :class="$style.Header__searchForm"
-        />
+        <div>
+          <SearchForm
+            :class="$style.Header__searchForm"
+          />
+        </div>
       </div>
 
       <div :class="$style.Header__right" />
