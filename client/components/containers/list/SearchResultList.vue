@@ -2,7 +2,7 @@
   <portal to="searchResultList">
     <transition name="fade">
       <v-card
-        v-show="menu"
+        v-show="menu && query"
         :elevation="12"
         :class="$style.SearchResultList"
         :style="styles"
@@ -96,6 +96,9 @@ export default Vue.extend({
   },
 
   computed: {
+    query(): string {
+      return $searchForm.query;
+    },
     menu: {
       get(): boolean {
         return $searchForm.isMenuShown;

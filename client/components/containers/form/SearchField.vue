@@ -56,13 +56,12 @@ import { SpotifyAPI, App } from '~~/types';
 
 const SEARCH_FIELD_REF = 'searchField';
 
-export type ItemInfo = {
+type ItemInfo = {
   title: string
   items: App.ContentItemInfo<SpotifyAPI.SearchType>[]
 }
 
 type Data = {
-  query: string
   isFocused: boolean
   isHovered: boolean
   debouncedDispatcher: ((query: string) => void) & Cancelable
@@ -73,14 +72,15 @@ export default Vue.extend({
   data(): Data {
     const interval = 500;
     const debouncedDispatcher = debounce((query: string) => {
+      $searchForm.setQuery(query);
       if (query) {
         this.$dispatch('search/searchAllItems', { query });
+        // クエリが更新されたらメニューを閉じていても再表示
         $searchForm.handleMenu(true);
       }
     }, interval);
 
     return {
-      query: '',
       isFocused: false,
       isHovered: false,
       debouncedDispatcher,
@@ -89,6 +89,14 @@ export default Vue.extend({
   },
 
   computed: {
+    query: {
+      get(): string {
+        return $searchForm.query;
+      },
+      set(query: string) {
+        $searchForm.setQuery(query);
+      },
+    },
     menu: {
       get(): boolean {
         return $searchForm.isMenuShown;
