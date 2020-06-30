@@ -16,12 +16,13 @@
     </v-btn>
 
     <v-slider
-      v-model="volumePercent"
+      :value="volumePercent"
       color="active-icon"
       thumb-color="white"
       hide-details
       dense
       @change="onChange"
+      @input="onInput"
     />
   </div>
 </template>
@@ -124,6 +125,9 @@ export default Vue.extend({
   },
 
   methods: {
+    onInput(volumePercent: number) {
+      this.volumePercent = this.debounceSetter(volumePercent);
+    },
     onChange(volumePercent: number) {
       this.$dispatch('player/volume', { volumePercent })
         .catch((err: Error) => {

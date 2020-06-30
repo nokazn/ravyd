@@ -10,6 +10,11 @@
       >
         <div :class="$style.Spacer" />
         <nuxt />
+
+        <Overlay
+          v-bind="$overlay"
+          @on-changed="onOverlayChanged"
+        />
       </main>
 
       <Footer v-if="isLoggedin" />
@@ -18,6 +23,8 @@
         v-bind="$toast"
         @on-changed="onToastChanged"
       />
+
+      <portal-target name="searchResultList" />
     </template>
 
     <main
@@ -37,10 +44,11 @@
 import Vue from 'vue';
 import { RootGetters } from 'vuex';
 
-import Header from '@/components/globals/Header.vue';
-import NavigationDrawer from '@/components/globals/NavigationDrawer.vue';
-import Footer from '@/components/globals/Footer.vue';
-import Toast, { On as OnToast } from '@/components/globals/Toast.vue';
+import Header from '~/components/globals/Header.vue';
+import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
+import Footer from '~/components/globals/Footer.vue';
+import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
+import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
 
 type Data = {
   onLoaded: boolean
@@ -51,6 +59,7 @@ export default Vue.extend({
     Header,
     NavigationDrawer,
     Footer,
+    Overlay,
     Toast,
   },
 
@@ -76,6 +85,9 @@ export default Vue.extend({
   },
 
   methods: {
+    onOverlayChanged(isShown: OnOverlay['on-changed']) {
+      this.$overlay.change(isShown);
+    },
     onToastChanged(isShown: OnToast['on-changed']) {
       this.$toast.change(isShown);
     },

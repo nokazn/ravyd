@@ -91,7 +91,7 @@ a {
   }
 
   &::-webkit-scrollbar-track {
-    background-color: $g-background-color;
+    background-color: inherit;
   }
 
   &::-webkit-scrollbar-thumb {

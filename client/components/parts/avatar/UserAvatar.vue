@@ -39,6 +39,7 @@
       :max-width="maxSize || size"
       :max-height="maxSize || size"
       :class="$style.UserAvatar__noAvatar"
+      class="rounded-circle"
     >
       <v-icon :size="noAvatarIconSize">
         {{ defaultUserIcon }}
@@ -114,17 +115,18 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const noAvatarIconSize = (): number => {
-      const baseSize = this.size ?? this.minSize;
-      if (baseSize == null) return 60;
-
-      return this.smallIcon
+    const baseSize = this.size ?? this.minSize;
+    let noAvatarIconSize: number;
+    if (baseSize == null) {
+      noAvatarIconSize = 60;
+    } else {
+      noAvatarIconSize = this.smallIcon
         ? baseSize * 0.4
         : baseSize;
-    };
+    }
 
     return {
-      noAvatarIconSize: noAvatarIconSize(),
+      noAvatarIconSize,
     };
   },
 

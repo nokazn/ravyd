@@ -9,6 +9,7 @@ $g-subtitle-color: rgba(255, 255, 255, 0.7);
 $g-background-color: #121212;
 $g-bar-background-color: #303030;
 $g-data-table-background-color: #1e1e1e;
+$g-menu-background-color: #323232;
 
 /**
  * height
@@ -21,11 +22,13 @@ $g-navigation-drawer-width: 200px;
  * z-index
  */
 $__layer-map: (
-  toast: 2000,
+  toast: 1002,
+  search-result-list: 1001,
   modal: 1001,
   header: 1000,
   navigation-drawer: 1000,
   footer: 1000,
+  overlay: 200,
   floating-button: 101,
   text-gradation: 100,
 );

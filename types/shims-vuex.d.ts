@@ -4,11 +4,12 @@ import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { IncomingMessage, ServerResponse } from 'http';
 import * as Root from '~/store/types';
 import * as Auth from '~/store/auth/types';
-import * as Playlists from '~/store/playlists/types';
 import * as LibraryTracks from '~/store/library/tracks/types';
 import * as LibraryReleases from '~/store/library/releases/types';
 import * as LibraryArtists from '~/store/library/artists/types';
 import * as Player from '~/store/player/types';
+import * as Playlists from '~/store/playlists/types';
+import * as Search from '~/store/search/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
@@ -33,38 +34,42 @@ declare module 'vuex' {
    */
   type RootState = {
     auth: Auth.AuthState
-    playlists: Playlists.PlaylistsState
     library: {
       tracks: LibraryTracks.LibraryTracksState
       releases: LibraryReleases.LibraryReleasesState
       artists: LibraryArtists.LibraryArtistsState
     }
     player: Player.PlayerState
+    playlists: Playlists.PlaylistsState
+    search: Search.SearchState
   } & Root.RootState
 
   type RootGetters = Root.RootGetters
     & Auth.RootGetters
-    & Playlists.RootGetters
     & LibraryTracks.RootGetters
     & LibraryReleases.RootGetters
     & LibraryArtists.RootGetters
     & Player.RootGetters
+    & Playlists.RootGetters
+    & Search.RootGetters
 
   type RootMutations = Root.RootMutations
     & Auth.RootMutations
-    & Playlists.RootMutations
     & LibraryTracks.RootMutations
     & LibraryReleases.RootMutations
     & LibraryArtists.RootMutations
     & Player.RootMutations
+    & Playlists.RootMutations
+    & Search.RootMutations
 
   type RootActions = Root.RootActions
     & Auth.RootActions
-    & Playlists.RootActions
     & LibraryTracks.RootActions
     & LibraryReleases.RootActions
     & LibraryArtists.RootActions
     & Player.RootActions
+    & Playlists.RootActions
+    & Search.RootActions
 
   /**
    * 公式の型定義の拡張

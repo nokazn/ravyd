@@ -291,6 +291,29 @@ export namespace SpotifyAPI {
     snapshot_id: string
   }
 
+  // @todo
+  type SearchTypes = {
+    album: 'albums',
+    artist: 'artists',
+    track: 'tracks',
+    playlist: 'playlists',
+    show: 'shows',
+    episode: 'episodes',
+  };
+  type SearchResultBase = {
+    albums?: Paging<SimpleAlbum>
+    artists?: Paging<Artist>
+    tracks?: Paging<Track>
+    playlists?: Paging<SimplePlaylist>
+    shows?: Paging<SimpleShow>
+    episodes?: Paging<Episode | null>
+  }
+  export type SearchType = keyof SearchTypes
+  // キーが T のものを抜き出す
+  export type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
+    SearchResultBase, SearchTypes[T]
+  >>
+
   export type RepeatState = 'off' | 'track' | 'context'
 
   export type Restriction = {

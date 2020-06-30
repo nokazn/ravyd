@@ -160,4 +160,15 @@ export namespace App {
     name: string
     artworkSrc: string | undefined
   }
+
+  export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
+    type: T
+    id: string
+    releaseId: string
+    name: string
+    uri: string
+    artworkSrc: string | undefined
+    artistList?: SimpleArtistInfo[] // type が release と track の時のみ存在
+    hash?: string // type が track と show の時のみ存在
+  }
 }
