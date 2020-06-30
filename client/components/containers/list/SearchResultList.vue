@@ -16,13 +16,21 @@
             v-show="isSearching"
             :class="$style['SearchResultList__content--searching']"
           >
-            <v-progress-circular
-              indeterminate
-            />
+            <v-progress-circular indeterminate />
           </div>
 
           <div
-            v-show="!isSearching"
+            v-show="!isSearching && !hasItem"
+            :class="$style['SearchResultList__content--empty']"
+          >
+            <v-icon left>
+              mdi-help-circle-outline
+            </v-icon>
+            {{ query }} に一致する項目が見つかりません
+          </div>
+
+          <div
+            v-show="!isSearching && hasItem"
             class="g-custom-scroll-bar"
             :class="$style.SearchResultList__content"
           >
@@ -177,6 +185,11 @@ export default Vue.extend({
 
       return itemInfoList;
     },
+    hasItem(): boolean {
+      return this.itemInfoList
+        .filter(({ items }) => items.length > 0)
+        .length > 0;
+    },
   },
 
   methods: {
@@ -197,11 +210,13 @@ export default Vue.extend({
     max-height: 60vh;
     overflow-y: auto;
 
-    &--searching {
+    &--searching,
+    &--empty {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 160px;
+      height: 120px;
+      padding: 0 24px;
     }
   }
 
