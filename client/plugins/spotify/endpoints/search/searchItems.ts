@@ -23,7 +23,8 @@ export const searchItems = (context: Context) => {
   > => {
     if (query === '') return Promise.resolve({});
 
-    const q = encodeURIComponent(query);
+    // スペースをエンコード
+    const q = query.replace(/\s/g, '%20');
     const request = app.$spotifyApi.$get('/search', {
       params: {
         q,
