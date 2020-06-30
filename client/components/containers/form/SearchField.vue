@@ -104,6 +104,8 @@ export default Vue.extend({
       },
       set(isShown: boolean) {
         $searchForm.handleMenu(isShown);
+        // メニュー表示時に overlay も表示
+        this.$overlay.change(isShown);
       },
     },
   },
@@ -125,7 +127,6 @@ export default Vue.extend({
 
       // フォーカスの有無でメニューの表示が決まる
       this.menu = isFocused;
-      this.$overlay.change(isFocused);
     },
     handleIsHovered(isHovered: boolean) {
       this.isHovered = isHovered;
