@@ -55,6 +55,7 @@ import { $searchForm } from '~/observable/searchForm';
 import { SpotifyAPI, App } from '~~/types';
 
 const SEARCH_FIELD_REF = 'searchField';
+const LIMIT_OF_SEARCH_ITEM = 5;
 
 type ItemInfo = {
   title: string
@@ -75,10 +76,12 @@ export default Vue.extend({
       $searchForm.setQuery(query);
       if (query) {
         $searchForm.handleSearching(true);
-        this.$dispatch('search/searchAllItems', { query })
-          .then(() => {
-            $searchForm.handleSearching(false);
-          });
+        this.$dispatch('search/searchAllItems', {
+          query,
+          limit: LIMIT_OF_SEARCH_ITEM,
+        }).then(() => {
+          $searchForm.handleSearching(false);
+        });
 
         // クエリが更新されたらメニューを閉じていても再表示
         this.$nextTick().then(() => {
