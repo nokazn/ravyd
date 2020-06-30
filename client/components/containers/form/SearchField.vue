@@ -76,8 +76,10 @@ export default Vue.extend({
       if (query) {
         this.$dispatch('search/searchAllItems', { query });
         // クエリが更新されたらメニューを閉じていても再表示
-        $searchForm.handleMenu(true);
-        this.$overlay.change(true);
+        this.$nextTick().then(() => {
+          $searchForm.handleMenu(true);
+          this.$overlay.change(true);
+        });
       }
     }, interval);
 

@@ -177,6 +177,8 @@ export default Vue.extend({
 <style lang="scss" module>
 .SearchResultList {
   z-index: z-index-of(search-result-list);
+  min-width: 240px;
+  max-width: 60vw;
 
   &__content {
     max-height: 60vh;

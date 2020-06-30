@@ -1,9 +1,9 @@
 <template>
   <v-list-item
     dense
-    nuxt
-    :to="to"
-    :two-line="artistList != null"
+    :nuxt="!isTwoLine"
+    :to="isTwoLine ? undefined : to"
+    :two-line="isTwoLine"
     :title="name"
     @click.native="onClicked"
   >
@@ -28,10 +28,12 @@
 
     <v-list-item-content>
       <v-list-item-title class="g-ellipsis-text">
-        {{ name }}
+        <nuxt-link :to="to">
+          {{ name }}
+        </nuxt-link>
       </v-list-item-title>
 
-      <v-list-item-subtitle v-if="artistList != null">
+      <v-list-item-subtitle v-if="isTwoLine">
         <ArtistNames
           :artist-list="artistList"
           class="g-ellipsis-text"
@@ -52,6 +54,7 @@ import { SpotifyAPI, App } from '~~/types';
 
 type Data = {
   to: string
+  isTwoLine: boolean
 }
 
 const ON_CLICKED = 'on-clicked';
@@ -111,13 +114,20 @@ export default Vue.extend({
       ? `/${type}/${this.releaseId}#${this.hash}`
       : `/${type}/${this.releaseId}`;
 
+    const isTwoLine = this.artistList != null;
+
     return {
       to,
+      isTwoLine,
     };
   },
 
   methods: {
     onClicked() {
+      if (this.isTwoLine) {
+        this.$router.push(this.to);
+      }
+
       this.$emit(ON_CLICKED);
     },
   },
