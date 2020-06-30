@@ -18,6 +18,8 @@
         v-bind="$toast"
         @on-changed="onToastChanged"
       />
+
+      <portal-target name="searchResultList" />
     </template>
 
     <main

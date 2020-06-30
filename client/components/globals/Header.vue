@@ -33,10 +33,9 @@
           </v-icon>
         </v-btn>
 
-        <div>
-          <SearchForm
-            :class="$style.Header__searchForm"
-          />
+        <div :class="$style.Header__searchForm">
+          <SearchField />
+          <SearchResultList />
         </div>
       </div>
 
@@ -48,7 +47,8 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import SearchForm from '~/components/containers/form/SearchForm.vue';
+import SearchField from '~/components/containers/form/SearchField.vue';
+import SearchResultList from '~/components/containers/list/SearchResultList.vue';
 import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
 import { App } from '~~/types';
 
@@ -58,7 +58,8 @@ type Data = {
 
 export default Vue.extend({
   components: {
-    SearchForm,
+    SearchField,
+    SearchResultList,
   },
 
   data(): Data {

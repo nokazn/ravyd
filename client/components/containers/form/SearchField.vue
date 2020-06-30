@@ -1,0 +1,150 @@
+<template>
+  <v-text-field
+    :ref="SEARCH_FIELD_REF"
+    :value="query"
+    dense
+    hide-details
+    rounded
+    light
+    background-color="white"
+    title="検索"
+    :class="{
+      [$style.SearchField]: true,
+      'g-box-shadow': isFocused || isHovered
+    }"
+    @mouseover="handleIsHovered(true)"
+    @mouseout="handleIsHovered(false)"
+    @input="debouncedDispatcher"
+    @focus="handleIsFocused(true)"
+    @blur="handleIsFocused(false)"
+  >
+    <template #prepend-inner>
+      <div :class="$style.SearchForm__prependInnerIcon">
+        <v-icon
+          :size="28"
+          color="grey darken-4"
+          title="検索"
+        >
+          mdi-magnify
+        </v-icon>
+      </div>
+    </template>
+
+    <template #append>
+      <div :class="$style.SearchForm__clearIcon">
+        <v-icon
+          v-show="query !== ''"
+          :size="28"
+          color="grey darken-1"
+          title="消去"
+          @click="clearText"
+        >
+          mdi-close
+        </v-icon>
+      </div>
+    </template>
+  </v-text-field>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import debounce from 'lodash/debounce';
+import { Cancelable } from 'lodash';
+
+import { $searchForm } from '~/observable/searchForm';
+import { SpotifyAPI, App } from '~~/types';
+
+const SEARCH_FIELD_REF = 'searchField';
+
+export type ItemInfo = {
+  title: string
+  items: App.ContentItemInfo<SpotifyAPI.SearchType>[]
+}
+
+type Data = {
+  query: string
+  isFocused: boolean
+  isHovered: boolean
+  debouncedDispatcher: ((query: string) => void) & Cancelable
+  SEARCH_FIELD_REF: string
+}
+
+export default Vue.extend({
+  data(): Data {
+    const interval = 500;
+    const debouncedDispatcher = debounce((query: string) => {
+      if (query) {
+        this.$dispatch('search/searchAllItems', { query });
+        $searchForm.handleMenu(true);
+      }
+    }, interval);
+
+    return {
+      query: '',
+      isFocused: false,
+      isHovered: false,
+      debouncedDispatcher,
+      SEARCH_FIELD_REF,
+    };
+  },
+
+  computed: {
+    menu: {
+      get(): boolean {
+        return $searchForm.isMenuShown;
+      },
+      set(isShown: boolean) {
+        $searchForm.handleMenu(isShown);
+      },
+    },
+  },
+
+  methods: {
+    handleIsFocused(isFocused: boolean) {
+      this.isFocused = isFocused;
+
+      // フォーカスされたらメニューの位置を計算する
+      if (isFocused) {
+        const ref = this.$refs[SEARCH_FIELD_REF] as Vue;
+        const { clientHeight } = ref.$el;
+        const { x, y } = ref.$el.getBoundingClientRect();
+        const offsetY = 4;
+        const top = Math.ceil(y) + clientHeight + offsetY;
+        const left = Math.ceil(x);
+        $searchForm.setPosition(top, left);
+      }
+
+      // フォーカスの有無でメニューの表示が決まる
+      this.menu = isFocused;
+    },
+    handleIsHovered(isHovered: boolean) {
+      this.isHovered = isHovered;
+    },
+    clearText() {
+      this.query = '';
+    },
+    onListItemClicked() {
+      this.menu = false;
+    },
+  },
+});
+</script>
+
+<style lang="scss" module>
+.SearchForm {
+  &__prependInnerIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -12px;
+  }
+
+  &__clearIcon {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -12px;
+  }
+}
+</style>
