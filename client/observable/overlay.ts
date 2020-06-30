@@ -1,16 +1,25 @@
 import Vue from 'vue';
 
-export type OverlayState = {
+type OverlayOptions = {
+  opacity?: number
+  zIndex?: number
+}
+
+type OverlayState = {
   isShown: boolean
+  opacity: number | undefined
+  zIndex: number | undefined
 }
 
 export type Overlay = {
   readonly isShown: boolean
-  change: (isShown: boolean) => void
+  change: (isShown: boolean, options?: OverlayOptions) => void
 }
 
 const state = Vue.observable<OverlayState>({
   isShown: false,
+  opacity: undefined,
+  zIndex: undefined,
 });
 
 export const $overlay: Overlay = {
@@ -18,7 +27,13 @@ export const $overlay: Overlay = {
     return state.isShown;
   },
 
-  change(isShown: boolean) {
+  change(isShown: boolean, options?: OverlayOptions) {
     state.isShown = isShown;
+
+    if (options != null) {
+      const { opacity, zIndex } = options;
+      state.opacity = opacity;
+      state.zIndex = zIndex;
+    }
   },
 };
