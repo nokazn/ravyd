@@ -76,8 +76,9 @@ export default Vue.extend({
       $searchForm.setQuery(query);
       if (query) {
         $searchForm.handleSearching(true);
+        // スペースをアンダーバー区切りにして検索
         this.$dispatch('search/searchAllItems', {
-          query,
+          query: query.replace(/\s+/g, '_'),
           limit: LIMIT_OF_SEARCH_ITEM,
         }).then(() => {
           $searchForm.handleSearching(false);
