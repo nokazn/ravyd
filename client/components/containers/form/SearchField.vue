@@ -74,7 +74,12 @@ export default Vue.extend({
     const debouncedDispatcher = debounce((query: string) => {
       $searchForm.setQuery(query);
       if (query) {
-        this.$dispatch('search/searchAllItems', { query });
+        $searchForm.handleSearching(true);
+        this.$dispatch('search/searchAllItems', { query })
+          .then(() => {
+            $searchForm.handleSearching(false);
+          });
+
         // クエリが更新されたらメニューを閉じていても再表示
         this.$nextTick().then(() => {
           $searchForm.handleMenu(true);

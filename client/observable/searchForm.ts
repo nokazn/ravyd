@@ -6,47 +6,57 @@ type Position = {
 }
 
 export type SearchFormState = {
-  query: string
   isMenuShown: boolean
   position: Position
+  query: string
+  isSearching: boolean
 }
 
 export type SearchForm = {
-  readonly query: string
   readonly isMenuShown: boolean
   readonly position: Position
-  setQuery: (query: string) => void
-  setPosition: (top: number, left: number) => void
+  readonly query: string
+  readonly isSearching: boolean
   handleMenu: (isMenuShown: boolean) => void
+  setPosition: (top: number, left: number) => void
+  setQuery: (query: string) => void
+  handleSearching: (isSearching: boolean) => void
 }
 
 const state = Vue.observable<SearchFormState>({
-  query: '',
+  isMenuShown: false,
   position: {
     top: 0,
     left: 0,
   },
-  isMenuShown: false,
+  query: '',
+  isSearching: false,
 });
 
 export const $searchForm: SearchForm = {
-  get query(): string {
-    return state.query;
+  get isMenuShown(): boolean {
+    return state.isMenuShown;
   },
   get position(): Position {
     return state.position;
   },
-  get isMenuShown(): boolean {
-    return state.isMenuShown;
+  get query(): string {
+    return state.query;
+  },
+  get isSearching(): boolean {
+    return state.isSearching;
   },
 
-  setQuery(query: string) {
-    state.query = query;
+  handleMenu(isMenuShown: boolean) {
+    state.isMenuShown = isMenuShown;
   },
   setPosition(top: number, left: number) {
     state.position = { top, left };
   },
-  handleMenu(isMenuShown: boolean) {
-    state.isMenuShown = isMenuShown;
+  setQuery(query: string) {
+    state.query = query;
+  },
+  handleSearching(isSearching: boolean) {
+    state.isSearching = isSearching;
   },
 };

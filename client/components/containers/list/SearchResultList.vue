@@ -13,6 +13,16 @@
           :color="MENU_BACKGROUND_COLOR"
         >
           <div
+            v-show="isSearching"
+            :class="$style['SearchResultList__content--searching']"
+          >
+            <v-progress-circular
+              indeterminate
+            />
+          </div>
+
+          <div
+            v-show="!isSearching"
             class="g-custom-scroll-bar"
             :class="$style.SearchResultList__content"
           >
@@ -99,6 +109,9 @@ export default Vue.extend({
     query(): string {
       return $searchForm.query;
     },
+    isSearching(): boolean {
+      return $searchForm.isSearching;
+    },
     menu: {
       get(): boolean {
         return $searchForm.isMenuShown;
@@ -177,12 +190,19 @@ export default Vue.extend({
 <style lang="scss" module>
 .SearchResultList {
   z-index: z-index-of(search-result-list);
-  min-width: 240px;
+  min-width: 400px;
   max-width: 60vw;
 
   &__content {
     max-height: 60vh;
     overflow-y: auto;
+
+    &--searching {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 160px;
+    }
   }
 
   &__moreButton {
