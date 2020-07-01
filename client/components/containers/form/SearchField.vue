@@ -8,6 +8,7 @@
     light
     background-color="white"
     title="検索"
+    aria-autocomplete="none"
     :class="{
       [$style.SearchField]: true,
       'g-box-shadow': isFocused || isHovered

@@ -38,6 +38,7 @@ export default Vue.extend({
   },
 
   mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
     console.error(this.error);
   },
 

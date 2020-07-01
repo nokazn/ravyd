@@ -62,7 +62,7 @@
                 <div
                   :class="[
                     $style.DeviceSelectMenuList__listItemTitle,
-                    trackNameColor(track.isPlaying),
+                    trackNameColor(track.isSet),
                   ]"
                   class="g-ellipsis-text"
                 >
@@ -72,7 +72,7 @@
                 <v-list-item-subtitle
                   :class="[
                     $style.DeviceSelectMenuList__listItemSubtitle,
-                    subtextColor(track.isPlaying),
+                    subtextColor(track.isSet),
                   ]"
                 >
                   <nuxt-link
@@ -106,7 +106,7 @@
             <v-list-item-action>
               <TrackTime
                 :time-ms="track.durationMs"
-                :class="subtextColor(track.isPlaying)"
+                :class="subtextColor(track.isSet)"
               />
             </v-list-item-action>
           </v-list-item>
@@ -143,9 +143,9 @@ const CUSTOM_CLASS = 'track-queue-content';
 
 type Data = {
   isShown: boolean
-  trackNameColor: (isPlaying: boolean) => string | undefined
-  subtextColor: (isPlaying: boolean) => string | undefined
-  artistNames: (artistList: App.SimpleArtistInfo[]) => string
+  trackNameColor: (isSet: boolean) => string | undefined
+  subtextColor: (isSet: boolean) => string | undefined
+  artistNames: (isSet: App.SimpleArtistInfo[]) => string
   CUSTOM_CLASS: string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
@@ -160,8 +160,8 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
-      trackNameColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : undefined),
-      subtextColor: (isPlaying: boolean) => (isPlaying ? 'active--text' : 'subtext--text'),
+      trackNameColor: (isSet: boolean) => (isSet ? 'active--text' : undefined),
+      subtextColor: (isSet: boolean) => (isSet ? 'active--text' : 'subtext--text'),
       artistNames: (artistList) => artistList.map((artist) => artist.name).join(', '),
       CUSTOM_CLASS,
       MENU_BACKGROUND_COLOR,

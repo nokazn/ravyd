@@ -16,7 +16,7 @@
         <div class="g-small-text">
           プレイリスト
           <v-icon
-            v-if="!playlistInfo.isPublic"
+            v-if="!playlistInfo.isPublic && isOwnPlaylist"
             small
             color="subtext"
             title="非公開のプレイリスト"

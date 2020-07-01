@@ -24,7 +24,10 @@
         @on-changed="onToastChanged"
       />
 
-      <portal-target name="searchResultList" />
+      <portal-target
+        name="searchResultList"
+        role="menu"
+      />
     </template>
 
     <main

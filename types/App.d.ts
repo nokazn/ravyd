@@ -26,6 +26,7 @@ export namespace App {
     isSaved: boolean
     releaseId: string
     releaseName: string
+    // @todo #69
     // artworkList: SpotifyAPI.Image[]
     artworkSrc?: string | undefined
   }
@@ -35,6 +36,7 @@ export namespace App {
   }
 
   export type TrackQueueInfo = {
+    isSet: boolean
     isPlaying: boolean
     id: string | undefined
     name: string
