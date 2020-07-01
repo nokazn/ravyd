@@ -148,14 +148,25 @@ export default Vue.extend({
     listOfPlaylists(): RootState['playlists']['playlists'] {
       return this.$state().playlists.playlists;
     },
+    isActiveContext(): (uri: string) => boolean {
+      return (uri: string) => (uri != null
+        ? this.$getters()['player/contextUri'] === uri
+        : false);
+    },
+    isPlaying(): RootState['player']['isPlaying'] {
+      return this.$state().player.isPlaying;
+    },
     playlistGroup(): NavigationGroup {
       const items = this.listOfPlaylists?.map((playlist) => {
         const to = `/playlists/${playlist.id}`;
+        const isSet = this.isActiveContext(playlist.uri);
+
         return {
           id: playlist.id,
           name: playlist.name,
           to,
-          isActive: this.isActiveContext(playlist.uri),
+          isSet,
+          isPlaying: isSet && this.isPlaying,
         };
       }) ?? [];
       const subtitle = items.length > 0
@@ -170,11 +181,6 @@ export default Vue.extend({
       };
 
       return playlists;
-    },
-    isActiveContext(): (uri: string) => boolean {
-      return (uri: string) => (uri != null
-        ? this.$getters()['player/contextUri'] === uri
-        : false);
     },
     userAvatarSrc(): RootGetters['auth/userAvatarSrc'] {
       return this.$getters()['auth/userAvatarSrc'];

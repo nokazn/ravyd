@@ -21,7 +21,7 @@
       <v-list-item-title
         :class="{
           [$style.NavigationListItem__title]: true,
-          'active--text': isActive,
+          'active--text': isSet,
         }"
       >
         <span class="g-ellipsis-text">
@@ -29,7 +29,7 @@
         </span>
 
         <v-icon
-          v-if="isActive"
+          v-if="isSet && isPlaying"
           small
         >
           mdi-volume-high
@@ -47,7 +47,8 @@ export type Item = {
   name: string
   to: string
   icon?: string
-  uri?: string
+  isSet?: boolean
+  isPlaying?: boolean
 }
 
 export default Vue.extend({
@@ -64,7 +65,11 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    isActive: {
+    isSet: {
+      type: Boolean,
+      default: false,
+    },
+    isPlaying: {
       type: Boolean,
       default: false,
     },
