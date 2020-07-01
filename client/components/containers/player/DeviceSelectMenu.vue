@@ -14,7 +14,7 @@
         :width="36"
         :height="36"
         v-on="on"
-        @click="onDeviceButtonClicked"
+        @click="toggleMenu"
       >
         <v-icon>
           mdi-devices
@@ -50,52 +50,12 @@
         <v-divider />
 
         <v-list-item-group>
-          <v-list-item
-            v-for="device in deviceItemList"
-            :key="device.id"
-            dense
-            two-line
-            :class="$style.DeviceSelectMenu__listItem"
-            @click="onListItemClickedHandler(device.id)"
-          >
-            <v-list-item-avatar>
-              <v-icon
-                :size="32"
-                :color="device.color"
-              >
-                {{ device.icon }}
-              </v-icon>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title
-                :class="[
-                  $style.DeviceSelectMenu__listItemTitle,
-                  device.textClass
-                ]"
-              >
-                {{ device.title }}
-              </v-list-item-title>
-
-              <v-list-item-subtitle
-                :class="[
-                  $style.DeviceSelectMenu__listItemSubtitle,
-                  device.textClass,
-                ]"
-              >
-                <v-icon
-                  v-show="device.isActive"
-                  :color="device.color"
-                  :size="16"
-                >
-                  mdi-volume-high
-                </v-icon>
-                <span>
-                  {{ device.subtitle }}
-                </span>
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <DeviceSelectMenuItem
+            v-for="(device, index) in deviceItemList"
+            :key="`${device.id}-${index}`"
+            v-bind="device"
+            @on-clicked="onItemClicked"
+          />
         </v-list-item-group>
       </v-list>
     </v-card>
@@ -105,6 +65,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
+import DeviceSelectMenuItem, { DeviceInfo, On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
@@ -114,46 +75,11 @@ type Data = {
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
-type DeviceInfo = {
-  id: string | null
-  title: string
-  subtitle: string
-  isActive: boolean
-  icon: string
-  color: 'active' | undefined
-  textClass: 'active--text' | undefined
-}
-
-const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
-  switch (type) {
-    case 'Computer':
-      return 'mdi-laptop';
-    case 'Smartphone':
-      return 'mdi-cellphone';
-    case 'Tablet':
-      return 'mdi-tablet';
-    case 'Speaker':
-      return 'mdi-speaker';
-    case 'TV':
-      return 'mdi-television';
-    case 'CastAudio':
-      return 'mdi-cast-audio';
-    case 'Automobile':
-      return 'mdi-car';
-    case 'AVR':
-    case 'STB':
-    case 'AudioDongle':
-      return 'mdi-audio-video';
-    case 'GameConsole':
-      return 'mdi-gamepad-variant-outline';
-    case 'CastVideo':
-      return 'mdi-cast';
-    default:
-      return 'mdi-help';
-  }
-};
-
 export default Vue.extend({
+  components: {
+    DeviceSelectMenuItem,
+  },
+
   data(): Data {
     return {
       isShown: false,
@@ -171,20 +97,19 @@ export default Vue.extend({
     deviceItemList(): DeviceInfo[] {
       // @todo any[] で推論されてしまう
       const activeDeviceList = this.$state().player.activeDeviceList as SpotifyAPI.Device[];
+
       return activeDeviceList.map((device) => ({
-        id: device.id,
+        id: device.id ?? undefined,
+        type: device.type,
         isActive: device.is_active,
         title: device.is_active ? '再生中のデバイス' : device.name,
         subtitle: device.is_active ? device.name : 'Spotify Connect',
-        icon: deviceIcon(device.type),
-        color: device.is_active ? 'active' : undefined,
-        textClass: device.is_active ? 'active--text' : undefined,
       }));
     },
   },
 
   methods: {
-    onDeviceButtonClicked() {
+    toggleMenu() {
       this.isShown = !this.isShown;
     },
     async onUpdateButtonClicked() {
@@ -192,8 +117,10 @@ export default Vue.extend({
       await this.$dispatch('player/getActiveDeviceList');
       this.isRefreshingDeviceList = false;
     },
-    onListItemClickedHandler(id: string) {
-      this.$dispatch('player/transferPlayback', { deviceId: id });
+    onItemClicked(deviceId: OnItem['on-clicked']) {
+      if (deviceId != null) {
+        this.$dispatch('player/transferPlayback', { deviceId });
+      }
     },
   },
 });
@@ -206,15 +133,6 @@ export default Vue.extend({
     justify-content: space-between;
     align-items: center;
     margin: 0 12px;
-  }
-
-  &__listItemTitle {
-    font-size: 0.9em !important;
-    margin-bottom: 6px !important;
-  }
-
-  &__listItemSubtitle {
-    font-size: 0.8em !important;
   }
 }
 </style>
