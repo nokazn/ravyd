@@ -78,7 +78,8 @@ export default Vue.extend({
       if (query) {
         $searchForm.handleSearching(true);
         this.$dispatch('search/searchAllItems', {
-          query,
+          // スペースをアンダーバーに置換して1単語として扱う
+          query: query.replace(/\s+/g, '_'),
           limit: LIMIT_OF_SEARCH_ITEM,
         }).then(() => {
           $searchForm.handleSearching(false);
