@@ -20,13 +20,9 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export type FollowIcon = 'mdi-account-plus'
-  | 'mdi-account-minus'
-  | 'mdi-heart';
+export type FollowIcon = 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-heart';
 
-export type FollowText = 'フォロー'
-  | 'フォローしない'
-  | 'フォロー中'
+export type FollowText = 'フォロー' | 'フォローしない' | 'フォロー中'
 
 const ON_CLICKED = 'on-clicked';
 
@@ -46,10 +42,10 @@ export default Vue.extend({
     followIcon(): (hover: boolean) => FollowIcon {
       return (hover: boolean) => {
         if (!this.isFollowing) {
-          return 'mdi-account-plus';
+          return 'mdi-heart-plus-outline';
         }
         return hover
-          ? 'mdi-account-minus'
+          ? 'mdi-heart-outline'
           : 'mdi-heart';
       };
     },
