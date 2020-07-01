@@ -170,8 +170,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       }));
 
       player.addListener('ready', async ({ device_id }) => {
-        // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
-        await dispatch('pause', { isInitializing: true });
+        // 再生中でない場合
+        if (!this.$state().player.isPlaying) {
+          // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
+          await dispatch('pause', { isInitializing: true });
+        }
+
         await dispatch('transferPlayback', {
           deviceId: device_id,
           play: false,
