@@ -9,6 +9,7 @@ type ExtendedTrack = Spotify.Track & {
 }
 
 export const convertTrackForQueue = (
+  isSet: boolean,
   isPlaying: boolean,
   artworkSize: number = TRACK_QUEUE_ARTWORK_SIZE,
 ) => (track: ExtendedTrack | SpotifyAPI.Track): App.TrackQueueInfo => {
@@ -16,6 +17,7 @@ export const convertTrackForQueue = (
   const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[]} = track;
 
   const info = {
+    isSet,
     isPlaying,
     id: track.id ?? undefined,
     name: track.name,

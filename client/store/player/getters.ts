@@ -67,7 +67,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
       // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在
       const currentTrack = {
-        isPlaying: true,
+        isSet: true,
+        isPlaying: state.isPlaying,
         id: state.trackId,
         name: state.trackName!,
         uri: state.trackUri!,
@@ -78,9 +79,9 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
         durationMs: state.durationMs,
       };
       const previousTrackList = state.previousTrackList
-        .map(convertTrackForQueue(false, artworkSize));
+        .map(convertTrackForQueue(false, false, artworkSize));
       const nextTrackList = state.nextTrackList
-        .map(convertTrackForQueue(false, artworkSize));
+        .map(convertTrackForQueue(false, false, artworkSize));
 
       return [
         ...previousTrackList,
