@@ -41,12 +41,9 @@ export namespace App {
     id: string | undefined
     name: string
     uri: string
-    releaseName: string
     releaseId: string
-    artistList: {
-      id: string
-      name: string
-    }[]
+    releaseName: string
+    artistList: SimpleArtistInfo[]
     artworkSrc: string | undefined
     durationMs: number | undefined
   }

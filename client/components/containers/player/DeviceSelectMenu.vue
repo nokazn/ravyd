@@ -27,9 +27,9 @@
         dense
         subheader
         :color="MENU_BACKGROUND_COLOR"
-        :class="$style.DeviceSelectMenuList"
+        :class="$style.DeviceSelectMenu"
       >
-        <div :class="$style.DeviceSelectMenuList__header">
+        <div :class="$style.DeviceSelectMenu__header">
           <v-subheader>
             デバイスを選択
           </v-subheader>
@@ -55,7 +55,7 @@
             :key="device.id"
             dense
             two-line
-            :class="$style.DeviceSelectMenuList__listItem"
+            :class="$style.DeviceSelectMenu__listItem"
             @click="onListItemClickedHandler(device.id)"
           >
             <v-list-item-avatar>
@@ -70,7 +70,7 @@
             <v-list-item-content>
               <v-list-item-title
                 :class="[
-                  $style.DeviceSelectMenuList__listItemTitle,
+                  $style.DeviceSelectMenu__listItemTitle,
                   device.textClass
                 ]"
               >
@@ -79,7 +79,7 @@
 
               <v-list-item-subtitle
                 :class="[
-                  $style.DeviceSelectMenuList__listItemSubtitle,
+                  $style.DeviceSelectMenu__listItemSubtitle,
                   device.textClass,
                 ]"
               >
@@ -200,7 +200,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.DeviceSelectMenuList {
+.DeviceSelectMenu {
   &__header {
     display: flex;
     justify-content: space-between;
