@@ -22,7 +22,9 @@ export const getArtistInfo = async (
     external_urls: externalUrls,
   } = artist;
   const avatarSrc = getImageSrc(images, avatarSize);
-  const followersText = `フォロワー ${addComma(followers.total)}人`;
+  const followersText = followers.total != null
+    ? `フォロワー ${addComma(followers.total)}人`
+    : undefined;
 
   return {
     name,

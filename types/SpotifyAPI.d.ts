@@ -186,8 +186,8 @@ export namespace SpotifyAPI {
   }>
 
   export type Followers = {
-    href: string
-    total: number
+    href: string | null
+    total: number | null
   }
 
   export type Image = {
