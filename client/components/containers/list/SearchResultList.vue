@@ -228,10 +228,7 @@ export default Vue.extend({
 
   &__group {
     max-width: calc(30vw - 18px);
-
-    &:last-child {
-      margin-bottom: 12px;
-    }
+    margin-bottom: 12px;
   }
 
   &__moreButton {

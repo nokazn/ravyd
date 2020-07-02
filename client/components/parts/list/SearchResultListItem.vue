@@ -7,7 +7,10 @@
     :title="name"
     @click.native="onClicked"
   >
-    <v-list-item-avatar tile>
+    <v-list-item-avatar
+      tile
+      :class="$style.SearchResultListItem__avatar"
+    >
       <UserAvatar
         v-if="type === 'artist'"
         :src="artworkSrc"
@@ -135,3 +138,12 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.SearchResultListItem {
+  &__avatar {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+}
+</style>
