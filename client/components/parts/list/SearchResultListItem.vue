@@ -28,7 +28,10 @@
 
     <v-list-item-content>
       <v-list-item-title class="g-ellipsis-text">
-        <nuxt-link :to="to">
+        <nuxt-link
+          :to="to"
+          @click.native.stop
+        >
           {{ name }}
         </nuxt-link>
       </v-list-item-title>
@@ -37,7 +40,6 @@
         <ArtistNames
           :artist-list="artistList"
           class="g-ellipsis-text"
-          @on-clicked="onClicked"
         />
       </v-list-item-subtitle>
     </v-list-item-content>
