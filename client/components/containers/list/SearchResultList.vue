@@ -202,7 +202,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .SearchResultList {
-  z-index: z-index-of(search-result-list);
+  z-index: z-index-of(menu);
   min-width: 400px;
   max-width: 60vw;
 

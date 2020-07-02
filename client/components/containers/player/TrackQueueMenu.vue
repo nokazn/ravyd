@@ -7,7 +7,7 @@
     offset-y
     :min-width="400"
     :max-width="500"
-    :content-class="CUSTOM_CLASS"
+    :z-index="1001"
   >
     <template #activator="{ on }">
       <v-btn
@@ -72,11 +72,8 @@ import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQ
 import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
 
-const CUSTOM_CLASS = 'track-queue-content';
-
 type Data = {
   isShown: boolean
-  CUSTOM_CLASS: string
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
 }
 
@@ -88,7 +85,6 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
-      CUSTOM_CLASS,
       MENU_BACKGROUND_COLOR,
     };
   },

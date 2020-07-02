@@ -5,6 +5,7 @@
     top
     left
     offset-y
+    :z-index="1001"
   >
     <template #activator="{ on }">
       <v-btn
