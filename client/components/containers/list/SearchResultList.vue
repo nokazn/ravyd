@@ -35,16 +35,18 @@
             :class="$style.SearchResultList__content"
           >
             <template v-for="{ title, items } in itemInfoList">
-              <template v-if="items.length > 0">
-                <v-subheader :key="`${title}-subheader`">
+              <div
+                v-if="items.length > 0"
+                :key="title"
+                :class="$style.SearchResultList__group"
+              >
+                <v-subheader>
                   {{ title }}
                 </v-subheader>
 
-                <v-divider :key="`${title}-divider`" />
+                <v-divider />
 
-                <v-list-item-group
-                  :key="title"
-                >
+                <v-list-item-group>
                   <SearchResultListItem
                     v-for="item in items"
                     :key="item.id"
@@ -52,7 +54,7 @@
                     @on-clicked="onListItemClicked"
                   />
                 </v-list-item-group>
-              </template>
+              </div>
             </template>
           </div>
 
@@ -203,12 +205,16 @@ export default Vue.extend({
 <style lang="scss" module>
 .SearchResultList {
   z-index: z-index-of(menu);
-  min-width: 400px;
-  max-width: 60vw;
 
   &__content {
+    min-width: 400px;
+    max-width: 60vw;
     max-height: 60vh;
     overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 12px;
+    padding: 0 12px;
 
     &--searching,
     &--empty {
@@ -217,6 +223,14 @@ export default Vue.extend({
       align-items: center;
       height: 120px;
       padding: 0 24px;
+    }
+  }
+
+  &__group {
+    max-width: calc(30vw - 18px);
+
+    &:last-child {
+      margin-bottom: 12px;
     }
   }
 
