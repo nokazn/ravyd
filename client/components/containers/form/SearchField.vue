@@ -58,7 +58,7 @@ import { $searchForm } from '~/observable/searchForm';
 import { SpotifyAPI, App } from '~~/types';
 
 const SEARCH_FIELD_REF = 'searchField';
-const LIMIT_OF_SEARCH_ITEM = 5;
+const LIMIT_OF_SEARCH_ITEM = 4;
 
 type ItemInfo = {
   title: string

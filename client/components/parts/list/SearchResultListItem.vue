@@ -3,7 +3,7 @@
     dense
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
-    :two-line="isTwoLine"
+    two-line
     :title="name"
     @click.native="onClicked"
   >

@@ -93,7 +93,7 @@ import { $searchForm } from '~/observable/searchForm';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
-const MAX_LIST_LENGT = 5;
+const LIMIT_OF_SEARCH_ITEM = 4;
 
 type Data = {
   MENU_BACKGROUND_COLOR: string
@@ -140,22 +140,22 @@ export default Vue.extend({
       };
     },
     tracks(): RootGetters['search/tracks'] {
-      return this.$getters()['search/tracks'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     artists(): RootGetters['search/artists'] {
-      return this.$getters()['search/artists'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     albums(): RootGetters['search/albums'] {
-      return this.$getters()['search/albums'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     playlists(): RootGetters['search/playlists'] {
-      return this.$getters()['search/playlists'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     shows(): RootGetters['search/shows'] {
-      return this.$getters()['search/shows'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     episodes(): RootGetters['search/episodes'] {
-      return this.$getters()['search/episodes'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     itemInfoList(): ItemInfo[] {
       const itemInfoList = [
@@ -204,6 +204,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .SearchResultList {
+  min-width: 400px;
   z-index: z-index-of(menu);
 
   &__content {
