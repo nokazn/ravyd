@@ -6,7 +6,9 @@
     hide-details
     rounded
     light
+    :height="32"
     background-color="white"
+    placeholder="検索"
     title="検索"
     aria-autocomplete="none"
     :class="{
@@ -35,8 +37,8 @@
       <div :class="$style.SearchField__clearIcon">
         <v-icon
           v-show="query !== ''"
-          :size="28"
-          color="grey darken-1"
+          :size="24"
+          color="grey"
           title="消去"
           @click="clearText"
         >
@@ -160,7 +162,7 @@ export default Vue.extend({
   &__prependInnerIcon {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    height: 32px;
     margin-left: -12px;
   }
 
@@ -168,7 +170,7 @@ export default Vue.extend({
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    height: 32px;
     margin-right: -12px;
   }
 }
