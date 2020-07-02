@@ -69,6 +69,7 @@ type Data = {
   isFocused: boolean
   isHovered: boolean
   debouncedDispatcher: ((query: string) => void) & Cancelable
+  keyEventListener: ((e: KeyboardEvent) => void) | undefined
   SEARCH_FIELD_REF: string
 }
 
@@ -99,6 +100,7 @@ export default Vue.extend({
       isFocused: false,
       isHovered: false,
       debouncedDispatcher,
+      keyEventListener: undefined,
       SEARCH_FIELD_REF,
     };
   },
@@ -122,6 +124,34 @@ export default Vue.extend({
         this.$overlay.change(isShown);
       },
     },
+  },
+
+  mounted() {
+    // @as v-text-field は focus と blur ハンドラが存在
+    const ref = this.$refs[this.SEARCH_FIELD_REF] as Vue & { focus(): void, blur(): void };
+    const keyEventListener = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case '/':
+          ref.focus();
+          break;
+
+        case 'Escape':
+          ref.blur();
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    window.document.addEventListener('keyup', keyEventListener);
+    this.keyEventListener = keyEventListener;
+  },
+
+  beforeDestroy() {
+    if (this.keyEventListener != null) {
+      window.document.removeEventListener('keyup', this.keyEventListener);
+    }
   },
 
   methods: {
