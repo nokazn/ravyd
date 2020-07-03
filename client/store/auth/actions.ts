@@ -103,13 +103,15 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
 
-    if (accessToken == null) {
-      dispatch('logout');
-    }
-
     if (state.refreshTokenTimerId != null) {
       clearTimeout(state.refreshTokenTimerId);
     }
+
+    if (accessToken == null) {
+      dispatch('logout');
+      return;
+    }
+
     // 50 分後にまだトークンが更新されてなかった場合更新
     const time = 1000 * 60 * 50;
     const refreshTokenTimer = setTimeout(() => {

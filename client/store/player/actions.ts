@@ -92,11 +92,38 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         name: APP_NAME,
         // アクセストークンの更新が必要になったら呼ばれる
         getOAuthToken: async (callback) => {
-          const { accessToken }: { accessToken :string } = await this.$serverApi.$get('/api/auth')
+          const { accessToken, expireIn }: {
+            accessToken?: string
+            expireIn: number
+          } = await this.$serverApi.$post('/api/auth/refresh')
             .catch((err) => {
               console.error({ err });
               return {};
             });
+
+          commit('auth/SET_TOKEN', accessToken, { root: true });
+          commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
+
+          const currentTimerId = this.$state().auth.refreshTokenTimerId;
+          if (currentTimerId != null) {
+            clearTimeout(currentTimerId);
+          }
+
+          if (accessToken == null) {
+            dispatch('auth/logout', undefined, { root: true });
+            return;
+          }
+
+          // 50 分後にまだトークンが更新されてなかった場合更新
+          const time = 1000 * 60 * 50;
+          const refreshTokenTimer = setTimeout(() => {
+            // time 経過後の状態を取得するため、引数の getters ではなく context から呼び出している
+            if (this.$getters()['auth/isTokenExpired']) {
+              dispatch('auth/refreshAccessToken', undefined, { root: true });
+            }
+          }, time);
+          commit('auth/SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer, { root: true });
+
           callback(accessToken);
         },
       });
