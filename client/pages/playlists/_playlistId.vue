@@ -80,6 +80,7 @@
             />
 
             <Followers
+              v-if="playlistInfo.followersText != null"
               :text="playlistInfo.followersText"
             />
           </div>

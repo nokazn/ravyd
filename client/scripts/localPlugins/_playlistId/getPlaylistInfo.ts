@@ -48,7 +48,9 @@ export const getPlaylistInfo = async (
       userIdList: [userId],
     });
 
-  const followersText = `フォロワー ${addComma(followers.total)}人`;
+  const followersText = followers.total != null
+    ? `フォロワー ${addComma(followers.total)}人`
+    : undefined;
 
   return {
     id,

@@ -129,7 +129,7 @@ export namespace App {
     totalTracks: number
     isFollowing: boolean | undefined
     isPublic: boolean | null
-    followersText: string
+    followersText: string | undefined
     externalUrls: SpotifyAPI.ExternalUrls
   }
   export type PlaylistTrackInfo = {
