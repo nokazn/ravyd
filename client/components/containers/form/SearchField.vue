@@ -10,6 +10,7 @@
     background-color="white"
     placeholder="検索"
     title="検索"
+    autocomplete="off"
     aria-autocomplete="none"
     :class="{
       [$style.SearchField]: true,
