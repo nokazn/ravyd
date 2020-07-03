@@ -3,7 +3,7 @@ import { Getters } from 'vuex';
 import { SearchState } from './state';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
 export type SearchGetters = {
   tracks: App.ContentItemInfo<'track'>[]
@@ -23,21 +23,43 @@ export type RootGetters = {
   'search/episodes': SearchGetters['episodes']
 }
 
+const generatePath = (type: SpotifyAPI.SearchType, id: string) => {
+  const linkType = {
+    album: 'releases',
+    artist: 'artists',
+    track: 'releases',
+    playlist: 'playlists',
+    // @todo
+    show: 'episodes',
+    episode: 'episodes',
+  }[type];
+
+  return `/${linkType}/${id}`;
+};
+
 const getters: Getters<SearchState, SearchGetters> = {
   tracks(state) {
     return state.tracks?.map((track) => {
+      const type = 'track' as const;
+      const { id, name, uri } = track;
+      const releaseId = track.album.id;
+      const to = {
+        path: generatePath(type, releaseId),
+        hash: `${track.disc_number}-${track.track_number}`,
+      };
+
       const info = {
-        type: 'track' as const,
-        id: track.id,
-        releaseId: track.album.id,
-        name: track.name,
-        uri: track.uri,
+        type,
+        id,
+        releaseId,
+        name,
+        uri,
         artworkSrc: getImageSrc(track.album.images, TRACK_QUEUE_ARTWORK_SIZE),
         artistList: track.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
         })),
-        hash: `${track.disc_number}-${track.track_number}`,
+        to,
       };
 
       return info;
@@ -46,13 +68,18 @@ const getters: Getters<SearchState, SearchGetters> = {
 
   artists(state) {
     return state.artists?.map((artist) => {
+      const type = 'artist' as const;
+      const { id, name, uri } = artist;
+      const to = generatePath(type, id);
+
       const info = {
-        type: 'artist' as const,
-        id: artist.id,
-        releaseId: artist.id,
-        name: artist.name,
-        uri: artist.uri,
+        type,
+        id,
+        releaseId: id,
+        name,
+        uri,
         artworkSrc: getImageSrc(artist.images, TRACK_QUEUE_ARTWORK_SIZE),
+        to,
       };
 
       return info;
@@ -61,17 +88,22 @@ const getters: Getters<SearchState, SearchGetters> = {
 
   albums(state) {
     return state.albums?.map((album) => {
+      const type = 'album' as const;
+      const { id, name, uri } = album;
+      const to = generatePath(type, id);
+
       const info = {
-        type: 'album' as const,
-        id: album.id,
-        releaseId: album.id,
-        name: album.name,
-        uri: album.uri,
+        type,
+        id,
+        releaseId: id,
+        name,
+        uri,
         artworkSrc: getImageSrc(album.images, TRACK_QUEUE_ARTWORK_SIZE),
         artistList: album.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
         })),
+        to,
       };
 
       return info;
@@ -80,13 +112,18 @@ const getters: Getters<SearchState, SearchGetters> = {
 
   playlists(state) {
     return state.playlists?.map((playlist) => {
+      const type = 'playlist' as const;
+      const { id, name, uri } = playlist;
+      const to = generatePath(type, id);
+
       const info = {
-        type: 'playlist' as const,
-        id: playlist.id,
-        releaseId: playlist.id,
-        name: playlist.name,
-        uri: playlist.uri,
+        type,
+        id,
+        releaseId: id,
+        name,
+        uri,
         artworkSrc: getImageSrc(playlist.images, TRACK_QUEUE_ARTWORK_SIZE),
+        to,
       };
 
       return info;
@@ -95,13 +132,18 @@ const getters: Getters<SearchState, SearchGetters> = {
 
   shows(state) {
     return state.shows?.map((show) => {
+      const type = 'show' as const;
+      const { id, name, uri } = show;
+      const to = generatePath(type, id);
+
       const info = {
-        type: 'show' as const,
-        id: show.id,
-        releaseId: show.id,
-        name: show.name,
-        uri: show.uri,
+        type,
+        id,
+        releaseId: id,
+        name,
+        uri,
         artworkSrc: getImageSrc(show.images, TRACK_QUEUE_ARTWORK_SIZE),
+        to,
       };
 
       return info;
@@ -110,13 +152,18 @@ const getters: Getters<SearchState, SearchGetters> = {
 
   episodes(state) {
     return state.episodes?.map((episode) => {
+      const type = 'episode' as const;
+      const { id, name, uri } = episode;
+      const to = generatePath(type, id);
+
       const info = {
-        type: 'episode' as const,
-        id: episode.id,
-        releaseId: episode.id,
-        name: episode.name,
-        uri: episode.uri,
+        type,
+        id,
+        releaseId: id,
+        name,
+        uri,
         artworkSrc: getImageSrc(episode.images, TRACK_QUEUE_ARTWORK_SIZE),
+        to,
       };
 
       return info;

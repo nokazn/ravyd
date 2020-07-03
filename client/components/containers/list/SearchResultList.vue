@@ -51,7 +51,8 @@
                     v-for="item in items"
                     :key="item.id"
                     v-bind="item"
-                    @on-clicked="onListItemClicked"
+                    :is-selected="selectedItem != null ? item.id === selectedItem.id : false"
+                    @on-clicked="onItemClicked"
                   />
                 </v-list-item-group>
               </div>
@@ -87,6 +88,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { RootGetters } from 'vuex';
+import { RawLocation } from 'vue-router';
 
 import SearchResultListItem from '~/components/parts/list/SearchResultListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
@@ -96,7 +98,10 @@ import { SpotifyAPI, App } from '~~/types';
 const LIMIT_OF_SEARCH_ITEM = 4;
 
 type Data = {
+  selectedItemIndex: number | undefined
+  keyEventListener: ((e: KeyboardEvent) => void) | undefined
   MENU_BACKGROUND_COLOR: string
+  LIMIT_OF_SEARCH_ITEM: number
 }
 
 export type ItemInfo = {
@@ -111,7 +116,10 @@ export default Vue.extend({
 
   data(): Data {
     return {
+      selectedItemIndex: undefined,
+      keyEventListener: undefined,
       MENU_BACKGROUND_COLOR,
+      LIMIT_OF_SEARCH_ITEM,
     };
   },
 
@@ -187,16 +195,77 @@ export default Vue.extend({
 
       return itemInfoList;
     },
+    itemList(): App.ContentItemInfo<SpotifyAPI.SearchType>[] {
+      return this.itemInfoList.reduce(
+        (prev, curr) => [...prev, ...curr.items],
+        [] as App.ContentItemInfo<SpotifyAPI.SearchType>[],
+      );
+    },
+    selectedItem(): App.ContentItemInfo<SpotifyAPI.SearchType> | undefined {
+      return this.selectedItemIndex != null
+        ? this.itemList[this.selectedItemIndex] ?? undefined
+        : undefined;
+    },
     hasItem(): boolean {
-      return this.itemInfoList
-        .filter(({ items }) => items.length > 0)
-        .length > 0;
+      return this.itemList.length > 0;
     },
   },
 
+  watch: {
+    // 検索用のクエリが変化するたびに初期化
+    query() {
+      this.selectedItemIndex = undefined;
+    },
+  },
+
+  mounted() {
+    const keyEventListener = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          this.handleSelectedItem(1);
+          break;
+
+        case 'ArrowUp':
+          this.handleSelectedItem(-1);
+          break;
+
+        case 'Enter':
+          // 項目が選択されていたらページ遷移
+          if (this.selectedItem != null) {
+            this.onItemEntered(this.selectedItem.to);
+          }
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    window.document.addEventListener('keydown', keyEventListener);
+    this.keyEventListener = keyEventListener;
+  },
+
+  beforeDestroy() {
+    if (this.keyEventListener != null) {
+      window.document.removeEventListener('keydown', this.keyEventListener);
+    }
+  },
+
   methods: {
-    onListItemClicked() {
+    onItemClicked() {
       this.menu = false;
+      this.$overlay.change(false);
+    },
+    handleSelectedItem(diff: 1 | -1) {
+      const { length } = this.itemList;
+      // 未選択の場合は down/up を押したときにそれぞれ 最初/最後 が選択されるようにする
+      const currentIndex = this.selectedItemIndex ?? (diff > 0 ? -1 : 0);
+      this.selectedItemIndex = (diff + currentIndex + length) % length;
+    },
+    onItemEntered(to: string | RawLocation) {
+      this.$router.push(to);
+      this.menu = false;
+      this.$overlay.change(false);
     },
   },
 });
