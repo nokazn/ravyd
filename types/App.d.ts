@@ -1,4 +1,6 @@
 import { Swatch } from 'node-vibrant/lib/color';
+import { RawLocation } from 'vue-router';
+
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
@@ -168,6 +170,6 @@ export namespace App {
     uri: string
     artworkSrc: string | undefined
     artistList?: SimpleArtistInfo[] // type が release と track の時のみ存在
-    hash?: string // type が track と show の時のみ存在
+    to: string | RawLocation
   }
 }

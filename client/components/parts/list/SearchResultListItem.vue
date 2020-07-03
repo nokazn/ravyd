@@ -3,11 +3,16 @@
     dense
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
-    :two-line="isTwoLine"
+    two-line
     :title="name"
+    :data-is-selected="isSelected"
+    :class="$style.SearchResultListItem"
     @click.native="onClicked"
   >
-    <v-list-item-avatar tile>
+    <v-list-item-avatar
+      tile
+      :class="$style.SearchResultListItem__avatar"
+    >
       <UserAvatar
         v-if="type === 'artist'"
         :src="artworkSrc"
@@ -48,6 +53,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RawLocation } from 'vue-router';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
@@ -55,7 +61,6 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { SpotifyAPI, App } from '~~/types';
 
 type Data = {
-  to: string
   isTwoLine: boolean
 }
 
@@ -81,6 +86,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    uri: {
+      type: String,
+      required: true,
+    },
     releaseId: {
       type: String,
       required: true,
@@ -97,29 +106,20 @@ export default Vue.extend({
       type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
       default: undefined,
     },
-    hash: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
+    to: {
+      type: [String, Object] as PropType<string | RawLocation>,
+      required: true,
+    },
+    isSelected: {
+      type: Boolean,
+      required: true,
     },
   },
 
   data(): Data {
-    const type = ({
-      album: 'releases',
-      artist: 'artists',
-      track: 'releases',
-      playlist: 'playlists',
-      show: 'episodes',
-      episode: 'episodes',
-    } as const)[this.type];
-    const to = this.hash != null
-      ? `/${type}/${this.releaseId}#${this.hash}`
-      : `/${type}/${this.releaseId}`;
-
     const isTwoLine = this.artistList != null;
 
     return {
-      to,
       isTwoLine,
     };
   },
@@ -135,3 +135,16 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.SearchResultListItem {
+  &[data-is-selected=true] {
+    background-color: lighten($g-menu-background-color, 15%);
+  }
+
+  &__avatar {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+}
+</style>

@@ -35,24 +35,27 @@
             :class="$style.SearchResultList__content"
           >
             <template v-for="{ title, items } in itemInfoList">
-              <template v-if="items.length > 0">
-                <v-subheader :key="`${title}-subheader`">
+              <div
+                v-if="items.length > 0"
+                :key="title"
+                :class="$style.SearchResultList__group"
+              >
+                <v-subheader>
                   {{ title }}
                 </v-subheader>
 
-                <v-divider :key="`${title}-divider`" />
+                <v-divider />
 
-                <v-list-item-group
-                  :key="title"
-                >
+                <v-list-item-group>
                   <SearchResultListItem
                     v-for="item in items"
                     :key="item.id"
                     v-bind="item"
-                    @on-clicked="onListItemClicked"
+                    :is-selected="selectedItem != null ? item.id === selectedItem.id : false"
+                    @on-clicked="onItemClicked"
                   />
                 </v-list-item-group>
-              </template>
+              </div>
             </template>
           </div>
 
@@ -85,16 +88,20 @@
 <script lang="ts">
 import Vue from 'vue';
 import { RootGetters } from 'vuex';
+import { RawLocation } from 'vue-router';
 
 import SearchResultListItem from '~/components/parts/list/SearchResultListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
-const MAX_LIST_LENGT = 5;
+const LIMIT_OF_SEARCH_ITEM = 4;
 
 type Data = {
+  selectedItemIndex: number | undefined
+  keyEventListener: ((e: KeyboardEvent) => void) | undefined
   MENU_BACKGROUND_COLOR: string
+  LIMIT_OF_SEARCH_ITEM: number
 }
 
 export type ItemInfo = {
@@ -109,7 +116,10 @@ export default Vue.extend({
 
   data(): Data {
     return {
+      selectedItemIndex: undefined,
+      keyEventListener: undefined,
       MENU_BACKGROUND_COLOR,
+      LIMIT_OF_SEARCH_ITEM,
     };
   },
 
@@ -138,22 +148,22 @@ export default Vue.extend({
       };
     },
     tracks(): RootGetters['search/tracks'] {
-      return this.$getters()['search/tracks'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     artists(): RootGetters['search/artists'] {
-      return this.$getters()['search/artists'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     albums(): RootGetters['search/albums'] {
-      return this.$getters()['search/albums'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     playlists(): RootGetters['search/playlists'] {
-      return this.$getters()['search/playlists'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     shows(): RootGetters['search/shows'] {
-      return this.$getters()['search/shows'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     episodes(): RootGetters['search/episodes'] {
-      return this.$getters()['search/episodes'].slice(0, MAX_LIST_LENGT);
+      return this.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
     itemInfoList(): ItemInfo[] {
       const itemInfoList = [
@@ -185,16 +195,77 @@ export default Vue.extend({
 
       return itemInfoList;
     },
+    itemList(): App.ContentItemInfo<SpotifyAPI.SearchType>[] {
+      return this.itemInfoList.reduce(
+        (prev, curr) => [...prev, ...curr.items],
+        [] as App.ContentItemInfo<SpotifyAPI.SearchType>[],
+      );
+    },
+    selectedItem(): App.ContentItemInfo<SpotifyAPI.SearchType> | undefined {
+      return this.selectedItemIndex != null
+        ? this.itemList[this.selectedItemIndex] ?? undefined
+        : undefined;
+    },
     hasItem(): boolean {
-      return this.itemInfoList
-        .filter(({ items }) => items.length > 0)
-        .length > 0;
+      return this.itemList.length > 0;
     },
   },
 
+  watch: {
+    // 検索用のクエリが変化するたびに初期化
+    query() {
+      this.selectedItemIndex = undefined;
+    },
+  },
+
+  mounted() {
+    const keyEventListener = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          this.handleSelectedItem(1);
+          break;
+
+        case 'ArrowUp':
+          this.handleSelectedItem(-1);
+          break;
+
+        case 'Enter':
+          // 項目が選択されていたらページ遷移
+          if (this.selectedItem != null) {
+            this.onItemEntered(this.selectedItem.to);
+          }
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    window.document.addEventListener('keydown', keyEventListener);
+    this.keyEventListener = keyEventListener;
+  },
+
+  beforeDestroy() {
+    if (this.keyEventListener != null) {
+      window.document.removeEventListener('keydown', this.keyEventListener);
+    }
+  },
+
   methods: {
-    onListItemClicked() {
+    onItemClicked() {
       this.menu = false;
+      this.$overlay.change(false);
+    },
+    handleSelectedItem(diff: 1 | -1) {
+      const { length } = this.itemList;
+      // 未選択の場合は down/up を押したときにそれぞれ 最初/最後 が選択されるようにする
+      const currentIndex = this.selectedItemIndex ?? (diff > 0 ? -1 : 0);
+      this.selectedItemIndex = (diff + currentIndex + length) % length;
+    },
+    onItemEntered(to: string | RawLocation) {
+      this.$router.push(to);
+      this.menu = false;
+      this.$overlay.change(false);
     },
   },
 });
@@ -202,13 +273,18 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .SearchResultList {
-  z-index: z-index-of(menu);
   min-width: 400px;
-  max-width: 60vw;
+  z-index: z-index-of(menu);
 
   &__content {
+    min-width: 400px;
+    max-width: 60vw;
     max-height: 60vh;
     overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 12px;
+    padding: 0 12px;
 
     &--searching,
     &--empty {
@@ -218,6 +294,11 @@ export default Vue.extend({
       height: 120px;
       padding: 0 24px;
     }
+  }
+
+  &__group {
+    max-width: calc(30vw - 18px);
+    margin-bottom: 12px;
   }
 
   &__moreButton {
