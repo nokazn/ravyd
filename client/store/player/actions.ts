@@ -34,11 +34,14 @@ export type PlayerActions = {
       uri?: undefined
       position: number
     }
-  }) => void
-  pause: (payload?: { isInitializing: boolean }) => void
-  seek: (positionMs: number) => Promise<void>
-  next: () => Promise<void>
-  previous: () => Promise<void>
+  }) => Promise<void>
+  pause: (payload?: { isInitializing: boolean }) => Promise<void>
+  seek: (payload: {
+    positionMs: number
+    currentPositionMs?: number
+  }) => Promise<void>
+  next: () => void
+  previous: () => void
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
   volume: ({ volumePercent }: { volumePercent: number }) => Promise<void>
@@ -318,7 +321,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  play({ state, commit }, payload?) {
+  async play({ state, commit }, payload?) {
     const { deviceId } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -331,7 +334,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       && state.trackUri === trackUriList[offset.position]
     ) || state.trackUri === offset?.uri;
 
-    this.$spotify.player.play(
+    await this.$spotify.player.play(
       // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
       isNotUriPassed || isRestartingTracks
         ? {
@@ -346,54 +349,81 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         },
     ).then(() => {
       commit('SET_IS_PLAYING', true);
-    }).catch((err) => {
+    }).catch((err: Error) => {
       console.error({ err });
+      this.$toast.show('error', 'エラーが発生し、再生できません。');
     });
   },
 
-  pause({ state, commit }, payload = { isInitializing: false }) {
+  async pause({ state, commit }, payload = { isInitializing: false }) {
     const { deviceId } = state;
     const { isInitializing } = payload;
     const params = isInitializing
       ? { isInitializing }
       : { deviceId };
 
-    this.$spotify.player.pause(params)
-      .then(() => {
-        commit('SET_IS_PLAYING', false);
-      })
+    await this.$spotify.player.pause(params)
       .catch((err) => {
         console.error({ err });
+        this.$toast.show('warning', 'エラーが発生しました。');
+      })
+      .finally(() => {
+        // エラーが発生しても停止させる
+        commit('SET_IS_PLAYING', false);
       });
   },
 
-  async seek({ state }, positionMs) {
-    const { deviceId } = state;
+  async seek({ state, commit }, { positionMs, currentPositionMs }) {
+    const { deviceId, positionMs: positionMsOfState } = state;
+    console.log({
+      positionMs,
+      currentPositionMs,
+      positionMsOfState,
+    });
     await this.$spotify.player.seek({
       deviceId,
       positionMs,
+    }).catch((err: Error) => {
+      console.error({ err });
+      // 現在の position に戻す
+      commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfState);
+      this.$toast.show('error', 'エラーが発生しました。');
     });
   },
 
   async next({ state }) {
     const { deviceId } = state;
-    await this.$spotify.player.next({ deviceId });
+
+    await this.$spotify.player.next({ deviceId })
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', 'エラーが発生し、次の曲を再生できません。');
+      });
   },
 
   async previous({ state }) {
     const { deviceId } = state;
-    await this.$spotify.player.previous({ deviceId });
+
+    await this.$spotify.player.previous({ deviceId })
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', 'エラーが発生し、前の曲を再生できません。');
+      });
   },
 
   async shuffle({ state, commit }) {
     const { deviceId, isShuffled } = state;
     const nextIsShuffled = !isShuffled;
+
     await this.$spotify.player.shuffle({
       deviceId,
       state: nextIsShuffled,
+    }).then(() => {
+      commit('SET_IS_SHUFFLED', nextIsShuffled);
+    }).catch((err: Error) => {
+      console.error({ err });
+      this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
     });
-
-    commit('SET_IS_SHUFFLED', nextIsShuffled);
   },
 
   async repeat({ state, commit }) {
@@ -402,12 +432,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
     const { deviceId } = state;
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
+
     await this.$spotify.player.repeat({
       deviceId,
       state: REPEAT_STATE_LIST[nextRepeatMode],
+    }).then(() => {
+      commit('SET_REPEAT_MODE', nextRepeatMode);
+    }).catch((err: Error) => {
+      console.error({ err });
+      this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
     });
-
-    commit('SET_REPEAT_MODE', nextRepeatMode);
   },
 
   async volume({ state, commit }, { volumePercent }) {
@@ -417,12 +451,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     await this.$spotify.player.volume({
       deviceId,
       volumePercent,
+    }).then(() => {
+      commit('SET_VOLUME_PERCENT', { volumePercent });
     }).catch((err: Error) => {
       console.error({ err });
-      throw new Error('ボリュームが変更できませんでした。');
+      this.$toast.show('error', 'エラーが発生し、ボリュームが変更できませんでした。');
     });
-
-    commit('SET_VOLUME_PERCENT', { volumePercent });
   },
 
   async mute({ state, commit }) {
@@ -433,13 +467,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       await this.$spotify.player.volume({
         deviceId,
         volumePercent,
+      }).then(() => {
+        commit('SET_IS_MUTED', nextMuteState);
       }).catch((err: Error) => {
         console.error({ err });
-        throw new Error('ボリュームをミュートにできませんでした。');
+        this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
       });
     }
-
-    commit('SET_IS_MUTED', nextMuteState);
   },
 
   async checkTrackSavedState({ state, commit }, trackId?) {

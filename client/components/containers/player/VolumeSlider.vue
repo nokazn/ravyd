@@ -129,18 +129,10 @@ export default Vue.extend({
       this.volumePercent = this.debounceSetter(volumePercent);
     },
     onChange(volumePercent: number) {
-      this.$dispatch('player/volume', { volumePercent })
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('warning', err.message);
-        });
+      this.$dispatch('player/volume', { volumePercent });
     },
     onVolumeButtonClicked() {
-      this.$dispatch('player/mute')
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('warning', err.message);
-        });
+      this.$dispatch('player/mute');
     },
   },
 });

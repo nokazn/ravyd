@@ -131,9 +131,11 @@ export default Vue.extend({
     onInput(positionMs: number) {
       this.value = this.debounceSetter(positionMs);
     },
-    onChange(positionMs: number) {
+    async onChange(positionMs: number) {
+      const currentPositionMs = this.$state().player.positionMs;
       this.$commit('player/SET_POSITION_MS', positionMs);
-      this.$dispatch('player/seek', positionMs);
+      await this.$dispatch('player/seek', { positionMs, currentPositionMs });
+
       if (this.isPlaying) {
         this.updatePosition();
       }

@@ -12,6 +12,7 @@ import * as Playlists from '~/store/playlists/types';
 import * as Search from '~/store/search/types';
 import { ActionMethodMap, Merge } from '~~/types';
 
+import { Toast } from '~/plugins/toast';
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
 
 declare module 'vuex/types/index' {
@@ -25,6 +26,7 @@ declare module 'vuex/types/index' {
     $spotifyApi: NuxtAxiosInstance,
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance,
+    $toast: Toast
   }
 }
 

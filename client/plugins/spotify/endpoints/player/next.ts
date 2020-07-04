@@ -8,6 +8,7 @@ export const next = (context: Context) => {
       params: { device_id: deviceId },
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;

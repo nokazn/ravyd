@@ -17,6 +17,7 @@ export const shuffle = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;

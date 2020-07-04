@@ -45,7 +45,6 @@ export default Vue.extend({
 
   methods: {
     onPreivousClicked() {
-      this.$commit('player/SET_POSITION_MS', 0);
       // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
       if (this.firstClicked) {
         this.$dispatch('player/previous');
@@ -56,7 +55,7 @@ export default Vue.extend({
           this.firstClicked = false;
         }, interval);
 
-        this.$dispatch('player/seek', 0);
+        this.$dispatch('player/seek', { positionMs: 0 });
       }
     },
   },
