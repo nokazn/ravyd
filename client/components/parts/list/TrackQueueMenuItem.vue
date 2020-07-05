@@ -4,7 +4,6 @@
     three-line
     :input-valuea="id"
     :title="`${name} を再生`"
-    :class="$style.TrackQueueMenuItem"
     @click="onItemClicked"
   >
     <v-list-item-avatar tile>
@@ -16,50 +15,38 @@
       />
     </v-list-item-avatar>
 
-    <v-list-item-content :class="$style.TrackQueueMenuItem__content">
-      <div>
-        <div
-          :class="[
-            $style.TrackQueueMenuItem__title,
-            isSet ? 'active--text' : undefined,
-          ]"
-          class="g-ellipsis-text"
-        >
-          {{ name }}
-        </div>
+    <v-list-item-content>
+      <v-list-item-title
+        :class="[isSet ? 'active--text' : undefined]"
+        class="g-ellipsis-text"
+      >
+        {{ name }}
+      </v-list-item-title>
 
-        <v-list-item-subtitle
-          :class="[
-            $style.TrackQueueMenuItem__subtitle,
-            isSet ? 'active--text' : 'subtext--text',
-          ]"
-        >
+      <v-list-item-subtitle
+        :class="[isSet ? 'active--text' : 'subtext--text']"
+      >
+        <div class="g-ellipsis-text">
           <nuxt-link
             :to="`/releases/${releaseId}`"
             :title="releaseName"
-            class="g-ellipsis-text"
             @click.native.stop="onLinkClicked"
           >
             {{ releaseName }}
           </nuxt-link>
+        </div>
+      </v-list-item-subtitle>
 
-          <ArtistNames
-            :artist-list="artistList"
-            :title="artistNames"
-            class="g-ellipsis-text"
-            @on-clicked="onLinkClicked"
-          />
-        </v-list-item-subtitle>
-      </div>
-
-      <v-icon
-        v-show="isPlaying"
-        :size="20"
-        color="active"
-        title="再生中"
+      <v-list-item-subtitle
+        :class="[isSet ? 'active--text' : 'subtext--text']"
       >
-        mdi-volume-high
-      </v-icon>
+        <ArtistNames
+          :artist-list="artistList"
+          :title="artistNames"
+          class="g-ellipsis-text"
+          @on-clicked="onLinkClicked"
+        />
+      </v-list-item-subtitle>
     </v-list-item-content>
 
     <v-list-item-action>
@@ -68,6 +55,14 @@
         :time-ms="durationMs"
         :class="isSet ? 'active--text' : 'subtext--text'"
       />
+      <v-icon
+        v-show="isPlaying"
+        :size="20"
+        color="active"
+        title="再生中"
+      >
+        mdi-volume-high
+      </v-icon>
     </v-list-item-action>
   </v-list-item>
 </template>
@@ -162,26 +157,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.TrackQueueMenuItem {
-  &__content {
-    display: grid;
-    grid-template-columns: auto 20px;
-    column-gap: 12px;
-
-    & > *:first-child {
-      overflow-x: hidden;
-    }
-  }
-
-  &__title {
-    font-size: 0.9em;
-    line-height: 1.2rem;
-  }
-
-  &__subtitle {
-    font-size: 0.7em !important;
-  }
-}
-</style>
