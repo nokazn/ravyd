@@ -4,6 +4,7 @@
       [$style.ArtistNames]: true,
       [$style.inline]: inline,
     }"
+    :title="artistNames"
   >
     <template
       v-for="({ name, id }, index) in artistList"
@@ -32,6 +33,10 @@ import { App } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';
 
+type Data = {
+  artistNames: string
+}
+
 export type On = {
   [ON_CLICKED]: void
 }
@@ -49,6 +54,16 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+  },
+
+  data(): Data {
+    const artistNames = this.artistList
+      .map((artist) => artist.name)
+      .join(', ');
+
+    return {
+      artistNames,
+    };
   },
 
   computed: {

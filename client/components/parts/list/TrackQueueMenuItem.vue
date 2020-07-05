@@ -42,7 +42,6 @@
       >
         <ArtistNames
           :artist-list="artistList"
-          :title="artistNames"
           class="g-ellipsis-text"
           @on-clicked="onLinkClicked"
         />
@@ -74,10 +73,6 @@ import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { App } from '~~/types';
-
-type Data = {
-  artistNames: string
-}
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
@@ -135,16 +130,6 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-  },
-
-  data(): Data {
-    const artistNames = this.artistList
-      .map((artist) => artist.name)
-      .join(', ');
-
-    return {
-      artistNames,
-    };
   },
 
   methods: {
