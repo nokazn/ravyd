@@ -54,6 +54,8 @@
             </v-list-item-title>
           </v-list-item>
         </template>
+
+        <ShareMenu :track="track" />
       </v-list-item-group>
     </v-list>
   </v-menu>
@@ -62,6 +64,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import ShareMenu from '~/components/parts/menu/ShareMenu.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
@@ -80,6 +83,10 @@ type Data = {
 }
 
 export default Vue.extend({
+  components: {
+    ShareMenu,
+  },
+
   props: {
     track: {
       type: Object as PropType<App.TrackDetail>,
