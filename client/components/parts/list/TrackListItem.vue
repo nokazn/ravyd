@@ -2,6 +2,7 @@
   <v-hover #default="{ hover }">
     <v-list-item
       dense
+      :disabled="!isPlayable"
       :class="$style.TrackListItem"
       class="track-list-item"
     >
@@ -41,10 +42,10 @@
                 {{ name }}
               </nuxt-link>
 
-              <template v-if="artistList.length > 0">
+              <template v-if="featuredArtistList.length > 0">
                 <span :class="subtextColor">-</span>
                 <ArtistNames
-                  :artist-list="artistList"
+                  :artist-list="featuredArtistList"
                   inline
                   :class="subtextColor"
                 />
@@ -81,7 +82,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { hasProp } from '~~/utils/hasProp';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
 export type Data = {
   path: string
@@ -119,11 +120,19 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
+    id: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
     },
-    id: {
+    releaseId: {
+      type: String,
+      required: true,
+    },
+    releaseName: {
       type: String,
       required: true,
     },
@@ -135,10 +144,6 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    releaseId: {
-      type: String,
-      required: true,
-    },
     trackNumber: {
       type: Number,
       required: true,
@@ -147,7 +152,18 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
+    hash: {
+      type: String,
+      required: true,
+    },
     artistList: {
+      type: Array as PropType<App.SimpleArtistInfo[]>,
+      required: true,
+      validator(value) {
+        return value.every((ele) => hasProp(ele, ['name', 'id']));
+      },
+    },
+    featuredArtistList: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
       validator(value) {
@@ -158,12 +174,24 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isSaved: {
+    isPlayable: {
       type: Boolean,
       required: true,
     },
     durationMs: {
       type: Number,
+      required: true,
+    },
+    externalUrls: {
+      type: Object as PropType<SpotifyAPI.ExternalUrls>,
+      required: true,
+    },
+    previewUrl: {
+      type: String,
+      required: true,
+    },
+    isSaved: {
+      type: Boolean,
       required: true,
     },
     isPlayingTrack: {
@@ -177,8 +205,7 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const hash = `#${this.discNumber}-${this.trackNumber}`;
-    const path = `/releases/${this.releaseId}${hash}`;
+    const path = `/releases/${this.releaseId}#${this.hash}`;
     const trackIndex = this.index + 1;
     return {
       path,

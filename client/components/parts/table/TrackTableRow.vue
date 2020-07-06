@@ -36,10 +36,10 @@
               {{ item.name }}
             </span>
 
-            <template v-if="item.artistList.length > 0">
+            <template v-if="item.featuredArtistList.length > 0">
               <span :class="subtextColor">-</span>
               <ArtistNames
-                :artist-list="item.artistList"
+                :artist-list="item.featuredArtistList"
                 inline
                 :class="subtextColor"
               />
