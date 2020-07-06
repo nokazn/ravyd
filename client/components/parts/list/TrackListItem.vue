@@ -61,11 +61,7 @@
 
           <TrackTime :time-ms="item.durationMs" />
 
-          <v-btn icon>
-            <v-icon>
-              mdi-dots-horizontal
-            </v-icon>
-          </v-btn>
+          <TrackMenu :track="item" />
         </div>
       </v-list-item-action>
     </v-list-item>
@@ -81,6 +77,7 @@ import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
+import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { App } from '~~/types';
 
 export type Data = {
@@ -111,6 +108,7 @@ export default Vue.extend({
     FavoriteButton,
     ExplicitChip,
     TrackTime,
+    TrackMenu,
   },
 
   props: {
