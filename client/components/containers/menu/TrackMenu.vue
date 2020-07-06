@@ -66,7 +66,10 @@
       <v-divider />
 
       <v-list-item-group>
-        <ShareMenu :track="track" />
+        <ShareMenu
+          :artist-list="track.artistList"
+          :name="track.name"
+        />
       </v-list-item-group>
     </v-list>
   </v-menu>

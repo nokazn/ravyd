@@ -91,15 +91,23 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    track: {
-      type: Object as PropType<App.TrackDetail>,
+    artistList: {
+      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
+      default: undefined,
+    },
+    name: {
+      type: String,
       required: true,
     },
   },
 
   data(): Data {
-    const artist = this.track.artistList[0] ?? this.track.featuredArtistList[0];
-    const text = `${artist.name}の${this.track.name}`;
+    const artistNames = this.artistList
+      ?.map((artist) => artist.name)
+      .join(', ');
+    const text = artistNames != null
+      ? `${artistNames} の ${this.name}`
+      : this.name;
 
     return {
       text,
