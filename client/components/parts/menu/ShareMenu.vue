@@ -50,8 +50,8 @@
                   v-else
                   :src="item.iconSrc"
                   :alt="item.name"
-                  :width="20"
-                  :height="20"
+                  :width="24"
+                  :height="24"
                   :aspect-ratio="1"
                 />
               </v-list-item-icon>
