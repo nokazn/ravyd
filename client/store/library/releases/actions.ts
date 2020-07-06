@@ -106,8 +106,8 @@ const actions: Actions<
   async saveReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.saveAlbums({ albumIdList })
       .catch((err) => {
-        console.error(err.message);
-        throw new Error('ライブラリにアルバムを保存できませんでした。');
+        console.error({ err });
+        this.$toast.show('error', 'ライブラリにアルバムを保存できませんでした。');
       });
 
     albumIdList.forEach((releaseId) => {
@@ -121,8 +121,8 @@ const actions: Actions<
   async removeReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList })
       .catch((err) => {
-        console.error(err.message);
-        throw new Error('ライブラリからアルバムを削除できませんでした。');
+        console.error({ err });
+        this.$toast.show('error', 'ライブラリからアルバムを削除できませんでした。');
       });
 
     albumIdList.forEach((releaseId) => {
