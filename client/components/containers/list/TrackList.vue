@@ -102,17 +102,9 @@ export default Vue.extend({
 
       const { id, nextSavedState } = row;
       if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [id])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        this.$dispatch('library/tracks/removeTracks', [id])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/removeTracks', [id]);
       }
     },
   },

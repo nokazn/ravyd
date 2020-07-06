@@ -147,17 +147,9 @@ export default Vue.extend({
       // API との通信の結果を待たずに先に表示を変更させておく
       this.$commit('player/SET_IS_SAVED_TRACK', isSaved);
       if (isSaved) {
-        this.$dispatch('library/tracks/saveTracks', [this.trackId])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/saveTracks', [this.trackId]);
       } else {
-        this.$dispatch('library/tracks/removeTracks', [this.trackId])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/removeTracks', [this.trackId]);
       }
     },
   },
