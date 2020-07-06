@@ -94,8 +94,6 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
-export type Item = App.TrackDetail
-
 export default Vue.extend({
   components: {
     TrackListMediaButton,
@@ -107,7 +105,7 @@ export default Vue.extend({
 
   props: {
     item: {
-      type: Object as PropType<Item>,
+      type: Object as PropType<App.TrackDetail>,
       required: true,
     },
     isTrackSet: {
