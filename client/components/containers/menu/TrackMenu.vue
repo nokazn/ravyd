@@ -23,38 +23,49 @@
       :color="MENU_BACKGROUND_COLOR"
       :elevation="12"
     >
+      <template v-for="(group, index) in menuItemLists">
+        <v-divider
+          v-show="index !== 0"
+          :key="`${index}-devider`"
+        />
+
+        <v-list-item-group :key="index">
+          <template v-for="item in group">
+            <v-list-item
+              v-if="item.to != null"
+              :key="item.name"
+              nuxt
+              :to="item.to"
+              :disabled="item.disabled"
+              :inactive="item.disabled"
+            >
+              <v-list-item-title
+                :class="{ 'inactive--text': item.disabled }"
+              >
+                {{ item.name }}
+              </v-list-item-title>
+            </v-list-item>
+
+            <v-list-item
+              v-else
+              :key="item.name"
+              :disabled="item.disabled"
+              :inactive="item.disabled"
+              @click="item.handler"
+            >
+              <v-list-item-title
+                :class="{ 'inactive--text': item.disabled }"
+              >
+                {{ item.name }}
+              </v-list-item-title>
+            </v-list-item>
+          </template>
+        </v-list-item-group>
+      </template>
+
+      <v-divider />
+
       <v-list-item-group>
-        <template v-for="item in menuItemList">
-          <v-list-item
-            v-if="item.to != null"
-            :key="item.name"
-            nuxt
-            :to="item.to"
-            :disabled="item.disabled"
-            :inactive="item.disabled"
-          >
-            <v-list-item-title
-              :class="{ 'inactive--text': item.disabled }"
-            >
-              {{ item.name }}
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item
-            v-else
-            :key="item.name"
-            :disabled="item.disabled"
-            :inactive="item.disabled"
-            @click="item.handler"
-          >
-            <v-list-item-title
-              :class="{ 'inactive--text': item.disabled }"
-            >
-              {{ item.name }}
-            </v-list-item-title>
-          </v-list-item>
-        </template>
-
         <ShareMenu :track="track" />
       </v-list-item-group>
     </v-list>
@@ -101,7 +112,21 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemList(): MenuItem[] {
+    menuItemLists(): MenuItem[][] {
+      const addItemToQueue = {
+        name: '次に再生に追加',
+        handler: () => {
+          this.$spotify.player.addItemToQueue({
+            uri: this.track.uri,
+          }).then(() => {
+            this.$toast.show(undefined, `"${this.track.name}" を次に再生に追加しました。`);
+          }).catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', `"${this.track.name}" を次に再生に追加できませんでした。`);
+          });
+        },
+      };
+
       const artist = this.track.artistList[0] as App.SimpleArtistInfo | undefined;
       const artistPageItem = {
         name: 'アーティストページに移動',
@@ -130,22 +155,9 @@ export default Vue.extend({
         };
 
       const menuItemList = [
-        {
-          name: '次に再生に追加',
-          handler: () => {
-            this.$spotify.player.addItemToQueue({
-              uri: this.track.uri,
-            }).then(() => {
-              this.$toast.show(undefined, `"${this.track.name}" を次に再生に追加しました。`);
-            }).catch((err: Error) => {
-              console.error({ err });
-              this.$toast.show('error', `"${this.track.name}" を次に再生に追加できませんでした。`);
-            });
-          },
-        },
-        artistPageItem,
-        releasePageItem,
-        saveTrackItem,
+        [addItemToQueue],
+        [artistPageItem, releasePageItem],
+        [saveTrackItem],
       ];
 
       return menuItemList;
