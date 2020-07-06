@@ -142,13 +142,13 @@ export default Vue.extend({
 
       const saveTrackItem = this.track.isSaved
         ? {
-          name: 'お気に入りしない',
+          name: 'お気に入りから削除',
           handler: () => {
             this.$dispatch('library/tracks/removeTracks', [this.track.id]);
           },
         }
         : {
-          name: 'お気に入り',
+          name: 'お気に入りに追加',
           handler: () => {
             this.$dispatch('library/tracks/saveTracks', [this.track.id]);
           },
