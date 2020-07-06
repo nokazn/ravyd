@@ -2,16 +2,16 @@
   <v-hover #default="{ hover }">
     <v-list-item
       dense
-      :disabled="!isPlayable"
+      :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
       class="track-list-item"
     >
       <v-list-item-avatar tile>
         <ReleaseArtwork
-          :src="artworkSrc"
+          :src="item.artworkSrc"
           :size="40"
-          :alt="name"
-          :title="name"
+          :alt="item.name"
+          :title="item.name"
         />
       </v-list-item-avatar>
 
@@ -21,12 +21,12 @@
             <TrackListMediaButton
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
-              :track-number="trackIndex"
+              :track-number="item.index + 1"
               @on-clicked="onMediaButtonClicked"
             />
 
             <FavoriteButton
-              :is-favorited="isSaved"
+              :is-favorited="item.isSaved"
               @on-clicked="onFavoriteButtonClicked"
             />
 
@@ -36,16 +36,16 @@
             >
               <nuxt-link
                 :to="path"
-                :title="name"
+                :title="item.name"
                 :class="textColor"
               >
-                {{ name }}
+                {{ item.name }}
               </nuxt-link>
 
-              <template v-if="featuredArtistList.length > 0">
+              <template v-if="item.featuredArtistList.length > 0">
                 <span :class="subtextColor">-</span>
                 <ArtistNames
-                  :artist-list="featuredArtistList"
+                  :artist-list="item.featuredArtistList"
                   inline
                   :class="subtextColor"
                 />
@@ -57,9 +57,9 @@
 
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
-          <ExplicitChip v-if="explicit" />
+          <ExplicitChip v-if="item.explicit" />
 
-          <TrackTime :time-ms="durationMs" />
+          <TrackTime :time-ms="item.durationMs" />
 
           <v-btn icon>
             <v-icon>
@@ -81,12 +81,10 @@ import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import { hasProp } from '~~/utils/hasProp';
-import { App, SpotifyAPI } from '~~/types';
+import { App } from '~~/types';
 
 export type Data = {
   path: string
-  trackIndex: number
 }
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -116,82 +114,8 @@ export default Vue.extend({
   },
 
   props: {
-    index: {
-      type: Number,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    releaseId: {
-      type: String,
-      required: true,
-    },
-    releaseName: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    artworkSrc: {
-      type: String,
-      required: true,
-    },
-    trackNumber: {
-      type: Number,
-      required: true,
-    },
-    discNumber: {
-      type: Number,
-      required: true,
-    },
-    hash: {
-      type: String,
-      required: true,
-    },
-    artistList: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
-      required: true,
-      validator(value) {
-        return value.every((ele) => hasProp(ele, ['name', 'id']));
-      },
-    },
-    featuredArtistList: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
-      required: true,
-      validator(value) {
-        return value.every((ele) => hasProp(ele, ['name', 'id']));
-      },
-    },
-    explicit: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayable: {
-      type: Boolean,
-      required: true,
-    },
-    durationMs: {
-      type: Number,
-      required: true,
-    },
-    externalUrls: {
-      type: Object as PropType<SpotifyAPI.ExternalUrls>,
-      required: true,
-    },
-    previewUrl: {
-      type: String,
-      required: true,
-    },
-    isSaved: {
-      type: Boolean,
+    item: {
+      type: Object as PropType<App.TrackDetail>,
       required: true,
     },
     isPlayingTrack: {
@@ -205,11 +129,10 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const path = `/releases/${this.releaseId}#${this.hash}`;
-    const trackIndex = this.index + 1;
+    const path = `/releases/${this.item.releaseId}#${this.item.hash}`;
+
     return {
       path,
-      trackIndex,
     };
   },
 
@@ -229,13 +152,13 @@ export default Vue.extend({
   methods: {
     onMediaButtonClicked() {
       this.$emit(ON_MEDIA_BUTTON_CLICKED, {
-        index: this.index,
-        id: this.id,
-        uri: this.uri,
+        index: this.item.index,
+        id: this.item.id,
+        uri: this.item.uri,
       });
     },
     onFavoriteButtonClicked(nextSavedState: boolean) {
-      const { id, index } = this;
+      const { id, index } = this.item;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, {
         index,
         id,

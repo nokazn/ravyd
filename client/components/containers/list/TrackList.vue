@@ -11,9 +11,9 @@
       <TrackListItem
         v-show="track.index < length"
         :key="track.id"
+        :item="track"
         :is-playing-track="isPlayingTrack(track.id)"
         :is-track-set="isTrackSet(track.id)"
-        v-bind="track"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />
