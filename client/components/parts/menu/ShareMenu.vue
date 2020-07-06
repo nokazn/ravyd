@@ -3,6 +3,7 @@
     offset-x
     left
     :z-index="1001"
+    :nudge-left="1"
     open-on-hover
   >
     <template #activator="{ on }">
@@ -49,8 +50,8 @@
                   v-else
                   :src="item.iconSrc"
                   :alt="item.name"
-                  :width="24"
-                  :height="24"
+                  :width="20"
+                  :height="20"
                   :aspect-ratio="1"
                 />
               </v-list-item-icon>
