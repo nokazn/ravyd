@@ -25,7 +25,6 @@ export const convertPlaylistTrackDetail = (
       name: artist.name,
       id: artist.id,
     })),
-    featuredArtistList: [],
     explicit: track.explicit,
     isPlayable: track.is_playable,
     durationMs: track.duration_ms,

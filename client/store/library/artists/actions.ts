@@ -104,7 +104,7 @@ const actions: Actions<
       artistIdList,
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.show('error', 'フォローに失敗しました。');
+      throw new Error('フォローに失敗しました。');
     });
 
     artistIdList.forEach((artistId) => {
@@ -121,7 +121,7 @@ const actions: Actions<
       artistIdList,
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.show('error', 'フォローの解除に失敗しました。');
+      throw new Error('フォローの解除に失敗しました。');
     });
 
     artistIdList.forEach((artistId) => {

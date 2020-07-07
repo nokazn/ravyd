@@ -15,7 +15,7 @@ export const removePlaylistItems = (context: Context) => {
       positions?: number[]
     }[]
     snapshotId?: string,
-  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
+  }): Promise<SpotifyAPI.PlaylistSnapshot | null> => {
     const request = app.$spotifyApi.$delete(`/playlists/${playlistId}/tracks`, {
       params: {
         tracks,
@@ -23,7 +23,7 @@ export const removePlaylistItems = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return {};
+      return null;
     });
 
     return request;

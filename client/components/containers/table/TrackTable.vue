@@ -46,9 +46,8 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
+import TrackTableRow, { On as OnRow, Item } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
-import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
@@ -69,7 +68,7 @@ export default Vue.extend({
 
   props: {
     trackList: {
-      type: Array as PropType<App.TrackDetail[]>,
+      type: Array as PropType<Item[]>,
       required: true,
     },
     uri: {
@@ -159,9 +158,17 @@ export default Vue.extend({
       const { id, isSaved } = row;
       const nextSavedState = !isSaved;
       if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [id]);
+        this.$dispatch('library/tracks/saveTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       } else {
-        this.$dispatch('library/tracks/removeTracks', [id]);
+        this.$dispatch('library/tracks/removeTracks', [id])
+          .catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
       }
     },
     onRowClicked({ id }: OnRow['on-row-clicked']) {
