@@ -57,6 +57,7 @@ const nuxtConfig: Configuration = {
     '@nuxtjs/dotenv',
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/style-resources',
     '@nuxtjs/stylelint-module',
   ],
   modules: [
@@ -80,7 +81,7 @@ const nuxtConfig: Configuration = {
     filename: process.env.NODE_ENV === 'production' ? './.env.prod' : './.env.dev',
   },
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
+    customVariables: ['~/assets/vuetify.scss'],
     treeShake: true,
     icons: {
       iconfont: 'mdi',
@@ -106,6 +107,9 @@ const nuxtConfig: Configuration = {
         },
       },
     },
+  },
+  styleResources: {
+    scss: ['~/assets/variables.scss'],
   },
   stylelint: {
     configFile: './.stylelintrc.js',

@@ -4,7 +4,7 @@
     left
     :z-index="1001"
     :nudge-left="1"
-    open-on-hovera
+    open-on-hover
     open-on-click
   >
     <template #activator="{ on }">
@@ -75,18 +75,24 @@ import { RootGetters } from 'vuex';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
+export type Props = {
+  name: string
+  uriList: string[]
+  artistList: App.SimpleArtistInfo[]
+}
+
 type Data = {
   MENU_BACKGROUND_COLOR: string
 }
 
 export default Vue.extend({
   props: {
-    uriList: {
-      type: Array as PropType<string[]>,
-      required: true,
-    },
     name: {
       type: String,
+      required: true,
+    },
+    uriList: {
+      type: Array as PropType<string[]>,
       required: true,
     },
     artistList: {

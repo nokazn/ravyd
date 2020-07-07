@@ -31,8 +31,15 @@
 
         <v-list-item-group :key="index">
           <template v-for="item in group">
+            <component
+              :is="item.component"
+              v-if="item.component != null"
+              :key="item.name"
+              v-bind="item.props"
+            />
+
             <v-list-item
-              v-if="item.to != null"
+              v-else-if="item.to != null"
               :key="item.name"
               nuxt
               :to="item.to"
@@ -62,32 +69,15 @@
           </template>
         </v-list-item-group>
       </template>
-
-      <v-divider />
-
-      <v-list-item-group>
-        <PlaylistMenu
-          :uri-list="[track.uri]"
-          :name="track.name"
-          :artist-list="track.artistList"
-        />
-      </v-list-item-group>
-
-      <v-list-item-group>
-        <ShareMenu
-          :artist-list="track.artistList"
-          :name="track.name"
-        />
-      </v-list-item-group>
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 
-import PlaylistMenu from '~/components/containers/menu/PlaylistMenu.vue';
-import ShareMenu from '~/components/parts/menu/ShareMenu.vue';
+import PlaylistMenu, { Props as PlaylistMenuProps } from '~/components/containers/menu/PlaylistMenu.vue';
+import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
 
@@ -99,6 +89,9 @@ type MenuItem = {
   name: string
   disabled?: boolean
   handler: () => void
+} | {
+  component: VueConstructor
+  props: { [k in string]: unknown }
 }
 
 type Data = {
@@ -167,10 +160,32 @@ export default Vue.extend({
           },
         };
 
+      const playlistMenuProps: PlaylistMenuProps = {
+        name: this.track.name,
+        uriList: [this.track.uri],
+        artistList: this.track.artistList,
+      };
+      const addItemToPlaylist = {
+        component: PlaylistMenu,
+        props: playlistMenuProps,
+      };
+
+      const shareMenuProps: ShareMenuProps = {
+        name: this.track.name,
+        uri: this.track.uri,
+        artistList: this.track.artistList,
+        externalUrls: this.track.externalUrls,
+      };
+      const share = {
+        component: ShareMenu,
+        props: shareMenuProps,
+      };
+
       const menuItemList = [
         [addItemToQueue],
         [artistPageItem, releasePageItem],
-        [saveTrackItem],
+        [saveTrackItem, addItemToPlaylist],
+        [share],
       ];
 
       return menuItemList;

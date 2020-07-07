@@ -32,6 +32,7 @@
       <v-list-item-group>
         <template v-for="item in menuItemList">
           <a
+            v-if="item.to != null"
             :key="item.name"
             :href="item.to"
             target="_blank"
@@ -39,15 +40,7 @@
           >
             <v-list-item>
               <v-list-item-icon>
-                <v-icon
-                  v-if="item.icon != null"
-                  small
-                >
-                  {{ item.icon }}
-                </v-icon>
-
                 <v-img
-                  v-else
                   :src="item.iconSrc"
                   :alt="item.name"
                   :width="24"
@@ -61,6 +54,24 @@
               </v-list-item-title>
             </v-list-item>
           </a>
+
+          <v-list-item
+            v-else
+            :key="item.name"
+            :disabled="item.disabled"
+            :inactive="item.disabled"
+            @click="item.handler"
+          >
+            <v-list-item-icon v-if="item.icon != null">
+              <v-icon small>
+                {{ item.icon }}
+              </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-title :class="item.disabled ? 'inactive--text' : undefined">
+              {{ item.name }}
+            </v-list-item-title>
+          </v-list-item>
         </template>
       </v-list-item-group>
     </v-list>
@@ -71,17 +82,26 @@
 import Vue, { PropType } from 'vue';
 
 import { MENU_BACKGROUND_COLOR } from '~/variables';
-import { App } from '~~/types';
 import { createUrl } from '~~/utils/createUrl';
+import { App, SpotifyAPI } from '~~/types';
+import { Toast } from '~/plugins/toast';
 
 type MenuItem = {
   name: string
   to: string
-  icon: string
+  iconSrc: string
 } | {
   name: string
-  to: string
-  iconSrc: string
+  handler: () => void
+  icon?: string
+  disabled?: boolean
+}
+
+export type Props = {
+  name: string
+  uri: string
+  artistList?: App.SimpleArtistInfo[]
+  externalUrls: SpotifyAPI.ExternalUrls
 }
 
 type Data = {
@@ -89,14 +109,40 @@ type Data = {
   MENU_BACKGROUND_COLOR: string
 }
 
+const copyText = (text: string, name: string, $toast: Toast): void => {
+  const copyEventListener = (e: ClipboardEvent) => {
+    if (e.clipboardData == null) {
+      $toast.show('error', `${name}をコピーできませんでした。`);
+      return;
+    }
+
+    e.preventDefault();
+    e.clipboardData.setData('text/plain', text);
+    document.removeEventListener('copy', copyEventListener);
+
+    $toast.show('primary', `${name}をコピーしました。`);
+  };
+
+  document.addEventListener('copy', copyEventListener);
+  document.execCommand('copy');
+};
+
 export default Vue.extend({
   props: {
+    name: {
+      type: String,
+      required: true,
+    },
+    uri: {
+      type: String,
+      required: true,
+    },
     artistList: {
       type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
       default: undefined,
     },
-    name: {
-      type: String,
+    externalUrls: {
+      type: Object as PropType<SpotifyAPI.ExternalUrls>,
       required: true,
     },
   },
@@ -143,10 +189,29 @@ export default Vue.extend({
         iconSrc: '/icon/line.png',
       };
 
+      const copyTrackUrl = {
+        name: '曲のリンクをコピー',
+        handler: () => {
+          if (this.externalUrls.spotify != null) {
+            copyText(this.externalUrls.spotify, '曲のリンク', this.$toast);
+          }
+        },
+        disabled: this.externalUrls.spotify == null,
+      };
+
+      const copyUri = {
+        name: 'Spotify URI をコピー',
+        handler: () => {
+          copyText(this.uri, 'Spotify URI ', this.$toast);
+        },
+      };
+
       return [
         twitter,
         facebook,
         line,
+        copyTrackUrl,
+        copyUri,
       ];
     },
   },
