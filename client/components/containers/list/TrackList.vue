@@ -11,9 +11,9 @@
       <TrackListItem
         v-show="track.index < length"
         :key="track.id"
+        :item="track"
         :is-playing-track="isPlayingTrack(track.id)"
         :is-track-set="isTrackSet(track.id)"
-        v-bind="track"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />
@@ -102,17 +102,9 @@ export default Vue.extend({
 
       const { id, nextSavedState } = row;
       if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [id])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/saveTracks', [id]);
       } else {
-        this.$dispatch('library/tracks/removeTracks', [id])
-          .catch((err: Error) => {
-            console.error({ err });
-            this.$toast.show('error', err.message);
-          });
+        this.$dispatch('library/tracks/removeTracks', [id]);
       }
     },
   },

@@ -81,6 +81,7 @@ const nuxtConfig: Configuration = {
   },
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
     icons: {
       iconfont: 'mdi',
     },
