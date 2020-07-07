@@ -3,7 +3,6 @@
     dense
     two-line
     :disabled="id == null"
-    :class="$style.DeviceSelectMenuItem"
     @click="onItemClicked"
   >
     <v-list-item-avatar>
@@ -18,7 +17,6 @@
     <v-list-item-content>
       <v-list-item-title
         :class="[
-          $style.DeviceSelectMenuItem__title,
           isActive ? 'active--text' : undefined,
         ]"
       >
@@ -27,7 +25,6 @@
 
       <v-list-item-subtitle
         :class="[
-          $style.DeviceSelectMenuItem__subtitle,
           isActive ? 'active--text' : undefined,
         ]"
       >
@@ -135,16 +132,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.DeviceSelectMenuItem {
-  &__title {
-    font-size: 0.9em !important;
-    margin-bottom: 4px !important;
-  }
-
-  &__subtitle {
-    font-size: 0.8em !important;
-  }
-}
-</style>
