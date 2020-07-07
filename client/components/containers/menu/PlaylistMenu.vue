@@ -4,7 +4,7 @@
     left
     :z-index="1001"
     :nudge-left="1"
-    open-on-hovera
+    open-on-hover
     open-on-click
   >
     <template #activator="{ on }">
