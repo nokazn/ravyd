@@ -20,7 +20,7 @@
       <v-list-item-title
         :class="[
           $style.TrackQueueMenuItem__title,
-          isSet ? 'active--text' : undefined,
+          isSet ? 'active--text' : undefined
         ]"
         class="g-ellipsis-text"
       >
@@ -28,7 +28,9 @@
       </v-list-item-title>
 
       <v-list-item-subtitle
-        :class="[isSet ? 'active--text' : 'subtext--text']"
+        :class="[
+          isSet ? 'active--text' : 'subtext--text'
+        ]"
       >
         <div class="g-ellipsis-text">
           <nuxt-link
@@ -42,7 +44,10 @@
       </v-list-item-subtitle>
 
       <v-list-item-subtitle
-        :class="[isSet ? 'active--text' : 'subtext--text']"
+        :class="[
+          $style.TrackQueueMenuItem__artistNames,
+          isSet ? 'active--text' : 'subtext--text'
+        ]"
       >
         <ArtistNames
           :artist-list="artistList"
@@ -150,7 +155,11 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackQueueMenuItem {
   &__title {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  &__artistNames {
+    margin-top: -2px;
   }
 
   &__action {
