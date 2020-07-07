@@ -50,7 +50,10 @@
 
         <v-divider />
 
-        <v-list-item-group>
+        <v-list-item-group
+          :class="$style.DeviceSelectMenu__wrapper"
+          class="g-custom-scroll-bar"
+        >
           <DeviceSelectMenuItem
             v-for="(device, index) in deviceItemList"
             :key="`${device.id}-${index}`"
@@ -129,11 +132,20 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .DeviceSelectMenu {
+  max-width: min(400px, 80vw);
+
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0 12px;
+  }
+
+  &__wrapper {
+    min-height: 64px;
+    // header の分を差し引く
+    max-height: calc(70vh - 40px);
+    overflow-y: auto;
   }
 }
 </style>

@@ -4,6 +4,7 @@
     three-line
     :input-valuea="id"
     :title="`${name} を再生`"
+    :class="$style.TrackQueueMenuItem"
     @click="onItemClicked"
   >
     <v-list-item-avatar tile>
@@ -17,7 +18,10 @@
 
     <v-list-item-content>
       <v-list-item-title
-        :class="[isSet ? 'active--text' : undefined]"
+        :class="[
+          $style.TrackQueueMenuItem__title,
+          isSet ? 'active--text' : undefined,
+        ]"
         class="g-ellipsis-text"
       >
         {{ name }}
@@ -48,7 +52,7 @@
       </v-list-item-subtitle>
     </v-list-item-content>
 
-    <v-list-item-action>
+    <v-list-item-action :class="$style.TrackQueueMenuItem__action">
       <TrackTime
         v-if="durationMs != null"
         :time-ms="durationMs"
@@ -142,3 +146,17 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.TrackQueueMenuItem {
+  &__title {
+    font-size: 0.9rem !important;
+  }
+
+  &__action {
+    & > *:not(:last-child) {
+      margin-bottom: 4px;
+    }
+  }
+}
+</style>
