@@ -129,7 +129,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackQueueMenu {
   min-width: 400px;
-  max-width: min(500px, 60vw);
+  max-width: min(500px, 80vw);
 
   &__header {
     margin-left: 12px;
