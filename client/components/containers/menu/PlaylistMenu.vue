@@ -75,6 +75,12 @@ import { RootGetters } from 'vuex';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
+export type Props = {
+  uriList: string[]
+  name: string
+  artistList: App.SimpleArtistInfo[]
+}
+
 type Data = {
   MENU_BACKGROUND_COLOR: string
 }

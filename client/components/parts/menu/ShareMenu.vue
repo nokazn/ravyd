@@ -84,6 +84,11 @@ type MenuItem = {
   iconSrc: string
 }
 
+export type Props = {
+  name: string
+  artistList?: App.SimpleArtistInfo[]
+}
+
 type Data = {
   text: string
   MENU_BACKGROUND_COLOR: string
@@ -91,13 +96,13 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    artistList: {
-      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
-      default: undefined,
-    },
     name: {
       type: String,
       required: true,
+    },
+    artistList: {
+      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
+      default: undefined,
     },
   },
 
