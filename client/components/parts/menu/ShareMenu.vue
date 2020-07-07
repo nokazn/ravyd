@@ -17,7 +17,7 @@
         </v-list-item-title>
 
         <v-list-item-action>
-          <v-icon>
+          <v-icon small>
             mdi-chevron-right
           </v-icon>
         </v-list-item-action>
