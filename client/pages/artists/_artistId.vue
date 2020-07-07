@@ -336,7 +336,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  async onFollowButtonClicked(nextFollowingState: OnFollow['on-clicked']) {
+  onFollowButtonClicked(nextFollowingState: OnFollow['on-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
@@ -344,17 +344,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     const artistIdList = [this.artistInfo.id];
     if (nextFollowingState) {
-      await this.$dispatch('library/artists/followArtists', artistIdList)
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('library/artists/followArtists', artistIdList);
     } else {
-      await this.$dispatch('library/artists/unfollowArtists', artistIdList)
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('library/artists/unfollowArtists', artistIdList);
     }
   }
 
