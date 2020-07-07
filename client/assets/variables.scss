@@ -1,5 +1,9 @@
 @import 'vuetify/src/styles/settings/_colors.scss';
 
+$list-dense-min-height: 36px;
+$list-item-action-icon-margin: 20px;
+$list-item-action-margin: 0 0;
+
 /**
  * color
  */
@@ -30,7 +34,7 @@ $__layer-map: (
   footer: 1000,
   overlay: 200,
   floating-button: 101,
-  text-gradation: 100,
+  text-gradation: 10,
 );
 
 @function z-index-of($key) {
