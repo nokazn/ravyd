@@ -24,44 +24,46 @@
       </v-btn>
     </template>
 
-    <v-card :elevation="12">
-      <v-list
-        dense
-        subheader
-        :color="MENU_BACKGROUND_COLOR"
-        :class="$style.TrackQueueMenu"
+    <v-list
+      dense
+      :elevation="12"
+      subheader
+      :color="MENU_BACKGROUND_COLOR"
+      :class="$style.TrackQueueMenu"
+    >
+      <v-subheader :class="$style.TrackQueueMenu__header">
+        再生リスト
+      </v-subheader>
+
+      <v-divider />
+
+      <v-list-item-group
+        :class="$style.TrackQueueMenu__wrapper"
+        class="g-custom-scroll-bar"
       >
-        <v-subheader :class="$style.TrackQueueMenu__header">
-          再生リスト
-        </v-subheader>
+        <TrackQueueMenuItem
+          v-for="(track, index) in trackQueue"
+          :key="`${track.id}-${index}`"
+          v-bind="track"
+          @on-item-clicked="onItemClicked"
+          @on-link-clicked="toggleMenu"
+        />
+      </v-list-item-group>
 
-        <v-divider />
+      <v-divider />
 
-        <v-list-item-group>
-          <TrackQueueMenuItem
-            v-for="(track, index) in trackQueue"
-            :key="`${track.id}-${index}`"
-            v-bind="track"
-            @on-item-clicked="onItemClicked"
-            @on-link-clicked="toggleMenu"
-          />
-
-          <v-divider />
-
-          <div :class="$style.TrackQueueMenu__moreButton">
-            <v-btn
-              rounded
-              text
-              small
-              nuxt
-              to="/queue"
-            >
-              すべて表示
-            </v-btn>
-          </div>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+      <div :class="$style.TrackQueueMenu__footer">
+        <v-btn
+          rounded
+          text
+          small
+          nuxt
+          to="/queue"
+        >
+          すべて表示
+        </v-btn>
+      </div>
+    </v-list>
   </v-menu>
 </template>
 
@@ -132,7 +134,14 @@ export default Vue.extend({
     margin-left: 12px;
   }
 
-  &__moreButton {
+  &__wrapper {
+    min-height: 100px;
+    // header と footer の分を差し引く
+    max-height: calc(70vh - 80px);
+    overflow-y: auto;
+  }
+
+  &__footer {
     display: flex;
     justify-content: center;
     margin-top: 8px;
