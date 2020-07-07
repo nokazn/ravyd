@@ -36,12 +36,10 @@
           />
         </div>
 
-        <v-card-title
-          :class="$style.ArtistCard__title"
-        >
+        <v-card-title :class="$style.ArtistCard__title">
           <span
-            class="g-ellipsis-text"
             :title="name"
+            class="g-ellipsis-text"
           >
             {{ name }}
           </span>
