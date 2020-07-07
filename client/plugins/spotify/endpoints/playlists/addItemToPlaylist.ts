@@ -9,19 +9,19 @@ export const addItemToPlaylist = (context: Context) => {
    */
   return ({
     playlistId,
-    uris,
+    uriList,
     position,
   }: {
     playlistId: string
-    uris?: string[]
+    uriList?: string[]
     position?: number
-  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
+  }): Promise<SpotifyAPI.PlaylistSnapshot> => {
     const request = app.$spotifyApi.$post(`/playlists/${playlistId}/tracks`, {
-      uris,
+      uris: uriList,
       position,
     }).catch((err: Error) => {
       console.error({ err });
-      return {};
+      throw new Error(err.message);
     });
 
     return request;

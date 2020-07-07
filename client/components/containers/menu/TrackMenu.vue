@@ -66,6 +66,14 @@
       <v-divider />
 
       <v-list-item-group>
+        <PlaylistMenu
+          :uri-list="[track.uri]"
+          :name="track.name"
+          :artist-list="track.artistList"
+        />
+      </v-list-item-group>
+
+      <v-list-item-group>
         <ShareMenu
           :artist-list="track.artistList"
           :name="track.name"
@@ -78,6 +86,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import PlaylistMenu from '~/components/containers/menu/PlaylistMenu.vue';
 import ShareMenu from '~/components/parts/menu/ShareMenu.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { App } from '~~/types';
@@ -98,6 +107,7 @@ type Data = {
 
 export default Vue.extend({
   components: {
+    PlaylistMenu,
     ShareMenu,
   },
 
