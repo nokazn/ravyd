@@ -277,15 +277,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     this.releaseInfo.isSaved = nextSavedState;
     const releaseIdList = [this.releaseInfo.id];
     if (nextSavedState) {
-      this.$dispatch('library/releases/saveReleases', releaseIdList)
-        .catch((err: Error) => {
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('library/releases/saveReleases', releaseIdList);
     } else {
-      this.$dispatch('library/releases/removeReleases', releaseIdList)
-        .catch((err: Error) => {
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('library/releases/removeReleases', releaseIdList);
     }
   }
 

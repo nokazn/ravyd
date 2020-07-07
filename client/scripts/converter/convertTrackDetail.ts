@@ -18,7 +18,7 @@ export const convertTrackDetail = <
     offset?: number
     releaseId?: undefined
     releaseName?: undefined
-    artistIdList?: undefined
+    artistIdList?: string[]
     artworkSrc?: undefined
   }
   : {
@@ -37,12 +37,21 @@ export const convertTrackDetail = <
     // artistIdList が undefined のとき track は SpotifyAPI.Track
     const releaseArtistIdList = artistIdList
       ?? (track as SpotifyAPI.Track).album.artists.map((artist) => artist.id);
-    const artistList = track.artists
-      .filter((artist) => !releaseArtistIdList.includes(artist.id))
-      .map((artist) => ({
+
+    // artistIdList に含まれるかどうかで分ける
+    const artistList: App.SimpleArtistInfo[] = [];
+    const featuredArtistList: App.SimpleArtistInfo[] = [];
+    track.artists.forEach((artist) => {
+      const info = {
         id: artist.id,
         name: artist.name,
-      }));
+      };
+      if (releaseArtistIdList.includes(artist.id)) {
+        artistList.push(info);
+      } else {
+        featuredArtistList.push(info);
+      }
+    });
 
     const detail = {
       index: index + offset,
@@ -53,6 +62,7 @@ export const convertTrackDetail = <
       discNumber: track.disc_number,
       hash: `${track.disc_number}-${track.track_number}`,
       artistList,
+      featuredArtistList,
       explicit: track.explicit,
       isPlayable: track.is_playable,
       durationMs: track.duration_ms,

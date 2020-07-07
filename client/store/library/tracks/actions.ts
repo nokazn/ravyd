@@ -122,7 +122,7 @@ const actions: Actions<
     await this.$spotify.library.saveTracks({ trackIdList })
       .catch((err) => {
         console.error({ err });
-        throw new Error('ライブラリにトラックを保存できませんでした。');
+        this.$toast.show('error', 'ライブラリにトラックを保存できませんでした。');
       });
 
     trackIdList.forEach((trackId) => {
@@ -137,7 +137,7 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedTracks({ trackIdList })
       .catch((err) => {
         console.error({ err });
-        throw new Error('ライブラリからトラックを削除できませんでした。');
+        this.$toast.show('error', 'ライブラリからトラックを削除できませんでした。');
       });
 
     trackIdList.forEach((trackId) => {
