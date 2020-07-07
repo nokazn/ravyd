@@ -5,8 +5,6 @@
     top
     left
     offset-y
-    :min-width="400"
-    :max-width="500"
     :z-index="1001"
   >
     <template #activator="{ on }">
@@ -130,12 +128,15 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackQueueMenu {
+  min-width: 400px;
+  max-width: min(500px, 60vw);
+
   &__header {
     margin-left: 12px;
   }
 
   &__wrapper {
-    min-height: 100px;
+    min-height: 72px;
     // header と footer の分を差し引く
     max-height: calc(70vh - 80px);
     overflow-y: auto;
