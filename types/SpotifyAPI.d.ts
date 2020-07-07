@@ -179,11 +179,11 @@ export namespace SpotifyAPI {
   }>
 
   // @todo
-  export type ExternalUrls = Merge<{
+  export type ExternalUrls = {
     spotify?: string
-  }, {
+  } & {
     [k: string]: string
-  }>
+  }
 
   export type Followers = {
     href: string | null

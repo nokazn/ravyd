@@ -76,8 +76,8 @@ import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
 export type Props = {
-  uriList: string[]
   name: string
+  uriList: string[]
   artistList: App.SimpleArtistInfo[]
 }
 
@@ -87,12 +87,12 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    uriList: {
-      type: Array as PropType<string[]>,
-      required: true,
-    },
     name: {
       type: String,
+      required: true,
+    },
+    uriList: {
+      type: Array as PropType<string[]>,
       required: true,
     },
     artistList: {

@@ -161,8 +161,8 @@ export default Vue.extend({
         };
 
       const playlistMenuProps: PlaylistMenuProps = {
-        uriList: [this.track.uri],
         name: this.track.name,
+        uriList: [this.track.uri],
         artistList: this.track.artistList,
       };
       const addItemToPlaylist = {
@@ -172,7 +172,9 @@ export default Vue.extend({
 
       const shareMenuProps: ShareMenuProps = {
         name: this.track.name,
+        uri: this.track.uri,
         artistList: this.track.artistList,
+        externalUrls: this.track.externalUrls,
       };
       const share = {
         component: ShareMenu,
