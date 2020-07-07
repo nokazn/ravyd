@@ -26,7 +26,7 @@
             <v-icon left>
               mdi-help-circle-outline
             </v-icon>
-            {{ query }} に一致する項目が見つかりません
+            "{{ query }}" に一致する項目が見つかりません
           </div>
 
           <div
