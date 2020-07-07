@@ -19,7 +19,6 @@ export namespace App {
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
     hash: string
     artistList: SimpleArtistInfo[]
-    featuredArtistList: SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
     durationMs: number

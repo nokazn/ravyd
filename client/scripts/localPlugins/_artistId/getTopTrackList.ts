@@ -10,9 +10,8 @@ export const getTopTrackList = async (
   const country = app.$getters()['auth/userCountryCode'];
   if (country == null) return undefined;
 
-  const { artistId } = params;
   const { tracks } = await app.$spotify.artists.getArtistTopTracks({
-    artistId,
+    artistId: params.artistId,
     country,
   });
   if (tracks == null) return undefined;
@@ -21,7 +20,6 @@ export const getTopTrackList = async (
   const trackIdList = tracks.map((track) => track.id);
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });
   const trackList = tracks.map(convertTrackDetail({
-    artistIdList: [artistId],
     isTrackSavedList,
     artworkSize,
   }));

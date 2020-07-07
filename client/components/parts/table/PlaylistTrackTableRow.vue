@@ -85,7 +85,16 @@
       </td>
 
       <td>
-        <TrackMenu :track="item" />
+        <v-btn
+          icon
+          size="small"
+          :disabled="!item.isPlayable"
+          title="メニュー"
+        >
+          <v-icon>
+            mdi-dots-horizontal
+          </v-icon>
+        </v-btn>
       </td>
     </tr>
   </v-hover>
@@ -99,7 +108,6 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -119,7 +127,6 @@ export default Vue.extend({
     ArtistNames,
     ExplicitChip,
     TrackTime,
-    TrackMenu,
   },
 
   props: {

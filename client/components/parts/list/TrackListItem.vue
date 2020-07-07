@@ -2,16 +2,15 @@
   <v-hover #default="{ hover }">
     <v-list-item
       dense
-      :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
       class="track-list-item"
     >
       <v-list-item-avatar tile>
         <ReleaseArtwork
-          :src="item.artworkSrc"
+          :src="artworkSrc"
           :size="40"
-          :alt="item.name"
-          :title="item.name"
+          :alt="name"
+          :title="name"
         />
       </v-list-item-avatar>
 
@@ -21,12 +20,12 @@
             <TrackListMediaButton
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
-              :track-number="item.index + 1"
+              :track-number="trackIndex"
               @on-clicked="onMediaButtonClicked"
             />
 
             <FavoriteButton
-              :is-favorited="item.isSaved"
+              :is-favorited="isSaved"
               @on-clicked="onFavoriteButtonClicked"
             />
 
@@ -36,16 +35,16 @@
             >
               <nuxt-link
                 :to="path"
-                :title="item.name"
+                :title="name"
                 :class="textColor"
               >
-                {{ item.name }}
+                {{ name }}
               </nuxt-link>
 
-              <template v-if="item.featuredArtistList.length > 0">
+              <template v-if="artistList.length > 0">
                 <span :class="subtextColor">-</span>
                 <ArtistNames
-                  :artist-list="item.featuredArtistList"
+                  :artist-list="artistList"
                   inline
                   :class="subtextColor"
                 />
@@ -57,11 +56,15 @@
 
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
-          <ExplicitChip v-if="item.explicit" />
+          <ExplicitChip v-if="explicit" />
 
-          <TrackTime :time-ms="item.durationMs" />
+          <TrackTime :time-ms="durationMs" />
 
-          <TrackMenu :track="item" />
+          <v-btn icon>
+            <v-icon>
+              mdi-dots-horizontal
+            </v-icon>
+          </v-btn>
         </div>
       </v-list-item-action>
     </v-list-item>
@@ -77,11 +80,12 @@ import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
+import { hasProp } from '~~/utils/hasProp';
 import { App } from '~~/types';
 
 export type Data = {
   path: string
+  trackIndex: number
 }
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -108,12 +112,58 @@ export default Vue.extend({
     FavoriteButton,
     ExplicitChip,
     TrackTime,
-    TrackMenu,
   },
 
   props: {
-    item: {
-      type: Object as PropType<App.TrackDetail>,
+    index: {
+      type: Number,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    id: {
+      type: String,
+      required: true,
+    },
+    uri: {
+      type: String,
+      required: true,
+    },
+    artworkSrc: {
+      type: String,
+      required: true,
+    },
+    releaseId: {
+      type: String,
+      required: true,
+    },
+    trackNumber: {
+      type: Number,
+      required: true,
+    },
+    discNumber: {
+      type: Number,
+      required: true,
+    },
+    artistList: {
+      type: Array as PropType<App.SimpleArtistInfo[]>,
+      required: true,
+      validator(value) {
+        return value.every((ele) => hasProp(ele, ['name', 'id']));
+      },
+    },
+    explicit: {
+      type: Boolean,
+      required: true,
+    },
+    isSaved: {
+      type: Boolean,
+      required: true,
+    },
+    durationMs: {
+      type: Number,
       required: true,
     },
     isPlayingTrack: {
@@ -127,10 +177,12 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const path = `/releases/${this.item.releaseId}#${this.item.hash}`;
-
+    const hash = `#${this.discNumber}-${this.trackNumber}`;
+    const path = `/releases/${this.releaseId}${hash}`;
+    const trackIndex = this.index + 1;
     return {
       path,
+      trackIndex,
     };
   },
 
@@ -150,13 +202,13 @@ export default Vue.extend({
   methods: {
     onMediaButtonClicked() {
       this.$emit(ON_MEDIA_BUTTON_CLICKED, {
-        index: this.item.index,
-        id: this.item.id,
-        uri: this.item.uri,
+        index: this.index,
+        id: this.id,
+        uri: this.uri,
       });
     },
     onFavoriteButtonClicked(nextSavedState: boolean) {
-      const { id, index } = this.item;
+      const { id, index } = this;
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, {
         index,
         id,

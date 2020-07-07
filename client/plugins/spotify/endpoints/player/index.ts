@@ -1,6 +1,5 @@
 import { Context } from '@nuxt/types';
 
-import { addItemToQueue } from './addItemToQueue';
 import { getActiveDeviceList } from './getActiveDeviceList';
 import { getCurrentlyPlaying } from './getCurrentlyPlaying';
 import { getRecentlyPlayed } from './getRecentlyPlayed';
@@ -15,7 +14,6 @@ import { volume } from './volume';
 import { transferPlayback } from './transferPlayback';
 
 export const player = (context: Context) => ({
-  addItemToQueue: addItemToQueue(context),
   getActiveDeviceList: getActiveDeviceList(context),
   getCurrentlyPlaying: getCurrentlyPlaying(context),
   getRecentlyPlayed: getRecentlyPlayed(context),

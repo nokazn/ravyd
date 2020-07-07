@@ -36,10 +36,10 @@
               {{ item.name }}
             </span>
 
-            <template v-if="item.featuredArtistList.length > 0">
+            <template v-if="item.artistList.length > 0">
               <span :class="subtextColor">-</span>
               <ArtistNames
-                :artist-list="item.featuredArtistList"
+                :artist-list="item.artistList"
                 inline
                 :class="subtextColor"
               />
@@ -59,7 +59,16 @@
       </td>
 
       <td>
-        <TrackMenu :track="item" />
+        <v-btn
+          icon
+          size="small"
+          :disabled="!item.isPlayable"
+          title="メニュー"
+        >
+          <v-icon>
+            mdi-dots-horizontal
+          </v-icon>
+        </v-btn>
       </td>
     </tr>
   </v-hover>
@@ -73,7 +82,6 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -86,6 +94,8 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
+export type Item = App.TrackDetail
+
 export default Vue.extend({
   components: {
     TrackListMediaButton,
@@ -93,12 +103,11 @@ export default Vue.extend({
     ArtistNames,
     ExplicitChip,
     TrackTime,
-    TrackMenu,
   },
 
   props: {
     item: {
-      type: Object as PropType<App.TrackDetail>,
+      type: Object as PropType<Item>,
       required: true,
     },
     isTrackSet: {
