@@ -10,8 +10,8 @@
 import Vue, { PropType } from 'vue';
 
 import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
-import ArtistMenu, { Props as ArtistMenuProps } from '~/components/parts/menu/ArtistMenu.vue';
-import PlaylistMenu, { Props as PlaylistMenuProps } from '~/components/containers/menu/PlaylistMenu.vue';
+import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
+import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { App } from '~~/types';
@@ -62,9 +62,9 @@ export default Vue.extend({
       const artistPageItem = () => {
         const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
         if (artistList.length > 1) {
-          const props: ArtistMenuProps = { artistList };
+          const props: ArtistLinkMenuProps = { artistList };
           return {
-            component: ArtistMenu,
+            component: ArtistLinkMenu,
             props,
           };
         }
@@ -106,14 +106,14 @@ export default Vue.extend({
       };
 
       const addItemToPlaylist = () => {
-        const props: PlaylistMenuProps = {
+        const props: AddItemToPlaylistMenuProps = {
           name: this.track.name,
           uriList: [this.track.uri],
           artistList: this.track.artistList,
         };
 
         return {
-          component: PlaylistMenu,
+          component: AddItemToPlaylistMenu,
           props,
         };
       };
