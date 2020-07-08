@@ -10,6 +10,7 @@ export type PlaylistsActions = {
     name: string
     description: string
     isPublic: boolean
+    uriList?: string[]
   }) => Promise<void>
   editPlaylist: (payload: {
     playlistId: string
@@ -79,7 +80,9 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     ]);
   },
 
-  async createPlaylist({ commit, rootGetters }, { name, description, isPublic }) {
+  async createPlaylist({ commit, rootGetters }, {
+    name, description, isPublic, uriList,
+  }) {
     const userId = rootGetters['auth/userId'];
     if (userId == null) return;
 
@@ -95,6 +98,17 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
 
     commit('ADD_PLAYLIST', playlist);
+
+    // 新規作成したプレイリストに追加
+    if (uriList != null) {
+      await this.$spotify.playlists.addItemToPlaylist({
+        playlistId: playlist.id,
+        uriList,
+      }).catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
+    }
   },
 
   async editPlaylist({ state, commit }, {
@@ -107,7 +121,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       description: description || undefined,
       isPublic,
     }).catch((err: Error) => {
-      console.error(err.message);
+      console.error({ err });
       throw new Error('プレイリストの更新に失敗しました。');
     });
 
