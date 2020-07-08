@@ -2,7 +2,7 @@
   <v-menu
     offset-x
     left
-    :z-index="1001"
+    :z-index="Z_INDEX"
   >
     <template #activator="{ on }">
       <v-btn
@@ -78,7 +78,7 @@ import Vue, { PropType, VueConstructor } from 'vue';
 
 import PlaylistMenu, { Props as PlaylistMenuProps } from '~/components/containers/menu/PlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { MENU_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { App } from '~~/types';
 
 type MenuItem = {
@@ -96,6 +96,7 @@ type MenuItem = {
 
 type Data = {
   MENU_BACKGROUND_COLOR: string
+  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -114,6 +115,7 @@ export default Vue.extend({
   data(): Data {
     return {
       MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

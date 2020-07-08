@@ -158,7 +158,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Footer {
-  z-index: z-index-of(footer);
+  z-index: z-index-of(footer) !important;
 
   &__container {
     display: grid;

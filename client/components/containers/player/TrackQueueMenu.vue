@@ -5,7 +5,7 @@
     top
     left
     offset-y
-    :z-index="1001"
+    :z-index="Z_INDEX"
   >
     <template #activator="{ on }">
       <v-btn
@@ -69,12 +69,13 @@
 import Vue from 'vue';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
-import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
+import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE, Z_INDEX_OF } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
   isShown: boolean
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
+  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -86,6 +87,7 @@ export default Vue.extend({
     return {
       isShown: false,
       MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

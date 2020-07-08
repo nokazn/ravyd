@@ -13,6 +13,7 @@
 
         <Overlay
           v-bind="$overlay"
+          :class="$style.Overlay"
           @on-changed="onOverlayChanged"
         />
       </main>
@@ -105,6 +106,12 @@ export default Vue.extend({
 
 .Spacer {
   height: $g-header-height;
+}
+
+.Overlay {
+  top: $g-header-height;
+  bottom: $g-footer-height;
+  left: $g-navigation-drawer-width;
 }
 
 .ProgressCircular {

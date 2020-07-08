@@ -210,7 +210,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .NavigationDrawer {
-  z-index: z-index-of(navigation-drawer);
+  z-index: z-index-of(navigation-drawer) !important;
 
   &__list {
     display: flex;

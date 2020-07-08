@@ -2,7 +2,7 @@
   <v-menu
     offset-x
     left
-    :z-index="1001"
+    :z-index="Z_INDEX"
     :nudge-left="1"
     open-on-hover
   >
@@ -81,8 +81,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { createUrl } from '~~/utils/createUrl';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { App, SpotifyAPI } from '~~/types';
 import { Toast } from '~/plugins/toast';
 
@@ -107,6 +107,7 @@ export type Props = {
 type Data = {
   text: string
   MENU_BACKGROUND_COLOR: string
+  Z_INDEX: number
 }
 
 const copyText = (text: string, name: string, $toast: Toast): void => {
@@ -158,6 +159,7 @@ export default Vue.extend({
     return {
       text,
       MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

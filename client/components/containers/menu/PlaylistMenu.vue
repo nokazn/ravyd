@@ -2,7 +2,7 @@
   <v-menu
     offset-x
     left
-    :z-index="1001"
+    :z-index="Z_INDEX"
     :nudge-left="1"
     open-on-hover
     open-on-click
@@ -72,7 +72,7 @@
 import Vue, { PropType } from 'vue';
 import { RootGetters } from 'vuex';
 
-import { MENU_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
 export type Props = {
@@ -83,6 +83,7 @@ export type Props = {
 
 type Data = {
   MENU_BACKGROUND_COLOR: string
+  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -104,6 +105,7 @@ export default Vue.extend({
   data(): Data {
     return {
       MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

@@ -1,7 +1,6 @@
 <template>
   <v-overlay
     v-model="overlay"
-    absolute
     :opacity="opacity"
     :z-index="zIndex"
     :class="$style.Overlay"
@@ -29,7 +28,7 @@ export default Vue.extend({
     },
     zIndex: {
       type: Number,
-      default: 200,
+      default: 10,
     },
   },
 

@@ -24,3 +24,16 @@ export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
 export const APP_NAME = 'spotify-player';
 
 export const TRACK_QUEUE_ARTWORK_SIZE = 40;
+
+export const Z_INDEX_OF = {
+  toast: 12,
+  modal: 12,
+  frontMenu: 11,
+  overlay: 10,
+  menu: 9,
+  header: 4,
+  navigationDrawer: 4,
+  footer: 4,
+  floatingButton: 3,
+  textGradation: 2,
+} as const;

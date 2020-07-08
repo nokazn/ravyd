@@ -20,15 +20,16 @@ $g-navigation-drawer-width: 200px;
  * z-index
  */
 $__layer-map: (
-  toast: 1002,
-  menu: 1001,
-  modal: 1001,
-  header: 1000,
-  navigation-drawer: 1000,
-  footer: 1000,
-  overlay: 200,
-  floating-button: 101,
-  text-gradation: 10,
+  toast: 12,
+  modal: 12,
+  front-menu: 11,
+  overlay: 10,
+  menu: 9,
+  header: 4,
+  navigation-drawer: 4,
+  footer: 4,
+  floating-button: 3,
+  text-gradation: 2,
 );
 
 @function z-index-of($key) {

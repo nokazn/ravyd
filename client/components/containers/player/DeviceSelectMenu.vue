@@ -5,7 +5,7 @@
     top
     left
     offset-y
-    :z-index="1001"
+    :z-index="Z_INDEX"
   >
     <template #activator="{ on }">
       <v-btn
@@ -70,13 +70,14 @@
 import Vue from 'vue';
 
 import DeviceSelectMenuItem, { DeviceInfo, On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
-import { MENU_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 type Data = {
   isShown: boolean
   isRefreshingDeviceList: boolean
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
+  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -89,6 +90,7 @@ export default Vue.extend({
       isShown: false,
       isRefreshingDeviceList: false,
       MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 
