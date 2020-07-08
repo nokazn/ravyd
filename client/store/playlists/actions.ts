@@ -14,9 +14,10 @@ export type PlaylistsActions = {
   }) => Promise<void>
   editPlaylist: (payload: {
     playlistId: string
-    name: string
-    description: string
-    isPublic: boolean
+    name?: string
+    description?: string
+    isPublic?: boolean
+    isCollaborative?: boolean
   }) => Promise<void>
   followPlaylist: (playlistId: string) => Promise<void>
   unfollowPlaylist: (playlistId: string) => Promise<void>
@@ -112,7 +113,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   },
 
   async editPlaylist({ state, commit }, {
-    playlistId, name, description, isPublic,
+    playlistId, name, description, isPublic, isCollaborative,
   }) {
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
@@ -120,24 +121,25 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       // @todo 空文字列を渡せない
       description: description || undefined,
       isPublic,
+      isCollaborative,
+    }).then(() => {
+      const { playlists } = state;
+      const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
+      if (index == null || index === -1) {
+        this.$toast.show('error', 'プレイリスト一覧の更新に失敗しました。');
+        return;
+      }
+
+      commit('EDIT_PLAYLIST', {
+        index,
+        id: playlistId,
+        name,
+        description,
+        isPublic,
+      });
     }).catch((err: Error) => {
       console.error({ err });
-      throw new Error('プレイリストの更新に失敗しました。');
-    });
-
-    const { playlists } = state;
-    const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-    if (index == null || index === -1) {
-      throw new Error('プレイリスト一覧の更新に失敗しました。');
-    }
-
-    commit('EDIT_PLAYLIST', {
-      index,
-      id: playlistId,
-      name,
-      // 空文字列の場合は null にする
-      description: description || null,
-      isPublic,
+      this.$toast.show('error', 'プレイリストの更新に失敗しました。');
     });
   },
 

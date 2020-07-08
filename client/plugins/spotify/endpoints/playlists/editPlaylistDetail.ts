@@ -7,19 +7,19 @@ export const editPlaylistDetail = (context: Context) => {
     playlistId,
     name,
     isPublic,
-    collaborative,
+    isCollaborative,
     description,
   }: {
     playlistId: string
     name?: string
     isPublic?: boolean
-    collaborative?: boolean
+    isCollaborative?: boolean
     description?: string
   }): Promise<void> => {
     const request = app.$spotifyApi.$put(`/playlists/${playlistId}`, {
       name,
       public: isPublic,
-      collaborative,
+      collaborative: isCollaborative,
       description,
     }).catch((err: Error) => {
       console.error({ err });
