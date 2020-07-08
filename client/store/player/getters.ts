@@ -1,7 +1,7 @@
 import { Getters } from 'vuex';
 
 import { PlayerState } from './state';
-import { REPEAT_STATE_LIST, APP_NAME, TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
+import { REPEAT_STATE_LIST, APP_NAME, TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
@@ -62,7 +62,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   trackQueue(state, getters) {
-    return (artworkSize = TRACK_QUEUE_ARTWORK_SIZE) => {
+    return (artworkSize = TRACK_LIST_ARTWORK_SIZE) => {
       if (!getters.hasTrack) return [];
 
       // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在

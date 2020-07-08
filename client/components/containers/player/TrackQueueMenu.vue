@@ -69,7 +69,7 @@
 import Vue from 'vue';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
-import { MENU_BACKGROUND_COLOR, TRACK_QUEUE_ARTWORK_SIZE, Z_INDEX_OF } from '~/variables';
+import { MENU_BACKGROUND_COLOR, TRACK_LIST_ARTWORK_SIZE, Z_INDEX_OF } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
@@ -93,7 +93,7 @@ export default Vue.extend({
 
   computed: {
     trackQueue(): App.TrackQueueInfo[] {
-      return this.$getters()['player/trackQueue'](TRACK_QUEUE_ARTWORK_SIZE);
+      return this.$getters()['player/trackQueue'](TRACK_LIST_ARTWORK_SIZE);
     },
   },
 

@@ -2,7 +2,7 @@ import { Getters } from 'vuex';
 
 import { SearchState } from './state';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_QUEUE_ARTWORK_SIZE } from '~/variables';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { App, SpotifyAPI } from '~~/types';
 
 export type SearchGetters = {
@@ -54,7 +54,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId,
         name,
         uri,
-        artworkSrc: getImageSrc(track.album.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(track.album.images, TRACK_LIST_ARTWORK_SIZE),
         artistList: track.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -78,7 +78,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name,
         uri,
-        artworkSrc: getImageSrc(artist.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(artist.images, TRACK_LIST_ARTWORK_SIZE),
         to,
       };
 
@@ -98,7 +98,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name,
         uri,
-        artworkSrc: getImageSrc(album.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(album.images, TRACK_LIST_ARTWORK_SIZE),
         artistList: album.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -122,7 +122,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name,
         uri,
-        artworkSrc: getImageSrc(playlist.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(playlist.images, TRACK_LIST_ARTWORK_SIZE),
         to,
       };
 
@@ -142,7 +142,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name,
         uri,
-        artworkSrc: getImageSrc(show.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(show.images, TRACK_LIST_ARTWORK_SIZE),
         to,
       };
 
@@ -162,7 +162,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name,
         uri,
-        artworkSrc: getImageSrc(episode.images, TRACK_QUEUE_ARTWORK_SIZE),
+        artworkSrc: getImageSrc(episode.images, TRACK_LIST_ARTWORK_SIZE),
         to,
       };
 
