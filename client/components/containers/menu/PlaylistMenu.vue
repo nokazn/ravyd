@@ -29,25 +29,36 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const toggleIsCollaborative = () => {
-        const name = this.playlist.isCollaborative
-          ? 'コラボプレイリストにしない'
-          : 'コラボプレイリストにする';
+        const isCollaborative = !this.playlist.isCollaborative;
+        const name = isCollaborative
+          ? 'コラボプレイリストにする'
+          : 'コラボプレイリストにしない';
 
         return {
           name,
           handler: () => {
             this.$dispatch('playlists/editPlaylist', {
               playlistId: this.playlist.id,
-              isCollaborative: !this.playlist.isCollaborative,
+              isCollaborative,
+            }).then(() => {
+              this.$toast.show('primary', isCollaborative
+                ? 'コラボプレイリストにしました。'
+                : 'コラボプレイリストを解除しました。');
+            }).catch((err: Error) => {
+              console.error({ err });
+              this.$toast.show('error', isCollaborative
+                ? 'コラボプレイリストにできませんでした。'
+                : 'コラボプレイリストを解除できませんでした。');
             });
           },
         };
       };
 
       const toggleIsPublic = () => {
-        const name = this.playlist.isPublic
-          ? '非公開にする'
-          : '公開する';
+        const isPublic = !this.playlist.isPublic;
+        const name = isPublic
+          ? '公開する'
+          : '非公開にする';
 
         return {
           name,
@@ -55,8 +66,13 @@ export default Vue.extend({
             this.$dispatch('playlists/editPlaylist', {
               playlistId: this.playlist.id,
               isPublic: !this.playlist.isPublic,
+            }).then(() => {
+              this.$toast.show('primary', isPublic
+                ? 'プレイリストを公開しました'
+                : 'プレイリストを非公開にしました');
             });
           },
+          disabled: this.playlist.isCollaborative,
         };
       };
 
@@ -90,12 +106,17 @@ export default Vue.extend({
         };
       };
 
-      // プレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
-      return [
-        [toggleIsCollaborative(), toggleIsPublic()],
-        [followPlaylist()],
-        [share()],
-      ];
+      // 自分のプレイリストの場合は編集するメニューを表示
+      return this.playlist.isOwnPlaylist
+        ? [
+          [toggleIsCollaborative(), toggleIsPublic()],
+          [followPlaylist()],
+          [share()],
+        ]
+        : [
+          [followPlaylist()],
+          [share()],
+        ];
     },
   },
 });

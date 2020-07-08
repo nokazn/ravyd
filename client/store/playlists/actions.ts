@@ -120,7 +120,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       name,
       // @todo 空文字列を渡せない
       description: description || undefined,
-      isPublic,
+      isPublic: isCollaborative ? false : isPublic,
       isCollaborative,
     }).then(() => {
       const { playlists } = state;
@@ -135,7 +135,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         id: playlistId,
         name,
         description,
-        isPublic,
+        isPublic: isCollaborative ? false : isPublic,
         isCollaborative,
       });
     }).catch((err: Error) => {
