@@ -1,7 +1,11 @@
 <template>
   <v-menu
-    offset-x
-    left
+    :offset-x="offsetX"
+    :offset-y="offsetY"
+    :top="top"
+    :bottom="bottom"
+    :left="left"
+    :right="right"
     :z-index="Z_INDEX"
   >
     <template #activator="{ on }">
@@ -100,6 +104,30 @@ export default Vue.extend({
       default: false,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    offsetX: {
+      type: Boolean,
+      default: false,
+    },
+    offsetY: {
+      type: Boolean,
+      default: false,
+    },
+    top: {
+      type: Boolean,
+      default: false,
+    },
+    bottom: {
+      type: Boolean,
+      default: false,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
       type: Boolean,
       default: false,
     },
