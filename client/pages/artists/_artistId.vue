@@ -58,6 +58,11 @@
               :is-following="isFollowing"
               @on-clicked="onFollowButtonClicked"
             />
+
+            <ArtistMenu
+              :artist="artistInfo"
+              :is-following="isFollowing"
+            />
           </div>
         </div>
       </div>
@@ -128,6 +133,7 @@ import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
+import ArtistMenu from '~/components/containers/menu/ArtistMenu.vue';
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
@@ -176,6 +182,7 @@ export type Data = {
     HashTags,
     ContextMediaButton,
     FollowButton,
+    ArtistMenu,
     TrackListWrapper,
     CardsSection,
     ReleaseCard,
