@@ -85,7 +85,10 @@
       </td>
 
       <td>
-        <TrackMenu :track="item" />
+        <TrackMenu
+          :track="item"
+          :playlist-id="playlistId"
+        />
       </td>
     </tr>
   </v-hover>
@@ -125,6 +128,10 @@ export default Vue.extend({
   props: {
     item: {
       type: Object as PropType<App.PlaylistTrackDetail>,
+      required: true,
+    },
+    playlistId: {
+      type: String,
       required: true,
     },
     isTrackSet: {

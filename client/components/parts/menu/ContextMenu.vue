@@ -1,5 +1,6 @@
 <template>
   <v-menu
+    :min-width="160"
     :offset-x="offsetX"
     :offset-y="offsetY"
     :top="top"

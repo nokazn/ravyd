@@ -2,8 +2,8 @@
   <ContextMenu
     :item-lists="menuItemLists"
     outlined
-    bottom
     offset-y
+    bottom
   />
 </template>
 
@@ -43,7 +43,7 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const artistPageItem = () => {
+      const artistPage = () => {
         const { artistList } = this.release;
         if (artistList.length > 1) {
           const props: ArtistLinkMenuProps = { artistList };
@@ -61,7 +61,7 @@ export default Vue.extend({
         };
       };
 
-      const saveReleaseItem = () => {
+      const saveRelease = () => {
         const params = [this.release.id];
 
         return this.release.isSaved
@@ -93,7 +93,7 @@ export default Vue.extend({
         };
       };
 
-      const shareItem = () => {
+      const share = () => {
         const props: ShareMenuProps = {
           name: this.release.name,
           uri: this.release.uri,
@@ -109,9 +109,9 @@ export default Vue.extend({
       };
 
       return [
-        [artistPageItem()],
-        [saveReleaseItem(), addItemToPlaylist()],
-        [shareItem()],
+        [artistPage()],
+        [saveRelease(), addItemToPlaylist()],
+        [share()],
       ];
     },
   },
