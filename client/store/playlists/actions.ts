@@ -126,8 +126,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       const { playlists } = state;
       const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
       if (index == null || index === -1) {
-        this.$toast.show('error', 'プレイリスト一覧の更新に失敗しました。');
-        return;
+        throw new Error('プレイリスト一覧の更新に失敗しました。');
       }
 
       commit('EDIT_PLAYLIST', {
@@ -140,7 +139,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       });
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.show('error', 'プレイリストの更新に失敗しました。');
+      throw new Error('プレイリストの更新に失敗しました。');
     });
   },
 
