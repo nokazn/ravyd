@@ -136,6 +136,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         name,
         description,
         isPublic,
+        isCollaborative,
       });
     }).catch((err: Error) => {
       console.error({ err });
