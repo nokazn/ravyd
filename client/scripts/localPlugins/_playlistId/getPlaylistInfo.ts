@@ -41,12 +41,12 @@ export const getPlaylistInfo = async (
   const durationMs = filteredTrackList.reduce((prev, { track }) => track.duration_ms + prev, 0);
 
   // owner が自分の場合はフォローボタンは表示しない
-  const [isFollowing] = owner.id === userId
-    ? [undefined]
-    : await app.$spotify.following.checkUserFollowedPlaylist({
-      playlistId: playlistInfo.id,
-      userIdList: [userId],
-    });
+  const [isFollowing] = await app.$spotify.following.checkUserFollowedPlaylist({
+    playlistId: playlistInfo.id,
+    userIdList: [userId],
+  });
+
+  const isOwnPlaylist = owner.id === userId;
 
   const followersText = followers.total != null
     ? `フォロワー ${addComma(followers.total)}人`
@@ -64,6 +64,7 @@ export const getPlaylistInfo = async (
     durationMs,
     isFollowing,
     isPublic,
+    isOwnPlaylist,
     followersText,
     externalUrls,
   };

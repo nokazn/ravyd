@@ -128,8 +128,9 @@ export namespace App {
     owner: SpotifyAPI.UserData
     durationMs: number
     totalTracks: number
-    isFollowing: boolean | undefined
+    isFollowing: boolean
     isPublic: boolean | null
+    isOwnPlaylist: boolean
     followersText: string | undefined
     externalUrls: SpotifyAPI.ExternalUrls
   }

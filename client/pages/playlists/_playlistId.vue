@@ -16,7 +16,7 @@
         <div class="g-small-text">
           プレイリスト
           <v-icon
-            v-if="!playlistInfo.isPublic && isOwnPlaylist"
+            v-if="!playlistInfo.isPublic && playlistInfo.isOwnPlaylist"
             small
             color="subtext"
             title="非公開のプレイリスト"
@@ -47,7 +47,7 @@
               @on-clicked="onContextMediaButtonClicked"
             />
 
-            <template v-if="isOwnPlaylist">
+            <template v-if="playlistInfo.isOwnPlaylist">
               <CircleButton
                 outlined
                 title="編集する"
@@ -217,6 +217,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       };
     };
 
+    // プレイリストをフォロー/アンフォローした後呼ばれる
     const subscribeFollowedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUAL_IS_SAVED'>) => {
       if (this.playlistInfo == null) return;
 
@@ -279,11 +280,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
   get isPlaying(): RootState['player']['isPlaying'] {
     return this.$state().player.isPlaying;
-  }
-  get isOwnPlaylist(): boolean {
-    return this.playlistInfo != null
-      ? this.playlistInfo?.owner.id === this.$getters()['auth/userId']
-      : false;
   }
   get hasTracks(): boolean {
     return this.playlistTrackInfo != null
