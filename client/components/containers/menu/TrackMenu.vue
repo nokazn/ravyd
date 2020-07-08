@@ -76,6 +76,7 @@
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
 
+import ArtistMenu, { Props as ArtistMenuProps } from '~/components/parts/menu/ArtistMenu.vue';
 import PlaylistMenu, { Props as PlaylistMenuProps } from '~/components/containers/menu/PlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
@@ -95,12 +96,14 @@ type MenuItem = {
 }
 
 type Data = {
+  menuItemLists: MenuItem[][]
   MENU_BACKGROUND_COLOR: string
   Z_INDEX: number
 }
 
 export default Vue.extend({
   components: {
+    ArtistMenu,
     PlaylistMenu,
     ShareMenu,
   },
@@ -113,85 +116,106 @@ export default Vue.extend({
   },
 
   data(): Data {
-    return {
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
-    };
-  },
-
-  computed: {
-    menuItemLists(): MenuItem[][] {
-      const addItemToQueue = {
+    const addItemToQueue = () => {
+      const trackName = this.track.name;
+      return {
         name: '次に再生に追加',
         handler: () => {
           this.$spotify.player.addItemToQueue({
             uri: this.track.uri,
           }).then(() => {
-            this.$toast.show(undefined, `"${this.track.name}" を次に再生に追加しました。`);
+            this.$toast.show(undefined, `"${trackName}" を次に再生に追加しました。`);
           }).catch((err: Error) => {
             console.error({ err });
-            this.$toast.show('error', `"${this.track.name}" を次に再生に追加できませんでした。`);
+            this.$toast.show('error', `"${trackName}" を次に再生に追加できませんでした。`);
           });
         },
       };
+    };
 
-      const artist = this.track.artistList[0] as App.SimpleArtistInfo | undefined;
-      const artistPageItem = {
+    const artistPageItem = () => {
+      const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
+      if (artistList.length > 1) {
+        const props: ArtistMenuProps = { artistList };
+        return {
+          component: ArtistMenu,
+          props,
+        };
+      }
+
+      const artist = artistList[0] as App.SimpleArtistInfo | undefined;
+      return {
         name: 'アーティストページに移動',
         to: `/artists/${artist?.id}`,
         disabled: artist == null || this.$route.params.artistId === artist.id,
       };
+    };
 
-      const releasePageItem = {
+    const releasePageItem = () => {
+      const { releaseId } = this.track;
+
+      return {
         name: 'アルバムページに移動',
-        to: `/releases/${this.track.releaseId}`,
-        disabled: this.$route.params.releaseId === this.track.releaseId,
+        to: `/releases/${releaseId}`,
+        disabled: this.$route.params.releaseId === releaseId,
       };
+    };
 
-      const saveTrackItem = this.track.isSaved
+    const saveTrackItem = () => {
+      const params = [this.track.id];
+
+      return this.track.isSaved
         ? {
           name: 'お気に入りから削除',
           handler: () => {
-            this.$dispatch('library/tracks/removeTracks', [this.track.id]);
+            this.$dispatch('library/tracks/removeTracks', params);
           },
         }
         : {
           name: 'お気に入りに追加',
           handler: () => {
-            this.$dispatch('library/tracks/saveTracks', [this.track.id]);
+            this.$dispatch('library/tracks/saveTracks', params);
           },
         };
+    };
 
-      const playlistMenuProps: PlaylistMenuProps = {
+    const addItemToPlaylist = () => {
+      const props: PlaylistMenuProps = {
         name: this.track.name,
         uriList: [this.track.uri],
         artistList: this.track.artistList,
       };
-      const addItemToPlaylist = {
-        component: PlaylistMenu,
-        props: playlistMenuProps,
-      };
 
-      const shareMenuProps: ShareMenuProps = {
+      return {
+        component: PlaylistMenu,
+        props,
+      };
+    };
+
+    const shareItem = () => {
+      const props: ShareMenuProps = {
         name: this.track.name,
         uri: this.track.uri,
         artistList: this.track.artistList,
         externalUrls: this.track.externalUrls,
       };
-      const share = {
+
+      return {
         component: ShareMenu,
-        props: shareMenuProps,
+        props,
       };
+    };
 
-      const menuItemList = [
-        [addItemToQueue],
-        [artistPageItem, releasePageItem],
-        [saveTrackItem, addItemToPlaylist],
-        [share],
-      ];
-
-      return menuItemList;
-    },
+    return {
+      menuItemLists: [
+        [addItemToQueue()],
+        [artistPageItem(), releasePageItem()],
+        [saveTrackItem(), addItemToPlaylist()],
+        [shareItem()],
+      ],
+      MENU_BACKGROUND_COLOR,
+      Z_INDEX: Z_INDEX_OF.menu,
+    };
   },
 });
 </script>
