@@ -1,7 +1,8 @@
 <template>
   <v-menu
     offset-x
-    left
+    :left="left"
+    :right="right"
     :z-index="Z_INDEX"
     :nudge-left="1"
     open-on-hover
@@ -100,8 +101,11 @@ type MenuItem = {
 export type Props = {
   name: string
   uri: string
+  typeName: string
   artistList?: App.SimpleArtistInfo[]
   externalUrls: SpotifyAPI.ExternalUrls
+  left?: boolean
+  right?: boolean
 }
 
 type Data = {
@@ -138,6 +142,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    typeName: {
+      type: String,
+      required: true,
+    },
     artistList: {
       type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
       default: undefined,
@@ -145,6 +153,14 @@ export default Vue.extend({
     externalUrls: {
       type: Object as PropType<SpotifyAPI.ExternalUrls>,
       required: true,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -192,10 +208,10 @@ export default Vue.extend({
       };
 
       const copyTrackUrl = {
-        name: '曲のリンクをコピー',
+        name: `${this.typeName}のリンクをコピー`,
         handler: () => {
           if (this.externalUrls.spotify != null) {
-            copyText(this.externalUrls.spotify, '曲のリンク', this.$toast);
+            copyText(this.externalUrls.spotify, `${this.typeName}のリンク`, this.$toast);
           }
         },
         disabled: this.externalUrls.spotify == null,

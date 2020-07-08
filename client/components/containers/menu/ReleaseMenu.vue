@@ -1,8 +1,9 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
-    offset-x
-    left
+    outlined
+    bottom
+    offset-y
   />
 </template>
 
@@ -27,8 +28,8 @@ export default Vue.extend({
   },
 
   props: {
-    track: {
-      type: Object as PropType<App.TrackDetail>,
+    release: {
+      type: Object as PropType<App.ReleaseInfo>,
       required: true,
     },
   },
@@ -42,31 +43,10 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const addItemToQueue = () => {
-        const trackName = this.track.name;
-        return {
-          name: '次に再生に追加',
-          handler: () => {
-            this.$spotify.player.addItemToQueue({
-              uri: this.track.uri,
-            }).then(() => {
-              this.$toast.show(undefined, `"${trackName}" を次に再生に追加しました。`);
-            }).catch((err: Error) => {
-              console.error({ err });
-              this.$toast.show('error', `"${trackName}" を次に再生に追加できませんでした。`);
-            });
-          },
-        };
-      };
-
       const artistPageItem = () => {
-        const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
+        const { artistList } = this.release;
         if (artistList.length > 1) {
-          const props: ArtistLinkMenuProps = {
-            artistList,
-            left: true,
-
-          };
+          const props: ArtistLinkMenuProps = { artistList };
           return {
             component: ArtistLinkMenu,
             props,
@@ -81,40 +61,30 @@ export default Vue.extend({
         };
       };
 
-      const releasePageItem = () => {
-        const { releaseId } = this.track;
+      const saveReleaseItem = () => {
+        const params = [this.release.id];
 
-        return {
-          name: 'アルバムページに移動',
-          to: `/releases/${releaseId}`,
-          disabled: this.$route.params.releaseId === releaseId,
-        };
-      };
-
-      const saveTrackItem = () => {
-        const params = [this.track.id];
-
-        return this.track.isSaved
+        return this.release.isSaved
           ? {
             name: 'お気に入りから削除',
             handler: () => {
-              this.$dispatch('library/tracks/removeTracks', params);
+              this.$dispatch('library/releases/removeReleases', params);
             },
           }
           : {
             name: 'お気に入りに追加',
             handler: () => {
-              this.$dispatch('library/tracks/saveTracks', params);
+              this.$dispatch('library/releases/saveReleases', params);
             },
           };
       };
 
       const addItemToPlaylist = () => {
+        const uriList = this.release.trackList.map((track) => track.uri);
         const props: AddItemToPlaylistMenuProps = {
-          name: this.track.name,
-          uriList: [this.track.uri],
-          artistList: this.track.artistList,
-          left: true,
+          name: this.release.name,
+          uriList,
+          artistList: this.release.artistList,
         };
 
         return {
@@ -125,13 +95,13 @@ export default Vue.extend({
 
       const shareItem = () => {
         const props: ShareMenuProps = {
-          name: this.track.name,
-          uri: this.track.uri,
-          typeName: '曲',
-          artistList: this.track.artistList,
-          externalUrls: this.track.externalUrls,
-          left: true,
+          name: this.release.name,
+          uri: this.release.uri,
+          typeName: 'アルバム',
+          artistList: this.release.artistList,
+          externalUrls: this.release.externalUrls,
         };
+
         return {
           component: ShareMenu,
           props,
@@ -139,9 +109,8 @@ export default Vue.extend({
       };
 
       return [
-        [addItemToQueue()],
-        [artistPageItem(), releasePageItem()],
-        [saveTrackItem(), addItemToPlaylist()],
+        [artistPageItem()],
+        [saveReleaseItem(), addItemToPlaylist()],
         [shareItem()],
       ];
     },

@@ -1,7 +1,8 @@
 <template>
   <v-menu
     offset-x
-    left
+    :left="left"
+    :right="right"
     :z-index="Z_INDEX"
     :nudge-left="1"
     open-on-hover
@@ -57,6 +58,8 @@ type MenuItem = {
   name: string
   to: string
   disabled: boolean
+  left?: boolean
+  right?: boolean
 }
 
 export type Props = {
@@ -74,6 +77,14 @@ export default Vue.extend({
     artistList: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
+      type: Boolean,
+      default: false,
     },
   },
 
