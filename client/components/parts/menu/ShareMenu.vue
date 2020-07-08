@@ -100,6 +100,7 @@ type MenuItem = {
 export type Props = {
   name: string
   uri: string
+  typeName: string
   artistList?: App.SimpleArtistInfo[]
   externalUrls: SpotifyAPI.ExternalUrls
 }
@@ -135,6 +136,10 @@ export default Vue.extend({
       required: true,
     },
     uri: {
+      type: String,
+      required: true,
+    },
+    typeName: {
       type: String,
       required: true,
     },
@@ -192,10 +197,10 @@ export default Vue.extend({
       };
 
       const copyTrackUrl = {
-        name: '曲のリンクをコピー',
+        name: `${this.typeName}のリンクをコピー`,
         handler: () => {
           if (this.externalUrls.spotify != null) {
-            copyText(this.externalUrls.spotify, '曲のリンク', this.$toast);
+            copyText(this.externalUrls.spotify, `${this.typeName}のリンク`, this.$toast);
           }
         },
         disabled: this.externalUrls.spotify == null,
