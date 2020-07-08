@@ -46,9 +46,7 @@
               :disabled="item.disabled"
               :inactive="item.disabled"
             >
-              <v-list-item-title
-                :class="{ 'inactive--text': item.disabled }"
-              >
+              <v-list-item-title>
                 {{ item.name }}
               </v-list-item-title>
             </v-list-item>
@@ -60,9 +58,7 @@
               :inactive="item.disabled"
               @click="item.handler"
             >
-              <v-list-item-title
-                :class="{ 'inactive--text': item.disabled }"
-              >
+              <v-list-item-title>
                 {{ item.name }}
               </v-list-item-title>
             </v-list-item>

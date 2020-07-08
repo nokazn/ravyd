@@ -68,7 +68,7 @@
               </v-icon>
             </v-list-item-icon>
 
-            <v-list-item-title :class="item.disabled ? 'inactive--text' : undefined">
+            <v-list-item-title>
               {{ item.name }}
             </v-list-item-title>
           </v-list-item>

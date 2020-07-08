@@ -31,13 +31,15 @@
     >
       <v-list-item-group>
         <v-list-item
-          v-for="artist in artistList"
-          :key="artist.id"
+          v-for="item in menuItemList"
+          :key="item.to"
           nuxt
-          :to="`/artists/${artist.id}`"
+          :to="item.to"
+          :disabled="item.disabled"
+          :inactive="item.disabled"
         >
           <v-list-item-title>
-            {{ artist.name }}
+            {{ item.name }}
           </v-list-item-title>
         </v-list-item>
       </v-list-item-group>
@@ -54,6 +56,7 @@ import { App } from '~~/types';
 type MenuItem = {
   name: string
   to: string
+  disabled: boolean
 }
 
 export type Props = {
@@ -61,6 +64,7 @@ export type Props = {
 }
 
 type Data = {
+  menuItemList: MenuItem[]
   MENU_BACKGROUND_COLOR: string
   Z_INDEX: number
 }
@@ -68,13 +72,20 @@ type Data = {
 export default Vue.extend({
   props: {
     artistList: {
-      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
-      default: undefined,
+      type: Array as PropType<App.SimpleArtistInfo[]>,
+      required: true,
     },
   },
 
   data(): Data {
+    const menuItemList = this.artistList.map((artist) => ({
+      name: artist.name,
+      to: `/artists/${artist.id}`,
+      disabled: artist.id === this.$route.params.artistId,
+    }));
+
     return {
+      menuItemList,
       MENU_BACKGROUND_COLOR,
       Z_INDEX: Z_INDEX_OF.menu,
     };
