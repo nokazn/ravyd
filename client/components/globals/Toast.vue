@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
+import { ToastType } from '~/plugins/toast';
 
 const ON_CHANGED = 'on-changed';
 
@@ -37,7 +38,7 @@ export default Vue.extend({
       required: true,
     },
     type: {
-      type: String,
+      type: String as PropType<ToastType>,
       default: undefined,
     },
     message: {
