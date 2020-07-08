@@ -14,13 +14,7 @@ import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { App } from '~~/types';
-
-type Data = {
-  MENU_BACKGROUND_COLOR: string
-  Z_INDEX: number
-}
 
 export default Vue.extend({
   components: {
@@ -32,13 +26,6 @@ export default Vue.extend({
       type: Object as PropType<App.ReleaseInfo>,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
-    };
   },
 
   computed: {
