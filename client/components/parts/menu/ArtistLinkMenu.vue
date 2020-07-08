@@ -58,12 +58,12 @@ type MenuItem = {
   name: string
   to: string
   disabled: boolean
-  left?: boolean
-  right?: boolean
 }
 
 export type Props = {
   artistList: App.SimpleArtistInfo[]
+  left?: boolean
+  right?: boolean
 }
 
 type Data = {

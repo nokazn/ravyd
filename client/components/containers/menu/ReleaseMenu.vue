@@ -2,8 +2,8 @@
   <ContextMenu
     :item-lists="menuItemLists"
     outlined
-    bottom
     offset-y
+    bottom
   />
 </template>
 

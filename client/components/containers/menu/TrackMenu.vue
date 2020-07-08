@@ -65,7 +65,6 @@ export default Vue.extend({
           const props: ArtistLinkMenuProps = {
             artistList,
             left: true,
-
           };
           return {
             component: ArtistLinkMenu,
