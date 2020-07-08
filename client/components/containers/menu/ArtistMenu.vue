@@ -32,7 +32,7 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const saveTrack = () => {
+      const followArtist = () => {
         const params = [this.artist.id];
 
         return this.isFollowing
@@ -64,7 +64,7 @@ export default Vue.extend({
       };
 
       return [
-        [saveTrack()],
+        [followArtist()],
         [share()],
       ];
     },
