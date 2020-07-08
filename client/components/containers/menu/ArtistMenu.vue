@@ -45,7 +45,7 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const saveTrackItem = () => {
+      const saveTrack = () => {
         const params = [this.artist.id];
 
         return this.isFollowing
@@ -63,7 +63,7 @@ export default Vue.extend({
           };
       };
 
-      const shareItem = () => {
+      const share = () => {
         const props: ShareMenuProps = {
           name: this.artist.name,
           uri: this.artist.uri,
@@ -77,8 +77,8 @@ export default Vue.extend({
       };
 
       return [
-        [saveTrackItem()],
-        [shareItem()],
+        [saveTrack()],
+        [share()],
       ];
     },
   },

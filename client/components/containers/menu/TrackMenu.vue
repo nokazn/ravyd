@@ -59,7 +59,7 @@ export default Vue.extend({
         };
       };
 
-      const artistPageItem = () => {
+      const artistPage = () => {
         const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
         if (artistList.length > 1) {
           const props: ArtistLinkMenuProps = {
@@ -80,7 +80,7 @@ export default Vue.extend({
         };
       };
 
-      const releasePageItem = () => {
+      const releasePage = () => {
         const { releaseId } = this.track;
 
         return {
@@ -90,7 +90,7 @@ export default Vue.extend({
         };
       };
 
-      const saveTrackItem = () => {
+      const saveTrack = () => {
         const params = [this.track.id];
 
         return this.track.isSaved
@@ -139,9 +139,9 @@ export default Vue.extend({
 
       return [
         [addItemToQueue()],
-        [artistPageItem(), releasePageItem()],
-        [saveTrackItem(), addItemToPlaylist()],
-        [shareItem()],
+        [artistPage(), releasePage()],
+        [saveTrack(), addItemToPlaylist()],
+        [share()],
       ];
     },
   },
