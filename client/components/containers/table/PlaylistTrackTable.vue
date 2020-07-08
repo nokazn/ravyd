@@ -31,6 +31,7 @@
     <template #item="{ item }">
       <PlaylistTrackTableRow
         :item="item"
+        :playlist-id="playlistId"
         :added-at="addedAt"
         :is-active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
@@ -69,6 +70,10 @@ export default Vue.extend({
   props: {
     trackList: {
       type: Array as PropType<App.PlaylistTrackDetail[]>,
+      required: true,
+    },
+    playlistId: {
+      type: String,
       required: true,
     },
     uri: {

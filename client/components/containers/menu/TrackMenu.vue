@@ -31,6 +31,10 @@ export default Vue.extend({
       type: Object as PropType<App.TrackDetail>,
       required: true,
     },
+    playlistId: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
   },
 
   data(): Data {
@@ -122,7 +126,29 @@ export default Vue.extend({
         };
       };
 
-      const shareItem = () => {
+      const removePlaylistItem = () => ({
+        name: 'このプレイリストから削除',
+        handler: async () => {
+          if (this.playlistId == null) return;
+
+          const { snapshot_id } = await this.$spotify.playlists.removePlaylistItems({
+            playlistId: this.playlistId,
+            tracks: [{
+              uri: this.track.uri,
+              positions: [this.track.index],
+            }],
+          });
+
+          if (snapshot_id != null) {
+            this.$toast.show('primary', `${this.track.name}をこのプレイリストから削除しました。`);
+          } else {
+            this.$toast.show('primary', `${this.track.name}をこのプレイリストから削除できませんでした。`);
+          }
+        },
+        disabled: this.playlistId == null,
+      });
+
+      const share = () => {
         const props: ShareMenuProps = {
           name: this.track.name,
           uri: this.track.uri,
@@ -137,12 +163,20 @@ export default Vue.extend({
         };
       };
 
-      return [
-        [addItemToQueue()],
-        [artistPage(), releasePage()],
-        [saveTrack(), addItemToPlaylist()],
-        [share()],
-      ];
+      // プレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
+      return this.playlistId != null
+        ? [
+          [addItemToQueue()],
+          [artistPage(), releasePage()],
+          [saveTrack(), addItemToPlaylist(), removePlaylistItem()],
+          [share()],
+        ]
+        : [
+          [addItemToQueue()],
+          [artistPage(), releasePage()],
+          [saveTrack(), addItemToPlaylist()],
+          [share()],
+        ];
     },
   },
 });
