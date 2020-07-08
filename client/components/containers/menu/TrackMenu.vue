@@ -62,7 +62,11 @@ export default Vue.extend({
       const artistPageItem = () => {
         const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
         if (artistList.length > 1) {
-          const props: ArtistLinkMenuProps = { artistList };
+          const props: ArtistLinkMenuProps = {
+            artistList,
+            left: true,
+
+          };
           return {
             component: ArtistLinkMenu,
             props,
@@ -110,6 +114,7 @@ export default Vue.extend({
           name: this.track.name,
           uriList: [this.track.uri],
           artistList: this.track.artistList,
+          left: true,
         };
 
         return {
@@ -125,6 +130,7 @@ export default Vue.extend({
           typeName: '曲',
           artistList: this.track.artistList,
           externalUrls: this.track.externalUrls,
+          left: true,
         };
         return {
           component: ShareMenu,
