@@ -57,6 +57,11 @@
               v-model="isPrivatePlaylist"
               label="プレイリストを非公開にする"
             />
+
+            <v-checkbox
+              v-model="isCollaborativePlaylist"
+              label="コラボプレイリストにする"
+            />
           </v-form>
         </v-card-text>
 
@@ -98,17 +103,20 @@ export type Data = {
   playlistDescription: string
   playlistArtwork: Blob | undefined
   isPrivatePlaylist: boolean
+  isCollaborativePlaylist: boolean
   playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
   mutationUnsubscriber: (() => void) | undefined
 }
 
+// 編集するとき
 export type Form = {
   playlistId: string
   name: string,
   description: string,
   artworkSrc: string | undefined,
   isPrivate: boolean
+  isCollaborative: boolean
 }
 
 export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' ?
@@ -117,11 +125,13 @@ export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' 
     name: string
     description: string
     isPublic: boolean
+    isCollaborative: boolean
   }
   : {
     name: string
     description: string
     isPublic: boolean
+    isCollaborative: boolean
   }) => Promise<void>
 
 export const ON_CHANGED = 'on-changed';
@@ -159,6 +169,7 @@ export default Vue.extend({
     const playlistDescription = this.form?.description ?? '';
     const playlistArtwork = undefined;
     const isPrivatePlaylist = this.form?.isPrivate ?? false;
+    const isCollaborativePlaylist = this.form?.isCollaborative ?? false;
 
     return {
       isValid: playlistName !== '',
@@ -166,6 +177,7 @@ export default Vue.extend({
       playlistDescription,
       playlistArtwork,
       isPrivatePlaylist,
+      isCollaborativePlaylist,
       playlistNameRules: [
         (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
       ],
@@ -198,11 +210,11 @@ export default Vue.extend({
         return;
       }
 
-      const playlist = mutationPayload.payload;
+      const { id: playlistId } = mutationPayload.payload;
       const fileReader = new FileReader();
       fileReader.addEventListener('load', () => {
         this.$spotify.playlists.uploadPlaylistArtwork({
-          playlistId: playlist.id,
+          playlistId,
           artwork: fileReader.result as string,
         }).then(() => {
           this.modal = false;
@@ -261,9 +273,11 @@ export default Vue.extend({
         name: this.playlistName,
         description: this.playlistDescription,
         isPublic: !this.isPrivatePlaylist,
+        isCollaborative: this.isCollaborativePlaylist,
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
+          this.isLoading = false;
           this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }
@@ -278,6 +292,7 @@ export default Vue.extend({
       this.playlistDescription = this.form?.description ?? '';
       this.playlistArtwork = undefined;
       this.isPrivatePlaylist = this.form?.isPrivate ?? false;
+      this.isCollaborativePlaylist = this.form?.isCollaborative ?? false;
     },
   },
 });

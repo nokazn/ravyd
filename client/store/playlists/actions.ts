@@ -10,6 +10,7 @@ export type PlaylistsActions = {
     name: string
     description?: string
     isPublic: boolean
+    isCollaborative: boolean
     uriList?: string[]
   }) => Promise<void>
   editPlaylist: (payload: {
@@ -93,6 +94,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     name,
     description,
     isPublic,
+    isCollaborative,
     uriList: uris,
   }) {
     const userId = rootGetters['auth/userId'];
@@ -103,7 +105,9 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       name,
       // 空文字列の場合は undefined にする
       description: description || undefined,
-      isPublic,
+      // コラボプレイリストの場合は非公開
+      isPublic: isCollaborative ? false : isPublic,
+      isCollaborative,
     });
     if (playlist == null) {
       throw new Error('プレイリストの作成に失敗しました。');
@@ -150,15 +154,16 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }).then(() => {
       const { playlists } = state;
       const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-      if (index == null || index === -1) {
-        throw new Error('プレイリスト一覧の更新に失敗しました。');
-      }
+      // 削除 (実際はアンフォロー) したプレイリストを編集した時
+      if (index == null || index === -1) return;
+
 
       commit('EDIT_PLAYLIST', {
         index,
         id: playlistId,
         name,
         description,
+        // コラボプレイリストの場合は非公開
         isPublic: isCollaborative ? false : isPublic,
         isCollaborative,
       });
