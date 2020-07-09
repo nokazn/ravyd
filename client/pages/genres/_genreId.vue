@@ -42,7 +42,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { getCategory, getCategoryPlaylist } from '~/scripts/localPlugins/genreId';
+import { getCategory, getCategoryPlaylist } from '~/scripts/localPlugins/_genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
 import { App } from '~~/types';
 
