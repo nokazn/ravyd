@@ -289,15 +289,22 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFavoriteTrackButtonClicked(row: OnTable['on-favorite-button-clicked']) {
+  onFavoriteTrackButtonClicked({ index, id, isSaved }: OnTable['on-favorite-button-clicked']) {
     if (this.releaseInfo == null) return;
 
+    const nextSavedState = !isSaved;
     const trackList = [...this.releaseInfo.trackList];
-    trackList[row.index].isSaved = !row.isSaved;
+    trackList[index].isSaved = nextSavedState;
     this.releaseInfo = {
       ...this.releaseInfo,
       trackList,
     };
+
+    if (nextSavedState) {
+      this.$dispatch('library/tracks/saveTracks', [id]);
+    } else {
+      this.$dispatch('library/tracks/removeTracks', [id]);
+    }
   }
 }
 </script>
