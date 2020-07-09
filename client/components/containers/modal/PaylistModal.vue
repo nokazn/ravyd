@@ -56,6 +56,7 @@
             <v-checkbox
               v-model="isPrivatePlaylist"
               label="プレイリストを非公開にする"
+              :disabled="isCollaborativePlaylist"
             />
 
             <v-checkbox
@@ -198,6 +199,15 @@ export default Vue.extend({
         }
         this.$emit(ON_CHANGED, isShown);
       },
+    },
+  },
+
+  watch: {
+    isCollaborativePlaylist(isCollaborative: boolean) {
+      // コラボプレイリストの場合は非公開
+      if (isCollaborative) {
+        this.isPrivatePlaylist = true;
+      }
     },
   },
 
