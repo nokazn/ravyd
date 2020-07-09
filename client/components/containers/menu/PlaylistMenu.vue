@@ -15,9 +15,11 @@ import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/Shar
 import { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
+const ON_EDIT_MENU_CLICKED = 'on-edit-menu-clicked';
 
 export type On = {
   [ON_FOLLOW_MENU_CLICKED]: boolean
+  [ON_EDIT_MENU_CLICKED]: boolean
 }
 
 export default Vue.extend({
@@ -87,6 +89,13 @@ export default Vue.extend({
         };
       };
 
+      const editPlaylist = () => ({
+        name: '詳細の編集',
+        handler: () => {
+          this.$emit(ON_EDIT_MENU_CLICKED, true);
+        },
+      });
+
       const followPlaylist = () => {
         const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
         const handler = () => {
@@ -122,7 +131,7 @@ export default Vue.extend({
       return this.playlist.isOwnPlaylist
         ? [
           [toggleIsCollaborative(), toggleIsPublic()],
-          [followPlaylist()],
+          [editPlaylist(), followPlaylist()],
           [share()],
         ]
         : [

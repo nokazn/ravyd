@@ -66,6 +66,7 @@
 
             <PlaylistMenu
               :playlist="playlistInfo"
+              @on-edit-menu-clicked="onEditPlaylistModalChanged"
               @on-follow-menu-clicked="onFollowButtonClicked"
             />
           </div>
@@ -340,7 +341,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed']) {
+  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
     this.editPlaylistModal = isShown;
   }
 
