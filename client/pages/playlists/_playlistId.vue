@@ -351,17 +351,9 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
       await this.$spotify.following.followPlaylist({ playlistId });
-      this.$dispatch('playlists/followPlaylist', playlistId)
-        .catch((err) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('playlists/followPlaylist', playlistId);
     } else {
-      this.$dispatch('playlists/unfollowPlaylist', playlistId)
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('playlists/unfollowPlaylist', playlistId);
     }
   }
 

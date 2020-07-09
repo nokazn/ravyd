@@ -41,7 +41,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       offset,
     });
     if (playlists == null) {
-      throw new Error('プレイリストの一覧を取得できませんでした。');
+      this.$toast.show('error', 'プレイリストの一覧を取得できませんでした。');
+      return;
     }
 
     commit('SET_PLAYLISTS', playlists?.items);
@@ -54,7 +55,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (firstListOfPlaylists == null) {
-      throw new Error('プレイリストの一覧を取得できませんでした。');
+      this.$toast.show('error', 'プレイリストの一覧を取得できませんでした。');
+      return;
     }
 
     // offset: index から limit 件取得
@@ -63,7 +65,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         offset: limit * (index + 1),
         limit,
       });
-      if (playlists == null) return [];
+      if (playlists == null) {
+        this.$toast.show('error', 'プレイリストの一部が取得できませんでした。');
+        return [];
+      }
 
       return playlists.items;
     };
@@ -145,40 +150,44 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
 
   async followPlaylist({ state, commit, rootGetters }, playlistId) {
     await this.$spotify.following.followPlaylist({ playlistId })
+      .then(async () => {
+        const currentPlaylists = state.playlists;
+        if (currentPlaylists != null) {
+          const savedPlaylist = currentPlaylists.find((item) => item.id === playlistId);
+          // すでに一覧に存在する場合
+          if (savedPlaylist != null) {
+            commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+            return;
+          }
+        }
+
+        const market = rootGetters['auth/userCountryCode'];
+        const playlist = await this.$spotify.playlists.getPlaylist({
+          playlistId,
+          market,
+        });
+
+        if (playlist != null) {
+          commit('ADD_PLAYLIST', playlist);
+          commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+        }
+      })
       .catch((err: Error) => {
-        throw new Error(err.message);
+        console.error({ err });
+        this.$toast.show('error', 'プレイリストのフォローに失敗しました。');
       });
-
-    const currentPlaylists = state.playlists;
-    if (currentPlaylists != null) {
-      const savedPlaylist = currentPlaylists.find((item) => item.id === playlistId);
-      // すでに一覧に存在する場合
-      if (savedPlaylist != null) {
-        commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
-        return;
-      }
-    }
-
-    const market = rootGetters['auth/userCountryCode'];
-    const playlist = await this.$spotify.playlists.getPlaylist({
-      playlistId,
-      market,
-    });
-
-    if (playlist != null) {
-      commit('ADD_PLAYLIST', playlist);
-      commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
-    }
   },
 
   async unfollowPlaylist({ commit }, playlistId) {
     await this.$spotify.following.unfollowPlaylist({ playlistId })
+      .then(() => {
+        commit('REMOVE_PLAYLIST', playlistId);
+        commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
+      })
       .catch((err: Error) => {
-        throw new Error(err.message);
+        console.error({ err });
+        this.$toast.show('error', 'プレイリストのフォローの解除に失敗しました。');
       });
-
-    commit('REMOVE_PLAYLIST', playlistId);
-    commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
   },
 };
 
