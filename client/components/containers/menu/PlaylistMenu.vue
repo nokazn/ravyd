@@ -33,6 +33,10 @@ export default Vue.extend({
       type: Object as PropType<App.PlaylistInfo>,
       required: true,
     },
+    isFollowing: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   computed: {
@@ -100,11 +104,11 @@ export default Vue.extend({
       const followPlaylist = () => {
         const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
         const handler = () => {
-          const nextFollowingState = !this.playlist.isFollowing;
+          const nextFollowingState = !this.isFollowing;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         };
 
-        return this.playlist.isFollowing
+        return this.isFollowing
           ? {
             name: isOwnPlaylist ? '削除する' : 'フォローしない',
             handler,

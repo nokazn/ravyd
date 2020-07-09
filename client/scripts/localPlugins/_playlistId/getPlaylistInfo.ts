@@ -41,12 +41,6 @@ export const getPlaylistInfo = async (
   const durationMs = filteredTrackList.reduce((prev, { track }) => track.duration_ms + prev, 0);
   const trackUriList = filteredTrackList.map(({ track }) => track.uri);
 
-  // owner が自分の場合はフォローボタンは表示しない
-  const [isFollowing] = await app.$spotify.following.checkUserFollowedPlaylist({
-    playlistId: playlistInfo.id,
-    userIdList: [userId],
-  });
-
   const isOwnPlaylist = owner.id === userId;
 
   const followersText = followers.total != null
@@ -63,7 +57,6 @@ export const getPlaylistInfo = async (
     artworkSrc,
     totalTracks,
     durationMs,
-    isFollowing,
     isPublic,
     isOwnPlaylist,
     followersText,

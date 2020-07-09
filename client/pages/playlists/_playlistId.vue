@@ -59,13 +59,14 @@
 
             <FavoriteButton
               v-else
-              :is-favorited="playlistInfo.isFollowing"
+              :is-favorited="isFollowing"
               outlined
               @on-clicked="onFollowButtonClicked"
             />
 
             <PlaylistMenu
               :playlist="playlistInfo"
+              :is-following="isFollowing"
               @on-edit-menu-clicked="onEditPlaylistModalChanged"
               @on-follow-menu-clicked="onFollowButtonClicked"
             />
@@ -128,7 +129,7 @@ import Followers from '~/components/parts/text/Followers.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getPlaylistInfo, getPlaylistTrackInfoHandler } from '~/scripts/localPlugins/_playlistId';
+import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfoHandler } from '~/scripts/localPlugins/_playlistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
@@ -136,10 +137,11 @@ const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
 
 interface AsyncData {
-  ARTWORK_SIZE: number
   playlistInfo: App.PlaylistInfo | undefined
+  isFollowing: boolean
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
+  ARTWORK_SIZE: number
 }
 
 interface Data {
@@ -169,24 +171,31 @@ interface Data {
 
   async asyncData(context): Promise<AsyncData> {
     const getPlaylistTrackInfo = getPlaylistTrackInfoHandler(context);
-    const [playlistInfo, playlistTrackInfo] = await Promise.all([
+    const [
+      playlistInfo,
+      isFollowing,
+      playlistTrackInfo,
+    ] = await Promise.all([
       await getPlaylistInfo(context, ARTWORK_SIZE),
+      await getIsFollowing(context),
       await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
     ]);
 
     return {
-      ARTWORK_SIZE,
       playlistInfo,
+      isFollowing,
       playlistTrackInfo,
       getPlaylistTrackInfo,
+      ARTWORK_SIZE,
     };
   },
 })
 export default class PlaylistIdPage extends Vue implements AsyncData, Data {
-  ARTWORK_SIZE = ARTWORK_SIZE;
   playlistInfo: App.PlaylistInfo | undefined = undefined;
+  isFollowing = false;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
   getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -225,7 +234,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
       const [playlistId, isFollowing] = mutationPayload.payload;
       if (playlistId === this.playlistInfo.id) {
-        this.playlistInfo.isFollowing = isFollowing;
+        this.isFollowing = isFollowing;
         this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
       }
     };
@@ -349,7 +358,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
-    this.playlistInfo.isFollowing = nextFollowingState;
+    this.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
       this.$dispatch('playlists/followPlaylist', playlistId);
