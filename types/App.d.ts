@@ -133,6 +133,7 @@ export namespace App {
     isOwnPlaylist: boolean
     followersText: string | undefined
     externalUrls: SpotifyAPI.ExternalUrls
+    trackUriList: string[]
   }
   export type PlaylistTrackInfo = {
     trackList: PlaylistTrackDetail[]

@@ -12,6 +12,7 @@ import Vue, { PropType } from 'vue';
 
 import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import { generateCopiedName } from '~~/utils/generateCopiedName';
 import { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
@@ -114,6 +115,27 @@ export default Vue.extend({
           };
       };
 
+      const copyPlaylist = () => {
+        const handler = () => {
+          const name = generateCopiedName(this.playlist.name);
+          this.$dispatch('playlists/createPlaylist', {
+            name,
+            uriList: this.playlist.trackUriList,
+            isPublic: true,
+          }).then(() => {
+            this.$toast.show('primary', `"${name}" を作成しました。`);
+          }).catch((err: Error) => {
+            console.error({ err });
+            this.$toast.show('error', err.message);
+          });
+        };
+
+        return {
+          name: '同様のプレイリストを作成',
+          handler,
+        };
+      };
+
       const share = () => {
         const props: ShareMenuProps = {
           name: this.playlist.name,
@@ -132,10 +154,12 @@ export default Vue.extend({
         ? [
           [toggleIsCollaborative(), toggleIsPublic()],
           [editPlaylist(), followPlaylist()],
+          [copyPlaylist()],
           [share()],
         ]
         : [
           [followPlaylist()],
+          [copyPlaylist()],
           [share()],
         ];
     },

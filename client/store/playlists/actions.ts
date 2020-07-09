@@ -8,7 +8,7 @@ export type PlaylistsActions = {
   getAllPlaylists: () => Promise<void>
   createPlaylist: (payload: {
     name: string
-    description: string
+    description?: string
     isPublic: boolean
     uriList?: string[]
   }) => Promise<void>
@@ -87,7 +87,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   },
 
   async createPlaylist({ commit, rootGetters }, {
-    name, description, isPublic, uriList,
+    name,
+    description,
+    isPublic,
+    uriList: uris,
   }) {
     const userId = rootGetters['auth/userId'];
     if (userId == null) return;
@@ -106,14 +109,28 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     commit('ADD_PLAYLIST', playlist);
 
     // 新規作成したプレイリストに追加
-    if (uriList != null) {
-      await this.$spotify.playlists.addItemToPlaylist({
+    if (uris != null) {
+      const limit = 100;
+      const baseLists: string[][] = new Array(Math.ceil(uris.length / limit)).fill([]);
+      const uriLists = uris.reduce((prev, uri, i) => {
+        const index = Math.floor(i / limit);
+        prev[index].push(uri);
+        return prev;
+      }, baseLists);
+
+      const request = (uriList: string[]) => this.$spotify.playlists.addItemToPlaylist({
         playlistId: playlist.id,
         uriList,
       }).catch((err: Error) => {
         console.error({ err });
         throw new Error(err.message);
       });
+
+      await Promise.all(uriLists.map((uriList) => request(uriList)))
+        .catch((err: Error) => {
+          console.error({ err });
+          throw new Error('プレイリストにアイテムの一部または全部を追加できませんでした。');
+        });
     }
   },
 
