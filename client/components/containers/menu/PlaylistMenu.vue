@@ -14,6 +14,12 @@ import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
+const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
+
+export type On = {
+  [ON_FOLLOW_MENU_CLICKED]: boolean
+}
+
 export default Vue.extend({
   components: {
     ContextMenu,
@@ -68,8 +74,13 @@ export default Vue.extend({
               isPublic: !this.playlist.isPublic,
             }).then(() => {
               this.$toast.show('primary', isPublic
-                ? 'プレイリストを公開しました'
-                : 'プレイリストを非公開にしました');
+                ? 'プレイリストを公開しました。'
+                : 'プレイリストを非公開にしました。');
+            }).catch((err: Error) => {
+              console.error({ err });
+              this.$toast.show('error', isPublic
+                ? 'プレイリストの公開に失敗しました。'
+                : 'プレイリストを非公開にできませんでした。');
             });
           },
           disabled: this.playlist.isCollaborative,
@@ -78,18 +89,19 @@ export default Vue.extend({
 
       const followPlaylist = () => {
         const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
+        const handler = () => {
+          const nextFollowingState = !this.playlist.isFollowing;
+          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
+        };
+
         return this.playlist.isFollowing
           ? {
             name: isOwnPlaylist ? '削除する' : 'フォローしない',
-            handler: () => {
-              this.$dispatch('playlists/unfollowPlaylist', this.playlist.id);
-            },
+            handler,
           }
           : {
             name: 'フォローする',
-            handler: () => {
-              this.$dispatch('playlists/followPlaylist', this.playlist.id);
-            },
+            handler,
           };
       };
 

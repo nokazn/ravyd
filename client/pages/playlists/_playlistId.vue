@@ -66,6 +66,7 @@
 
             <PlaylistMenu
               :playlist="playlistInfo"
+              @on-follow-menu-clicked="onFollowButtonClicked"
             />
           </div>
 
@@ -343,14 +344,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.editPlaylistModal = isShown;
   }
 
-  async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {
+  onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.playlistInfo.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
-      await this.$spotify.following.followPlaylist({ playlistId });
       this.$dispatch('playlists/followPlaylist', playlistId);
     } else {
       this.$dispatch('playlists/unfollowPlaylist', playlistId);
