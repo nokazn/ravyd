@@ -121,7 +121,7 @@ import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFollowButton } from '~/components/parts/button/FavoriteButton.vue';
-import PlaylistMenu from '~/components/containers/menu/PlaylistMenu.vue';
+import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
