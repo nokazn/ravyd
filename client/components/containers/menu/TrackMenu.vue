@@ -47,7 +47,7 @@ export default Vue.extend({
             this.$spotify.player.addItemToQueue({
               uri: this.track.uri,
             }).then(() => {
-              this.$toast.show(undefined, `"${trackName}" を次に再生に追加しました。`);
+              this.$toast.show('primary', `"${trackName}" を次に再生に追加しました。`);
             }).catch((err: Error) => {
               console.error({ err });
               this.$toast.show('error', `"${trackName}" を次に再生に追加できませんでした。`);
