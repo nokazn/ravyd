@@ -61,14 +61,14 @@
               v-else
               :is-favorited="isFollowing"
               outlined
-              @on-clicked="onFollowButtonClicked"
+              @on-clicked="toggleFollowingState"
             />
 
             <PlaylistMenu
               :playlist="playlistInfo"
               :is-following="isFollowing"
-              @on-edit-menu-clicked="onEditPlaylistModalChanged"
-              @on-follow-menu-clicked="onFollowButtonClicked"
+              @on-edit-menu-clicked="toggleEditPlaylistModal"
+              @on-follow-menu-clicked="toggleFollowingState"
             />
           </div>
 
@@ -93,7 +93,7 @@
     <EditPlaylistModal
       :is-shown="editPlaylistModal"
       :form="editPlaylistForm"
-      @on-changed="onEditPlaylistModalChanged"
+      @on-changed="toggleEditPlaylistModal"
     />
 
     <PlaylistTrackTable
@@ -350,11 +350,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
+  toggleEditPlaylistModal(isShown: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
     this.editPlaylistModal = isShown;
   }
 
-  onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
