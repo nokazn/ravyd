@@ -16,6 +16,7 @@
       :uri="uri"
       custom
       :class="$style.LibraryTracksPage__table"
+      @on-favorite-button-clicked="onFavoriteButtonClicked"
     />
 
     <IntersectionLoadingCircle
@@ -29,8 +30,8 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState } from 'vuex';
 
-import ContextMediaButton, { On } from '~/components/parts/button/ContextMediaButton.vue';
-import PlaylistTrackTable from '~/components/containers/table/PlaylistTrackTable.vue';
+import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
+import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
 
@@ -96,7 +97,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     this.$dispatch('setDefaultDominantBackgroundColor');
   }
 
-  onContextMediaButtonClicked(nextPlayingState: On['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
     // 停止
     if (!nextPlayingState) {
       this.$dispatch('player/pause');
@@ -115,6 +116,15 @@ export default class LibraryTracksPage extends Vue implements Data {
       contextUri: this.uri,
       trackUriList,
     });
+  }
+
+  onFavoriteButtonClicked({ id, isSaved }: OnTable['on-favorite-button-clicked']) {
+    const nextSavedState = !isSaved;
+    if (nextSavedState) {
+      this.$dispatch('library/tracks/saveTracks', [id]);
+    } else {
+      this.$dispatch('library/tracks/removeTracks', [id]);
+    }
   }
 
   onLoadingCircleAppear() {

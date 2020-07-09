@@ -100,7 +100,7 @@
       :track-list="playlistTrackInfo.trackList"
       :playlist-id="playlistInfo.id"
       :uri="playlistInfo.uri"
-      @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
+      @on-favorite-button-clicked="toggleTrackFavoritState"
     />
 
     <IntersectionLoadingCircle
@@ -358,15 +358,23 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFavoriteTrackButtonClicked(row: OnTable['on-favorite-button-clicked']) {
+  toggleTrackFavoritState({ index, id, isSaved }: OnTable['on-favorite-button-clicked']) {
     if (this.playlistTrackInfo == null) return;
 
+    const nextSavedState = !isSaved;
+    // トラックの一覧のお気に入りの状態を変更
     const nextTrackList = [...this.playlistTrackInfo.trackList];
-    nextTrackList[row.index].isSaved = !row.isSaved;
+    nextTrackList[index].isSaved = nextSavedState;
     this.playlistTrackInfo = {
       ...this.playlistTrackInfo,
       trackList: nextTrackList,
     };
+
+    if (nextSavedState) {
+      this.$dispatch('library/tracks/saveTracks', [id]);
+    } else {
+      this.$dispatch('library/tracks/removeTracks', [id]);
+    }
   }
 }
 </script>
