@@ -363,7 +363,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (nextFollowingState) {
       this.$dispatch('playlists/followPlaylist', playlistId);
     } else {
-      this.$dispatch('playlists/unfollowPlaylist', playlistId);
+      this.$dispatch('playlists/unfollowPlaylist', {
+        playlistId,
+        isOwnPlaylist: this.playlistInfo.isOwnPlaylist,
+      });
     }
   }
 

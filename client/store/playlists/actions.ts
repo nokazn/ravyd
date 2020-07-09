@@ -20,7 +20,10 @@ export type PlaylistsActions = {
     isCollaborative?: boolean
   }) => Promise<void>
   followPlaylist: (playlistId: string) => Promise<void>
-  unfollowPlaylist: (playlistId: string) => Promise<void>
+  unfollowPlaylist: (params: {
+    playlistId: string
+    isOwnPlaylist: boolean
+  }) => Promise<void>
 }
 
 export type RootActions = {
@@ -195,15 +198,22 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       });
   },
 
-  async unfollowPlaylist({ commit }, playlistId) {
+  async unfollowPlaylist({ commit }, { playlistId, isOwnPlaylist }) {
     await this.$spotify.following.unfollowPlaylist({ playlistId })
       .then(() => {
         commit('REMOVE_PLAYLIST', playlistId);
         commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
+        if (isOwnPlaylist) {
+          this.$toast.show('primary', 'プレイリストを削除しました。');
+          // @todo プレイリスト一覧に飛ばす
+          this.$router.push('/');
+        }
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', 'プレイリストのフォローの解除に失敗しました。');
+        this.$toast.show('error', isOwnPlaylist
+          ? 'プレイリストの削除に失敗しました。'
+          : 'プレイリストのフォローの解除に失敗しました。');
       });
   },
 };
