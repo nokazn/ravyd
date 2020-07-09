@@ -357,12 +357,19 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFavoriteTrackButtonClicked({ index, nextSavedState }: OnList['on-favorite-button-clicked']) {
+  onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
     if (this.topTrackList == null) return;
 
+    const nextSavedState = !isSaved;
     const topTrackList = [...this.topTrackList];
     topTrackList[index].isSaved = nextSavedState;
     this.topTrackList = topTrackList;
+
+    if (nextSavedState) {
+      this.$dispatch('library/tracks/saveTracks', [id]);
+    } else {
+      this.$dispatch('library/tracks/removeTracks', [id]);
+    }
   }
 
   async getAllReleaseList(type: ReleaseType) {

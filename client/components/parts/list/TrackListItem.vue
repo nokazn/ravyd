@@ -88,16 +88,8 @@ const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
-  [ON_MEDIA_BUTTON_CLICKED]: {
-    index: number
-    id: string
-    uri: string
-  }
-  [ON_FAVORITE_BUTTON_CLICKED]: {
-    index: number
-    id: string
-    nextSavedState: boolean
-  }
+  [ON_MEDIA_BUTTON_CLICKED]:App.TrackDetail
+  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
 export default Vue.extend({
@@ -149,19 +141,10 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, {
-        index: this.item.index,
-        id: this.item.id,
-        uri: this.item.uri,
-      });
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
     },
-    onFavoriteButtonClicked(nextSavedState: boolean) {
-      const { id, index } = this.item;
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, {
-        index,
-        id,
-        nextSavedState,
-      });
+    onFavoriteButtonClicked() {
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
     },
   },
 });

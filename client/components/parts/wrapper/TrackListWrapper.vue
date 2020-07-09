@@ -81,7 +81,7 @@ export default Vue.extend({
     onShowAllTracksButtonClicked() {
       this.isAbbreviated = !this.isAbbreviated;
     },
-    onFavoriteButtonClicked({ ...row }: OnList['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnList['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },

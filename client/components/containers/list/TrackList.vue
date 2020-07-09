@@ -88,6 +88,7 @@ export default Vue.extend({
           trackUriList: this.trackUriList,
           offset: { uri },
         });
+        // アーティストの contextUri から直接再生はできない
         this.$dispatch('player/setCustomContext', {
           contextUri: this.uri,
           trackUriList: this.trackUriList,
@@ -97,15 +98,7 @@ export default Vue.extend({
 
     // row をコピーしたものを参照する
     onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
-      const params: On['on-favorite-button-clicked'] = row;
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, params);
-
-      const { id, nextSavedState } = row;
-      if (nextSavedState) {
-        this.$dispatch('library/tracks/saveTracks', [id]);
-      } else {
-        this.$dispatch('library/tracks/removeTracks', [id]);
-      }
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
