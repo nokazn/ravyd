@@ -41,11 +41,12 @@
             <FavoriteButton
               :is-favorited="releaseInfo.isSaved"
               outlined
-              @on-clicked="onFavoriteButtonClicked"
+              @on-clicked="toggleSavedState"
             />
 
             <ReleaseMenu
               :release="releaseInfo"
+              @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>
 
@@ -100,7 +101,7 @@ import HashTags from '~/components/parts/chip/HashTags.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
-import ReleaseMenu from '~/components/containers/menu/ReleaseMenu.vue';
+import ReleaseMenu, { On as OnMenu } from '~/components/containers/menu/ReleaseMenu.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
@@ -276,7 +277,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFavoriteButtonClicked(nextSavedState: OnMediaButton['on-clicked']) {
+  toggleSavedState(nextSavedState: OnMediaButton['on-clicked'] | OnMenu['on-favorite-menu-clicked']) {
     if (this.releaseInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

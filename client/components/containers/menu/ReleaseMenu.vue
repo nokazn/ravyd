@@ -16,6 +16,12 @@ import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/co
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
+const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
+
+export type On = {
+  [ON_FAVORITE_MENU_CLICKED]: boolean
+}
+
 export default Vue.extend({
   components: {
     ContextMenu,
@@ -48,23 +54,13 @@ export default Vue.extend({
         };
       };
 
-      const saveRelease = () => {
-        const params = [this.release.id];
-
-        return this.release.isSaved
-          ? {
-            name: 'お気に入りから削除',
-            handler: () => {
-              this.$dispatch('library/releases/removeReleases', params);
-            },
-          }
-          : {
-            name: 'お気に入りに追加',
-            handler: () => {
-              this.$dispatch('library/releases/saveReleases', params);
-            },
-          };
-      };
+      const saveRelease = () => ({
+        name: this.release.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
+        handler: () => {
+          const nextSavedState = !this.release.isSaved;
+          this.$emit(ON_FAVORITE_MENU_CLICKED, nextSavedState);
+        },
+      });
 
       const addItemToPlaylist = () => {
         const uriList = this.release.trackList.map((track) => track.uri);
