@@ -61,7 +61,10 @@
 
           <TrackTime :time-ms="item.durationMs" />
 
-          <TrackMenu :track="item" />
+          <TrackMenu
+            :track="item"
+            @on-favorite-menu-clicked="onFavoriteButtonClicked"
+          />
         </div>
       </v-list-item-action>
     </v-list-item>

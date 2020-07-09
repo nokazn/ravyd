@@ -88,6 +88,7 @@
         <TrackMenu
           :track="item"
           :playlist-id="playlistId"
+          @on-favorite-menu-clicked="onFavoriteButtonClicked"
         />
       </td>
     </tr>

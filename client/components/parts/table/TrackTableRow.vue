@@ -59,7 +59,10 @@
       </td>
 
       <td>
-        <TrackMenu :track="item" />
+        <TrackMenu
+          :track="item"
+          @on-favorite-menu-clicked="onFavoriteButtonClicked"
+        />
       </td>
     </tr>
   </v-hover>
