@@ -192,11 +192,7 @@ export default Vue.extend({
 
   methods: {
     onPlaylistGroupLoaded() {
-      this.$dispatch('playlists/getAllPlaylists')
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('playlists/getAllPlaylists');
     },
     onPlaylistButtonClicked() {
       this.createPlaylistModal = true;

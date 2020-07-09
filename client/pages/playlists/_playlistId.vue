@@ -12,11 +12,11 @@
         shadow
       />
 
-      <div :class="$style.PlaylistIdPage__info">
+      <div :class="$style.Info">
         <div class="g-small-text">
           プレイリスト
           <v-icon
-            v-if="!playlistInfo.isPublic && isOwnPlaylist"
+            v-if="!playlistInfo.isPublic && playlistInfo.isOwnPlaylist"
             small
             color="subtext"
             title="非公開のプレイリスト"
@@ -25,7 +25,7 @@
           </v-icon>
         </div>
 
-        <h1 :class="$style.PlaylistIdPage__playlistName">
+        <h1 :class="$style.Info__playlistName">
           {{ playlistInfo.name }}
         </h1>
 
@@ -39,15 +39,15 @@
           <UserName :user="playlistInfo.owner" />
         </div>
 
-        <div :class="$style.PlaylistIdPage__playlistInfoFooter">
-          <div :class="$style.PlaylistIdPage__buttons">
+        <div :class="$style.Info__footer">
+          <div :class="$style.Info__buttons">
             <ContextMediaButton
               :is-playing="isPlaylistSet && isPlaying"
               :disabled="!hasTracks"
               @on-clicked="onContextMediaButtonClicked"
             />
 
-            <template v-if="isOwnPlaylist">
+            <template v-if="playlistInfo.isOwnPlaylist">
               <CircleButton
                 outlined
                 title="編集する"
@@ -55,11 +55,6 @@
               >
                 mdi-pencil
               </CircleButton>
-              <EditPlaylistModal
-                :is-shown="editPlaylistModal"
-                :form="editPlaylistForm"
-                @on-changed="onEditPlaylistModalChanged"
-              />
             </template>
 
             <FavoriteButton
@@ -68,9 +63,15 @@
               outlined
               @on-clicked="onFollowButtonClicked"
             />
+
+            <PlaylistMenu
+              :playlist="playlistInfo"
+              @on-edit-menu-clicked="onEditPlaylistModalChanged"
+              @on-follow-menu-clicked="onFollowButtonClicked"
+            />
           </div>
 
-          <div :class="$style.PlaylistIdPage__playlistDetail">
+          <div :class="$style.Info__detail">
             <ReleaseTotalTracks
               :total-tracks="playlistInfo.totalTracks"
             />
@@ -87,6 +88,12 @@
         </div>
       </div>
     </div>
+
+    <EditPlaylistModal
+      :is-shown="editPlaylistModal"
+      :form="editPlaylistForm"
+      @on-changed="onEditPlaylistModalChanged"
+    />
 
     <PlaylistTrackTable
       v-if="playlistTrackInfo != null"
@@ -114,6 +121,7 @@ import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFollowButton } from '~/components/parts/button/FavoriteButton.vue';
+import PlaylistMenu from '~/components/containers/menu/PlaylistMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
@@ -147,6 +155,7 @@ interface Data {
     ContextMediaButton,
     CircleButton,
     FavoriteButton,
+    PlaylistMenu,
     ReleaseTotalTracks,
     ReleaseDuration,
     Followers,
@@ -210,6 +219,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       };
     };
 
+    // プレイリストをフォロー/アンフォローした後呼ばれる
     const subscribeFollowedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUAL_IS_SAVED'>) => {
       if (this.playlistInfo == null) return;
 
@@ -225,14 +235,16 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       if (this.playlistInfo == null) return;
 
       const {
-        id, name, description, isPublic,
+        id, name, description, isPublic, isCollaborative,
       } = mutationPayload.payload;
       if (id === this.playlistInfo.id) {
         this.playlistInfo = {
           ...this.playlistInfo,
-          name,
-          description,
-          isPublic,
+          name: name ?? this.playlistInfo.name,
+          // 空文字列の場合は null にする
+          description: (description ?? this.playlistInfo.description) || null,
+          isPublic: isPublic ?? this.playlistInfo.isPublic,
+          isCollaborative: isCollaborative ?? this.playlistInfo.isCollaborative,
         };
       }
     };
@@ -270,11 +282,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
   get isPlaying(): RootState['player']['isPlaying'] {
     return this.$state().player.isPlaying;
-  }
-  get isOwnPlaylist(): boolean {
-    return this.playlistInfo != null
-      ? this.playlistInfo?.owner.id === this.$getters()['auth/userId']
-      : false;
   }
   get hasTracks(): boolean {
     return this.playlistTrackInfo != null
@@ -334,29 +341,20 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed']) {
+  onEditPlaylistModalChanged(isShown: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
     this.editPlaylistModal = isShown;
   }
 
-  async onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked']) {
+  onFollowButtonClicked(nextFollowingState: OnFollowButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.playlistInfo.isFollowing = nextFollowingState;
     const playlistId = this.playlistInfo.id;
     if (nextFollowingState) {
-      await this.$spotify.following.followPlaylist({ playlistId });
-      this.$dispatch('playlists/followPlaylist', playlistId)
-        .catch((err) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('playlists/followPlaylist', playlistId);
     } else {
-      this.$dispatch('playlists/unfollowPlaylist', playlistId)
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      this.$dispatch('playlists/unfollowPlaylist', playlistId);
     }
   }
 
@@ -378,46 +376,46 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   padding: 16px 6% 48px;
 
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 220px auto;
+    grid-column-gap: 24px;
     margin-bottom: 32px;
-
-    & > *:not(:last-child) {
-      margin-right: 24px;
-    }
   }
 
-  &__info {
+  .Info {
     display: inline-flex;
     flex-direction: column;
     justify-content: flex-end;
-  }
 
-  &__playlistName {
-    font-size: 40px;
-    margin: 8px 0;
-    line-height: 1.2em;
-  }
-
-  &__playlistInfoFooter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    margin-top: 12px;
-  }
-
-  &__buttons {
-    margin-right: 24px;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
+    &__playlistName {
+      font-size: 40px;
+      margin: 8px 0;
+      line-height: 1.2em;
     }
-  }
 
-  &__playlistDetail {
-    margin-top: 12px;
+    &__footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-top: 12px;
+    }
 
-    & > *:not(:last-child) {
-      margin-right: 8px;
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      margin-right: 24px;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+
+    &__detail {
+      margin-top: 12px;
+
+      & > *:not(:last-child) {
+        margin-right: 8px;
+      }
     }
   }
 }

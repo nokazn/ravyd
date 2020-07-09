@@ -8,15 +8,16 @@ export type PlaylistsActions = {
   getAllPlaylists: () => Promise<void>
   createPlaylist: (payload: {
     name: string
-    description: string
+    description?: string
     isPublic: boolean
     uriList?: string[]
   }) => Promise<void>
   editPlaylist: (payload: {
     playlistId: string
-    name: string
-    description: string
-    isPublic: boolean
+    name?: string
+    description?: string
+    isPublic?: boolean
+    isCollaborative?: boolean
   }) => Promise<void>
   followPlaylist: (playlistId: string) => Promise<void>
   unfollowPlaylist: (playlistId: string) => Promise<void>
@@ -40,7 +41,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       offset,
     });
     if (playlists == null) {
-      throw new Error('プレイリストの一覧を取得できませんでした。');
+      this.$toast.show('error', 'プレイリストの一覧を取得できませんでした。');
+      return;
     }
 
     commit('SET_PLAYLISTS', playlists?.items);
@@ -53,7 +55,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (firstListOfPlaylists == null) {
-      throw new Error('プレイリストの一覧を取得できませんでした。');
+      this.$toast.show('error', 'プレイリストの一覧を取得できませんでした。');
+      return;
     }
 
     // offset: index から limit 件取得
@@ -62,7 +65,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         offset: limit * (index + 1),
         limit,
       });
-      if (playlists == null) return [];
+      if (playlists == null) {
+        this.$toast.show('error', 'プレイリストの一部が取得できませんでした。');
+        return [];
+      }
 
       return playlists.items;
     };
@@ -81,7 +87,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   },
 
   async createPlaylist({ commit, rootGetters }, {
-    name, description, isPublic, uriList,
+    name,
+    description,
+    isPublic,
+    uriList: uris,
   }) {
     const userId = rootGetters['auth/userId'];
     if (userId == null) return;
@@ -100,83 +109,102 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     commit('ADD_PLAYLIST', playlist);
 
     // 新規作成したプレイリストに追加
-    if (uriList != null) {
-      await this.$spotify.playlists.addItemToPlaylist({
+    if (uris != null) {
+      const limit = 100;
+      const baseLists: string[][] = new Array(Math.ceil(uris.length / limit)).fill([]);
+      const uriLists = uris.reduce((prev, uri, i) => {
+        const index = Math.floor(i / limit);
+        prev[index].push(uri);
+        return prev;
+      }, baseLists);
+
+      const request = (uriList: string[]) => this.$spotify.playlists.addItemToPlaylist({
         playlistId: playlist.id,
         uriList,
       }).catch((err: Error) => {
         console.error({ err });
         throw new Error(err.message);
       });
+
+      await Promise.all(uriLists.map((uriList) => request(uriList)))
+        .catch((err: Error) => {
+          console.error({ err });
+          throw new Error('プレイリストにアイテムの一部または全部を追加できませんでした。');
+        });
     }
   },
 
   async editPlaylist({ state, commit }, {
-    playlistId, name, description, isPublic,
+    playlistId, name, description, isPublic, isCollaborative,
   }) {
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
       // @todo 空文字列を渡せない
       description: description || undefined,
-      isPublic,
+      isPublic: isCollaborative ? false : isPublic,
+      isCollaborative,
+    }).then(() => {
+      const { playlists } = state;
+      const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
+      if (index == null || index === -1) {
+        throw new Error('プレイリスト一覧の更新に失敗しました。');
+      }
+
+      commit('EDIT_PLAYLIST', {
+        index,
+        id: playlistId,
+        name,
+        description,
+        isPublic: isCollaborative ? false : isPublic,
+        isCollaborative,
+      });
     }).catch((err: Error) => {
       console.error({ err });
       throw new Error('プレイリストの更新に失敗しました。');
-    });
-
-    const { playlists } = state;
-    const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-    if (index == null || index === -1) {
-      throw new Error('プレイリスト一覧の更新に失敗しました。');
-    }
-
-    commit('EDIT_PLAYLIST', {
-      index,
-      id: playlistId,
-      name,
-      // 空文字列の場合は null にする
-      description: description || null,
-      isPublic,
     });
   },
 
   async followPlaylist({ state, commit, rootGetters }, playlistId) {
     await this.$spotify.following.followPlaylist({ playlistId })
+      .then(async () => {
+        const currentPlaylists = state.playlists;
+        if (currentPlaylists != null) {
+          const savedPlaylist = currentPlaylists.find((item) => item.id === playlistId);
+          // すでに一覧に存在する場合
+          if (savedPlaylist != null) {
+            commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+            return;
+          }
+        }
+
+        const market = rootGetters['auth/userCountryCode'];
+        const playlist = await this.$spotify.playlists.getPlaylist({
+          playlistId,
+          market,
+        });
+
+        if (playlist != null) {
+          commit('ADD_PLAYLIST', playlist);
+          commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
+        }
+      })
       .catch((err: Error) => {
-        throw new Error(err.message);
+        console.error({ err });
+        this.$toast.show('error', 'プレイリストのフォローに失敗しました。');
       });
-
-    const currentPlaylists = state.playlists;
-    if (currentPlaylists != null) {
-      const savedPlaylist = currentPlaylists.find((item) => item.id === playlistId);
-      // すでに一覧に存在する場合
-      if (savedPlaylist != null) {
-        commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
-        return;
-      }
-    }
-
-    const market = rootGetters['auth/userCountryCode'];
-    const playlist = await this.$spotify.playlists.getPlaylist({
-      playlistId,
-      market,
-    });
-
-    if (playlist != null) {
-      commit('ADD_PLAYLIST', playlist);
-      commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);
-    }
   },
 
   async unfollowPlaylist({ commit }, playlistId) {
     await this.$spotify.following.unfollowPlaylist({ playlistId })
+      .then(() => {
+        commit('REMOVE_PLAYLIST', playlistId);
+        commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
+      })
       .catch((err: Error) => {
-        throw new Error(err.message);
+        console.error({ err });
+        this.$toast.show('error', 'プレイリストのフォローの解除に失敗しました。');
       });
-
-    commit('REMOVE_PLAYLIST', playlistId);
-    commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
   },
 };
 

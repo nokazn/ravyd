@@ -9,9 +9,10 @@ export type PlaylistsMutations = {
   EDIT_PLAYLIST: {
     index: number
     id: string
-    name: string
-    description: string | null
-    isPublic: boolean
+    name?: string
+    description?: string
+    isPublic?: boolean
+    isCollaborative?: boolean
   }
   REMOVE_PLAYLIST: string
   SET_ACTUAL_IS_SAVED: [string, boolean],
@@ -40,18 +41,20 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
   },
 
   EDIT_PLAYLIST(state, {
-    index, name, description, isPublic,
+    index, name, description, isPublic, isCollaborative,
   }) {
     const { playlists } = state;
     if (playlists == null) return;
 
     const modifiedPlaylists = [...playlists];
+    const playlist = modifiedPlaylists[index];
     modifiedPlaylists[index] = {
-      ...modifiedPlaylists[index],
-      name,
+      ...playlist,
+      name: name ?? playlist.name,
       // 空文字列の場合は null にする
-      description: description || null,
-      public: isPublic,
+      description: (description ?? playlist.description) || null,
+      public: isPublic ?? playlist.public,
+      collaborative: isCollaborative ?? playlist.collaborative,
     };
     state.playlists = modifiedPlaylists;
   },
