@@ -301,7 +301,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (this.playlistInfo == null) return undefined;
 
     const {
-      name, description, artworkSrc, isPublic,
+      name, description, artworkSrc, isPublic, isCollaborative,
     } = this.playlistInfo;
 
     return {
@@ -312,6 +312,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       isPrivate: isPublic != null
         ? !isPublic
         : false,
+      isCollaborative,
     };
   }
 
