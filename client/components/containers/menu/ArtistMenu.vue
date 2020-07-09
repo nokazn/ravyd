@@ -14,6 +14,12 @@ import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
+const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
+
+export type On = {
+  [ON_FOLLOW_MENU_CLICKED]: boolean
+}
+
 export default Vue.extend({
   components: {
     ContextMenu,
@@ -32,23 +38,13 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const followArtist = () => {
-        const params = [this.artist.id];
-
-        return this.isFollowing
-          ? {
-            name: 'フォローしない',
-            handler: () => {
-              this.$dispatch('library/artists/unfollowArtists', params);
-            },
-          }
-          : {
-            name: 'フォローする',
-            handler: () => {
-              this.$dispatch('library/artists/followArtists', params);
-            },
-          };
-      };
+      const followArtist = () => ({
+        name: this.isFollowing ? 'フォローしない' : 'フォローする',
+        handler: () => {
+          const nextFollowingState = !this.isFollowing;
+          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
+        },
+      });
 
       const share = () => {
         const props: ShareMenuProps = {

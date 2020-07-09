@@ -56,12 +56,13 @@
 
             <FollowButton
               :is-following="isFollowing"
-              @on-clicked="onFollowButtonClicked"
+              @on-clicked="toggleFolloingState"
             />
 
             <ArtistMenu
               :artist="artistInfo"
               :is-following="isFollowing"
+              @on-follow-menu-clicked="toggleFolloingState"
             />
           </div>
         </div>
@@ -133,7 +134,7 @@ import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
-import ArtistMenu from '~/components/containers/menu/ArtistMenu.vue';
+import ArtistMenu, { On as OnMenu } from '~/components/containers/menu/ArtistMenu.vue';
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
@@ -343,7 +344,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFollowButtonClicked(nextFollowingState: OnFollow['on-clicked']) {
+  toggleFolloingState(nextFollowingState: OnFollow['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
