@@ -108,15 +108,15 @@ import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTa
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 
-import { getReleaseInfo, getTrackListHandler } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
-import { App } from '~~/types';
+import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
+import { SpotifyAPI, App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
-  getTrackList: ReturnType<typeof getTrackListHandler> | undefined
   ARTWORK_SIZE: number
 }
 
@@ -147,11 +147,9 @@ interface Data {
 
   async asyncData(context: Context): Promise<AsyncData> {
     const releaseInfo = await getReleaseInfo(context, ARTWORK_SIZE);
-    const getTrackList = getTrackListHandler(context);
 
     return {
       releaseInfo,
-      getTrackList,
       ARTWORK_SIZE,
     };
   },
@@ -159,7 +157,6 @@ interface Data {
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
-  getTrackList: ReturnType<typeof getTrackListHandler> | undefined = undefined;
   ARTWORK_SIZE = ARTWORK_SIZE;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -224,21 +221,49 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
+  get isReleaseSet(): boolean {
+    return this.$getters()['player/isContextSet'](this.releaseInfo?.uri);
+  }
+  get isPlaying(): RootState['player']['isPlaying'] {
+    return this.$state().player.isPlaying;
+  }
+
   async appendTrackList() {
     if (this.releaseInfo == null
-      || this.releaseInfo.isFullTrackList
-      || typeof this.getTrackList !== 'function') {
+      || this.releaseInfo.isFullTrackList) {
       return;
     }
 
+    const { releaseInfo } = this;
     const offset = this.releaseInfo.trackList.length;
-    const { trackList, durationMs, isFullTrackList } = await this.getTrackList({
+    const tracks = await this.$spotify.albums.getAlbumTracks({
+      albumId: this.$route.params.releaseId,
+      market: this.$getters()['auth/userCountryCode'],
+      limit: 50,
       offset,
-      releaseId: this.releaseInfo.id,
-      releaseName: this.releaseInfo.name,
-      artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
-      artworkSrc: this.releaseInfo.artworkSrc,
     });
+    if (tracks == null) {
+      this.$toast.show('error', 'トラックが取得できませんでした。');
+      this.releaseInfo = { ...this.releaseInfo, isFullTrackList: true };
+      return;
+    }
+
+    const trackIdList = tracks.items.map((track) => track.id);
+    const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
+    const trackList = tracks.items.map((track, i) => {
+      const detail = convertTrackDetail<SpotifyAPI.SimpleTrack>({
+        isTrackSavedList,
+        offset,
+        releaseId: releaseInfo.id,
+        releaseName: releaseInfo.name,
+        artistIdList: releaseInfo.artistList.map((artist) => artist.id),
+        artworkSrc: releaseInfo.artworkSrc,
+      })(track, i);
+
+      return detail;
+    });
+    const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);
+    const isFullTrackList = tracks.next == null;
 
     this.releaseInfo = {
       ...this.releaseInfo,
@@ -246,13 +271,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       durationMs: this.releaseInfo.durationMs + durationMs,
       isFullTrackList,
     };
-  }
-
-  get isReleaseSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.releaseInfo?.uri);
-  }
-  get isPlaying(): RootState['player']['isPlaying'] {
-    return this.$state().player.isPlaying;
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnFavorite['on-clicked']) {
