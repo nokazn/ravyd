@@ -80,12 +80,10 @@
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
-    <div :class="$style.ReleaseIdPage__progressCircular">
-      <v-progress-circular
-        v-if="!releaseInfo.isFullTrackList"
-        indeterminate
-      />
-    </div>
+    <IntersectionLoadingCircle
+      :is-loading="!releaseInfo.isFullTrackList"
+      @on-appeared="appendTrackList"
+    />
 
     <Copyrights :copyright-list="releaseInfo.copyrightList" />
   </div>
@@ -106,8 +104,9 @@ import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
-import Copyrights from '~/components/parts/text/Copyrights.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Copyrights from '~/components/parts/text/Copyrights.vue';
 
 import { getReleaseInfo, getTrackListHandler } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
@@ -138,6 +137,7 @@ interface Data {
     ReleaseDuration,
     ReleaseLabel,
     TrackTable,
+    IntersectionLoadingCircle,
     Copyrights,
   },
 
@@ -171,8 +171,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
-    this.appendTrackList();
-
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
     } else {
@@ -229,32 +227,25 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   async appendTrackList() {
     if (this.releaseInfo == null
       || this.releaseInfo.isFullTrackList
-      || this.getTrackList == null) {
+      || typeof this.getTrackList !== 'function') {
       return;
     }
 
     const offset = this.releaseInfo.trackList.length;
-    const counts = this.releaseInfo.totalTracks - offset;
-    if (counts > 0) {
-      const trackList = await this.getTrackList({
-        offset,
-        counts,
-        releaseId: this.releaseInfo.id,
-        releaseName: this.releaseInfo.name,
-        artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
-        artworkSrc: this.releaseInfo.artworkSrc,
-      });
+    const { trackList, durationMs, isFullTrackList } = await this.getTrackList({
+      offset,
+      releaseId: this.releaseInfo.id,
+      releaseName: this.releaseInfo.name,
+      artistIdList: this.releaseInfo.artistList.map((artist) => artist.id),
+      artworkSrc: this.releaseInfo.artworkSrc,
+    });
 
-      const durationMs = trackList
-        .reduce((prev, curr) => prev + curr.durationMs, this.releaseInfo.durationMs);
-
-      this.releaseInfo = {
-        ...this.releaseInfo,
-        trackList: [...this.releaseInfo.trackList, ...trackList],
-        durationMs,
-        isFullTrackList: true,
-      };
-    }
+    this.releaseInfo = {
+      ...this.releaseInfo,
+      trackList: [...this.releaseInfo.trackList, ...trackList],
+      durationMs: this.releaseInfo.durationMs + durationMs,
+      isFullTrackList,
+    };
   }
 
   get isReleaseSet(): boolean {
@@ -366,13 +357,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__trackTable {
     margin-bottom: 16px;
-  }
-
-  &__progressCircular {
-    display: flex;
-    justify-content: center;
-    margin: 12px 0;
-    width: 100%;
   }
 }
 </style>
