@@ -146,7 +146,7 @@ export default Vue.extend({
         };
       };
 
-      // プレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
+      // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
       return this.playlistId != null
         ? [
           [addItemToQueue()],

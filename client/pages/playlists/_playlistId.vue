@@ -99,7 +99,7 @@
     <PlaylistTrackTable
       v-if="playlistTrackInfo != null"
       :track-list="playlistTrackInfo.trackList"
-      :playlist-id="playlistInfo.id"
+      :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
       :uri="playlistInfo.uri"
       @on-favorite-button-clicked="toggleTrackFavoritState"
     />
