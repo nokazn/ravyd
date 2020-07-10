@@ -36,15 +36,20 @@
 
     <template #append>
       <div :class="$style.SearchField__clearIcon">
-        <v-icon
+        <v-btn
           v-show="query !== ''"
-          :size="24"
-          color="grey"
+          icon
+          small
           title="消去"
           @click="clearText"
         >
-          mdi-close
-        </v-icon>
+          <v-icon
+            :size="24"
+            color="grey"
+          >
+            mdi-close
+          </v-icon>
+        </v-btn>
       </div>
     </template>
   </v-text-field>
