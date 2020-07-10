@@ -86,6 +86,23 @@
     />
 
     <Copyrights :copyright-list="releaseInfo.copyrightList" />
+
+    <template v-for="artist in releaseInfo.artistReleaseList">
+      <ScrollableCardsSection
+        v-if="artist.items.length > 0"
+        :key="artist.id"
+        :title="`${artist.name} の他のリリース`"
+        :class="$style.ReleaseIdPage__section"
+      >
+        <ReleaseCard
+          v-for="release in artist.items"
+          :key="release.id"
+          v-bind="release"
+          :width="CARD_WIDTH"
+          discograpy
+        />
+      </ScrollableCardsSection>
+    </template>
   </div>
 </template>
 
@@ -107,6 +124,8 @@ import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
+import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
+import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 
 import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
@@ -114,10 +133,12 @@ import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { SpotifyAPI, App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
+const CARD_WIDTH = 200;
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
   ARTWORK_SIZE: number
+  CARD_WIDTH: number
 }
 
 interface Data {
@@ -139,6 +160,8 @@ interface Data {
     TrackTable,
     IntersectionLoadingCircle,
     Copyrights,
+    ScrollableCardsSection,
+    ReleaseCard,
   },
 
   validate({ params }: Context) {
@@ -151,6 +174,7 @@ interface Data {
     return {
       releaseInfo,
       ARTWORK_SIZE,
+      CARD_WIDTH,
     };
   },
 })
@@ -158,6 +182,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
   ARTWORK_SIZE = ARTWORK_SIZE;
+  CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
 
@@ -375,6 +400,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__trackTable {
     margin-bottom: 16px;
+  }
+
+  &__section {
+    margin: 40px -32px;
   }
 }
 </style>

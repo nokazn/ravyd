@@ -70,6 +70,11 @@ export namespace App {
     externalUrls: SpotifyAPI.ExternalUrls
     genreList: string[]
     isFullTrackList: boolean
+    artistReleaseList: {
+      id: string
+      name: string
+      items: ReleaseCardInfo[]
+    }[]
   }
   export type ReleaseTrackInfo = {
     trackList: App.TrackDetail[]

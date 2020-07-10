@@ -3,6 +3,7 @@ import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App, SpotifyAPI } from '~~/types';
+import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
 export const getReleaseInfo = async (
   { app, params }: Context,
@@ -37,6 +38,26 @@ export const getReleaseInfo = async (
   const artistList = artists.map((artist) => ({
     id: artist.id,
     name: artist.name,
+  }));
+
+  const limit = 10;
+  const artistReleaseList = await Promise.all(artistList.map(async (artist) => {
+    const releases = await app.$spotify.artists.getArtistAlbums({
+      artistId: artist.id,
+      country: market,
+      // 同じリリースが含まれる場合は除いて 10 件にするため
+      limit: limit + 1,
+    });
+    // 同じリリースを除いて 10 件にする
+    const items = releases?.items
+      .map(convertReleaseForCard(artworkSize))
+      .filter((item) => item.id !== params.releaseId)
+      .slice(0, limit) ?? [];
+
+    return {
+      ...artist,
+      items,
+    };
   }));
 
   const artworkSrc = getImageSrc(images, artworkSize);
@@ -81,5 +102,6 @@ export const getReleaseInfo = async (
     externalUrls,
     genreList,
     isFullTrackList,
+    artistReleaseList,
   };
 };
