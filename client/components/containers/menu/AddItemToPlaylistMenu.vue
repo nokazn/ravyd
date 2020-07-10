@@ -136,7 +136,6 @@ export default Vue.extend({
       this.$dispatch('playlists/createPlaylist', {
         name,
         description: '',
-        isPublic: true,
         uriList: this.uriList,
       }).then(() => {
         this.$toast.show('primary', `"${this.name}" を新規プレイリストに追加しました。`);

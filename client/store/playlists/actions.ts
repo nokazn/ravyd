@@ -9,8 +9,8 @@ export type PlaylistsActions = {
   createPlaylist: (payload: {
     name: string
     description?: string
-    isPublic: boolean
-    isCollaborative: boolean
+    isPublic?: boolean
+    isCollaborative?: boolean
     uriList?: string[]
   }) => Promise<void>
   editPlaylist: (payload: {
