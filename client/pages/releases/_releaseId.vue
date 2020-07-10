@@ -403,7 +403,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   &__section {
-    margin: 40px -32px;
+    margin: 40px -32px 0;
   }
 }
 </style>
