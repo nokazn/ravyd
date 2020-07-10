@@ -80,7 +80,7 @@
       />
     </section>
 
-    <template v-for="[type, releaseInfo] in Object.entries(releaseListMap)">
+    <template v-for="[type, releaseInfo] in Array.from(releaseListMap.entries())">
       <CardsSection
         v-if="releaseInfo.items.length > 0"
         :key="type"
@@ -147,6 +147,7 @@ import {
   getTopTrackList,
   getIsFollowing,
   getReleaseListHandler,
+  initalReleaseListMap,
   ReleaseType,
 } from '~/scripts/localPlugins/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
@@ -226,40 +227,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
   topTrackList: App.TrackDetail[] | undefined = undefined;
-  releaseListMap: ArtistReleaseInfo = {
-    album: {
-      title: 'アルバム',
-      items: [],
-      total: 0,
-      isFull: false,
-      isAbbreviated: true,
-      isFetching: false,
-    },
-    single: {
-      title: 'シングル・EP',
-      items: [],
-      total: 0,
-      isFull: false,
-      isAbbreviated: true,
-      isFetching: false,
-    },
-    compilation: {
-      title: 'コンピレーション',
-      items: [],
-      total: 0,
-      isFull: false,
-      isAbbreviated: true,
-      isFetching: false,
-    },
-    appears_on: {
-      title: '参加作品',
-      items: [],
-      total: 0,
-      isFull: false,
-      isAbbreviated: true,
-      isFetching: false,
-    },
-  };
+  releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined = undefined
 
   AVATAR_SIZE = AVATAR_SIZE;
@@ -374,7 +342,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   async getAllReleaseList(type: ReleaseType) {
-    const currentReleaseList = this.releaseListMap[type];
+    const currentReleaseList = this.releaseListMap.get(type);
+    if (currentReleaseList == null) return;
+
     // すでにすべて表示されてるか取得済みの場合は何もしない
     if (!currentReleaseList.isAbbreviated
       || currentReleaseList.isFull
@@ -385,7 +355,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     const counts = currentReleaseList.total - offset;
     // 追加で取得するコンテンツがあり、取得中でない場合
     if (counts > 0 && !currentReleaseList.isFetching) {
-      this.$set(this.releaseListMap[type], 'isFetching', true);
+      this.releaseListMap.set(type, {
+        ...currentReleaseList,
+        isFetching: true,
+      });
       const releaseList = await this.getReleaseList({
         type,
         artworkSize: this.ARTWORK_MAX_SIZE,
@@ -393,21 +366,30 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
         offset,
       });
 
-      this.$set(this.releaseListMap[type], 'items', [...currentReleaseList.items, ...releaseList]);
-      this.$set(this.releaseListMap[type], 'isFull', true);
-      this.$set(this.releaseListMap[type], 'isFetching', false);
+      this.releaseListMap = new Map(this.releaseListMap.set(type, {
+        ...currentReleaseList,
+        items: [...currentReleaseList.items, ...releaseList],
+        isFull: true,
+        isFetching: false,
+      }).entries());
     }
   }
 
   async onShowAllButtonClicked(type: ReleaseType) {
-    const currentReleaseList = this.releaseListMap[type];
+    const currentReleaseList = this.releaseListMap.get(type);
     if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
 
     if (currentReleaseList.isAbbreviated) {
       await this.getAllReleaseList(type);
-      this.$set(this.releaseListMap[type], 'isAbbreviated', false);
+      this.releaseListMap = new Map(this.releaseListMap.set(type, {
+        ...currentReleaseList,
+        isAbbreviated: false,
+      }).entries());
     } else {
-      this.$set(this.releaseListMap[type], 'isAbbreviated', true);
+      this.releaseListMap = new Map(this.releaseListMap.set(type, {
+        ...currentReleaseList,
+        isAbbreviated: true,
+      }).entries());
     }
   }
 }

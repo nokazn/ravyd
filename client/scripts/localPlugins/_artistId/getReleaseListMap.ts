@@ -8,16 +8,61 @@ import {
   ReleaseInfo,
 } from './index';
 
-export type ArtistReleaseInfo = {
-  [k in ReleaseType]: ReleaseInfo<k>
-}
+export type ArtistReleaseInfo<T extends ReleaseType = ReleaseType> = Map<T, ReleaseInfo<T>>
+
+export const initalReleaseListMap: ArtistReleaseInfo = new Map([
+  [
+    'album',
+    {
+      title: 'アルバム',
+      items: [],
+      total: 0,
+      isFull: false,
+      isAbbreviated: true,
+      isFetching: false,
+    },
+  ],
+  [
+    'single',
+    {
+      title: 'シングル・EP',
+      items: [],
+      total: 0,
+      isFull: false,
+      isAbbreviated: true,
+      isFetching: false,
+    },
+  ],
+  [
+    'compilation',
+    {
+      title: 'コンピレーション',
+      items: [],
+      total: 0,
+      isFull: false,
+      isAbbreviated: true,
+      isFetching: false,
+    },
+  ],
+  [
+    'appears_on',
+    {
+      title: '参加作品',
+      items: [],
+      total: 0,
+      isFull: false,
+      isAbbreviated: true,
+      isFetching: false,
+    },
+  ],
+]);
 
 const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
   releaseType: T,
   artworkSize: number,
   limit: number,
   offset?: number,
-): Promise<ReleaseInfo<T>> => {
+): Promise<[T, ReleaseInfo<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 
   const country = app.$getters()['auth/userCountryCode'];
@@ -33,21 +78,24 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   const isFull = releases?.next == null;
   const total = releases?.total ?? 0;
 
-  return {
-    title,
-    items,
-    total,
-    isFull,
-    isAbbreviated: true,
-    isFetching: false,
-  };
+  return [
+    releaseType,
+    {
+      title,
+      items,
+      total,
+      isFull,
+      isAbbreviated: true,
+      isFetching: false,
+    },
+  ];
 };
 
 export const getReleaseListMap = async (
   context: Context,
   artworkSize: number,
   limit: number,
-): Promise<ArtistReleaseInfo> => {
+): Promise<ArtistReleaseInfo<ReleaseType>> => {
   const getReleaseList = getReleaseListHandler(context);
 
   const [album, single, compilation, appears_on] = await Promise.all([
@@ -57,10 +105,10 @@ export const getReleaseListMap = async (
     getReleaseList('appears_on', artworkSize, limit),
   ] as const);
 
-  return {
+  return new Map<ReleaseType, ReleaseInfo<ReleaseType>>([
     album,
     single,
     compilation,
     appears_on,
-  };
+  ]);
 };
