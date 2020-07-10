@@ -2,7 +2,6 @@
   <v-list-item
     dense
     three-line
-    :input-valuea="id"
     :title="`${name} を再生`"
     :class="$style.TrackQueueMenuItem"
     @click="onItemClicked"
