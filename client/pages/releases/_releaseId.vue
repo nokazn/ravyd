@@ -91,7 +91,7 @@
       <ScrollableCardsSection
         v-if="artist.items.length > 0"
         :key="artist.id"
-        :title="`${artist.name} の他のリリース`"
+        :title="`${artist.name}の他のリリース`"
         :class="$style.ReleaseIdPage__section"
       >
         <ReleaseCard
