@@ -12,7 +12,6 @@
     <PlaylistTrackTable
       v-if="trackList != null"
       :track-list="trackList"
-      playlist-id=""
       :uri="uri"
       custom
       :class="$style.LibraryTracksPage__table"

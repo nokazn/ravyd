@@ -132,8 +132,8 @@ export default Vue.extend({
       required: true,
     },
     playlistId: {
-      type: String,
-      required: true,
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
     isTrackSet: {
       type: Boolean,
