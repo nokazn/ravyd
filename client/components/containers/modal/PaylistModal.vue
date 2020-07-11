@@ -1,97 +1,97 @@
 <template>
-  <div>
-    <v-dialog
-      v-model="modal"
-      :max-width="600"
-      :class="$style.PlaylistModal"
-    >
-      <v-card>
-        <div :class="$style.PlaylistModal__title">
-          <v-card-title>
-            プレイリストの{{ detailText }}
-          </v-card-title>
+  <v-dialog
+    v-model="modal"
+    :max-width="600"
+    :class="$style.PlaylistModal"
+  >
+    <v-card :elevation="12">
+      <div :class="$style.PlaylistModal__header">
+        <v-card-title>
+          プレイリストの{{ detailText }}
+        </v-card-title>
 
-          <v-btn
-            icon
-            title="閉じる"
-            @click="onCloseButtonClicked"
-          >
-            <v-icon>
-              mdi-close
-            </v-icon>
-          </v-btn>
-        </div>
+        <v-btn
+          icon
+          title="閉じる"
+          @click="onCloseButtonClicked"
+        >
+          <v-icon>
+            mdi-close
+          </v-icon>
+        </v-btn>
+      </div>
 
-        <v-card-text>
-          <v-form
-            ref="form"
-            v-model="isValid"
-          >
-            <v-text-field
-              v-model="playlistName"
-              autofocus
-              label="名前"
-              clearable
-              required
-              :rules="playlistNameRules"
-              @keydown.enter.prevent
-            />
+      <v-form
+        ref="form"
+        v-model="isValid"
+        :class="[
+          $style.PlaylistModal__content,
+          $style.Content,
+        ]"
+        class="g-custom-scroll-bar"
+      >
+        <v-text-field
+          v-model="playlistName"
+          autofocus
+          label="名前"
+          clearable
+          required
+          :rules="playlistNameRules"
+          @keydown.enter.prevent
+        />
 
-            <v-textarea
-              v-model="playlistDescription"
-              label="説明"
-              clearable
-              :rows="3"
-            />
+        <v-textarea
+          v-model="playlistDescription"
+          label="説明"
+          clearable
+          :rows="3"
+        />
 
-            <v-file-input
-              v-model="playlistArtwork"
-              label="画像を選択"
-              accept="image/*"
-              prepend-icon="mdi-camera"
-              clearable
-              show-size
-            />
+        <v-file-input
+          v-model="playlistArtwork"
+          label="画像を選択"
+          accept="image/*"
+          prepend-icon="mdi-camera"
+          clearable
+          show-size
+        />
 
-            <v-checkbox
-              v-model="isPrivatePlaylist"
-              label="プレイリストを非公開にする"
-              :disabled="isCollaborativePlaylist"
-            />
+        <v-checkbox
+          v-model="isPrivatePlaylist"
+          label="プレイリストを非公開にする"
+          :disabled="isCollaborativePlaylist"
+        />
 
-            <v-checkbox
-              v-model="isCollaborativePlaylist"
-              label="コラボプレイリストにする"
-            />
-          </v-form>
-        </v-card-text>
+        <v-checkbox
+          v-model="isCollaborativePlaylist"
+          label="コラボプレイリストにする"
+          :class="$style['Content__collaborative--last']"
+        />
+      </v-form>
 
-        <v-card-actions>
-          <div :class="$style.PlaylistModal__action">
-            <v-btn
-              text
-              rounded
-              :min-width="90"
-              @click="onCloseButtonClicked"
-            >
-              キャンセル
-            </v-btn>
+      <v-card-actions :class="$style.PlaylistModal__footer">
+        <v-btn
+          text
+          rounded
+          :min-width="90"
+          @click="onCloseButtonClicked"
+        >
+          キャンセル
+        </v-btn>
 
-            <v-btn
-              rounded
-              :min-width="90"
-              color="success"
-              :loading="isLoading"
-              :disabled="!isValid"
-              @click="createPlaylist"
-            >
-              {{ resultText || detailText }}
-            </v-btn>
-          </div>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+        <v-btn
+          rounded
+          :min-width="90"
+          color="success"
+          :loading="isLoading"
+          :disabled="!isValid"
+          @click="createPlaylist"
+        >
+          {{ resultText || detailText }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -312,20 +312,32 @@ export default Vue.extend({
 .PlaylistModal {
   z-index: z-index-of(modal);
 
-  &__title {
+  &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 
     & > *:last-child {
-      margin-right: 8px;
+      margin-right: 16px;
     }
   }
 
-  &__action {
-    padding: 12px;
-    width: 100%;
+  &__content {
+    min-height: 72px;
+    // header と footer の分を差し引く
+    max-height: calc(90vh - 2rem - 32px - 68px);
+    padding: 0 24px;
+    overflow-y: auto;
+
+    .Content {
+      &__collaborative--last {
+        margin-top: 0;
+      }
+    }
+  }
+
+  &__footer {
+    padding: 16px;
     display: flex;
     justify-content: flex-end;
 
