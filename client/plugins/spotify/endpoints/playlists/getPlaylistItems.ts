@@ -23,7 +23,7 @@ export const getPlaylistItems = (context: Context) => {
     offset?: number
     market?: string
     additionalTypeList?: Array<'track' | 'episode'>
-  }): Promise<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack> | null> => {
+  }): Promise<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack> | undefined> => {
     const request = app.$spotifyApi.$get(`/playlists/${playlistId}/tracks`, {
       params: {
         fields,
@@ -34,7 +34,7 @@ export const getPlaylistItems = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 
     return request;
