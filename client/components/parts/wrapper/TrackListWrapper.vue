@@ -6,6 +6,7 @@
       </h2>
 
       <ShowAllTracksButton
+        v-if="trackList.length > abbreviatedLength"
         :is-abbreviated="isAbbreviated"
         :abbreviated-length="abbreviatedLength"
         @on-clicked="onShowAllTracksButtonClicked"
