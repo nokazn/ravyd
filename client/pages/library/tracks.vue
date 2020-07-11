@@ -35,9 +35,10 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
 
 interface Data {
-  observer: IntersectionObserver | undefined
   title: string
   uri: string
+  observer: IntersectionObserver | undefined
+  mutationSubscriber: (() => void) | undefined
 }
 
 const LIMIT_OF_TRACKS = 30 as const;
@@ -68,10 +69,11 @@ const LIMIT_OF_TRACKS = 30 as const;
   },
 })
 export default class LibraryTracksPage extends Vue implements Data {
-  observer: IntersectionObserver | undefined = undefined;
   title = 'お気に入りの曲';
   // @non-null ログイン中なので userId は必ず存在
   uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
+  observer: IntersectionObserver | undefined = undefined;
+  mutationSubscriber: (() => void) | undefined = undefined;
 
   head() {
     return {
@@ -94,6 +96,24 @@ export default class LibraryTracksPage extends Vue implements Data {
 
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
+
+    this.mutationSubscriber = this.$subscribe((mutation) => {
+      switch (mutation.type) {
+        case 'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS':
+          this.$dispatch('library/tracks/updateLatestSavedTrackList');
+          break;
+
+        default:
+          break;
+      }
+    });
+  }
+
+  beforeDestroy() {
+    if (this.mutationSubscriber != null) {
+      this.mutationSubscriber();
+      this.mutationSubscriber = undefined;
+    }
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
@@ -103,7 +123,7 @@ export default class LibraryTracksPage extends Vue implements Data {
       return;
     }
 
-    if (this.trackList == null) return;
+    if (this.trackList == null || this.trackList.length === 0) return;
 
     // 再生
     const trackUriList = this.trackList.map((track) => track.uri);
