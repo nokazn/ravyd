@@ -145,14 +145,11 @@ export default Vue.extend({
       });
     },
     onItemClicked(playlist: SpotifyAPI.SimplePlaylist) {
-      this.$spotify.playlists.addItemToPlaylist({
+      this.$dispatch('playlists/addItemToPlaylist', {
         playlistId: playlist.id,
+        playlistName: playlist.name,
         uriList: this.uriList,
-      }).then(() => {
-        this.$toast.show('primary', `"${this.name}" を "${playlist.name}" に追加しました。`);
-      }).catch((err: Error) => {
-        console.error({ err });
-        this.$toast.show('error', `"${this.name}" を "${playlist.name}" に追加できませんでした。`);
+        name: this.name,
       });
     },
   },

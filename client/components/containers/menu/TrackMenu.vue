@@ -111,22 +111,17 @@ export default Vue.extend({
 
       const removePlaylistItem = () => ({
         name: 'このプレイリストから削除',
-        handler: async () => {
+        handler: () => {
           if (this.playlistId == null) return;
 
-          const { snapshot_id } = await this.$spotify.playlists.removePlaylistItems({
+          this.$dispatch('playlists/removePlaylistItem', {
             playlistId: this.playlistId,
-            tracks: [{
+            track: {
               uri: this.track.uri,
               positions: [this.track.index],
-            }],
+            },
+            name: this.track.name,
           });
-
-          if (snapshot_id != null) {
-            this.$toast.show('primary', `${this.track.name}をこのプレイリストから削除しました。`);
-          } else {
-            this.$toast.show('primary', `${this.track.name}をこのプレイリストから削除できませんでした。`);
-          }
         },
         disabled: this.playlistId == null,
       });

@@ -15,8 +15,19 @@ export type PlaylistsMutations = {
     isCollaborative?: boolean
   }
   REMOVE_PLAYLIST: string
+  MODIFY_PLAYLIST_TOTAL_TRACKS: {
+    playlistId: string
+    total: number
+  }
   SET_ACTUAL_IS_SAVED: [string, boolean],
   DELETE_ACTUAL_IS_SAVED: string,
+  INCREMENT_UNUPDATED_TRACKS_MAP: [string, number],
+  DELETE_UNUPDATED_TRACKS_MAP: string,
+  SET_ACTUALLY_DELETED_TRACK: [string, {
+    uri: string
+    positions: [number]
+  }],
+  DELETE_ACTUALLY_DELETED_TRACK: string,
 }
 
 export type RootMutations = {
@@ -24,8 +35,13 @@ export type RootMutations = {
   'playlists/ADD_PLAYLIST': PlaylistsMutations['ADD_PLAYLIST']
   'playlists/EDIT_PLAYLIST': PlaylistsMutations['EDIT_PLAYLIST']
   'playlists/REMOVE_PLAYLIST': PlaylistsMutations['REMOVE_PLAYLIST']
+  'playlists/MODIFY_PLAYLIST_TOTAL_TRACKS': PlaylistsMutations['MODIFY_PLAYLIST_TOTAL_TRACKS']
   'playlists/SET_ACTUAL_IS_SAVED': PlaylistsMutations['SET_ACTUAL_IS_SAVED']
   'playlists/DELETE_ACTUAL_IS_SAVED': PlaylistsMutations['DELETE_ACTUAL_IS_SAVED']
+  'playlists/INCREMENT_UNUPDATED_TRACKS_MAP': PlaylistsMutations['INCREMENT_UNUPDATED_TRACKS_MAP']
+  'playlists/DELETE_UNUPDATED_TRACKS_MAP': PlaylistsMutations['DELETE_UNUPDATED_TRACKS_MAP']
+  'playlists/SET_ACTUALLY_DELETED_TRACK': PlaylistsMutations['SET_ACTUALLY_DELETED_TRACK']
+  'playlists/DELETE_ACTUALLY_DELETED_TRACK': PlaylistsMutations['DELETE_ACTUALLY_DELETED_TRACK']
 }
 
 const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
@@ -71,12 +87,48 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
     state.playlists = modifiedPlaylists;
   },
 
+  MODIFY_PLAYLIST_TOTAL_TRACKS(state, { playlistId, total }) {
+    const { playlists } = state;
+    if (playlists == null) return;
+
+    const modifiedPlaylists = [...playlists];
+    const index = modifiedPlaylists.findIndex((playlist) => playlist.id === playlistId);
+    if (index === -1) return;
+
+    const playlist = modifiedPlaylists[index];
+    modifiedPlaylists[index] = {
+      ...playlist,
+      tracks: {
+        ...playlist.tracks,
+        total,
+      },
+    };
+
+    state.playlists = modifiedPlaylists;
+  },
+
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
     state.actualIsSavedMap.set(key, isSaved);
   },
 
   DELETE_ACTUAL_IS_SAVED(state, key) {
     state.actualIsSavedMap.delete(key);
+  },
+
+  INCREMENT_UNUPDATED_TRACKS_MAP(state, [key, isTrackSavedMap]) {
+    state.numberOfUnupdatedTracksMap.set(key, isTrackSavedMap);
+  },
+
+  DELETE_UNUPDATED_TRACKS_MAP(state, key) {
+    state.numberOfUnupdatedTracksMap.delete(key);
+  },
+
+  SET_ACTUALLY_DELETED_TRACK(state, [key, track]) {
+    state.actuallyDeletedTrackMap.set(key, track);
+  },
+
+  DELETE_ACTUALLY_DELETED_TRACK(state, key) {
+    state.actuallyDeletedTrackMap.delete(key);
   },
 };
 
