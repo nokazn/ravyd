@@ -234,26 +234,28 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   async addItemToPlaylist({ state, commit }, {
     playlistId, playlistName, uriList, name,
   }) {
-    await this.$spotify.playlists.addItemToPlaylist({
+    const { snapshot_id } = await this.$spotify.playlists.addItemToPlaylist({
       playlistId,
       uriList,
-    }).then(() => {
-      this.$toast.show('primary', `"${name}" を "${playlistName}" に追加しました。`);
-
-      const { playlists } = state;
-      const playlist = playlists?.find((item) => item.id === playlistId);
-      // フォローしている自分のプレイリストにアイテムを追加した時
-      if (playlist?.tracks != null) {
-        const total = playlist.tracks.total + 1;
-        commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
-      }
-
-      const currentUnupdatedCounts = state.numberOfUnupdatedTracksMap.get(playlistId) ?? 0;
-      commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', `"${name}" を "${playlistName}" に追加できませんでした。`);
     });
+
+    if (snapshot_id == null) {
+      this.$toast.show('error', `"${name}" を "${playlistName}" に追加できませんでした。`);
+      return;
+    }
+
+    const { playlists } = state;
+    const playlist = playlists?.find((item) => item.id === playlistId);
+    // フォローしている自分のプレイリストにアイテムを追加した時
+    if (playlist?.tracks != null) {
+      const total = playlist.tracks.total + 1;
+      commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
+    }
+
+    const currentUnupdatedCounts = state.numberOfUnupdatedTracksMap.get(playlistId) ?? 0;
+    commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
+
+    this.$toast.show('primary', `"${name}" を "${playlistName}" に追加しました。`);
   },
 
   /**
@@ -279,6 +281,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
 
     commit('SET_ACTUALLY_DELETED_TRACK', [playlistId, track]);
+
     this.$toast.show('primary', `${name}をこのプレイリストから削除しました。`);
   },
 };

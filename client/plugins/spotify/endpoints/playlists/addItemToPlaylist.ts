@@ -15,13 +15,13 @@ export const addItemToPlaylist = (context: Context) => {
     playlistId: string
     uriList?: string[]
     position?: number
-  }): Promise<SpotifyAPI.PlaylistSnapshot> => {
+  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
     const request = app.$spotifyApi.$post(`/playlists/${playlistId}/tracks`, {
       uris: uriList,
       position,
     }).catch((err: Error) => {
       console.error({ err });
-      throw new Error(err.message);
+      return {};
     });
 
     return request;
