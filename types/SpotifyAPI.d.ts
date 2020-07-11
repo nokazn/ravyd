@@ -274,12 +274,16 @@ export namespace SpotifyAPI {
     owner: UserData
     public: boolean | null
     snapshot_id: string
-    tracks: Paging<PlaylistTrack>
+    tracks: {
+      href: string
+      total: number
+    } | null
     type: 'playlist'
     uri: string
   }
   export type Playlist = SimplePlaylist & {
     followers: Followers
+    tracks: Paging<PlaylistTrack>
   }
   export type PlaylistTrack = {
     added_at: string // timestamp
