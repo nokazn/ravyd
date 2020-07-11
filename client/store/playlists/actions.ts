@@ -25,6 +25,20 @@ export type PlaylistsActions = {
     playlistId: string
     isOwnPlaylist: boolean
   }) => Promise<void>
+  addItemToPlaylist: (params: {
+    playlistId: string
+    playlistName: string
+    uriList: string[]
+    name: string
+  }) => Promise<void>
+  removePlaylistItem: (params: {
+    playlistId: string
+    track: {
+      uri: string
+      positions: [number]
+    }
+    name: string
+  }) => Promise<void>
 }
 
 export type RootActions = {
@@ -34,6 +48,8 @@ export type RootActions = {
   'playlists/editPlaylist': PlaylistsActions['editPlaylist']
   'playlists/followPlaylist': PlaylistsActions['followPlaylist']
   'playlists/unfollowPlaylist': PlaylistsActions['unfollowPlaylist']
+  'playlists/addItemToPlaylist': PlaylistsActions['addItemToPlaylist']
+  'playlists/removePlaylistItem': PlaylistsActions['removePlaylistItem']
 }
 
 const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
@@ -141,7 +157,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
   },
 
-  async editPlaylist({ state, commit }, {
+  async editPlaylist({ commit }, {
     playlistId, name, description, isPublic, isCollaborative,
   }) {
     await this.$spotify.playlists.editPlaylistDetail({
@@ -152,14 +168,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       isPublic: isCollaborative ? false : isPublic,
       isCollaborative,
     }).then(() => {
-      const { playlists } = state;
-      const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-      // 削除 (実際はアンフォロー) したプレイリストを編集した時
-      if (index == null || index === -1) return;
-
-
       commit('EDIT_PLAYLIST', {
-        index,
         id: playlistId,
         name,
         description,
@@ -220,6 +229,60 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
           ? 'プレイリストの削除に失敗しました。'
           : 'プレイリストのフォローの解除に失敗しました。');
       });
+  },
+
+  async addItemToPlaylist({ state, commit }, {
+    playlistId, playlistName, uriList, name,
+  }) {
+    const { snapshot_id } = await this.$spotify.playlists.addItemToPlaylist({
+      playlistId,
+      uriList,
+    });
+
+    if (snapshot_id == null) {
+      this.$toast.show('error', `"${name}" を "${playlistName}" に追加できませんでした。`);
+      return;
+    }
+
+    const { playlists } = state;
+    const playlist = playlists?.find((item) => item.id === playlistId);
+    // フォローしている自分のプレイリストにアイテムを追加した時
+    if (playlist?.tracks != null) {
+      const total = playlist.tracks.total + 1;
+      commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
+    }
+
+    const currentUnupdatedCounts = state.numberOfUnupdatedTracksMap.get(playlistId) ?? 0;
+    commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
+
+    this.$toast.show('primary', `"${name}" を "${playlistName}" に追加しました。`);
+  },
+
+  /**
+   * プレイリストから1曲削除
+   */
+  async removePlaylistItem({ state, commit }, { playlistId, track, name }) {
+    const { snapshot_id } = await this.$spotify.playlists.removePlaylistItems({
+      playlistId,
+      tracks: [track],
+    });
+
+    if (snapshot_id == null) {
+      this.$toast.show('error', `${name}をこのプレイリストから削除できませんでした。`);
+      return;
+    }
+
+    const { playlists } = state;
+    const playlist = playlists?.find((item) => item.id === playlistId);
+    // フォローしている自分のプレイリストのアイテムを削除した時
+    if (playlist?.tracks != null) {
+      const total = playlist.tracks.total - 1;
+      commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
+    }
+
+    commit('SET_ACTUALLY_DELETED_TRACK', [playlistId, track]);
+
+    this.$toast.show('primary', `${name}をこのプレイリストから削除しました。`);
   },
 };
 

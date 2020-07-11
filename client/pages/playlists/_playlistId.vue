@@ -235,8 +235,9 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       const [playlistId, isFollowing] = mutationPayload.payload;
       if (playlistId === this.playlistInfo.id) {
         this.isFollowing = isFollowing;
-        this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
       }
+
+      this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
     };
 
     // プレイリストを編集した後呼ばれる
@@ -258,6 +259,79 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       }
     };
 
+    // アイテムを追加した後呼ばれる
+    const subscribeAddedItem = async (mutationPayload: ExtendedMutationPayload<'playlists/INCREMENT_UNUPDATED_TRACKS_MAP'>) => {
+      // @todo this.getPlaylistTrackInfo
+      if (this.playlistInfo == null
+        || this.playlistTrackInfo == null
+        || this.getPlaylistTrackInfo == null) return;
+
+      const [playlistId, limit] = mutationPayload.payload;
+      const currentPlaylistTrackInfo = this.playlistTrackInfo;
+      // 表示中のプレイリストのアイテムがすべて読み込み済みで、アイテムが追加された場合
+      if (playlistId === this.$route.params.playlistId
+        || currentPlaylistTrackInfo.isFullTrackList) {
+        const offset = currentPlaylistTrackInfo.trackList.length;
+        const trackInfo = await this.getPlaylistTrackInfo({
+          offset,
+          limit,
+        });
+
+        if (trackInfo == null) {
+          this.playlistTrackInfo.isFullTrackList = true;
+          return;
+        }
+
+        const { isFullTrackList, trackList } = trackInfo;
+        this.playlistTrackInfo = {
+          trackList: [...currentPlaylistTrackInfo.trackList, ...trackList],
+          isFullTrackList,
+        };
+
+        const { playlistInfo } = this;
+        this.playlistInfo = {
+          ...playlistInfo,
+          totalTracks: playlistInfo.totalTracks + limit,
+        };
+      }
+
+      this.$commit('playlists/DELETE_UNUPDATED_TRACKS_MAP', playlistId);
+    };
+
+    // アイテムを削除した後呼ばれる
+    const subscribeRemovedItem = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUALLY_DELETED_TRACK'>) => {
+      if (this.playlistInfo == null || this.playlistTrackInfo == null) return;
+
+      const [playlistId, { uri, positions: [index] }] = mutationPayload.payload;
+      if (playlistId === this.$route.params.playlistId) {
+        const currentTrackInfo = this.playlistTrackInfo;
+        const removedItem = currentTrackInfo
+          .trackList[index] as App.PlaylistTrackDetail | undefined;
+        if (removedItem == null || removedItem.uri !== uri) return;
+
+        const unmodifiedTrackList = currentTrackInfo.trackList.slice(0, index);
+        // index 番目の要素を除き、残りの後ろの要素のインデックスを変更
+        const modifiedTrackList = currentTrackInfo.trackList
+          .slice(index + 1, currentTrackInfo.trackList.length)
+          .map((track) => ({
+            ...track,
+            index: track.index - 1,
+          }));
+        this.playlistTrackInfo = {
+          ...currentTrackInfo,
+          trackList: [...unmodifiedTrackList, ...modifiedTrackList],
+        };
+
+        const { playlistInfo } = this;
+        this.playlistInfo = {
+          ...playlistInfo,
+          totalTracks: playlistInfo.totalTracks - 1,
+        };
+      }
+
+      this.$commit('playlists/DELETE_ACTUALLY_DELETED_TRACK', playlistId);
+    };
+
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
@@ -271,6 +345,14 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
         case 'playlists/EDIT_PLAYLIST':
           subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        case 'playlists/INCREMENT_UNUPDATED_TRACKS_MAP':
+          subscribeAddedItem(mutation as ExtendedMutationPayload<typeof type>);
+          break;
+
+        case 'playlists/SET_ACTUALLY_DELETED_TRACK':
+          subscribeRemovedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
         default:
