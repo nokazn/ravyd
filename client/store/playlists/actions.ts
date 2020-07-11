@@ -157,7 +157,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
   },
 
-  async editPlaylist({ state, commit }, {
+  async editPlaylist({ commit }, {
     playlistId, name, description, isPublic, isCollaborative,
   }) {
     await this.$spotify.playlists.editPlaylistDetail({
@@ -168,14 +168,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       isPublic: isCollaborative ? false : isPublic,
       isCollaborative,
     }).then(() => {
-      const { playlists } = state;
-      const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-      // 削除 (実際はアンフォロー) したプレイリストを編集した時
-      if (index == null || index === -1) return;
-
-
       commit('EDIT_PLAYLIST', {
-        index,
         id: playlistId,
         name,
         description,
@@ -278,9 +271,12 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
 
     const { playlists } = state;
-    const index = playlists?.findIndex((playlist) => playlist.id === playlistId);
-    // 削除 (実際はアンフォロー) したプレイリストを編集した時
-    if (index == null || index === -1) return;
+    const playlist = playlists?.find((item) => item.id === playlistId);
+    // フォローしている自分のプレイリストのアイテムを削除した時
+    if (playlist?.tracks != null) {
+      const total = playlist.tracks.total - 1;
+      commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
+    }
 
     commit('SET_ACTUALLY_DELETED_TRACK', [playlistId, track]);
     this.$toast.show('primary', `${name}をこのプレイリストから削除しました。`);

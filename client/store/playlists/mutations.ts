@@ -7,7 +7,6 @@ export type PlaylistsMutations = {
   SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined
   ADD_PLAYLIST: SpotifyAPI.SimplePlaylist
   EDIT_PLAYLIST: {
-    index: number
     id: string
     name?: string
     description?: string
@@ -51,18 +50,23 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
 
   ADD_PLAYLIST(state, playlist) {
     const { playlists } = state;
+
     state.playlists = playlists != null
       ? [playlist, ...playlists]
       : [playlist];
   },
 
   EDIT_PLAYLIST(state, {
-    index, name, description, isPublic, isCollaborative,
+    id, name, description, isPublic, isCollaborative,
   }) {
     const { playlists } = state;
     if (playlists == null) return;
 
     const modifiedPlaylists = [...playlists];
+    const index = modifiedPlaylists.findIndex((playlist) => playlist.id === id);
+    // 削除 (実際はアンフォロー) したプレイリストを編集した時
+    if (index === -1) return;
+
     const playlist = modifiedPlaylists[index];
     modifiedPlaylists[index] = {
       ...playlist,
@@ -72,6 +76,7 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
       public: isPublic ?? playlist.public,
       collaborative: isCollaborative ?? playlist.collaborative,
     };
+
     state.playlists = modifiedPlaylists;
   },
 
@@ -84,6 +89,7 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
     if (index === -1) return;
 
     modifiedPlaylists.splice(index, 1);
+
     state.playlists = modifiedPlaylists;
   },
 
