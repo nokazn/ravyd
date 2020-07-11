@@ -76,7 +76,7 @@
     <TrackTable
       :track-list="releaseInfo.trackList"
       :uri="releaseInfo.uri"
-      :class="$style.ReleaseIdPage__trackTable"
+      :class="$style.ReleaseIdPage__table"
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
@@ -398,7 +398,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  &__trackTable {
+  &__table {
     margin-bottom: 16px;
   }
 

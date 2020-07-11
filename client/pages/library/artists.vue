@@ -131,11 +131,5 @@ export default class LibraryArtistsPage extends Vue implements Data {
   &__cardSpacer {
     height: 0;
   }
-
-  &__loading {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
 }
 </style>

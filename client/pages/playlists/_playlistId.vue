@@ -101,6 +101,7 @@
       :track-list="playlistTrackInfo.trackList"
       :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
       :uri="playlistInfo.uri"
+      :class="$style.PlaylistIdPage__table"
       @on-favorite-button-clicked="toggleTrackFavoritState"
     />
 
@@ -520,6 +521,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         margin-right: 8px;
       }
     }
+  }
+
+  &__table {
+    margin-bottom: 32px;
   }
 }
 </style>

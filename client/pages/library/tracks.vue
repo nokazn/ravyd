@@ -148,11 +148,5 @@ export default class LibraryTracksPage extends Vue implements Data {
   &__table {
     width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }
-
-  &__loading {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
 }
 </style>
