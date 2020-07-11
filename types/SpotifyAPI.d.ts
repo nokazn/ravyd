@@ -277,7 +277,7 @@ export namespace SpotifyAPI {
     tracks: {
       href: string
       total: number
-    } | null
+    }
     type: 'playlist'
     uri: string
   }
