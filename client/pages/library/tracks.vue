@@ -38,7 +38,7 @@ interface Data {
   title: string
   uri: string
   observer: IntersectionObserver | undefined
-  mutationSubscriber: (() => void) | undefined
+  mutationUnsubscribe: (() => void) | undefined
 }
 
 const LIMIT_OF_TRACKS = 30 as const;
@@ -73,7 +73,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   // @non-null ログイン中なので userId は必ず存在
   uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
   observer: IntersectionObserver | undefined = undefined;
-  mutationSubscriber: (() => void) | undefined = undefined;
+  mutationUnsubscribe: (() => void) | undefined = undefined;
 
   head() {
     return {
@@ -97,7 +97,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   mounted() {
     this.$dispatch('setDefaultDominantBackgroundColor');
 
-    this.mutationSubscriber = this.$subscribe((mutation) => {
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
         case 'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS':
           this.$dispatch('library/tracks/updateLatestSavedTrackList');
@@ -110,9 +110,9 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   beforeDestroy() {
-    if (this.mutationSubscriber != null) {
-      this.mutationSubscriber();
-      this.mutationSubscriber = undefined;
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
     }
   }
 

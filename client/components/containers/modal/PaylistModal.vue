@@ -107,7 +107,7 @@ export type Data = {
   isCollaborativePlaylist: boolean
   playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
-  mutationUnsubscriber: (() => void) | undefined
+  mutationUnsubscribe: (() => void) | undefined
 }
 
 // 編集するとき
@@ -183,7 +183,7 @@ export default Vue.extend({
         (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
       ],
       isLoading: false,
-      mutationUnsubscriber: undefined,
+      mutationUnsubscribe: undefined,
     };
   },
 
@@ -247,7 +247,7 @@ export default Vue.extend({
       fileReader.readAsDataURL(this.playlistArtwork);
     };
 
-    this.mutationUnsubscriber = this.$subscribe((mutation) => {
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
         case 'playlists/ADD_PLAYLIST':
@@ -262,9 +262,9 @@ export default Vue.extend({
   },
 
   beforeDestroy() {
-    if (this.mutationUnsubscriber != null) {
-      this.mutationUnsubscriber();
-      this.mutationUnsubscriber = undefined;
+    if (this.mutationUnsubscribe != null) {
+      this.mutationUnsubscribe();
+      this.mutationUnsubscribe = undefined;
     }
   },
 
