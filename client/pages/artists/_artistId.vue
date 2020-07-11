@@ -110,6 +110,13 @@
           <div :class="$style.CradSection__spacer" />
         </div>
 
+        <IntersectionLoadingCircle
+          v-if="releaseInfo != null && !releaseInfo.isAbbreviated"
+          :is-loading="!releaseInfo.isFull"
+          :class="$style.CardSection__loadingCircle"
+          @on-appeared="appendReleaseList(type)"
+        />
+
         <div
           v-if="releaseInfo.total > ABBREVIATED_RELEASE_LENGTH"
           :class="$style.CardSection__buttonWrapper"
@@ -117,7 +124,7 @@
           <ShowAllReleaseButton
             :is-abbreviated="releaseInfo.isAbbreviated"
             @on-clicked="onShowAllButtonClicked(type)"
-            @mouseenter.native="getAllReleaseList(type)"
+            @mouseenter.native="onShowAllButtonHovered(type)"
           />
         </div>
       </CardsSection>
@@ -138,6 +145,7 @@ import ArtistMenu, { On as OnMenu } from '~/components/containers/menu/ArtistMen
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import ShowAllReleaseButton from '~/components/parts/button/ShowAllReleaseButton.vue';
 
 import {
@@ -146,11 +154,11 @@ import {
   getArtistInfo,
   getTopTrackList,
   getIsFollowing,
-  getReleaseListHandler,
   initalReleaseListMap,
   ReleaseType,
 } from '~/scripts/localPlugins/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
+import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
@@ -159,13 +167,13 @@ const ARTWORK_MIN_SIZE = 180;
 const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const ABBREVIATED_RELEASE_LENGTH = 10;
+const LIMIT_OF_RELEASES = 30;
 
 export type AsyncData = {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | undefined
   releaseListMap: ArtistReleaseInfo
-  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined
   AVATAR_SIZE: number
   TOP_TRACK_ARTWORK_SIZE: number
   ARTWORK_MIN_SIZE: number
@@ -188,6 +196,7 @@ export type Data = {
     TrackListWrapper,
     CardsSection,
     ReleaseCard,
+    IntersectionLoadingCircle,
     ShowAllReleaseButton,
   },
 
@@ -207,14 +216,11 @@ export type Data = {
       getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
       getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
-    const getReleaseList = getReleaseListHandler(context);
-
     return {
       artistInfo,
       isFollowing,
       topTrackList,
       releaseListMap,
-      getReleaseList,
       AVATAR_SIZE,
       TOP_TRACK_ARTWORK_SIZE,
       ARTWORK_MIN_SIZE,
@@ -228,7 +234,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   isFollowing = false;
   topTrackList: App.TrackDetail[] | undefined = undefined;
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
-  getReleaseList: ReturnType<typeof getReleaseListHandler> | undefined = undefined
 
   AVATAR_SIZE = AVATAR_SIZE;
   TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
@@ -333,7 +338,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     const topTrackList = [...this.topTrackList];
     topTrackList[index].isSaved = nextSavedState;
     this.topTrackList = topTrackList;
-
     if (nextSavedState) {
       this.$dispatch('library/tracks/saveTracks', [id]);
     } else {
@@ -341,55 +345,66 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  async getAllReleaseList(type: ReleaseType) {
+  async appendReleaseList(type: ReleaseType) {
+    console.log('append');
+    const currentReleaseList = this.releaseListMap.get(type);
+    // すべて読み込み済みの場合は何もしない
+    if (currentReleaseList == null || currentReleaseList.isFull) return;
+
+    this.releaseListMap = new Map(this.releaseListMap.set(type, {
+      ...currentReleaseList,
+      isAppended: true,
+    }).entries());
+    const offset = currentReleaseList.items.length;
+    const releases = await this.$spotify.artists.getArtistAlbums({
+      artistId: this.$route.params.artistId,
+      country: this.$getters()['auth/userCountryCode'],
+      includeGroupList: [type],
+      limit: LIMIT_OF_RELEASES,
+      offset,
+    });
+    const items = releases?.items.map(convertReleaseForCard(ARTWORK_MIN_SIZE)) ?? [];
+    const isFull = releases?.next == null;
+
+    this.releaseListMap = new Map(this.releaseListMap.set(type, {
+      ...currentReleaseList,
+      items: [...currentReleaseList.items, ...items],
+      isFull,
+      // currentReleaseList ではまだ isAppended が反映されていないので再度指定する必要がある
+      isAppended: true,
+    }).entries());
+  }
+
+  onShowAllButtonHovered(type: ReleaseType) {
+    const currentReleaseList = this.releaseListMap.get(type);
+    // すべて取得済みか初回の追加読み込みがなされている場合は何もしない
+    if (currentReleaseList == null
+      || currentReleaseList.isFull
+      || currentReleaseList.isAppended) return;
+
+    this.appendReleaseList(type);
+  }
+
+  onShowAllButtonClicked(type: ReleaseType) {
     const currentReleaseList = this.releaseListMap.get(type);
     if (currentReleaseList == null) return;
 
-    // すでにすべて表示されてるか取得済みの場合は何もしない
-    if (!currentReleaseList.isAbbreviated
-      || currentReleaseList.isFull
-      || currentReleaseList == null
-      || typeof this.getReleaseList !== 'function') return;
-
-    const offset = currentReleaseList.items.length;
-    const counts = currentReleaseList.total - offset;
-    // 追加で取得するコンテンツがあり、取得中でない場合
-    if (counts > 0 && !currentReleaseList.isFetching) {
-      this.releaseListMap.set(type, {
-        ...currentReleaseList,
-        isFetching: true,
-      });
-      const releaseList = await this.getReleaseList({
-        type,
-        artworkSize: this.ARTWORK_MAX_SIZE,
-        counts,
-        offset,
-      });
-
-      this.releaseListMap = new Map(this.releaseListMap.set(type, {
-        ...currentReleaseList,
-        items: [...currentReleaseList.items, ...releaseList],
-        isFull: true,
-        isFetching: false,
-      }).entries());
-    }
-  }
-
-  async onShowAllButtonClicked(type: ReleaseType) {
-    const currentReleaseList = this.releaseListMap.get(type);
-    if (currentReleaseList == null || typeof this.getReleaseList !== 'function') return;
-
-    if (currentReleaseList.isAbbreviated) {
-      await this.getAllReleaseList(type);
-      this.releaseListMap = new Map(this.releaseListMap.set(type, {
-        ...currentReleaseList,
-        isAbbreviated: false,
-      }).entries());
-    } else {
+    // 折りたたむとき
+    if (!currentReleaseList.isAbbreviated) {
       this.releaseListMap = new Map(this.releaseListMap.set(type, {
         ...currentReleaseList,
         isAbbreviated: true,
       }).entries());
+      return;
+    }
+
+    this.releaseListMap = new Map(this.releaseListMap.set(type, {
+      ...currentReleaseList,
+      isAbbreviated: false,
+    }).entries());
+    // 初回の追加読み込みがなされていない場合
+    if (!currentReleaseList.isAppended) {
+      this.appendReleaseList(type);
     }
   }
 }
@@ -419,6 +434,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
+      margin-bottom: -8px;
 
       // card と spacer 両方に適用
       & > * {
@@ -439,14 +455,13 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       height: 0;
     }
 
-    &__buttonWrapper {
-      margin-top: -8px;
-      display: flex;
-      justify-content: center;
+    &__loadingCircle {
+      margin-bottom: 16px;
     }
 
-    &__buttonIcon {
-      margin-right: 4px;
+    &__buttonWrapper {
+      display: flex;
+      justify-content: center;
     }
   }
 

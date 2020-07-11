@@ -15,11 +15,10 @@ export type ReleaseInfo<T extends ReleaseType> = {
   total: number
   isFull: boolean
   isAbbreviated: boolean
-  isFetching: boolean
+  isAppended: boolean
 }
 
 export * from './getReleaseListMap';
-export * from './getReleaseListHandler';
 export * from './getArtistInfo';
 export * from './getIsFollowing';
 export * from './getTopTrackList';

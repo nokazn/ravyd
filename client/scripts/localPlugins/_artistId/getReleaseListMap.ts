@@ -19,7 +19,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       total: 0,
       isFull: false,
       isAbbreviated: true,
-      isFetching: false,
+      isAppended: false,
     },
   ],
   [
@@ -30,7 +30,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       total: 0,
       isFull: false,
       isAbbreviated: true,
-      isFetching: false,
+      isAppended: false,
     },
   ],
   [
@@ -41,7 +41,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       total: 0,
       isFull: false,
       isAbbreviated: true,
-      isFetching: false,
+      isAppended: false,
     },
   ],
   [
@@ -52,7 +52,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       total: 0,
       isFull: false,
       isAbbreviated: true,
-      isFetching: false,
+      isAppended: false,
     },
   ],
 ]);
@@ -86,7 +86,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
       total,
       isFull,
       isAbbreviated: true,
-      isFetching: false,
+      isAppended: false,
     },
   ];
 };
