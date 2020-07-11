@@ -130,7 +130,8 @@ import Followers from '~/components/parts/text/Followers.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfoHandler } from '~/scripts/localPlugins/_playlistId';
+import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
+import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
@@ -141,7 +142,6 @@ interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
   isFollowing: boolean
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
-  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined
   ARTWORK_SIZE: number
 }
 
@@ -171,7 +171,6 @@ interface Data {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const getPlaylistTrackInfo = getPlaylistTrackInfoHandler(context);
     const [
       playlistInfo,
       isFollowing,
@@ -179,14 +178,13 @@ interface Data {
     ] = await Promise.all([
       await getPlaylistInfo(context, ARTWORK_SIZE),
       await getIsFollowing(context),
-      await getPlaylistTrackInfo({ limit: LIMIT_OF_TRACKS }),
+      await getPlaylistTrackInfo(context, { limit: LIMIT_OF_TRACKS }),
     ]);
 
     return {
       playlistInfo,
       isFollowing,
       playlistTrackInfo,
-      getPlaylistTrackInfo,
       ARTWORK_SIZE,
     };
   },
@@ -195,7 +193,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   isFollowing = false;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
-  getPlaylistTrackInfo: ReturnType<typeof getPlaylistTrackInfoHandler> | undefined = undefined;
   ARTWORK_SIZE = ARTWORK_SIZE;
 
   editPlaylistModal = false;
@@ -262,33 +259,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
     // アイテムを追加した後呼ばれる
     const subscribeAddedItem = async (mutationPayload: ExtendedMutationPayload<'playlists/INCREMENT_UNUPDATED_TRACKS_MAP'>) => {
-      // @todo this.getPlaylistTrackInfo
-      if (this.playlistInfo == null
-        || this.playlistTrackInfo == null
-        || this.getPlaylistTrackInfo == null) return;
+      if (this.playlistInfo == null || this.playlistTrackInfo == null) return;
 
       const [playlistId, limit] = mutationPayload.payload;
-      const currentPlaylistTrackInfo = this.playlistTrackInfo;
-      // 表示中のプレイリストのアイテムがすべて読み込み済みで、アイテムが追加された場合
-      if (playlistId === this.$route.params.playlistId
-        || currentPlaylistTrackInfo.isFullTrackList) {
-        const offset = currentPlaylistTrackInfo.trackList.length;
-        const trackInfo = await this.getPlaylistTrackInfo({
-          offset,
-          limit,
-        });
-
-        if (trackInfo == null) {
-          this.playlistTrackInfo.isFullTrackList = true;
-          return;
-        }
-
-        const { isFullTrackList, trackList } = trackInfo;
-        this.playlistTrackInfo = {
-          trackList: [...currentPlaylistTrackInfo.trackList, ...trackList],
-          isFullTrackList,
-        };
-
+      const { isFullTrackList } = this.playlistTrackInfo;
+      // すべて読み込み済みの表示中のプレイリストにアイテムが追加された場合
+      if (playlistId === this.$route.params.playlistId || isFullTrackList) {
+        await this.appendTrackList(limit);
         const { playlistInfo } = this;
         this.playlistInfo = {
           ...playlistInfo,
@@ -399,26 +376,44 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  async appendTrackList() {
-    if (this.playlistTrackInfo == null
-      || this.playlistTrackInfo.isFullTrackList
-      || typeof this.getPlaylistTrackInfo !== 'function') return;
+  async appendTrackList(limit?: number) {
+    if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
 
-    const currentTrackList = this.playlistTrackInfo.trackList;
-    const offset = currentTrackList.length;
-    const trackInfo = await this.getPlaylistTrackInfo({
-      limit: LIMIT_OF_TRACKS,
+    const currentPlaylistTrackInfo = this.playlistTrackInfo;
+    const offset = currentPlaylistTrackInfo.trackList.length;
+    const tracks = await this.$spotify.playlists.getPlaylistItems({
+      playlistId: this.$route.params.playlistId,
+      market: this.$getters()['auth/userCountryCode'],
+      limit: limit ?? LIMIT_OF_TRACKS,
       offset,
     });
-    if (trackInfo == null) {
+    if (tracks == null) {
       this.playlistTrackInfo.isFullTrackList = true;
       return;
     }
 
+    const filteredTrackList = tracks.items
+      .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
+    if (filteredTrackList.length === 0) {
+      this.playlistTrackInfo = {
+        ...currentPlaylistTrackInfo,
+        isFullTrackList: true,
+      };
+      return;
+    }
+
+    const trackIdList = filteredTrackList.map(({ track }) => track.id);
+    const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
+    const trackList = filteredTrackList.map(convertPlaylistTrackDetail({
+      isTrackSavedList,
+      offset,
+    }));
+    const isFullTrackList = tracks.next == null;
+
     this.playlistTrackInfo = {
       ...this.playlistTrackInfo,
-      trackList: [...currentTrackList, ...trackInfo.trackList],
-      isFullTrackList: trackInfo.isFullTrackList,
+      trackList: [...currentPlaylistTrackInfo.trackList, ...trackList],
+      isFullTrackList,
     };
   }
 

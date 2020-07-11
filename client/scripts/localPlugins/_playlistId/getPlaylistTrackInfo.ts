@@ -6,7 +6,8 @@ import { App } from '~~/types';
 /**
  * limit は 0 ~ 50
  */
-export const getPlaylistTrackInfoHandler = ({ app, params }: Context) => async (
+export const getPlaylistTrackInfo = async (
+  { app, params }: Context,
   { limit, offset = 0 }: { limit: number, offset?: number },
 ): Promise<App.PlaylistTrackInfo | undefined> => {
   const { playlistId } = params;
