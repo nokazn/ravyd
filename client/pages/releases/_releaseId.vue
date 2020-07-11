@@ -218,8 +218,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
       if (releaseId === this.releaseInfo.id) {
         this.releaseInfo.isSaved = isSaved;
-        this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
       }
+
+      this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
