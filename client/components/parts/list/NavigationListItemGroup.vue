@@ -109,15 +109,19 @@ export default Vue.extend({
 <style lang="scss" module>
 .NavigationDrawerListItemGroup {
   $subheader-height: 28px;
+  // アイテムを 最低 4 個は表示
+  $scroll-content-min-height: calc(#{$list-dense-min-height} * 4);
 
   &--scroll {
     overflow-y: auto;
     flex: 1 0;
     height: 100%;
+    min-height: calc(#{$scroll-content-min-height} + #{$subheader-height});
   }
 
   &__wrapper--scroll {
     height: calc(100% - #{$subheader-height});
+    min-height: $scroll-content-min-height;
   }
 
   &__subheader {

@@ -9,14 +9,17 @@
     class="NavigationDrawer"
   >
     <v-list
-      :class="$style.NavigationDrawer__list"
+      :class="[
+        $style.NavigationDrawer__list,
+        $style.List,
+      ]"
       class="g-custom-scroll-bar"
     >
-      <div :class="$style.NavigationDrawer__header">
+      <div :class="$style.List__header">
         <UserMenu />
       </div>
 
-      <v-divider :class="$style.NavigationDrawer__divider" />
+      <v-divider :class="$style.List__divider" />
 
       <template
         v-for="({ items, name, subtitle }) in navigationGroupList"
@@ -29,7 +32,7 @@
 
         <v-divider
           :key="`${name}-divider`"
-          :class="$style.NavigationDrawer__divider"
+          :class="$style.List__divider"
         />
       </template>
 
@@ -38,7 +41,7 @@
         @on-loaded="onPlaylistGroupLoaded"
       />
 
-      <v-divider :class="$style.NavigationDrawer__divider" />
+      <v-divider :class="$style.List__divider" />
 
       <v-list-item-group>
         <v-list-item
@@ -213,24 +216,21 @@ export default Vue.extend({
     flex-direction: column;
     height: calc(100vh - #{$g-footer-height});
     overflow-y: auto;
-  }
 
-  &__header {
-    padding: 8px 12px;
-    font-size: 12px;
+    .List {
+      &__header {
+        padding: 4px 12px;
+        font-size: 12px;
 
-    & > *:not(:last-child) {
-      margin-right: 8px;
+        & > *:not(:last-child) {
+          margin-right: 8px;
+        }
+      }
+
+      &__divider {
+        margin: 8px 0;
+      }
     }
-  }
-
-  &__divider {
-    margin: 10px 0;
-  }
-
-  &__subheader {
-    font-size: 12px;
-    height: 28px;
   }
 }
 </style>
