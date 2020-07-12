@@ -346,7 +346,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendReleaseList(type: ReleaseType) {
-    console.log('append');
     const currentReleaseList = this.releaseListMap.get(type);
     // すべて読み込み済みの場合は何もしない
     if (currentReleaseList == null || currentReleaseList.isFull) return;
