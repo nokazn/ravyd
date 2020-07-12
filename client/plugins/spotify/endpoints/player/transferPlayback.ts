@@ -3,6 +3,9 @@ import { Context } from '@nuxt/types';
 export const transferPlayback = (context: Context) => {
   const { app } = context;
 
+  /**
+   * play === false の場合は現在の再生状態を維持
+   */
   return ({ deviceId, play }: {
     deviceId: string
     play: boolean

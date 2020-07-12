@@ -259,7 +259,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
     const { isPlaying, deviceList } = state;
 
-    // play が指定されなかった場合は、現在の状態を維持
+    // play が指定されなかった場合は、アプリ内のの状態を維持し、false が指定された場合は現在の状態を維持
     await this.$spotify.player.transferPlayback({
       deviceId,
       play: play != null
