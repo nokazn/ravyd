@@ -58,7 +58,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   isThisAppPlaying(state, getters) {
-    return getters.activeDevice?.id === state.activeDeviceId;
+    return getters.activeDevice?.id === state.deviceId;
   },
 
   trackQueue(state, getters) {
