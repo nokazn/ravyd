@@ -8,10 +8,7 @@ export const pause = (context: Context) => {
     isInitializing = false,
   }: {
     deviceId?: string | undefined
-    isInitializing?: false
-  } | {
-    deviceId?: undefined
-    isInitializing: true
+    isInitializing?: boolean
   }): Promise<void> => {
     const request = app.$spotifyApi.$put('/me/player/pause', undefined, {
       params: {
