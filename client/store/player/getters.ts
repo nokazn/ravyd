@@ -9,10 +9,10 @@ import { SpotifyAPI, App } from '~~/types';
 
 export type PlayerGetters = {
   isPlayerConnected: boolean
-  activeDevice: SpotifyAPI.Device | null
+  activeDevice: SpotifyAPI.Device | undefined
   isThisAppPlaying: boolean
   trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
-  releaseId: string | null
+  releaseId: string | undefined
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
   isTrackSet: (trackId: string) => boolean
@@ -54,7 +54,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     const activeDevice = state.deviceList?.find((device) => device.is_active);
     return activeDevice != null
       ? activeDevice
-      : null;
+      : undefined;
   },
 
   isThisAppPlaying(state, getters) {
@@ -95,7 +95,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     // 最後の ":" 以降を取り出す
     return state.releaseUri != null
       ? convertUriToId(state.releaseUri)
-      : null;
+      : undefined;
   },
 
   artworkSrc(state) {
