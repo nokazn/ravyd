@@ -344,7 +344,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async getRecentlyPlayed({ commit }) {
-    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({});
+    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed();
 
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
@@ -422,7 +422,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async next() {
-    await this.$spotify.player.next({})
+    await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、次の曲を再生できません。');
@@ -430,7 +430,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async previous() {
-    await this.$spotify.player.previous({})
+    await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、前の曲を再生できません。');
