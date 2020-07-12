@@ -7,7 +7,7 @@ export const pause = (context: Context) => {
     deviceId,
     isInitializing = false,
   }: {
-    deviceId: string | undefined
+    deviceId?: string | undefined
     isInitializing?: false
   } | {
     deviceId?: undefined
