@@ -216,13 +216,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         });
 
         // volme は 0 から 1
-        const [volume] = await Promise.all([
-          player.getVolume().catch((err: Error) => {
-            console.error({ err });
-            return 1;
-          }),
-          dispatch('getActiveDeviceList'),
-        ] as const);
+        const volume = await player.getVolume().catch((err: Error) => {
+          console.error({ err });
+          return 1;
+        });
 
         commit('SET_VOLUME_PERCENT', { volumePercent: volume * 100 });
 
