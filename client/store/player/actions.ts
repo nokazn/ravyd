@@ -203,16 +203,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('ready', async ({ device_id }) => {
         commit('SET_DEVICE_ID', device_id);
 
-        // 再生中でない場合
-        if (!this.$state().player.isPlaying) {
-          // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
-          await dispatch('pause', { isInitializing: true });
-        }
+        await dispatch('getActiveDeviceList');
 
-        await dispatch('transferPlayback', {
-          deviceId: device_id,
-          play: false,
-        });
+        const activeDevice = this.$getters()['player/activeDevice'];
+        if (activeDevice == null) {
+          await dispatch('transferPlayback', {
+            deviceId: device_id,
+            play: false,
+          });
+        }
 
         console.log('Ready with this device 🎉');
       });
