@@ -4,7 +4,7 @@
     permanent
     :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
     :mobile-breakpoint="768"
-    :width="200"
+    :width="NAVIGATION_DRAWER_WIDTH"
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
   >
@@ -77,7 +77,7 @@ import { RootState, RootGetters } from 'vuex';
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
-import { NAVIGATION_DRAWER_BACKGROUND_COLOR } from '~/variables';
+import { NAVIGATION_DRAWER_BACKGROUND_COLOR, NAVIGATION_DRAWER_WIDTH } from '~/variables';
 
 type NavigationGroup = {
   items: Item[]
@@ -90,6 +90,7 @@ type Data = {
   navigationGroupList: NavigationGroup[]
   createPlaylistModal: boolean
   NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
+  NAVIGATION_DRAWER_WIDTH: number
 }
 
 export default Vue.extend({
@@ -144,6 +145,7 @@ export default Vue.extend({
       navigationGroupList,
       createPlaylistModal: false,
       NAVIGATION_DRAWER_BACKGROUND_COLOR,
+      NAVIGATION_DRAWER_WIDTH,
     };
   },
 

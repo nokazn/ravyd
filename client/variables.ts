@@ -15,6 +15,10 @@ export const FOOTER_BACKGROUND_COLOR = '#303030';
 export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#161616';
 export const MENU_BACKGROUND_COLOR = '#3c3c3c';
 
+export const HEADER_HEIGHT = 52;
+export const FOOTER_HEIGHT = 80;
+export const NAVIGATION_DRAWER_WIDTH = 200;
+
 export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'off',
   'context',

@@ -3,7 +3,7 @@
     v-scroll="onScrolled"
     app
     :elevation="elevation"
-    :height="52"
+    :height="HEADER_HEIGHT"
     :style="styles"
     :class="$style.Header"
   >
@@ -49,11 +49,12 @@ import Vue from 'vue';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO } from '~/variables';
+import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO, HEADER_HEIGHT } from '~/variables';
 import { App } from '~~/types';
 
 type Data = {
   elevation: number
+  HEADER_HEIGHT: number
 }
 
 export default Vue.extend({
@@ -65,6 +66,7 @@ export default Vue.extend({
   data(): Data {
     return {
       elevation: 0,
+      HEADER_HEIGHT,
     };
   },
 

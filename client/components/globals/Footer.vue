@@ -2,7 +2,7 @@
   <v-footer
     app
     padless
-    :height="80"
+    :height="FOOTER_HEIGHT"
     :color="FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer"
   >
@@ -83,11 +83,12 @@ import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllers
 import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import { FOOTER_BACKGROUND_COLOR } from '~/variables';
+import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT } from '~/variables';
 
 type Data = {
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
   deviceSelectMenu: boolean
+  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
+  FOOTER_HEIGHT: number
 }
 
 export default Vue.extend({
@@ -105,8 +106,9 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      FOOTER_BACKGROUND_COLOR,
       deviceSelectMenu: false,
+      FOOTER_BACKGROUND_COLOR,
+      FOOTER_HEIGHT,
     };
   },
 
