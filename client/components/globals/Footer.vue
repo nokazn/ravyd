@@ -2,6 +2,7 @@
   <v-footer
     app
     padless
+    :elevation="8"
     :height="FOOTER_HEIGHT"
     :color="FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer"
