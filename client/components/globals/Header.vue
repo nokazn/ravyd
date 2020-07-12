@@ -1,6 +1,5 @@
 <template>
   <v-app-bar
-    v-scroll="onScrolled"
     app
     :elevation="elevation"
     :height="HEADER_HEIGHT"
@@ -53,7 +52,6 @@ import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO, HEADER_HEIGHT } from 
 import { App } from '~~/types';
 
 type Data = {
-  elevation: number
   HEADER_HEIGHT: number
 }
 
@@ -63,9 +61,15 @@ export default Vue.extend({
     SearchResultList,
   },
 
+  props: {
+    elevation: {
+      type: Number,
+      required: true,
+    },
+  },
+
   data(): Data {
     return {
-      elevation: 0,
       HEADER_HEIGHT,
     };
   },
@@ -80,14 +84,6 @@ export default Vue.extend({
   },
 
   methods: {
-    onScrolled(e: { target?: HTMLDivElement }) {
-      const scrollTop = e.target?.scrollTop as number;
-      if (scrollTop == null) return;
-
-      this.elevation = scrollTop < 120
-        ? scrollTop / 5
-        : 24;
-    },
     onBackButtonClicked() {
       this.$router.back();
     },

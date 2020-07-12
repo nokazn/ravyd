@@ -30,6 +30,7 @@ export const APP_NAME = 'spotify-player';
 export const TRACK_LIST_ARTWORK_SIZE = 40;
 
 export const Z_INDEX_OF = {
+  loading: 13,
   toast: 12,
   modal: 12,
   frontMenu: 11,
