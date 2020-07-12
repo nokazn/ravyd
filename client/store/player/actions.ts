@@ -214,14 +214,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           play: false,
         });
 
-        // volme は 0 から 1
-        const volume = await player.getVolume().catch((err: Error) => {
-          console.error({ err });
-          return 1;
-        });
-
-        commit('SET_VOLUME_PERCENT', { volumePercent: volume * 100 });
-
         console.log('Ready with this device 🎉');
       });
 
@@ -320,6 +312,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_DEVICE_LIST', deviceList);
 
     const activeDevice = deviceList.find((device) => device.is_active);
+
+    commit('SET_VOLUME_PERCENT', {
+      volumePercent: activeDevice != null
+        ? activeDevice.volume_percent
+        : 100,
+    });
+
     if (activeDevice?.id != null) {
       commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
     }
