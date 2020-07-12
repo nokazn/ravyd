@@ -51,9 +51,9 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   activeDevice(state) {
-    const activeDevice = state.deviceList?.filter((device) => device.is_active);
-    return activeDevice != null && activeDevice.length > 0
-      ? activeDevice[0]
+    const activeDevice = state.deviceList?.find((device) => device.is_active);
+    return activeDevice != null
+      ? activeDevice
       : null;
   },
 
