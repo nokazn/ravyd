@@ -318,13 +318,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async getActiveDeviceList({ state, commit }) {
+  async getActiveDeviceList({ commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
 
     commit('SET_DEVICE_LIST', deviceList);
 
-    const activeDevice = deviceList.find((device) => device.id === state.deviceId);
+    const activeDevice = deviceList.find((device) => device.is_active);
     if (activeDevice?.id != null) {
       commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
     }
