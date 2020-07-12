@@ -12,7 +12,6 @@ export type PlayerActions = {
   transferPlayback: ({ deviceId, play }: {
     deviceId: string
     play?: boolean
-    force?: boolean
   }) => Promise<void>
   reconnectDevice: () => Promise<void>
   getActiveDeviceList: () => Promise<void>
@@ -265,10 +264,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_MUTED', false);
   },
 
-  async transferPlayback({ state, commit, dispatch }, { deviceId, play, force }) {
-    const { activeDeviceId, isPlaying, deviceList } = state;
-    // force === true の場合は強制的にリクエスト
-    if (!force && deviceId === activeDeviceId) return;
+  async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
+    const { isPlaying, deviceList } = state;
 
     // play が指定されなかった場合は、現在の状態を維持
     await this.$spotify.player.transferPlayback({
@@ -313,10 +310,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
     commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
-    await dispatch('transferPlayback', {
-      deviceId,
-      force: true,
-    });
+    await dispatch('transferPlayback', { deviceId });
   },
 
   async getActiveDeviceList({ commit }) {
