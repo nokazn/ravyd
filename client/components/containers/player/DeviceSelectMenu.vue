@@ -102,9 +102,9 @@ export default Vue.extend({
     },
     deviceItemList(): DeviceInfo[] {
       // @todo any[] で推論されてしまう
-      const activeDeviceList = this.$state().player.activeDeviceList as SpotifyAPI.Device[];
+      const deviceList = this.$state().player.deviceList as SpotifyAPI.Device[];
 
-      return activeDeviceList.map((device) => ({
+      return deviceList.map((device) => ({
         id: device.id ?? undefined,
         type: device.type,
         isActive: device.is_active,
@@ -126,6 +126,8 @@ export default Vue.extend({
     onItemClicked(deviceId: OnItem['on-clicked']) {
       if (deviceId != null) {
         this.$dispatch('player/transferPlayback', { deviceId });
+      } else {
+        this.$toast.show('error', 'デバイスを変更できません。');
       }
     },
   },

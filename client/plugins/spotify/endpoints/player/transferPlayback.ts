@@ -12,6 +12,7 @@ export const transferPlayback = (context: Context) => {
       play,
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;

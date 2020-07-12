@@ -6,7 +6,8 @@ import type { SpotifyAPI } from '~~/types';
 export type PlayerMutations = {
   SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
   SET_DEVICE_ID: string | undefined
-  SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
+  SET_ACTIVE_DEVICE_ID: string | undefined
+  SET_DEVICE_LIST: SpotifyAPI.Device[]
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_CURRENTLY_PLAYING: SpotifyAPI.Player.CurrentlyPlaying | undefined
@@ -29,7 +30,8 @@ export type PlayerMutations = {
 export type RootMutations = {
   ['player/SET_PLAYBACK_PLAYER']: PlayerMutations['SET_PLAYBACK_PLAYER']
   ['player/SET_DEVICE_ID']: PlayerMutations['SET_DEVICE_ID']
-  ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
+  ['player/SET_ACTIVE_DEVICE_ID']: PlayerMutations['SET_ACTIVE_DEVICE_ID']
+  ['player/SET_DEVICE_LIST']: PlayerMutations['SET_DEVICE_LIST']
   ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
   ['player/SET_CUSTOM_TRACK_URI_LIST']: PlayerMutations['SET_CUSTOM_TRACK_URI_LIST']
   ['player/SET_CURRENTLY_PLAYING']: PlayerMutations['SET_CURRENTLY_PLAYING']
@@ -57,8 +59,12 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.deviceId = deviceId;
   },
 
-  SET_ACTIVE_DEVICE_LIST(state, deviceList) {
-    state.activeDeviceList = deviceList;
+  SET_ACTIVE_DEVICE_ID(state, activeDeviceId) {
+    state.activeDeviceId = activeDeviceId;
+  },
+
+  SET_DEVICE_LIST(state, deviceList) {
+    state.deviceList = deviceList;
   },
 
   SET_CUSTOM_CONTEXT_URI(state, contextUri) {

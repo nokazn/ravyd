@@ -12,7 +12,9 @@ export type PlayerActions = {
   transferPlayback: ({ deviceId, play }: {
     deviceId: string
     play?: boolean
+    force?: boolean
   }) => Promise<void>
+  reconnectDevice: () => Promise<void>
   getActiveDeviceList: () => Promise<void>
   setCustomContext: (params: {
     contextUri?: string
@@ -200,6 +202,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       }));
 
       player.addListener('ready', async ({ device_id }) => {
+        commit('SET_DEVICE_ID', device_id);
+
         // 再生中でない場合
         if (!this.$state().player.isPlaying) {
           // デバイスをアクティブにする前に再生を止めないとアクティブにした後勝手に再生される可能性があるらしい
@@ -245,7 +249,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
     commit('SET_PLAYBACK_PLAYER', undefined);
     commit('SET_DEVICE_ID', undefined);
-    commit('SET_ACTIVE_DEVICE_LIST', []);
+    commit('SET_ACTIVE_DEVICE_ID', undefined);
+    commit('SET_DEVICE_LIST', []);
     commit('SET_CURRENT_TRACK', undefined);
     commit('SET_NEXT_TRACK_LIST', []);
     commit('SET_PREVIOUS_TRACK_LIST', []);
@@ -263,8 +268,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_MUTED', false);
   },
 
-  async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
-    if (deviceId === state.deviceId) return;
+  async transferPlayback({ state, commit, dispatch }, { deviceId, play, force }) {
+    // force === true の場合は強制的にリクエスト
+    if (!force && deviceId === state.activeDeviceId) return;
 
     // play が指定されなかった場合は、現在の状態を維持
     await this.$spotify.player.transferPlayback({
@@ -272,31 +278,59 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       play: play != null
         ? play
         : state.isPlaying,
+    }).then(() => {
+      commit('SET_ACTIVE_DEVICE_ID', deviceId);
+
+      const playingDevice = state.deviceList.find((device) => device.id === deviceId);
+      if (playingDevice != null) {
+        // 再生されているデバイスの isActive を true にする
+        const activeDeviceList: SpotifyAPI.Device[] = state.deviceList.map((device) => ({
+          ...device,
+          is_active: device.id === deviceId,
+        }));
+
+        commit('SET_DEVICE_LIST', activeDeviceList);
+      } else {
+        // デバイスのリストを取得しなおす
+        dispatch('getActiveDeviceList');
+      }
+    }).catch((err: Error) => {
+      console.error({ err });
+      this.$toast.show('error', 'デバイスを変更できませんでした。');
     });
+  },
 
-    commit('SET_DEVICE_ID', deviceId);
+  async reconnectDevice({ state, commit, dispatch }) {
+    const { devices } = await this.$spotify.player.getActiveDeviceList();
+    commit('SET_DEVICE_LIST', devices ?? []);
 
-    const playingDevice = state.activeDeviceList.find((device) => device.id === deviceId);
-    if (playingDevice != null) {
-      // 再生されているデバイスの isActive を true にする
-      const activeDeviceList: SpotifyAPI.Device[] = state.activeDeviceList.map((device) => ({
-        ...device,
-        is_active: device.id === deviceId,
-      }));
-      commit('SET_ACTIVE_DEVICE_LIST', activeDeviceList);
-    } else {
-      // デバイスのリストを取得しなおす
-      await dispatch('getActiveDeviceList');
+    // アクティブなデバイスか、見つからなければこのアプリ
+    const activeDevice = devices?.find((device) => device.is_active)
+      ?? devices?.find((device) => device.id === state.activeDeviceId);
+    const deviceId = activeDevice?.id;
+    if (deviceId == null) {
+      this.$toast.show('error', 'デバイスが見つかりませんでした。');
+      return;
     }
+
+    commit('SET_ACTIVE_DEVICE_ID', deviceId);
+
+    await dispatch('transferPlayback', {
+      deviceId,
+      force: true,
+    });
   },
 
   async getActiveDeviceList({ state, commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
+    const deviceList = devices ?? [];
 
-    commit('SET_ACTIVE_DEVICE_LIST', devices ?? []);
+    commit('SET_DEVICE_LIST', deviceList);
 
-    const playingDevice = state.activeDeviceList.find((device) => device.id === state.deviceId);
-    if (playingDevice?.id != null) commit('SET_DEVICE_ID', playingDevice.id);
+    const activeDevice = deviceList.find((device) => device.id === state.deviceId);
+    if (activeDevice?.id != null) {
+      commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+    }
   },
 
   setCustomContext({ commit }, { contextUri, trackUriList }) {
@@ -321,8 +355,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  async play({ state, commit }, payload?) {
-    const { deviceId } = state;
+  async play({ state, commit, dispatch }, payload?) {
+    const deviceId = state.activeDeviceId;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
     const offset = payload?.offset;
@@ -334,7 +368,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       && state.trackUri === trackUriList[offset.position]
     ) || state.trackUri === offset?.uri;
 
-    await this.$spotify.player.play(
+    const playHandler = () => this.$spotify.player.play(
       // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
       isNotUriPassed || isRestartingTracks
         ? {
@@ -347,16 +381,30 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           trackUriList,
           offset,
         },
-    ).then(() => {
-      commit('SET_IS_PLAYING', true);
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', 'エラーが発生し、再生できません。');
-    });
+    );
+
+    await playHandler()
+      .then(() => {
+        commit('SET_IS_PLAYING', true);
+      })
+      .catch(async (err: Error) => {
+        console.error({ err });
+        // デバイスを探し、再度トライ
+        await dispatch('reconnectDevice');
+        console.log('reconnect ended');
+      })
+      .then(() => {
+        console.log('play');
+        playHandler();
+      })
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', 'エラーが発生し、再生できません。');
+      });
   },
 
   async pause({ state, commit }, payload = { isInitializing: false }) {
-    const { deviceId } = state;
+    const deviceId = state.activeDeviceId;
     const { isInitializing } = payload;
     const params = isInitializing
       ? { isInitializing }
@@ -374,12 +422,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async seek({ state, commit }, { positionMs, currentPositionMs }) {
-    const { deviceId, positionMs: positionMsOfState } = state;
-    console.log({
-      positionMs,
-      currentPositionMs,
-      positionMsOfState,
-    });
+    const {
+      activeDeviceId: deviceId,
+      positionMs: positionMsOfState,
+    } = state;
+
     await this.$spotify.player.seek({
       deviceId,
       positionMs,
@@ -392,7 +439,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async next({ state }) {
-    const { deviceId } = state;
+    const deviceId = state.activeDeviceId;
 
     await this.$spotify.player.next({ deviceId })
       .catch((err: Error) => {
@@ -402,7 +449,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async previous({ state }) {
-    const { deviceId } = state;
+    const deviceId = state.activeDeviceId;
 
     await this.$spotify.player.previous({ deviceId })
       .catch((err: Error) => {
@@ -412,7 +459,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async shuffle({ state, commit }) {
-    const { deviceId, isShuffled } = state;
+    const {
+      activeDeviceId: deviceId,
+      isShuffled,
+    } = state;
     const nextIsShuffled = !isShuffled;
 
     await this.$spotify.player.shuffle({
@@ -430,7 +480,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     // 初回読み込み時は undefined
     if (state.repeatMode == null) return;
 
-    const { deviceId } = state;
+    const deviceId = state.activeDeviceId;
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
 
     await this.$spotify.player.repeat({
@@ -445,7 +495,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async volume({ state, commit }, { volumePercent }) {
-    const { deviceId, volumePercent: currentVolumePercent } = state;
+    const {
+      activeDeviceId: deviceId,
+      volumePercent: currentVolumePercent,
+    } = state;
     if (currentVolumePercent === volumePercent) return;
 
     await this.$spotify.player.volume({
@@ -460,30 +513,33 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async mute({ state, commit }) {
-    const { isMuted, deviceId, volumePercent: currentVolumePercent } = state;
+    const {
+      isMuted,
+      activeDeviceId: deviceId,
+      volumePercent: currentVolumePercent,
+    } = state;
     const nextMuteState = !isMuted;
-    if (currentVolumePercent !== 0) {
-      const volumePercent = nextMuteState ? 0 : currentVolumePercent;
-      await this.$spotify.player.volume({
-        deviceId,
-        volumePercent,
-      }).then(() => {
-        commit('SET_IS_MUTED', nextMuteState);
-      }).catch((err: Error) => {
-        console.error({ err });
-        this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
-      });
-    }
+    if (currentVolumePercent === 0) return;
+
+    const volumePercent = nextMuteState ? 0 : currentVolumePercent;
+    await this.$spotify.player.volume({
+      deviceId,
+      volumePercent,
+    }).then(() => {
+      commit('SET_IS_MUTED', nextMuteState);
+    }).catch((err: Error) => {
+      console.error({ err });
+      this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
+    });
   },
 
   async checkTrackSavedState({ state, commit }, trackId?) {
     const id = trackId ?? state.trackId;
     if (id == null) return;
+
     const trackIdList = [id];
 
-    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
-      trackIdList,
-    });
+    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
   },
