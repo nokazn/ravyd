@@ -96,7 +96,7 @@ export default Vue.extend({
 
   computed: {
     deviceButtonColor(): string | undefined {
-      return this.$getters()['player/isTheAppPlaying']
+      return this.$getters()['player/isThisAppPlaying']
         ? 'active-icon'
         : undefined;
     },
