@@ -19,6 +19,7 @@ export const repeat = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;
