@@ -416,31 +416,26 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       && state.trackUri === trackUriList[offset.position]
     ) || state.trackUri === offset?.uri;
 
-    const playHandler = () => this.$spotify.player.play(
-      // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
-      isNotUriPassed || isRestartingTracks
-        ? { positionMs }
-        : {
-          contextUri,
-          trackUriList,
-          offset,
-        },
-    );
-
-    await playHandler()
+    // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
+    await this.$spotify.player.play(isNotUriPassed || isRestartingTracks
+      ? { positionMs }
+      : {
+        contextUri,
+        trackUriList,
+        offset,
+      })
       .then(() => {
         commit('SET_IS_PLAYING', true);
-      })
-      .catch(async (err: Error) => {
-        console.error({ err });
-        await dispatch('getCurrentPlayback');
-        console.error({ err });
-        this.$toast.show('error', 'エラーが発生し、再生できません。');
-      })
-      .finally(() => {
+
         if (!getters.isThisAppPlaying) {
           dispatch('getCurrentPlayback', 500);
         }
+      })
+      .catch((err: Error) => {
+        console.error({ err });
+        this.$toast.show('error', 'エラーが発生し、再生できません。');
+
+        dispatch('getCurrentPlayback');
       });
   },
 
@@ -451,17 +446,19 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       : {};
 
     await this.$spotify.player.pause(params)
-      .catch((err) => {
-        console.error({ err });
-        this.$toast.show('warning', 'エラーが発生しました。');
-      })
-      .finally(() => {
-        // エラーが発生しても停止させる
-        commit('SET_IS_PLAYING', false);
-
+      .then(() => {
         if (!getters.isThisAppPlaying) {
           dispatch('getCurrentPlayback', 500);
         }
+      })
+      .catch((err) => {
+        console.error({ err });
+        this.$toast.show('warning', 'エラーが発生しました。');
+
+        dispatch('getCurrentPlayback');
+      }).finally(() => {
+        // エラーが発生しても停止させる
+        commit('SET_IS_PLAYING', false);
       });
   },
 
@@ -473,9 +470,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     await this.$spotify.player.seek({ positionMs })
       .catch((err: Error) => {
         console.error({ err });
+        this.$toast.show('error', 'エラーが発生しました。');
+
         // 現在の position に戻す
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
-        this.$toast.show('error', 'エラーが発生しました。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -605,7 +603,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     if (id == null) return;
 
     const trackIdList = [id];
-
     const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
