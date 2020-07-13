@@ -167,6 +167,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
         const disallowList = disallowKeys.filter((key) => disallows[key]);
 
+        // currentTrack を変更する前に行う
         const lastTrackId = this.$state().player.trackId;
         const trackId = currentTrack.id;
         // trackId 変わったときだけチェック
@@ -378,7 +379,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           artists: item.artists,
         }
         : undefined;
-      commit('SET_CURRENT_TRACK', track);
 
       if (track == null) {
         // アイテムが取得できない場合は3回まで1秒ごとにリトライ
@@ -391,7 +391,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         commit('RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
         this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
+      } else {
+        // currentTrack を変更する前に行う
+        const lastTrackId = this.$state().player.trackId;
+        const trackId = track.id;
+        // trackId 変わったときだけチェック
+        if (trackId != null && trackId !== lastTrackId) {
+          dispatch('checkTrackSavedState', trackId);
+        }
       }
+
+      commit('SET_CURRENT_TRACK', track);
 
       // 曲を再生しきって 500ms と 20s で早いほう経った後再取得
       const interval = Math.min(this.$getters()['player/remainingTimeMs'] + 500, 20 * 1000);
