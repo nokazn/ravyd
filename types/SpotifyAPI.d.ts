@@ -233,7 +233,8 @@ export namespace SpotifyAPI {
     }>
 
     type PlayingType = 'track' | 'episode' | 'ad' | 'unknown'
-    type CurrentPlayback<T extends PlayingType = PlayingType> = {
+    // アクティブなデバイスが存在しない場合は空文字が返ってくる
+    type CurrentPlayback<T extends PlayingType = PlayingType> = '' | {
       actions: {
         disallows: Disallow
       }

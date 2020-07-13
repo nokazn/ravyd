@@ -9,8 +9,8 @@ import { SpotifyAPI } from '~~/types';
 export type PlayerActions = {
   initPlayer: () => void
   disconnectPlayer: () => void
-  transferPlayback: ({ deviceId, play }: {
-    deviceId: string
+  transferPlayback: (params?: {
+    deviceId?: string
     play?: boolean
   }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
@@ -252,15 +252,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_IS_MUTED', false);
   },
 
-  async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
-    const { isPlaying, deviceList } = state;
+  async transferPlayback({ state, commit, dispatch }, params) {
+    // 指定されなければこのデバイス
+    const deviceId = params?.deviceId ?? state.deviceId;
+    if (deviceId == null) return;
 
-    // play が指定されなかった場合は、デバイス内のの状態を維持し、false が指定された場合は現在の状態を維持
+    // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
     await this.$spotify.player.transferPlayback({
       deviceId,
-      play: play != null
-        ? play
-        : isPlaying,
+      play: params?.play ?? state.isPlaying,
     }).then(() => {
       commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
@@ -269,8 +269,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         dispatch('getCurrentPlayback');
       }
 
-      const playingDevice = deviceList.find((device) => device.id === deviceId);
-      if (playingDevice != null) {
+      const { deviceList } = state;
+      const activeDevice = deviceList.find((device) => device.id === deviceId);
+      if (activeDevice != null) {
         // 再生されているデバイスの isActive を true にする
         const activeDeviceList: SpotifyAPI.Device[] = deviceList.map((device) => ({
           ...device,
@@ -332,55 +333,64 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const market = this.$getters()['auth/userCountryCode'];
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
-      if (currentPlayback != null) {
-        const {
-          item,
-          actions: { disallows },
-        } = currentPlayback;
-        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
-        const disallowList = disallowKeys.filter((key) => disallows[key]);
+      if (!currentPlayback) {
+        // 再生状況が取得できない場合はこのデバイスで再生
+        Promise.all([
+          dispatch('transferPlayback', { play: false }),
+          dispatch('getActiveDeviceList'),
+        ]).then(() => {
+          this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+        });
+        return;
+      }
 
-        commit('SET_IS_PLAYING', currentPlayback.is_playing);
-        commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
-        commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
-        commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
-        commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
-        commit('SET_NEXT_TRACK_LIST', []);
-        commit('SET_PREVIOUS_TRACK_LIST', []);
-        commit('SET_DISALLOW_LIST', disallowList);
+      const {
+        item,
+        actions: { disallows },
+      } = currentPlayback;
+      const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
+      const disallowList = disallowKeys.filter((key) => disallows[key]);
 
-        // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
-        if (currentPlayback.device.id !== this.$state().player.activeDeviceId) {
-          dispatch('getActiveDeviceList');
+      commit('SET_IS_PLAYING', currentPlayback.is_playing);
+      commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
+      commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
+      commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
+      commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
+      commit('SET_NEXT_TRACK_LIST', []);
+      commit('SET_PREVIOUS_TRACK_LIST', []);
+      commit('SET_DISALLOW_LIST', disallowList);
+
+      // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
+      if (currentPlayback.device.id !== this.$state().player.activeDeviceId) {
+        dispatch('getActiveDeviceList');
+      }
+
+      // @todo episode 再生中だと null になる
+      const track: Spotify.Track | undefined = item != null && item.type === 'track'
+        ? {
+          uri: item.uri,
+          id: item.id,
+          type: item.type,
+          media_type: 'audio',
+          name: item.name,
+          is_playable: item.is_playable,
+          album: item.album,
+          artists: item.artists,
+        }
+        : undefined;
+      commit('SET_CURRENT_TRACK', track);
+
+      if (track == null) {
+        // アイテムが取得できない場合は3回まで1秒ごとにリトライ
+        if (this.$state().player.retryCountsOfGetCurrentPlayback < 3) {
+          const timer = setTimeout(handler, 1000);
+          commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+          commit('INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
+          return;
         }
 
-        // @todo episode 再生中だと null になる
-        const track: Spotify.Track | undefined = item != null && item.type === 'track'
-          ? {
-            uri: item.uri,
-            id: item.id,
-            type: item.type,
-            media_type: 'audio',
-            name: item.name,
-            is_playable: item.is_playable,
-            album: item.album,
-            artists: item.artists,
-          }
-          : undefined;
-        commit('SET_CURRENT_TRACK', track);
-
-        if (track == null) {
-          // アイテムが取得できない場合は3回まで1秒ごとにリトライ
-          if (this.$state().player.retryCountsOfGetCurrentPlayback < 3) {
-            const timer = setTimeout(handler, 1000);
-            commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
-            commit('INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
-            return;
-          }
-
-          commit('RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
-          this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
-        }
+        commit('RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
+        this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
       }
 
       // 曲を再生しきって 500ms と 20s で早いほう経った後再取得
