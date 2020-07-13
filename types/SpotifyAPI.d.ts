@@ -150,23 +150,8 @@ export namespace SpotifyAPI {
     type: 'episode'
     uri: string
   }
-  export type Episode = {
-    available_markets: Country[]
-    copyrights: Copyright[]
-    description: string
-    explicit: boolean
-    episodes: SimpleShow[]
-    external_urls: ExternalUrls
-    href: string
-    id: string
-    images: Image[]
-    is_externally_hosted: boolean
-    languages: string[]
-    media_type: string
-    name: string
-    publisher: string
-    type: string
-    uri: string
+  export type Episode = SimpleEpisode & {
+    show: SimpleShow
   }
 
   // @todo
