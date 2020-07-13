@@ -197,7 +197,9 @@ export default Vue.extend({
 
   methods: {
     onPlaylistGroupLoaded() {
-      this.$dispatch('playlists/getAllPlaylists');
+      if (this.$state().playlists.playlists == null) {
+        this.$dispatch('playlists/getAllPlaylists');
+      }
     },
     onPlaylistButtonClicked() {
       this.createPlaylistModal = true;
