@@ -314,7 +314,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
   },
 
-  getCurrentPlayback({ commit, rootGetters }, timeout) {
+  getCurrentPlayback({ commit, dispatch, rootGetters }, timeout) {
     const handler = async () => {
       // このデバイスで再生中の場合は playback-sdk から取得する
       if (this.$getters()['player/isThisAppPlaying']) return;
@@ -335,10 +335,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
         commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
         commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
-        commit('SET_ACTIVE_DEVICE_ID', currentPlayback.device.id ?? undefined);
         commit('SET_NEXT_TRACK_LIST', []);
         commit('SET_PREVIOUS_TRACK_LIST', []);
         commit('SET_DISALLOW_LIST', disallowList);
+
+        // アクティブなデバイスが異なる場合はデバイス一覧を取得し直す
+        if (currentPlayback.device.id !== this.$getters()['player/activeDevice']?.id) {
+          dispatch('getActiveDeviceList');
+        }
 
         // @todo episode 再生中だと null になる
         const track: Spotify.Track | undefined = item != null && item.type === 'track'
