@@ -264,6 +264,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).then(() => {
       commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
+      // 他のデバイスで再生する場合
+      if (deviceId !== state.deviceId) {
+        dispatch('getCurrentPlayback');
+      }
+
       const playingDevice = deviceList.find((device) => device.id === deviceId);
       if (playingDevice != null) {
         // 再生されているデバイスの isActive を true にする
@@ -283,7 +288,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async getActiveDeviceList({ commit }) {
+  async getActiveDeviceList({ state, commit, dispatch }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
 
@@ -297,8 +302,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         : 100,
     });
 
-    if (activeDevice?.id != null) {
-      commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+    if (activeDevice?.id == null) return;
+
+    commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+
+    // 他のデバイスで再生中の場合
+    if (activeDevice.id !== state.deviceId) {
+      dispatch('getCurrentPlayback');
     }
   },
 
@@ -339,8 +349,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_PREVIOUS_TRACK_LIST', []);
         commit('SET_DISALLOW_LIST', disallowList);
 
-        // アクティブなデバイスが異なる場合はデバイス一覧を取得し直す
-        if (currentPlayback.device.id !== this.$getters()['player/activeDevice']?.id) {
+        // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
+        if (currentPlayback.device.id !== this.$state().player.activeDeviceId) {
           dispatch('getActiveDeviceList');
         }
 
