@@ -11,6 +11,7 @@ export type PlayerMutations = {
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
@@ -33,6 +34,7 @@ export type RootMutations = {
   ['player/SET_DEVICE_LIST']: PlayerMutations['SET_DEVICE_LIST']
   ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
   ['player/SET_CUSTOM_TRACK_URI_LIST']: PlayerMutations['SET_CUSTOM_TRACK_URI_LIST']
+  ['player/SET_GET_CURRENT_PLAYBACK_TIMER_ID']: PlayerMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
@@ -75,6 +77,19 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
 
   SET_RECENTLY_PLAYED(state, recentlyPlayed) {
     state.recentlyPlayed = recentlyPlayed;
+  },
+
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID(state, timer) {
+    const { getCurrentPlaybackTimer } = state;
+    if (typeof getCurrentPlaybackTimer === 'number') {
+      // クライアントサイドで実行
+      window.clearTimeout(getCurrentPlaybackTimer);
+    } else if (getCurrentPlaybackTimer != null) {
+      // サーバーサイドで実行
+      clearTimeout(getCurrentPlaybackTimer);
+    }
+
+    state.getCurrentPlaybackTimer = timer;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {

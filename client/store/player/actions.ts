@@ -19,8 +19,8 @@ export type PlayerActions = {
     contextUri?: string
     trackUriList: string[]
   }) => void
-  getCurrentPlayback: () => void
   resetCustomContext: () => void
+  getCurrentPlayback: (timeout?: number) => void
   getRecentlyPlayed: () => Promise<void>
   play: (payload?: ({
     contextUri: string
@@ -62,6 +62,7 @@ export type RootActions = {
   'player/getActiveDeviceList': PlayerActions['getActiveDeviceList']
   'player/setCustomContext': PlayerActions['setCustomContext']
   'player/resetCustomContext': PlayerActions['resetCustomContext']
+  'player/getCurrentPlayback': PlayerActions['getCurrentPlayback']
   'player/getRecentlyPlayed': PlayerActions['getRecentlyPlayed']
   'player/play': PlayerActions['play']
   'player/pause': PlayerActions['pause']
@@ -201,10 +202,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         const activeDevice = this.$getters()['player/activeDevice'];
         if (activeDevice == null) {
+          // アクティブなデバイスがない場合はこのデバイスで再生
           await dispatch('transferPlayback', {
             deviceId: device_id,
             play: false,
           });
+        } else if (activeDevice.id !== device_id) {
+          // 他のデバイスで再生中の場合
+          await dispatch('getCurrentPlayback');
         }
 
         console.log('Ready with this device 🎉');
@@ -251,7 +256,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async transferPlayback({ state, commit, dispatch }, { deviceId, play }) {
     const { isPlaying, deviceList } = state;
 
-    // play が指定されなかった場合は、アプリ内のの状態を維持し、false が指定された場合は現在の状態を維持
+    // play が指定されなかった場合は、デバイス内のの状態を維持し、false が指定された場合は現在の状態を維持
     await this.$spotify.player.transferPlayback({
       deviceId,
       play: play != null
@@ -283,7 +288,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     commit('SET_DEVICE_LIST', devices ?? []);
 
-    // アクティブなデバイスか、見つからなければこのアプリ
+    // アクティブなデバイスか、見つからなければこのデバイス
     const activeDevice = devices?.find((device) => device.is_active)
       ?? devices?.find((device) => device.id === state.activeDeviceId);
     const deviceId = activeDevice?.id;
@@ -328,45 +333,58 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
   },
 
-  async getCurrentPlayback({ commit, rootGetters }) {
-    const market = rootGetters['auth/userCountryCode'];
-    const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
-    if (currentPlayback == null) return;
+  getCurrentPlayback({ commit, rootGetters }, timeout) {
+    const handler = async () => {
+      // このデバイスで再生中の場合は playback-sdk から取得する
+      if (this.$getters()['player/isThisAppPlaying']) return;
 
-    const {
-      item,
-      actions: { disallows },
-    } = currentPlayback;
-    const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
-    const disallowList = disallowKeys.filter((key) => disallows[key]);
+      const market = rootGetters['auth/userCountryCode'];
+      const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
-    commit('SET_IS_PLAYING', currentPlayback.is_playing);
-    commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
-    commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
-    commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
-    commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
-    commit('SET_NEXT_TRACK_LIST', []);
-    commit('SET_PREVIOUS_TRACK_LIST', []);
-    commit('SET_DISALLOW_LIST', disallowList);
+      if (currentPlayback != null) {
+        const {
+          item,
+          actions: { disallows },
+        } = currentPlayback;
+        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
+        const disallowList = disallowKeys.filter((key) => disallows[key]);
 
-    // @todo episode 再生中だと null になる
-    const track: Spotify.Track | undefined = item != null && item.type === 'track'
-      ? {
-        uri: item.uri,
-        id: item.id,
-        type: item.type,
-        media_type: 'audio',
-        name: item.name,
-        is_playable: item.is_playable,
-        album: item.album,
-        artists: item.artists,
+        commit('SET_IS_PLAYING', currentPlayback.is_playing);
+        commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
+        commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
+        commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
+        commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
+        commit('SET_NEXT_TRACK_LIST', []);
+        commit('SET_PREVIOUS_TRACK_LIST', []);
+        commit('SET_DISALLOW_LIST', disallowList);
+
+        // @todo episode 再生中だと null になる
+        const track: Spotify.Track | undefined = item != null && item.type === 'track'
+          ? {
+            uri: item.uri,
+            id: item.id,
+            type: item.type,
+            media_type: 'audio',
+            name: item.name,
+            is_playable: item.is_playable,
+            album: item.album,
+            artists: item.artists,
+          }
+          : undefined;
+        commit('SET_CURRENT_TRACK', track);
+
+        if (track == null) {
+          this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
+        }
       }
-      : undefined;
-    if (track == null) {
-      this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
-    }
 
-    commit('SET_CURRENT_TRACK', track);
+      // 他でタイマーがセットされなければ20秒後に再取得
+      const periodicalTimer = setTimeout(handler, 20 * 1000);
+      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', periodicalTimer);
+    };
+
+    const timer = setTimeout(handler, timeout);
+    commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
   },
 
   async getRecentlyPlayed({ commit }) {
@@ -379,7 +397,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  async play({ state, commit, dispatch }, payload?) {
+  async play({
+    state, getters, commit, dispatch,
+  }, payload?) {
     const { positionMs } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -415,10 +435,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、再生できません。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async pause({ commit }, payload = { isInitializing: false }) {
+  async pause({ getters, commit, dispatch }, payload = { isInitializing: false }) {
     const { isInitializing } = payload;
     const params = isInitializing
       ? { isInitializing }
@@ -432,10 +457,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .finally(() => {
         // エラーが発生しても停止させる
         commit('SET_IS_PLAYING', false);
+
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async seek({ state, commit }, { positionMs, currentPositionMs }) {
+  async seek({
+    state, getters, commit, dispatch,
+  }, { positionMs, currentPositionMs }) {
     const positionMsOfCurrentState = state.positionMs;
 
     await this.$spotify.player.seek({ positionMs })
@@ -444,29 +475,44 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         // 現在の position に戻す
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
         this.$toast.show('error', 'エラーが発生しました。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 1000);
+        }
       });
   },
 
-  async next() {
+  async next({ getters, dispatch }) {
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、次の曲を再生できません。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async previous() {
+  async previous({ getters, dispatch }) {
     await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、前の曲を再生できません。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async shuffle({ state, commit }) {
-    const {
-      isShuffled,
-    } = state;
+  async shuffle({
+    state, getters, commit, dispatch,
+  }) {
+    const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
 
     await this.$spotify.player.shuffle({ state: nextIsShuffled })
@@ -475,10 +521,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       }).catch((err: Error) => {
         console.error({ err });
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async repeat({ state, commit }) {
+  async repeat({
+    state, getters, commit, dispatch,
+  }) {
     // 初回読み込み時は undefined
     if (state.repeatMode == null) return;
 
@@ -491,10 +544,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async volume({ state, commit }, { volumePercent }) {
+  async volume({
+    state, getters, commit, dispatch,
+  }, { volumePercent }) {
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
@@ -505,10 +565,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、ボリュームが変更できませんでした。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async mute({ state, commit }) {
+  async mute({
+    state, getters, commit, dispatch,
+  }) {
     const {
       isMuted,
       volumePercent: currentVolumePercent,
@@ -524,6 +591,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
+      })
+      .finally(() => {
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
