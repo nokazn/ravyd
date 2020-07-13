@@ -280,7 +280,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       }
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.show('error', 'デバイスを変更できませんでした。');
+      dispatch('disconnectPlayer');
+      dispatch('initPlayer');
     });
   },
 
