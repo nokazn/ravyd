@@ -13,7 +13,6 @@ export type PlayerActions = {
     deviceId: string
     play?: boolean
   }) => Promise<void>
-  reconnectDevice: () => Promise<void>
   getActiveDeviceList: () => Promise<void>
   setCustomContext: (params: {
     contextUri?: string
@@ -284,24 +283,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async reconnectDevice({ state, commit, dispatch }) {
-    const { devices } = await this.$spotify.player.getActiveDeviceList();
-    commit('SET_DEVICE_LIST', devices ?? []);
-
-    // アクティブなデバイスか、見つからなければこのデバイス
-    const activeDevice = devices?.find((device) => device.is_active)
-      ?? devices?.find((device) => device.id === state.activeDeviceId);
-    const deviceId = activeDevice?.id;
-    if (deviceId == null) {
-      this.$toast.show('error', 'デバイスが見つかりませんでした。');
-      return;
-    }
-
-    commit('SET_ACTIVE_DEVICE_ID', deviceId);
-
-    await dispatch('transferPlayback', { deviceId });
-  },
-
   async getActiveDeviceList({ commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
@@ -354,6 +335,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
         commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
         commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
+        commit('SET_ACTIVE_DEVICE_ID', currentPlayback.device.id ?? undefined);
         commit('SET_NEXT_TRACK_LIST', []);
         commit('SET_PREVIOUS_TRACK_LIST', []);
         commit('SET_DISALLOW_LIST', disallowList);
@@ -374,6 +356,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_CURRENT_TRACK', track);
 
         if (track == null) {
+          // アイテムが取得できない場合は3回まで1秒ごとにリトライ
+          if (this.$state().player.retryCountsOfGetCurrentPlayback < 3) {
+            const timer = setTimeout(handler, 1000);
+            commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+            commit('INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
+            return;
+          }
+
+          commit('RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
           this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
         }
       }
@@ -428,11 +419,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       })
       .catch(async (err: Error) => {
         console.error({ err });
-        // デバイスを探し、再度トライ
-        await dispatch('reconnectDevice');
-        playHandler();
-      })
-      .catch((err: Error) => {
+        await dispatch('getCurrentPlayback');
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、再生できません。');
       })

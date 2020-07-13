@@ -7,6 +7,7 @@ export type PlayerState = {
   deviceList: SpotifyAPI.Device[]
   contextUri: string | undefined
   getCurrentPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
+  retryCountsOfGetCurrentPlayback: number
   trackId: string | undefined
   trackName: string | undefined
   trackUri: string | undefined
@@ -44,6 +45,7 @@ const state = (): PlayerState => ({
   releaseUri: undefined,
   artistList: [],
   getCurrentPlaybackTimer: undefined,
+  retryCountsOfGetCurrentPlayback: 0,
   customContextUri: undefined,
   customTrackUriList: undefined,
   nextTrackList: [],

@@ -12,6 +12,8 @@ export type PlayerMutations = {
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
   SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
+  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
+  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
@@ -35,6 +37,8 @@ export type RootMutations = {
   ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
   ['player/SET_CUSTOM_TRACK_URI_LIST']: PlayerMutations['SET_CUSTOM_TRACK_URI_LIST']
   ['player/SET_GET_CURRENT_PLAYBACK_TIMER_ID']: PlayerMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
+  ['player/INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']: PlayerMutations['INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
+  ['player/RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']: PlayerMutations['RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
@@ -90,6 +94,13 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     }
 
     state.getCurrentPlaybackTimer = timer;
+  },
+  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
+    state.retryCountsOfGetCurrentPlayback += 1;
+  },
+
+  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
+    state.retryCountsOfGetCurrentPlayback = 0;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
