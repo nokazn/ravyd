@@ -232,15 +232,20 @@ export namespace SpotifyAPI {
       track: SimpleTrack
     }>
 
-    type CurrentlyPlaying = {
+    type PlayingType = 'track' | 'episode' | 'ad' | 'unknown'
+    type CurrentPlayback<T extends PlayingType = PlayingType> = {
       actions: {
-        disallow?: Disallow
+        disallows: Disallow
       }
       context: Context | null
-      currently_playing_type: 'track' | 'episode' | 'ad' | 'unknown'
+      currently_playing_type: T
       device: Device
       is_playing: boolean
-      item: Track | Episode | null
+      item: T extends 'track'
+        ? Track
+        : T extends 'episode'
+        ? Episode | null
+        : null
       progress_ms: number | null
       repeat_state: RepeatState
       shuffle_state: 'on' | 'off'

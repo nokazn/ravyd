@@ -19,6 +19,7 @@ export type PlayerActions = {
     contextUri?: string
     trackUriList: string[]
   }) => void
+  getCurrentPlayback: () => void
   resetCustomContext: () => void
   getRecentlyPlayed: () => Promise<void>
   play: (payload?: ({
@@ -158,15 +159,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log(playerState);
         const {
           context: { uri },
-          position,
-          duration,
-          paused: isPaused,
-          shuffle: isShuffled,
-          repeat_mode: repeatMode,
           track_window: {
             current_track: currentTrack,
-            next_tracks: nextTracks,
-            previous_tracks: previousTracks,
           },
           disallows,
         } = playerState;
@@ -180,19 +174,19 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           dispatch('checkTrackSavedState', trackId);
         }
 
-        commit('SET_IS_PLAYING', !isPaused);
+        commit('SET_IS_PLAYING', !playerState.paused);
+        commit('SET_POSITION_MS', playerState.position);
+        commit('SET_DURATION_MS', playerState.duration);
+        commit('SET_IS_SHUFFLED', playerState.shuffle);
         commit('SET_CONTEXT_URI', uri ?? undefined);
-        commit('SET_POSITION_MS', position);
-        commit('SET_DURATION_MS', duration);
-        commit('SET_IS_SHUFFLED', isShuffled);
         commit('SET_CURRENT_TRACK', currentTrack);
-        commit('SET_NEXT_TRACK_LIST', nextTracks);
-        commit('SET_PREVIOUS_TRACK_LIST', previousTracks);
+        commit('SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks);
+        commit('SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks);
         commit('SET_DISALLOW_LIST', disallowList);
 
         // 表示がちらつくので、初回以外は player/repeat 内で commit する
         if (this.$state().player.repeatMode == null) {
-          commit('SET_REPEAT_MODE', repeatMode);
+          commit('SET_REPEAT_MODE', playerState.repeat_mode);
         }
         // playback-sdk から提供される uri が存在する場合は customContext をリセット
         if (uri != null) {
@@ -241,7 +235,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CURRENT_TRACK', undefined);
     commit('SET_NEXT_TRACK_LIST', []);
     commit('SET_PREVIOUS_TRACK_LIST', []);
-    commit('SET_CURRENTLY_PLAYING', undefined);
     commit('SET_RECENTLY_PLAYED', undefined);
     commit('SET_IS_SAVED_TRACK', false);
     commit('SET_IS_PLAYING', false);
@@ -333,6 +326,47 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   resetCustomContext({ commit }) {
     commit('SET_CUSTOM_CONTEXT_URI', undefined);
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
+  },
+
+  async getCurrentPlayback({ commit, rootGetters }) {
+    const market = rootGetters['auth/userCountryCode'];
+    const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
+    if (currentPlayback == null) return;
+
+    const {
+      item,
+      actions: { disallows },
+    } = currentPlayback;
+    const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
+    const disallowList = disallowKeys.filter((key) => disallows[key]);
+
+    commit('SET_IS_PLAYING', currentPlayback.is_playing);
+    commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
+    commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
+    commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
+    commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
+    commit('SET_NEXT_TRACK_LIST', []);
+    commit('SET_PREVIOUS_TRACK_LIST', []);
+    commit('SET_DISALLOW_LIST', disallowList);
+
+    // @todo episode 再生中だと null になる
+    const track: Spotify.Track | undefined = item != null && item.type === 'track'
+      ? {
+        uri: item.uri,
+        id: item.id,
+        type: item.type,
+        media_type: 'audio',
+        name: item.name,
+        is_playable: item.is_playable,
+        album: item.album,
+        artists: item.artists,
+      }
+      : undefined;
+    if (track == null) {
+      this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
+    }
+
+    commit('SET_CURRENT_TRACK', track);
   },
 
   async getRecentlyPlayed({ commit }) {
