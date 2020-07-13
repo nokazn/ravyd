@@ -207,10 +207,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             deviceId: device_id,
             play: false,
           });
-        } else if (activeDevice.id !== device_id) {
-          // 他のデバイスで再生中の場合
-          await dispatch('getCurrentPlayback');
         }
+
+        await dispatch('getCurrentPlayback');
 
         console.log('Ready with this device 🎉');
       });
@@ -265,11 +264,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).then(() => {
       commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
-      // 他のデバイスで再生する場合
-      if (deviceId !== state.deviceId) {
-        dispatch('getCurrentPlayback');
-      }
-
       const { deviceList } = state;
       const activeDevice = deviceList.find((device) => device.id === deviceId);
       if (activeDevice != null) {
@@ -290,7 +284,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     });
   },
 
-  async getActiveDeviceList({ state, commit, dispatch }) {
+  async getActiveDeviceList({ commit }) {
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
 
@@ -304,13 +298,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         : 100,
     });
 
-    if (activeDevice?.id == null) return;
-
-    commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
-
-    // 他のデバイスで再生中の場合
-    if (activeDevice.id !== state.deviceId) {
-      dispatch('getCurrentPlayback');
+    if (activeDevice?.id != null) {
+      commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
     }
   },
 
@@ -328,9 +317,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   getCurrentPlayback({ getters, commit, dispatch }, timeout) {
     const handler = async () => {
-      // このデバイスで再生中の場合は playback-sdk から取得する
-      if (this.$getters()['player/isThisAppPlaying']) return;
-
       const market = this.$getters()['auth/userCountryCode'];
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
@@ -363,7 +349,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
       if (currentPlayback.device.id !== this.$state().player.activeDeviceId) {
-        dispatch('getActiveDeviceList');
+        dispatch('getActiveDeviceList')
+          .then(() => {
+            this.$toast.show('primary', 'デバイスの変更を検知しました。');
+          });
       }
 
       // @todo episode 再生中だと null になる
@@ -379,10 +368,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           artists: item.artists,
         }
         : undefined;
+      /**
+       * @todo
+       * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
+       * web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
+       */
+      const isEmptyEpisode = currentPlayback.currently_playing_type === 'episode'
+        && item == null
+        && this.$getters()['player/isThisAppPlaying'];
 
       if (track == null) {
         // アイテムが取得できない場合は3回まで1秒ごとにリトライ
-        if (this.$state().player.retryCountsOfGetCurrentPlayback < 3) {
+        if (this.$state().player.retryCountsOfGetCurrentPlayback < 3 && !isEmptyEpisode) {
           const timer = setTimeout(handler, 1000);
           commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
           commit('INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
@@ -401,12 +398,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
       }
 
-      commit('SET_CURRENT_TRACK', track);
+      // @todo このデバイスで再生中でエピソードの内容が取得できなかった場合はパスする
+      if (!isEmptyEpisode) {
+        commit('SET_CURRENT_TRACK', track);
+      }
 
-      // 曲を再生しきって 500ms と 20s で早いほう経った後再取得
-      const interval = Math.min(this.$getters()['player/remainingTimeMs'] + 500, 20 * 1000);
-      const periodicalTimer = setTimeout(handler, interval);
-      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', periodicalTimer);
+      // このデバイスで再生中の場合は30秒、そうでなければ15秒
+      const regurarPeriod = this.$getters()['player/isThisAppPlaying'] ? 30 * 1000 : 15 * 1000;
+      // 曲を再生しきって 500ms の方が先に来ればそれを採用
+      const interval = Math.min(this.$getters()['player/remainingTimeMs'] + 500, regurarPeriod);
+      const timer = setTimeout(handler, interval);
+      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
     };
 
     // 曲を再生しきって 500ms と timeout ms で早いほう
@@ -425,9 +427,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  async play({
-    state, getters, commit, dispatch,
-  }, payload?) {
+  async play({ state, commit, dispatch }, payload?) {
     const { positionMs } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -450,9 +450,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .then(() => {
         commit('SET_IS_PLAYING', true);
 
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       })
       .catch((err: Error) => {
         console.error({ err });
@@ -485,9 +483,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
   },
 
-  async seek({
-    state, getters, commit, dispatch,
-  }, { positionMs, currentPositionMs }) {
+  async seek({ state, commit, dispatch }, { positionMs, currentPositionMs }) {
     const positionMsOfCurrentState = state.positionMs;
 
     await this.$spotify.player.seek({ positionMs })
@@ -499,41 +495,33 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 1000);
-        }
+        dispatch('getCurrentPlayback', 1000);
       });
   },
 
-  async next({ getters, dispatch }) {
+  async next({ dispatch }) {
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、次の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
-  async previous({ getters, dispatch }) {
+  async previous({ dispatch }) {
     await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、前の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
-  async shuffle({
-    state, getters, commit, dispatch,
-  }) {
+  async shuffle({ state, commit, dispatch }) {
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
 
@@ -545,15 +533,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
-  async repeat({
-    state, getters, commit, dispatch,
-  }) {
+  async repeat({ state, commit, dispatch }) {
     // 初回読み込み時は undefined
     if (state.repeatMode == null) return;
 
@@ -568,15 +552,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
-  async volume({
-    state, getters, commit, dispatch,
-  }, { volumePercent }) {
+  async volume({ state, commit, dispatch }, { volumePercent }) {
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
@@ -589,15 +569,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('error', 'エラーが発生し、ボリュームが変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
-  async mute({
-    state, getters, commit, dispatch,
-  }) {
+  async mute({ state, commit, dispatch }) {
     const {
       isMuted,
       volumePercent: currentVolumePercent,
@@ -615,9 +591,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
-        }
+        dispatch('getCurrentPlayback', 500);
       });
   },
 
