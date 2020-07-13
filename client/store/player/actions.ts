@@ -324,12 +324,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
   },
 
-  getCurrentPlayback({ commit, dispatch, rootGetters }, timeout) {
+  getCurrentPlayback({ getters, commit, dispatch }, timeout) {
     const handler = async () => {
       // このデバイスで再生中の場合は playback-sdk から取得する
       if (this.$getters()['player/isThisAppPlaying']) return;
 
-      const market = rootGetters['auth/userCountryCode'];
+      const market = this.$getters()['auth/userCountryCode'];
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
       if (currentPlayback != null) {
@@ -383,12 +383,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
       }
 
-      // 他でタイマーがセットされなければ20秒後に再取得
-      const periodicalTimer = setTimeout(handler, 20 * 1000);
+      // 曲を再生しきって 500ms と 20s で早いほう経った後再取得
+      const interval = Math.min(this.$getters()['player/remainingTimeMs'] + 500, 20 * 1000);
+      const periodicalTimer = setTimeout(handler, interval);
       commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', periodicalTimer);
     };
 
-    const timer = setTimeout(handler, timeout);
+    // 曲を再生しきって 500ms と timeout ms で早いほう
+    const interval = Math.min(getters.remainingTimeMs + 500, timeout ?? 0);
+    const timer = setTimeout(handler, interval);
     commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
   },
 

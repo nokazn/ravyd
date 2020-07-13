@@ -18,6 +18,7 @@ export type PlayerGetters = {
   isTrackSet: (trackId: string) => boolean
   contextUri: string | undefined
   isContextSet: (uri: string | undefined) => boolean
+  remainingTimeMs: number
   repeatState: SpotifyAPI.RepeatState | undefined
   isPreviousDisallowed: boolean
   isShuffleDisallowed: boolean
@@ -37,6 +38,7 @@ export type RootGetters = {
   ['player/isTrackSet']: PlayerGetters['isTrackSet']
   ['player/contextUri']: PlayerGetters['contextUri']
   ['player/isContextSet']: PlayerGetters['isContextSet']
+  ['player/remainingTimeMs']: PlayerGetters['remainingTimeMs']
   ['player/repeatState']: PlayerGetters['repeatState']
   ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
   ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
@@ -132,6 +134,10 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
 
   isShuffleDisallowed(state) {
     return state.disallowList.some((disallow) => disallow.includes('shuffle'));
+  },
+
+  remainingTimeMs(state) {
+    return Math.max(state.durationMs - state.positionMs, 0);
   },
 
   repeatState(state) {
