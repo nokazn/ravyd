@@ -150,23 +150,8 @@ export namespace SpotifyAPI {
     type: 'episode'
     uri: string
   }
-  export type Episode = {
-    available_markets: Country[]
-    copyrights: Copyright[]
-    description: string
-    explicit: boolean
-    episodes: SimpleShow[]
-    external_urls: ExternalUrls
-    href: string
-    id: string
-    images: Image[]
-    is_externally_hosted: boolean
-    languages: string[]
-    media_type: string
-    name: string
-    publisher: string
-    type: string
-    uri: string
+  export type Episode = SimpleEpisode & {
+    show: SimpleShow
   }
 
   // @todo
@@ -247,15 +232,21 @@ export namespace SpotifyAPI {
       track: SimpleTrack
     }>
 
-    type CurrentlyPlaying = {
+    type PlayingType = 'track' | 'episode' | 'ad' | 'unknown'
+    // アクティブなデバイスが存在しない場合は空文字が返ってくる
+    type CurrentPlayback<T extends PlayingType = PlayingType> = '' | {
       actions: {
-        disallow?: Disallow
+        disallows: Disallow
       }
       context: Context | null
-      currently_playing_type: 'track' | 'episode' | 'ad' | 'unknown'
+      currently_playing_type: T
       device: Device
       is_playing: boolean
-      item: Track | Episode | null
+      item: T extends 'track'
+        ? Track
+        : T extends 'episode'
+        ? Episode | null
+        : null
       progress_ms: number | null
       repeat_state: RepeatState
       shuffle_state: 'on' | 'off'

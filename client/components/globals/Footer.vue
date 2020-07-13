@@ -138,9 +138,8 @@ export default Vue.extend({
   },
 
   // player を初期化してからアクティブなデバイスを取得する
-  async mounted() {
-    await this.$dispatch('player/initPlayer');
-    this.$dispatch('player/getActiveDeviceList');
+  mounted() {
+    this.$dispatch('player/initPlayer');
   },
 
   methods: {

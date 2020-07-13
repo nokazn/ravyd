@@ -7,7 +7,7 @@ export const volume = (context: Context) => {
     deviceId,
     volumePercent,
   }: {
-    deviceId: string | undefined
+    deviceId?: string | undefined
     volumePercent: number
   }): Promise<void> => {
     if (volumePercent < 0 || volumePercent > 100) {

@@ -3,8 +3,11 @@ import type { SpotifyAPI, App } from '~~/types';
 export type PlayerState = {
   playbackPlayer: Spotify.SpotifyPlayer | undefined
   deviceId: string | undefined
-  activeDeviceList: SpotifyAPI.Device[]
+  activeDeviceId: string | undefined
+  deviceList: SpotifyAPI.Device[]
   contextUri: string | undefined
+  getCurrentPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
+  retryCountsOfGetCurrentPlayback: number
   trackId: string | undefined
   trackName: string | undefined
   trackUri: string | undefined
@@ -16,7 +19,6 @@ export type PlayerState = {
   customTrackUriList: string[] | undefined
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
-  currentlyPlaying: SpotifyAPI.Player.CurrentlyPlaying | undefined
   recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
   isPlaying: boolean
   isSavedTrack: boolean
@@ -32,7 +34,8 @@ export type PlayerState = {
 const state = (): PlayerState => ({
   playbackPlayer: undefined,
   deviceId: undefined,
-  activeDeviceList: [],
+  activeDeviceId: undefined,
+  deviceList: [],
   artWorkList: undefined,
   contextUri: undefined,
   trackId: undefined,
@@ -41,11 +44,12 @@ const state = (): PlayerState => ({
   releaseName: undefined,
   releaseUri: undefined,
   artistList: [],
+  getCurrentPlaybackTimer: undefined,
+  retryCountsOfGetCurrentPlayback: 0,
   customContextUri: undefined,
   customTrackUriList: undefined,
   nextTrackList: [],
   previousTrackList: [],
-  currentlyPlaying: undefined,
   recentlyPlayed: undefined,
   isPlaying: false,
   isSavedTrack: false,

@@ -6,11 +6,14 @@ import type { SpotifyAPI } from '~~/types';
 export type PlayerMutations = {
   SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
   SET_DEVICE_ID: string | undefined
-  SET_ACTIVE_DEVICE_LIST: SpotifyAPI.Device[]
+  SET_ACTIVE_DEVICE_ID: string | undefined
+  SET_DEVICE_LIST: SpotifyAPI.Device[]
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
-  SET_CURRENTLY_PLAYING: SpotifyAPI.Player.CurrentlyPlaying | undefined
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
+  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
+  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
@@ -29,10 +32,13 @@ export type PlayerMutations = {
 export type RootMutations = {
   ['player/SET_PLAYBACK_PLAYER']: PlayerMutations['SET_PLAYBACK_PLAYER']
   ['player/SET_DEVICE_ID']: PlayerMutations['SET_DEVICE_ID']
-  ['player/SET_ACTIVE_DEVICE_LIST']: PlayerMutations['SET_ACTIVE_DEVICE_LIST']
+  ['player/SET_ACTIVE_DEVICE_ID']: PlayerMutations['SET_ACTIVE_DEVICE_ID']
+  ['player/SET_DEVICE_LIST']: PlayerMutations['SET_DEVICE_LIST']
   ['player/SET_CUSTOM_CONTEXT_URI']: PlayerMutations['SET_CUSTOM_CONTEXT_URI']
   ['player/SET_CUSTOM_TRACK_URI_LIST']: PlayerMutations['SET_CUSTOM_TRACK_URI_LIST']
-  ['player/SET_CURRENTLY_PLAYING']: PlayerMutations['SET_CURRENTLY_PLAYING']
+  ['player/SET_GET_CURRENT_PLAYBACK_TIMER_ID']: PlayerMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
+  ['player/INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']: PlayerMutations['INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
+  ['player/RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']: PlayerMutations['RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
   ['player/SET_CURRENT_TRACK']: PlayerMutations['SET_CURRENT_TRACK']
   ['player/SET_NEXT_TRACK_LIST']: PlayerMutations['SET_NEXT_TRACK_LIST']
   ['player/SET_PREVIOUS_TRACK_LIST']: PlayerMutations['SET_PREVIOUS_TRACK_LIST']
@@ -57,8 +63,12 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.deviceId = deviceId;
   },
 
-  SET_ACTIVE_DEVICE_LIST(state, deviceList) {
-    state.activeDeviceList = deviceList;
+  SET_ACTIVE_DEVICE_ID(state, activeDeviceId) {
+    state.activeDeviceId = activeDeviceId;
+  },
+
+  SET_DEVICE_LIST(state, deviceList) {
+    state.deviceList = deviceList;
   },
 
   SET_CUSTOM_CONTEXT_URI(state, contextUri) {
@@ -69,12 +79,28 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.customTrackUriList = trackUriList;
   },
 
-  SET_CURRENTLY_PLAYING(state, currentlyPlaying) {
-    state.currentlyPlaying = currentlyPlaying;
-  },
-
   SET_RECENTLY_PLAYED(state, recentlyPlayed) {
     state.recentlyPlayed = recentlyPlayed;
+  },
+
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID(state, timer) {
+    const { getCurrentPlaybackTimer } = state;
+    if (typeof getCurrentPlaybackTimer === 'number') {
+      // クライアントサイドで実行
+      window.clearTimeout(getCurrentPlaybackTimer);
+    } else if (getCurrentPlaybackTimer != null) {
+      // サーバーサイドで実行
+      clearTimeout(getCurrentPlaybackTimer);
+    }
+
+    state.getCurrentPlaybackTimer = timer;
+  },
+  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
+    state.retryCountsOfGetCurrentPlayback += 1;
+  },
+
+  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
+    state.retryCountsOfGetCurrentPlayback = 0;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {

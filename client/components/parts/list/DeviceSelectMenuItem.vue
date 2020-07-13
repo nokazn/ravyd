@@ -2,13 +2,14 @@
   <v-list-item
     dense
     two-line
-    :disabled="id == null"
+    :disabled="disabled"
+    :inactive="disabled"
     @click="onItemClicked"
   >
     <v-list-item-avatar>
       <v-icon
         :size="32"
-        :color="isActive ? 'active' : undefined"
+        :color="disabled ? 'inactive' : isActive ? 'active' : undefined"
       >
         {{ icon }}
       </v-icon>
@@ -16,21 +17,23 @@
 
     <v-list-item-content>
       <v-list-item-title
-        :class="[
-          isActive ? 'active--text' : undefined,
-        ]"
+        :class="{
+          'active--text': isActive,
+          'inactive--text': disabled,
+        }"
       >
         {{ title }}
       </v-list-item-title>
 
       <v-list-item-subtitle
-        :class="[
-          isActive ? 'active--text' : undefined,
-        ]"
+        :class="{
+          'active--text': isActive,
+          'inactive--text': disabled,
+        }"
       >
         <v-icon
           v-show="isActive"
-          :color="isActive ? 'active' : undefined"
+          :color="disabled ? 'inactive' : isActive ? 'active' : undefined"
           :size="16"
         >
           mdi-volume-high
@@ -81,6 +84,7 @@ export type DeviceInfo = {
   id: string | undefined
   type: string
   isActive: boolean
+  disabled: boolean
   title: string
   subtitle: string
 }
@@ -106,6 +110,10 @@ export default Vue.extend({
       required: true,
     },
     isActive: {
+      type: Boolean,
+      required: true,
+    },
+    disabled: {
       type: Boolean,
       required: true,
     },

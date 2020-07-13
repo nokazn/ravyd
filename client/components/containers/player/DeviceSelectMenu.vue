@@ -23,46 +23,45 @@
       </v-btn>
     </template>
 
-    <v-card :elevation="12">
-      <v-list
-        dense
-        subheader
-        :color="MENU_BACKGROUND_COLOR"
-        :class="$style.DeviceSelectMenu"
-      >
-        <div :class="$style.DeviceSelectMenu__header">
-          <v-subheader>
-            デバイスを選択
-          </v-subheader>
+    <v-list
+      dense
+      subheader
+      :elevation="12"
+      :color="MENU_BACKGROUND_COLOR"
+      :class="$style.DeviceSelectMenu"
+    >
+      <div :class="$style.DeviceSelectMenu__header">
+        <v-subheader>
+          デバイスを選択
+        </v-subheader>
 
-          <v-btn
-            icon
-            small
-            :loading="isRefreshingDeviceList"
-            title="デバイスの一覧を更新"
-            @click.stop="onUpdateButtonClicked"
-          >
-            <v-icon>
-              mdi-refresh
-            </v-icon>
-          </v-btn>
-        </div>
-
-        <v-divider />
-
-        <v-list-item-group
-          :class="$style.DeviceSelectMenu__wrapper"
-          class="g-custom-scroll-bar"
+        <v-btn
+          icon
+          small
+          :loading="isRefreshingDeviceList"
+          title="デバイスの一覧を更新"
+          @click.stop="onUpdateButtonClicked"
         >
-          <DeviceSelectMenuItem
-            v-for="(device, index) in deviceItemList"
-            :key="`${device.id}-${index}`"
-            v-bind="device"
-            @on-clicked="onItemClicked"
-          />
-        </v-list-item-group>
-      </v-list>
-    </v-card>
+          <v-icon>
+            mdi-refresh
+          </v-icon>
+        </v-btn>
+      </div>
+
+      <v-divider />
+
+      <v-list-item-group
+        :class="$style.DeviceSelectMenu__wrapper"
+        class="g-custom-scroll-bar"
+      >
+        <DeviceSelectMenuItem
+          v-for="(device, index) in deviceItemList"
+          :key="`${device.id}-${index}`"
+          v-bind="device"
+          @on-clicked="onItemClicked"
+        />
+      </v-list-item-group>
+    </v-list>
   </v-menu>
 </template>
 
@@ -96,18 +95,19 @@ export default Vue.extend({
 
   computed: {
     deviceButtonColor(): string | undefined {
-      return this.$getters()['player/isTheAppPlaying']
+      return this.$getters()['player/isThisAppPlaying']
         ? 'active-icon'
         : undefined;
     },
     deviceItemList(): DeviceInfo[] {
       // @todo any[] で推論されてしまう
-      const activeDeviceList = this.$state().player.activeDeviceList as SpotifyAPI.Device[];
+      const deviceList = this.$state().player.deviceList as SpotifyAPI.Device[];
 
-      return activeDeviceList.map((device) => ({
+      return deviceList.map((device) => ({
         id: device.id ?? undefined,
         type: device.type,
         isActive: device.is_active,
+        disabled: device.id == null,
         title: device.is_active ? '再生中のデバイス' : device.name,
         subtitle: device.is_active ? device.name : 'Spotify Connect',
       }));
@@ -126,6 +126,8 @@ export default Vue.extend({
     onItemClicked(deviceId: OnItem['on-clicked']) {
       if (deviceId != null) {
         this.$dispatch('player/transferPlayback', { deviceId });
+      } else {
+        this.$toast.show('error', 'デバイスを変更できません。');
       }
     },
   },
