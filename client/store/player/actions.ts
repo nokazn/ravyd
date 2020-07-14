@@ -421,7 +421,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async play({
     state, getters, commit, dispatch,
   }, payload?) {
-    if (getters.isDisallowed('resuming')) {
+    if (getters.isDisallowed('resuming') && payload == null) {
       commit('SET_IS_PLAYING', true);
       return;
     }
