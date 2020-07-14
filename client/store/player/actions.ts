@@ -382,12 +382,17 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
       if (!currentPlayback) {
+        const previousActiveDeviceId = this.$getters()['player/activeDevice'];
         // 再生状況が取得できない場合はこのデバイスで再生
         await dispatch('transferPlayback', {
           play: false,
           update: true,
         });
-        this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+
+        if (previousActiveDeviceId !== this.$getters()['player/activeDevice']) {
+          this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+        }
+
         setTimer();
         return;
       }
