@@ -4,10 +4,10 @@ import { LibraryTracksState } from './state';
 import { App } from '~~/types';
 
 export type LibraryTracksMutations = {
-  SET_TRACK_LIST: App.PlaylistTrackDetail[] | null
+  SET_TRACK_LIST: App.PlaylistTrackDetail[]
   SET_TOTAL: number
-  ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[] | null
-  UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[] | null
+  ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[]
+  UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[]
   INCREMENT_NUMBER_OF_UNUPDATED_TRACKS: void
   RESET_NUMBER_OF_UNUPDATED_TRACKS: void
   SET_ACTUAL_IS_SAVED: [string, boolean],

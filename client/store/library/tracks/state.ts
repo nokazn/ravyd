@@ -1,7 +1,7 @@
 import { App } from '~~/types';
 
 export type LibraryTracksState = {
-  trackList: App.PlaylistTrackDetail[] | null
+  trackList: App.PlaylistTrackDetail[]
   total: number
   numberOfUnupdatedTracks: number
   actualIsSavedMap: Map<string, boolean>
