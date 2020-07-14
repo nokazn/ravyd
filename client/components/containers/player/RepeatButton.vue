@@ -3,7 +3,7 @@
     icon
     :color="repeatButton.color"
     :title="repeatButton.title"
-    :disabled="isRepeatDisallowed"
+    :disabled="disabled"
     @click="onClicked"
   >
     <v-icon :size="size">
@@ -52,9 +52,9 @@ export default Vue.extend({
           };
       }
     },
-    isRepeatDisallowed(): boolean {
-      return this.$getters()['player/isRepeatContextDisallowed']
-        || this.$getters()['player/isRepeatTrackDisallowed'];
+    disabled(): boolean {
+      return this.$getters()['player/isDisallowed']('toggling_repeat_context')
+        || this.$getters()['player/isDisallowed']('toggling_repeat_track');
     },
   },
 

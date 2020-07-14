@@ -24,7 +24,7 @@ export type PlayerMutations = {
   SET_DURATION_MS: number
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
-  SET_DISALLOW_LIST: string[]
+  SET_DISALLOWS: SpotifyAPI.Disallows
   SET_VOLUME_PERCENT: { volumePercent: number }
   SET_IS_MUTED: boolean
 };
@@ -49,7 +49,7 @@ export type RootMutations = {
   ['player/SET_DURATION_MS']: PlayerMutations['SET_DURATION_MS']
   ['player/SET_IS_SHUFFLED']: PlayerMutations['SET_IS_SHUFFLED']
   ['player/SET_REPEAT_MODE']: PlayerMutations['SET_REPEAT_MODE']
-  ['player/SET_DISALLOW_LIST']: PlayerMutations['SET_DISALLOW_LIST']
+  ['player/SET_DISALLOWS']: PlayerMutations['SET_DISALLOWS']
   ['player/SET_VOLUME_PERCENT']: PlayerMutations['SET_VOLUME_PERCENT']
   ['player/SET_IS_MUTED']: PlayerMutations['SET_IS_MUTED']
 };
@@ -152,8 +152,8 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.repeatMode = repeatMode;
   },
 
-  SET_DISALLOW_LIST(state, disallowList) {
-    state.disallowList = disallowList;
+  SET_DISALLOWS(state, disallows) {
+    state.disallows = disallows;
   },
 
   SET_VOLUME_PERCENT(state, { volumePercent }) {

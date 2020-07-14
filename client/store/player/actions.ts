@@ -160,13 +160,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log(playerState);
         const {
           context: { uri },
-          track_window: {
-            current_track: currentTrack,
-          },
-          disallows,
+          track_window: { current_track: currentTrack },
         } = playerState;
-        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
-        const disallowList = disallowKeys.filter((key) => disallows[key]);
 
         // currentTrack を変更する前に行う
         const lastTrackId = this.$state().player.trackId;
@@ -184,7 +179,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_CURRENT_TRACK', currentTrack);
         commit('SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks);
         commit('SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks);
-        commit('SET_DISALLOW_LIST', disallowList);
+        commit('SET_DISALLOWS', playerState.disallows);
 
         // 表示がちらつくので、初回以外は player/repeat 内で commit する
         if (this.$state().player.repeatMode == null) {
@@ -248,7 +243,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     commit('SET_DURATION_MS', 0);
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
-    commit('SET_DISALLOW_LIST', []);
+    commit('SET_DISALLOWS', {});
     commit('SET_VOLUME_PERCENT', { volumePercent: 0 });
     commit('SET_IS_MUTED', false);
   },
@@ -336,25 +331,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
       };
 
-      const setDisallowList = (disallows: SpotifyAPI.Disallows) => {
-        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
-        const disallowList = disallowKeys.filter((key) => disallows[key]);
-
-        commit('SET_DISALLOW_LIST', disallowList);
-      };
-
       const setTrack = (item: SpotifyAPI.Track | SpotifyAPI.Episode | null) => {
         // @todo episode 再生中だと null になる
         const track: Spotify.Track | undefined = item != null && item.type === 'track'
           ? {
-            uri: item.uri,
-            id: item.id,
-            type: item.type,
+            ...item,
             media_type: 'audio',
-            name: item.name,
-            is_playable: item.is_playable,
-            album: item.album,
-            artists: item.artists,
           }
           : undefined;
         /**
@@ -401,10 +383,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
       commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
       commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
+      commit('SET_DISALLOWS', currentPlayback.actions.disallows);
       commit('SET_NEXT_TRACK_LIST', []);
       commit('SET_PREVIOUS_TRACK_LIST', []);
-
-      setDisallowList(currentPlayback.actions.disallows);
       setTrack(currentPlayback.item);
 
       // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
@@ -440,6 +421,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async play({
     state, getters, commit, dispatch,
   }, payload?) {
+    if (getters.isDisallowed('resuming')) {
+      commit('SET_IS_PLAYING', true);
+      return;
+    }
+
     const { positionMs } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -475,6 +461,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async pause({ getters, commit, dispatch }, payload = { isInitializing: false }) {
+    if (getters.isDisallowed('pausing')) {
+      commit('SET_IS_PLAYING', false);
+      return;
+    }
+
     const { isInitializing } = payload;
     const params = isInitializing
       ? { isInitializing }
@@ -500,6 +491,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async seek({
     state, getters, commit, dispatch,
   }, { positionMs, currentPositionMs }) {
+    if (getters.isDisallowed('seeking')) return;
+
     const positionMsOfCurrentState = state.positionMs;
 
     await this.$spotify.player.seek({ positionMs })
@@ -518,6 +511,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async next({ getters, dispatch }) {
+    if (getters.isDisallowed('skipping_next')) return;
+
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
@@ -531,6 +526,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   async previous({ getters, dispatch }) {
+    if (getters.isDisallowed('skipping_prev')) return;
+
     await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
@@ -546,6 +543,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   async shuffle({
     state, getters, commit, dispatch,
   }) {
+    if (getters.isDisallowed('toggling_shuffle')) return;
+
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
 
@@ -567,7 +566,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     state, getters, commit, dispatch,
   }) {
     // 初回読み込み時は undefined
-    if (state.repeatMode == null) return;
+    if (state.repeatMode == null
+      || getters.isDisallowed('toggling_repeat_context')
+      || getters.isDisallowed('toggling_repeat_track')) return;
 
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
 

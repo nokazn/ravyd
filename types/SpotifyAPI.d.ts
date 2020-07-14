@@ -118,7 +118,7 @@ export namespace SpotifyAPI {
   }
 
   export type Disallows = {
-    nterrupting_playback?: boolean
+    interrupting_playback?: boolean
     pausing?: boolean
     resuming?: boolean
     seeking?: boolean

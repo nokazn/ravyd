@@ -4,6 +4,7 @@
       :value="value"
       dense
       hide-details
+      :disabled="disabled"
       thumb-color="white"
       :color="seekbarColor"
       :max="maxMs"
@@ -68,6 +69,10 @@ export default Vue.extend({
     },
     durationMss(): string {
       return mssTime(this.durationMs);
+    },
+
+    disabled(): boolean {
+      return this.$getters()['player/isDisallowed']('seeking');
     },
 
     maxMs(): number {

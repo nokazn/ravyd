@@ -2,6 +2,7 @@
   <v-btn
     icon
     large
+    :disabled="disabled"
     title="次の曲"
     @click="onClicked"
   >
@@ -21,6 +22,13 @@ export default Vue.extend({
       default: 28,
     },
   },
+
+  computed: {
+    disabled(): boolean {
+      return this.$getters()['player/isDisallowed']('skipping_next');
+    },
+  },
+
   methods: {
     onClicked() {
       this.$dispatch('player/next');

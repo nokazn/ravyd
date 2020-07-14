@@ -2,7 +2,7 @@
   <v-btn
     icon
     large
-    :disabled="isPreviousDisallowed"
+    :disabled="disabled"
     title="前の曲"
     @click="onPreivousClicked"
   >
@@ -38,8 +38,8 @@ export default Vue.extend({
     position(): RootState['player']['positionMs'] {
       return this.$state().player.positionMs;
     },
-    isPreviousDisallowed(): boolean {
-      return this.$getters()['player/isPreviousDisallowed'] && this.position < 1000;
+    disabled(): boolean {
+      return this.$getters()['player/isDisallowed']('skipping_prev');
     },
   },
 

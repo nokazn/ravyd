@@ -26,7 +26,7 @@ export type PlayerState = {
   durationMs: number
   isShuffled: boolean
   repeatMode: 0 | 1 | 2 | undefined
-  disallowList: string[]
+  disallows: SpotifyAPI.Disallows
   volumePercent: number
   isMuted: boolean
 }
@@ -57,7 +57,7 @@ const state = (): PlayerState => ({
   durationMs: 0,
   isShuffled: false,
   repeatMode: undefined,
-  disallowList: [],
+  disallows: {},
   volumePercent: 0,
   isMuted: false,
 });

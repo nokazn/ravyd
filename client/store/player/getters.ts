@@ -20,10 +20,7 @@ export type PlayerGetters = {
   isContextSet: (uri: string | undefined) => boolean
   remainingTimeMs: number
   repeatState: SpotifyAPI.RepeatState | undefined
-  isPreviousDisallowed: boolean
-  isShuffleDisallowed: boolean
-  isRepeatContextDisallowed: boolean
-  isRepeatTrackDisallowed: boolean
+  isDisallowed: (disallow: keyof SpotifyAPI.Disallows) => boolean
   volumePercent: number
 }
 
@@ -40,10 +37,7 @@ export type RootGetters = {
   ['player/isContextSet']: PlayerGetters['isContextSet']
   ['player/remainingTimeMs']: PlayerGetters['remainingTimeMs']
   ['player/repeatState']: PlayerGetters['repeatState']
-  ['player/isPreviousDisallowed']: PlayerGetters['isPreviousDisallowed']
-  ['player/isShuffleDisallowed']: PlayerGetters['isShuffleDisallowed']
-  ['player/isRepeatContextDisallowed']: PlayerGetters['isRepeatContextDisallowed']
-  ['player/isRepeatTrackDisallowed']: PlayerGetters['isRepeatTrackDisallowed']
+  ['player/isDisallowed']: PlayerGetters['isDisallowed']
   ['player/volumePercent']: PlayerGetters['volumePercent']
 }
 
@@ -132,8 +126,8 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return (uri) => uri != null && (getters.contextUri === uri);
   },
 
-  isShuffleDisallowed(state) {
-    return state.disallowList.some((disallow) => disallow.includes('shuffle'));
+  isDisallowed(state) {
+    return (disallow) => !!state.disallows[disallow];
   },
 
   remainingTimeMs(state) {
@@ -144,18 +138,6 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     return state.repeatMode != null
       ? REPEAT_STATE_LIST[state.repeatMode]
       : undefined;
-  },
-
-  isPreviousDisallowed(state) {
-    return state.disallowList.some((disallow) => disallow.includes('prev'));
-  },
-
-  isRepeatContextDisallowed(state) {
-    return state.disallowList.some((disallow) => disallow.includes('repeat_context'));
-  },
-
-  isRepeatTrackDisallowed(state) {
-    return state.disallowList.some((disallow) => disallow.includes('repeat_track'));
   },
 
   volumePercent(state) {

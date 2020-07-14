@@ -1,8 +1,8 @@
 <template>
   <v-btn
     icon
-    :disabled="isShuffleDisallowed"
     :color="shuffleButton.color"
+    :disabled="disabled"
     :title="shuffleButton.title"
     @click="onClicked"
   >
@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
 
 export type ShuffleButton = {
   color: 'active-icon' | 'inactive',
@@ -34,8 +33,8 @@ export default Vue.extend({
           title: 'シャッフル再生',
         };
     },
-    isShuffleDisallowed(): RootGetters['player/isShuffleDisallowed'] {
-      return this.$getters()['player/isShuffleDisallowed'];
+    disabled(): boolean {
+      return this.$getters()['player/isDisallowed']('toggling_shuffle');
     },
   },
 
