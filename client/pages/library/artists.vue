@@ -4,7 +4,7 @@
       {{ title }}
     </h1>
 
-    <div :class="$style.LibraryArtistsPage__cardContainer">
+    <div :class="$style.CardWrapper">
       <template v-if="artistList != null">
         <ArtistCard
           v-for="artist in artistList"
@@ -12,18 +12,18 @@
           v-bind="artist"
           :min-width="180"
           :max-width="240"
-          :class="$style.LibraryArtistsPage__card"
+          :class="$style.CardWrapper__card"
         />
       </template>
 
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
     </div>
 
     <IntersectionLoadingCircle
@@ -110,7 +110,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
     margin-bottom: 24px;
   }
 
-  &__cardContainer {
+  .CardWrapper {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -122,14 +122,15 @@ export default class LibraryArtistsPage extends Vue implements Data {
       min-width: 180px;
       max-width: 240px;
     }
-  }
 
-  &__card {
-    margin-bottom: 32px;
-  }
-  // 最終行の余りの部分を埋める
-  &__cardSpacer {
-    height: 0;
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    // 最終行の余りの部分を埋める
+    &__cardSpacer {
+      height: 0;
+    }
   }
 }
 </style>

@@ -4,23 +4,23 @@
       {{ title }}
     </h1>
 
-    <div :class="$style.LibraryReleasesPage__cardContainer">
+    <div :class="$style.CardWrapper">
       <ReleaseCard
         v-for="release in releaseList"
         :key="release.id"
         v-bind="release"
         :max-width="240"
-        :class="$style.LibraryReleasesPage__card"
+        :class="$style.CardWrapper__card"
       />
 
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
-      <div :class="$style.ArtistIdPage__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.CardWrapper__cardSpacer" />
     </div>
 
     <IntersectionLoadingCircle
@@ -105,7 +105,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
     margin-bottom: 24px;
   }
 
-  &__cardContainer {
+  .CardWrapper {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -117,14 +117,15 @@ export default class LibraryReleasesPage extends Vue implements Data {
       min-width: 180px;
       max-width: 240px;
     }
-  }
 
-  &__card {
-    margin-bottom: 32px;
-  }
-  // 最終行の余りの部分を埋める
-  &__cardSpacer {
-    height: 0;
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    // 最終行の余りの部分を埋める
+    &__cardSpacer {
+      height: 0;
+    }
   }
 }
 </style>
