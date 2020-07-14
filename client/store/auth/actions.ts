@@ -83,9 +83,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_USER_DATA', userData);
   },
 
-  async refreshAccessToken({
-    state, getters, commit, dispatch,
-  }) {
+  async refreshAccessToken({ getters, commit, dispatch }) {
     if (!getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
@@ -102,10 +100,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     commit('SET_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
-
-    if (state.refreshTokenTimerId != null) {
-      clearTimeout(state.refreshTokenTimerId);
-    }
+    commit('CLEAR_REFRESH_TOKEN_TIMER');
 
     if (accessToken == null) {
       dispatch('logout');
@@ -120,6 +115,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         dispatch('refreshAccessToken');
       }
     }, time);
+
     commit('SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer);
   },
 

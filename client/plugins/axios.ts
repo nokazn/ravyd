@@ -11,7 +11,7 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   }) as NuxtAxiosInstance;
 
   spotifyApi.onRequest((config) => {
-    const accessToken = app.$state().auth.accessToken ?? '';
+    const { accessToken } = app.$state().auth;
     // eslint-disable-next-line no-param-reassign
     config.headers = {
       ...config.headers,
