@@ -3,19 +3,21 @@ import { LibraryTracksState } from './state';
 
 export type LibraryTracksGetters = {
   trackListLength: number
+  isFull: boolean
 };
 
 export type RootGetters = {
   'library/tracks/trackListLength': LibraryTracksGetters['trackListLength']
+  'library/tracks/isFull': LibraryTracksGetters['isFull']
 };
 
-const getters: Getters<LibraryTracksState, LibraryTracksGetters> = {
+const libraryTracksGetters: Getters<LibraryTracksState, LibraryTracksGetters> = {
   trackListLength(state) {
-    const { trackList } = state;
-    return trackList != null
-      ? trackList.length
-      : 0;
+    return state.trackList?.length ?? 0;
+  },
+  isFull(state, getters) {
+    return getters.trackListLength > state.total;
   },
 };
 
-export default getters;
+export default libraryTracksGetters;

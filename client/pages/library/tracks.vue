@@ -19,7 +19,7 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullTrackList"
+      :is-loading="!isFull"
       @on-appeared="onLoadingCircleAppear"
     />
   </div>
@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -54,17 +54,11 @@ const LIMIT_OF_TRACKS = 30 as const;
     if (app.$getters()['library/tracks/trackListLength'] === 0) {
       await app.$dispatch('library/tracks/getSavedTrackList', {
         limit: LIMIT_OF_TRACKS,
-      }).catch((err: Error) => {
-        console.error({ err });
-        this.$toast.show('error', err.message);
       });
     } else {
-      await app.$dispatch('library/tracks/updateLatestSavedTrackList')
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      await app.$dispatch('library/tracks/updateLatestSavedTrackList');
     }
+
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
 })
@@ -84,8 +78,8 @@ export default class LibraryTracksPage extends Vue implements Data {
   get trackList(): RootState['library']['tracks']['trackList'] {
     return this.$state().library.tracks.trackList;
   }
-  get isFullTrackList(): RootState['library']['tracks']['isFullTrackList'] {
-    return this.$state().library.tracks.isFullTrackList;
+  get isFull(): RootGetters['library/tracks/isFull'] {
+    return this.$getters()['library/tracks/isFull'];
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['player/isContextSet'](this.uri);
@@ -149,9 +143,6 @@ export default class LibraryTracksPage extends Vue implements Data {
   onLoadingCircleAppear() {
     this.$dispatch('library/tracks/getSavedTrackList', {
       limit: LIMIT_OF_TRACKS,
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', err.message);
     });
   }
 }
