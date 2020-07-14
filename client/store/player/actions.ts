@@ -432,7 +432,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
    * contextUri が album/playlist の時のみに offset.uri が有効
    * offset.position は playlist を再生する場合のみ?
    */
-  async play({ state, commit, dispatch }, payload?) {
+  async play({
+    state, getters, commit, dispatch,
+  }, payload?) {
     const { positionMs } = state;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
@@ -455,7 +457,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       .then(() => {
         commit('SET_IS_PLAYING', true);
 
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       })
       .catch((err: Error) => {
         console.error({ err });
@@ -488,7 +492,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       });
   },
 
-  async seek({ state, commit, dispatch }, { positionMs, currentPositionMs }) {
+  async seek({
+    state, getters, commit, dispatch,
+  }, { positionMs, currentPositionMs }) {
     const positionMsOfCurrentState = state.positionMs;
 
     await this.$spotify.player.seek({ positionMs })
@@ -500,33 +506,41 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 1000);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 1000);
+        }
       });
   },
 
-  async next({ dispatch }) {
+  async next({ getters, dispatch }) {
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、次の曲を再生できません。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async previous({ dispatch }) {
+  async previous({ getters, dispatch }) {
     await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、前の曲を再生できません。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async shuffle({ state, commit, dispatch }) {
+  async shuffle({
+    state, getters, commit, dispatch,
+  }) {
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
 
@@ -538,11 +552,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async repeat({ state, commit, dispatch }) {
+  async repeat({
+    state, getters, commit, dispatch,
+  }) {
     // 初回読み込み時は undefined
     if (state.repeatMode == null) return;
 
@@ -557,11 +575,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('warning', 'エラーが発生し、シャッフルの状態を変更できませんでした。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async volume({ state, commit, dispatch }, { volumePercent }) {
+  async volume({
+    state, getters, commit, dispatch,
+  }, { volumePercent }) {
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
@@ -574,11 +596,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('error', 'エラーが発生し、ボリュームが変更できませんでした。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
-  async mute({ state, commit, dispatch }) {
+  async mute({
+    state, getters, commit, dispatch,
+  }) {
     const {
       isMuted,
       volumePercent: currentVolumePercent,
@@ -596,7 +622,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         this.$toast.show('error', 'エラーが発生し、ボリュームをミュートにできませんでした。');
       })
       .finally(() => {
-        dispatch('getCurrentPlayback', 500);
+        if (!getters.isThisAppPlaying) {
+          dispatch('getCurrentPlayback', 500);
+        }
       });
   },
 
