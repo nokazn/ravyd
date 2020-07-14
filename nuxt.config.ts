@@ -43,6 +43,7 @@ const nuxtConfig: Configuration = {
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/toast' },
     { src: '~/plugins/overlay' },
+    { src: '~/plugins/observable/header' },
   ],
   router: {
     middleware: 'auth',

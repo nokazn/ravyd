@@ -11,6 +11,7 @@ import { Toast } from '~/plugins/toast';
 import { Overlay } from '~/plugins/overlay';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+import { Header } from '~/plugins/observable/header';
 
 declare module '@nuxt/types/app' {
 
@@ -26,6 +27,7 @@ declare module '@nuxt/types/app' {
     $serverApi: NuxtAxiosInstance
     $toast: Toast
     $overlay: Overlay
+    $header: Header
   }
 }
 

@@ -14,6 +14,7 @@
         :ref="SPACER_REF"
         :class="$style.Spacer"
       />
+
       <nuxt />
 
       <Overlay
@@ -112,9 +113,12 @@ export default Vue.extend({
       entries.forEach((entry) => {
         // intersectionRatio は 0 ~ 1
         this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
+        // spacer が完全に隠れたらヘッダーを表示
+        this.$header.change(!entry.isIntersecting);
+        this.$header.setExtensionHeight(48 * (1 - entry.intersectionRatio));
       });
     }, {
-      threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
     });
     this.observer.observe(element);
   },
