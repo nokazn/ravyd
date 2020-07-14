@@ -117,7 +117,7 @@ export namespace SpotifyAPI {
     volume_percent: number
   }
 
-  export type Disallow = {
+  export type Disallows = {
     nterrupting_playback?: boolean
     pausing?: boolean
     resuming?: boolean
@@ -236,7 +236,7 @@ export namespace SpotifyAPI {
     // アクティブなデバイスが存在しない場合は空文字が返ってくる
     type CurrentPlayback<T extends PlayingType = PlayingType> = '' | {
       actions: {
-        disallows: Disallow
+        disallows: Disallows
       }
       context: Context | null
       currently_playing_type: T

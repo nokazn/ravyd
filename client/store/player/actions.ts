@@ -12,6 +12,7 @@ export type PlayerActions = {
   transferPlayback: (params?: {
     deviceId?: string
     play?: boolean
+    update?: boolean
   }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   setCustomContext: (params: {
@@ -264,9 +265,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }).then(() => {
       commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
+      // update が指定された場合は必ずデバイスのリストを取得し直す
+      const update = params?.update;
       const { deviceList } = state;
       const activeDevice = deviceList.find((device) => device.id === deviceId);
-      if (activeDevice != null) {
+      if (!update && activeDevice != null) {
         // 再生されているデバイスの isActive を true にする
         const activeDeviceList: SpotifyAPI.Device[] = deviceList.map((device) => ({
           ...device,
@@ -318,98 +321,99 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   getCurrentPlayback({ getters, commit, dispatch }, timeout) {
     const handler = async () => {
+      const setTimer = () => {
+        // このデバイスで再生中の場合は30秒、そうでなければ15秒
+        const regurarPeriod = this.$getters()['player/isThisAppPlaying']
+          ? 30 * 1000
+          : 15 * 1000;
+        const interval = this.$state().player.durationMs > 0
+          // 曲を再生しきって 500ms の方が先に来ればそれを採用
+          ? Math.min(this.$getters()['player/remainingTimeMs'] + 500, regurarPeriod)
+          // 曲の長さが 0:00 の場合は一定時間経過後に再取得
+          : regurarPeriod;
+        const timer = setTimeout(handler, interval);
+
+        commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+      };
+
+      const setDisallowList = (disallows: SpotifyAPI.Disallows) => {
+        const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
+        const disallowList = disallowKeys.filter((key) => disallows[key]);
+
+        commit('SET_DISALLOW_LIST', disallowList);
+      };
+
+      const setTrack = (item: SpotifyAPI.Track | SpotifyAPI.Episode | null) => {
+        // @todo episode 再生中だと null になる
+        const track: Spotify.Track | undefined = item != null && item.type === 'track'
+          ? {
+            uri: item.uri,
+            id: item.id,
+            type: item.type,
+            media_type: 'audio',
+            name: item.name,
+            is_playable: item.is_playable,
+            album: item.album,
+            artists: item.artists,
+          }
+          : undefined;
+        /**
+         * @todo
+         * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
+         * web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
+         */
+
+        // @todo このデバイスで再生中でエピソードの内容が取得できなかった場合はパスする
+        if (track == null && this.$getters()['player/isThisAppPlaying']) return;
+
+        // currentTrack を変更する前に行う
+        const lastTrackId = this.$state().player.trackId;
+        const trackId = track?.id;
+        // trackId 変わったときだけチェック
+        if (trackId != null && trackId !== lastTrackId) {
+          dispatch('checkTrackSavedState', trackId);
+        }
+
+        commit('SET_CURRENT_TRACK', track);
+        commit('SET_DURATION_MS', item?.duration_ms ?? 0);
+      };
+
       const market = this.$getters()['auth/userCountryCode'];
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
       if (!currentPlayback) {
         // 再生状況が取得できない場合はこのデバイスで再生
-        Promise.all([
-          dispatch('transferPlayback', { play: false }),
-          dispatch('getActiveDeviceList'),
-        ]).then(() => {
-          this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+        await dispatch('transferPlayback', {
+          play: false,
+          update: true,
         });
+        this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+        setTimer();
         return;
       }
-
-      const {
-        item,
-        actions: { disallows },
-      } = currentPlayback;
-      const disallowKeys = Object.keys(disallows) as Array<keyof typeof disallows>;
-      const disallowList = disallowKeys.filter((key) => disallows[key]);
 
       commit('SET_IS_PLAYING', currentPlayback.is_playing);
       commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
       commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
-      commit('SET_DURATION_MS', currentPlayback.item?.duration_ms ?? 0);
       commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
       commit('SET_NEXT_TRACK_LIST', []);
       commit('SET_PREVIOUS_TRACK_LIST', []);
-      commit('SET_DISALLOW_LIST', disallowList);
+
+      setDisallowList(currentPlayback.actions.disallows);
+      setTrack(currentPlayback.item);
 
       // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
-      if (currentPlayback.device.id !== this.$state().player.activeDeviceId) {
+      const activeDeviceId = currentPlayback.device.id;
+      if (activeDeviceId !== this.$state().player.activeDeviceId) {
         dispatch('getActiveDeviceList')
           .then(() => {
-            this.$toast.show('primary', 'デバイスの変更を検知しました。');
+            if (activeDeviceId !== this.$state().player.deviceId) {
+              this.$toast.show('primary', 'デバイスの変更を検知しました。');
+            }
           });
       }
 
-      // @todo episode 再生中だと null になる
-      const track: Spotify.Track | undefined = item != null && item.type === 'track'
-        ? {
-          uri: item.uri,
-          id: item.id,
-          type: item.type,
-          media_type: 'audio',
-          name: item.name,
-          is_playable: item.is_playable,
-          album: item.album,
-          artists: item.artists,
-        }
-        : undefined;
-      /**
-       * @todo
-       * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
-       * web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
-       */
-      const isEmptyEpisode = currentPlayback.currently_playing_type === 'episode'
-        && item == null
-        && this.$getters()['player/isThisAppPlaying'];
-
-      if (track == null) {
-        // アイテムが取得できない場合は3回まで1秒ごとにリトライ
-        if (this.$state().player.retryCountsOfGetCurrentPlayback < 3 && !isEmptyEpisode) {
-          const timer = setTimeout(handler, 1000);
-          commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
-          commit('INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
-          return;
-        }
-
-        commit('RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK');
-        this.$toast.show('warning', '再生中のアイテムの情報を取得できませんでした。');
-      } else {
-        // currentTrack を変更する前に行う
-        const lastTrackId = this.$state().player.trackId;
-        const trackId = track.id;
-        // trackId 変わったときだけチェック
-        if (trackId != null && trackId !== lastTrackId) {
-          dispatch('checkTrackSavedState', trackId);
-        }
-      }
-
-      // @todo このデバイスで再生中でエピソードの内容が取得できなかった場合はパスする
-      if (!isEmptyEpisode) {
-        commit('SET_CURRENT_TRACK', track);
-      }
-
-      // このデバイスで再生中の場合は30秒、そうでなければ15秒
-      const regurarPeriod = this.$getters()['player/isThisAppPlaying'] ? 30 * 1000 : 15 * 1000;
-      // 曲を再生しきって 500ms の方が先に来ればそれを採用
-      const interval = Math.min(this.$getters()['player/remainingTimeMs'] + 500, regurarPeriod);
-      const timer = setTimeout(handler, interval);
-      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+      setTimer();
     };
 
     // 曲を再生しきって 500ms と timeout ms で早いほう
