@@ -3,8 +3,9 @@ import Vue from 'vue';
 const PORTAL_NAME = 'CONTENT_HEADER';
 
 type HeaderState = {
-  isExtended: boolean
   isOn: boolean
+  isExtended: boolean
+  isIntersecting: boolean
 }
 
 export type Header = {
@@ -17,8 +18,10 @@ export type Header = {
 }
 
 const state = Vue.observable<HeaderState>({
-  isExtended: false,
   isOn: false,
+  isExtended: false,
+  // spacer の isIntersecting
+  isIntersecting: true,
 });
 
 export const $header: Header = {
@@ -36,9 +39,16 @@ export const $header: Header = {
 
   change(isShown: boolean) {
     state.isExtended = isShown;
+    state.isIntersecting = !isShown;
   },
   on() {
     state.isOn = true;
+    // @todo 戻る/進むボタンでちらつかないように遅らせる
+    setTimeout(() => {
+      if (!state.isIntersecting) {
+        state.isExtended = true;
+      }
+    }, 500);
   },
   reset() {
     state.isExtended = false;
