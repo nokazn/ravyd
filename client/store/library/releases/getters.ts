@@ -17,7 +17,9 @@ const libraryReleasesGetters: Getters<LibraryReleasesState, LibraryReleasesGette
   },
 
   isFull(state, getters) {
-    return getters.releaseListLength >= state.total;
+    return state.total != null
+      ? getters.releaseListLength >= state.total
+      : false;
   },
 };
 

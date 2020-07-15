@@ -17,7 +17,9 @@ const libraryTracksGetters: Getters<LibraryTracksState, LibraryTracksGetters> = 
   },
 
   isFull(state, getters) {
-    return getters.trackListLength >= state.total;
+    return state.total != null
+      ? getters.trackListLength >= state.total
+      : false;
   },
 };
 
