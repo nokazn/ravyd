@@ -52,7 +52,8 @@ const actions: Actions<
       market,
     });
     if (releases == null) {
-      throw new Error('お気に入りのアルバムの一覧を取得できませんでした。');
+      this.$toast.show('error', 'お気に入りのアルバムの一覧を取得できませんでした。');
+      return;
     }
 
     const releaseList = releases.items.map(convertRelease);
@@ -74,7 +75,8 @@ const actions: Actions<
       market,
     });
     if (releases == null) {
-      throw new Error('お気に入りのアルバムの一覧を更新できませんでした。');
+      this.$toast.show('error', 'お気に入りのアルバムの一覧を更新できませんでした。');
+      return;
     }
 
     const currentReleaseList = state.releaseList;

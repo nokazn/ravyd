@@ -54,16 +54,9 @@ const LIMIT_OF_RELEASES = 30 as const;
     if (app.$getters()['library/releases/releaseListLength'] === 0) {
       await app.$dispatch('library/releases/getSavedReleaseList', {
         limit: LIMIT_OF_RELEASES,
-      }).catch((err: Error) => {
-        console.error({ err });
-        app.$toast.show('error', err.message);
       });
     } else {
-      await app.$dispatch('library/releases/updateLatestSavedReleaseList')
-        .catch((err: Error) => {
-          console.error({ err });
-          app.$toast.show('error', err.message);
-        });
+      await app.$dispatch('library/releases/updateLatestSavedReleaseList');
     }
   },
 })
@@ -90,9 +83,6 @@ export default class LibraryReleasesPage extends Vue implements Data {
   onLoadingCircleAppeared() {
     this.$dispatch('library/releases/getSavedReleaseList', {
       limit: LIMIT_OF_RELEASES,
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', err.message);
     });
   }
 }
