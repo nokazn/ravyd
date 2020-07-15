@@ -4,10 +4,10 @@ import { LibraryArtistsState } from './state';
 import { App } from '~~/types';
 
 export type LibraryArtistsMutations = {
-  SET_ARTIST_LIST: App.ArtistCardInfo[] | null
-  ADD_TO_ARTIST_LIST: App.ArtistCardInfo[] | null
-  UNSHIFT_TO_ARTIST_LIST: App.ArtistCardInfo[] | null
-  SET_IS_FULL_ARTIST_LIST: boolean
+  SET_ARTIST_LIST: App.ArtistCardInfo[]
+  ADD_TO_ARTIST_LIST: App.ArtistCardInfo[]
+  UNSHIFT_TO_ARTIST_LIST: App.ArtistCardInfo[]
+  SET_TOTAL: number
   INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS: void
   RESET_NUMBER_OF_UNUPDATED_ARTISTS: void
   SET_ACTUAL_IS_SAVED: [string, boolean],
@@ -18,7 +18,7 @@ export type RootMutations = {
   'library/artists/SET_ARTIST_LIST': LibraryArtistsMutations['SET_ARTIST_LIST'];
   'library/artists/ADD_TO_ARTIST_LIST': LibraryArtistsMutations['ADD_TO_ARTIST_LIST'];
   'library/artists/UNSHIFT_TO_ARTIST_LIST': LibraryArtistsMutations['UNSHIFT_TO_ARTIST_LIST'];
-  'library/artists/SET_IS_FULL_ARTIST_LIST': LibraryArtistsMutations['SET_IS_FULL_ARTIST_LIST'];
+  'library/artists/SET_TOTAL': LibraryArtistsMutations['SET_TOTAL'];
   'library/artists/INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS'];
   'library/artists/RESET_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['RESET_NUMBER_OF_UNUPDATED_ARTISTS'];
   'library/artists/SET_ACTUAL_IS_SAVED': LibraryArtistsMutations['SET_ACTUAL_IS_SAVED'];
@@ -48,8 +48,8 @@ const mutations: Mutations<LibraryArtistsState, LibraryArtistsMutations> = {
     }
   },
 
-  SET_IS_FULL_ARTIST_LIST(state, isFullArtistList) {
-    state.isFullArtistList = isFullArtistList;
+  SET_TOTAL(state, total) {
+    state.total = total;
   },
 
   INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS(state) {
