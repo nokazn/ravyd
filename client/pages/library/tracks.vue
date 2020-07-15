@@ -1,33 +1,22 @@
 <template>
   <div :class="$style.LibraryTracksPage">
     <portal :to="$header.PORTAL_NAME">
-      <div :class="$style.LibraryTracksPage__header">
-        <h2>
+      <div :class="$style.ExtendedHeader">
+        <h2 :class="$style.ExtendedHeader__title">
           {{ title }}
         </h2>
 
-        <div>
-          <span class="subtext--text">
-            {{ trackCounts }}
-          </span>
-          <ContextMediaButton
-            :is-playing="isPlaylistSet && isPlaying"
-            @on-clicked="onContextMediaButtonClicked"
-          />
-        </div>
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isPlaylistSet && isPlaying"
+          @on-clicked="onContextMediaButtonClicked"
+        />
       </div>
     </portal>
 
-
-    <div :class="$style.LibraryTracksPage__header">
-      <h1 :class="$style.LibraryTracksPage__title">
-        {{ title }}
-      </h1>
-
-      <span class="subtext--text">
-        {{ trackCounts }}
-      </span>
-    </div>
+    <h1>
+      {{ title }}
+    </h1>
 
     <ContextMediaButton
       :is-playing="isPlaylistSet && isPlaying"
@@ -106,11 +95,6 @@ export default class LibraryTracksPage extends Vue implements Data {
   get isFull(): RootGetters['library/tracks/isFull'] {
     return this.$getters()['library/tracks/isFull'];
   }
-  get trackCounts(): string {
-    const counts = this.trackList.length;
-    const { total } = this.$state().library.tracks;
-    return `${counts} / ${total}`;
-  }
   get isPlaylistSet(): boolean {
     return this.$getters()['player/isContextSet'](this.uri);
   }
@@ -135,7 +119,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     });
   }
 
-  beforeDestroy() {
+  destroyed() {
     this.$header.off();
 
     if (this.mutationUnsubscribe != null) {
@@ -190,10 +174,14 @@ export default class LibraryTracksPage extends Vue implements Data {
     margin-bottom: 16px;
   }
 
-  &__header {
+  .ExtendedHeader {
     display: flex;
     justify-content: space-between;
     width: 100%;
+
+    &__title {
+      font-size: 1.4em;
+    }
   }
 
   &__table {

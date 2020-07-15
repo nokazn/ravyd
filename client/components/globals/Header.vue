@@ -3,6 +3,7 @@
     app
     :elevation="elevation"
     :height="HEADER_HEIGHT"
+    :extended="$header.isExtended"
     :extension-height="$header.extensionHeight"
     :style="styles"
     :class="$style.Header"
@@ -105,14 +106,18 @@ export default Vue.extend({
 <style lang="scss" module>
 .Header {
   z-index: z-index-of(header) !important;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
 
   &__main,
   &__extension > *:first-child {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 0 8px;
+    padding: 0 8px;
+  }
+
+  &__extension {
+    width: 100%;
   }
 
   &__left,
