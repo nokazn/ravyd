@@ -83,12 +83,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
   }
 
   mounted() {
-    this.$header.on();
     this.$dispatch('resetDominantBackgroundColor');
-  }
-
-  beforeDestroy() {
-    this.$header.reset();
   }
 
   onLoadingCircleAppeared() {
