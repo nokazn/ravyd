@@ -119,8 +119,8 @@ export default class LibraryTracksPage extends Vue implements Data {
     });
   }
 
-  destroyed() {
-    this.$header.off();
+  beforeDestroy() {
+    this.$header.reset();
 
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();

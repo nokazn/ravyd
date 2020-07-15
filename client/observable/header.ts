@@ -13,7 +13,7 @@ export type Header = {
   readonly PORTAL_NAME: typeof PORTAL_NAME
   change: (isShown: boolean) => void
   on: () => void
-  off: () => void
+  reset: () => void
 }
 
 const state = Vue.observable<HeaderState>({
@@ -40,7 +40,8 @@ export const $header: Header = {
   on() {
     state.isOn = true;
   },
-  off() {
+  reset() {
+    state.isExtended = false;
     state.isOn = false;
   },
 };

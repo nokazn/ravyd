@@ -1,6 +1,12 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <h1 :class="$style.LibraryReleasesPage__title">
+    <portal :to="$header.PORTAL_NAME">
+      <h2 :class="$style.ExtendedHeader__title">
+        {{ title }}
+      </h2>
+    </portal>
+
+    <h1>
       {{ title }}
     </h1>
 
@@ -77,7 +83,12 @@ export default class LibraryReleasesPage extends Vue implements Data {
   }
 
   mounted() {
+    this.$header.on();
     this.$dispatch('resetDominantBackgroundColor');
+  }
+
+  beforeDestroy() {
+    this.$header.reset();
   }
 
   onLoadingCircleAppeared() {
@@ -94,6 +105,12 @@ export default class LibraryReleasesPage extends Vue implements Data {
 
   & > * {
     margin-bottom: 24px;
+  }
+
+  .ExtendedHeader {
+    &__title {
+      font-size: 1.4em;
+    }
   }
 
   .CardWrapper {
