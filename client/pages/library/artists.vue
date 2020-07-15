@@ -58,16 +58,9 @@ const LIMIT_OF_ARTISTS = 30 as const;
     if (app.$getters()['library/artists/artistListLength'] === 0) {
       await app.$dispatch('library/artists/getSavedArtistList', {
         limit: LIMIT_OF_ARTISTS,
-      }).catch((err: Error) => {
-        console.error({ err });
-        app.$toast.show('error', err.message);
       });
     } else {
-      await app.$dispatch('library/artists/updateLatestSavedArtistList')
-        .catch((err: Error) => {
-          console.error({ err });
-          app.$toast.show('error', err.message);
-        });
+      await app.$dispatch('library/artists/updateLatestSavedArtistList');
     }
   },
 })
@@ -95,9 +88,6 @@ export default class LibraryArtistsPage extends Vue implements Data {
   onLoadingCircleAppeared() {
     this.$dispatch('library/artists/getSavedArtistList', {
       limit: LIMIT_OF_ARTISTS,
-    }).catch((err) => {
-      console.error({ err });
-      this.$toast.show('error', err.message);
     });
   }
 }

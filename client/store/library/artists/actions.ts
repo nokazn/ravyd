@@ -49,7 +49,8 @@ const actions: Actions<
       after,
     });
     if (artists == null) {
-      throw new Error('フォロー中のアーティストの一覧を取得できませんでした。');
+      this.$toast.show('error', 'フォロー中のアーティストの一覧を取得できませんでした。');
+      return;
     }
 
     const artistList = artists.items.map(convertArtist);
@@ -71,7 +72,8 @@ const actions: Actions<
       limit,
     });
     if (artists == null) {
-      throw new Error('フォロー中のアーティストの一覧を更新できませんでした。');
+      this.$toast.show('error', 'フォロー中のアーティストの一覧を更新できませんでした。');
+      return;
     }
 
     const currentArtistList = state.artistList;
