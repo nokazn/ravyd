@@ -5,9 +5,9 @@ import { App } from '~~/types';
 
 export type LibraryTracksMutations = {
   SET_TRACK_LIST: App.PlaylistTrackDetail[]
-  SET_TOTAL: number
   ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[]
   UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[]
+  SET_TOTAL: number
   INCREMENT_NUMBER_OF_UNUPDATED_TRACKS: void
   RESET_NUMBER_OF_UNUPDATED_TRACKS: void
   SET_ACTUAL_IS_SAVED: [string, boolean],
@@ -30,10 +30,6 @@ const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
     state.trackList = trackList;
   },
 
-  SET_TOTAL(state, total) {
-    state.total = total;
-  },
-
   ADD_TO_TRACK_LIST(state, trackList) {
     const currentTrackList = state.trackList;
     if (trackList != null) {
@@ -50,6 +46,10 @@ const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
         ? [...trackList, ...currentTrackList]
         : trackList;
     }
+  },
+
+  SET_TOTAL(state, total) {
+    state.total = total;
   },
 
   INCREMENT_NUMBER_OF_UNUPDATED_TRACKS(state) {
