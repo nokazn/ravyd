@@ -4,10 +4,10 @@ import { LibraryReleasesState } from './state';
 import { App } from '~~/types';
 
 export type LibraryReleasesMutations = {
-  SET_RELEASE_LIST: App.ReleaseCardInfo[] | null
-  ADD_TO_RELEASE_LIST: App.ReleaseCardInfo[] | null
-  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCardInfo[] | null
-  SET_IS_FULL_RELEASE_LIST: boolean
+  SET_RELEASE_LIST: App.ReleaseCardInfo[]
+  ADD_TO_RELEASE_LIST: App.ReleaseCardInfo[]
+  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCardInfo[]
+  SET_TOTAL: number
   INCREMENT_NUMBER_OF_UNUPDATED_RELEASES: void
   RESET_NUMBER_OF_UNUPDATED_RELEASES: void
   SET_ACTUAL_IS_SAVED: [string, boolean],
@@ -18,7 +18,7 @@ export type RootMutations = {
   'library/releases/SET_RELEASE_LIST': LibraryReleasesMutations['SET_RELEASE_LIST'];
   'library/releases/ADD_TO_RELEASE_LIST': LibraryReleasesMutations['ADD_TO_RELEASE_LIST'];
   'library/releases/UNSHIFT_TO_RELEASE_LIST': LibraryReleasesMutations['UNSHIFT_TO_RELEASE_LIST'];
-  'library/releases/SET_IS_FULL_RELEASE_LIST': LibraryReleasesMutations['SET_IS_FULL_RELEASE_LIST'];
+  'library/releases/SET_TOTAL': LibraryReleasesMutations['SET_TOTAL'];
   'library/releases/INCREMENT_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['INCREMENT_NUMBER_OF_UNUPDATED_RELEASES'];
   'library/releases/RESET_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['RESET_NUMBER_OF_UNUPDATED_RELEASES'];
   'library/releases/SET_ACTUAL_IS_SAVED': LibraryReleasesMutations['SET_ACTUAL_IS_SAVED'];
@@ -48,8 +48,8 @@ const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
     }
   },
 
-  SET_IS_FULL_RELEASE_LIST(state, isFullReleaseList) {
-    state.isFullReleaseList = isFullReleaseList;
+  SET_TOTAL(state, total) {
+    state.total = total;
   },
 
   INCREMENT_NUMBER_OF_UNUPDATED_RELEASES(state) {

@@ -1,15 +1,15 @@
 import { App } from '~~/types';
 
 export type LibraryReleasesState = {
-  releaseList: App.ReleaseCardInfo[] | null
-  isFullReleaseList: boolean
+  releaseList: App.ReleaseCardInfo[]
+  total: number
   numberOfUnupdatedReleases: number
   actualIsSavedMap: Map<string, boolean>
 };
 
 const state: () => LibraryReleasesState = () => ({
   releaseList: [],
-  isFullReleaseList: false,
+  total: 0,
   numberOfUnupdatedReleases: 0,
   actualIsSavedMap: new Map(),
 });

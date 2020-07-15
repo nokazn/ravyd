@@ -24,7 +24,7 @@
     </div>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullReleaseList"
+      :is-loading="!isFull"
       @on-appeared="onLoadingCircleAppeared"
     />
   </div>
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import { RootGetters } from 'vuex';
 
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -78,8 +79,8 @@ export default class LibraryReleasesPage extends Vue implements Data {
   get releaseList(): App.ReleaseCardInfo[] | null {
     return this.$state().library.releases.releaseList;
   }
-  get isFullReleaseList(): boolean {
-    return this.$state().library.releases.isFullReleaseList;
+  get isFull(): RootGetters['library/releases/isFull'] {
+    return this.$getters()['library/releases/isFull'];
   }
 
   mounted() {
