@@ -3,7 +3,7 @@
     app
     :elevation="elevation"
     :height="HEADER_HEIGHT"
-    :extended="$header.isExtended"
+    :extended="$header.isOn && $header.isExtended"
     :extension-height="$header.extensionHeight"
     :style="styles"
     :class="$style.Header"
@@ -44,13 +44,15 @@
     </div>
 
     <template #extension>
-      <transition name="fade">
-        <portal-target
-          v-show="$header.isExtended"
-          :name="$header.PORTAL_NAME"
-          :class="$style.Header__extension"
-        />
-      </transition>
+      <template v-if="$header.isOn">
+        <transition name="fade">
+          <portal-target
+            v-show="$header.isExtended"
+            :name="$header.PORTAL_NAME"
+            :class="$style.Header__extension"
+          />
+        </transition>
+      </template>
     </template>
   </v-app-bar>
 </template>

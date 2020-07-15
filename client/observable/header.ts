@@ -10,6 +10,7 @@ type HeaderState = {
 
 export type Header = {
   readonly isExtended: boolean
+  readonly isOn: boolean
   readonly extensionHeight: number
   readonly PORTAL_NAME: typeof PORTAL_NAME
   change: (isShown: boolean) => void
@@ -26,10 +27,13 @@ const state = Vue.observable<HeaderState>({
 
 export const $header: Header = {
   get isExtended(): boolean {
-    return state.isExtended && state.isOn;
+    return state.isExtended;
+  },
+  get isOn(): boolean {
+    return state.isOn;
   },
   get extensionHeight(): number {
-    return this.isExtended
+    return state.isExtended && state.isOn
       ? 44
       : 0;
   },
@@ -48,7 +52,7 @@ export const $header: Header = {
       if (!state.isIntersecting) {
         state.isExtended = true;
       }
-    }, 500);
+    }, 1000);
   },
   reset() {
     state.isExtended = false;
