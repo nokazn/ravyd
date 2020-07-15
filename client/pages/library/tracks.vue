@@ -1,6 +1,20 @@
 <template>
   <div :class="$style.LibraryTracksPage">
-    <h1 :class="$style.LibraryTracksPage__title">
+    <portal :to="$header.PORTAL_NAME">
+      <div :class="$style.ExtendedHeader">
+        <h2 :class="$style.ExtendedHeader__title">
+          {{ title }}
+        </h2>
+
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isPlaylistSet && isPlaying"
+          @on-clicked="onContextMediaButtonClicked"
+        />
+      </div>
+    </portal>
+
+    <h1>
       {{ title }}
     </h1>
 
@@ -19,7 +33,7 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullTrackList"
+      :is-loading="!isFull"
       @on-appeared="onLoadingCircleAppear"
     />
   </div>
@@ -27,7 +41,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
@@ -54,17 +68,11 @@ const LIMIT_OF_TRACKS = 30 as const;
     if (app.$getters()['library/tracks/trackListLength'] === 0) {
       await app.$dispatch('library/tracks/getSavedTrackList', {
         limit: LIMIT_OF_TRACKS,
-      }).catch((err: Error) => {
-        console.error({ err });
-        this.$toast.show('error', err.message);
       });
     } else {
-      await app.$dispatch('library/tracks/updateLatestSavedTrackList')
-        .catch((err: Error) => {
-          console.error({ err });
-          this.$toast.show('error', err.message);
-        });
+      await app.$dispatch('library/tracks/updateLatestSavedTrackList');
     }
+
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
 })
@@ -84,8 +92,8 @@ export default class LibraryTracksPage extends Vue implements Data {
   get trackList(): RootState['library']['tracks']['trackList'] {
     return this.$state().library.tracks.trackList;
   }
-  get isFullTrackList(): RootState['library']['tracks']['isFullTrackList'] {
-    return this.$state().library.tracks.isFullTrackList;
+  get isFull(): RootGetters['library/tracks/isFull'] {
+    return this.$getters()['library/tracks/isFull'];
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['player/isContextSet'](this.uri);
@@ -95,6 +103,8 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   mounted() {
+    this.$header.on();
+
     this.$dispatch('setDefaultDominantBackgroundColor');
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
@@ -110,6 +120,8 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   beforeDestroy() {
+    this.$header.reset();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -149,9 +161,6 @@ export default class LibraryTracksPage extends Vue implements Data {
   onLoadingCircleAppear() {
     this.$dispatch('library/tracks/getSavedTrackList', {
       limit: LIMIT_OF_TRACKS,
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', err.message);
     });
   }
 }
@@ -163,6 +172,16 @@ export default class LibraryTracksPage extends Vue implements Data {
 
   & > * {
     margin-bottom: 16px;
+  }
+
+  .ExtendedHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    &__title {
+      font-size: 1.4em;
+    }
   }
 
   &__table {

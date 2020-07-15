@@ -3,6 +3,8 @@
     app
     :elevation="elevation"
     :height="HEADER_HEIGHT"
+    :extended="$header.isOn && $header.isExtended"
+    :extension-height="$header.extensionHeight"
     :style="styles"
     :class="$style.Header"
   >
@@ -40,16 +42,28 @@
 
       <div :class="$style.Header__right" />
     </div>
+
+    <template #extension>
+      <template v-if="$header.isOn">
+        <transition name="fade">
+          <portal-target
+            v-show="$header.isExtended"
+            :name="$header.PORTAL_NAME"
+            :class="$style.Header__extension"
+          />
+        </transition>
+      </template>
+    </template>
   </v-app-bar>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootGetters } from 'vuex';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_BACKGROUND_COLOR_RGB, DARKEN_FILTER_RATIO, HEADER_HEIGHT } from '~/variables';
-import { App } from '~~/types';
+import { HEADER_HEIGHT } from '~/variables';
 
 type Data = {
   HEADER_HEIGHT: number
@@ -75,11 +89,8 @@ export default Vue.extend({
   },
 
   computed: {
-    styles(): { backgroundColor: string } {
-      const rgbList = this.$state().dominantBackgroundColor?.rgb
-        ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColorInfo['rgb'] ?? HEADER_BACKGROUND_COLOR_RGB;
-
-      return { backgroundColor: `rgba(${rgbList.join(',')},0.6)` };
+    styles(): RootGetters['headerStyles'] {
+      return this.$getters().headerStyles;
     },
   },
 
@@ -99,16 +110,22 @@ export default Vue.extend({
   z-index: z-index-of(header) !important;
   backdrop-filter: blur(16px);
 
-  &__container {
+  &__main,
+  &__extension > *:first-child {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 0 8px;
+    padding: 0 8px;
+  }
 
-    & > * {
-      display: flex;
-      align-items: center;
-    }
+  &__extension {
+    width: 100%;
+  }
+
+  &__left,
+  &__right {
+    display: flex;
+    align-items: center;
   }
 
   &__searchForm {

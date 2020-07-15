@@ -39,11 +39,9 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedReleaseList({
-    state, commit, getters, rootGetters,
-  }, payload) {
+  async getSavedReleaseList({ commit, getters, rootGetters }, payload) {
     // すでに全データを取得している場合は何もしない
-    if (state.isFullReleaseList) return;
+    if (getters.isFull) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.releaseListLength;
@@ -54,15 +52,13 @@ const actions: Actions<
       market,
     });
     if (releases == null) {
-      throw new Error('お気に入りのアルバムの一覧を取得できませんでした。');
+      this.$toast.show('error', 'お気に入りのアルバムの一覧を取得できませんでした。');
+      return;
     }
 
     const releaseList = releases.items.map(convertRelease);
     commit('ADD_TO_RELEASE_LIST', releaseList);
-
-    if (releases.next == null) {
-      commit('SET_IS_FULL_RELEASE_LIST', true);
-    }
+    commit('SET_TOTAL', releases.total);
   },
 
   /**
@@ -79,13 +75,15 @@ const actions: Actions<
       market,
     });
     if (releases == null) {
-      throw new Error('お気に入りのアルバムの一覧を更新できませんでした。');
+      this.$toast.show('error', 'お気に入りのアルバムの一覧を更新できませんでした。');
+      return;
     }
 
     const currentReleaseList = state.releaseList;
     // 現在のライブラリが未取得ならそのままセット
     if (currentReleaseList == null) {
       commit('SET_RELEASE_LIST', releases.items.map(convertRelease));
+      commit('SET_TOTAL', releases.total);
       return;
     }
 
@@ -100,6 +98,7 @@ const actions: Actions<
       : releases.items.slice(0, lastReleaseIndex).map(convertRelease);
 
     commit('UNSHIFT_TO_RELEASE_LIST', addedReleaseList);
+    commit('SET_TOTAL', releases.total);
     commit('RESET_NUMBER_OF_UNUPDATED_RELEASES');
   },
 

@@ -3,19 +3,24 @@ import { LibraryReleasesState } from './state';
 
 export type LibraryReleasesGetters = {
   releaseListLength: number
+  isFull: boolean
 };
 
 export type RootGetters = {
   'library/releases/releaseListLength': LibraryReleasesGetters['releaseListLength']
+  'library/releases/isFull': LibraryReleasesGetters['isFull']
 };
 
-const getters: Getters<LibraryReleasesState, LibraryReleasesGetters> = {
+const libraryReleasesGetters: Getters<LibraryReleasesState, LibraryReleasesGetters> = {
   releaseListLength(state) {
-    const { releaseList } = state;
-    return releaseList != null
-      ? releaseList.length
-      : 0;
+    return state.releaseList?.length ?? 0;
+  },
+
+  isFull(state, getters) {
+    return state.total != null
+      ? getters.releaseListLength >= state.total
+      : false;
   },
 };
 
-export default getters;
+export default libraryReleasesGetters;

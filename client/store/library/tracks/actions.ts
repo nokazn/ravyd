@@ -35,11 +35,9 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedTrackList({
-    state, commit, getters, rootGetters,
-  }, payload) {
+  async getSavedTrackList({ commit, getters, rootGetters }, payload) {
     // すでに全データを取得している場合は何もしない
-    if (state.isFullTrackList) return;
+    if (getters.isFull) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.trackListLength;
@@ -50,7 +48,8 @@ const actions: Actions<
       market,
     });
     if (tracks == null) {
-      throw new Error('お気に入りのトラックの一覧を取得できませんでした。');
+      this.$toast.show('error', 'お気に入りのトラックの一覧を取得できませんでした。');
+      return;
     }
 
     // 保存された楽曲を取得しているので isSaved はすべて true
@@ -61,10 +60,7 @@ const actions: Actions<
     }));
 
     commit('ADD_TO_TRACK_LIST', trackList);
-
-    if (tracks.next == null) {
-      commit('SET_IS_FULL_TRACK_LIST', true);
-    }
+    commit('SET_TOTAL', tracks.total);
   },
 
   /**
@@ -81,7 +77,8 @@ const actions: Actions<
       market,
     });
     if (tracks == null) {
-      throw new Error('お気に入りのトラックの一覧を更新できませんでした。');
+      this.$toast.show('error', 'お気に入りのトラックの一覧を更新できませんでした。');
+      return;
     }
 
     // 保存された楽曲を取得しているので isSaved はすべて true
@@ -91,6 +88,7 @@ const actions: Actions<
       commit('SET_TRACK_LIST', tracks.items.map(
         convertPlaylistTrackDetail({ isTrackSavedList }),
       ));
+      commit('SET_TOTAL', tracks.total);
       return;
     }
 
@@ -106,7 +104,9 @@ const actions: Actions<
       : tracks.items
         .slice(0, lastTrackIndex)
         .map(convertPlaylistTrackDetail({ isTrackSavedList }));
+
     commit('UNSHIFT_TO_TRACK_LIST', addedTrackList);
+    commit('SET_TOTAL', tracks.total);
     commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
   },
 

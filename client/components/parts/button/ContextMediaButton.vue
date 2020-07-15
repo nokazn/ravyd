@@ -2,6 +2,7 @@
   <v-btn
     color="success"
     rounded
+    :height="height"
     :disabled="disabled"
     @click="onClicked"
   >
@@ -28,6 +29,10 @@ export default Vue.extend({
     isPlaying: {
       type: Boolean,
       required: true,
+    },
+    height: {
+      type: Number,
+      default: 36,
     },
     disabled: {
       type: Boolean,

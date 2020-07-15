@@ -1,6 +1,12 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <h1 :class="$style.LibraryReleasesPage__title">
+    <portal :to="$header.PORTAL_NAME">
+      <h2 :class="$style.ExtendedHeader__title">
+        {{ title }}
+      </h2>
+    </portal>
+
+    <h1>
       {{ title }}
     </h1>
 
@@ -24,7 +30,7 @@
     </div>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullReleaseList"
+      :is-loading="!isFull"
       @on-appeared="onLoadingCircleAppeared"
     />
   </div>
@@ -32,6 +38,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import { RootGetters } from 'vuex';
 
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -53,16 +60,9 @@ const LIMIT_OF_RELEASES = 30 as const;
     if (app.$getters()['library/releases/releaseListLength'] === 0) {
       await app.$dispatch('library/releases/getSavedReleaseList', {
         limit: LIMIT_OF_RELEASES,
-      }).catch((err: Error) => {
-        console.error({ err });
-        app.$toast.show('error', err.message);
       });
     } else {
-      await app.$dispatch('library/releases/updateLatestSavedReleaseList')
-        .catch((err: Error) => {
-          console.error({ err });
-          app.$toast.show('error', err.message);
-        });
+      await app.$dispatch('library/releases/updateLatestSavedReleaseList');
     }
   },
 })
@@ -78,8 +78,8 @@ export default class LibraryReleasesPage extends Vue implements Data {
   get releaseList(): App.ReleaseCardInfo[] | null {
     return this.$state().library.releases.releaseList;
   }
-  get isFullReleaseList(): boolean {
-    return this.$state().library.releases.isFullReleaseList;
+  get isFull(): RootGetters['library/releases/isFull'] {
+    return this.$getters()['library/releases/isFull'];
   }
 
   mounted() {
@@ -89,9 +89,6 @@ export default class LibraryReleasesPage extends Vue implements Data {
   onLoadingCircleAppeared() {
     this.$dispatch('library/releases/getSavedReleaseList', {
       limit: LIMIT_OF_RELEASES,
-    }).catch((err: Error) => {
-      console.error({ err });
-      this.$toast.show('error', err.message);
     });
   }
 }
@@ -103,6 +100,12 @@ export default class LibraryReleasesPage extends Vue implements Data {
 
   & > * {
     margin-bottom: 24px;
+  }
+
+  .ExtendedHeader {
+    &__title {
+      font-size: 1.4em;
+    }
   }
 
   .CardWrapper {
