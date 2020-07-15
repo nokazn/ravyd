@@ -37,9 +37,9 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedArtistList({ state, commit, getters }, payload) {
+  async getSavedArtistList({ commit, getters }, payload) {
     // すでに全データを取得している場合は何もしない
-    if (state.isFullArtistList) return;
+    if (getters.isFull) return;
 
     const limit = payload?.limit ?? 30;
     const after = getters.lastArtistId;
@@ -55,10 +55,7 @@ const actions: Actions<
     const artistList = artists.items.map(convertArtist);
 
     commit('ADD_TO_ARTIST_LIST', artistList);
-
-    if (artists.next == null) {
-      commit('SET_IS_FULL_ARTIST_LIST', true);
-    }
+    commit('SET_TOTAL', artists.total);
   },
 
   /**
@@ -81,6 +78,7 @@ const actions: Actions<
     // 現在のライブラリが未取得ならそのままセット
     if (currentArtistList == null) {
       commit('SET_ARTIST_LIST', artists.items.map(convertArtist));
+      commit('SET_TOTAL', artists.total);
       return;
     }
 
@@ -95,6 +93,7 @@ const actions: Actions<
       : artists.items.slice(0, lastArtistIndex).map(convertArtist);
 
     commit('UNSHIFT_TO_ARTIST_LIST', addedArtistList);
+    commit('SET_TOTAL', artists.total);
     commit('RESET_NUMBER_OF_UNUPDATED_ARTISTS');
   },
 

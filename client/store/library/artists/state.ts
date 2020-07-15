@@ -1,15 +1,15 @@
 import { App } from '~~/types';
 
 export type LibraryArtistsState = {
-  artistList: App.ArtistCardInfo[] | null
-  isFullArtistList: boolean
+  artistList: App.ArtistCardInfo[]
+  total: number | undefined
   numberOfUnupdatedArtist: number
   actualIsSavedMap: Map<string, boolean>
 };
 
 const state: () => LibraryArtistsState = () => ({
   artistList: [],
-  isFullArtistList: false,
+  total: undefined,
   numberOfUnupdatedArtist: 0,
   actualIsSavedMap: new Map(),
 });
