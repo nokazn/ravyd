@@ -215,7 +215,6 @@ export type AsyncData = {
 
 export type Data = {
   mutationUnsubscribe: (() => void) | undefined
-  intersectionObserver: IntersectionObserver | undefined,
   HEADER_REF: string
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
@@ -276,7 +275,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  intersectionObserver: IntersectionObserver | undefined = undefined;
   HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
 
@@ -296,19 +294,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.artistInfo != null) {
-      this.$header.enableAdditionalContent();
-
-      const ref = this.$refs[this.HEADER_REF] as HTMLDivElement;
-      if (ref == null) return;
-
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          this.$header.changeAdditionalContent(!entry.isIntersecting);
-        });
-      }, {
-        rootMargin: '-52px 0px',
-      });
-      this.intersectionObserver.observe(ref);
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
     }
 
     this.$dispatch('setDefaultDominantBackgroundColor');
@@ -352,16 +339,11 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
-    this.$header.reset();
+    this.$header.disconnectObserver();
 
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
-    }
-
-    if (this.intersectionObserver != null) {
-      this.intersectionObserver.disconnect();
-      this.intersectionObserver = undefined;
     }
   }
 
@@ -470,6 +452,15 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .ArtistIdPage {
   padding: 16px 6% 48px;
 
@@ -521,12 +512,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     &__buttonWrapper {
       display: flex;
       justify-content: center;
-    }
-  }
-
-  .AdditionalHeaderContent {
-    & > *:not(:last-child) {
-      margin-right: 1%;
     }
   }
 

@@ -39,13 +39,15 @@
       </div>
 
       <div :class="$style.Header__right">
-        <transition name="fade">
-          <portal-target
-            v-show="$header.isAdditionalContentShown"
-            :name="$header.PORTAL_NAME"
-            :class="$style.Header__additional"
-          />
-        </transition>
+        <template v-if="$header.hasAdditionalContent">
+          <transition name="fade">
+            <portal-target
+              v-show="$header.isAdditionalContentShown"
+              :name="$header.PORTAL_NAME"
+              :class="$style.Header__additional"
+            />
+          </transition>
+        </template>
       </div>
     </div>
   </v-app-bar>

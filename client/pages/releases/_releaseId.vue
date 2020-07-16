@@ -6,7 +6,6 @@
     <portal :to="$header.PORTAL_NAME">
       <div
         v-if="releaseInfo != null"
-        :ref="HEADER_REF"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -32,7 +31,11 @@
       </div>
     </portal>
 
-    <div :class="$style.ReleaseIdPage__header">
+    <div
+      v-if="releaseInfo != null"
+      :ref="HEADER_REF"
+      :class="$style.ReleaseIdPage__header"
+    >
       <ReleaseArtwork
         :src="releaseInfo.artworkSrc"
         :alt="releaseInfo.name"
@@ -174,7 +177,6 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
-  intersectionObserver: IntersectionObserver | undefined
   HEADER_REF: string
 }
 
@@ -218,7 +220,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  intersectionObserver: IntersectionObserver | undefined;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -230,19 +231,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.releaseInfo != null) {
-      this.$header.enableAdditionalContent();
-
-      const ref = this.$refs[this.HEADER_REF] as HTMLDivElement;
-      if (ref == null) return;
-
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          this.$header.changeAdditionalContent(!entry.isIntersecting);
-        });
-      }, {
-        rootMargin: '-52px 0px',
-      });
-      this.intersectionObserver.observe(ref);
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
     }
 
     if (this.releaseInfo?.artworkSrc != null) {
@@ -293,7 +283,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
-    this.$header.reset();
+    this.$header.disconnectObserver();
 
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
@@ -400,6 +390,15 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .ReleaseIdPage {
   padding: 16px 6% 48px;
 
@@ -459,12 +458,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__section {
     margin: 40px -32px 0;
-  }
-
-  .AdditionalHeaderContent {
-    & > *:not(:last-child) {
-      margin-right: 1%;
-    }
   }
 }
 </style>

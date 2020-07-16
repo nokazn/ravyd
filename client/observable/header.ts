@@ -1,55 +1,66 @@
 import Vue from 'vue';
 
+import { HEADER_HEIGHT } from '~/variables';
+
 const PORTAL_NAME = 'CONTENT_HEADER';
 
 type HeaderState = {
-  hasAdditionalContentShown: boolean
+  hasAdditionalContent: boolean
   isAdditionalContentShown: boolean
-  isIntersecting: boolean
+  intersectionObserver: IntersectionObserver | undefined
 }
 
 export type Header = {
   readonly isAdditionalContentShown: boolean
-  readonly hasAdditionalContentShown: boolean
+  readonly hasAdditionalContent: boolean
   readonly PORTAL_NAME: typeof PORTAL_NAME
-  changeAdditionalContent: (isShown: boolean) => void
-  enableAdditionalContent: () => void
-  reset: () => void
+  observe: (element: Element | null) => void
+  disconnectObserver: () => void
 }
 
 const state = Vue.observable<HeaderState>({
-  hasAdditionalContentShown: false,
+  hasAdditionalContent: false,
   isAdditionalContentShown: false,
-  // spacer の isIntersecting
-  isIntersecting: true,
+  intersectionObserver: undefined,
 });
 
 export const $header: Header = {
   get isAdditionalContentShown(): boolean {
     return state.isAdditionalContentShown;
   },
-  get hasAdditionalContentShown(): boolean {
-    return state.hasAdditionalContentShown;
+  get hasAdditionalContent(): boolean {
+    return state.hasAdditionalContent;
   },
   get PORTAL_NAME(): typeof PORTAL_NAME {
     return PORTAL_NAME;
   },
 
-  changeAdditionalContent(isShown: boolean) {
-    state.isAdditionalContentShown = isShown;
-    state.isIntersecting = !isShown;
+  observe(element) {
+    if (element == null) return;
+
+    if (state.intersectionObserver != null) {
+      state.intersectionObserver.disconnect();
+    }
+
+    state.hasAdditionalContent = true;
+
+    // ヘッダーの分のマージン
+    const rootMargin = `-${HEADER_HEIGHT}px 0px`;
+    state.intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // element がヘッダーに隠れて見えなくなったら additional contents を表示
+        state.isAdditionalContentShown = !entry.isIntersecting;
+      });
+    }, { rootMargin });
+    state.intersectionObserver.observe(element);
   },
-  enableAdditionalContent() {
-    state.hasAdditionalContentShown = true;
-    // @todo 戻る/進むボタンでちらつかないように遅らせる
-    setTimeout(() => {
-      if (!state.isIntersecting) {
-        state.isAdditionalContentShown = true;
-      }
-    }, 1000);
-  },
-  reset() {
+  disconnectObserver() {
+    if (state.intersectionObserver != null) {
+      state.intersectionObserver.disconnect();
+      state.intersectionObserver = undefined;
+    }
+
     state.isAdditionalContentShown = false;
-    state.hasAdditionalContentShown = false;
+    state.hasAdditionalContent = false;
   },
 };

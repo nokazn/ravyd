@@ -6,7 +6,6 @@
     <portal :to="$header.PORTAL_NAME">
       <div
         v-if="playlistInfo != null"
-        :ref="HEADER_REF"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -47,7 +46,11 @@
       </div>
     </portal>
 
-    <div :class="$style.PlaylistIdPage__header">
+    <div
+      v-if="playlistInfo != null"
+      :ref="HEADER_REF"
+      :class="$style.PlaylistIdPage__header"
+    >
       <ReleaseArtwork
         :src="playlistInfo.artworkSrc"
         :alt="playlistInfo.name"
@@ -245,7 +248,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  intersectionObserver: IntersectionObserver | undefined = undefined;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -257,19 +259,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.playlistInfo != null) {
-      this.$header.enableAdditionalContent();
-
-      const ref = this.$refs[this.HEADER_REF] as HTMLDivElement;
-      if (ref == null) return;
-
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          this.$header.changeAdditionalContent(!entry.isIntersecting);
-        });
-      }, {
-        rootMargin: '-52px 0px',
-      });
-      this.intersectionObserver.observe(ref);
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
     }
 
     if (this.playlistInfo?.artworkSrc != null) {
@@ -407,7 +398,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
-    this.$header.reset();
+    this.$header.disconnectObserver();
 
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
@@ -540,6 +531,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .PlaylistIdPage {
   padding: 16px 6% 48px;
 
@@ -589,12 +589,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   &__table {
     margin-bottom: 32px;
-  }
-
-  .AdditionalHeaderContent {
-    & > *:not(:last-child) {
-      margin-right: 1%;
-    }
   }
 }
 </style>

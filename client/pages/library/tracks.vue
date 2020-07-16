@@ -13,6 +13,7 @@
     </h1>
 
     <ContextMediaButton
+      :ref="MEDIA_BUTTON_REF"
       :is-playing="isPlaylistSet && isPlaying"
       @on-clicked="onContextMediaButtonClicked"
     />
@@ -47,8 +48,10 @@ interface Data {
   uri: string
   observer: IntersectionObserver | undefined
   mutationUnsubscribe: (() => void) | undefined
+  MEDIA_BUTTON_REF: string
 }
 
+const MEDIA_BUTTON_REF = 'mediaButtonRef';
 const LIMIT_OF_TRACKS = 30 as const;
 
 @Component({
@@ -76,6 +79,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
   observer: IntersectionObserver | undefined = undefined;
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  MEDIA_BUTTON_REF = MEDIA_BUTTON_REF;
 
   head() {
     return {
@@ -97,7 +101,8 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   mounted() {
-    this.$header.enableAdditionalContent();
+    const element = this.$refs[MEDIA_BUTTON_REF] as Vue;
+    this.$header.observe(element.$el);
 
     this.$dispatch('setDefaultDominantBackgroundColor');
 
@@ -114,7 +119,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   beforeDestroy() {
-    this.$header.reset();
+    this.$header.disconnectObserver();
 
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
