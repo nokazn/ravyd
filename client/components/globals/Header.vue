@@ -3,8 +3,6 @@
     app
     :elevation="elevation"
     :height="HEADER_HEIGHT"
-    :extended="$header.isOn && $header.isExtended"
-    :extension-height="$header.extensionHeight"
     :style="styles"
     :class="$style.Header"
   >
@@ -40,20 +38,16 @@
         </div>
       </div>
 
-      <div :class="$style.Header__right" />
-    </div>
-
-    <template #extension>
-      <template v-if="$header.isOn">
+      <div :class="$style.Header__right">
         <transition name="fade">
           <portal-target
-            v-show="$header.isExtended"
+            v-show="$header.isAdditionalContentShown"
             :name="$header.PORTAL_NAME"
-            :class="$style.Header__extension"
+            :class="$style.Header__additional"
           />
         </transition>
-      </template>
-    </template>
+      </div>
+    </div>
   </v-app-bar>
 </template>
 
@@ -110,16 +104,11 @@ export default Vue.extend({
   z-index: z-index-of(header) !important;
   backdrop-filter: blur(16px);
 
-  &__main,
-  &__extension > *:first-child {
+  &__container {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 0 8px;
-  }
-
-  &__extension {
-    width: 100%;
   }
 
   &__left,
