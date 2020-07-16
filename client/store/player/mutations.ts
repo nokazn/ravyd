@@ -3,6 +3,8 @@ import { Mutations } from 'vuex';
 import { PlayerState } from './state';
 import type { SpotifyAPI } from '~~/types';
 
+import { convertUriToId } from '~/scripts/converter/convertUriToId';
+
 export type PlayerMutations = {
   SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
   SET_DEVICE_ID: string | undefined
@@ -112,7 +114,7 @@ const mutations: Mutations<PlayerState, PlayerMutations> = {
     state.releaseUri = currentTrack?.album.uri;
     state.artistList = currentTrack?.artists.map((artist) => ({
       name: artist.name,
-      id: artist.uri.replace(/^.+:/g, ''),
+      id: convertUriToId(artist.uri),
     }));
   },
 
