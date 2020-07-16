@@ -292,14 +292,11 @@ export default Vue.extend({
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
-          this.isLoading = false;
           this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
           this.resetForm();
         }
-      }).catch((err: Error) => {
-        console.error({ err });
+      }).finally(() => {
         this.isLoading = false;
-        this.$toast.show('error', err.message);
       });
     },
     resetForm() {
