@@ -1,11 +1,5 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <portal :to="$header.PORTAL_NAME">
-      <h2 :class="$style.ExtendedHeader__title">
-        {{ title }}
-      </h2>
-    </portal>
-
     <h1>
       {{ title }}
     </h1>

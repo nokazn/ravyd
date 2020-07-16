@@ -113,8 +113,6 @@ export default Vue.extend({
       entries.forEach((entry) => {
         // intersectionRatio は 0 ~ 1
         this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
-        // spacer が完全に隠れたらヘッダーを表示
-        this.$header.change(!entry.isIntersecting);
       });
     }, {
       threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],

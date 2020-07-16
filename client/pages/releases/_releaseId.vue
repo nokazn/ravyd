@@ -3,7 +3,39 @@
     v-if="releaseInfo != null"
     :class="$style.ReleaseIdPage"
   >
-    <div :class="$style.ReleaseIdPage__header">
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="releaseInfo != null"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isReleaseSet && isPlaying"
+          @on-clicked="onContextMediaButtonClicked"
+        />
+
+        <FavoriteButton
+          :size="32"
+          outlined
+          :is-favorited="releaseInfo.isSaved"
+          @on-clicked="toggleSavedState"
+        />
+
+        <ReleaseMenu
+          :release="releaseInfo"
+          :size="32"
+          outlined
+          left
+          @on-favorite-menu-clicked="toggleSavedState"
+        />
+      </div>
+    </portal>
+
+    <div
+      v-if="releaseInfo != null"
+      :ref="HEADER_REF"
+      :class="$style.ReleaseIdPage__header"
+    >
       <ReleaseArtwork
         :src="releaseInfo.artworkSrc"
         :alt="releaseInfo.name"
@@ -46,6 +78,7 @@
 
             <ReleaseMenu
               :release="releaseInfo"
+              outlined
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>
@@ -134,6 +167,7 @@ import { SpotifyAPI, App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const CARD_WIDTH = 200;
+const HEADER_REF = 'headerRef';
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
@@ -143,6 +177,7 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
+  HEADER_REF: string
 }
 
 @Component({
@@ -185,6 +220,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  HEADER_REF = HEADER_REF;
 
   head() {
     return {
@@ -193,6 +229,12 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
+    // ボタンが見えなくなったらヘッダーに表示
+    if (this.releaseInfo != null) {
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
+    }
+
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
     } else {
@@ -241,6 +283,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
+    this.$header.disconnectObserver();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -346,6 +390,15 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .ReleaseIdPage {
   padding: 16px 6% 48px;
 

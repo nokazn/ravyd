@@ -3,7 +3,54 @@
     v-if="playlistInfo != null"
     :class="$style.PlaylistIdPage"
   >
-    <div :class="$style.PlaylistIdPage__header">
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="playlistInfo != null"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isPlaylistSet && isPlaying"
+          :disabled="!hasTracks"
+          @on-clicked="onContextMediaButtonClicked"
+        />
+
+        <template v-if="playlistInfo.isOwnPlaylist">
+          <CircleButton
+            :size="32"
+            outlined
+            title="編集する"
+            @on-clicked="editPlaylistModal = true"
+          >
+            mdi-pencil
+          </CircleButton>
+        </template>
+
+        <FavoriteButton
+          v-else
+          :size="32"
+          outlined
+          :is-favorited="isFollowing"
+          @on-clicked="toggleFollowingState"
+        />
+
+        <PlaylistMenu
+          :playlist="playlistInfo"
+          :is-following="isFollowing"
+          :size="32"
+          outlined
+          left
+          @on-edit-menu-clicked="toggleEditPlaylistModal"
+          @on-follow-menu-clicked="toggleFollowingState"
+        />
+      </div>
+    </portal>
+
+    <div
+      v-if="playlistInfo != null"
+      :ref="HEADER_REF"
+      :class="$style.PlaylistIdPage__header"
+    >
       <ReleaseArtwork
         :src="playlistInfo.artworkSrc"
         :alt="playlistInfo.name"
@@ -49,6 +96,7 @@
 
             <template v-if="playlistInfo.isOwnPlaylist">
               <CircleButton
+                :size="36"
                 outlined
                 title="編集する"
                 @on-clicked="editPlaylistModal = true"
@@ -67,6 +115,7 @@
             <PlaylistMenu
               :playlist="playlistInfo"
               :is-following="isFollowing"
+              outlined
               @on-edit-menu-clicked="toggleEditPlaylistModal"
               @on-follow-menu-clicked="toggleFollowingState"
             />
@@ -122,7 +171,7 @@ import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table
 import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import FavoriteButton, { On as OnFollowButton } from '~/components/parts/button/FavoriteButton.vue';
+import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
@@ -137,6 +186,7 @@ import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
+const HEADER_REF = 'headerRef';
 
 interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
@@ -148,6 +198,7 @@ interface AsyncData {
 interface Data {
   editPlaylistModal: boolean
   mutationUnsubscribe: (() => void) | undefined
+  HEADER_REF: string
 }
 
 @Component({
@@ -197,6 +248,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  HEADER_REF = HEADER_REF;
 
   head() {
     return {
@@ -205,6 +257,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
+    // ボタンが見えなくなったらヘッダーに表示
+    if (this.playlistInfo != null) {
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
+    }
+
     if (this.playlistInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
     } else {
@@ -340,6 +398,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
+    this.$header.disconnectObserver();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -433,7 +493,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.editPlaylistModal = isShown;
   }
 
-  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFavoriteButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
@@ -471,6 +531,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .PlaylistIdPage {
   padding: 16px 6% 48px;
 

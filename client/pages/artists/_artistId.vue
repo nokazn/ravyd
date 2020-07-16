@@ -1,9 +1,39 @@
 <template>
   <div
+    v-if="artistInfo != null"
     :class="$style.ArtistIdPage"
   >
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="artistInfo != null"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isArtistSet && isPlaying "
+          @on-clicked="onContextMediaButtonClicked"
+        />
+
+        <FollowButton
+          :is-following="isFollowing"
+          :height="32"
+          @on-clicked="toggleFolloingState"
+        />
+
+        <ArtistMenu
+          :artist="artistInfo"
+          :is-following="isFollowing"
+          :size="32"
+          outlined
+          left
+          @on-follow-menu-clicked="toggleFolloingState"
+        />
+      </div>
+    </portal>
+
     <div
       v-if="artistInfo != null"
+      :ref="HEADER_REF"
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
@@ -62,6 +92,7 @@
             <ArtistMenu
               :artist="artistInfo"
               :is-following="isFollowing"
+              outlined
               @on-follow-menu-clicked="toggleFolloingState"
             />
           </div>
@@ -161,6 +192,7 @@ import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState'
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { App } from '~~/types';
 
+const HEADER_REF = 'headerRef';
 const AVATAR_SIZE = 220;
 const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
@@ -183,6 +215,7 @@ export type AsyncData = {
 
 export type Data = {
   mutationUnsubscribe: (() => void) | undefined
+  HEADER_REF: string
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
@@ -242,6 +275,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
 
   head() {
@@ -258,6 +292,12 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
+    // ボタンが見えなくなったらヘッダーに表示
+    if (this.artistInfo != null) {
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
+    }
+
     this.$dispatch('setDefaultDominantBackgroundColor');
 
     // トラックを保存/削除した後呼ばれる
@@ -299,6 +339,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
+    this.$header.disconnectObserver();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -410,6 +452,15 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: 0.5vw;
+  }
+}
+
 .ArtistIdPage {
   padding: 16px 6% 48px;
 

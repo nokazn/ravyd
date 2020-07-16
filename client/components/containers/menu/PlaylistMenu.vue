@@ -1,9 +1,12 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
-    outlined
+    :size="size"
+    :outlined="outlined"
     offset-y
     bottom
+    :left="left"
+    :right="right"
   />
 </template>
 
@@ -36,6 +39,22 @@ export default Vue.extend({
     isFollowing: {
       type: Boolean,
       required: true,
+    },
+    size: {
+      type: Number,
+      default: 36,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -145,6 +164,8 @@ export default Vue.extend({
           uri: this.playlist.uri,
           typeName: '曲',
           externalUrls: this.playlist.externalUrls,
+          left: this.left,
+          right: this.right,
         };
         return {
           component: ShareMenu,

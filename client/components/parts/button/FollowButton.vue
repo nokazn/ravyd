@@ -3,7 +3,8 @@
     <v-btn
       rounded
       :outlined="isFollowing"
-      :width="180"
+      :height="height"
+      :width="160"
       @click="onClicked"
     >
       <v-icon
@@ -35,6 +36,10 @@ export default Vue.extend({
     isFollowing: {
       type: Boolean,
       required: true,
+    },
+    height: {
+      type: Number,
+      default: 36,
     },
   },
 

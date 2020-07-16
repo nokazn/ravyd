@@ -1,9 +1,12 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
-    outlined
+    :size="size"
+    :outlined="outlined"
     offset-y
     bottom
+    :left="left"
+    :right="right"
   />
 </template>
 
@@ -32,6 +35,22 @@ export default Vue.extend({
       type: Object as PropType<App.ReleaseInfo>,
       required: true,
     },
+    size: {
+      type: Number,
+      default: 36,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -39,7 +58,11 @@ export default Vue.extend({
       const artistPage = () => {
         const { artistList } = this.release;
         if (artistList.length > 1) {
-          const props: ArtistLinkMenuProps = { artistList };
+          const props: ArtistLinkMenuProps = {
+            artistList,
+            left: this.left,
+            right: this.right,
+          };
           return {
             component: ArtistLinkMenu,
             props,
@@ -68,6 +91,8 @@ export default Vue.extend({
           name: this.release.name,
           uriList,
           artistList: this.release.artistList,
+          left: this.left,
+          right: this.right,
         };
 
         return {
@@ -83,6 +108,8 @@ export default Vue.extend({
           typeName: 'アルバム',
           artistList: this.release.artistList,
           externalUrls: this.release.externalUrls,
+          left: this.left,
+          right: this.right,
         };
 
         return {

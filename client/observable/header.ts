@@ -1,61 +1,66 @@
 import Vue from 'vue';
 
+import { HEADER_HEIGHT } from '~/variables';
+
 const PORTAL_NAME = 'CONTENT_HEADER';
 
 type HeaderState = {
-  isOn: boolean
-  isExtended: boolean
-  isIntersecting: boolean
+  hasAdditionalContent: boolean
+  isAdditionalContentShown: boolean
+  intersectionObserver: IntersectionObserver | undefined
 }
 
 export type Header = {
-  readonly isExtended: boolean
-  readonly isOn: boolean
-  readonly extensionHeight: number
+  readonly isAdditionalContentShown: boolean
+  readonly hasAdditionalContent: boolean
   readonly PORTAL_NAME: typeof PORTAL_NAME
-  change: (isShown: boolean) => void
-  on: () => void
-  reset: () => void
+  observe: (element: Element | null) => void
+  disconnectObserver: () => void
 }
 
 const state = Vue.observable<HeaderState>({
-  isOn: false,
-  isExtended: false,
-  // spacer の isIntersecting
-  isIntersecting: true,
+  hasAdditionalContent: false,
+  isAdditionalContentShown: false,
+  intersectionObserver: undefined,
 });
 
 export const $header: Header = {
-  get isExtended(): boolean {
-    return state.isExtended;
+  get isAdditionalContentShown(): boolean {
+    return state.isAdditionalContentShown;
   },
-  get isOn(): boolean {
-    return state.isOn;
-  },
-  get extensionHeight(): number {
-    return state.isExtended && state.isOn
-      ? 44
-      : 0;
+  get hasAdditionalContent(): boolean {
+    return state.hasAdditionalContent;
   },
   get PORTAL_NAME(): typeof PORTAL_NAME {
     return PORTAL_NAME;
   },
 
-  change(isShown: boolean) {
-    state.isExtended = isShown;
-    state.isIntersecting = !isShown;
+  observe(element) {
+    if (element == null) return;
+
+    if (state.intersectionObserver != null) {
+      state.intersectionObserver.disconnect();
+    }
+
+    state.hasAdditionalContent = true;
+
+    // ヘッダーの分のマージン
+    const rootMargin = `-${HEADER_HEIGHT}px 0px`;
+    state.intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // element がヘッダーに隠れて見えなくなったら additional contents を表示
+        state.isAdditionalContentShown = !entry.isIntersecting;
+      });
+    }, { rootMargin });
+    state.intersectionObserver.observe(element);
   },
-  on() {
-    state.isOn = true;
-    // @todo 戻る/進むボタンでちらつかないように遅らせる
-    setTimeout(() => {
-      if (!state.isIntersecting) {
-        state.isExtended = true;
-      }
-    }, 1000);
-  },
-  reset() {
-    state.isExtended = false;
-    state.isOn = false;
+  disconnectObserver() {
+    if (state.intersectionObserver != null) {
+      state.intersectionObserver.disconnect();
+      state.intersectionObserver = undefined;
+    }
+
+    state.isAdditionalContentShown = false;
+    state.hasAdditionalContent = false;
   },
 };
