@@ -34,7 +34,7 @@
           <FavoriteButton
             v-if="hasTrack"
             :is-favorited="isSavedTrack"
-            :size="20"
+            :size="36"
             @on-clicked="onFavoriteButtonClicked"
           />
         </div>

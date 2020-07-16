@@ -1,7 +1,9 @@
 <template>
   <v-btn
     icon
-    v-bind="buttonProps"
+    :width="size"
+    :height="size"
+    :outlined="outlined"
     :disabled="disabled"
     :title="title"
     @click="onClicked"
@@ -13,13 +15,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
-type ButtonProps = {
-  [k in 'x-large' | 'large' | 'small' | 'x-small']?: true
-} & {
-  outlined: boolean
-}
+import Vue from 'vue';
 
 export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
 
@@ -36,8 +32,8 @@ export default Vue.extend({
       required: true,
     },
     size: {
-      type: [Number, String] as PropType<number | 'x-large' | 'large' | 'small' | 'x-small'>,
-      default: undefined,
+      type: Number,
+      default: 36,
     },
     outlined: {
       type: Boolean,
@@ -60,30 +56,8 @@ export default Vue.extend({
         ? '保存しない'
         : '保存する';
     },
-    buttonProps(): ButtonProps {
-      return typeof this.size === 'number'
-        ? {
-          outlined: false,
-        }
-        : {
-          [this.size]: true,
-          outlined: this.outlined,
-        };
-    },
     iconSize(): number {
-      // 数値で指定するときは outlined 無効の時のみ有効
-      if (!this.outlined && typeof this.size === 'number') return this.size;
-
-      switch (this.size) {
-        case 'x-small':
-          return 12;
-        case 'small':
-          return 16;
-        case 'large' || 'x-large':
-          return 24;
-        default:
-          return 20;
-      }
+      return (this.size * 0.8) / Math.SQRT2;
     },
   },
 
