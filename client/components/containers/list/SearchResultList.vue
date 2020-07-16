@@ -279,7 +279,8 @@ export default Vue.extend({
   &__content {
     min-width: 400px;
     max-width: 60vw;
-    max-height: 60vh;
+    // 80vh と 100vh からヘッダーとフッターの高さを除いた高さのうち小さいほう
+    max-height: calc(100vh - #{$g-header-height} - #{$g-footer-height} - 48px);
     overflow-y: auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
