@@ -1,17 +1,11 @@
 <template>
   <div :class="$style.LibraryTracksPage">
     <portal :to="$header.PORTAL_NAME">
-      <div :class="$style.ExtendedHeader">
-        <h2 :class="$style.ExtendedHeader__title">
-          {{ title }}
-        </h2>
-
-        <ContextMediaButton
-          :height="32"
-          :is-playing="isPlaylistSet && isPlaying"
-          @on-clicked="onContextMediaButtonClicked"
-        />
-      </div>
+      <ContextMediaButton
+        :height="32"
+        :is-playing="isPlaylistSet && isPlaying"
+        @on-clicked="onContextMediaButtonClicked"
+      />
     </portal>
 
     <h1>
@@ -103,7 +97,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   mounted() {
-    this.$header.on();
+    this.$header.enableAdditionalContent();
 
     this.$dispatch('setDefaultDominantBackgroundColor');
 
