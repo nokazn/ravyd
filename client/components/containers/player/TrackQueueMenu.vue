@@ -36,6 +36,7 @@
       <v-divider />
 
       <v-list-item-group
+        v-if="trackQueue.length > 0"
         :class="$style.TrackQueueMenu__wrapper"
         class="g-custom-scroll-bar"
       >
@@ -47,6 +48,13 @@
           @on-link-clicked="toggleMenu"
         />
       </v-list-item-group>
+
+      <div
+        v-else
+        :class="$style['TrackQueueMenu__wrapper--empty']"
+      >
+        再生待ちの曲はありません。
+      </div>
 
       <v-divider />
 
@@ -142,6 +150,13 @@ export default Vue.extend({
     // header と footer の分を差し引く
     max-height: calc(70vh - 80px);
     overflow-y: auto;
+
+    &--empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5em 1em;
+    }
   }
 
   &__footer {
