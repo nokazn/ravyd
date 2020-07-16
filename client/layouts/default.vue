@@ -32,7 +32,7 @@
     />
 
     <portal-target
-      name="searchResultList"
+      :name="SEARCH_FORM_PORTAL_NAME"
       role="menu"
     />
 
@@ -59,8 +59,9 @@ import { RootGetters } from 'vuex';
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
 import Footer from '~/components/globals/Footer.vue';
-import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
+import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
+import { $searchForm } from '~/observable/searchForm';
 import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 
 const SPACER_REF = 'SPACER_REF';
@@ -72,6 +73,7 @@ type Data = {
   BACKGROUND_COLOR: string
   Z_INDEX: number
   SPACER_REF: string
+  SEARCH_FORM_PORTAL_NAME: string
 }
 
 export default Vue.extend({
@@ -91,6 +93,7 @@ export default Vue.extend({
       BACKGROUND_COLOR,
       Z_INDEX: Z_INDEX_OF.loading,
       SPACER_REF,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
   },
 

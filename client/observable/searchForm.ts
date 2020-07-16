@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+const PORTAL_NAME = 'SEARCH_RESULT_LIST';
+
 type Position = {
   top: number
   left: number
@@ -17,6 +19,7 @@ export type SearchForm = {
   readonly position: Position
   readonly query: string
   readonly isSearching: boolean
+  readonly PORTAL_NAME: typeof PORTAL_NAME
   handleMenu: (isMenuShown: boolean) => void
   setPosition: (top: number, left: number) => void
   setQuery: (query: string) => void
@@ -45,6 +48,9 @@ export const $searchForm: SearchForm = {
   },
   get isSearching(): boolean {
     return state.isSearching;
+  },
+  get PORTAL_NAME(): typeof PORTAL_NAME {
+    return PORTAL_NAME;
   },
 
   handleMenu(isMenuShown: boolean) {

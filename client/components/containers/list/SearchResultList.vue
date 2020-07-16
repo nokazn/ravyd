@@ -1,5 +1,5 @@
 <template>
-  <portal to="searchResultList">
+  <portal :to="SEARCH_FORM_PORTAL_NAME">
     <transition name="fade">
       <v-card
         v-show="menu && query"
@@ -102,6 +102,7 @@ type Data = {
   keyEventListener: ((e: KeyboardEvent) => void) | undefined
   MENU_BACKGROUND_COLOR: string
   LIMIT_OF_SEARCH_ITEM: number
+  SEARCH_FORM_PORTAL_NAME: string
 }
 
 export type ItemInfo = {
@@ -120,6 +121,7 @@ export default Vue.extend({
       keyEventListener: undefined,
       MENU_BACKGROUND_COLOR,
       LIMIT_OF_SEARCH_ITEM,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
   },
 
