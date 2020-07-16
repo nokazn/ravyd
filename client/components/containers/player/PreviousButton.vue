@@ -2,7 +2,7 @@
   <v-btn
     icon
     large
-    :disabled="disabled"
+    :disabled="disabledPlayingFromBegining && disabledSkippingPrev"
     title="前の曲"
     @click="onPreivousClicked"
   >
@@ -38,7 +38,10 @@ export default Vue.extend({
     position(): RootState['player']['positionMs'] {
       return this.$state().player.positionMs;
     },
-    disabled(): boolean {
+    disabledPlayingFromBegining(): RootState['player']['disabledPlayingFromBegining'] {
+      return this.$state().player.disabledPlayingFromBegining;
+    },
+    disabledSkippingPrev(): boolean {
       return this.$getters()['player/isDisallowed']('skipping_prev');
     },
   },

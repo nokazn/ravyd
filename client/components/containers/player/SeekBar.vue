@@ -74,6 +74,9 @@ export default Vue.extend({
     disabled(): boolean {
       return this.$getters()['player/isDisallowed']('seeking');
     },
+    disabledPlayingFromBegining(): RootState['player']['disabledPlayingFromBegining'] {
+      return this.$state().player.disabledPlayingFromBegining;
+    },
 
     maxMs(): number {
       return this.durationMs || 1;
@@ -153,6 +156,11 @@ export default Vue.extend({
 
       this.updateInterval = setInterval(() => {
         this.value += intervalMs;
+
+        const disabledPlayingFromBegining = this.value <= 1000;
+        if (disabledPlayingFromBegining !== this.disabledPlayingFromBegining) {
+          this.$commit('player/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBegining);
+        }
       }, intervalMs);
     },
     clearInterval() {
