@@ -22,7 +22,7 @@
       </div>
 
       <v-form
-        ref="form"
+        :ref="FORM_REF"
         v-model="isValid"
         :class="[
           $style.PlaylistModal__content,
@@ -98,6 +98,8 @@
 import Vue, { PropType } from 'vue';
 import { ExtendedMutationPayload } from 'vuex';
 
+const FORM_REF = 'FORM_REF';
+
 export type Data = {
   isValid: boolean
   playlistName: string
@@ -108,6 +110,7 @@ export type Data = {
   playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
   mutationUnsubscribe: (() => void) | undefined
+  FORM_REF: string
 }
 
 // 編集するとき
@@ -184,6 +187,7 @@ export default Vue.extend({
       ],
       isLoading: false,
       mutationUnsubscribe: undefined,
+      FORM_REF,
     };
   },
 
@@ -193,9 +197,10 @@ export default Vue.extend({
         return this.isShown;
       },
       set(isShown: boolean) {
-        if (!isShown && this.$refs.form != null) {
+        const ref = this.$refs[FORM_REF];
+        if (!isShown && ref != null) {
           // モーダルを閉じたときにバリデーションをリセット
-          (this.$refs.form as Vue & { resetValidation(): void }).resetValidation();
+          (ref as Vue & { resetValidation(): void }).resetValidation();
         }
         this.$emit(ON_CHANGED, isShown);
       },

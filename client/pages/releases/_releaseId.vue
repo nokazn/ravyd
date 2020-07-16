@@ -167,7 +167,7 @@ import { SpotifyAPI, App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const CARD_WIDTH = 200;
-const HEADER_REF = 'headerRef';
+const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined

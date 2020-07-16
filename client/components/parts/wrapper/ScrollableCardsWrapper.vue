@@ -37,7 +37,7 @@
       </transition>
 
       <div
-        ref="cardsWrapper"
+        :ref="SCROLLABLE_CARDS_WRAPPER_REF"
         :class="[
           $style.CardsWrapper__container,
           'g-no-scroll-bar'
@@ -54,6 +54,7 @@ import Vue from 'vue';
 import debounce from 'lodash/debounce';
 
 const CARDS_WRAPPER_MARGIN = 24;
+const SCROLLABLE_CARDS_WRAPPER_REF = 'SCROLLABLE_CARDS_WRAPPER_REF';
 
 export type Data = {
   cardList: {
@@ -62,6 +63,7 @@ export type Data = {
   }[],
   scrollMax: number
   scrollLeft: number
+  SCROLLABLE_CARDS_WRAPPER_REF: string
 }
 
 export type CardType = 'release' | 'artist'
@@ -72,6 +74,7 @@ export default Vue.extend({
       cardList: [],
       scrollMax: 0,
       scrollLeft: 0,
+      SCROLLABLE_CARDS_WRAPPER_REF,
     };
   },
 
@@ -85,7 +88,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    const cardsWrapperRef = this.$refs.cardsWrapper as HTMLDivElement;
+    const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
     if (cardsWrapperRef == null) {
       console.warn('Cannot find the ref of "cardsWrapperRef".');
       return;
@@ -123,7 +126,7 @@ export default Vue.extend({
         .find((element) => element.isVisible)?.element.getBoundingClientRect().right;
       if (leftSideElementRight == null) return;
 
-      const cardsWrapperRef = this.$refs.cardsWrapper as HTMLDivElement;
+      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
       // ラッパーの右端の絶対位置 - 余白
       const rightSideEdgeRight = cardsWrapperRef
         .getBoundingClientRect().right - CARDS_WRAPPER_MARGIN;
@@ -147,7 +150,7 @@ export default Vue.extend({
         return this.cardList[length - 1].element.getBoundingClientRect().left;
       };
 
-      const cardsWrapperRef = this.$refs.cardsWrapper as HTMLDivElement;
+      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
       // ラッパーの左端の絶対位置 ⁺ 余白
       const leftSideEdgeLeft = cardsWrapperRef
         .getBoundingClientRect().left + CARDS_WRAPPER_MARGIN;

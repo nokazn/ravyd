@@ -63,7 +63,7 @@ import { Cancelable } from 'lodash';
 import { $searchForm } from '~/observable/searchForm';
 import { SpotifyAPI, App } from '~~/types';
 
-const SEARCH_FIELD_REF = 'searchField';
+const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const LIMIT_OF_SEARCH_ITEM = 4;
 
 type ItemInfo = {
@@ -134,7 +134,7 @@ export default Vue.extend({
 
   mounted() {
     // @as v-text-field は focus と blur ハンドラが存在
-    const ref = this.$refs[this.SEARCH_FIELD_REF] as Vue & { focus(): void, blur(): void };
+    const ref = this.$refs[SEARCH_FIELD_REF] as Vue & { focus(): void, blur(): void };
     const keyEventListener = (e: KeyboardEvent) => {
       switch (e.key) {
         case '/':

@@ -51,8 +51,8 @@ interface Data {
   MEDIA_BUTTON_REF: string
 }
 
-const MEDIA_BUTTON_REF = 'mediaButtonRef';
 const LIMIT_OF_TRACKS = 30 as const;
+const MEDIA_BUTTON_REF = 'MEDIA_BUTTON_REF';
 
 @Component({
   components: {

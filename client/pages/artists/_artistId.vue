@@ -192,7 +192,6 @@ import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState'
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { App } from '~~/types';
 
-const HEADER_REF = 'headerRef';
 const AVATAR_SIZE = 220;
 const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
@@ -200,6 +199,7 @@ const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const ABBREVIATED_RELEASE_LENGTH = 10;
 const LIMIT_OF_RELEASES = 30;
+const HEADER_REF = 'HEADER_REF';
 
 export type AsyncData = {
   artistInfo: App.ArtistInfo | undefined

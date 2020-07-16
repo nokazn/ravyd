@@ -186,7 +186,7 @@ import { App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
-const HEADER_REF = 'headerRef';
+const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined

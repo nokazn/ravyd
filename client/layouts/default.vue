@@ -63,7 +63,7 @@ import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
 import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 
-const SPACER_REF = 'spacerRef';
+const SPACER_REF = 'SPACER_REF';
 
 type Data = {
   onLoaded: boolean
@@ -108,7 +108,7 @@ export default Vue.extend({
     // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
     this.$dispatch('player/initPlayer');
 
-    const element = this.$refs[this.SPACER_REF] as HTMLDivElement;
+    const element = this.$refs[SPACER_REF] as HTMLDivElement;
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         // intersectionRatio は 0 ~ 1

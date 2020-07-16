@@ -13,7 +13,7 @@
 
     <div
       v-if="scroll"
-      :ref="REF_KEY"
+      :ref="VIRTUAL_SCROLLER_WRAPPER_REF"
       :class="$style['NavigationDrawerListItemGroup__wrapper--scroll']"
     >
       <v-virtual-scroll
@@ -49,11 +49,11 @@ import NavigationListItem, { Item } from '~/components/parts/list/NavigationList
 
 export { Item } from '~/components/parts/list/NavigationListItem.vue';
 
-const REF_KEY = 'virtualScrollerWrapper';
+const VIRTUAL_SCROLLER_WRAPPER_REF = 'VIRTUAL_SCROLLER_WRAPPER_REF';
 const ON_LOADED = 'on-loaded';
 
 type Data = {
-  REF_KEY: string
+  VIRTUAL_SCROLLER_WRAPPER_REF: string
   virtualScrollerHeight: number
 }
 
@@ -83,7 +83,7 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      REF_KEY,
+      VIRTUAL_SCROLLER_WRAPPER_REF,
       virtualScrollerHeight: 0,
     };
   },
@@ -98,7 +98,7 @@ export default Vue.extend({
   methods: {
     calculateVirtualScrollerHeight() {
       this.$nextTick(() => {
-        const element = this.$refs[REF_KEY] as Element;
+        const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as Element;
         this.virtualScrollerHeight = Math.max(Math.floor(element.clientHeight - 1), 0);
       });
     },

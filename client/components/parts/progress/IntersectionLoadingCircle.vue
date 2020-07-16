@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="loading"
+    :ref="LOADING_REF"
     :class="$style.LoadingCircle"
   >
     <v-progress-circular
@@ -13,8 +13,11 @@
 <script lang="ts">
 import Vue from 'vue';
 
+const LOADING_REF = 'LOADING_REF';
+
 export type Data = {
   observer: IntersectionObserver | undefined
+  LOADING_REF: string
 }
 
 const ON_APPEARED = 'on-appeared';
@@ -34,11 +37,12 @@ export default Vue.extend({
   data(): Data {
     return {
       observer: undefined,
+      LOADING_REF,
     };
   },
 
   mounted() {
-    const loading = this.$refs.loading as HTMLDivElement;
+    const loading = this.$refs[LOADING_REF] as HTMLDivElement;
 
     // loading が表示されたら親コンポーネントに通知
     this.observer = new IntersectionObserver((entries) => {
@@ -52,7 +56,10 @@ export default Vue.extend({
   },
 
   beforeDestroy() {
-    if (this.observer != null) this.observer.disconnect();
+    if (this.observer != null) {
+      this.observer.disconnect();
+      this.observer = undefined;
+    }
   },
 });
 </script>
