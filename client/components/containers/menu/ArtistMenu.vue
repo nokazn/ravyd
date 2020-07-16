@@ -1,9 +1,12 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
+    :size="size"
     :outlined="outlined"
     offset-y
     bottom
+    :left="left"
+    :right="right"
   />
 </template>
 
@@ -34,7 +37,19 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
+    size: {
+      type: Number,
+      default: 36,
+    },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
       type: Boolean,
       default: false,
     },
@@ -56,6 +71,8 @@ export default Vue.extend({
           uri: this.artist.uri,
           typeName: 'アーティスト',
           externalUrls: this.artist.externalUrls,
+          left: this.left,
+          right: this.right,
         };
         return {
           component: ShareMenu,

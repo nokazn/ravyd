@@ -12,8 +12,8 @@
     <template #activator="{ on }">
       <v-btn
         icon
-        :height="36"
-        :width="36"
+        :height="size"
+        :width="size"
         :outlined="outlined"
         :disabled="disabled"
         title="メニュー"
@@ -101,6 +101,10 @@ type Data = {
 
 export default Vue.extend({
   props: {
+    size: {
+      type: Number,
+      default: 36,
+    },
     outlined: {
       type: Boolean,
       default: false,
