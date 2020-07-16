@@ -6,9 +6,9 @@
 
     <v-divider :class="$style.ScrollableCardSection__divider" />
 
-    <scrollable-cards-wrapper :class="$style.ScrollableCardSection__cardContainer">
+    <ScrollableCardsWrapper>
       <slot />
-    </scrollable-cards-wrapper>
+    </ScrollableCardsWrapper>
   </section>
 </template>
 
