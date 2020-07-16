@@ -51,6 +51,8 @@ export default Vue.extend({
           this.$emit(ON_APPEARED);
         }
       });
+    }, {
+      rootMargin: '400px 0px',
     });
     this.observer.observe(loading);
   },
