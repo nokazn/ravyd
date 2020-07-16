@@ -3,6 +3,35 @@
     v-if="releaseInfo != null"
     :class="$style.ReleaseIdPage"
   >
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="releaseInfo != null"
+        :ref="HEADER_REF"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isReleaseSet && isPlaying"
+          @on-clicked="onContextMediaButtonClicked"
+        />
+
+        <FavoriteButton
+          :size="32"
+          outlined
+          :is-favorited="releaseInfo.isSaved"
+          @on-clicked="toggleSavedState"
+        />
+
+        <ReleaseMenu
+          :release="releaseInfo"
+          :size="32"
+          outlined
+          left
+          @on-favorite-menu-clicked="toggleSavedState"
+        />
+      </div>
+    </portal>
+
     <div :class="$style.ReleaseIdPage__header">
       <ReleaseArtwork
         :src="releaseInfo.artworkSrc"
@@ -135,6 +164,7 @@ import { SpotifyAPI, App } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const CARD_WIDTH = 200;
+const HEADER_REF = 'headerRef';
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
@@ -144,6 +174,8 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
+  intersectionObserver: IntersectionObserver | undefined
+  HEADER_REF: string
 }
 
 @Component({
@@ -186,6 +218,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  intersectionObserver: IntersectionObserver | undefined;
+  HEADER_REF = HEADER_REF;
 
   head() {
     return {
@@ -194,6 +228,23 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
+    // ボタンが見えなくなったらヘッダーに表示
+    if (this.releaseInfo != null) {
+      this.$header.enableAdditionalContent();
+
+      const ref = this.$refs[this.HEADER_REF] as HTMLDivElement;
+      if (ref == null) return;
+
+      this.intersectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          this.$header.changeAdditionalContent(!entry.isIntersecting);
+        });
+      }, {
+        rootMargin: '-52px 0px',
+      });
+      this.intersectionObserver.observe(ref);
+    }
+
     if (this.releaseInfo?.artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
     } else {
@@ -242,6 +293,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
+    this.$header.reset();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
@@ -406,6 +459,12 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__section {
     margin: 40px -32px 0;
+  }
+
+  .AdditionalHeaderContent {
+    & > *:not(:last-child) {
+      margin-right: 1%;
+    }
   }
 }
 </style>

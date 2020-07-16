@@ -1,9 +1,39 @@
 <template>
   <div
+    v-if="artistInfo != null"
     :class="$style.ArtistIdPage"
   >
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="artistInfo != null"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <ContextMediaButton
+          :height="32"
+          :is-playing="isArtistSet && isPlaying "
+          @on-clicked="onContextMediaButtonClicked"
+        />
+
+        <FollowButton
+          :is-following="isFollowing"
+          :height="32"
+          @on-clicked="toggleFolloingState"
+        />
+
+        <ArtistMenu
+          :artist="artistInfo"
+          :is-following="isFollowing"
+          :size="32"
+          outlined
+          left
+          @on-follow-menu-clicked="toggleFolloingState"
+        />
+      </div>
+    </portal>
+
     <div
       v-if="artistInfo != null"
+      :ref="HEADER_REF"
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
@@ -162,6 +192,7 @@ import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState'
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { App } from '~~/types';
 
+const HEADER_REF = 'headerRef';
 const AVATAR_SIZE = 220;
 const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
@@ -184,6 +215,8 @@ export type AsyncData = {
 
 export type Data = {
   mutationUnsubscribe: (() => void) | undefined
+  intersectionObserver: IntersectionObserver | undefined,
+  HEADER_REF: string
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
@@ -243,6 +276,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  intersectionObserver: IntersectionObserver | undefined = undefined;
+  HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
 
   head() {
@@ -259,6 +294,23 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
+    // ボタンが見えなくなったらヘッダーに表示
+    if (this.artistInfo != null) {
+      this.$header.enableAdditionalContent();
+
+      const ref = this.$refs[this.HEADER_REF] as HTMLDivElement;
+      if (ref == null) return;
+
+      this.intersectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          this.$header.changeAdditionalContent(!entry.isIntersecting);
+        });
+      }, {
+        rootMargin: '-52px 0px',
+      });
+      this.intersectionObserver.observe(ref);
+    }
+
     this.$dispatch('setDefaultDominantBackgroundColor');
 
     // トラックを保存/削除した後呼ばれる
@@ -300,9 +352,16 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   beforeDestroy() {
+    this.$header.reset();
+
     if (this.mutationUnsubscribe != null) {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
+    }
+
+    if (this.intersectionObserver != null) {
+      this.intersectionObserver.disconnect();
+      this.intersectionObserver = undefined;
     }
   }
 
@@ -462,6 +521,12 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     &__buttonWrapper {
       display: flex;
       justify-content: center;
+    }
+  }
+
+  .AdditionalHeaderContent {
+    & > *:not(:last-child) {
+      margin-right: 1%;
     }
   }
 
