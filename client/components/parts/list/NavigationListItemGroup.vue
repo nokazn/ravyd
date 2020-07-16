@@ -55,6 +55,7 @@ const ON_LOADED = 'on-loaded';
 type Data = {
   VIRTUAL_SCROLLER_WRAPPER_REF: string
   virtualScrollerHeight: number
+  resizeObserver: ResizeObserver | undefined
 }
 
 type On = {
@@ -85,21 +86,39 @@ export default Vue.extend({
     return {
       VIRTUAL_SCROLLER_WRAPPER_REF,
       virtualScrollerHeight: 0,
+      resizeObserver: undefined,
     };
   },
 
   mounted() {
     if (this.scroll) {
-      this.calculateVirtualScrollerHeight();
+      const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as Element;
+      this.calculateVirtualScrollerHeight(element.clientHeight);
+
+      if (typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver((entries) => {
+          entries.forEach((entry) => {
+            this.calculateVirtualScrollerHeight(entry.contentRect.height);
+          });
+        });
+        this.resizeObserver.observe(element);
+      }
+
       this.$emit(ON_LOADED);
     }
   },
 
+  beforeDestroy() {
+    if (this.resizeObserver != null) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = undefined;
+    }
+  },
+
   methods: {
-    calculateVirtualScrollerHeight() {
+    calculateVirtualScrollerHeight(height: number) {
       this.$nextTick(() => {
-        const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as Element;
-        this.virtualScrollerHeight = Math.max(Math.floor(element.clientHeight - 1), 0);
+        this.virtualScrollerHeight = Math.max(Math.floor(height - 1), 0);
       });
     },
   },

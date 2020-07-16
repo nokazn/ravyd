@@ -57,7 +57,9 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "vuetify",
-      "@types/spotify-web-playback-sdk"
+      "@types/spotify-web-playback-sdk",
+      "@types/wicg-mediasession",
+      "@types/resize-observer-browser",
     ],
     // "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
