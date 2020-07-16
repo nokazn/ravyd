@@ -1,7 +1,7 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
-    outlined
+    :outlined="outlined"
     offset-y
     bottom
   />
@@ -36,6 +36,10 @@ export default Vue.extend({
     isFollowing: {
       type: Boolean,
       required: true,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
     },
   },
 

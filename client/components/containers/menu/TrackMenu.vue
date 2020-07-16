@@ -1,6 +1,7 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
+    :outlined="outlined"
     offset-x
     left
   />
@@ -34,6 +35,10 @@ export default Vue.extend({
     playlistId: {
       type: String as PropType<string | undefined>,
       default: undefined,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
     },
   },
 

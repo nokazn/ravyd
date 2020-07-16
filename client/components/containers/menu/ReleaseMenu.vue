@@ -1,7 +1,7 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
-    outlined
+    :outlined="outlined"
     offset-y
     bottom
   />
@@ -31,6 +31,10 @@ export default Vue.extend({
     release: {
       type: Object as PropType<App.ReleaseInfo>,
       required: true,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
     },
   },
 

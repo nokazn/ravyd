@@ -46,6 +46,7 @@
 
             <ReleaseMenu
               :release="releaseInfo"
+              outlined
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>

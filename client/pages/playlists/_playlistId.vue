@@ -67,6 +67,7 @@
             <PlaylistMenu
               :playlist="playlistInfo"
               :is-following="isFollowing"
+              outlined
               @on-edit-menu-clicked="toggleEditPlaylistModal"
               @on-follow-menu-clicked="toggleFollowingState"
             />

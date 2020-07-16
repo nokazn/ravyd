@@ -12,7 +12,8 @@
     <template #activator="{ on }">
       <v-btn
         icon
-        size="small"
+        :height="36"
+        :width="36"
         :outlined="outlined"
         :disabled="disabled"
         title="メニュー"

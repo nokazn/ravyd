@@ -62,6 +62,7 @@
             <ArtistMenu
               :artist="artistInfo"
               :is-following="isFollowing"
+              outlined
               @on-follow-menu-clicked="toggleFolloingState"
             />
           </div>
