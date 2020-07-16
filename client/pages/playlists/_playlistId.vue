@@ -49,6 +49,7 @@
 
             <template v-if="playlistInfo.isOwnPlaylist">
               <CircleButton
+                :size="36"
                 outlined
                 title="編集する"
                 @on-clicked="editPlaylistModal = true"

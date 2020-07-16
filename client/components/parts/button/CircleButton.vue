@@ -1,11 +1,13 @@
 <template>
   <v-btn
     icon
-    v-bind="buttonProps"
+    :width="size"
+    :height="size"
+    :outlined="outlined"
     :disabled="disabled"
     @click="onClicked"
   >
-    <v-icon :size="iconSize">
+    <v-icon :size="iconSize || ((size * 0.8) / Math.SQRT2)">
       <slot />
     </v-icon>
   </v-btn>
@@ -13,12 +15,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-
-type ButtonProps = {
-  [k in 'x-large' | 'large' | 'small' | 'x-small']?: true
-} & {
-  outlined: boolean
-}
 
 const ON_CLICKED = 'on-clicked';
 
@@ -29,7 +25,11 @@ export type On = {
 export default Vue.extend({
   props: {
     size: {
-      type: [Number, String] as PropType<number | 'x-large' | 'large' | 'small' | 'x-small'>,
+      type: Number,
+      default: 36,
+    },
+    iconSize: {
+      type: Number as PropType<number | undefined>,
       default: undefined,
     },
     outlined: {
@@ -39,34 +39,6 @@ export default Vue.extend({
     disabled: {
       type: Boolean,
       default: false,
-    },
-  },
-
-  computed: {
-    buttonProps(): ButtonProps {
-      return typeof this.size === 'number'
-        ? {
-          outlined: false,
-        }
-        : {
-          [this.size]: true,
-          outlined: this.outlined,
-        };
-    },
-    iconSize(): number {
-      // 数値で指定するときは outlined 無効の時のみ有効
-      if (!this.outlined && typeof this.size === 'number') return this.size;
-
-      switch (this.size) {
-        case 'x-small':
-          return 12;
-        case 'small':
-          return 16;
-        case 'large' || 'x-large':
-          return 24;
-        default:
-          return 20;
-      }
     },
   },
 
