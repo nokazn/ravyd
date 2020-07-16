@@ -73,7 +73,7 @@ export default Vue.extend({
 
   props: {
     src: {
-      type: String,
+      type: String as PropType<string | undefined>,
       default: undefined,
     },
     alt: {

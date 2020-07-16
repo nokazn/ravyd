@@ -80,8 +80,8 @@ export default Vue.extend({
       required: true,
     },
     avatarSrc: {
-      type: String,
-      required: true,
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
     externalUrls: {
       type: Object as PropType<SpotifyAPI.ExternalUrls>,
