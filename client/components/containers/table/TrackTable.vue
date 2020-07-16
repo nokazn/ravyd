@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    v-if="onLoaded"
     :headers="headers"
     :items="trackList"
     group-by="discNumber"
@@ -51,6 +52,7 @@ import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeade
 import { App } from '~~/types';
 
 export type Data = {
+  onLoaded: boolean
   headers: DataTableHeader[]
   activeRowId: string | undefined
 };
@@ -113,6 +115,7 @@ export default Vue.extend({
     const activeRowId = this.trackList.find((item) => item.hash === hash)?.id;
 
     return {
+      onLoaded: false,
       headers,
       activeRowId,
     };
@@ -136,6 +139,11 @@ export default Vue.extend({
     isActiveRow(): (id: string) => boolean {
       return (id: string) => this.activeRowId === id;
     },
+  },
+
+  mounted() {
+    // サーバーサイドのコンテンツとクライアントサイドの仮想DOMが合致しなくなるのを避ける
+    this.onLoaded = true;
   },
 
   methods: {
