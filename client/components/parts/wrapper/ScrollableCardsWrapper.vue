@@ -1,54 +1,52 @@
 <template>
-  <v-hover #default="{ hover }">
-    <div>
-      <div :class="$style.CardsWrapper">
-        <transition name="fade">
-          <v-btn
-            v-show="hover && !isScrollOnLeftEdge"
-            icon
-            large
-            :class="[
-              $style.CardsWrapper__icon,
-              $style['CardsWrapper__icon--left']
-            ]"
-            @click="onLeftButtonClicked"
-          >
-            <v-icon :size="48">
-              mdi-chevron-left
-            </v-icon>
-          </v-btn>
-        </transition>
-
-        <transition name="fade">
-          <v-btn
-            v-show="hover && !isScrollOnRightEdge"
-            icon
-            absolute
-            large
-            :class="[
-              $style.CardsWrapper__icon,
-              $style['CardsWrapper__icon--right']
-            ]"
-            @click="onRightButtonClicked"
-          >
-            <v-icon :size="48">
-              mdi-chevron-right
-            </v-icon>
-          </v-btn>
-        </transition>
-
-        <div
-          ref="cardsWrapper"
+  <div>
+    <div :class="$style.CardsWrapper">
+      <transition name="fade">
+        <v-btn
+          v-show="!isScrollOnLeftEdge"
+          icon
+          large
           :class="[
-            $style.CardsWrapper__container,
-            'g-no-scroll-bar'
+            $style.CardsWrapper__icon,
+            $style['CardsWrapper__icon--left']
           ]"
+          @click="onLeftButtonClicked"
         >
-          <slot />
-        </div>
+          <v-icon :size="48">
+            mdi-chevron-left
+          </v-icon>
+        </v-btn>
+      </transition>
+
+      <transition name="fade">
+        <v-btn
+          v-show="!isScrollOnRightEdge"
+          icon
+          absolute
+          large
+          :class="[
+            $style.CardsWrapper__icon,
+            $style['CardsWrapper__icon--right']
+          ]"
+          @click="onRightButtonClicked"
+        >
+          <v-icon :size="48">
+            mdi-chevron-right
+          </v-icon>
+        </v-btn>
+      </transition>
+
+      <div
+        ref="cardsWrapper"
+        :class="[
+          $style.CardsWrapper__container,
+          'g-no-scroll-bar'
+        ]"
+      >
+        <slot />
       </div>
     </div>
-  </v-hover>
+  </div>
 </template>
 
 <script lang="ts">
