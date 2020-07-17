@@ -3,7 +3,7 @@ import { Context } from '@nuxt/types';
 export const removeUserSavedTracks = (context: Context) => {
   const { app } = context;
 
-  return ({ trackIdList }: { trackIdList: string[] }): Promise<void | null> => {
+  return ({ trackIdList }: { trackIdList: string[] }): Promise<void> => {
     const { length } = trackIdList;
     const maxLength = 20;
     if (length > maxLength) {
