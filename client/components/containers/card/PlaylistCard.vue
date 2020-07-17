@@ -57,6 +57,7 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App, SpotifyAPI } from '~~/types';
 
 export type PlaylistCardInfo = App.PlaylistCardInfo
@@ -88,8 +89,8 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    artworkSrc: {
-      type: String,
+    artworkList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
       required: true,
     },
     externalUrls: {
@@ -118,6 +119,9 @@ export default Vue.extend({
   },
 
   computed: {
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.artworkList, this.maxWidth ?? this.width);
+    },
     isPlaylistSet(): boolean {
       return this.$getters()['player/isContextSet'](this.uri);
     },

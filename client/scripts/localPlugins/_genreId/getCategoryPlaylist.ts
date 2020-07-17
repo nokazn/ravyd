@@ -5,7 +5,6 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 
 export const getCategoryPlaylist = async (
   { app, params }: Context,
-  artworkSize: number,
   limit: number,
 ): Promise<App.PlaylistCardInfo[] | null> => {
   const country = app.$getters()['auth/userCountryCode'];
@@ -16,5 +15,5 @@ export const getCategoryPlaylist = async (
   });
   if (playlists == null) return null;
 
-  return playlists.items.map(convertPlaylistForCard(artworkSize));
+  return playlists.items.map(convertPlaylistForCard);
 };

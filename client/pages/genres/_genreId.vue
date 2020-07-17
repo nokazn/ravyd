@@ -71,7 +71,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   async asyncData(context): Promise<AsyncData> {
     const [categoryInfo, playlists] = await Promise.all([
       getCategory(context, MAX_IMAGE_SIZE),
-      getCategoryPlaylist(context, MAX_IMAGE_SIZE, LIMIT_OF_PLAYLISTS),
+      getCategoryPlaylist(context, LIMIT_OF_PLAYLISTS),
     ]);
 
     const isFullPlaylists = playlists == null
@@ -118,7 +118,7 @@ export default class GenreIdPage extends Vue implements AsyncData {
       return;
     }
 
-    const addedPlaylists = playlists.items.map(convertPlaylistForCard(this.MAX_IMAGE_SIZE));
+    const addedPlaylists = playlists.items.map(convertPlaylistForCard);
     this.playlists = this.playlists != null
       ? [...this.playlists, ...addedPlaylists]
       : addedPlaylists;

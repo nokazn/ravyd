@@ -1,24 +1,16 @@
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI, App } from '~~/types';
 
-export const convertPlaylistForCard = (artworkSize?: number) => (
+export const convertPlaylistForCard = (
   playlist: SpotifyAPI.SimplePlaylist | SpotifyAPI.Playlist,
 ): App.PlaylistCardInfo => {
-  const {
-    id,
-    name,
-    uri,
-    description,
-    external_urls: externalUrls,
-  } = playlist;
-  const artworkSrc = getImageSrc(playlist.images, artworkSize);
-
-  return {
-    id,
-    name,
-    uri,
-    description,
-    externalUrls,
-    artworkSrc,
+  const info = {
+    id: playlist.id,
+    name: playlist.name,
+    uri: playlist.id,
+    description: playlist.description,
+    externalUrls: playlist.external_urls,
+    artworkList: playlist.images,
   };
+
+  return info;
 };
