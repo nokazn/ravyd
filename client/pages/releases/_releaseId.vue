@@ -172,12 +172,13 @@ const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
-  CARD_WIDTH: number
 }
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
+  ARTWORK_SIZE: number
+  CARD_WIDTH: number
 }
 
 @Component({
@@ -208,13 +209,13 @@ interface Data {
 
     return {
       releaseInfo,
-      CARD_WIDTH,
     };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
   CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
