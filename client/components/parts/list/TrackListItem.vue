@@ -9,7 +9,7 @@
       <v-list-item-avatar tile>
         <ReleaseArtwork
           :src="artworkSrc"
-          :size="TOP_TRACK_ARTWORK_SIZE"
+          :size="TRACK_LIST_ARTWORK_SIZE"
           :alt="item.name"
           :title="item.name"
         />
@@ -82,13 +82,12 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
-
-const TOP_TRACK_ARTWORK_SIZE = 40;
 
 export type Data = {
   path: string
-  TOP_TRACK_ARTWORK_SIZE: number
+  TRACK_LIST_ARTWORK_SIZE: number
 }
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -130,13 +129,13 @@ export default Vue.extend({
 
     return {
       path,
-      TOP_TRACK_ARTWORK_SIZE,
+      TRACK_LIST_ARTWORK_SIZE,
     };
   },
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.item.artworkList, TOP_TRACK_ARTWORK_SIZE);
+      return getImageSrc(this.item.artworkList, TRACK_LIST_ARTWORK_SIZE);
     },
     textColor(): string | undefined {
       return this.isTrackSet
