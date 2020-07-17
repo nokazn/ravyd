@@ -47,11 +47,14 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 import { App } from '~~/types';
 
 interface AsyncData {
-  MIN_IMAGE_SIZE: number
-  MAX_IMAGE_SIZE: number
   categoryInfo: App.CategoryInfo | null
   playlists: App.PlaylistCardInfo[] | null
   isFullPlaylists: boolean
+}
+
+interface Data {
+  MIN_IMAGE_SIZE: number
+  MAX_IMAGE_SIZE: number
 }
 
 const MIN_IMAGE_SIZE = 180;
@@ -70,7 +73,7 @@ const LIMIT_OF_PLAYLISTS = 30;
 
   async asyncData(context): Promise<AsyncData> {
     const [categoryInfo, playlists] = await Promise.all([
-      getCategory(context, MAX_IMAGE_SIZE),
+      getCategory(context),
       getCategoryPlaylist(context, LIMIT_OF_PLAYLISTS),
     ]);
 
@@ -78,20 +81,19 @@ const LIMIT_OF_PLAYLISTS = 30;
       || (playlists != null && playlists.length < LIMIT_OF_PLAYLISTS);
 
     return {
-      MIN_IMAGE_SIZE,
-      MAX_IMAGE_SIZE,
       isFullPlaylists,
       categoryInfo,
       playlists,
     };
   },
 })
-export default class GenreIdPage extends Vue implements AsyncData {
-  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE
-  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE
+export default class GenreIdPage extends Vue implements AsyncData, Data {
   categoryInfo: App.CategoryInfo | null = null;
   playlists: App.PlaylistCardInfo[] | null = null;
   isFullPlaylists = false;
+
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');

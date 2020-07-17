@@ -164,7 +164,7 @@ export namespace App {
   export type CategoryInfo = {
     id: string
     name: string
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
   }
 
   export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
@@ -173,7 +173,7 @@ export namespace App {
     releaseId: string
     name: string
     uri: string
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
     artistList?: SimpleArtistInfo[] // type が release と track の時のみ存在
     to: string | RawLocation
   }
