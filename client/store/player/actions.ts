@@ -384,11 +384,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
       commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
       commit('SET_DISALLOWS', currentPlayback.actions.disallows);
-      commit('SET_NEXT_TRACK_LIST', []);
-      commit('SET_PREVIOUS_TRACK_LIST', []);
       setTrack(currentPlayback.item);
       // 表示のちらつきを防ぐためにトラック (duration_ms) をセットしてからセット
       commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
+
+      // このデバイスで再生中の場合は Web Playback SDK から取得する
+      if (!getters.isThisAppPlaying) {
+        commit('SET_NEXT_TRACK_LIST', []);
+        commit('SET_PREVIOUS_TRACK_LIST', []);
+      }
 
       // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
       const activeDeviceId = currentPlayback.device.id;
