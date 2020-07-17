@@ -127,7 +127,7 @@ export namespace App {
     uri: string
     description: string | null
     isCollaborative: boolean
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
     owner: SpotifyAPI.UserData
     durationMs: number
     totalTracks: number
