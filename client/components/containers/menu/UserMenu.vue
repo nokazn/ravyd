@@ -18,7 +18,7 @@
           <UserAvatar
             :src="userAvatarSrc"
             :alt="userDisplayName"
-            :size="32"
+            :size="AVATAR_SIZE"
           />
 
           <span
@@ -74,13 +74,16 @@ import { RootGetters } from 'vuex';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 
+const AVATAR_SIZE = 32;
+
 type Data = {
   isOpened: boolean
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
   itemLists: {
     title: string
     to: string
   }[][]
+  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
+  AVATAR_SIZE: number
 };
 
 export default Vue.extend({
@@ -91,7 +94,6 @@ export default Vue.extend({
   data(): Data {
     return {
       isOpened: false,
-      MENU_BACKGROUND_COLOR,
       itemLists: [
         [
           {
@@ -105,6 +107,8 @@ export default Vue.extend({
           },
         ],
       ],
+      MENU_BACKGROUND_COLOR,
+      AVATAR_SIZE,
     };
   },
 
@@ -112,8 +116,8 @@ export default Vue.extend({
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
-    userAvatarSrc(): RootGetters['auth/userAvatarSrc'] {
-      return this.$getters()['auth/userAvatarSrc'];
+    userAvatarSrc(): string | undefined {
+      return this.$getters()['auth/userAvatarSrc'](AVATAR_SIZE);
     },
     userDisplayName(): RootGetters['auth/userDisplayName'] {
       return this.$getters()['auth/userDisplayName'];

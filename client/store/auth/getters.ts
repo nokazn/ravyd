@@ -1,5 +1,6 @@
 import { Getters } from 'vuex';
 
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
@@ -8,7 +9,7 @@ export type AuthGetters = {
   isTokenExpired: () => boolean
   userId: string | undefined
   userDisplayName: string | undefined
-  userAvatarSrc: string| undefined
+  userAvatarSrc: (avatarSize?: number) => string| undefined
   userCountryCode: SpotifyAPI.Country | undefined
 }
 
@@ -42,7 +43,7 @@ const getters: Getters<AuthState, AuthGetters> = {
   },
 
   userAvatarSrc(state) {
-    return state.userData?.images?.[0]?.url;
+    return (avatarSize) => getImageSrc(state.userData?.images, avatarSize);
   },
 
   userCountryCode(state) {
