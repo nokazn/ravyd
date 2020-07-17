@@ -75,10 +75,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { RootGetters } from 'vuex';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
-import { MENU_BACKGROUND_COLOR, TRACK_LIST_ARTWORK_SIZE, Z_INDEX_OF } from '~/variables';
-import { App } from '~~/types';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 
 type Data = {
   isShown: boolean
@@ -100,8 +100,8 @@ export default Vue.extend({
   },
 
   computed: {
-    trackQueue(): App.TrackQueueInfo[] {
-      return this.$getters()['player/trackQueue'](TRACK_LIST_ARTWORK_SIZE);
+    trackQueue(): RootGetters['player/trackQueue'] {
+      return this.$getters()['player/trackQueue'];
     },
   },
 

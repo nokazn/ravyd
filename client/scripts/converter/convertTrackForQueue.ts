@@ -1,6 +1,4 @@
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { App, SpotifyAPI } from '~~/types';
 
 // @todo
@@ -11,7 +9,6 @@ type ExtendedTrack = Spotify.Track & {
 export const convertTrackForQueue = (
   isSet: boolean,
   isPlaying: boolean,
-  artworkSize: number = TRACK_LIST_ARTWORK_SIZE,
 ) => (track: ExtendedTrack | SpotifyAPI.Track): App.TrackQueueInfo => {
   // Array#map 関数が呼べるように型を定義する
   const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[]} = track;
@@ -28,7 +25,7 @@ export const convertTrackForQueue = (
       id: convertUriToId(artist.uri),
       name: artist.name,
     })),
-    artworkSrc: getImageSrc(track.album.images, artworkSize),
+    artworkList: track.album.images,
     durationMs: track.duration_ms,
   };
 

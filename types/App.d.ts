@@ -45,7 +45,7 @@ export namespace App {
     releaseId: string
     releaseName: string
     artistList: SimpleArtistInfo[]
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
     durationMs: number | undefined
   }
 
