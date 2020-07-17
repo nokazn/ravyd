@@ -172,8 +172,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
 
         commit('SET_IS_PLAYING', !playerState.paused);
-        commit('SET_POSITION_MS', playerState.position);
         commit('SET_DURATION_MS', playerState.duration);
+        // 表示のちらつきを防ぐためにトラック (duration_ms) をセットしてからセット
+        commit('SET_POSITION_MS', playerState.position);
         commit('SET_IS_SHUFFLED', playerState.shuffle);
         commit('SET_CONTEXT_URI', uri ?? undefined);
         commit('SET_CURRENT_TRACK', currentTrack);
@@ -381,12 +382,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       commit('SET_IS_PLAYING', currentPlayback.is_playing);
       commit('SET_CONTEXT_URI', currentPlayback.context?.uri);
-      commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
       commit('SET_IS_SHUFFLED', currentPlayback.shuffle_state === 'on');
       commit('SET_DISALLOWS', currentPlayback.actions.disallows);
       commit('SET_NEXT_TRACK_LIST', []);
       commit('SET_PREVIOUS_TRACK_LIST', []);
       setTrack(currentPlayback.item);
+      // 表示のちらつきを防ぐためにトラック (duration_ms) をセットしてからセット
+      commit('SET_POSITION_MS', currentPlayback.progress_ms ?? 0);
 
       // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
       const activeDeviceId = currentPlayback.device.id;
