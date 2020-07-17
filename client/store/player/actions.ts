@@ -206,7 +206,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           });
         }
 
-        await dispatch('getCurrentPlayback');
+        // このデバイスで再生中の場合は初回の更新は30秒後
+        const interval = this.$getters()['player/isThisAppPlaying']
+          ? 30 * 1000
+          : 0;
+        await dispatch('getCurrentPlayback', interval);
 
         console.log('Ready with this device 🎉');
       });
@@ -316,22 +320,25 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
   },
 
   getCurrentPlayback({ getters, commit, dispatch }, timeout) {
+    const setTimer = (callback: () => Promise<void>, timout?: number) => {
+      // このデバイスで再生中の場合は30秒、そうでなければ15秒
+      const regurarPeriod = this.$getters()['player/isThisAppPlaying']
+        ? 30 * 1000
+        : 15 * 1000;
+      // トラックがセットされていて再生中の場合
+      const interval = this.$state().player.durationMs > 0 && this.$state().player.isPlaying
+        // 曲を再生しきって 500ms の方が先に来ればそれを採用
+        ? Math.min(
+          this.$getters()['player/remainingTimeMs'] + 500,
+          timout ?? regurarPeriod,
+        )
+        : timout ?? regurarPeriod;
+      const timer = setTimeout(callback, interval);
+
+      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+    };
+
     const handler = async () => {
-      const setTimer = () => {
-        // このデバイスで再生中の場合は30秒、そうでなければ15秒
-        const regurarPeriod = this.$getters()['player/isThisAppPlaying']
-          ? 30 * 1000
-          : 15 * 1000;
-        const interval = this.$state().player.durationMs > 0
-          // 曲を再生しきって 500ms の方が先に来ればそれを採用
-          ? Math.min(this.$getters()['player/remainingTimeMs'] + 500, regurarPeriod)
-          // 曲の長さが 0:00 の場合は一定時間経過後に再取得
-          : regurarPeriod;
-        const timer = setTimeout(handler, interval);
-
-        commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
-      };
-
       const setTrack = (item: SpotifyAPI.Track | SpotifyAPI.Episode | null) => {
         // @todo episode 再生中だと null になる
         const track: Spotify.Track | undefined = item != null && item.type === 'track'
@@ -376,7 +383,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
         }
 
-        setTimer();
+        setTimer(handler);
         return;
       }
 
@@ -405,13 +412,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           });
       }
 
-      setTimer();
+      setTimer(handler);
     };
 
-    // 曲を再生しきって 500ms と timeout ms で早いほう
-    const interval = Math.min(getters.remainingTimeMs + 500, timeout ?? 0);
-    const timer = setTimeout(handler, interval);
-    commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
+    setTimer(handler, timeout);
   },
 
   async getRecentlyPlayed({ commit }) {
