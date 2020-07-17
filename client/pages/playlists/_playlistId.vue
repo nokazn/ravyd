@@ -52,7 +52,7 @@
       :class="$style.PlaylistIdPage__header"
     >
       <ReleaseArtwork
-        :src="playlistInfo.artworkSrc"
+        :src="artworkSrc"
         :alt="playlistInfo.name"
         :size="ARTWORK_SIZE"
         :title="playlistInfo.name"
@@ -181,6 +181,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 
 import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App } from '~~/types';
 
@@ -192,12 +193,12 @@ interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
   isFollowing: boolean
   playlistTrackInfo: App.PlaylistTrackInfo | undefined
-  ARTWORK_SIZE: number
 }
 
 interface Data {
   editPlaylistModal: boolean
   mutationUnsubscribe: (() => void) | undefined
+  ARTWORK_SIZE: number
   HEADER_REF: string
 }
 
@@ -227,7 +228,7 @@ interface Data {
       isFollowing,
       playlistTrackInfo,
     ] = await Promise.all([
-      await getPlaylistInfo(context, ARTWORK_SIZE),
+      await getPlaylistInfo(context),
       await getIsFollowing(context),
       await getPlaylistTrackInfo(context, { limit: LIMIT_OF_TRACKS }),
     ]);
@@ -236,7 +237,6 @@ interface Data {
       playlistInfo,
       isFollowing,
       playlistTrackInfo,
-      ARTWORK_SIZE,
     };
   },
 })
@@ -244,10 +244,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistInfo: App.PlaylistInfo | undefined = undefined;
   isFollowing = false;
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -263,8 +263,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       this.$header.observe(ref);
     }
 
-    if (this.playlistInfo?.artworkSrc != null) {
-      this.$dispatch('extractDominantBackgroundColor', this.playlistInfo.artworkSrc);
+    // 小さい画像から抽出
+    const artworkSrc = getImageSrc(this.playlistInfo?.artworkList, 40);
+    if (artworkSrc != null) {
+      this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
       this.$dispatch('setDefaultDominantBackgroundColor');
     }
@@ -406,6 +408,9 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
+  get artworkSrc(): string | undefined {
+    return getImageSrc(this.playlistInfo?.artworkList, ARTWORK_SIZE);
+  }
   get isPlaylistSet(): boolean {
     return this.$getters()['player/isContextSet'](this.playlistInfo?.uri);
   }
@@ -421,14 +426,14 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (this.playlistInfo == null) return undefined;
 
     const {
-      name, description, artworkSrc, isPublic, isCollaborative,
+      name, description, artworkList, isPublic, isCollaborative,
     } = this.playlistInfo;
 
     return {
       playlistId: this.$route.params.playlistId,
       name,
       description: description ?? '',
-      artworkSrc,
+      artworkList,
       isPrivate: isPublic != null
         ? !isPublic
         : false,

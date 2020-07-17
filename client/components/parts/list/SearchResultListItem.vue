@@ -58,6 +58,8 @@ import { RawLocation } from 'vue-router';
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
 type Data = {
@@ -98,8 +100,8 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    artworkSrc: {
-      type: String as PropType<string | undefined>,
+    artworkList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
     artistList: {
@@ -122,6 +124,12 @@ export default Vue.extend({
     return {
       isTwoLine,
     };
+  },
+
+  computed: {
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.artworkList, TRACK_LIST_ARTWORK_SIZE);
+    },
   },
 
   methods: {

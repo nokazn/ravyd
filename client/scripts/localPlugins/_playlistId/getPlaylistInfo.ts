@@ -1,12 +1,10 @@
 import { Context } from '@nuxt/types';
 
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { addComma } from '~~/utils/addComma';
 import { App } from '~~/types';
 
 export const getPlaylistInfo = async (
   { app, params }: Context,
-  artworkSize: number,
 ): Promise<App.PlaylistInfo | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
@@ -25,15 +23,13 @@ export const getPlaylistInfo = async (
     uri,
     description,
     collaborative: isCollaborative,
-    images,
+    images: artworkList,
     tracks,
     owner,
     followers,
     public: isPublic,
     external_urls: externalUrls,
   } = playlistInfo;
-
-  const artworkSrc = getImageSrc(images, artworkSize);
 
   const filteredTrackList = tracks.items
     .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
@@ -54,7 +50,7 @@ export const getPlaylistInfo = async (
     description,
     isCollaborative,
     owner,
-    artworkSrc,
+    artworkList,
     totalTracks,
     durationMs,
     isPublic,

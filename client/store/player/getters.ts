@@ -1,7 +1,7 @@
 import { Getters } from 'vuex';
 
 import { PlayerState } from './state';
-import { REPEAT_STATE_LIST, TRACK_LIST_ARTWORK_SIZE } from '~/variables';
+import { REPEAT_STATE_LIST } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
@@ -11,7 +11,7 @@ export type PlayerGetters = {
   isPlayerConnected: boolean
   activeDevice: SpotifyAPI.Device | undefined
   isThisAppPlaying: boolean
-  trackQueue: (artworkSize?: number) => App.TrackQueueInfo[]
+  trackQueue: App.TrackQueueInfo[]
   releaseId: string | undefined
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
@@ -58,33 +58,31 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   trackQueue(state, getters) {
-    return (artworkSize = TRACK_LIST_ARTWORK_SIZE) => {
-      if (!getters.hasTrack) return [];
+    if (!getters.hasTrack) return [];
 
-      // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在
-      const currentTrack = {
-        isSet: true,
-        isPlaying: state.isPlaying,
-        id: state.trackId,
-        name: state.trackName!,
-        uri: state.trackUri!,
-        releaseId: getters.releaseId!,
-        releaseName: state.releaseName!,
-        artistList: state.artistList!,
-        artworkSrc: getImageSrc(state.artWorkList, artworkSize),
-        durationMs: state.durationMs,
-      };
-      const previousTrackList = state.previousTrackList
-        .map(convertTrackForQueue(false, false, artworkSize));
-      const nextTrackList = state.nextTrackList
-        .map(convertTrackForQueue(false, false, artworkSize));
-
-      return [
-        ...previousTrackList,
-        currentTrack,
-        ...nextTrackList,
-      ];
+    // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在
+    const currentTrack = {
+      isSet: true,
+      isPlaying: state.isPlaying,
+      id: state.trackId,
+      name: state.trackName!,
+      uri: state.trackUri!,
+      releaseId: getters.releaseId!,
+      releaseName: state.releaseName!,
+      artistList: state.artistList!,
+      artworkList: state.artworkList ?? [],
+      durationMs: state.durationMs,
     };
+    const previousTrackList = state.previousTrackList
+      .map(convertTrackForQueue(false, false));
+    const nextTrackList = state.nextTrackList
+      .map(convertTrackForQueue(false, false));
+
+    return [
+      ...previousTrackList,
+      currentTrack,
+      ...nextTrackList,
+    ];
   },
 
   releaseId(state) {
@@ -95,9 +93,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
   },
 
   artworkSrc(state) {
-    return (minSize?: number) => (state.artWorkList != null
-      ? getImageSrc(state.artWorkList, minSize)
-      : undefined);
+    return (minSize?: number) => getImageSrc(state.artworkList, minSize);
   },
 
   hasTrack(state) {

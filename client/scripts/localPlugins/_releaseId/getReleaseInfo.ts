@@ -1,13 +1,11 @@
 import { Context } from '@nuxt/types';
 import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App, SpotifyAPI } from '~~/types';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
 export const getReleaseInfo = async (
   { app, params }: Context,
-  artworkSize: number,
 ): Promise<App.ReleaseInfo | undefined> => {
   const market = app.$getters()['auth/userCountryCode'];
   const release = await app.$spotify.albums.getAlbum({
@@ -26,7 +24,7 @@ export const getReleaseInfo = async (
     release_date_precision: releaseDatePrecision,
     total_tracks: totalTracks,
     label,
-    images,
+    images: artworkList,
     tracks,
     copyrights: copyrightList,
     external_urls: externalUrls,
@@ -50,7 +48,7 @@ export const getReleaseInfo = async (
     });
     // 同じリリースを除いて 10 件にする
     const items = releases?.items
-      .map(convertReleaseForCard(artworkSize))
+      .map(convertReleaseForCard)
       .filter((item) => item.id !== params.releaseId)
       .slice(0, limit) ?? [];
 
@@ -59,8 +57,6 @@ export const getReleaseInfo = async (
       items,
     };
   }));
-
-  const artworkSrc = getImageSrc(images, artworkSize);
 
   const trackIdList = tracks.items.map((track) => track.id);
   const [[isSaved], isTrackSavedList] = await Promise.all([
@@ -73,8 +69,8 @@ export const getReleaseInfo = async (
       isTrackSavedList,
       releaseId: id,
       releaseName: name,
-      artworkSrc,
       artistIdList: artistList.map((artist) => artist.id),
+      artworkList,
     })(track, index);
 
     return detail;
@@ -92,7 +88,7 @@ export const getReleaseInfo = async (
     artistList,
     releaseDate,
     releaseDatePrecision,
-    artworkSrc,
+    artworkList,
     totalTracks,
     durationMs,
     label,

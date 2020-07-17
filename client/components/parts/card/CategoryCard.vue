@@ -20,8 +20,8 @@
       :to="`/genres/${id}`"
     >
       <v-img
-        v-if="src != null"
-        :src="src"
+        v-if="artworkSrc != null"
+        :src="artworkSrc"
         :alt="name"
         :title="name"
         :min-width="minSize || size"
@@ -68,6 +68,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { SpotifyAPI } from '~~/types';
+
 export type Data = {
   isLoaded: boolean
 }
@@ -82,20 +85,20 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    src: {
-      type: String as PropType<string | undefined>,
+    artworkList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
       required: true,
     },
     size: {
-      type: Number as PropType<number | undefined >,
+      type: Number as PropType<number | undefined>,
       default: undefined,
     },
     minSize: {
-      type: Number as PropType<number | undefined >,
+      type: Number as PropType<number | undefined>,
       default: undefined,
     },
     maxSize: {
-      type: Number as PropType<number | undefined >,
+      type: Number as PropType<number | undefined>,
       default: undefined,
     },
   },
@@ -104,6 +107,12 @@ export default Vue.extend({
     return {
       isLoaded: false,
     };
+  },
+
+  computed: {
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.artworkList, this.maxSize ?? this.size);
+    },
   },
 
   mounted() {

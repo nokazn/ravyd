@@ -37,8 +37,8 @@
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
+        :src="avatarSrc"
         :size="AVATAR_SIZE"
-        :src="artistInfo.avatarSrc"
         :alt="artistInfo.name"
         :title="artistInfo.name"
         default-user-icon="mdi-account-music"
@@ -190,10 +190,10 @@ import {
 } from '~/scripts/localPlugins/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
-const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
 const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
@@ -206,16 +206,15 @@ export type AsyncData = {
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | undefined
   releaseListMap: ArtistReleaseInfo
-  AVATAR_SIZE: number
-  TOP_TRACK_ARTWORK_SIZE: number
-  ARTWORK_MIN_SIZE: number
-  ARTWORK_MAX_SIZE: number
   ABBREVIATED_RELEASE_LENGTH: number
 }
 
 export type Data = {
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
+  AVATAR_SIZE: number
+  ARTWORK_MIN_SIZE: number
+  ARTWORK_MAX_SIZE: number
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
@@ -244,20 +243,16 @@ export type Data = {
       topTrackList,
       releaseListMap,
     ] = await Promise.all([
-      getArtistInfo(context, AVATAR_SIZE),
+      getArtistInfo(context),
       getIsFollowing(context),
-      getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
-      getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
+      getTopTrackList(context),
+      getReleaseListMap(context, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
     return {
       artistInfo,
       isFollowing,
       topTrackList,
       releaseListMap,
-      AVATAR_SIZE,
-      TOP_TRACK_ARTWORK_SIZE,
-      ARTWORK_MIN_SIZE,
-      ARTWORK_MAX_SIZE,
       ABBREVIATED_RELEASE_LENGTH,
     };
   },
@@ -267,16 +262,14 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   isFollowing = false;
   topTrackList: App.TrackDetail[] | undefined = undefined;
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
-
-  AVATAR_SIZE = AVATAR_SIZE;
-  TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
-  ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
-  ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
+  AVATAR_SIZE = AVATAR_SIZE;
+  ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
+  ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
 
   head() {
     return {
@@ -284,6 +277,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get avatarSrc(): string | undefined {
+    return getImageSrc(this.artistInfo?.avatarList, AVATAR_SIZE);
+  }
   get isArtistSet(): boolean {
     return this.$getters()['player/isContextSet'](this.artistInfo?.uri);
   }
@@ -404,7 +400,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       limit: LIMIT_OF_RELEASES,
       offset,
     });
-    const items = releases?.items.map(convertReleaseForCard(ARTWORK_MIN_SIZE)) ?? [];
+    const items = releases?.items.map(convertReleaseForCard) ?? [];
     const isFull = releases?.next == null;
 
     this.releaseListMap = new Map(this.releaseListMap.set(type, {

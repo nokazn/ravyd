@@ -54,10 +54,10 @@ import { App } from '~~/types';
 const CARD_WIDTH = 200;
 
 export type AsyncData = {
-  CARD_WIDTH: number
   topArtistList: App.ArtistCardInfo[] | undefined
   topTrackList: App.ReleaseCardInfo[] | undefined
   newReleaseList: App.ReleaseCardInfo[] | undefined
+  CARD_WIDTH: number
 }
 
 export default Vue.extend({
@@ -74,17 +74,17 @@ export default Vue.extend({
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ]);
-    const topArtistList = topArtists?.items.map(convertArtistForCard(CARD_WIDTH));
-    const topTrackList = topTracks?.items.map(convertTrackForCard(CARD_WIDTH));
-    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard(CARD_WIDTH));
+    const topArtistList = topArtists?.items.map(convertArtistForCard);
+    const topTrackList = topTracks?.items.map(convertTrackForCard);
+    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard);
 
     app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
 
     return {
-      CARD_WIDTH,
       topArtistList,
       topTrackList,
       newReleaseList,
+      CARD_WIDTH,
     };
   },
 

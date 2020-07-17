@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState, RootGetters } from 'vuex';
+import { RootState } from 'vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
@@ -186,12 +186,6 @@ export default Vue.extend({
       };
 
       return playlists;
-    },
-    userAvatarSrc(): RootGetters['auth/userAvatarSrc'] {
-      return this.$getters()['auth/userAvatarSrc'];
-    },
-    userDisplayName(): RootGetters['auth/userDisplayName'] {
-      return this.$getters()['auth/userDisplayName'];
     },
   },
 

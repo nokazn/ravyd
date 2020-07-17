@@ -59,7 +59,6 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
 
 const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
   releaseType: T,
-  artworkSize: number,
   limit: number,
   offset?: number,
 ): Promise<[T, ReleaseInfo<T>]> => {
@@ -73,7 +72,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
     limit,
     offset,
   });
-  const items = releases?.items.map(convertReleaseForCard(artworkSize)) ?? [];
+  const items = releases?.items.map(convertReleaseForCard) ?? [];
 
   const isFull = releases?.next == null;
   const total = releases?.total ?? 0;
@@ -93,16 +92,15 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
 
 export const getReleaseListMap = async (
   context: Context,
-  artworkSize: number,
   limit: number,
 ): Promise<ArtistReleaseInfo<ReleaseType>> => {
   const getReleaseList = getReleaseListHandler(context);
 
   const [album, single, compilation, appears_on] = await Promise.all([
-    getReleaseList('album', artworkSize, limit),
-    getReleaseList('single', artworkSize, limit),
-    getReleaseList('compilation', artworkSize, limit),
-    getReleaseList('appears_on', artworkSize, limit),
+    getReleaseList('album', limit),
+    getReleaseList('single', limit),
+    getReleaseList('compilation', limit),
+    getReleaseList('appears_on', limit),
   ] as const);
 
   return new Map<ReleaseType, ReleaseInfo<ReleaseType>>([

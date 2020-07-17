@@ -98,6 +98,8 @@
 import Vue, { PropType } from 'vue';
 import { ExtendedMutationPayload } from 'vuex';
 
+import { SpotifyAPI } from '~~/types';
+
 const FORM_REF = 'FORM_REF';
 
 export type Data = {
@@ -118,7 +120,7 @@ export type Form = {
   playlistId: string
   name: string,
   description: string,
-  artworkSrc: string | undefined,
+  artworkList: SpotifyAPI.Image[],
   isPrivate: boolean
   isCollaborative: boolean
 }

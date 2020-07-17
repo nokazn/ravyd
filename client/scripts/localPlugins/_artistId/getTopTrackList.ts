@@ -5,7 +5,6 @@ import { App } from '~~/types';
 
 export const getTopTrackList = async (
   { app, params }: Context,
-  artworkSize: number,
 ): Promise<App.TrackDetail[] | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
   if (country == null) return undefined;
@@ -23,7 +22,6 @@ export const getTopTrackList = async (
   const trackList = tracks.map(convertTrackDetail({
     artistIdList: [artistId],
     isTrackSavedList,
-    artworkSize,
   }));
 
   return trackList;

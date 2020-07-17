@@ -1,8 +1,6 @@
 import { Getters } from 'vuex';
 
 import { SearchState } from './state';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { App, SpotifyAPI } from '~~/types';
 
 export type SearchGetters = {
@@ -41,20 +39,19 @@ const getters: Getters<SearchState, SearchGetters> = {
   tracks(state) {
     return state.tracks?.map((track) => {
       const type = 'track' as const;
-      const { id, name, uri } = track;
-      const releaseId = track.album.id;
+      const { id } = track;
       const to = {
-        path: generatePath(type, releaseId),
+        path: generatePath(type, id),
         hash: `${track.disc_number}-${track.track_number}`,
       };
 
       const info = {
         type,
         id,
-        releaseId,
-        name,
-        uri,
-        artworkSrc: getImageSrc(track.album.images, TRACK_LIST_ARTWORK_SIZE),
+        releaseId: id,
+        name: track.name,
+        uri: track.uri,
+        artworkList: track.album.images,
         artistList: track.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -69,16 +66,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   artists(state) {
     return state.artists?.map((artist) => {
       const type = 'artist' as const;
-      const { id, name, uri } = artist;
+      const { id } = artist;
       const to = generatePath(type, id);
 
       const info = {
         type,
         id,
         releaseId: id,
-        name,
-        uri,
-        artworkSrc: getImageSrc(artist.images, TRACK_LIST_ARTWORK_SIZE),
+        name: artist.name,
+        uri: artist.uri,
+        artworkList: artist.images,
         to,
       };
 
@@ -89,16 +86,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   albums(state) {
     return state.albums?.map((album) => {
       const type = 'album' as const;
-      const { id, name, uri } = album;
+      const { id } = album;
       const to = generatePath(type, id);
 
       const info = {
         type,
         id,
         releaseId: id,
-        name,
-        uri,
-        artworkSrc: getImageSrc(album.images, TRACK_LIST_ARTWORK_SIZE),
+        name: album.name,
+        uri: album.uri,
+        artworkList: album.images,
         artistList: album.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -113,16 +110,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   playlists(state) {
     return state.playlists?.map((playlist) => {
       const type = 'playlist' as const;
-      const { id, name, uri } = playlist;
+      const { id } = playlist;
       const to = generatePath(type, id);
 
       const info = {
         type,
         id,
         releaseId: id,
-        name,
-        uri,
-        artworkSrc: getImageSrc(playlist.images, TRACK_LIST_ARTWORK_SIZE),
+        name: playlist.name,
+        uri: playlist.uri,
+        artworkList: playlist.images,
         to,
       };
 
@@ -133,16 +130,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   shows(state) {
     return state.shows?.map((show) => {
       const type = 'show' as const;
-      const { id, name, uri } = show;
+      const { id } = show;
       const to = generatePath(type, id);
 
       const info = {
         type,
         id,
         releaseId: id,
-        name,
-        uri,
-        artworkSrc: getImageSrc(show.images, TRACK_LIST_ARTWORK_SIZE),
+        name: show.name,
+        uri: show.uri,
+        artworkList: show.images,
         to,
       };
 
@@ -153,16 +150,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   episodes(state) {
     return state.episodes?.map((episode) => {
       const type = 'episode' as const;
-      const { id, name, uri } = episode;
+      const { id } = episode;
       const to = generatePath(type, id);
 
       const info = {
         type,
         id,
         releaseId: id,
-        name,
-        uri,
-        artworkSrc: getImageSrc(episode.images, TRACK_LIST_ARTWORK_SIZE),
+        name: episode.name,
+        uri: episode.uri,
+        artworkList: episode.images,
         to,
       };
 

@@ -80,7 +80,9 @@ import Vue, { PropType } from 'vue';
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import { App } from '~~/types';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
+import { App, SpotifyAPI } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
@@ -130,13 +132,19 @@ export default Vue.extend({
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
     },
-    artworkSrc: {
-      type: String as PropType<string | undefined>,
+    artworkList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
     durationMs: {
       type: Number as PropType<number | undefined>,
       default: undefined,
+    },
+  },
+
+  computed: {
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.artworkList, TRACK_LIST_ARTWORK_SIZE);
     },
   },
 

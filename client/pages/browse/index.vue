@@ -9,13 +9,11 @@
       :class="$style.BrowsePage__categoryCardContainer"
     >
       <CategoryCard
-        v-for="{ id, name, artworkSrc } in categoryList"
-        :id="id"
-        :key="id"
-        :src="artworkSrc"
+        v-for="category in categoryList"
+        :key="category.id"
+        v-bind="category"
         :min-size="MIN_IMAGE_SIZE"
         :max-size="MAX_IMAGE_SIZE"
-        :name="name"
         :class="$style.BrowsePage__categoryCard"
       />
 
@@ -42,18 +40,17 @@ import { Vue, Component } from 'nuxt-property-decorator';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { getCategoryList } from '~/scripts/localPlugins/browse';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 interface AsyncData {
-  MIN_IMAGE_SIZE: number
-  MAX_IMAGE_SIZE: number
   isFullCategoryList: boolean
-  categoryList: App.CategoryInfo[] | null
+  categoryList: App.CategoryInfo[] | undefined
 }
 
 interface Data {
   title: string
+  MIN_IMAGE_SIZE: number
+  MAX_IMAGE_SIZE: number
 }
 
 const MIN_IMAGE_SIZE = 180;
@@ -67,25 +64,23 @@ const LIMIT_OF_CATEGORIES = 30;
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const categoryList = await getCategoryList(context, MAX_IMAGE_SIZE);
+    const categoryList = await getCategoryList(context);
     const isFullCategoryList = categoryList == null
       || (categoryList != null && categoryList.length < LIMIT_OF_CATEGORIES);
 
     return {
-      MIN_IMAGE_SIZE,
-      MAX_IMAGE_SIZE,
       isFullCategoryList,
       categoryList,
     };
   },
 })
 export default class BrowsePage extends Vue implements AsyncData, Data {
-  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
-  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
   isFullCategoryList = false;
-  categoryList: App.CategoryInfo[] | null = null;
+  categoryList: App.CategoryInfo[] | undefined = undefined;
 
   title = '見つける';
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
 
   head() {
     return {
@@ -115,7 +110,7 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
     const addedCategoryList = categories.items.map((category) => ({
       id: category.id,
       name: category.name,
-      artworkSrc: getImageSrc(category.icons, this.MAX_IMAGE_SIZE),
+      artworkList: category.icons,
     }));
 
     this.categoryList = this.categoryList != null

@@ -1,8 +1,7 @@
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
 import { SpotifyAPI, App } from '~~/types';
 
-export const convertReleaseForCard = (artworkSize?: number) => (
+export const convertReleaseForCard = (
   release: SpotifyAPI.Album | SpotifyAPI.SimpleAlbum,
 ): App.ReleaseCardInfo<'album'> => {
   const info = {
@@ -21,7 +20,7 @@ export const convertReleaseForCard = (artworkSize?: number) => (
       releaseDatePrecision: release.release_date_precision,
       format: 'YYYY年',
     }),
-    artworkSrc: getImageSrc(release.images, artworkSize),
+    artworkList: release.images,
     externalUrls: release.external_urls,
   };
 
