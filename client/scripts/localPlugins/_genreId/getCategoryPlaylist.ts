@@ -6,14 +6,14 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 export const getCategoryPlaylist = async (
   { app, params }: Context,
   limit: number,
-): Promise<App.PlaylistCardInfo[] | null> => {
+): Promise<App.PlaylistCardInfo[]> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { playlists } = await app.$spotify.browse.getCategoryPlaylist({
     categoryId: params.genreId,
     country,
     limit,
   });
-  if (playlists == null) return null;
+  if (playlists == null) return [];
 
   return playlists.items.map(convertPlaylistForCard);
 };

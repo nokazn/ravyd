@@ -8,7 +8,7 @@
     </h1>
 
     <div
-      v-if="playlists != null"
+      v-if="playlists.length > 0"
       :class="$style.GenreIdPage__playlistCardContainer"
     >
       <PlaylistCard
@@ -47,8 +47,8 @@ import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCa
 import { App } from '~~/types';
 
 interface AsyncData {
-  categoryInfo: App.CategoryInfo | null
-  playlists: App.PlaylistCardInfo[] | null
+  categoryInfo: App.CategoryInfo | undefined
+  playlists: App.PlaylistCardInfo[]
   isFullPlaylists: boolean
 }
 
@@ -75,10 +75,8 @@ const LIMIT_OF_PLAYLISTS = 30;
     const [categoryInfo, playlists] = await Promise.all([
       getCategory(context),
       getCategoryPlaylist(context, LIMIT_OF_PLAYLISTS),
-    ]);
-
-    const isFullPlaylists = playlists == null
-      || (playlists != null && playlists.length < LIMIT_OF_PLAYLISTS);
+    ] as const);
+    const isFullPlaylists = playlists.length < LIMIT_OF_PLAYLISTS;
 
     return {
       isFullPlaylists,
@@ -88,8 +86,8 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 })
 export default class GenreIdPage extends Vue implements AsyncData, Data {
-  categoryInfo: App.CategoryInfo | null = null;
-  playlists: App.PlaylistCardInfo[] | null = null;
+  categoryInfo: App.CategoryInfo | undefined = undefined;
+  playlists: App.PlaylistCardInfo[] = [];
   isFullPlaylists = false;
 
   MIN_IMAGE_SIZE = MIN_IMAGE_SIZE
