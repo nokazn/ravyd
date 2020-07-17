@@ -37,7 +37,7 @@
       :class="$style.ReleaseIdPage__header"
     >
       <ReleaseArtwork
-        :src="releaseInfo.artworkSrc"
+        :src="releaseArtworkSrc"
         :alt="releaseInfo.name"
         :size="ARTWORK_SIZE"
         :title="releaseInfo.name"
@@ -162,6 +162,7 @@ import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 
 import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { SpotifyAPI, App } from '~~/types';
 
@@ -171,7 +172,6 @@ const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
-  ARTWORK_SIZE: number
   CARD_WIDTH: number
 }
 
@@ -208,7 +208,6 @@ interface Data {
 
     return {
       releaseInfo,
-      ARTWORK_SIZE,
       CARD_WIDTH,
     };
   },
@@ -216,7 +215,6 @@ interface Data {
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
   releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
   CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -235,8 +233,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       this.$header.observe(ref);
     }
 
-    if (this.releaseInfo?.artworkSrc != null) {
-      this.$dispatch('extractDominantBackgroundColor', this.releaseInfo.artworkSrc);
+    // 小さい画像から抽出
+    const artworkSrc = getImageSrc(this.releaseInfo?.artworkList, 40);
+    if (artworkSrc != null) {
+      this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
       this.$dispatch('setDefaultDominantBackgroundColor');
     }
@@ -291,6 +291,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
+  get releaseArtworkSrc(): string | undefined {
+    return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
+  }
   get isReleaseSet(): boolean {
     return this.$getters()['player/isContextSet'](this.releaseInfo?.uri);
   }
@@ -327,7 +330,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
         releaseId: releaseInfo.id,
         releaseName: releaseInfo.name,
         artistIdList: releaseInfo.artistList.map((artist) => artist.id),
-        artworkSrc: releaseInfo.artworkSrc,
+        artworkList: releaseInfo.artworkList,
       })(track, i);
 
       return detail;

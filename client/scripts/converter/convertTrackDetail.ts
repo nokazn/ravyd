@@ -1,34 +1,30 @@
 import { App, SpotifyAPI } from '~~/types';
-import { getImageSrc } from './getImageSrc';
 
 export const convertTrackDetail = <
   T extends SpotifyAPI.Track | SpotifyAPI.SimpleTrack = SpotifyAPI.Track
 >({
     isTrackSavedList,
-    artworkSize,
     offset = 0,
     releaseId,
     releaseName,
     artistIdList,
-    artworkSrc,
+    artworkList,
   }: T extends SpotifyAPI.Track
   ? {
     isTrackSavedList: boolean[]
-    artworkSize?: number
     offset?: number
     releaseId?: undefined
     releaseName?: undefined
     artistIdList?: string[]
-    artworkSrc?: undefined
+    artworkList?: undefined
   }
   : {
     isTrackSavedList: boolean[]
-    artworkSize?: number
     offset?: number
     releaseId: string
     releaseName: string
     artistIdList: string[]
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
   },
   ) => (
     track: T,
@@ -71,7 +67,7 @@ export const convertTrackDetail = <
       isSaved: isTrackSavedList[index],
       releaseId: releaseId ?? (track as SpotifyAPI.Track).album.id,
       releaseName: releaseName ?? (track as SpotifyAPI.Track).album.name,
-      artworkSrc: artworkSrc ?? getImageSrc((track as SpotifyAPI.Track).album.images, artworkSize),
+      artworkList: artworkList ?? (track as SpotifyAPI.Track).album.images,
     };
 
     return detail;

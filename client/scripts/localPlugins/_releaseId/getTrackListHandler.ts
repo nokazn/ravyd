@@ -2,19 +2,22 @@ import { Context } from '@nuxt/types';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { App, SpotifyAPI } from '~~/types';
 
+/**
+ * deprecated
+ */
 export const getTrackListHandler = ({ app, params }: Context) => async (
   {
     offset,
     releaseId,
     releaseName,
     artistIdList,
-    artworkSrc,
+    artworkList,
   } : {
     offset: number
     releaseId: string
     releaseName: string
     artistIdList: string[]
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
   },
 ): Promise<{
   trackList: App.TrackDetail[]
@@ -47,7 +50,7 @@ export const getTrackListHandler = ({ app, params }: Context) => async (
       offset,
       releaseId,
       releaseName,
-      artworkSrc,
+      artworkList,
       artistIdList,
     })(track, i);
 

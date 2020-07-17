@@ -29,9 +29,7 @@ export namespace App {
     isSaved: boolean
     releaseId: string
     releaseName: string
-    // @todo #69
-    // artworkList: SpotifyAPI.Image[]
-    artworkSrc?: string | undefined
+    artworkList: SpotifyAPI.Image[]
   }
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {
@@ -63,7 +61,7 @@ export namespace App {
     totalTracks: number
     durationMs: number
     label: string
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
     copyrightList: SpotifyAPI.Copyright[]
     isSaved: boolean
     trackList: App.TrackDetail[]

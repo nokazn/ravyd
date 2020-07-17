@@ -193,7 +193,6 @@ import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
-const TOP_TRACK_ARTWORK_SIZE = 40;
 const ARTWORK_MIN_SIZE = 180;
 const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
@@ -207,7 +206,6 @@ export type AsyncData = {
   topTrackList: App.TrackDetail[] | undefined
   releaseListMap: ArtistReleaseInfo
   AVATAR_SIZE: number
-  TOP_TRACK_ARTWORK_SIZE: number
   ARTWORK_MIN_SIZE: number
   ARTWORK_MAX_SIZE: number
   ABBREVIATED_RELEASE_LENGTH: number
@@ -246,7 +244,7 @@ export type Data = {
     ] = await Promise.all([
       getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
-      getTopTrackList(context, TOP_TRACK_ARTWORK_SIZE),
+      getTopTrackList(context),
       getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
     return {
@@ -255,7 +253,6 @@ export type Data = {
       topTrackList,
       releaseListMap,
       AVATAR_SIZE,
-      TOP_TRACK_ARTWORK_SIZE,
       ARTWORK_MIN_SIZE,
       ARTWORK_MAX_SIZE,
       ABBREVIATED_RELEASE_LENGTH,
@@ -269,7 +266,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
 
   AVATAR_SIZE = AVATAR_SIZE;
-  TOP_TRACK_ARTWORK_SIZE = TOP_TRACK_ARTWORK_SIZE;
   ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
   ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
