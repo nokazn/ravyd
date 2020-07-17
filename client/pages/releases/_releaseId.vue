@@ -204,7 +204,7 @@ interface Data {
   },
 
   async asyncData(context: Context): Promise<AsyncData> {
-    const releaseInfo = await getReleaseInfo(context, ARTWORK_SIZE);
+    const releaseInfo = await getReleaseInfo(context);
 
     return {
       releaseInfo,

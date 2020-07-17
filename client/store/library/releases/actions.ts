@@ -25,10 +25,9 @@ export type RootActions = {
   'library/releases/modifyReleaseSavedState': LibraryReleasesActions['modifyReleaseSavedState']
 };
 
-const MAX_ARTWORK_SIZE = 240;
 const convertRelease = ({ album }: {
   album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album
-}) => convertReleaseForCard(MAX_ARTWORK_SIZE)(album);
+}) => convertReleaseForCard(album);
 
 const actions: Actions<
   LibraryReleasesState,

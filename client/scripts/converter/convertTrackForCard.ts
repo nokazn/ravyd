@@ -1,7 +1,6 @@
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI, App } from '~~/types';
 
-export const convertTrackForCard = (artworkSize?: number) => (
+export const convertTrackForCard = (
   track: SpotifyAPI.Track,
 ): App.ReleaseCardInfo<'track'> => {
   const info = {
@@ -16,7 +15,7 @@ export const convertTrackForCard = (artworkSize?: number) => (
       id: artist.id,
     })),
     hash: `${track.disc_number}-${track.track_number}`,
-    artworkSrc: getImageSrc(track.album.images, artworkSize),
+    artworkList: track.album.images,
     externalUrls: track.external_urls,
   };
 

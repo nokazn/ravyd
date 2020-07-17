@@ -245,7 +245,7 @@ export type Data = {
       getArtistInfo(context, AVATAR_SIZE),
       getIsFollowing(context),
       getTopTrackList(context),
-      getReleaseListMap(context, ARTWORK_MAX_SIZE, ABBREVIATED_RELEASE_LENGTH),
+      getReleaseListMap(context, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
     return {
       artistInfo,
@@ -400,7 +400,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       limit: LIMIT_OF_RELEASES,
       offset,
     });
-    const items = releases?.items.map(convertReleaseForCard(ARTWORK_MIN_SIZE)) ?? [];
+    const items = releases?.items.map(convertReleaseForCard) ?? [];
     const isFull = releases?.next == null;
 
     this.releaseListMap = new Map(this.releaseListMap.set(type, {

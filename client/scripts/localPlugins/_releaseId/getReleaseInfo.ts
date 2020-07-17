@@ -6,7 +6,6 @@ import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard
 
 export const getReleaseInfo = async (
   { app, params }: Context,
-  artworkSize: number,
 ): Promise<App.ReleaseInfo | undefined> => {
   const market = app.$getters()['auth/userCountryCode'];
   const release = await app.$spotify.albums.getAlbum({
@@ -49,7 +48,7 @@ export const getReleaseInfo = async (
     });
     // 同じリリースを除いて 10 件にする
     const items = releases?.items
-      .map(convertReleaseForCard(artworkSize))
+      .map(convertReleaseForCard)
       .filter((item) => item.id !== params.releaseId)
       .slice(0, limit) ?? [];
 

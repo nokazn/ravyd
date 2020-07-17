@@ -89,7 +89,7 @@ export namespace App {
     name: string // track または album の name
     uri: string // track または album の name
     artists: App.SimpleArtistInfo[]
-    artworkSrc: string | undefined
+    artworkList: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
   export type ReleaseCardInfo<T extends CardType = CardType> = ReleaseCardInfoBase<T>

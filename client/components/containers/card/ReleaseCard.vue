@@ -89,6 +89,7 @@ import { RawLocation } from 'vue-router';
 import { RootState } from 'vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { hasProp } from '~~/utils/hasProp';
 import { SpotifyAPI, App } from '~~/types';
 
@@ -143,9 +144,9 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    artworkSrc: {
-      type: String,
-      required: true,
+    artworkList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
+      default: undefined,
     },
     externalUrls: {
       type: Object as PropType<SpotifyAPI.ExternalUrls>,
@@ -187,6 +188,9 @@ export default Vue.extend({
   },
 
   computed: {
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.artworkList, this.maxWidth ?? this.width);
+    },
     isReleaseSet(): boolean {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
       return (this.type === 'track' && this.$getters()['player/isTrackSet'](this.id))
