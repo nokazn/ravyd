@@ -35,11 +35,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { App } from '~~/types';
 
 interface Data {
   observer: IntersectionObserver | undefined
@@ -74,7 +73,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
     };
   }
 
-  get artistList(): App.ArtistCardInfo[] | null {
+  get artistList(): RootState['library']['artists']['artistList'] {
     return this.$state().library.artists.artistList;
   }
   get isFull(): RootGetters['library/artists/isFull'] {
