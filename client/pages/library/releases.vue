@@ -32,11 +32,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'vuex';
 
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { App } from '~~/types';
 
 interface Data {
   title: string
@@ -69,7 +68,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
     };
   }
 
-  get releaseList(): App.ReleaseCardInfo[] | null {
+  get releaseList(): RootState['library']['releases']['releaseList'] {
     return this.$state().library.releases.releaseList;
   }
   get isFull(): RootGetters['library/releases/isFull'] {
