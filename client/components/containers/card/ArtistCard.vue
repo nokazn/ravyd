@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-skeleton-loader
-      v-if="!isLoaded"
+      v-if="!onLoaded"
       type="card"
       boilerplate
       :width="width"
@@ -54,11 +54,12 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'vuex';
 
 import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {
   artistPath: string
-  isLoaded: boolean
+  onLoaded: boolean
 }
 
 export default Vue.extend({
@@ -79,8 +80,8 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    avatarSrc: {
-      type: String as PropType<string | undefined>,
+    avatarList: {
+      type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
     externalUrls: {
@@ -104,11 +105,14 @@ export default Vue.extend({
   data(): Data {
     return {
       artistPath: `/artists/${this.id}`,
-      isLoaded: false,
+      onLoaded: false,
     };
   },
 
   computed: {
+    avatarSrc(): string | undefined {
+      return getImageSrc(this.avatarList, this.maxWidth ?? this.width);
+    },
     isPlaying(): RootState['player']['isPlaying'] {
       return this.$state().player.isPlaying;
     },
@@ -124,7 +128,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.isLoaded = true;
+    this.onLoaded = true;
   },
 
   methods: {

@@ -74,7 +74,7 @@ export default Vue.extend({
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ]);
-    const topArtistList = topArtists?.items.map(convertArtistForCard(CARD_WIDTH));
+    const topArtistList = topArtists?.items.map(convertArtistForCard);
     const topTrackList = topTracks?.items.map(convertTrackForCard);
     const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard);
 

@@ -25,8 +25,7 @@ export type RootActions = {
   'library/artists/modifyArtistSavedState': LibraryArtistsActions['modifyArtistSavedState']
 };
 
-const MAX_ARTWORK_SIZE = 240;
-const convertArtist = (artist: SpotifyAPI.Artist) => convertArtistForCard(MAX_ARTWORK_SIZE)(artist);
+const convertArtist = (artist: SpotifyAPI.Artist) => convertArtistForCard(artist);
 
 const actions: Actions<
   LibraryArtistsState,
