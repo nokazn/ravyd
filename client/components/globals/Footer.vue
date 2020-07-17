@@ -173,10 +173,10 @@ export default Vue.extend({
   &__left {
     display: flex;
     height: 100%;
-    margin-left: 4%;
+    margin-left: 1vw;
 
     & > *:not(:last-child) {
-      margin-right: 4px;
+      margin-right: 0.3em;
     }
   }
 
@@ -187,7 +187,7 @@ export default Vue.extend({
     overflow-x: hidden;
 
     & > *:not(:last-child) {
-      margin-bottom: 8px;
+      margin-bottom: 0.75em;
     }
   }
 
@@ -215,7 +215,7 @@ export default Vue.extend({
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    margin-right: 6%;
+    margin-right: 1vw;
   }
 
   &__buttons {

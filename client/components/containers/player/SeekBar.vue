@@ -178,8 +178,8 @@ export default Vue.extend({
   width: 100%;
 
   &__mss {
-    font-size: 0.75rem;
-    margin-top: -4px;
+    font-size: 0.75em;
+    margin-top: -0.5em;
     position: relative;
 
     & > * {

@@ -175,22 +175,22 @@ export default Vue.extend({
       overflow-x: hidden;
 
       & > * {
-        margin-right: 12px;
+        margin-right: 0.8em;
       }
     }
 
     &Title {
-      font-size: 0.9rem;
+      font-size: 0.9em;
 
       & > *:not(:last-child) {
-        margin-right: 4px;
+        margin-right: 0.3em;
       }
     }
   }
 
   &__action {
     & > *:not(:last-child) {
-      margin-right: 12px;
+      margin-right: 1em;
     }
   }
 }

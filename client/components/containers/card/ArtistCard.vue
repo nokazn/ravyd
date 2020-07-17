@@ -158,14 +158,14 @@ export default Vue.extend({
   &__avatar {
     display: flex;
     justify-content: center;
-    margin-top: 8px;
+    margin-top: 0.5em;
   }
 
   &__title {
     display: flex;
     justify-content: center;
-    font-size: 0.9rem;
-    line-height: 1.2rem;
+    font-size: 0.9em;
+    line-height: 1.3em;
   }
 }
 </style>

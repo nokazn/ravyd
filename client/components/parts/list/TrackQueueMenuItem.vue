@@ -171,7 +171,7 @@ export default Vue.extend({
 
   &__action {
     & > *:not(:last-child) {
-      margin-bottom: 4px;
+      margin-bottom: 0.4em;
     }
   }
 }

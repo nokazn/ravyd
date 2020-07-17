@@ -218,7 +218,7 @@ export default Vue.extend({
     .List {
       &__header {
         padding: 4px 12px;
-        font-size: 12px;
+        font-size: 0.8em;
 
         & > *:not(:last-child) {
           margin-right: 8px;

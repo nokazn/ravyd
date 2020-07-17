@@ -113,11 +113,11 @@ export default Vue.extend({
 <style lang="scss" module>
 .ReleaseName {
   color: $g-title-color;
-  font-size: 0.9rem;
-  line-height: 1rem;
+  font-size: 0.9em;
+  line-height: 1em;
   padding: {
-    right: 8px;
-    left: 8px;
+    right: 0.5em;
+    left: 0.5em;
   };
 
   white-space: nowrap;

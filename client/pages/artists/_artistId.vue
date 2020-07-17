@@ -529,12 +529,12 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
 
     &__verifiedArtistIcon {
-      margin-bottom: 2px;
+      margin-bottom: 0.15rem;
     }
 
     &__artistName {
-      font-size: 40px;
-      margin: 8px 0;
+      font-size: 2em;
+      margin: 0.3em 0;
       line-height: 1.2em;
     }
 

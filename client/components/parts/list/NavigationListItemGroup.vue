@@ -127,7 +127,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .NavigationDrawerListItemGroup {
-  $subheader-height: 28px;
+  $subheader-height: 2em;
   // アイテムを 最低 4 個は表示
   $scroll-content-min-height: calc(#{$list-dense-min-height} * 4);
 
@@ -144,7 +144,7 @@ export default Vue.extend({
   }
 
   &__subheader {
-    font-size: 12px;
+    font-size: 0.75em;
     height: $subheader-height;
   }
 }

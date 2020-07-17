@@ -47,9 +47,9 @@ export default Vue.extend({
   flex-wrap: wrap;
 
   & > * {
-    margin-bottom: 2px;
-    margin-right: 4px;
-    font-size: 10px !important;
+    margin-bottom: 0.3em;
+    margin-right: 0.6em;
+    font-size: 0.6em !important;
   }
 }
 </style>

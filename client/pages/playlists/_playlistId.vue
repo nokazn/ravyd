@@ -567,8 +567,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     justify-content: flex-end;
 
     &__playlistName {
-      font-size: 40px;
-      margin: 8px 0;
+      font-size: 2em;
+      margin: 0.3em 0;
       line-height: 1.2em;
     }
 

@@ -165,13 +165,13 @@ export default Vue.extend({
   }
 
   &__title {
-    font-size: 0.9rem;
-    line-height: 1.2rem;
+    font-size: 0.9em;
+    line-height: 1.3em;
   }
 
   &__text {
-    font-size: 0.75rem;
-    line-height: 1rem;
+    font-size: 0.8em;
+    line-height: 1.2em;
     margin-top: -8px !important;
 
     & > * {

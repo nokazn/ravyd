@@ -82,7 +82,7 @@ export default Vue.extend({
     }
 
     &__signupText {
-      font-size: 12px;
+      font-size: 0.8em;
     }
   }
 }

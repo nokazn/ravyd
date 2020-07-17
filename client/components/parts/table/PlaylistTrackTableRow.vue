@@ -185,7 +185,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .TrackListTableRow {
   cursor: pointer;
-  padding: 16px 0;
+  padding: 1em 0;
 
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
@@ -200,27 +200,27 @@ export default Vue.extend({
   }
 
   &__smallText {
-    font-size: 0.75rem !important;
+    font-size: 0.75em !important;
     white-space: nowrap;
-    padding: 0 4px !important;
+    padding: 0 0.25em !important;
   }
 
   .Content {
-    padding: 12px 0;
+    padding: 0.8em 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     & > *:not(:last-child) {
-      margin-right: 8px;
+      margin-right: 1em;
     }
 
     &__subtitle {
-      margin-top: 0.2rem;
-      font-size: 0.8rem;
+      margin-top: 0.3em;
+      font-size: 0.9em;
 
       &--divider {
-        margin: 0 0.2rem;
+        margin: 0 0.3em;
       }
     }
   }

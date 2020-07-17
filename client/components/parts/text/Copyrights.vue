@@ -67,7 +67,7 @@ export default Vue.extend({
 .Copyrights {
   &__item {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.75em;
   }
 }
 </style>
