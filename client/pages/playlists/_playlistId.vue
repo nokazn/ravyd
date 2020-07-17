@@ -160,6 +160,10 @@
       @on-appeared="appendTrackList"
     />
   </div>
+
+  <Fallback v-else>
+    プレイリストの情報を取得できませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
@@ -178,6 +182,7 @@ import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
@@ -216,6 +221,7 @@ interface Data {
     Followers,
     EditPlaylistModal,
     IntersectionLoadingCircle,
+    Fallback,
   },
 
   validate({ params }) {

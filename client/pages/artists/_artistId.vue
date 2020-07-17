@@ -161,6 +161,10 @@
       </CardsSection>
     </template>
   </div>
+
+  <Fallback v-else>
+    アーティストの情報を取得できませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
@@ -178,6 +182,7 @@ import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import ShowAllReleaseButton from '~/components/parts/button/ShowAllReleaseButton.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 
 import {
   getReleaseListMap,
@@ -230,6 +235,7 @@ export type Data = {
     ReleaseCard,
     IntersectionLoadingCircle,
     ShowAllReleaseButton,
+    Fallback,
   },
 
   validate({ params }: Context) {

@@ -137,6 +137,10 @@
       </ScrollableCardsSection>
     </template>
   </div>
+
+  <Fallback v-else>
+    アルバムの情報を取得できませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
@@ -159,6 +163,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getReleaseInfo } from '~/plugins/local/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
@@ -198,6 +203,7 @@ interface Data {
     Copyrights,
     ScrollableCardsSection,
     ReleaseCard,
+    Fallback,
   },
 
   validate({ params }: Context) {

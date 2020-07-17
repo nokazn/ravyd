@@ -24,7 +24,7 @@
             :class="$style['SearchResultList__content--empty']"
           >
             <v-icon left>
-              mdi-help-circle-outline
+              mdi-alert-circle-outline
             </v-icon>
             "{{ query }}" に一致する項目が見つかりません
           </div>
