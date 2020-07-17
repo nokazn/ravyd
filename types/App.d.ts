@@ -106,7 +106,7 @@ export namespace App {
     name: string
     id: string
     uri: string
-    avatarSrc: string | undefined
+    avatarList: SpotifyAPI.Image[]
     followersText: string | undefined
     genreList: string[]
     externalUrls: SpotifyAPI.ExternalUrls

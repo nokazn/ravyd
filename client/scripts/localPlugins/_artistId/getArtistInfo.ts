@@ -1,11 +1,9 @@
 import { Context } from '@nuxt/types';
 import { addComma } from '~~/utils/addComma';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
 export const getArtistInfo = async (
   { app, params }: Context,
-  avatarSize: number,
 ): Promise<App.ArtistInfo | undefined> => {
   const artist = await app.$spotify.artists.getArtist({
     artistId: params.artistId,
@@ -16,12 +14,11 @@ export const getArtistInfo = async (
     name,
     id,
     uri,
-    images,
+    images: avatarList,
     followers,
     genres: genreList,
     external_urls: externalUrls,
   } = artist;
-  const avatarSrc = getImageSrc(images, avatarSize);
   const followersText = followers.total != null
     ? `フォロワー ${addComma(followers.total)}人`
     : undefined;
@@ -30,7 +27,7 @@ export const getArtistInfo = async (
     name,
     id,
     uri,
-    avatarSrc,
+    avatarList,
     followersText,
     genreList,
     externalUrls,
