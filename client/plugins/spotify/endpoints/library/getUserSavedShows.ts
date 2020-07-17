@@ -12,7 +12,7 @@ export const getUserSavedShows = (context: Context) => {
     limit?: number
     offset?: number
     market?: SpotifyAPI.Country
-  }): Promise<SpotifyAPI.LibraryOf<'show'> | null> => {
+  }): Promise<SpotifyAPI.LibraryOf<'show'> | undefined> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
@@ -25,7 +25,7 @@ export const getUserSavedShows = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
   };
 };

@@ -20,7 +20,7 @@ export const getArtistAlbums = (context: Context) => {
     country?: SpotifyAPI.Country
     limit?: number
     offset?: number
-  }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleAlbum> | null> => {
+  }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleAlbum> | undefined> => {
     if (limit < 1 || limit > 50) {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
@@ -36,7 +36,7 @@ export const getArtistAlbums = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
   };
 };

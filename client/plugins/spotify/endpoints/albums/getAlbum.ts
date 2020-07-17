@@ -7,11 +7,15 @@ export const getAlbum = (context: Context) => {
   return ({ albumId, market }: {
     albumId: string
     market?: SpotifyAPI.Country
-  }): Promise<SpotifyAPI.Album | undefined> => app.$spotifyApi.$get(`/albums/${albumId}`, {
-    params: { market },
-  })
-    .catch((err: Error) => {
-      console.error({ err });
-      return undefined;
-    });
+  }): Promise<SpotifyAPI.Album | undefined> => {
+    const request = app.$spotifyApi.$get(`/albums/${albumId}`, {
+      params: { market },
+    })
+      .catch((err: Error) => {
+        console.error({ err });
+        return undefined;
+      });
+
+    return request;
+  };
 };

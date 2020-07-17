@@ -14,7 +14,7 @@ export const getListOfUserPlaylist = (context: Context) => {
   }: {
     limit: number
     offset: number
-  }): Promise<SpotifyAPI.SimplePlaylist | null> => {
+  }): Promise<SpotifyAPI.SimplePlaylist | undefined> => {
     const request = app.$spotifyApi.$get('/me/playlists', {
       params: {
         limit,
@@ -22,7 +22,7 @@ export const getListOfUserPlaylist = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 
     return request;

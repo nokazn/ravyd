@@ -12,7 +12,7 @@ export const getCategory = (context: Context) => {
     categoryId: string
     country?: SpotifyAPI.Country
     locale?: string
-  }): Promise<SpotifyAPI.Category | null> => {
+  }): Promise<SpotifyAPI.Category | undefined> => {
     const request = app.$spotifyApi.$get(`/browse/categories/${categoryId}`, {
       params: {
         country,
@@ -20,7 +20,7 @@ export const getCategory = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 
     return request;

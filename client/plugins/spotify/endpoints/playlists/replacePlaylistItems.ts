@@ -23,6 +23,7 @@ export const replacePlaylistItems = (context: Context) => {
       uris,
     }).catch((err: Error) => {
       console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;

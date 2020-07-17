@@ -10,11 +10,11 @@ export const getPlaylistArtwork = (context: Context) => {
     playlistId: string
     limit: number
     offset: number
-  }): Promise<SpotifyAPI.Image[] | null> => {
+  }): Promise<SpotifyAPI.Image[]> => {
     const request = app.$spotifyApi.$get(`/playlists/${playlistId}/images`, {
     }).catch((err: Error) => {
       console.error({ err });
-      return null;
+      return [];
     });
 
     return request;

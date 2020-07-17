@@ -6,9 +6,13 @@ export const getArtist = (context: Context) => {
 
   return ({ artistId }: {
     artistId: string
-  }): Promise<SpotifyAPI.Artist | null> => app.$spotifyApi.$get(`/artists/${artistId}`)
-    .catch((err: Error) => {
-      console.error({ err });
-      return null;
-    });
+  }): Promise<SpotifyAPI.Artist | undefined> => {
+    const request = app.$spotifyApi.$get(`/artists/${artistId}`)
+      .catch((err: Error) => {
+        console.error({ err });
+        return undefined;
+      });
+
+    return request;
+  };
 };
