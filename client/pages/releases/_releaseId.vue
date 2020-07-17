@@ -160,7 +160,7 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 
-import { getReleaseInfo } from '~/scripts/localPlugins/_releaseId';
+import { getReleaseInfo } from '~/plugins/local/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';

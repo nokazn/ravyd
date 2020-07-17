@@ -42,7 +42,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { getCategory, getCategoryPlaylist } from '~/scripts/localPlugins/_genreId';
+import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
 import { App } from '~~/types';
 
@@ -99,7 +99,7 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
 
   /**
    * @todo リファクタリング
-   * localPlugins の getCategoryPlaylist と同じ処理で、スクロールが下限に到達したとき呼ばれる
+   * plugins/local の getCategoryPlaylist と同じ処理で、スクロールが下限に到達したとき呼ばれる
    */
   async getCategoryPlaylist() {
     if (this.isFullPlaylists) return;

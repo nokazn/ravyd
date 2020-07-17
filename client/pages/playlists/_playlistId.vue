@@ -179,7 +179,7 @@ import Followers from '~/components/parts/text/Followers.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/scripts/localPlugins/_playlistId';
+import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';

@@ -39,7 +39,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { getCategoryList } from '~/scripts/localPlugins/browse';
+import { getCategoryList } from '~/plugins/local/browse';
 import { App } from '~~/types';
 
 interface AsyncData {

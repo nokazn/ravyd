@@ -187,7 +187,7 @@ import {
   getIsFollowing,
   initalReleaseListMap,
   ReleaseType,
-} from '~/scripts/localPlugins/_artistId';
+} from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
