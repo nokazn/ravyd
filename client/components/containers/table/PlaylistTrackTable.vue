@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    v-if="onLoaded"
+    v-if="isLoaded"
     :headers="headers"
     :items="trackList"
     disable-pagination
@@ -53,7 +53,7 @@ import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/Pla
 import { App } from '~~/types';
 
 export type Data = {
-  onLoaded: boolean
+  isLoaded: boolean
   headers: DataTableHeader[]
   activeRowId: string | undefined
 };
@@ -148,7 +148,7 @@ export default Vue.extend({
       ];
 
     return {
-      onLoaded: false,
+      isLoaded: false,
       headers,
       activeRowId: undefined,
     };
@@ -166,7 +166,7 @@ export default Vue.extend({
 
   mounted() {
     // サーバーサイドのコンテンツとクライアントサイドの仮想DOMが合致しなくなるのを避ける
-    this.onLoaded = true;
+    this.isLoaded = true;
   },
 
   methods: {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-skeleton-loader
-      v-if="!onLoaded"
+      v-if="!isLoaded"
       type="card"
       boilerplate
       :width="width"
@@ -59,7 +59,7 @@ import { SpotifyAPI } from '~~/types';
 
 export type Data = {
   artistPath: string
-  onLoaded: boolean
+  isLoaded: boolean
 }
 
 export default Vue.extend({
@@ -105,7 +105,7 @@ export default Vue.extend({
   data(): Data {
     return {
       artistPath: `/artists/${this.id}`,
-      onLoaded: false,
+      isLoaded: false,
     };
   },
 
@@ -128,7 +128,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.onLoaded = true;
+    this.isLoaded = true;
   },
 
   methods: {

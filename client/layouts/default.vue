@@ -37,7 +37,7 @@
     />
 
     <v-overlay
-      v-if="!onLoaded"
+      v-if="!isLoaded"
       :z-index="Z_INDEX"
       :color="BACKGROUND_COLOR"
       :opacity="1"
@@ -67,7 +67,7 @@ import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 const SPACER_REF = 'SPACER_REF';
 
 type Data = {
-  onLoaded: boolean
+  isLoaded: boolean
   elevation: number
   observer: IntersectionObserver | undefined
   BACKGROUND_COLOR: string
@@ -87,7 +87,7 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      onLoaded: false,
+      isLoaded: false,
       elevation: 0,
       observer: undefined,
       BACKGROUND_COLOR,
@@ -107,7 +107,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.onLoaded = true;
+    this.isLoaded = true;
     // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
     this.$dispatch('player/initPlayer');
 
