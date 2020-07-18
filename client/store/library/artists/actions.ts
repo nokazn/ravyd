@@ -67,10 +67,11 @@ const actions: Actions<
     const unupdatedCounts = state.numberOfUnupdatedArtist;
     if (unupdatedCounts === 0) return;
 
+    const maxLimit = 50;
     // @todo コンパイルを通すためにとりあえずキャストする
     const { artists } = await this.$spotify.following.getUserFollowed({
       type: 'artist',
-      limit: unupdatedCounts as TODO,
+      limit: Math.min(unupdatedCounts, maxLimit) as TODO,
     });
     if (artists == null) {
       this.$toast.show('error', 'フォロー中のアーティストの一覧を更新できませんでした。');

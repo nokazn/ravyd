@@ -70,7 +70,9 @@ const actions: Actions<
     const unupdatedCounts = state.numberOfUnupdatedReleases;
     if (unupdatedCounts === 0) return;
 
-    const limit = 50;
+    const maxLimit = 50;
+    // 最大値は50
+    const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
     const market = rootGetters['auth/userCountryCode'];
     const handler = (index: number): Promise<LibraryOfReleases | undefined> => {
       const offset = limit * index;
@@ -80,7 +82,7 @@ const actions: Actions<
         market,
       });
     };
-    const handlerCounts = Math.ceil(unupdatedCounts / limit);
+    const handlerCounts = Math.ceil(unupdatedCounts / maxLimit);
 
     const releases: LibraryOfReleases | undefined = await Promise.all(new Array(handlerCounts)
       .fill(undefined)

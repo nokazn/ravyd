@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { App, SpotifyAPI } from '~~/types';
+import { App, SpotifyAPI, OneToFifty } from '~~/types';
 
 /**
  * deprecated
@@ -23,15 +23,15 @@ export const getAllTrackListHandler = ({ app, params }: Context) => async (
   },
 ): Promise<App.TrackDetail[]> => {
   const market = app.$getters()['auth/userCountryCode'];
-  const limit = 50;
-  const handlerCounts = Math.ceil(counts / limit);
-
-  const handler = async (index: number): Promise<App.TrackDetail[]> => {
+  const maxLimit = 50;
+  const handler = async (index: number, limit?: OneToFifty): Promise<App.TrackDetail[]> => {
     const tracks = await app.$spotify.albums.getAlbumTracks({
       albumId: params.releaseId,
       market,
-      limit,
-      offset: offset + limit * index,
+      limit: limit ?? maxLimit,
+      offset: limit != null
+        ? offset + limit * index
+        : offset,
     });
     if (tracks == null) return [];
 
@@ -53,6 +53,7 @@ export const getAllTrackListHandler = ({ app, params }: Context) => async (
     return partialTrackList;
   };
 
+  const handlerCounts = Math.ceil(counts / maxLimit);
   const trackList = await Promise.all(new Array(handlerCounts)
     .fill(undefined)
     .map((_, i) => handler(i)))
