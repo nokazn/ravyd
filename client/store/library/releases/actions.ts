@@ -64,15 +64,35 @@ const actions: Actions<
    * 未更新分を追加
    */
   async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
+    type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
-    const limit = state.numberOfUnupdatedReleases;
-    if (limit === 0) return;
+    const unupdatedCounts = state.numberOfUnupdatedReleases;
+    if (unupdatedCounts === 0) return;
 
+    const limit = 50;
     const market = rootGetters['auth/userCountryCode'];
-    const releases = await this.$spotify.library.getUserSavedAlbums({
-      limit,
-      market,
-    });
+    const handler = (index: number): Promise<LibraryOfReleases | undefined> => {
+      const offset = limit * index;
+      return this.$spotify.library.getUserSavedAlbums({
+        limit,
+        offset,
+        market,
+      });
+    };
+    const handlerCounts = Math.ceil(unupdatedCounts / limit);
+
+    const releases: LibraryOfReleases | undefined = await Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((pagings) => pagings.reduce((prev, curr) => {
+        // 1つでもリクエストが失敗したらすべて無効にする
+        if (prev == null || curr == null) return undefined;
+        return {
+          ...curr,
+          items: [...prev.items, ...curr.items],
+        };
+      }, {} as LibraryOfReleases));
+
     if (releases == null) {
       this.$toast.show('error', 'お気に入りのアルバムの一覧を更新できませんでした。');
       return;

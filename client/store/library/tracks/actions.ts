@@ -4,7 +4,7 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
-import { OneToFifty } from '~~/types';
+import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryTracksActions = {
   getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
@@ -68,15 +68,35 @@ const actions: Actions<
    * 未更新分を追加
    */
   async updateLatestSavedTrackList({ state, commit, rootGetters }) {
+    type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
-    const limit = state.numberOfUnupdatedTracks;
-    if (limit === 0) return;
+    const unupdatedCounts = state.numberOfUnupdatedTracks;
+    if (unupdatedCounts === 0) return;
 
+    const limit = 50;
     const market = rootGetters['auth/userCountryCode'];
-    const tracks = await this.$spotify.library.getUserSavedTracks({
-      limit,
-      market,
-    });
+    const handler = (index: number): Promise<LibraryOfTracks | undefined> => {
+      const offset = limit * index;
+      return this.$spotify.library.getUserSavedTracks({
+        limit,
+        offset,
+        market,
+      });
+    };
+    const handlerCounts = Math.ceil(unupdatedCounts / limit);
+
+    const tracks: LibraryOfTracks | undefined = await Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((pagings) => pagings.reduce((prev, curr) => {
+        // 1つでもリクエストが失敗したらすべて無効にする
+        if (prev == null || curr == null) return undefined;
+        return {
+          ...curr,
+          items: [...prev?.items, ...curr?.items],
+        };
+      }, {} as LibraryOfTracks));
+
     if (tracks == null) {
       this.$toast.show('error', 'お気に入りのトラックの一覧を更新できませんでした。');
       return;

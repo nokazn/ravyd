@@ -4,7 +4,7 @@ import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { LibraryArtistsState } from './state';
 import { LibraryArtistsGetters } from './getters';
 import { LibraryArtistsMutations } from './mutations';
-import { SpotifyAPI, OneToFifty } from '~~/types';
+import { SpotifyAPI, OneToFifty, TODO } from '~~/types';
 
 export type LibraryArtistsActions = {
   getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
@@ -60,15 +60,17 @@ const actions: Actions<
 
   /**
    * 未更新分を追加
+   * @todo 追加順に取得できないので未更新分を上から見ていっても意味ない
    */
   async updateLatestSavedArtistList({ state, commit }) {
     // ライブラリの情報が更新されていないものの数
-    const limit = state.numberOfUnupdatedArtist;
-    if (limit === 0) return;
+    const unupdatedCounts = state.numberOfUnupdatedArtist;
+    if (unupdatedCounts === 0) return;
 
+    // @todo コンパイルを通すためにとりあえずキャストする
     const { artists } = await this.$spotify.following.getUserFollowed({
       type: 'artist',
-      limit,
+      limit: unupdatedCounts as TODO,
     });
     if (artists == null) {
       this.$toast.show('error', 'フォロー中のアーティストの一覧を更新できませんでした。');
