@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getUserFollowed = (context: Context) => {
   const { app } = context;
@@ -10,13 +10,10 @@ export const getUserFollowed = (context: Context) => {
     after,
   }: {
     type: 'artist'
-    limit?: number
+    limit?: OneToFifty
     after?: string
   }): Promise<{ artists: SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined}> => {
-    if (limit != null && (limit < 1 || limit > 50)) {
-      throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
-    }
-    return app.$spotifyApi.$get('/me/following', {
+    const request = app.$spotifyApi.$get('/me/following', {
       params: {
         type,
         limit,
@@ -26,5 +23,7 @@ export const getUserFollowed = (context: Context) => {
       console.error({ err });
       return {};
     });
+
+    return request;
   };
 };
