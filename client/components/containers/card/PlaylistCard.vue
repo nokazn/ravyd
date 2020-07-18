@@ -146,10 +146,10 @@ export default Vue.extend({
       if (this.isPlaying && this.isPlaylistSet) {
         this.$dispatch('player/pause');
       } else {
+        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
         const params = this.isPlaylistSet
           ? undefined
           : { contextUri: this.uri };
-        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
         this.$dispatch('player/play', params);
       }
     },
