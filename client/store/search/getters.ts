@@ -39,16 +39,16 @@ const getters: Getters<SearchState, SearchGetters> = {
   tracks(state) {
     return state.tracks?.map((track) => {
       const type = 'track' as const;
-      const { id } = track;
+      const { id, album: { id: releaseId } } = track;
       const to = {
-        path: generatePath(type, id),
+        path: generatePath(type, releaseId),
         hash: `${track.disc_number}-${track.track_number}`,
       };
 
       const info = {
         type,
         id,
-        releaseId: id,
+        releaseId,
         name: track.name,
         uri: track.uri,
         artworkList: track.album.images,
