@@ -104,6 +104,7 @@ const actions: Actions<
     if (currentReleaseList == null) {
       commit('SET_RELEASE_LIST', releases.items.map(convertRelease));
       commit('SET_TOTAL', releases.total);
+      commit('RESET_NUMBER_OF_UNUPDATED_RELEASES');
       return;
     }
 

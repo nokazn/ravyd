@@ -111,6 +111,7 @@ const actions: Actions<
         convertPlaylistTrackDetail({ isTrackSavedList }),
       ));
       commit('SET_TOTAL', tracks.total);
+      commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
       return;
     }
 

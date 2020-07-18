@@ -82,6 +82,7 @@ const actions: Actions<
     if (currentArtistList == null) {
       commit('SET_ARTIST_LIST', artists.items.map(convertArtist));
       commit('SET_TOTAL', artists.total);
+      commit('RESET_NUMBER_OF_UNUPDATED_ARTISTS');
       return;
     }
 
