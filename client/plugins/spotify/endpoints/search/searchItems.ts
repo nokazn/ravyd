@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const searchItems = (context: Context) => {
   const { app } = context;
@@ -15,7 +15,7 @@ export const searchItems = (context: Context) => {
     query: string
     typeList: T
     market?: SpotifyAPI.Country
-    limit?: number
+    limit?: OneToFifty
     offset?: number
     includeExternal?: 'audio'
   }): Promise<

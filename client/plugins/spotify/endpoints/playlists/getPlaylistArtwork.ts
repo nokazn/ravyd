@@ -4,12 +4,8 @@ import { SpotifyAPI } from '~~/types';
 export const getPlaylistArtwork = (context: Context) => {
   const { app } = context;
 
-  return ({
-    playlistId,
-  }: {
+  return ({ playlistId }: {
     playlistId: string
-    limit: number
-    offset: number
   }): Promise<SpotifyAPI.Image[]> => {
     const request = app.$spotifyApi.$get(`/playlists/${playlistId}/images`, {
     }).catch((err: Error) => {

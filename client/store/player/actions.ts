@@ -4,7 +4,7 @@ import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { REPEAT_STATE_LIST, APP_NAME } from '~/variables';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -46,7 +46,7 @@ export type PlayerActions = {
   previous: () => void
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
-  volume: ({ volumePercent }: { volumePercent: number }) => Promise<void>
+  volume: ({ volumePercent }: { volumePercent: ZeroToHundred }) => Promise<void>
   mute: () => Promise<void>
   checkTrackSavedState: (trackIds?: string) => Promise<void>
   modifyTrackSavedState: ({ trackId, isSaved }: {
@@ -298,7 +298,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
     commit('SET_VOLUME_PERCENT', {
       volumePercent: activeDevice != null
-        ? activeDevice.volume_percent
+        ? activeDevice.volume_percent as ZeroToHundred
         : 100,
     });
 

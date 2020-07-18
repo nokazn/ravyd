@@ -31,6 +31,7 @@
 import Vue from 'vue';
 import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'vuex';
+import { ZeroToHundred } from '~~/types';
 
 type Data = {
   volumePercent: number
@@ -125,10 +126,10 @@ export default Vue.extend({
   },
 
   methods: {
-    onInput(volumePercent: number) {
+    onInput(volumePercent: ZeroToHundred) {
       this.volumePercent = this.debounceSetter(volumePercent);
     },
-    onChange(volumePercent: number) {
+    onChange(volumePercent: ZeroToHundred) {
       this.$dispatch('player/volume', { volumePercent });
     },
     onVolumeButtonClicked() {

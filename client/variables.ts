@@ -42,3 +42,13 @@ export const Z_INDEX_OF = {
   floatingButton: 3,
   textGradation: 2,
 } as const;
+
+export const emptyPaging: SpotifyAPI.Paging<unknown> = {
+  href: '',
+  items: [],
+  limit: 0,
+  next: null,
+  offset: 0,
+  previous: null,
+  total: 0,
+};

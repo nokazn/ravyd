@@ -1,4 +1,5 @@
 import { Context } from '@nuxt/types';
+import { addItemToPlaylist } from './addItemToPlaylist';
 
 export const replacePlaylistItems = (context: Context) => {
   const { app } = context;
@@ -9,23 +10,42 @@ export const replacePlaylistItems = (context: Context) => {
    */
   return ({
     playlistId,
-    uris,
+    uriList,
   }: {
     playlistId: string
-    uris?: string[]
+    uriList?: string[]
   }): Promise<void> => {
-    const maxUris = 100;
-    if (uris != null && uris.length > maxUris) {
-      throw new Error(`uris は最大 ${maxUris} 個までですが、${uris.length} 個指定されました。`);
-    }
+    const length = uriList?.length;
+    const limit = 100;
 
-    const request = app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
-      uris,
-    }).catch((err: Error) => {
-      console.error({ err });
-      throw new Error(err.message);
-    });
+    const handler = (index?: number) => {
+      const uris = uriList?.slice(limit * (index ?? 0), limit);
+      // 1周目のリクエストでは replace する
+      if (index == null || index === 0) {
+        return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
+          uris,
+        }).catch((err: Error) => {
+          console.error({ err });
+          throw new Error(err.message);
+        });
+      }
 
-    return request;
+      return addItemToPlaylist(context)({
+        playlistId,
+        uriList: uris,
+      });
+    };
+    if (length == null) return handler();
+
+    const handlerCounts = Math.ceil(length / limit);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then(() => {})
+      .catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
   };
 };

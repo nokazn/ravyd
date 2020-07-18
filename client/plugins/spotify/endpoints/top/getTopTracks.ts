@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getTopTracks = (context: Context) => {
   const { app } = context;
@@ -9,24 +9,21 @@ export const getTopTracks = (context: Context) => {
     offset = 0,
     timeRange = 'medium_term',
   }: {
-    limit?: number // 1 ~ 50 まで指定できる
+    limit?: OneToFifty
     offset?: number
     timeRange?: 'long_term' | 'medium_term' | 'short_term'
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Track> | undefined> => {
-    if (limit < 1 || limit > 50) {
-      throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
-    }
-
-    return app.$spotifyApi.$get('/me/top/tracks', {
+    const request = app.$spotifyApi.$get('/me/top/tracks', {
       params: {
         limit,
         offset,
         time_range: timeRange,
       },
-    })
-      .catch((err: Error) => {
-        console.error({ err });
-        return undefined;
-      });
+    }).catch((err: Error) => {
+      console.error({ err });
+      return undefined;
+    });
+
+    return request;
   };
 };

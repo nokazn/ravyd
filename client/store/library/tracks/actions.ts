@@ -4,9 +4,11 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
+import { emptyPaging } from '~/variables';
+import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryTracksActions = {
-  getSavedTrackList: (payload?: { limit: number } | undefined) => Promise<void>
+  getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedTrackList: () => Promise<void>
   removeUnsavedTracks: () => void
   saveTracks: (trackIdList: string[]) => Promise<void>
@@ -67,15 +69,37 @@ const actions: Actions<
    * 未更新分を追加
    */
   async updateLatestSavedTrackList({ state, commit, rootGetters }) {
+    type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
-    const limit = state.numberOfUnupdatedTracks;
-    if (limit === 0) return;
+    const unupdatedCounts = state.numberOfUnupdatedTracks;
+    if (unupdatedCounts === 0) return;
 
+    const maxLimit = 50;
+    // 最大値は50
+    const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
     const market = rootGetters['auth/userCountryCode'];
-    const tracks = await this.$spotify.library.getUserSavedTracks({
-      limit,
-      market,
-    });
+    const handler = (index: number): Promise<LibraryOfTracks | undefined> => {
+      const offset = limit * index;
+      return this.$spotify.library.getUserSavedTracks({
+        limit,
+        offset,
+        market,
+      });
+    };
+    const handlerCounts = Math.ceil(unupdatedCounts / maxLimit);
+
+    const tracks: LibraryOfTracks | undefined = await Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((pagings) => pagings.reduce((prev, curr) => {
+        // 1つでもリクエストが失敗したらすべて無効にする
+        if (prev == null || curr == null) return undefined;
+        return {
+          ...curr,
+          items: [...prev.items, ...curr.items],
+        };
+      }, emptyPaging as LibraryOfTracks));
+
     if (tracks == null) {
       this.$toast.show('error', 'お気に入りのトラックの一覧を更新できませんでした。');
       return;
@@ -89,6 +113,7 @@ const actions: Actions<
         convertPlaylistTrackDetail({ isTrackSavedList }),
       ));
       commit('SET_TOTAL', tracks.total);
+      commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
       return;
     }
 

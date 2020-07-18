@@ -7,6 +7,7 @@ import {
   ReleaseTitle,
   ReleaseInfo,
 } from './index';
+import { OneToFifty } from '~~/types';
 
 export type ArtistReleaseInfo<T extends ReleaseType = ReleaseType> = Map<T, ReleaseInfo<T>>
 
@@ -59,7 +60,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
 
 const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
   releaseType: T,
-  limit: number,
+  limit: OneToFifty,
   offset?: number,
 ): Promise<[T, ReleaseInfo<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
@@ -92,7 +93,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
 
 export const getReleaseListMap = async (
   context: Context,
-  limit: number,
+  limit: OneToFifty,
 ): Promise<ArtistReleaseInfo<ReleaseType>> => {
   const getReleaseList = getReleaseListHandler(context);
 

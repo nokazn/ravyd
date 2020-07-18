@@ -1,14 +1,14 @@
 import { Context } from '@nuxt/types';
 
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
-import { App } from '~~/types';
+import { App, OneToFifty } from '~~/types';
 
 /**
  * limit は 0 ~ 50
  */
 export const getPlaylistTrackInfo = async (
   { app, params }: Context,
-  { limit, offset = 0 }: { limit: number, offset?: number },
+  { limit, offset = 0 }: { limit: OneToFifty, offset?: number },
 ): Promise<App.PlaylistTrackInfo | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];

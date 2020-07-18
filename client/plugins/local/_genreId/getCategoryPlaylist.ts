@@ -1,11 +1,11 @@
 import { Context } from '@nuxt/types';
-import { App } from '~~/types';
+import { App, OneToFifty } from '~~/types';
 
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
 
 export const getCategoryPlaylist = async (
   { app, params }: Context,
-  limit: number,
+  limit: OneToFifty,
 ): Promise<App.PlaylistCardInfo[]> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { playlists } = await app.$spotify.browse.getCategoryPlaylist({

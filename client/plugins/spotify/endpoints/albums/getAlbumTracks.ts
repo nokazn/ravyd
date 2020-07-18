@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getAlbumTracks = (context: Context) => {
   const { app } = context;
@@ -11,15 +11,11 @@ export const getAlbumTracks = (context: Context) => {
     market,
   }: {
     albumId: string
-    limit?: number // 1 ~ 50 まで指定できる
+    limit?: OneToFifty
     offset?: number
     market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleTrack> | undefined> => {
-    if (limit < 1 || limit > 50) {
-      throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
-    }
-
-    return app.$spotifyApi.$get(`/albums/${albumId}/tracks`, {
+    const request = app.$spotifyApi.$get(`/albums/${albumId}/tracks`, {
       params: {
         limit,
         offset,
@@ -29,5 +25,7 @@ export const getAlbumTracks = (context: Context) => {
       console.error({ err });
       return undefined;
     });
+
+    return request;
   };
 };

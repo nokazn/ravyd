@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getCategoryList = (context: Context) => {
   const { app } = context;
@@ -12,14 +12,10 @@ export const getCategoryList = (context: Context) => {
   }: {
     country?: SpotifyAPI.Country
     locale?: string
-    limit?: number // 1 ~ 50 まで指定できる
+    limit?: OneToFifty
     offset?: number
   }): Promise<{ categories: SpotifyAPI.Paging<SpotifyAPI.Category> | undefined }> => {
-    if (limit < 1 || limit > 50) {
-      throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
-    }
-
-    return app.$spotifyApi.$get('/browse/categories', {
+    const request = app.$spotifyApi.$get('/browse/categories', {
       params: {
         country,
         locale,
@@ -30,5 +26,7 @@ export const getCategoryList = (context: Context) => {
       console.error({ err });
       return {};
     });
+
+    return request;
   };
 };

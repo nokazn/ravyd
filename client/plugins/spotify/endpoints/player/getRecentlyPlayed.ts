@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getRecentlyPlayed = (context: Context) => {
   const { app } = context;
@@ -8,7 +8,7 @@ export const getRecentlyPlayed = (context: Context) => {
    * after と before はどちらか一方をミリ秒で指定する
    */
   return (params?: {
-    limit?: number // 1 ~ 50 まで指定できる
+    limit?: OneToFifty
     after?: number
     before?: number
   }): Promise<SpotifyAPI.Player.RecentlyPlayed | undefined> => {
