@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { OneToHundred } from '~~/types';
+import { ZeroToHundred } from '~~/types';
 
 export const volume = (context: Context) => {
   const { app } = context;
@@ -9,7 +9,7 @@ export const volume = (context: Context) => {
     volumePercent,
   }: {
     deviceId?: string | undefined
-    volumePercent: OneToHundred
+    volumePercent: ZeroToHundred
   }): Promise<void> => {
     const request = app.$spotifyApi.$put('/me/player/volume', undefined, {
       params: {

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'vuex';
 import { PlayerState } from './state';
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 
@@ -28,7 +28,7 @@ export type PlayerMutations = {
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
   SET_DISALLOWS: SpotifyAPI.Disallows
-  SET_VOLUME_PERCENT: { volumePercent: number }
+  SET_VOLUME_PERCENT: { volumePercent: ZeroToHundred }
   SET_IS_MUTED: boolean
 };
 

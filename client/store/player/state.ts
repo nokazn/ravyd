@@ -1,4 +1,4 @@
-import type { SpotifyAPI, App } from '~~/types';
+import type { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlayerState = {
   playbackPlayer: Spotify.SpotifyPlayer | undefined
@@ -28,7 +28,7 @@ export type PlayerState = {
   isShuffled: boolean
   repeatMode: 0 | 1 | 2 | undefined
   disallows: SpotifyAPI.Disallows
-  volumePercent: number
+  volumePercent: ZeroToHundred
   isMuted: boolean
 }
 

@@ -5,7 +5,7 @@ import { REPEAT_STATE_LIST } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
-import { SpotifyAPI, App } from '~~/types';
+import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlayerGetters = {
   isPlayerConnected: boolean
@@ -21,7 +21,7 @@ export type PlayerGetters = {
   remainingTimeMs: number
   repeatState: SpotifyAPI.RepeatState | undefined
   isDisallowed: (disallow: keyof SpotifyAPI.Disallows) => boolean
-  volumePercent: number
+  volumePercent: ZeroToHundred
 }
 
 export type RootGetters = {
