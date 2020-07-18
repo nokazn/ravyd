@@ -34,7 +34,7 @@ export const removePlaylistItems = (context: Context) => {
         return {};
       });
     };
-    const handlerCounts = Math.ceil(limit / length);
+    const handlerCounts = Math.ceil(length / limit);
 
     return Promise.all(new Array(handlerCounts)
       .fill(undefined)
