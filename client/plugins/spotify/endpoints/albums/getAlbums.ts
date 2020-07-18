@@ -5,27 +5,35 @@ export const getAlbums = (context: Context) => {
   const { app } = context;
 
   /**
-   * albumIdList は最大 20
+   * albumIdList はの長さは最大 20
    */
   return ({ albumIdList, market }: {
     albumIdList: string[]
     market?: SpotifyAPI.Country
-  }): Promise<{ albums: SpotifyAPI.Album[] | undefined }> => {
-    const { length } = albumIdList;
-    const maxLength = 20;
-    if (length > maxLength) {
-      throw new Error(`albumIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
-    }
+  }): Promise<{ albums: (SpotifyAPI.Album | null)[] }> => {
+    const limit = 20;
+    const handler = async (index: number) => {
+      // limit ごとに分割
+      const ids = albumIdList.slice(limit * index, limit).join(',');
+      const { albums }: { albums: (SpotifyAPI.Album | null)[]} = await app.$spotifyApi.$get('/albums', {
+        params: {
+          ids,
+          market,
+        },
+      }).catch((err: Error) => {
+        console.error({ err });
+        return { albums: new Array(ids.length).fill(null) };
+      });
 
-    const ids = albumIdList.join(',');
-    return app.$spotifyApi.$get('/albums', {
-      params: {
-        ids,
-        market,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      return {};
-    });
+      return albums;
+    };
+    const handlerCounts = Math.ceil(albumIdList.length / limit);
+
+    const albums = Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((albumLists) => ({ albums: albumLists.flat() }));
+
+    return albums;
   };
 };

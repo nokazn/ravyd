@@ -8,20 +8,30 @@ export const unfollow = (context: Context) => {
     artistIdList: string[]
   }): Promise<void> => {
     const { length } = artistIdList;
-    const maxLength = 50;
-    if (length > maxLength) {
-      throw new Error(`artistIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
+    if (length === 0) {
+      return Promise.resolve();
     }
 
-    const ids = artistIdList.join(',');
-    return app.$spotifyApi.$delete('/me/following', {
-      params: {
-        type,
-        ids,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      throw new Error(err.message);
-    });
+    const limit = 50;
+    const handler = (index: number): Promise<void> => {
+      // limit ごとに分割
+      const ids = artistIdList.slice(limit * index, limit).join(',');
+      return app.$spotifyApi.$delete('/me/following', {
+        params: {
+          type,
+          ids,
+        },
+      });
+    };
+    const handlerCounts = Math.ceil(length / limit);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then(() => {})
+      .catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
   };
 };

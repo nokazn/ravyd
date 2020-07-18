@@ -5,19 +5,31 @@ export const saveShows = (context: Context) => {
 
   return ({ showIdList }: { showIdList: string[] }): Promise<void> => {
     const { length } = showIdList;
-    const maxLength = 20;
-    if (length > maxLength) {
-      throw new Error(`showIdList は最大${maxLength}個までしか指定できませんが、${length}個指定されました。`);
+    if (length === 0) {
+      return Promise.resolve();
     }
 
-    const ids = showIdList.join(',');
-    return app.$spotifyApi.$put('/me/shows', null, {
-      params: {
-        ids,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      throw new Error(err.message);
-    });
+    const limit = 20;
+    const handler = (index: number) => {
+      const ids = showIdList.slice(limit * index, limit).join(',');
+      return app.$spotifyApi.$put('/me/shows', null, {
+        params: {
+          ids,
+        },
+      }).catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
+    };
+    const handlerCounts = Math.ceil(length / limit);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then(() => {})
+      .catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
   };
 };

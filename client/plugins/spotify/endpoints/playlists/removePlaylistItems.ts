@@ -15,17 +15,29 @@ export const removePlaylistItems = (context: Context) => {
       positions?: number[]
     }[]
     snapshotId?: string,
-  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
-    const request = app.$spotifyApi.$delete(`/playlists/${playlistId}/tracks`, {
-      data: {
-        tracks,
-        snapshot_id: snapshotId,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      return {};
-    });
+  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>[]> => {
+    const { length } = tracks;
+    if (length === 0) {
+      return Promise.resolve([{}]);
+    }
 
-    return request;
+    const limit = 100;
+    const handler = (index: number): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
+      const partialTracks = tracks.slice(limit * index, limit);
+      return app.$spotifyApi.$delete(`/playlists/${playlistId}/tracks`, {
+        data: {
+          tracks: partialTracks,
+          snapshot_id: snapshotId,
+        },
+      }).catch((err: Error) => {
+        console.error({ err });
+        return {};
+      });
+    };
+    const handlerCounts = Math.ceil(limit / length);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)));
   };
 };
