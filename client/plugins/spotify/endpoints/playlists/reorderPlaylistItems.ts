@@ -4,11 +4,6 @@ import { SpotifyAPI } from '~~/types';
 export const reorderPlaylistItems = (context: Context) => {
   const { app } = context;
 
-  /**
-   * fields 必要な情報をカンマ区切りで指定する
-   * limit は 0 ~ 50
-   * offset は 0 ~ 10000
-   */
   return ({
     playlistId,
     rangeStart,
