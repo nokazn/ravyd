@@ -117,7 +117,7 @@ const actions: Actions<SearchState, SearchActions, SearchGetters, SearchMutation
   async searchEpisodes({ commit }, params) {
     const { episodes } = await searchEachItemHandler(this.app, 'episode')(params) ?? {};
     const filteredEpisodes = episodes?.items
-      .filter((episode) => episode != null) as SpotifyAPI.Episode[] | undefined;
+      .filter((episode) => episode != null) as SpotifyAPI.SimpleEpisode[] | undefined;
 
     commit('SET_EPISODES', filteredEpisodes);
   },

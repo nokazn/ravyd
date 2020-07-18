@@ -10,7 +10,7 @@ export type SearchMutations = {
   SET_TRACKS: SpotifyAPI.Track[] | undefined
   SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined
   SET_SHOWS: SpotifyAPI.SimpleShow[] | undefined
-  SET_EPISODES: SpotifyAPI.Episode[] | undefined
+  SET_EPISODES: SpotifyAPI.SimpleEpisode[] | undefined
 }
 
 export type RootMutations = {

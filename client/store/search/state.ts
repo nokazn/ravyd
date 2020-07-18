@@ -6,7 +6,7 @@ export type SearchState = {
   tracks: SpotifyAPI.Track[] | undefined
   playlists: SpotifyAPI.SimplePlaylist[] | undefined
   shows: SpotifyAPI.SimpleShow[] | undefined
-  episodes: SpotifyAPI.Episode[] | undefined
+  episodes: SpotifyAPI.SimpleEpisode[] | undefined
 }
 
 const state = (): SearchState => ({
