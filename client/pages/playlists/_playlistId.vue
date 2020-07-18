@@ -188,7 +188,8 @@ import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
-import { App, OneToFifty } from '~~/types';
+import { App, OneToFifty, SpotifyAPI } from '~~/types';
+import { emptyPaging } from '~/variables';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
@@ -447,17 +448,39 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  async appendTrackList(limit?: OneToFifty) {
+  async appendTrackList(counts: number = LIMIT_OF_TRACKS) {
+    type PagingTracks = SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>;
     if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
 
+    const { playlistId } = this.$route.params;
     const currentPlaylistTrackInfo = this.playlistTrackInfo;
-    const offset = currentPlaylistTrackInfo.trackList.length;
-    const tracks = await this.$spotify.playlists.getPlaylistItems({
-      playlistId: this.$route.params.playlistId,
-      market: this.$getters()['auth/userCountryCode'],
-      limit: limit ?? LIMIT_OF_TRACKS,
-      offset,
-    });
+    const { length } = currentPlaylistTrackInfo.trackList;
+    const maxLimit = 50;
+    const limit = Math.min(counts, maxLimit) as OneToFifty;
+    const market = this.$getters()['auth/userCountryCode'];
+    const handler = (index: number): Promise<PagingTracks | undefined> => {
+      const offset = length + limit * index;
+      return this.$spotify.playlists.getPlaylistItems({
+        playlistId,
+        limit,
+        offset,
+        market,
+      });
+    };
+    const handlerCounts = Math.ceil(counts / maxLimit);
+
+    const tracks: PagingTracks | undefined = await Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((pagings) => pagings.reduce((prev, curr) => {
+        // 1つでもリクエストが失敗したらすべて無効にする
+        if (prev == null || curr == null) return undefined;
+        return {
+          ...curr,
+          items: [...prev.items, ...curr.items],
+        };
+      }, emptyPaging as PagingTracks));
+
     if (tracks == null) {
       this.playlistTrackInfo.isFullTrackList = true;
       return;
@@ -474,10 +497,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
 
     const trackIdList = filteredTrackList.map(({ track }) => track.id);
+    // trackIdList の長さが上限を超えるときはプラグイン内で分割してリクエストされる
     const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
     const trackList = filteredTrackList.map(convertPlaylistTrackDetail({
       isTrackSavedList,
-      offset,
+      offset: length,
     }));
     const isFullTrackList = tracks.next == null;
 
