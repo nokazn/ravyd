@@ -2,9 +2,10 @@ import { Actions } from 'vuex';
 import { PlaylistsState } from './state';
 import { PlaylistsGetters } from './getters';
 import { PlaylistsMutations } from './mutations';
+import { OneToFifty } from '~~/types';
 
 export type PlaylistsActions = {
-  getPlaylists: (payload?: { offset?: number, limit?: number }) => Promise<void>
+  getPlaylists: (payload?: { offset?: number, limit?: OneToFifty }) => Promise<void>
   getAllPlaylists: () => Promise<void>
   createPlaylist: (payload: {
     name: string
@@ -97,7 +98,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
 
     const listOfPlaylists = await Promise.all(new Array(handlerCounts)
       .fill(undefined)
-      .map((_, index) => handler(index)))
+      .map((_, i) => handler(i)))
       .then((listsOfPlaylists) => listsOfPlaylists.flat());
 
     commit('SET_PLAYLISTS', [
@@ -262,7 +263,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
    * プレイリストから1曲削除
    */
   async removePlaylistItem({ state, commit }, { playlistId, track, name }) {
-    const { snapshot_id } = await this.$spotify.playlists.removePlaylistItems({
+    const [{ snapshot_id }] = await this.$spotify.playlists.removePlaylistItems({
       playlistId,
       tracks: [track],
     });

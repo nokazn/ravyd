@@ -4,10 +4,10 @@ import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { LibraryArtistsState } from './state';
 import { LibraryArtistsGetters } from './getters';
 import { LibraryArtistsMutations } from './mutations';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export type LibraryArtistsActions = {
-  getSavedArtistList: (payload?: { limit: number } | undefined) => Promise<void>
+  getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedArtistList: () => Promise<void>
   followArtists: (artistIdList: string[]) => Promise<void>
   unfollowArtists: (artistIdList: string[]) => Promise<void>

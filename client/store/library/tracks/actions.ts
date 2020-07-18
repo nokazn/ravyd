@@ -4,9 +4,10 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
+import { OneToFifty } from '~~/types';
 
 export type LibraryTracksActions = {
-  getSavedTrackList: (payload?: { limit: number } | undefined) => Promise<void>
+  getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedTrackList: () => Promise<void>
   removeUnsavedTracks: () => void
   saveTracks: (trackIdList: string[]) => Promise<void>

@@ -4,11 +4,11 @@ import { Context } from '@nuxt/types';
 import { SearchState } from './state';
 import { SearchGetters } from './getters';
 import { SearchMutations } from './mutations';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 type SearchParams = {
   query: string
-  limit?: number
+  limit?: OneToFifty
   offset?: number
 }
 

@@ -188,7 +188,7 @@ import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
-import { App } from '~~/types';
+import { App, OneToFifty } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
@@ -447,7 +447,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  async appendTrackList(limit?: number) {
+  async appendTrackList(limit?: OneToFifty) {
     if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
 
     const currentPlaylistTrackInfo = this.playlistTrackInfo;

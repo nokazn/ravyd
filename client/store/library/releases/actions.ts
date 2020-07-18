@@ -4,10 +4,10 @@ import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard
 import { LibraryReleasesState } from './state';
 import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export type LibraryReleasesActions = {
-  getSavedReleaseList: (payload?: { limit: number } | undefined) => Promise<void>
+  getSavedReleaseList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedReleaseList: () => Promise<void>
   saveReleases: (albumIdList: string[]) => Promise<void>
   removeReleases: (albumIdList: string[]) => Promise<void>
