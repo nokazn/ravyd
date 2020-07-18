@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
 import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { App, SpotifyAPI } from '~~/types';
+import { App, SpotifyAPI, OneToFifty } from '~~/types';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 
 export const getReleaseInfo = async (
@@ -44,7 +44,7 @@ export const getReleaseInfo = async (
       artistId: artist.id,
       country: market,
       // 同じリリースが含まれる場合は除いて 10 件にするため
-      limit: limit + 1,
+      limit: limit + 1 as OneToFifty,
     });
     // 同じリリースを除いて 10 件にする
     const items = releases?.items

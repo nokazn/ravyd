@@ -55,7 +55,7 @@ export const getAllTrackListHandler = ({ app, params }: Context) => async (
 
   const trackList = await Promise.all(new Array(handlerCounts)
     .fill(undefined)
-    .map((_, index) => handler(index)))
+    .map((_, i) => handler(i)))
     .then((trackLists) => trackLists.flat());
 
   return trackList;
