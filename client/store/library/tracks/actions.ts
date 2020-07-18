@@ -4,6 +4,7 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
+import { emptyPaging } from '~/variables';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryTracksActions = {
@@ -93,9 +94,9 @@ const actions: Actions<
         if (prev == null || curr == null) return undefined;
         return {
           ...curr,
-          items: [...prev?.items, ...curr?.items],
+          items: [...prev.items, ...curr.items],
         };
-      }, {} as LibraryOfTracks));
+      }, emptyPaging as LibraryOfTracks));
 
     if (tracks == null) {
       this.$toast.show('error', 'お気に入りのトラックの一覧を更新できませんでした。');

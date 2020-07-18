@@ -4,6 +4,7 @@ import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard
 import { LibraryReleasesState } from './state';
 import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
+import { emptyPaging } from '~/variables';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export type LibraryReleasesActions = {
@@ -91,7 +92,7 @@ const actions: Actions<
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, {} as LibraryOfReleases));
+      }, emptyPaging as LibraryOfReleases));
 
     if (releases == null) {
       this.$toast.show('error', 'お気に入りのアルバムの一覧を更新できませんでした。');
