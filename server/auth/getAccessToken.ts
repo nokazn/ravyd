@@ -14,7 +14,7 @@ export const getAccessToken = (
         redirectUrl,
         clientId,
         clientSecret,
-      }, null, 2),
+      }, undefined, 2),
     );
     return null;
   }
