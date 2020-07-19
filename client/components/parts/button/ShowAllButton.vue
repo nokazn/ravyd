@@ -3,20 +3,27 @@
     rounded
     text
     :width="width"
+    :small="small"
+    :class="$style.ShowAllButton"
     @click="onClicked"
   >
-    <v-icon left>
-      {{ showAllButton.icon }}
-    </v-icon>
+    <div :class="$style.ShowAllButton__wrapper">
+      <v-icon
+        left
+        :small="small"
+      >
+        {{ showAllButton.icon }}
+      </v-icon>
 
-    <span>
-      {{ showAllButton.text }}
-    </span>
+      <span>
+        {{ showAllButton.text }}
+      </span>
+    </div>
   </v-btn>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 export type ShowALlButton = {
   icon: 'mdi-chevron-down' | 'mdi-chevron-up'
@@ -36,8 +43,12 @@ export default Vue.extend({
       required: true,
     },
     width: {
-      type: Number,
-      default: 200,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    small: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -62,3 +73,11 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.ShowAllButton {
+  &__wrapper {
+    padding: 0 0.8em;
+  }
+}
+</style>

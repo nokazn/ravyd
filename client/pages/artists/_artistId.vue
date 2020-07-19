@@ -116,7 +116,12 @@
         v-if="releaseInfo.items.length > 0"
         :key="type"
         :title="releaseInfo.title"
+        :is-abbreviated="releaseInfo.isAbbreviated"
+        :is-full="releaseInfo.isFull"
         :class="$style.CardSection"
+        @on-button-clicked="onShowAllButtonClicked(type)"
+        @on-button-hovered="onShowAllButtonHovered(type)"
+        @on-loading-appeared="appendReleaseList(type)"
       >
         <div :class="$style.CardSection__wrapper">
           <template v-for="(item, index) in releaseInfo.items">
@@ -139,24 +144,6 @@
           <div :class="$style.CradSection__spacer" />
           <div :class="$style.CradSection__spacer" />
           <div :class="$style.CradSection__spacer" />
-        </div>
-
-        <IntersectionLoadingCircle
-          v-if="releaseInfo != null && !releaseInfo.isAbbreviated"
-          :is-loading="!releaseInfo.isFull"
-          :class="$style.CardSection__loadingCircle"
-          @on-appeared="appendReleaseList(type)"
-        />
-
-        <div
-          v-if="releaseInfo.total > ABBREVIATED_RELEASE_LENGTH"
-          :class="$style.CardSection__buttonWrapper"
-        >
-          <ShowAllReleaseButton
-            :is-abbreviated="releaseInfo.isAbbreviated"
-            @on-clicked="onShowAllButtonClicked(type)"
-            @mouseenter.native="onShowAllButtonHovered(type)"
-          />
         </div>
       </CardsSection>
     </template>
@@ -181,7 +168,6 @@ import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/Track
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import ShowAllReleaseButton from '~/components/parts/button/ShowAllReleaseButton.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import {
@@ -234,7 +220,6 @@ export type Data = {
     CardsSection,
     ReleaseCard,
     IntersectionLoadingCircle,
-    ShowAllReleaseButton,
     Fallback,
   },
 
@@ -505,15 +490,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     // 最終行の余りの部分を埋める
     &__spacer {
       height: 0;
-    }
-
-    &__loadingCircle {
-      margin-bottom: 16px;
-    }
-
-    &__buttonWrapper {
-      display: flex;
-      justify-content: center;
     }
   }
 

@@ -19,7 +19,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: true,
+      isAbbreviated: undefined,
       isAppended: false,
     },
   ],
@@ -30,7 +30,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: true,
+      isAbbreviated: undefined,
       isAppended: false,
     },
   ],
@@ -41,7 +41,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: true,
+      isAbbreviated: undefined,
       isAppended: false,
     },
   ],
@@ -52,17 +52,21 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: true,
+      isAbbreviated: undefined,
       isAppended: false,
     },
   ],
 ]);
 
-const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>(
-  releaseType: T,
-  limit: OneToFifty,
-  offset?: number,
-): Promise<[T, ReleaseInfo<T>]> => {
+const getReleaseListHandler = ({ app, params }: Context) => async <T extends ReleaseType>({
+  releaseType,
+  limit,
+  offset,
+}: {
+  releaseType: T
+  limit: OneToFifty
+  offset?: number
+}): Promise<[T, ReleaseInfo<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 
   const country = app.$getters()['auth/userCountryCode'];
@@ -75,8 +79,12 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   });
   const items = releases?.items.map(convertReleaseForCard) ?? [];
 
-  const isFull = releases?.next == null;
   const total = releases?.total ?? 0;
+  const isFull = releases?.next == null;
+  // 未取得のアイテムがある場合に「すべて表示」ボタンを表示するためのフラグ
+  const isAbbreviated = total > limit
+    ? true
+    : undefined;
 
   return [
     releaseType,
@@ -85,7 +93,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
       items,
       total,
       isFull,
-      isAbbreviated: true,
+      isAbbreviated,
       isAppended: false,
     },
   ];
@@ -98,10 +106,22 @@ export const getReleaseListMap = async (
   const getReleaseList = getReleaseListHandler(context);
 
   const [album, single, compilation, appears_on] = await Promise.all([
-    getReleaseList('album', limit),
-    getReleaseList('single', limit),
-    getReleaseList('compilation', limit),
-    getReleaseList('appears_on', limit),
+    getReleaseList({
+      releaseType: 'album',
+      limit,
+    }),
+    getReleaseList({
+      releaseType: 'single',
+      limit,
+    }),
+    getReleaseList({
+      releaseType: 'compilation',
+      limit,
+    }),
+    getReleaseList({
+      releaseType: 'appears_on',
+      limit,
+    }),
   ] as const);
 
   return new Map<ReleaseType, ReleaseInfo<ReleaseType>>([
