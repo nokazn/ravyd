@@ -18,7 +18,7 @@ if (host == null || port == null || password == null) {
 
 const client = new Redis({
   host,
-  port: parseFloat(port),
+  port: parseInt(port, 10),
   password,
 });
 
