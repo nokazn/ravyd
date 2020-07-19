@@ -14,7 +14,8 @@ export type ReleaseInfo<T extends ReleaseType> = {
   items: App.ReleaseCardInfo[]
   total: number
   isFull: boolean
-  isAbbreviated: boolean
+  // undefined の時は最初からすべて表示
+  isAbbreviated: boolean | undefined
   isAppended: boolean
 }
 
