@@ -5,6 +5,7 @@ export namespace SpotifyAPI {
     type AuthorizationResponse = {
       accessToken: string
       expireIn: number
+      message?: string
       url?: undefined
     } | {
       accessToken?: undefined

@@ -45,12 +45,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     console.error('トークン取得時にエラーが発生しました。');
+    this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
   },
 
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
     const { accessToken, expireIn }: {
-      accessToken?: string
-      expireIn?: number
+      accessToken: string | undefined
+      expireIn: number
     } = await this.$serverApi.$post('/api/auth/login/callback', { code })
       .catch((err: Error) => {
         console.error({ err });
@@ -63,7 +64,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
   async getAccessToken({ commit }) {
     const { accessToken, expireIn }: {
-      accessToken?: string
+      accessToken: string | undefined
       expireIn: number
     } = await this.$serverApi.$get('/api/auth')
       .catch((err) => {
@@ -90,7 +91,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_EXPIRE_MILLIS', undefined);
 
     const { accessToken, expireIn }: {
-      accessToken?: string
+      accessToken: string | undefined
       expireIn: number
     } = await this.$serverApi.$post('/api/auth/refresh')
       .catch((err: Error) => {
@@ -119,8 +120,14 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer);
   },
 
-  logout({ commit, dispatch }) {
+  async logout({ commit, dispatch }) {
     dispatch('player/disconnectPlayer', undefined, { root: true });
+    // セッションを削除
+    await this.$serverApi.$post('/api/auth/logout')
+      .catch((err: Error) => {
+        console.error({ err });
+      });
+
     commit('SET_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);
   },
