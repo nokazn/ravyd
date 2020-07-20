@@ -88,7 +88,10 @@ const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
 
 export type On = {
-  [ON_ITEM_CLICKED]: string
+  [ON_ITEM_CLICKED]: {
+    index: number
+    uri: string
+  }
   [ON_LINK_CLICKED]: void
 }
 
@@ -110,6 +113,10 @@ export default Vue.extend({
     },
     id: {
       type: String,
+      required: true,
+    },
+    index: {
+      type: Number,
       required: true,
     },
     name: {
@@ -150,7 +157,10 @@ export default Vue.extend({
 
   methods: {
     onItemClicked() {
-      this.$emit(ON_ITEM_CLICKED, this.uri);
+      this.$emit(ON_ITEM_CLICKED, {
+        index: this.index,
+        uri: this.uri,
+      });
     },
     onLinkClicked() {
       this.$emit(ON_LINK_CLICKED);
