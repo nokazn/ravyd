@@ -3,7 +3,7 @@ import { SpotifyAPI } from '~~/types';
 
 export const getAccessToken = (
   code: string,
-): Promise<SpotifyAPI.Auth.Token> | null => {
+): Promise<SpotifyAPI.Auth.Token> | undefined => {
   const redirectUrl = process.env.BASE_URL;
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -16,7 +16,7 @@ export const getAccessToken = (
         clientSecret,
       }, undefined, 2),
     );
-    return null;
+    return undefined;
   }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
@@ -40,6 +40,6 @@ export const getAccessToken = (
     .then((res) => res.data)
     .catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 };
