@@ -3,7 +3,7 @@ import { SpotifyAPI } from '~~/types';
 
 export const getAccessToken = (
   code: string,
-): Promise<SpotifyAPI.Auth.TokenResponseData> | null => {
+): Promise<SpotifyAPI.Auth.Token> | null => {
   const redirectUrl = process.env.BASE_URL;
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -14,13 +14,13 @@ export const getAccessToken = (
         redirectUrl,
         clientId,
         clientSecret,
-      }, null, 2),
+      }, undefined, 2),
     );
     return null;
   }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
-  const params: SpotifyAPI.Auth.TokenRequestBody = {
+  const params: SpotifyAPI.Auth.GetToken.Params = {
     grant_type: 'authorization_code',
     code,
     // validation のためのもので実際にレダイレクトされるわけではない

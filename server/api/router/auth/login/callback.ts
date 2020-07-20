@@ -1,24 +1,27 @@
 import { Request, Response } from 'express';
 
 import { getAccessToken } from '../../../../auth/getAccessToken';
-import redisClient from '../../../../../db/redis';
 import { TOKEN_EXPIRE_IN } from '../../index';
+import { ServerAPI } from '~~/types';
 
 type RequestParams = {
   code: string
 }
 
-type ResponseBody = {
-  accessToken: string
-  expireIn: number
-} | {
-  message: string
-}
+type ResponseBody = ServerAPI.Auth.Token
 
 export const callback = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
-  const { code }: { code?: string } = req.body;
+  if (req.session == null) {
+    return res.status(401).send({
+      accessToken: undefined,
+      expireIn: 0,
+      message: 'トークンを更新できませんでした。',
+    });
+  }
 
-  if (typeof code !== 'string') {
+  const { code }: { code: string | undefined} = req.body;
+
+  if (code == null) {
     const { error }: { error?: string } = req.query;
     console.error(
       'code が取得できませんでした。',
@@ -26,22 +29,33 @@ export const callback = async (req: Request<RequestParams>, res: Response<Respon
         params: req.params,
         body: req.body,
         code,
-      }, null, 2),
+      }, undefined, 2),
     );
 
-    return res.status(400).send({ message: error ?? '認証時にエラーが発生しました。' });
+    return res.status(400).send({
+      accessToken: undefined,
+      expireIn: 0,
+      message: error ?? '認証時にエラーが発生しました。',
+    });
   }
 
   // code と token を交換する
   const token = await getAccessToken(code);
   if (token == null) {
-    return res.status(400).send({ message: '認証時にエラーが発生しました。' });
+    return res.status(400).send({
+      accessToken: undefined,
+      expireIn: 0,
+      message: '認証時にエラーが発生しました。',
+    });
   }
 
-  redisClient.set(req.sessionID!, JSON.stringify(token));
+  req.session.token = {
+    ...req.session.token,
+    ...token,
+  };
 
   return res.send({
-    accessToken: token?.access_token,
+    accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
   });
 };

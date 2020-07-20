@@ -2,7 +2,7 @@ import { Actions } from 'vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
 import { AuthMutations } from './mutations';
-import { SpotifyAPI } from '~~/types';
+import { ServerAPI } from '~~/types';
 
 export type AuthActions = {
   login: () => Promise<void>
@@ -24,12 +24,11 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
-    const data: SpotifyAPI.Auth.AuthorizationResponse = await this.$serverApi.$post(
-      '/api/auth/login',
-    ).catch((err: Error) => {
-      console.error({ err });
-      return {};
-    });
+    const data: ServerAPI.Auth.Login = await this.$serverApi.$post('/api/auth/login')
+      .catch((err: Error) => {
+        console.error({ err });
+        return {};
+      });
 
     if (data.accessToken != null && data.expireIn != null) {
       commit('SET_TOKEN', data.accessToken);
@@ -45,13 +44,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     console.error('トークン取得時にエラーが発生しました。');
+    this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
   },
 
   async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const { accessToken, expireIn }: {
-      accessToken?: string
-      expireIn?: number
-    } = await this.$serverApi.$post('/api/auth/login/callback', { code })
+    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/login/callback', { code })
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -62,10 +59,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async getAccessToken({ commit }) {
-    const { accessToken, expireIn }: {
-      accessToken?: string
-      expireIn: number
-    } = await this.$serverApi.$get('/api/auth')
+    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth')
       .catch((err) => {
         console.error({ err });
         return {};
@@ -89,10 +83,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
     commit('SET_EXPIRE_MILLIS', undefined);
 
-    const { accessToken, expireIn }: {
-      accessToken?: string
-      expireIn: number
-    } = await this.$serverApi.$post('/api/auth/refresh')
+    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/refresh')
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -119,8 +110,14 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer);
   },
 
-  logout({ commit, dispatch }) {
+  async logout({ commit, dispatch }) {
     dispatch('player/disconnectPlayer', undefined, { root: true });
+    // セッションを削除
+    await this.$serverApi.$post('/api/auth/logout')
+      .catch((err: Error) => {
+        console.error({ err });
+      });
+
     commit('SET_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);
   },

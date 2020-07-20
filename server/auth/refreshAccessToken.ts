@@ -2,8 +2,10 @@ import axios from 'axios';
 import { SpotifyAPI } from '~~/types';
 
 export const refreshAccessToken = (
-  refresh_token: string,
-): Promise<SpotifyAPI.Auth.TokenResponseData> | null => {
+  refresh_token: string | undefined,
+): Promise<SpotifyAPI.Auth.Token> | undefined => {
+  if (refresh_token == null) return undefined;
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   if (clientId == null || clientSecret == null) {
@@ -12,13 +14,13 @@ export const refreshAccessToken = (
       JSON.stringify({
         clientId,
         clientSecret,
-      }, null, 2),
+      }, undefined, 2),
     );
-    return null;
+    return undefined;
   }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
-  const params: SpotifyAPI.Auth.RefreshTokenRequestParams = {
+  const params: SpotifyAPI.Auth.RefreshToken.Params = {
     grant_type: 'refresh_token',
     refresh_token,
   };
@@ -36,6 +38,6 @@ export const refreshAccessToken = (
     .then((res) => res.data)
     .catch((err: Error) => {
       console.error({ err });
-      return null;
+      return undefined;
     });
 };
