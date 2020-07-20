@@ -28,7 +28,7 @@ export namespace SpotifyAPI {
     }
   }
 
-  export type SimpleAlbum = {
+  type SimpleAlbum = {
     // artist の album を取得すると├に含まれる値
     album_group?: 'album' | 'single' | 'compilation' | 'appears_on'
     album_type: 'album' | 'single' | 'compilation'
@@ -46,7 +46,7 @@ export namespace SpotifyAPI {
     type: 'album'
     uri: string
   }
-  export type Album = {
+  type Album = {
     external_ids: ExternalId
     genres: string[]
     label: string
@@ -55,7 +55,7 @@ export namespace SpotifyAPI {
     total_tracks: number
   } & Omit<SimpleAlbum, 'album_group'>
 
-  export type SimpleArtist = {
+  type SimpleArtist = {
     external_urls: ExternalUrls
     href: string
     id: string
@@ -63,7 +63,7 @@ export namespace SpotifyAPI {
     type: 'artist'
     uri: string
   }
-  export type Artist = {
+  type Artist = {
     followers: Followers
     genres: string[]
     images: Image[]
@@ -76,14 +76,14 @@ export namespace SpotifyAPI {
     type TopTracks = Paging<Track>
   }
 
-  export type Category = {
+  type Category = {
     href: string
     icons: Image[]
     id: string
     name: string
   }
 
-  export type Context = {
+  type Context = {
     // @todo
     type: 'artist' | 'playlist' | 'album' | 'track' | 'episode'| string
     href: string
@@ -91,12 +91,12 @@ export namespace SpotifyAPI {
     uri: string
   }
 
-  export type Copyright = {
+  type Copyright = {
     text: string
     type: 'C' | 'P'
   }
 
-  export type Device = {
+  type Device = {
     id: string | null
     is_active: boolean
     is_private_session: boolean
@@ -106,7 +106,7 @@ export namespace SpotifyAPI {
     volume_percent: number
   }
 
-  export type Disallows = {
+  type Disallows = {
     interrupting_playback?: boolean
     pausing?: boolean
     resuming?: boolean
@@ -119,7 +119,7 @@ export namespace SpotifyAPI {
     transferring_playback?: boolean
   }
 
-  export type SimpleEpisode = {
+  type SimpleEpisode = {
     audio_preview_url: string | null
     description: string
     duration_ms: number
@@ -139,12 +139,12 @@ export namespace SpotifyAPI {
     type: 'episode'
     uri: string
   }
-  export type Episode = SimpleEpisode & {
+  type Episode = SimpleEpisode & {
     show: SimpleShow
   }
 
   // @todo
-  export type ExternalId = Merge<{
+  type ExternalId = Merge<{
     isrc?: string
     ean?: string
     upc?: string
@@ -153,24 +153,24 @@ export namespace SpotifyAPI {
   }>
 
   // @todo
-  export type ExternalUrls = {
+  type ExternalUrls = {
     spotify?: string
   } & {
     [k: string]: string
   }
 
-  export type Followers = {
+  type Followers = {
     href: string | null
     total: number | null
   }
 
-  export type Image = {
+  type Image = {
     height?: number | null
     url: string
     width?: number | null
   }
 
-  export type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
+  type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
     added_at: string // timestamp
   } & {
     [k in T]: T extends 'album'
@@ -180,7 +180,7 @@ export namespace SpotifyAPI {
       : Track
   }>
 
-  export type LinkedTrack = {
+  type LinkedTrack = {
     external_urls: ExternalUrls
     href: string
     id: string
@@ -188,9 +188,9 @@ export namespace SpotifyAPI {
     uri: string
   }
 
-  export type Country = 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
+  type Country = 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
 
-  export type Paging<I> = {
+  type Paging<I> = {
     href: string
     items: I[]
     limit: number
@@ -200,12 +200,12 @@ export namespace SpotifyAPI {
     total: number
   }
 
-  export type Cursor = {
+  type Cursor = {
     after: string
     before?: string
   }
 
-  export type CursorPaging<I> = {
+  type CursorPaging<I> = {
     cursor: Cursor
     href: string
     items: I[]
@@ -243,7 +243,7 @@ export namespace SpotifyAPI {
     }
   }
 
-  export type SimplePlaylist = {
+  type SimplePlaylist = {
     collaborative: boolean
     description: string | null
     external_urls: ExternalUrls
@@ -261,17 +261,17 @@ export namespace SpotifyAPI {
     type: 'playlist'
     uri: string
   }
-  export type Playlist = SimplePlaylist & {
+  type Playlist = SimplePlaylist & {
     followers: Followers
     tracks: Paging<PlaylistTrack>
   }
-  export type PlaylistTrack = {
+  type PlaylistTrack = {
     added_at: string // timestamp
     added_by: UserData
     is_local: boolean
     track: Track | null
   }
-  export type PlaylistSnapshot = {
+  type PlaylistSnapshot = {
     snapshot_id: string
   }
 
@@ -292,25 +292,25 @@ export namespace SpotifyAPI {
     shows?: Paging<SimpleShow>
     episodes?: Paging<SimpleEpisode | null>
   }
-  export type SearchType = keyof SearchTypes
+  type SearchType = keyof SearchTypes
   // キーが T のものを抜き出す
-  export type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
+  type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
     SearchResultBase, SearchTypes[T]
   >>
 
-  export type RepeatState = 'off' | 'track' | 'context'
+  type RepeatState = 'off' | 'track' | 'context'
 
-  export type Restriction = {
+  type Restriction = {
     reason: string
     [k: string]: string
   }
 
-  export type ResumePoint = {
+  type ResumePoint = {
     fully_played: boolean
     resume_position_ms: number
   }
 
-  export type SimpleShow = {
+  type SimpleShow = {
     available_markets: string[]
     copyrights: Copyright[]
     description: string
@@ -327,11 +327,11 @@ export namespace SpotifyAPI {
     type: string
     uri: string
   }
-  export type Show = SimpleShow & {
+  type Show = SimpleShow & {
     episodes: Paging<SimpleEpisode>
   }
 
-  export type SimpleTrack = {
+  type SimpleTrack = {
     artists: SimpleArtist[]
     available_markets: Country[]
     disc_number: number
@@ -350,13 +350,13 @@ export namespace SpotifyAPI {
     uri: string
     is_local: boolean
   }
-  export type Track = SimpleTrack & {
+  type Track = SimpleTrack & {
     album: SimpleAlbum
     external_ids: ExternalId
     popularity: string
   }
 
-  export type UserData = {
+  type UserData = {
     country: Country
     display_name: string | null
     email: string
