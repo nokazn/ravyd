@@ -48,7 +48,7 @@ export const auth = async (req: Request<RequestParams>, res: Response<ResponseBo
   }
 
   req.session.token = {
-    ...req.session.token,
+    ...currentToken,
     ...token,
   };
 

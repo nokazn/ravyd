@@ -53,7 +53,7 @@ export const refresh = async (req: Request<RequestParams>, res: Response<Respons
     }
 
     req.session.token = {
-      ...req.session.token,
+      ...currentToken,
       ...token,
     };
 
