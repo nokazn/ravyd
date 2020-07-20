@@ -12,9 +12,9 @@ export const logout = (req: Request<RequestParams>, res: Response<ResponseBody>)
   return req.session.destroy((err: Error) => {
     if (err != null) {
       console.error({ err });
-      return res.send(400);
+      return res.status(400).send();
     }
 
-    return res.status(204);
+    return res.status(204).send();
   });
 };

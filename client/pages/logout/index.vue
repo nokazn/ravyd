@@ -6,8 +6,8 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  fetch({ app, redirect }) {
-    app.$dispatch('auth/logout');
+  async fetch({ app, redirect }) {
+    await app.$dispatch('auth/logout');
     redirect('/login');
   },
 });
