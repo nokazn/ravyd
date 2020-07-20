@@ -4,17 +4,11 @@ import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
 import { generateRandomString } from '../../../../../utils/generateRandomString';
 import { TOKEN_EXPIRE_IN } from '../../index';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type RequestParams = {}
 
-type ResponseBody = {
-  accessToken: string | undefined
-  expireIn: number
-  message?: string
-} | {
-  url: string
-}
+type ResponseBody = ServerAPI.Auth.Login
 
 export const login = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
   if (req.session == null) {

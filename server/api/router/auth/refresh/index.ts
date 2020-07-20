@@ -2,15 +2,11 @@ import { Request, Response } from 'express';
 
 import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type RequestParams = {}
 
-type ResponseBody = {
-  accessToken: string | undefined
-  expireIn: number
-  message?: string
-}
+type ResponseBody = ServerAPI.Auth.Token
 
 export const refresh = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
   if (req.session == null) {

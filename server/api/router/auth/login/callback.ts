@@ -2,16 +2,13 @@ import { Request, Response } from 'express';
 
 import { getAccessToken } from '../../../../auth/getAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
+import { ServerAPI } from '~~/types';
 
 type RequestParams = {
   code: string
 }
 
-type ResponseBody = {
-  accessToken: string | undefined
-  expireIn: number
-  message?: string
-}
+type ResponseBody = ServerAPI.Auth.Token
 
 export const callback = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
   if (req.session == null) {
