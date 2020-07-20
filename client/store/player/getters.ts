@@ -64,6 +64,7 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
     const currentTrack = {
       isSet: true,
       isPlaying: state.isPlaying,
+      index: 0,
       id: state.trackId,
       name: state.trackName!,
       uri: state.trackUri!,
@@ -73,10 +74,24 @@ const playerGetters: Getters<PlayerState, PlayerGetters> = {
       artworkList: state.artworkList ?? [],
       durationMs: state.durationMs,
     };
+
+    const prevLength = Math.min(state.previousTrackList.length, 2);
+    // 前後2曲まで含める
     const previousTrackList = state.previousTrackList
-      .map(convertTrackForQueue(false, false));
+      .slice(0, 2)
+      .map(convertTrackForQueue({
+        isSet: false,
+        isPlaying: false,
+        offset: -1 * prevLength,
+      }));
+
     const nextTrackList = state.nextTrackList
-      .map(convertTrackForQueue(false, false));
+      .slice(0, 2)
+      .map(convertTrackForQueue({
+        isSet: false,
+        isPlaying: false,
+        offset: 1,
+      }));
 
     return [
       ...previousTrackList,

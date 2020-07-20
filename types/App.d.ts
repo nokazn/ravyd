@@ -39,6 +39,7 @@ export namespace App {
   export type TrackQueueInfo = {
     isSet: boolean
     isPlaying: boolean
+    index: number
     id: string | undefined
     name: string
     uri: string

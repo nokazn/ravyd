@@ -106,28 +106,39 @@ export default Vue.extend({
   },
 
   methods: {
-    onItemClicked(uri: OnItem['on-item-clicked']) {
-      const { contextUri, customTrackUriList } = this.$state().player;
+    async onItemClicked({ index }: OnItem['on-item-clicked']) {
+      const isNext = index > 0;
+      const counts = Math.abs(index);
+
+      // @todo #174 次に再生に追加した曲が再生できないのに対処するため
+      for (let i = 0; i < counts; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.$dispatch(isNext
+          ? 'player/next'
+          : 'player/previous');
+      }
+
+      // const { contextUri, customTrackUriList } = this.$state().player;
 
       // album と playlist は contextUri + offset で操作できる
-      if (contextUri != null && /album|playlist/.test(contextUri)) {
-        // @todo #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-        this.$dispatch('player/play', {
-          contextUri,
-          offset: customTrackUriList != null && contextUri.includes('playlist')
-            ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === uri) }
-            : { uri },
-        });
-      } else {
-        // playback-sdk から提供される contextUri が不適当かどうかで場合分け
-        const trackUriList = contextUri == null && customTrackUriList != null
-          ? customTrackUriList
-          : this.trackQueue.map((track) => track.uri);
-        this.$dispatch('player/play', {
-          trackUriList,
-          offset: { uri },
-        });
-      }
+      // if (contextUri != null && /album|playlist/.test(contextUri)) {
+      //   // @todo #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
+      //   this.$dispatch('player/play', {
+      //     contextUri,
+      //     offset: customTrackUriList != null && contextUri.includes('playlist')
+      //       ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === uri) }
+      //       : { uri },
+      //   });
+      // } else {
+      //   // playback-sdk から提供される contextUri が不適当かどうかで場合分け
+      //   const trackUriList = contextUri == null && customTrackUriList != null
+      //     ? customTrackUriList
+      //     : this.trackQueue.map((track) => track.uri);
+      //   this.$dispatch('player/play', {
+      //     trackUriList,
+      //     offset: { uri },
+      //   });
+      // }
     },
     toggleMenu() {
       this.isShown = !this.isShown;

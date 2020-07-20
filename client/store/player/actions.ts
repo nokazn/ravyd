@@ -42,8 +42,8 @@ export type PlayerActions = {
     positionMs: number
     currentPositionMs?: number
   }) => Promise<void>
-  next: () => void
-  previous: () => void
+  next: () => Promise<void>
+  previous: () => Promise<void>
   shuffle: () => Promise<void>
   repeat: () => Promise<void>
   volume: ({ volumePercent }: { volumePercent: ZeroToHundred }) => Promise<void>
