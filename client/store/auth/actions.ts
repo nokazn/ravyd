@@ -95,6 +95,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     if (accessToken == null) {
       dispatch('logout');
+      this.$router.push('/login');
+      this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
       return;
     }
 

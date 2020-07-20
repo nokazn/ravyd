@@ -23,12 +23,14 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
     app.$dispatch('auth/refreshAccessToken');
   });
 
-  spotifyApi.onResponseError((err) => {
+  spotifyApi.onResponseError(async (err) => {
     console.error({ err });
     if (err.response?.status === 401) {
-      app.$dispatch('auth/refreshAccessToken');
+      await app.$dispatch('auth/refreshAccessToken');
       if (!app.$getters()['auth/isLoggedin']) {
-        app.$dispatch('auth/logout');
+        await app.$dispatch('auth/logout');
+        app.$router.push('/login');
+        app.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
       }
     }
   });
