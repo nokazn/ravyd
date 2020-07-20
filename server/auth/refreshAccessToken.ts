@@ -3,7 +3,7 @@ import { SpotifyAPI } from '~~/types';
 
 export const refreshAccessToken = (
   refresh_token: string | undefined,
-): Promise<SpotifyAPI.Auth.TokenResponseData> | undefined => {
+): Promise<SpotifyAPI.Auth.Token> | undefined => {
   if (refresh_token == null) return undefined;
 
   const clientId = process.env.SPOTIFY_CLIENT_ID;
@@ -20,7 +20,7 @@ export const refreshAccessToken = (
   }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
-  const params: SpotifyAPI.Auth.RefreshTokenRequestParams = {
+  const params: SpotifyAPI.Auth.RefreshToken.Params = {
     grant_type: 'refresh_token',
     refresh_token,
   };

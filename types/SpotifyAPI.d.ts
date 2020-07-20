@@ -2,41 +2,29 @@ import { Merge } from '~~/types/utility-types';
 
 export namespace SpotifyAPI {
   export namespace Auth {
-    type AuthorizationResponse = {
-      accessToken: string
-      expireIn: number
-      message?: string
-      url?: undefined
-    } | {
-      accessToken?: undefined
-      expireIn?: undefined
-      url: string
+    type Token = {
+      access_token: string
+      token_type: string
+      scope: string
+      expires_in: number
+      refresh_token?: string
     }
-    type CodeRequestBody = {
-      client_id: string;
-      response_type: 'code';
-      redirect_uri: string;
-      state?: string;
-      scope: string;
-      show_dialog?: string;
+
+    export namespace GetToken {
+      type Params = {
+        grant_type: 'authorization_code'
+        code: string
+        redirect_uri: string
+        client_id?: string
+        client_secret?: string
+      }
     }
-    type TokenRequestBody = {
-      grant_type: 'authorization_code';
-      code: string;
-      redirect_uri: string;
-      client_id?: string;
-      client_secret?: string;
-    }
-    type RefreshTokenRequestParams = {
-      grant_type: 'refresh_token'
-      refresh_token: string
-    }
-    type TokenResponseData = {
-      access_token: string;
-      token_type: string;
-      scope: string;
-      expires_in: number;
-      refresh_token?: string;
+
+    export namespace RefreshToken {
+      type Params = {
+        grant_type: 'refresh_token'
+        refresh_token: string
+      }
     }
   }
 
@@ -295,7 +283,7 @@ export namespace SpotifyAPI {
     playlist: 'playlists',
     show: 'shows',
     episode: 'episodes',
-  };
+  }
   type SearchResultBase = {
     albums?: Paging<SimpleAlbum>
     artists?: Paging<Artist>
