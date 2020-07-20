@@ -10,6 +10,8 @@ type ResponseBody = ServerAPI.Auth.Token
 
 export const refresh = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
   if (req.session == null) {
+    console.error(JSON.stringify(req.session, undefined, 2));
+
     return res.status(401).send({
       accessToken: undefined,
       expireIn: 0,
@@ -17,8 +19,13 @@ export const refresh = async (req: Request<RequestParams>, res: Response<Respons
     });
   }
 
-  const currentToken: SpotifyAPI.Auth.TokenResponseData | undefined = req.session.token;
+  const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   if (currentToken?.refresh_token == null) {
+    console.error(JSON.stringify({
+      session: req.session,
+      currentToken,
+    }, undefined, 2));
+
     return res.status(400).send({
       accessToken: undefined,
       expireIn: 0,
@@ -28,6 +35,12 @@ export const refresh = async (req: Request<RequestParams>, res: Response<Respons
 
   const token = await refreshAccessToken(currentToken.refresh_token);
   if (token == null) {
+    console.error(JSON.stringify({
+      session: req.session,
+      currentToken,
+      token,
+    }, undefined, 2));
+
     return res.status(400).send({
       accessToken: undefined,
       expireIn: 0,
@@ -41,6 +54,12 @@ export const refresh = async (req: Request<RequestParams>, res: Response<Respons
     }
 
     if (req.session == null) {
+      console.error(JSON.stringify({
+        session: req.session,
+        currentToken,
+        token,
+      }, undefined, 2));
+
       return res.status(401).send({
         accessToken: undefined,
         expireIn: 0,
