@@ -4,7 +4,7 @@ import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type AuthMutations = {
-  SET_TOKEN: SpotifyAPI.Auth.TokenResponseData['access_token'] | undefined,
+  SET_TOKEN: SpotifyAPI.Auth.Token['access_token'] | undefined,
   SET_EXPIRE_MILLIS: number | undefined
   CLEAR_REFRESH_TOKEN_TIMER: void
   SET_REFRESH_TOKEN_TIMER_ID: ReturnType<typeof setTimeout> | undefined
