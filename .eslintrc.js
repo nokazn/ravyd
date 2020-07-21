@@ -54,7 +54,7 @@ module.exports = {
     // typescript-eslint の no-unuserd-vars を有効にする
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': 2,
-    'camelcase': 0,
+    camelcase: 0,
     'lines-between-class-members': 0,
   },
   parserOptions: {
