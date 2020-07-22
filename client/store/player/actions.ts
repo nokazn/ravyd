@@ -373,6 +373,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const market = this.$getters()['auth/userCountryCode'];
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
+      // 再生中のアイテムの情報が存在し、現在の再生状況を取得できなかった場合
+      const retryTimeout = (!currentPlayback || currentPlayback?.item == null)
+        && this.$state().player.trackId != null
+        ? 1000
+        : undefined;
+
       if (!currentPlayback) {
         const previousActiveDeviceId = this.$getters()['player/activeDevice'];
         // 再生状況が取得できない場合はこのデバイスで再生
@@ -385,7 +391,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
         }
 
-        setTimer(handler);
+        setTimer(handler, retryTimeout);
         return;
       }
 
@@ -414,7 +420,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           });
       }
 
-      setTimer(handler);
+      setTimer(handler, retryTimeout);
     };
 
     setTimer(handler, timeout);
