@@ -31,7 +31,7 @@ export default Vue.extend({
 
   computed: {
     repeatButton(): RepeatButton {
-      switch (this.$state().player.repeatMode) {
+      switch (this.$state().playback.repeatMode) {
         case 1:
           return {
             icon: 'mdi-repeat',
@@ -53,14 +53,14 @@ export default Vue.extend({
       }
     },
     disabled(): boolean {
-      return this.$getters()['player/isDisallowed']('toggling_repeat_context')
-        || this.$getters()['player/isDisallowed']('toggling_repeat_track');
+      return this.$getters()['playback/isDisallowed']('toggling_repeat_context')
+        || this.$getters()['playback/isDisallowed']('toggling_repeat_track');
     },
   },
 
   methods: {
     onClicked() {
-      this.$dispatch('player/repeat');
+      this.$dispatch('playback/repeat');
     },
   },
 });

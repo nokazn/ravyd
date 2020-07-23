@@ -95,14 +95,14 @@ export default Vue.extend({
 
   computed: {
     deviceButtonColor(): string | undefined {
-      return this.$getters()['player/isThisAppPlaying']
+      return this.$getters()['playback/isThisAppPlaying']
         ? 'active-icon'
         : undefined;
     },
     deviceItemList(): DeviceInfo[] {
       // @todo any[] で推論されてしまう
-      const deviceList = this.$state().player.deviceList as SpotifyAPI.Device[];
-      const disabled = this.$getters()['player/isDisallowed']('transferring_playback');
+      const deviceList = this.$state().playback.deviceList as SpotifyAPI.Device[];
+      const disabled = this.$getters()['playback/isDisallowed']('transferring_playback');
 
       return deviceList.map((device) => ({
         id: device.id ?? undefined,
@@ -121,12 +121,12 @@ export default Vue.extend({
     },
     async onUpdateButtonClicked() {
       this.isRefreshingDeviceList = true;
-      await this.$dispatch('player/getActiveDeviceList');
+      await this.$dispatch('playback/getActiveDeviceList');
       this.isRefreshingDeviceList = false;
     },
     onItemClicked(deviceId: OnItem['on-clicked']) {
       if (deviceId != null) {
-        this.$dispatch('player/transferPlayback', { deviceId });
+        this.$dispatch('playback/transferPlayback', { deviceId });
       } else {
         this.$toast.show('error', 'デバイスを変更できません。');
       }

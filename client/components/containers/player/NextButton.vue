@@ -25,13 +25,13 @@ export default Vue.extend({
 
   computed: {
     disabled(): boolean {
-      return this.$getters()['player/isDisallowed']('skipping_next');
+      return this.$getters()['playback/isDisallowed']('skipping_next');
     },
   },
 
   methods: {
     onClicked() {
-      this.$dispatch('player/next');
+      this.$dispatch('playback/next');
     },
   },
 });

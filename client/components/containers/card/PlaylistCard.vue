@@ -123,10 +123,10 @@ export default Vue.extend({
       return getImageSrc(this.artworkList, this.maxWidth ?? this.width);
     },
     isPlaylistSet(): boolean {
-      return this.$getters()['player/isContextSet'](this.uri);
+      return this.$getters()['playback/isContextSet'](this.uri);
     },
-    isPlaying(): RootState['player']['isPlaying'] {
-      return this.$state().player.isPlaying;
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
 
     mediaIcon(): MediaIcon {
@@ -144,13 +144,13 @@ export default Vue.extend({
     onMediaButtonClicked() {
       // 現在再生中のプレイリストの場合
       if (this.isPlaying && this.isPlaylistSet) {
-        this.$dispatch('player/pause');
+        this.$dispatch('playback/pause');
       } else {
         // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
         const params = this.isPlaylistSet
           ? undefined
           : { contextUri: this.uri };
-        this.$dispatch('player/play', params);
+        this.$dispatch('playback/play', params);
       }
     },
   },

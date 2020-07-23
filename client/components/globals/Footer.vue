@@ -114,26 +114,26 @@ export default Vue.extend({
   },
 
   computed: {
-    hasTrack(): RootGetters['player/hasTrack'] {
-      return this.$getters()['player/hasTrack'];
+    hasTrack(): RootGetters['playback/hasTrack'] {
+      return this.$getters()['playback/hasTrack'];
     },
     artWorkSrc(): (size: number) => string | undefined {
-      return (size: number) => this.$getters()['player/artworkSrc'](size);
+      return (size: number) => this.$getters()['playback/artworkSrc'](size);
     },
     trackName(): string {
-      return this.$state().player.trackName ?? '';
+      return this.$state().playback.trackName ?? '';
     },
-    trackId(): RootState['player']['trackId'] {
-      return this.$state().player.trackId;
+    trackId(): RootState['playback']['trackId'] {
+      return this.$state().playback.trackId;
     },
-    releaseId(): RootGetters['player/releaseId'] {
-      return this.$getters()['player/releaseId'];
+    releaseId(): RootGetters['playback/releaseId'] {
+      return this.$getters()['playback/releaseId'];
     },
-    artistList(): RootState['player']['artistList'] {
-      return this.$state().player.artistList;
+    artistList(): RootState['playback']['artistList'] {
+      return this.$state().playback.artistList;
     },
-    isSavedTrack(): RootState['player']['isSavedTrack'] {
-      return this.$state().player.isSavedTrack;
+    isSavedTrack(): RootState['playback']['isSavedTrack'] {
+      return this.$state().playback.isSavedTrack;
     },
   },
 
@@ -147,7 +147,7 @@ export default Vue.extend({
       if (this.trackId == null) return;
 
       // API との通信の結果を待たずに先に表示を変更させておく
-      this.$commit('player/SET_IS_SAVED_TRACK', isSaved);
+      this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
       if (isSaved) {
         this.$dispatch('library/tracks/saveTracks', [this.trackId]);
       } else {

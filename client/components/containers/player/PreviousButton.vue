@@ -35,14 +35,14 @@ export default Vue.extend({
   },
 
   computed: {
-    position(): RootState['player']['positionMs'] {
-      return this.$state().player.positionMs;
+    position(): RootState['playback']['positionMs'] {
+      return this.$state().playback.positionMs;
     },
-    disabledPlayingFromBegining(): RootState['player']['disabledPlayingFromBegining'] {
-      return this.$state().player.disabledPlayingFromBegining;
+    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
+      return this.$state().playback.disabledPlayingFromBegining;
     },
     disabledSkippingPrev(): boolean {
-      return this.$getters()['player/isDisallowed']('skipping_prev');
+      return this.$getters()['playback/isDisallowed']('skipping_prev');
     },
   },
 
@@ -50,7 +50,7 @@ export default Vue.extend({
     onPreivousClicked() {
       // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
       if (this.firstClicked) {
-        this.$dispatch('player/previous');
+        this.$dispatch('playback/previous');
       } else {
         this.firstClicked = true;
         const interval = 1000;
@@ -58,7 +58,7 @@ export default Vue.extend({
           this.firstClicked = false;
         }, interval);
 
-        this.$dispatch('player/seek', { positionMs: 0 });
+        this.$dispatch('playback/seek', { positionMs: 0 });
       }
     },
   },

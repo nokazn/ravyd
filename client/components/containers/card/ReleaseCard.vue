@@ -193,11 +193,11 @@ export default Vue.extend({
     },
     isReleaseSet(): boolean {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
-      return (this.type === 'track' && this.$getters()['player/isTrackSet'](this.id))
-        || (this.type === 'album' && this.$getters()['player/isContextSet'](this.uri));
+      return (this.type === 'track' && this.$getters()['playback/isTrackSet'](this.id))
+        || (this.type === 'album' && this.$getters()['playback/isContextSet'](this.uri));
     },
-    isPlaying(): RootState['player']['isPlaying'] {
-      return this.$state().player.isPlaying;
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
     mediaIcon(): MediaIcon {
       return this.isPlaying && this.isReleaseSet
@@ -218,8 +218,8 @@ export default Vue.extend({
       // 現在再生中のトラック/アルバムの場合
       if (this.isReleaseSet) {
         this.$dispatch(this.isPlaying
-          ? 'player/pause'
-          : 'player/play');
+          ? 'playback/pause'
+          : 'playback/play');
 
         return;
       }
@@ -229,7 +229,7 @@ export default Vue.extend({
         ? { trackUriList: [this.uri] }
         : { contextUri: this.uri };
       // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-      this.$dispatch('player/play', params);
+      this.$dispatch('playback/play', params);
     },
   },
 });

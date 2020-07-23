@@ -64,25 +64,25 @@ export default Vue.extend({
       return Math.floor(((this.value ?? 0) / 1000) % 60).toString().padStart(2, '0');
     },
 
-    durationMs(): RootState['player']['durationMs'] {
-      return this.$state().player.durationMs;
+    durationMs(): RootState['playback']['durationMs'] {
+      return this.$state().playback.durationMs;
     },
     durationMss(): string {
       return mssTime(this.durationMs);
     },
 
     disabled(): boolean {
-      return this.$getters()['player/isDisallowed']('seeking');
+      return this.$getters()['playback/isDisallowed']('seeking');
     },
-    disabledPlayingFromBegining(): RootState['player']['disabledPlayingFromBegining'] {
-      return this.$state().player.disabledPlayingFromBegining;
+    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
+      return this.$state().playback.disabledPlayingFromBegining;
     },
 
     maxMs(): number {
       return this.durationMs || 1;
     },
-    isPlaying(): RootState['player']['isPlaying'] {
-      return this.$state().player.isPlaying;
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
     seekbarColor(): string {
       return this.isPlaying
@@ -107,14 +107,14 @@ export default Vue.extend({
       this.updatePosition();
     }
 
-    const subscribePositionMs = (mutationPayload: ExtendedMutationPayload<'player/SET_POSITION_MS'>) => {
+    const subscribePositionMs = (mutationPayload: ExtendedMutationPayload<'playback/SET_POSITION_MS'>) => {
       this.value = mutationPayload.payload;
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
-        case 'player/SET_POSITION_MS':
+        case 'playback/SET_POSITION_MS':
           subscribePositionMs(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
@@ -140,9 +140,9 @@ export default Vue.extend({
       this.value = this.debounceSetter(positionMs);
     },
     async onChange(positionMs: number) {
-      const currentPositionMs = this.$state().player.positionMs;
-      this.$commit('player/SET_POSITION_MS', positionMs);
-      await this.$dispatch('player/seek', { positionMs, currentPositionMs });
+      const currentPositionMs = this.$state().playback.positionMs;
+      this.$commit('playback/SET_POSITION_MS', positionMs);
+      await this.$dispatch('playback/seek', { positionMs, currentPositionMs });
 
       if (this.isPlaying) {
         this.updatePosition();
@@ -159,7 +159,7 @@ export default Vue.extend({
 
         const disabledPlayingFromBegining = this.value <= 1000;
         if (disabledPlayingFromBegining !== this.disabledPlayingFromBegining) {
-          this.$commit('player/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBegining);
+          this.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBegining);
         }
       }, intervalMs);
     },

@@ -23,7 +23,7 @@ export type ShuffleButton = {
 export default Vue.extend({
   computed: {
     shuffleButton(): ShuffleButton {
-      return this.$state().player.isShuffled
+      return this.$state().playback.isShuffled
         ? {
           color: 'active-icon',
           title: 'シャッフル再生しない',
@@ -34,13 +34,13 @@ export default Vue.extend({
         };
     },
     disabled(): boolean {
-      return this.$getters()['player/isDisallowed']('toggling_shuffle');
+      return this.$getters()['playback/isDisallowed']('toggling_shuffle');
     },
   },
 
   methods: {
     onClicked() {
-      this.$dispatch('player/shuffle');
+      this.$dispatch('playback/shuffle');
     },
   },
 });

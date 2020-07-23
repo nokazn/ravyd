@@ -155,11 +155,11 @@ export default Vue.extend({
     },
     isActiveContext(): (uri: string) => boolean {
       return (uri: string) => (uri != null
-        ? this.$getters()['player/contextUri'] === uri
+        ? this.$getters()['playback/contextUri'] === uri
         : false);
     },
-    isPlaying(): RootState['player']['isPlaying'] {
-      return this.$state().player.isPlaying;
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
     playlistGroup(): NavigationGroup {
       const items = this.listOfPlaylists?.map((playlist) => {

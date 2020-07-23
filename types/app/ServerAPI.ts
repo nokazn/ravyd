@@ -1,6 +1,6 @@
 export namespace ServerAPI {
   export namespace Auth {
-    type Token = {
+    export type Token = {
       accessToken: string | undefined
       expireIn: number
       message?: string

@@ -419,10 +419,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     return getImageSrc(this.playlistInfo?.artworkList, ARTWORK_SIZE);
   }
   get isPlaylistSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.playlistInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
   }
-  get isPlaying(): RootState['player']['isPlaying'] {
-    return this.$state().player.isPlaying;
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
   }
   get hasTracks(): boolean {
     return this.playlistTrackInfo != null
@@ -516,11 +516,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (this.playlistInfo == null) return;
 
     if (nextPlayingState) {
-      this.$dispatch('player/play', this.isPlaylistSet
+      this.$dispatch('playback/play', this.isPlaylistSet
         ? undefined
         : { contextUri: this.playlistInfo.uri });
     } else {
-      this.$dispatch('player/pause');
+      this.$dispatch('playback/pause');
     }
   }
 
