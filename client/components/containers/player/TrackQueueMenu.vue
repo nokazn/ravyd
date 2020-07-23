@@ -100,8 +100,8 @@ export default Vue.extend({
   },
 
   computed: {
-    trackQueue(): RootGetters['player/trackQueue'] {
-      return this.$getters()['player/trackQueue'];
+    trackQueue(): RootGetters['playback/trackQueue'] {
+      return this.$getters()['playback/trackQueue'];
     },
   },
 
@@ -114,8 +114,8 @@ export default Vue.extend({
       for (let i = 0; i < counts; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         await this.$dispatch(isNext
-          ? 'player/next'
-          : 'player/previous');
+          ? 'playback/next'
+          : 'playback/previous');
       }
 
       // const { contextUri, customTrackUriList } = this.$state().player;
@@ -123,7 +123,7 @@ export default Vue.extend({
       // album と playlist は contextUri + offset で操作できる
       // if (contextUri != null && /album|playlist/.test(contextUri)) {
       //   // @todo #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-      //   this.$dispatch('player/play', {
+      //   this.$dispatch('playback/play', {
       //     contextUri,
       //     offset: customTrackUriList != null && contextUri.includes('playlist')
       //       ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === uri) }
@@ -134,7 +134,7 @@ export default Vue.extend({
       //   const trackUriList = contextUri == null && customTrackUriList != null
       //     ? customTrackUriList
       //     : this.trackQueue.map((track) => track.uri);
-      //   this.$dispatch('player/play', {
+      //   this.$dispatch('playback/play', {
       //     trackUriList,
       //     offset: { uri },
       //   });

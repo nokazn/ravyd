@@ -156,11 +156,11 @@ export default Vue.extend({
 
   computed: {
     isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['player/isTrackSet'](trackId);
+      return (trackId: string) => this.$getters()['playback/isTrackSet'](trackId);
     },
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
-        && this.$state().player.isPlaying;
+        && this.$state().playback.isPlaying;
     },
   },
 
@@ -171,26 +171,26 @@ export default Vue.extend({
 
   methods: {
     setCustomContext(trackUriList: string[]) {
-      this.$dispatch('player/setCustomContext', {
+      this.$dispatch('playback/setCustomContext', {
         contextUri: this.uri,
         trackUriList,
       });
     },
     onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
-        this.$dispatch('player/pause');
+        this.$dispatch('playback/pause');
         return;
       }
 
       if (this.isTrackSet(id)) {
-        this.$dispatch('player/play');
+        this.$dispatch('playback/play');
         return;
       }
 
       // trackUriList は更新されうる
       const trackUriList = this.trackList.map((track) => track.uri);
       // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-      this.$dispatch('player/play', !this.custom && this.uri != null
+      this.$dispatch('playback/play', !this.custom && this.uri != null
         ? {
           contextUri: this.uri,
           offset: { position: index },

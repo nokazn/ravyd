@@ -75,8 +75,8 @@ export default Vue.extend({
   },
 
   computed: {
-    isMuted(): RootState['player']['isMuted'] {
-      return this.$state().player.isMuted;
+    isMuted(): RootState['playback']['isMuted'] {
+      return this.$state().playback.isMuted;
     },
     volumeButtonTitle(): string {
       return this.isMuted
@@ -91,12 +91,12 @@ export default Vue.extend({
   },
 
   mounted() {
-    const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'player/SET_VOLUME_PERCENT'>) => {
+    const subscribeVolume = ({ payload: { volumePercent } }: ExtendedMutationPayload<'playback/SET_VOLUME_PERCENT'>) => {
       this.volumePercent = volumePercent;
       this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
-    const subscribeMuteState = ({ payload: isMuted }: ExtendedMutationPayload<'player/SET_IS_MUTED'>) => {
-      const { volumePercent } = this.$state().player;
+    const subscribeMuteState = ({ payload: isMuted }: ExtendedMutationPayload<'playback/SET_IS_MUTED'>) => {
+      const { volumePercent } = this.$state().playback;
       this.volumePercent = isMuted ? 0 : volumePercent;
       this.volumeButtonIcon = volumeButtonIcon(volumePercent, this.isMuted);
     };
@@ -104,11 +104,11 @@ export default Vue.extend({
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
-        case 'player/SET_VOLUME_PERCENT':
+        case 'playback/SET_VOLUME_PERCENT':
           subscribeVolume(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
-        case 'player/SET_IS_MUTED':
+        case 'playback/SET_IS_MUTED':
           subscribeMuteState(mutation as ExtendedMutationPayload<typeof type>);
           break;
 
@@ -130,10 +130,10 @@ export default Vue.extend({
       this.volumePercent = this.debounceSetter(volumePercent);
     },
     onChange(volumePercent: ZeroToHundred) {
-      this.$dispatch('player/volume', { volumePercent });
+      this.$dispatch('playback/volume', { volumePercent });
     },
     onVolumeButtonClicked() {
-      this.$dispatch('player/mute');
+      this.$dispatch('playback/mute');
     },
   },
 });

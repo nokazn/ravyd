@@ -189,7 +189,7 @@ const actions: Actions<
     }
 
     // プレイヤーを更新
-    dispatch('player/modifyTrackSavedState', { trackId, isSaved }, { root: true });
+    dispatch('playback/modifyTrackSavedState', { trackId, isSaved }, { root: true });
 
     // ライブラリ一覧に表示されてない曲を保存した場合
     if (isSaved && savedTrackIndex === -1) {

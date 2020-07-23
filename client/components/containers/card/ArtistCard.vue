@@ -113,11 +113,11 @@ export default Vue.extend({
     avatarSrc(): string | undefined {
       return getImageSrc(this.avatarList, this.maxWidth ?? this.width);
     },
-    isPlaying(): RootState['player']['isPlaying'] {
-      return this.$state().player.isPlaying;
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
     isArtistSet(): boolean {
-      return this.$getters()['player/isContextSet'](this.uri);
+      return this.$getters()['playback/isContextSet'](this.uri);
     },
 
     mediaIcon(): MediaIcon {
@@ -135,13 +135,13 @@ export default Vue.extend({
     onMediaButtonClicked() {
       // 現在再生中のトラック/アルバムの場合
       if (this.isPlaying && this.isArtistSet) {
-        this.$dispatch('player/pause');
+        this.$dispatch('playback/pause');
       } else {
         const params = this.isArtistSet
           ? undefined
           : { contextUri: this.uri };
         // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-        this.$dispatch('player/play', params);
+        this.$dispatch('playback/play', params);
       }
     },
   },

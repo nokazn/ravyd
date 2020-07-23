@@ -29,7 +29,7 @@ export default Vue.extend({
 
   computed: {
     mediaButton(): MediaButton {
-      return this.$state().player.isPlaying
+      return this.$state().playback.isPlaying
         ? {
           icon: 'mdi-pause-circle',
           title: '停止',
@@ -43,10 +43,10 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      if (this.$state().player.isPlaying) {
-        this.$dispatch('player/pause');
+      if (this.$state().playback.isPlaying) {
+        this.$dispatch('playback/pause');
       } else {
-        this.$dispatch('player/play');
+        this.$dispatch('playback/play');
       }
     },
   },

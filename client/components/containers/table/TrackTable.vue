@@ -123,11 +123,11 @@ export default Vue.extend({
 
   computed: {
     isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['player/isTrackSet'](trackId);
+      return (trackId: string) => this.$getters()['playback/isTrackSet'](trackId);
     },
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
-        && this.$state().player.isPlaying;
+        && this.$state().playback.isPlaying;
     },
     hasMultipleDiscs(): boolean {
       const discNumberList = Array.from(
@@ -149,9 +149,9 @@ export default Vue.extend({
   methods: {
     onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
-        this.$dispatch('player/pause');
+        this.$dispatch('playback/pause');
       } else {
-        this.$dispatch('player/play', {
+        this.$dispatch('playback/play', {
           contextUri: this.uri,
           offset: {
             uri: row.uri,

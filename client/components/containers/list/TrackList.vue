@@ -70,11 +70,11 @@ export default Vue.extend({
 
   computed: {
     isTrackSet(): (id: string) => boolean {
-      return (id: string) => this.$getters()['player/isTrackSet'](id);
+      return (id: string) => this.$getters()['playback/isTrackSet'](id);
     },
     isPlayingTrack(): (id: string) => boolean {
       return (id: string) => this.isTrackSet(id)
-        && this.$state().player.isPlaying;
+        && this.$state().playback.isPlaying;
     },
   },
 
@@ -82,14 +82,14 @@ export default Vue.extend({
     // id, uri は track のパラメータで、this.uri は context のパラメータ
     onMediaButtonClicked({ id, uri }: OnListItem['on-media-button-clicked']) {
       if (this.isPlayingTrack(id)) {
-        this.$dispatch('player/pause');
+        this.$dispatch('playback/pause');
       } else {
-        this.$dispatch('player/play', {
+        this.$dispatch('playback/play', {
           trackUriList: this.trackUriList,
           offset: { uri },
         });
         // アーティストの contextUri から直接再生はできない
-        this.$dispatch('player/setCustomContext', {
+        this.$dispatch('playback/setCustomContext', {
           contextUri: this.uri,
           trackUriList: this.trackUriList,
         });

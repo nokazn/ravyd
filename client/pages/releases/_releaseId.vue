@@ -302,10 +302,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
   }
   get isReleaseSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.releaseInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
   }
-  get isPlaying(): RootState['player']['isPlaying'] {
-    return this.$state().player.isPlaying;
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
   }
 
   async appendTrackList() {
@@ -358,11 +358,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
-      this.$dispatch('player/play', this.isReleaseSet
+      this.$dispatch('playback/play', this.isReleaseSet
         ? undefined
         : { contextUri: this.releaseInfo.uri });
     } else {
-      this.$dispatch('player/pause');
+      this.$dispatch('playback/pause');
     }
   }
 

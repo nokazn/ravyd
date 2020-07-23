@@ -94,10 +94,10 @@ export default class LibraryTracksPage extends Vue implements Data {
     return this.$getters()['library/tracks/isFull'];
   }
   get isPlaylistSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.uri);
+    return this.$getters()['playback/isContextSet'](this.uri);
   }
-  get isPlaying(): RootState['player']['isPlaying'] {
-    return this.$state().player.isPlaying;
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
   }
 
   mounted() {
@@ -130,7 +130,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
     // 停止
     if (!nextPlayingState) {
-      this.$dispatch('player/pause');
+      this.$dispatch('playback/pause');
       return;
     }
 
@@ -139,10 +139,10 @@ export default class LibraryTracksPage extends Vue implements Data {
     // 再生
     const trackUriList = this.trackList.map((track) => track.uri);
     // uri を contextUri に指定しても再生できないため uris で指定
-    this.$dispatch('player/play', this.isPlaylistSet
+    this.$dispatch('playback/play', this.isPlaylistSet
       ? undefined
       : { trackUriList });
-    this.$dispatch('player/setCustomContext', {
+    this.$dispatch('playback/setCustomContext', {
       contextUri: this.uri,
       trackUriList,
     });

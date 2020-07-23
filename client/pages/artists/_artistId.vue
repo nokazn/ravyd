@@ -272,10 +272,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     return getImageSrc(this.artistInfo?.avatarList, AVATAR_SIZE);
   }
   get isArtistSet(): boolean {
-    return this.$getters()['player/isContextSet'](this.artistInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.artistInfo?.uri);
   }
-  get isPlaying(): RootState['player']['isPlaying'] {
-    return this.$state().player.isPlaying;
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
   }
 
   mounted() {
@@ -338,11 +338,11 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     if (this.artistInfo == null) return;
 
     if (nextPlayingState) {
-      this.$dispatch('player/play', this.isArtistSet
+      this.$dispatch('playback/play', this.isArtistSet
         ? undefined
         : { contextUri: this.artistInfo.uri });
     } else {
-      this.$dispatch('player/pause');
+      this.$dispatch('playback/pause');
     }
   }
 
