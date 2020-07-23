@@ -1,9 +1,5 @@
-import '@nuxtjs/axios';
-
-export * from './App';
+export * from './app';
 export * from './shims-nuxt';
 export * from './shims-vue';
 export * from './shims-vuex';
-export * from './SpotifyAPI';
-export * from './ServerAPI';
 export * from './utility-types';
