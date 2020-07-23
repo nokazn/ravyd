@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState, RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'typed-vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import MarqueeReleaseName from '~/components/parts/text/MarqueeReleaseName.vue';

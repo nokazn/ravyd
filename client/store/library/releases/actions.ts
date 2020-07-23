@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { LibraryReleasesState } from './state';

@@ -168,7 +168,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, ExtendedMutationPayload } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';

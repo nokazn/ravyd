@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
 import { AuthMutations } from './mutations';

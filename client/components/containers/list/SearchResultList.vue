@@ -87,7 +87,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 import { RawLocation } from 'vue-router';
 
 import SearchResultListItem from '~/components/parts/list/SearchResultListItem.vue';

@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';

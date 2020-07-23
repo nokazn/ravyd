@@ -71,7 +71,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';

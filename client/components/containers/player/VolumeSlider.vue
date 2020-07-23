@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import debounce from 'lodash/debounce';
-import { RootState, ExtendedMutationPayload } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 import { ZeroToHundred } from '~~/types';
 
 type Data = {

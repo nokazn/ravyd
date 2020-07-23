@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';

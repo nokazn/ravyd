@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 
 import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
 import { LibraryTracksState } from './state';

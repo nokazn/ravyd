@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 import { Context } from '@nuxt/types';
 
 import { SearchState } from './state';

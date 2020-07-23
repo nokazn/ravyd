@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootGetters } from 'vuex';
+import { RootState, RootGetters } from 'typed-vuex';
 
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';

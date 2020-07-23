@@ -96,7 +96,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { ExtendedMutationPayload } from 'vuex';
+import { ExtendedMutationPayload } from 'typed-vuex';
 
 import { SpotifyAPI } from '~~/types';
 

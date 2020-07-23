@@ -35,7 +35,7 @@
 
     /* Module Resolution Options */
     "moduleResolution": "node",
-    // "baseUrl": "./",
+    "baseUrl": "./",
     "paths": {
       "~/*": [
         "./client/*"
@@ -48,6 +48,9 @@
       ],
       "@@/*": [
         "./*"
+      ],
+      "typed-vuex": [
+        "./types/typed-vuex/index.d.ts"
       ]
     },
     // "rootDirs": [],
@@ -61,7 +64,7 @@
       "@types/wicg-mediasession",
       "@types/resize-observer-browser",
     ],
-    // "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     // "preserveSymlinks": true,
     // "allowUmdGlobalAccess": true,

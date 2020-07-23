@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 export default Vue.extend({
   computed: {

@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 import { PlaylistsState } from './state';
 import { PlaylistsGetters } from './getters';
 import { PlaylistsMutations } from './mutations';

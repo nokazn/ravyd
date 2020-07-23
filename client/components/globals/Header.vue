@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';

@@ -1,4 +1,4 @@
-import { Getters } from 'vuex';
+import { Getters } from 'typed-vuex';
 
 import { PlaylistsState } from './state';
 import { SpotifyAPI } from '~~/types';

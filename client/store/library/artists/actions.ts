@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 
 import { convertArtistForCard } from '~/scripts/converter/convertArtistForCard';
 import { LibraryArtistsState } from './state';

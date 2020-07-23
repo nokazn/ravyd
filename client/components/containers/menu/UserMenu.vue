@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'vuex';
+import { RootGetters } from 'typed-vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import { MENU_BACKGROUND_COLOR } from '~/variables';

@@ -1,5 +1,4 @@
-// import { RootMutations } from 'vuex';
-import { ExtendedMutationPayload, SFCCommit } from 'vuex';
+import { ExtendedMutationPayload, SFCCommit } from 'typed-vuex';
 import { App } from '~~/types';
 
 type TrackInfo = App.TrackDetail | App.PlaylistTrackDetail

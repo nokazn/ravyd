@@ -86,7 +86,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
-import { RootState } from 'vuex';
+import { RootState } from 'typed-vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
