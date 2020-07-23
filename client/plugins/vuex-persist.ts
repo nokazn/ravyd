@@ -1,8 +1,8 @@
 import VuexPersistence from 'vuex-persist';
-import { Store } from 'vuex';
-import { RootState } from '~/store/types';
+import { Context } from '@nuxt/types';
+import { RootState } from 'typed-vuex';
 
-export default ({ store }: { store: Store<RootState> }) => {
+export default ({ store }: Context) => {
   window.onNuxtReady(() => {
     new VuexPersistence<RootState>({
       modules: [],

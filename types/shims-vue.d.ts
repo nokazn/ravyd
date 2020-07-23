@@ -4,7 +4,7 @@ import {
   SFCCommit,
   SFCDispatch,
   ExtendedSubscribe,
-} from 'vuex';
+} from 'typed-vuex';
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { Toast } from '~/plugins/toast';

@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 import { BrowseState } from './state';
 import { BrowseGetters } from './getters';
 import { BrowseMutations } from './mutations';

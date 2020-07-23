@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';

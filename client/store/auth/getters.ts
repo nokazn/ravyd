@@ -1,4 +1,4 @@
-import { Getters } from 'vuex';
+import { Getters } from 'typed-vuex';
 
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { AuthState } from './state';

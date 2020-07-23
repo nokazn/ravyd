@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'vuex';
+import { Mutations } from 'typed-vuex';
 import { LibraryReleasesState } from './state';
 import { App } from '~~/types';
 

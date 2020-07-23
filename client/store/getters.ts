@@ -1,4 +1,4 @@
-import { Getters } from 'vuex';
+import { Getters } from 'typed-vuex';
 
 import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, HEADER_BACKGROUND_COLOR_RGB } from '~/variables';
 import { RootState } from './state';

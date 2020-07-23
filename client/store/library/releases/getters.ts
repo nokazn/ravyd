@@ -1,4 +1,4 @@
-import { Getters } from 'vuex';
+import { Getters } from 'typed-vuex';
 import { LibraryReleasesState } from './state';
 
 export type LibraryReleasesGetters = {

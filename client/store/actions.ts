@@ -1,4 +1,4 @@
-import { Actions } from 'vuex';
+import { Actions } from 'typed-vuex';
 
 import { extractDominantColors } from '~/scripts/images/extractDominantColors';
 import { DEFAULT_DOMINANT_COLOR } from '~/variables';

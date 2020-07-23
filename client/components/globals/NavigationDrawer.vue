@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'vuex';
+import { RootState } from 'typed-vuex';
 
 import UserMenu from '~/components/containers/menu/UserMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';

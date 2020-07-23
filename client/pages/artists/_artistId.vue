@@ -157,7 +157,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
-import { RootState, ExtendedMutationPayload } from 'vuex';
+import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';

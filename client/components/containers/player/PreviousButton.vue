@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'vuex';
+import { RootState } from 'typed-vuex';
 
 type Data = {
   firstClicked: boolean

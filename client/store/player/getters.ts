@@ -1,4 +1,4 @@
-import { Getters } from 'vuex';
+import { Getters } from 'typed-vuex';
 
 import { PlayerState } from './state';
 import { REPEAT_STATE_LIST } from '~/variables';
