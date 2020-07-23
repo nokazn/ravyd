@@ -6,7 +6,7 @@ export namespace ServerAPI {
       message?: string
     }
 
-    type Login = {
+    export type Login = {
       accessToken: string | undefined
       expireIn: number
       message?: string
