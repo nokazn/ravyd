@@ -7,7 +7,7 @@ export type PlayerMutations = {
 };
 
 export type RootMutations = {
-  ['player/SET_PLAYBACK_PLAYER']: PlayerMutations['SET_PLAYBACK_PLAYER']
+  'player/SET_PLAYBACK_PLAYER': PlayerMutations['SET_PLAYBACK_PLAYER']
 };
 
 const mutations: Mutations<PlayerState, PlayerMutations> = {

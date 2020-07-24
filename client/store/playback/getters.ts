@@ -24,19 +24,19 @@ export type PlaybackGetters = {
 }
 
 export type RootGetters = {
-  ['playback/activeDevice']: PlaybackGetters['activeDevice']
-  ['playback/isThisAppPlaying']: PlaybackGetters['isThisAppPlaying']
-  ['playback/trackQueue']: PlaybackGetters['trackQueue']
-  ['playback/releaseId']: PlaybackGetters['releaseId']
-  ['playback/artworkSrc']: PlaybackGetters['artworkSrc']
-  ['playback/hasTrack']: PlaybackGetters['hasTrack']
-  ['playback/isTrackSet']: PlaybackGetters['isTrackSet']
-  ['playback/contextUri']: PlaybackGetters['contextUri']
-  ['playback/isContextSet']: PlaybackGetters['isContextSet']
-  ['playback/remainingTimeMs']: PlaybackGetters['remainingTimeMs']
-  ['playback/repeatState']: PlaybackGetters['repeatState']
-  ['playback/isDisallowed']: PlaybackGetters['isDisallowed']
-  ['playback/volumePercent']: PlaybackGetters['volumePercent']
+  'playback/activeDevice': PlaybackGetters['activeDevice']
+  'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
+  'playback/trackQueue': PlaybackGetters['trackQueue']
+  'playback/releaseId': PlaybackGetters['releaseId']
+  'playback/artworkSrc': PlaybackGetters['artworkSrc']
+  'playback/hasTrack': PlaybackGetters['hasTrack']
+  'playback/isTrackSet': PlaybackGetters['isTrackSet']
+  'playback/contextUri': PlaybackGetters['contextUri']
+  'playback/isContextSet': PlaybackGetters['isContextSet']
+  'playback/remainingTimeMs': PlaybackGetters['remainingTimeMs']
+  'playback/repeatState': PlaybackGetters['repeatState']
+  'playback/isDisallowed': PlaybackGetters['isDisallowed']
+  'playback/volumePercent': PlaybackGetters['volumePercent']
 }
 
 const playerGetters: Getters<PlaybackState, PlaybackGetters> = {

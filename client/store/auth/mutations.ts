@@ -12,12 +12,12 @@ export type AuthMutations = {
 }
 
 export type RootMutations = {
-  ['auth/SET_TOKEN']: AuthMutations['SET_TOKEN']
-  ['auth/SET_EXPIRE_MILLIS']: AuthMutations['SET_EXPIRE_MILLIS']
-  ['auth/RESET_EXPIRE_MILLIS']: AuthMutations['SET_EXPIRE_MILLIS']
-  ['auth/CLEAR_REFRESH_TOKEN_TIMER']: AuthMutations['CLEAR_REFRESH_TOKEN_TIMER']
-  ['auth/SET_REFRESH_TOKEN_TIMER_ID']: AuthMutations['SET_REFRESH_TOKEN_TIMER_ID']
-  ['auth/SET_USER_DATA']: AuthMutations['SET_USER_DATA']
+  'auth/SET_TOKEN': AuthMutations['SET_TOKEN']
+  'auth/SET_EXPIRE_MILLIS': AuthMutations['SET_EXPIRE_MILLIS']
+  'auth/RESET_EXPIRE_MILLIS': AuthMutations['SET_EXPIRE_MILLIS']
+  'auth/CLEAR_REFRESH_TOKEN_TIMER': AuthMutations['CLEAR_REFRESH_TOKEN_TIMER']
+  'auth/SET_REFRESH_TOKEN_TIMER_ID': AuthMutations['SET_REFRESH_TOKEN_TIMER_ID']
+  'auth/SET_USER_DATA': AuthMutations['SET_USER_DATA']
 }
 
 const mutations: Mutations<AuthState, AuthMutations> = {

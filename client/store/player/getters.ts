@@ -7,7 +7,7 @@ export type PlayerGetters = {
 }
 
 export type RootGetters = {
-  ['player/isPlayerConnected']: PlayerGetters['isPlayerConnected']
+  'player/isPlayerConnected': PlayerGetters['isPlayerConnected']
 }
 
 const playerGetters: Getters<PlayerState, PlayerGetters> = {
