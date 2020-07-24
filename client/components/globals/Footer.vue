@@ -120,8 +120,8 @@ export default Vue.extend({
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['playback/artworkSrc'](size);
     },
-    trackName(): string {
-      return this.$state().playback.trackName ?? '';
+    trackName(): RootState['playback']['trackName'] {
+      return this.$state().playback.trackName;
     },
     trackId(): RootState['playback']['trackId'] {
       return this.$state().playback.trackId;
