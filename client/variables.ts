@@ -24,7 +24,7 @@ export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'context',
   'track',
 ];
-export const DEFAULT_DURATION_MS = 1;
+export const DEFAULT_DURATION_MS = Infinity;
 export const APP_NAME = 'spotify-player';
 
 export const TRACK_LIST_ARTWORK_SIZE = 40;

@@ -112,7 +112,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       && state.releaseName != null
       && state.releaseUri != null
       && state.artistList != null
-      && state.durationMs > DEFAULT_DURATION_MS;
+      && state.durationMs > 0 && state.durationMs !== DEFAULT_DURATION_MS;
   },
 
   isTrackSet(state) {
