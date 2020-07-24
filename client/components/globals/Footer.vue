@@ -137,7 +137,6 @@ export default Vue.extend({
     },
   },
 
-  // player を初期化してからアクティブなデバイスを取得する
   mounted() {
     this.$dispatch('player/initPlayer');
   },
