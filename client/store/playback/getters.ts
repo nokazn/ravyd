@@ -1,7 +1,7 @@
 import { Getters } from 'typed-vuex';
 
 import { PlaybackState } from './state';
-import { REPEAT_STATE_LIST } from '~/variables';
+import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
@@ -111,7 +111,8 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       && state.trackUri != null
       && state.releaseName != null
       && state.releaseUri != null
-      && state.artistList != null;
+      && state.artistList != null
+      && state.durationMs > DEFAULT_DURATION_MS;
   },
 
   isTrackSet(state) {

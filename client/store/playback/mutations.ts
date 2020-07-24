@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 import { PlaybackState } from './state';
+import { DEFAULT_DURATION_MS } from '~/variables';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
@@ -130,8 +131,8 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
   },
 
   SET_DURATION_MS(state, durationMs) {
-    // デフォルト値は1
-    state.durationMs = durationMs ?? 1;
+    // デフォルト値は DEFAULT_DURATION_MS
+    state.durationMs = durationMs ?? DEFAULT_DURATION_MS;
   },
 
   SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBegining) {
