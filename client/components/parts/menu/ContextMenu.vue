@@ -14,6 +14,7 @@
         icon
         :height="size"
         :width="size"
+        :loading="loading"
         :outlined="outlined"
         :disabled="disabled"
         title="メニュー"
@@ -104,6 +105,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 36,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,
