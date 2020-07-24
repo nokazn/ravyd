@@ -10,26 +10,28 @@ export namespace App {
   }
 
   // TrackTable, TrackList component
-  export type TrackDetail = {
-    index: number
+  export type SimpleTrackDetail = {
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
-    trackNumber: SpotifyAPI.SimpleTrack['track_number']
-    discNumber: SpotifyAPI.SimpleTrack['disc_number']
-    hash: string
     artistList: SimpleArtistInfo[]
-    featuredArtistList: SimpleArtistInfo[]
-    explicit: boolean
-    isPlayable: boolean
     durationMs: number
-    externalIds?: SpotifyAPI.ExternalId
     externalUrls: SpotifyAPI.ExternalUrls
-    previewUrl: string
     isSaved: boolean
     releaseId: string
     releaseName: string
     artworkList: SpotifyAPI.Image[]
+  }
+  export type TrackDetail = SimpleTrackDetail & {
+    index: number
+    trackNumber: SpotifyAPI.SimpleTrack['track_number']
+    discNumber: SpotifyAPI.SimpleTrack['disc_number']
+    hash: string
+    featuredArtistList: SimpleArtistInfo[]
+    explicit: boolean
+    isPlayable: boolean
+    externalIds?: SpotifyAPI.ExternalId
+    previewUrl: string
   }
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {

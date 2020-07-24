@@ -54,15 +54,7 @@
 
           <DeviceSelectMenu />
 
-          <v-btn
-            ref=""
-            icon
-            title="メニュー"
-          >
-            <v-icon :size="20">
-              mdi-dots-horizontal
-            </v-icon>
-          </v-btn>
+          <PlaybackMenu />
         </div>
 
         <VolumeSlider />
@@ -83,6 +75,7 @@ import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
+import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT } from '~/variables';
 
@@ -102,6 +95,7 @@ export default Vue.extend({
     MediaControllersWrapper,
     TrackQueueMenu,
     DeviceSelectMenu,
+    PlaybackMenu,
     VolumeSlider,
   },
 
@@ -120,8 +114,9 @@ export default Vue.extend({
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['playback/artworkSrc'](size);
     },
-    trackName(): RootState['playback']['trackName'] {
-      return this.$state().playback.trackName;
+    // alt 属性に渡す
+    trackName(): string {
+      return this.$state().playback.trackName || '不明のトラック';
     },
     trackId(): RootState['playback']['trackId'] {
       return this.$state().playback.trackId;

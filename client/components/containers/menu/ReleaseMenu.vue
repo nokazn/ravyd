@@ -57,6 +57,7 @@ export default Vue.extend({
     menuItemLists(): MenuItem[][] {
       const artistPage = () => {
         const { artistList } = this.release;
+        //  アーティストが複数の時
         if (artistList.length > 1) {
           const props: ArtistLinkMenuProps = {
             artistList,

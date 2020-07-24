@@ -10,6 +10,7 @@ import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined
   isThisAppPlaying: boolean
+  currentTrack: App.SimpleTrackDetail | undefined
   trackQueue: App.TrackQueueInfo[]
   releaseId: string | undefined
   artworkSrc: (minSize?: number) => string | undefined
@@ -26,6 +27,7 @@ export type PlaybackGetters = {
 export type RootGetters = {
   'playback/activeDevice': PlaybackGetters['activeDevice']
   'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
+  'playback/currentTrack': PlaybackGetters['currentTrack']
   'playback/trackQueue': PlaybackGetters['trackQueue']
   'playback/releaseId': PlaybackGetters['releaseId']
   'playback/artworkSrc': PlaybackGetters['artworkSrc']
@@ -49,6 +51,46 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
 
   isThisAppPlaying(state, getters) {
     return getters.activeDevice?.id === state.deviceId;
+  },
+
+  currentTrack(state, getters) {
+    const {
+      trackId,
+      trackName,
+      trackUri,
+      artistList,
+      releaseName,
+      releaseUri,
+      artworkList,
+      durationMs,
+      isSavedTrack: isSaved,
+    } = state;
+    const { releaseId } = getters;
+
+    if (trackId == null
+      || trackName == null
+      || trackUri == null
+      || artistList == null
+      || releaseName == null
+      || releaseUri == null
+      || artworkList == null
+      || releaseId == null) return undefined;
+
+    return {
+      index: -1,
+      id: trackId,
+      name: trackName,
+      uri: trackUri,
+      artistList,
+      featuredArtistList: [],
+      durationMs,
+      externalUrls: {},
+      previewUrl: {},
+      isSaved,
+      releaseId,
+      releaseName,
+      artworkList,
+    };
   },
 
   trackQueue(state, getters) {
