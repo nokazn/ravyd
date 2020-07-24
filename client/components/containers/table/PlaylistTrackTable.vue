@@ -1,48 +1,49 @@
 <template>
-  <v-data-table
-    v-if="isLoaded"
-    :headers="headers"
-    :items="trackList"
-    disable-pagination
-    hide-default-footer
-    :no-data-text="noDataText"
-    :class="$style.PlaylistTrackTable"
-    class="PlaylistTrackTable"
-  >
-    <template #header.duration>
-      <v-icon
-        :size="16"
-        color="subtext"
-        title="再生時間"
-      >
-        mdi-clock-outline
-      </v-icon>
-    </template>
+  <client-only>
+    <v-data-table
+      :headers="headers"
+      :items="trackList"
+      disable-pagination
+      hide-default-footer
+      :no-data-text="noDataText"
+      :class="$style.PlaylistTrackTable"
+      class="PlaylistTrackTable"
+    >
+      <template #header.duration>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="再生時間"
+        >
+          mdi-clock-outline
+        </v-icon>
+      </template>
 
-    <template #header.addedAt>
-      <v-icon
-        :size="16"
-        color="subtext"
-        title="保存した日"
-      >
-        mdi-calendar-outline
-      </v-icon>
-    </template>
+      <template #header.addedAt>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="保存した日"
+        >
+          mdi-calendar-outline
+        </v-icon>
+      </template>
 
-    <template #item="{ item }">
-      <PlaylistTrackTableRow
-        :item="item"
-        :playlist-id="playlistId"
-        :added-at="addedAt"
-        :is-active="item.id === activeRowId"
-        :is-track-set="isTrackSet(item.id)"
-        :is-playing-track="isPlayingTrack(item.id)"
-        @on-row-clicked="onRowClicked"
-        @on-media-button-clicked="onMediaButtonClicked"
-        @on-favorite-button-clicked="onFavoriteButtonClicked"
-      />
-    </template>
-  </v-data-table>
+      <template #item="{ item }">
+        <PlaylistTrackTableRow
+          :item="item"
+          :playlist-id="playlistId"
+          :added-at="addedAt"
+          :is-active="item.id === activeRowId"
+          :is-track-set="isTrackSet(item.id)"
+          :is-playing-track="isPlayingTrack(item.id)"
+          @on-row-clicked="onRowClicked"
+          @on-media-button-clicked="onMediaButtonClicked"
+          @on-favorite-button-clicked="onFavoriteButtonClicked"
+        />
+      </template>
+    </v-data-table>
+  </client-only>
 </template>
 
 <script lang="ts">
@@ -53,7 +54,6 @@ import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/Pla
 import { App } from '~~/types';
 
 export type Data = {
-  isLoaded: boolean
   headers: DataTableHeader[]
   activeRowId: string | undefined
 };
@@ -148,7 +148,6 @@ export default Vue.extend({
       ];
 
     return {
-      isLoaded: false,
       headers,
       activeRowId: undefined,
     };
@@ -162,11 +161,6 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
     },
-  },
-
-  mounted() {
-    // サーバーサイドのコンテンツとクライアントサイドの仮想DOMが合致しなくなるのを避ける
-    this.isLoaded = true;
   },
 
   methods: {
