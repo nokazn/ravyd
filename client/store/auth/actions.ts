@@ -113,6 +113,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async logout({ commit, dispatch }) {
+    // プレイヤーをリセット
     dispatch('player/disconnectPlayer', undefined, { root: true });
     // セッションを削除
     await this.$serverApi.$post('/api/auth/logout')

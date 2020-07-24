@@ -1,12 +1,11 @@
 import type { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlaybackState = {
+  getCurrentPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
   deviceId: string | undefined
   activeDeviceId: string | undefined
   deviceList: SpotifyAPI.Device[]
   contextUri: string | undefined
-  getCurrentPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
-  retryCountsOfGetCurrentPlayback: number
   trackId: string | undefined
   trackName: string | undefined
   trackUri: string | undefined
@@ -32,6 +31,7 @@ export type PlaybackState = {
 }
 
 const state = (): PlaybackState => ({
+  getCurrentPlaybackTimer: undefined,
   deviceId: undefined,
   activeDeviceId: undefined,
   deviceList: [],
@@ -43,8 +43,6 @@ const state = (): PlaybackState => ({
   releaseName: undefined,
   releaseUri: undefined,
   artistList: [],
-  getCurrentPlaybackTimer: undefined,
-  retryCountsOfGetCurrentPlayback: 0,
   customContextUri: undefined,
   customTrackUriList: undefined,
   nextTrackList: [],

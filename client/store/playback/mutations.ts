@@ -1,20 +1,19 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 import { PlaybackState } from './state';
+import { DEFAULT_DURATION_MS } from '~/variables';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 
 export type PlaybackMutations = {
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_ID: string | undefined
   SET_DEVICE_LIST: SpotifyAPI.Device[]
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
-  SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
-  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
-  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK: void
   SET_CURRENT_TRACK: Spotify.Track | undefined
   SET_NEXT_TRACK_LIST: Spotify.Track[]
   SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
@@ -22,8 +21,8 @@ export type PlaybackMutations = {
   SET_IS_PLAYING: boolean
   SET_CONTEXT_URI: string | undefined
   SET_POSITION_MS: number
+  SET_DURATION_MS: number | undefined
   SET_DISABLED_PLAYING_FROM_BEGINING: boolean
-  SET_DURATION_MS: number
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
   SET_DISALLOWS: SpotifyAPI.Disallows
@@ -32,15 +31,13 @@ export type PlaybackMutations = {
 };
 
 export type RootMutations = {
+  'playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID': PlaybackMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
   'playback/SET_DEVICE_ID': PlaybackMutations['SET_DEVICE_ID']
   'playback/SET_ACTIVE_DEVICE_ID': PlaybackMutations['SET_ACTIVE_DEVICE_ID']
   'playback/SET_DEVICE_LIST': PlaybackMutations['SET_DEVICE_LIST']
   'playback/SET_CUSTOM_CONTEXT_URI': PlaybackMutations['SET_CUSTOM_CONTEXT_URI']
   'playback/SET_CUSTOM_TRACK_URI_LIST': PlaybackMutations['SET_CUSTOM_TRACK_URI_LIST']
   'playback/SET_RECENTLY_PLAYED': PlaybackMutations['SET_RECENTLY_PLAYED']
-  'playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID': PlaybackMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
-  'playback/INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK': PlaybackMutations['INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
-  'playback/RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK': PlaybackMutations['RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK']
   'playback/SET_CURRENT_TRACK': PlaybackMutations['SET_CURRENT_TRACK']
   'playback/SET_NEXT_TRACK_LIST': PlaybackMutations['SET_NEXT_TRACK_LIST']
   'playback/SET_PREVIOUS_TRACK_LIST': PlaybackMutations['SET_PREVIOUS_TRACK_LIST']
@@ -48,8 +45,8 @@ export type RootMutations = {
   'playback/SET_IS_PLAYING': PlaybackMutations['SET_IS_PLAYING']
   'playback/SET_CONTEXT_URI': PlaybackMutations['SET_CONTEXT_URI']
   'playback/SET_POSITION_MS': PlaybackMutations['SET_POSITION_MS']
-  'playback/SET_DISABLED_PLAYING_FROM_BEGINING': PlaybackMutations['SET_DISABLED_PLAYING_FROM_BEGINING']
   'playback/SET_DURATION_MS': PlaybackMutations['SET_DURATION_MS']
+  'playback/SET_DISABLED_PLAYING_FROM_BEGINING': PlaybackMutations['SET_DISABLED_PLAYING_FROM_BEGINING']
   'playback/SET_IS_SHUFFLED': PlaybackMutations['SET_IS_SHUFFLED']
   'playback/SET_REPEAT_MODE': PlaybackMutations['SET_REPEAT_MODE']
   'playback/SET_DISALLOWS': PlaybackMutations['SET_DISALLOWS']
@@ -58,6 +55,19 @@ export type RootMutations = {
 };
 
 const mutations: Mutations<PlaybackState, PlaybackMutations> = {
+  SET_GET_CURRENT_PLAYBACK_TIMER_ID(state, timer) {
+    const { getCurrentPlaybackTimer } = state;
+    if (typeof getCurrentPlaybackTimer === 'number') {
+      // クライアントサイドで実行
+      window.clearTimeout(getCurrentPlaybackTimer);
+    } else if (getCurrentPlaybackTimer != null) {
+      // サーバーサイドで実行
+      clearTimeout(getCurrentPlaybackTimer);
+    }
+
+    state.getCurrentPlaybackTimer = timer;
+  },
+
   SET_DEVICE_ID(state, deviceId) {
     state.deviceId = deviceId;
   },
@@ -80,26 +90,6 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
 
   SET_RECENTLY_PLAYED(state, recentlyPlayed) {
     state.recentlyPlayed = recentlyPlayed;
-  },
-
-  SET_GET_CURRENT_PLAYBACK_TIMER_ID(state, timer) {
-    const { getCurrentPlaybackTimer } = state;
-    if (typeof getCurrentPlaybackTimer === 'number') {
-      // クライアントサイドで実行
-      window.clearTimeout(getCurrentPlaybackTimer);
-    } else if (getCurrentPlaybackTimer != null) {
-      // サーバーサイドで実行
-      clearTimeout(getCurrentPlaybackTimer);
-    }
-
-    state.getCurrentPlaybackTimer = timer;
-  },
-  INCREMENT_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
-    state.retryCountsOfGetCurrentPlayback += 1;
-  },
-
-  RESET_RETRY_COUNTS_OF_GET_CURRENT_PLAYBACK(state) {
-    state.retryCountsOfGetCurrentPlayback = 0;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
@@ -140,12 +130,13 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
     state.disabledPlayingFromBegining = positionMs <= 1000;
   },
 
-  SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBegining) {
-    state.disabledPlayingFromBegining = disabledPlayingFromBegining;
+  SET_DURATION_MS(state, durationMs) {
+    // デフォルト値は DEFAULT_DURATION_MS
+    state.durationMs = durationMs ?? DEFAULT_DURATION_MS;
   },
 
-  SET_DURATION_MS(state, durationMs) {
-    state.durationMs = durationMs;
+  SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBegining) {
+    state.disabledPlayingFromBegining = disabledPlayingFromBegining;
   },
 
   SET_IS_SHUFFLED(state, isShuffled) {
