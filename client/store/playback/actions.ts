@@ -186,7 +186,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         }
 
         commit('SET_CURRENT_TRACK', track);
-        commit('SET_DURATION_MS', item?.duration_ms ?? 0);
+        commit('SET_DURATION_MS', item?.duration_ms);
       };
 
       const market = this.$getters()['auth/userCountryCode'];
