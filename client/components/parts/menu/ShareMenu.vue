@@ -101,6 +101,7 @@ type MenuItem = {
 export type Props = {
   name: string
   uri: string
+  url?: string
   typeName: string
   artistList?: App.SimpleArtistInfo[]
   externalUrls: SpotifyAPI.ExternalUrls
@@ -142,6 +143,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    url: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
     typeName: {
       type: String,
       required: true,
@@ -181,7 +186,8 @@ export default Vue.extend({
 
   computed: {
     menuItemList(): MenuItem[] {
-      const url = `${process.env.BASE_URL}${this.$route.fullPath}`;
+      const path = this.url ?? this.$route.path;
+      const url = `${process.env.BASE_URL}${path}`;
 
       const twitter = {
         name: 'Twitter',

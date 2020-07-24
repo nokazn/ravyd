@@ -170,6 +170,7 @@ export default Vue.extend({
         const props: ShareMenuProps = {
           name: track.name,
           uri: track.uri,
+          url: `/releases/${track.releaseId}`,
           typeName: '曲',
           artistList: track.artistList,
           externalUrls: track.externalUrls,
