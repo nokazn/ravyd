@@ -5,6 +5,7 @@ import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/variables';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
+import { getExternalUrlFromUri } from '~~/utils/getExternalUrlFromUri';
 import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlaybackGetters = {
@@ -76,6 +77,12 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       || artworkList == null
       || releaseId == null) return undefined;
 
+    // Spotify で開く用のリンク
+    const spotify = getExternalUrlFromUri(trackUri);
+    const externalUrls: SpotifyAPI.ExternalUrls = spotify != null
+      ? { spotify }
+      : {};
+
     return {
       index: -1,
       id: trackId,
@@ -84,7 +91,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       artistList,
       featuredArtistList: [],
       durationMs,
-      externalUrls: {},
+      externalUrls,
       previewUrl: {},
       isSaved,
       releaseId,
