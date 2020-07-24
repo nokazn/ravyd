@@ -35,7 +35,7 @@ export type PlaybackActions = {
       position: number
     }
   }) => Promise<void>
-  pause: (payload?: { isInitializing: boolean }) => Promise<void>
+  pause: () => Promise<void>
   seek: (payload: {
     positionMs: number
     currentPositionMs?: number
@@ -326,18 +326,13 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
-  async pause({ getters, commit, dispatch }, payload = { isInitializing: false }) {
+  async pause({ getters, commit, dispatch }) {
     if (getters.isDisallowed('pausing')) {
       commit('SET_IS_PLAYING', false);
       return;
     }
 
-    const { isInitializing } = payload;
-    const params = isInitializing
-      ? { isInitializing }
-      : {};
-
-    await this.$spotify.player.pause(params)
+    await this.$spotify.player.pause()
       .then(() => {
         if (!getters.isThisAppPlaying) {
           dispatch('getCurrentPlayback', 500);

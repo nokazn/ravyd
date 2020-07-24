@@ -3,24 +3,15 @@ import { Context } from '@nuxt/types';
 export const pause = (context: Context) => {
   const { app } = context;
 
-  return ({
-    deviceId,
-    isInitializing = false,
-  }: {
-    deviceId?: string | undefined
-    isInitializing?: boolean
-  }): Promise<void> => {
+  return (params?: { deviceId?: string | undefined } | undefined): Promise<void> => {
+    const device_id = params?.deviceId;
     const request = app.$spotifyApi.$put('/me/player/pause', undefined, {
       params: {
-        device_id: deviceId,
+        device_id,
       },
     }).catch((err: Error) => {
-      if (isInitializing) {
-        console.log('Not found another active device.');
-      } else {
-        console.error({ err });
-        throw new Error(err.message);
-      }
+      console.error({ err });
+      throw new Error(err.message);
     });
 
     return request;
