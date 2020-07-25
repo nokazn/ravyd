@@ -74,12 +74,6 @@
           {{ playlistInfo.name }}
         </h1>
 
-        <p
-          v-if="playlistInfo.description"
-          class="subtext--text"
-          v-html="playlistInfo.description"
-        />
-
         <div>
           <UserName :user="playlistInfo.owner" />
         </div>
@@ -139,6 +133,12 @@
       :is-shown="editPlaylistModal"
       :form="editPlaylistForm"
       @on-changed="toggleEditPlaylistModal"
+    />
+
+    <p
+      v-if="playlistInfo.description"
+      class="subtext--text"
+      v-html="playlistInfo.description"
     />
 
     <PlaylistTrackTable
