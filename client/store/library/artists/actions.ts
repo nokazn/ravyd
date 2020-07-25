@@ -64,7 +64,10 @@ const actions: Actions<
    */
   async updateLatestSavedArtistList({ state, commit }) {
     // ライブラリの情報が更新されていないものの数
-    const unupdatedCounts = state.numberOfUnupdatedArtist;
+    const {
+      unupdatedCounts,
+      artistList: currentArtistList,
+    } = state;
     if (unupdatedCounts === 0) return;
 
     const maxLimit = 50;
@@ -75,15 +78,6 @@ const actions: Actions<
     });
     if (artists == null) {
       this.$toast.show('error', 'フォロー中のアーティストの一覧を更新できませんでした。');
-      return;
-    }
-
-    const currentArtistList = state.artistList;
-    // 現在のライブラリが未取得ならそのままセット
-    if (currentArtistList == null) {
-      commit('SET_ARTIST_LIST', artists.items.map(convertArtist));
-      commit('SET_TOTAL', artists.total);
-      commit('RESET_NUMBER_OF_UNUPDATED_ARTISTS');
       return;
     }
 
@@ -99,7 +93,7 @@ const actions: Actions<
 
     commit('UNSHIFT_TO_ARTIST_LIST', addedArtistList);
     commit('SET_TOTAL', artists.total);
-    commit('RESET_NUMBER_OF_UNUPDATED_ARTISTS');
+    commit('RESET_UNUPDATED_COUNTS');
   },
 
   async followArtists({ dispatch }, artistIdList) {
@@ -138,21 +132,19 @@ const actions: Actions<
 
   modifyArtistSavedState({ state, commit }, { artistId, isSaved }) {
     const currentArtistList = state.artistList;
-    if (currentArtistList == null) return;
-
     const savedArtistIndex = currentArtistList
       .findIndex((artist) => artist.id === artistId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedArtistIndex !== -1) {
-      const nextArtistList = [...currentArtistList];
+      const artistList = [...currentArtistList];
       // savedArtistIndex から1個取り除く
-      nextArtistList.splice(savedArtistIndex, 1);
-      commit('SET_ARTIST_LIST', nextArtistList);
+      artistList.splice(savedArtistIndex, 1);
+      commit('SET_ARTIST_LIST', artistList);
     }
 
     // ライブラリ一覧に表示されてないリリースを保存した場合
     if (isSaved && savedArtistIndex === -1) {
-      commit('INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS');
+      commit('INCREMENT_UNUPDATED_COUNTS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [artistId, isSaved]);

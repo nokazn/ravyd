@@ -8,8 +8,8 @@ export type LibraryReleasesMutations = {
   ADD_TO_RELEASE_LIST: App.ReleaseCardInfo[]
   UNSHIFT_TO_RELEASE_LIST: App.ReleaseCardInfo[]
   SET_TOTAL: number
-  INCREMENT_NUMBER_OF_UNUPDATED_RELEASES: void
-  RESET_NUMBER_OF_UNUPDATED_RELEASES: void
+  INCREMENT_UNUPDATED_COUNTS: void
+  RESET_UNUPDATED_COUNTS: void
   SET_ACTUAL_IS_SAVED: [string, boolean],
   DELETE_ACTUAL_IS_SAVED: string,
 };
@@ -19,8 +19,8 @@ export type RootMutations = {
   'library/releases/ADD_TO_RELEASE_LIST': LibraryReleasesMutations['ADD_TO_RELEASE_LIST'];
   'library/releases/UNSHIFT_TO_RELEASE_LIST': LibraryReleasesMutations['UNSHIFT_TO_RELEASE_LIST'];
   'library/releases/SET_TOTAL': LibraryReleasesMutations['SET_TOTAL'];
-  'library/releases/INCREMENT_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['INCREMENT_NUMBER_OF_UNUPDATED_RELEASES'];
-  'library/releases/RESET_NUMBER_OF_UNUPDATED_RELEASES': LibraryReleasesMutations['RESET_NUMBER_OF_UNUPDATED_RELEASES'];
+  'library/releases/INCREMENT_UNUPDATED_COUNTS': LibraryReleasesMutations['INCREMENT_UNUPDATED_COUNTS'];
+  'library/releases/RESET_UNUPDATED_COUNTS': LibraryReleasesMutations['RESET_UNUPDATED_COUNTS'];
   'library/releases/SET_ACTUAL_IS_SAVED': LibraryReleasesMutations['SET_ACTUAL_IS_SAVED'];
   'library/releases/DELETE_ACTUAL_IS_SAVED': LibraryReleasesMutations['DELETE_ACTUAL_IS_SAVED'];
 };
@@ -48,12 +48,12 @@ const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
     state.total = total;
   },
 
-  INCREMENT_NUMBER_OF_UNUPDATED_RELEASES(state) {
-    state.numberOfUnupdatedReleases += 1;
+  INCREMENT_UNUPDATED_COUNTS(state) {
+    state.unupdatedCounts += 1;
   },
 
-  RESET_NUMBER_OF_UNUPDATED_RELEASES(state) {
-    state.numberOfUnupdatedReleases = 0;
+  RESET_UNUPDATED_COUNTS(state) {
+    state.unupdatedCounts = 0;
   },
 
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {

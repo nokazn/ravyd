@@ -3,14 +3,14 @@ import { App } from '~~/types';
 export type LibraryTracksState = {
   trackList: App.PlaylistTrackDetail[]
   total: number | undefined
-  numberOfUnupdatedTracks: number
+  unupdatedCounts: number
   actualIsSavedMap: Map<string, boolean>
 };
 
 const state: () => LibraryTracksState = () => ({
   trackList: [],
   total: undefined,
-  numberOfUnupdatedTracks: 0,
+  unupdatedCounts: 0,
   actualIsSavedMap: new Map(),
 });
 
