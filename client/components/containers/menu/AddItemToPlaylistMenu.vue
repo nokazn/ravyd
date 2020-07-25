@@ -79,7 +79,7 @@ import { SpotifyAPI, App } from '~~/types';
 export type Props = {
   name: string
   uriList: string[]
-  artistList: App.SimpleArtistInfo[]
+  artists: App.SimpleArtistInfo[] | string | undefined
   left?: boolean
   right?: boolean
 }
@@ -99,9 +99,9 @@ export default Vue.extend({
       type: Array as PropType<string[]>,
       required: true,
     },
-    artistList: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
-      required: true,
+    artists: {
+      type: [Array, String] as PropType<App.SimpleArtistInfo[] | string | undefined>,
+      default: undefined,
     },
     left: {
       type: Boolean,
@@ -128,20 +128,23 @@ export default Vue.extend({
 
   methods: {
     onNewPlaylistClicked() {
-      const artist = this.artistList[0]?.name;
-      const name = artist != null
-        ? `${this.name} - ${artist}`
-        : this.name;
+      const { artists, name } = this;
+      const artistName = Array.isArray(artists)
+        ? artists.map((artist) => artist.name).join(', ')
+        : artists;
+      const title = artistName != null
+        ? `${name} - ${artistName}`
+        : name;
 
       this.$dispatch('playlists/createPlaylist', {
         name,
         description: '',
         uriList: this.uriList,
       }).then(() => {
-        this.$toast.show('primary', `"${this.name}" を新規プレイリストに追加しました。`);
+        this.$toast.show('primary', `"${title}" を新規プレイリストに追加しました。`);
       }).catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', `"${this.name}" を新規プレイリストに追加できませんでした。`);
+        this.$toast.show('error', `"${title}" を新規プレイリストに追加できませんでした。`);
       });
     },
     onItemClicked(playlist: SpotifyAPI.SimplePlaylist) {

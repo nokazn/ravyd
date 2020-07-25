@@ -70,6 +70,7 @@ export default Vue.extend({
           name: this.artist.name,
           uri: this.artist.uri,
           typeName: 'アーティスト',
+          artists: undefined,
           externalUrls: this.artist.externalUrls,
           left: this.left,
           right: this.right,

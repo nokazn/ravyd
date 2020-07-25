@@ -105,7 +105,7 @@ export default Vue.extend({
         const props: AddItemToPlaylistMenuProps = {
           name: this.track.name,
           uriList: [this.track.uri],
-          artistList: this.track.artistList,
+          artists: this.track.artistList,
           left: true,
         };
 
@@ -137,7 +137,7 @@ export default Vue.extend({
           name: this.track.name,
           uri: this.track.uri,
           typeName: '曲',
-          artistList: this.track.artistList,
+          artists: this.track.artistList,
           externalUrls: this.track.externalUrls,
           left: true,
         };

@@ -103,7 +103,7 @@ export type Props = {
   uri: string
   url?: string
   typeName: string
-  artistList?: App.SimpleArtistInfo[]
+  artists: App.SimpleArtistInfo[] | string | undefined
   externalUrls: SpotifyAPI.ExternalUrls
   left?: boolean
   right?: boolean
@@ -151,8 +151,8 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    artistList: {
-      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
+    artists: {
+      type: [Array, String] as PropType<App.SimpleArtistInfo[] | string | undefined>,
       default: undefined,
     },
     externalUrls: {
@@ -170,9 +170,10 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const artistNames = this.artistList
-      ?.map((artist) => artist.name)
-      .join(', ');
+    const { artists } = this;
+    const artistNames = Array.isArray(artists)
+      ? artists.map((artist) => artist.name).join(', ')
+      : artists;
     const text = artistNames != null
       ? `${artistNames} の ${this.name}`
       : this.name;

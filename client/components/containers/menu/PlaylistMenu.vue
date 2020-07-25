@@ -163,6 +163,7 @@ export default Vue.extend({
           name: this.playlist.name,
           uri: this.playlist.uri,
           typeName: 'プレイリスト',
+          artists: undefined,
           externalUrls: this.playlist.externalUrls,
           left: this.left,
           right: this.right,
