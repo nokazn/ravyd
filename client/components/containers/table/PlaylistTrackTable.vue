@@ -7,7 +7,6 @@
       hide-default-footer
       :no-data-text="noDataText"
       :class="$style.PlaylistTrackTable"
-      class="PlaylistTrackTable"
     >
       <template #header.duration>
         <v-icon

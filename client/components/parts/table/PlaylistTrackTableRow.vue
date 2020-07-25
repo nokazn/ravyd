@@ -2,7 +2,7 @@
   <v-hover #default="{ hover: isRowHovered }">
     <tr
       :class="{
-        [$style.TrackListTableRow]: true,
+        [$style.PlaylistTrackTableRow]: true,
         'inactive--text': !item.isPlayable
       }"
       :data-is-active="isActive"
@@ -10,7 +10,7 @@
     >
       <td>
         <div
-          :class="$style.TrackListTableRow__buttons"
+          :class="$style.PlaylistTrackTableRow__buttons"
           class="text-center"
         >
           <PlaylistMediaButton
@@ -66,7 +66,7 @@
 
       <td
         :title="item.addedAt.title"
-        :class="$style.TrackListTableRow__smallText"
+        :class="$style.PlaylistTrackTableRow__smallText"
         class="text-center"
       >
         <time
@@ -78,7 +78,7 @@
       </td>
 
       <td
-        :class="$style.TrackListTableRow__smallText"
+        :class="$style.PlaylistTrackTableRow__smallText"
         class="text-center"
       >
         <TrackTime :time-ms="item.durationMs" />
@@ -183,7 +183,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.TrackListTableRow {
+.PlaylistTrackTableRow {
   cursor: pointer;
   padding: 1em 0;
 
