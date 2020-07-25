@@ -37,7 +37,7 @@
       :class="$style.ReleaseIdPage__header"
     >
       <ReleaseArtwork
-        :src="releaseArtworkSrc"
+        :src="artworkSrc"
         :alt="releaseInfo.name"
         :size="ARTWORK_SIZE"
         :title="releaseInfo.name"
@@ -90,7 +90,7 @@
             />
 
             <ReleaseTotalTracks
-              :total-tracks="releaseInfo.totalTracks"
+              :total="releaseInfo.totalTracks"
             />
 
             <ReleaseDuration
@@ -169,11 +169,12 @@ import { getReleaseInfo } from '~/plugins/local/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { SpotifyAPI, App } from '~~/types';
+import { SpotifyAPI, App, OneToFifty } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const CARD_WIDTH = 200;
 const HEADER_REF = 'HEADER_REF';
+const LIMIT_OF_TRACKS = 30;
 
 interface AsyncData {
   releaseInfo: App.ReleaseInfo | undefined
@@ -298,7 +299,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  get releaseArtworkSrc(): string | undefined {
+  get artworkSrc(): string | undefined {
     return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
   }
   get isReleaseSet(): boolean {
@@ -308,47 +309,45 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     return this.$state().playback.isPlaying;
   }
 
-  async appendTrackList() {
+  async appendTrackList(limit: OneToFifty = LIMIT_OF_TRACKS) {
     if (this.releaseInfo == null
-      || this.releaseInfo.isFullTrackList) {
-      return;
-    }
+      || this.releaseInfo.isFullTrackList) return;
 
     const { releaseInfo } = this;
+    const releaseId = releaseInfo.id;
     const offset = this.releaseInfo.trackList.length;
     const tracks = await this.$spotify.albums.getAlbumTracks({
-      albumId: this.$route.params.releaseId,
+      albumId: releaseId,
       market: this.$getters()['auth/userCountryCode'],
-      limit: 50,
+      limit,
       offset,
     });
     if (tracks == null) {
       this.$toast.show('error', 'トラックが取得できませんでした。');
-      this.releaseInfo = { ...this.releaseInfo, isFullTrackList: true };
+      this.releaseInfo = {
+        ...releaseInfo,
+        isFullTrackList: true,
+      };
       return;
     }
 
     const trackIdList = tracks.items.map((track) => track.id);
     const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
-    const trackList = tracks.items.map((track, i) => {
-      const detail = convertTrackDetail<SpotifyAPI.SimpleTrack>({
-        isTrackSavedList,
-        offset,
-        releaseId: releaseInfo.id,
-        releaseName: releaseInfo.name,
-        artistIdList: releaseInfo.artistList.map((artist) => artist.id),
-        artworkList: releaseInfo.artworkList,
-      })(track, i);
-
-      return detail;
-    });
+    const trackList = tracks.items.map(convertTrackDetail<SpotifyAPI.SimpleTrack>({
+      isTrackSavedList,
+      offset,
+      releaseId,
+      releaseName: releaseInfo.name,
+      artistIdList: releaseInfo.artistList.map((artist) => artist.id),
+      artworkList: releaseInfo.artworkList,
+    }));
     const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);
     const isFullTrackList = tracks.next == null;
 
     this.releaseInfo = {
-      ...this.releaseInfo,
-      trackList: [...this.releaseInfo.trackList, ...trackList],
-      durationMs: this.releaseInfo.durationMs + durationMs,
+      ...releaseInfo,
+      trackList: [...releaseInfo.trackList, ...trackList],
+      durationMs: releaseInfo.durationMs + durationMs,
       isFullTrackList,
     };
   }
@@ -383,10 +382,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     if (this.releaseInfo == null) return;
 
     const nextSavedState = !isSaved;
-    const trackList = [...this.releaseInfo.trackList];
+    const { releaseInfo } = this;
+    const trackList = [...releaseInfo.trackList];
     trackList[index].isSaved = nextSavedState;
     this.releaseInfo = {
-      ...this.releaseInfo,
+      ...releaseInfo,
       trackList,
     };
 

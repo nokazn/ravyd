@@ -324,7 +324,8 @@ export namespace SpotifyAPI {
     media_type: string
     name: string
     publisher: string
-    type: string
+    type: 'show'
+    total_episodes: number
     uri: string
   }
   type Show = SimpleShow & {

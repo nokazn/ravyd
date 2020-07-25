@@ -8,8 +8,8 @@ export type LibraryArtistsMutations = {
   ADD_TO_ARTIST_LIST: App.ArtistCardInfo[]
   UNSHIFT_TO_ARTIST_LIST: App.ArtistCardInfo[]
   SET_TOTAL: number
-  INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS: void
-  RESET_NUMBER_OF_UNUPDATED_ARTISTS: void
+  INCREMENT_UNUPDATED_COUNTS: void
+  RESET_UNUPDATED_COUNTS: void
   SET_ACTUAL_IS_SAVED: [string, boolean],
   DELETE_ACTUAL_IS_SAVED: string,
 };
@@ -19,8 +19,8 @@ export type RootMutations = {
   'library/artists/ADD_TO_ARTIST_LIST': LibraryArtistsMutations['ADD_TO_ARTIST_LIST'];
   'library/artists/UNSHIFT_TO_ARTIST_LIST': LibraryArtistsMutations['UNSHIFT_TO_ARTIST_LIST'];
   'library/artists/SET_TOTAL': LibraryArtistsMutations['SET_TOTAL'];
-  'library/artists/INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS'];
-  'library/artists/RESET_NUMBER_OF_UNUPDATED_ARTISTS': LibraryArtistsMutations['RESET_NUMBER_OF_UNUPDATED_ARTISTS'];
+  'library/artists/INCREMENT_UNUPDATED_COUNTS': LibraryArtistsMutations['INCREMENT_UNUPDATED_COUNTS'];
+  'library/artists/RESET_UNUPDATED_COUNTS': LibraryArtistsMutations['RESET_UNUPDATED_COUNTS'];
   'library/artists/SET_ACTUAL_IS_SAVED': LibraryArtistsMutations['SET_ACTUAL_IS_SAVED'];
   'library/artists/DELETE_ACTUAL_IS_SAVED': LibraryArtistsMutations['DELETE_ACTUAL_IS_SAVED'];
 };
@@ -32,33 +32,28 @@ const mutations: Mutations<LibraryArtistsState, LibraryArtistsMutations> = {
 
   ADD_TO_ARTIST_LIST(state, artistList) {
     const currentArtistList = state.artistList;
-    if (artistList != null) {
-      state.artistList = currentArtistList != null
-        ? [...currentArtistList, ...artistList]
-        : artistList;
-    }
+    state.artistList = currentArtistList != null
+      ? [...currentArtistList, ...artistList]
+      : artistList;
   },
 
   UNSHIFT_TO_ARTIST_LIST(state, artistList) {
     const currentArtistList = state.artistList;
-    if (artistList != null) {
-      state.artistList = currentArtistList != null
-        ? [...artistList, ...currentArtistList]
-        : artistList;
-    }
+    state.artistList = currentArtistList != null
+      ? [...artistList, ...currentArtistList]
+      : artistList;
   },
 
   SET_TOTAL(state, total) {
     state.total = total;
   },
 
-  INCREMENT_NUMBER_OF_UNUPDATED_ARTISTS(state) {
-    const currentNumberOfUnupdatedArtists = state.numberOfUnupdatedArtist;
-    state.numberOfUnupdatedArtist = currentNumberOfUnupdatedArtists + 1;
+  INCREMENT_UNUPDATED_COUNTS(state) {
+    state.unupdatedCounts += 1;
   },
 
-  RESET_NUMBER_OF_UNUPDATED_ARTISTS(state) {
-    state.numberOfUnupdatedArtist = 0;
+  RESET_UNUPDATED_COUNTS(state) {
+    state.unupdatedCounts = 0;
   },
 
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {

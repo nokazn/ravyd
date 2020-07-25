@@ -2,7 +2,7 @@
   <v-hover #default="{ hover: isRowHovered }">
     <tr
       :class="{
-        [$style.PlaylistTrackTableRow]: true,
+        [$style.EpisodeTableRow]: true,
         'inactive--text': !item.isPlayable
       }"
       :data-is-active="isActive"
@@ -10,19 +10,14 @@
     >
       <td>
         <div
-          :class="$style.PlaylistTrackTableRow__buttons"
+          :class="$style.EpisodeTableRow_buttons"
           class="text-center"
         >
           <PlaylistMediaButton
             :is-hovered="isRowHovered"
-            :is-playing-track="isPlayingTrack"
+            :is-playing-track="isPlayingEpisode"
             :disabled="!item.isPlayable"
             @on-clicked="onMediaButtonClicked"
-          />
-
-          <FavoriteButton
-            :is-favorited="item.isSaved"
-            @on-clicked="onFavoriteButtonClicked"
           />
         </div>
       </td>
@@ -35,26 +30,17 @@
               class="g-ellipsis-text"
               :title="item.name"
             >
-              {{ item.name }}
+              <nuxt-link :to="`/episodes/${item.id}`">
+                {{ item.name }}
+              </nuxt-link>
             </div>
 
             <div
               :class="[$style.Content__subtitle, subtitleColor]"
               class="g-ellipsis-text"
+              :title="item.description"
             >
-              <ArtistNames
-                inline
-                :artist-list="item.artistList"
-              />
-
-              <span :class="$style['Content__subtitle--divider']">-</span>
-
-              <nuxt-link
-                :to="`/releases/${item.releaseId}`"
-                :title="item.releaseName"
-              >
-                {{ item.releaseName }}
-              </nuxt-link>
+              {{ item.description }}
             </div>
           </div>
 
@@ -65,30 +51,26 @@
       </td>
 
       <td
-        :title="item.addedAt.title"
-        :class="$style.PlaylistTrackTableRow__smallText"
+        :title="item.releaseDate"
+        :class="$style.EpisodeTableRow__smallText"
         class="text-center"
       >
-        <time
-          v-if="item.addedAt.text"
-          :datetime="item.addedAt.text"
-        >
-          {{ item.addedAt.text }}
+        <time :datetime="item.releaseDate">
+          {{ releaseDate }}
         </time>
       </td>
 
       <td
-        :class="$style.PlaylistTrackTableRow__smallText"
+        :class="$style.EpisodeTableRow__smallText"
         class="text-center"
       >
         <TrackTime :time-ms="item.durationMs" />
       </td>
 
       <td>
-        <TrackMenu
-          :track="item"
-          :playlist-id="playlistId"
-          @on-favorite-menu-clicked="onFavoriteButtonClicked"
+        <EpisodeMenu
+          :episode="item"
+          :publisher="publisher"
         />
       </td>
     </tr>
@@ -99,11 +81,10 @@
 import Vue, { PropType } from 'vue';
 
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
+import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
+import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -119,27 +100,25 @@ export type On = {
 export default Vue.extend({
   components: {
     PlaylistMediaButton,
-    FavoriteButton,
-    ArtistNames,
     ExplicitChip,
     TrackTime,
-    TrackMenu,
+    EpisodeMenu,
   },
 
   props: {
     item: {
-      type: Object as PropType<App.PlaylistTrackDetail>,
+      type: Object as PropType<App.EpisodeDetail>,
       required: true,
     },
-    playlistId: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
+    publisher: {
+      type: String,
+      required: true,
     },
-    isTrackSet: {
+    isEpisodeSet: {
       type: Boolean,
       required: true,
     },
-    isPlayingTrack: {
+    isPlayingEpisode: {
       type: Boolean,
       required: true,
     },
@@ -156,15 +135,22 @@ export default Vue.extend({
   computed: {
     titleColor(): string | undefined {
       if (!this.item.isPlayable) return 'inactive--text';
-      return this.isTrackSet
+      return this.isEpisodeSet
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
       if (!this.item.isPlayable) return 'inactive--text';
-      return this.isTrackSet
+      return this.isEpisodeSet
         ? 'active--text'
         : 'subtext--text';
+    },
+    releaseDate(): string {
+      return convertReleaseDate({
+        releaseDate: this.item.releaseDate,
+        releaseDatePrecision: this.item.releaseDatePrecision,
+        format: 'YYYY/M/D',
+      });
     },
   },
 
@@ -183,7 +169,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.PlaylistTrackTableRow {
+.EpisodeTableRow {
   cursor: pointer;
   padding: 1em 0;
 

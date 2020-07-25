@@ -108,7 +108,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
-        case 'library/tracks/INCREMENT_NUMBER_OF_UNUPDATED_TRACKS':
+        case 'library/tracks/INCREMENT_UNUPDATED_COUNTS':
           this.$dispatch('library/tracks/updateLatestSavedTrackList');
           break;
 

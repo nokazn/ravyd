@@ -149,7 +149,7 @@ export default Vue.extend({
         const props: AddItemToPlaylistMenuProps = {
           name: track.name,
           uriList: [track.uri],
-          artistList: track.artistList,
+          artists: track.artistList,
           left: true,
         };
         return {
@@ -172,7 +172,7 @@ export default Vue.extend({
           uri: track.uri,
           url: `/releases/${track.releaseId}`,
           typeName: '曲',
-          artistList: track.artistList,
+          artists: track.artistList,
           externalUrls: track.externalUrls,
           left: true,
         };

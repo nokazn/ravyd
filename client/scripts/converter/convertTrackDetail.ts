@@ -10,6 +10,7 @@ export const convertTrackDetail = <
     artistIdList,
     artworkList,
   }: T extends SpotifyAPI.Track
+  // Track の場合は release の情報は不要
   ? {
     isTrackSavedList: boolean[]
     offset?: number
@@ -51,16 +52,16 @@ export const convertTrackDetail = <
 
     const detail = {
       index: index + offset,
-      name: track.name,
       id: track.id,
+      name: track.name,
       uri: track.uri,
       trackNumber: track.track_number,
       discNumber: track.disc_number,
       hash: `${track.disc_number}-${track.track_number}`,
       artistList,
       featuredArtistList,
-      explicit: track.explicit,
       isPlayable: track.is_playable,
+      explicit: track.explicit,
       durationMs: track.duration_ms,
       externalUrls: track.external_urls,
       previewUrl: track.preview_url,

@@ -15,17 +15,15 @@
           @on-clicked="onContextMediaButtonClicked"
         />
 
-        <template v-if="playlistInfo.isOwnPlaylist">
-          <CircleButton
-            :size="32"
-            outlined
-            title="編集する"
-            @on-clicked="editPlaylistModal = true"
-          >
-            mdi-pencil
-          </CircleButton>
-        </template>
-
+        <CircleButton
+          v-if="playlistInfo.isOwnPlaylist"
+          :size="32"
+          outlined
+          title="編集する"
+          @on-clicked="editPlaylistModal = true"
+        >
+          mdi-pencil
+        </CircleButton>
         <FavoriteButton
           v-else
           :size="32"
@@ -76,12 +74,6 @@
           {{ playlistInfo.name }}
         </h1>
 
-        <p
-          v-if="playlistInfo.description"
-          class="subtext--text"
-          v-html="playlistInfo.description"
-        />
-
         <div>
           <UserName :user="playlistInfo.owner" />
         </div>
@@ -94,17 +86,15 @@
               @on-clicked="onContextMediaButtonClicked"
             />
 
-            <template v-if="playlistInfo.isOwnPlaylist">
-              <CircleButton
-                :size="36"
-                outlined
-                title="編集する"
-                @on-clicked="editPlaylistModal = true"
-              >
-                mdi-pencil
-              </CircleButton>
-            </template>
-
+            <CircleButton
+              v-if="playlistInfo.isOwnPlaylist"
+              :size="36"
+              outlined
+              title="編集する"
+              @on-clicked="editPlaylistModal = true"
+            >
+              mdi-pencil
+            </CircleButton>
             <FavoriteButton
               v-else
               :is-favorited="isFollowing"
@@ -123,7 +113,7 @@
 
           <div :class="$style.Info__detail">
             <ReleaseTotalTracks
-              :total-tracks="playlistInfo.totalTracks"
+              :total="playlistInfo.totalTracks"
             />
 
             <ReleaseDuration
@@ -143,6 +133,12 @@
       :is-shown="editPlaylistModal"
       :form="editPlaylistForm"
       @on-changed="toggleEditPlaylistModal"
+    />
+
+    <p
+      v-if="playlistInfo.description"
+      class="subtext--text"
+      v-html="playlistInfo.description"
     />
 
     <PlaylistTrackTable

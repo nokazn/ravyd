@@ -17,10 +17,10 @@ import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
-const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
+const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 
 export type On = {
-  [ON_FOLLOW_MENU_CLICKED]: boolean
+  [ON_SAVE_MENU_CLICKED]: boolean
 }
 
 export default Vue.extend({
@@ -29,11 +29,11 @@ export default Vue.extend({
   },
 
   props: {
-    artist: {
-      type: Object as PropType<App.ArtistInfo>,
+    show: {
+      type: Object as PropType<App.ShowInfo>,
       required: true,
     },
-    isFollowing: {
+    isSaved: {
       type: Boolean,
       required: true,
     },
@@ -57,21 +57,25 @@ export default Vue.extend({
 
   computed: {
     menuItemLists(): MenuItem[][] {
-      const followArtist = () => ({
-        name: this.isFollowing ? 'フォローしない' : 'フォローする',
-        handler: () => {
-          const nextFollowingState = !this.isFollowing;
-          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
-        },
-      });
+      const saveShow = () => {
+        const nextSavedState = !this.isSaved;
+        const handler = () => {
+          this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
+        };
+
+        return {
+          name: nextSavedState ? '保存する' : '保存しない',
+          handler,
+        };
+      };
 
       const share = () => {
         const props: ShareMenuProps = {
-          name: this.artist.name,
-          uri: this.artist.uri,
-          typeName: 'アーティスト',
-          artists: undefined,
-          externalUrls: this.artist.externalUrls,
+          name: this.show.name,
+          uri: this.show.uri,
+          typeName: 'ポッドキャスト',
+          artists: this.show.publisher,
+          externalUrls: this.show.externalUrls,
           left: this.left,
           right: this.right,
         };
@@ -82,7 +86,7 @@ export default Vue.extend({
       };
 
       return [
-        [followArtist()],
+        [saveShow()],
         [share()],
       ];
     },

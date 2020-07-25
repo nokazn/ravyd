@@ -37,7 +37,7 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedTrackList({ commit, getters, rootGetters }, payload) {
+  async getSavedTrackList({ getters, commit, rootGetters }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
 
@@ -71,7 +71,10 @@ const actions: Actions<
   async updateLatestSavedTrackList({ state, commit, rootGetters }) {
     type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
-    const unupdatedCounts = state.numberOfUnupdatedTracks;
+    const {
+      unupdatedCounts,
+      trackList: currentTrackList,
+    } = state;
     if (unupdatedCounts === 0) return;
 
     const maxLimit = 50;
@@ -107,16 +110,6 @@ const actions: Actions<
 
     // 保存された楽曲を取得しているので isSaved はすべて true
     const isTrackSavedList = new Array(tracks.items.length).fill(true);
-    const currentTrackList = state.trackList;
-    if (currentTrackList == null) {
-      commit('SET_TRACK_LIST', tracks.items.map(
-        convertPlaylistTrackDetail({ isTrackSavedList }),
-      ));
-      commit('SET_TOTAL', tracks.total);
-      commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
-      return;
-    }
-
     const currentLatestTrackId = currentTrackList[0].id;
     const lastTrackIndex = tracks.items
       .findIndex(({ track }) => track.id === currentLatestTrackId);
@@ -132,7 +125,7 @@ const actions: Actions<
 
     commit('UNSHIFT_TO_TRACK_LIST', addedTrackList);
     commit('SET_TOTAL', tracks.total);
-    commit('RESET_NUMBER_OF_UNUPDATED_TRACKS');
+    commit('RESET_UNUPDATED_COUNTS');
   },
 
   removeUnsavedTracks({ state, commit }) {
@@ -145,7 +138,7 @@ const actions: Actions<
 
   async saveTracks({ dispatch }, trackIdList) {
     await this.$spotify.library.saveTracks({ trackIdList })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリにトラックを保存できませんでした。');
       });
@@ -160,7 +153,7 @@ const actions: Actions<
 
   async removeTracks({ dispatch }, trackIdList) {
     await this.$spotify.library.removeUserSavedTracks({ trackIdList })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリからトラックを削除できませんでした。');
       });
@@ -175,8 +168,6 @@ const actions: Actions<
 
   modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
     const currentTrackList = state.trackList;
-    if (currentTrackList == null) return;
-
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedTrackIndex !== -1) {
@@ -193,7 +184,7 @@ const actions: Actions<
 
     // ライブラリ一覧に表示されてない曲を保存した場合
     if (isSaved && savedTrackIndex === -1) {
-      commit('INCREMENT_NUMBER_OF_UNUPDATED_TRACKS');
+      commit('INCREMENT_UNUPDATED_COUNTS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [trackId, isSaved]);

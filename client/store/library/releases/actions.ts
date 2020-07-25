@@ -39,7 +39,7 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedReleaseList({ commit, getters, rootGetters }, payload) {
+  async getSavedReleaseList({ getters, commit, rootGetters }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
 
@@ -67,7 +67,10 @@ const actions: Actions<
   async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
     type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
-    const unupdatedCounts = state.numberOfUnupdatedReleases;
+    const {
+      unupdatedCounts,
+      releaseList: currentReleaseList,
+    } = state;
     if (unupdatedCounts === 0) return;
 
     const maxLimit = 50;
@@ -101,15 +104,6 @@ const actions: Actions<
       return;
     }
 
-    const currentReleaseList = state.releaseList;
-    // 現在のライブラリが未取得ならそのままセット
-    if (currentReleaseList == null) {
-      commit('SET_RELEASE_LIST', releases.items.map(convertRelease));
-      commit('SET_TOTAL', releases.total);
-      commit('RESET_NUMBER_OF_UNUPDATED_RELEASES');
-      return;
-    }
-
     // @todo lastRelease の位置まで取得すべき?
     // 現在のライブラリの先頭があるかどうか
     const currentLatestReleaseId = currentReleaseList[0].id;
@@ -122,12 +116,12 @@ const actions: Actions<
 
     commit('UNSHIFT_TO_RELEASE_LIST', addedReleaseList);
     commit('SET_TOTAL', releases.total);
-    commit('RESET_NUMBER_OF_UNUPDATED_RELEASES');
+    commit('RESET_UNUPDATED_COUNTS');
   },
 
   async saveReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.saveAlbums({ albumIdList })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリにアルバムを保存できませんでした。');
       });
@@ -142,7 +136,7 @@ const actions: Actions<
 
   async removeReleases({ dispatch }, albumIdList) {
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリからアルバムを削除できませんでした。');
       });
@@ -157,21 +151,19 @@ const actions: Actions<
 
   modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
     const currentReleaseList = state.releaseList;
-    if (currentReleaseList == null) return;
-
     const savedReleaseIndex = currentReleaseList
       .findIndex((release) => release.id === releaseId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedReleaseIndex !== -1) {
-      const nextReleaseList = [...currentReleaseList];
+      const releaseList = [...currentReleaseList];
       // savedReleaseIndex から1個取り除く
-      nextReleaseList.splice(savedReleaseIndex, 1);
-      commit('SET_RELEASE_LIST', nextReleaseList);
+      releaseList.splice(savedReleaseIndex, 1);
+      commit('SET_RELEASE_LIST', releaseList);
     }
 
     // ライブラリ一覧に表示されてないリリースを保存した場合
     if (isSaved && savedReleaseIndex === -1) {
-      commit('INCREMENT_NUMBER_OF_UNUPDATED_RELEASES');
+      commit('INCREMENT_UNUPDATED_COUNTS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [releaseId, isSaved]);

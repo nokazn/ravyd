@@ -26,8 +26,9 @@ const libraryArtistsGetters: Getters<LibraryArtistsState, LibraryArtistsGetters>
 
   lastArtistId(state) {
     const { artistList } = state;
-    return artistList != null
-      ? artistList[artistList.length - 1]?.id
+    const { length } = artistList;
+    return length !== 0
+      ? artistList[length - 1].id
       : undefined;
   },
 };

@@ -60,7 +60,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
   async getAccessToken({ commit }) {
     const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth')
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         return {};
       });

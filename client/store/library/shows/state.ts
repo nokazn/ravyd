@@ -1,14 +1,14 @@
 import { App } from '~~/types';
 
-export type LibraryTracksState = {
-  trackList: App.PlaylistTrackDetail[]
+export type LibraryShowsState = {
+  showList: App.ShowCardInfo[]
   total: number | undefined
   unupdatedCounts: number
   actualIsSavedMap: Map<string, boolean>
-};
+}
 
-const state: () => LibraryTracksState = () => ({
-  trackList: [],
+const state = (): LibraryShowsState => ({
+  showList: [],
   total: undefined,
   unupdatedCounts: 0,
   actualIsSavedMap: new Map(),

@@ -11,16 +11,9 @@
 import Vue, { PropType } from 'vue';
 
 import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
-import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
-
-const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
-
-export type On = {
-  [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
-}
 
 export default Vue.extend({
   components: {
@@ -28,8 +21,12 @@ export default Vue.extend({
   },
 
   props: {
-    track: {
-      type: Object as PropType<App.TrackDetail>,
+    episode: {
+      type: Object as PropType<App.EpisodeDetail>,
+      required: true,
+    },
+    publisher: {
+      type: String,
       required: true,
     },
     playlistId: {
@@ -45,12 +42,12 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const addItemToQueue = () => {
-        const trackName = this.track.name;
+        const trackName = this.episode.name;
         return {
           name: '次に再生に追加',
           handler: () => {
             this.$spotify.player.addItemToQueue({
-              uri: this.track.uri,
+              uri: this.episode.uri,
             }).then(() => {
               this.$toast.show('primary', `"${trackName}" を次に再生に追加しました。`);
             }).catch((err: Error) => {
@@ -61,51 +58,11 @@ export default Vue.extend({
         };
       };
 
-      const artistPage = () => {
-        const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
-        //  アーティストが複数の時
-        if (artistList.length > 1) {
-          const props: ArtistLinkMenuProps = {
-            artistList,
-            left: true,
-          };
-          return {
-            component: ArtistLinkMenu,
-            props,
-          };
-        }
-
-        const artist = artistList[0] as App.SimpleArtistInfo | undefined;
-        return {
-          name: 'アーティストページに移動',
-          to: `/artists/${artist?.id}`,
-          disabled: artist == null || this.$route.params.artistId === artist.id,
-        };
-      };
-
-      const releasePage = () => {
-        const { releaseId } = this.track;
-
-        return {
-          name: 'アルバムページに移動',
-          to: `/releases/${releaseId}`,
-          disabled: this.$route.params.releaseId === releaseId,
-        };
-      };
-
-      const saveTrack = () => ({
-        name: this.track.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
-        handler: () => {
-          const nextSavedState = !this.track.isSaved;
-          this.$emit(ON_FAVORITE_MENU_CLICKED, nextSavedState);
-        },
-      });
-
       const addItemToPlaylist = () => {
         const props: AddItemToPlaylistMenuProps = {
-          name: this.track.name,
-          uriList: [this.track.uri],
-          artists: this.track.artistList,
+          name: this.episode.name,
+          uriList: [this.episode.uri],
+          artists: this.publisher,
           left: true,
         };
 
@@ -123,10 +80,10 @@ export default Vue.extend({
           this.$dispatch('playlists/removePlaylistItem', {
             playlistId: this.playlistId,
             track: {
-              uri: this.track.uri,
-              positions: [this.track.index],
+              uri: this.episode.uri,
+              positions: [this.episode.index],
             },
-            name: this.track.name,
+            name: this.episode.name,
           });
         },
         disabled: this.playlistId == null,
@@ -134,11 +91,11 @@ export default Vue.extend({
 
       const share = () => {
         const props: ShareMenuProps = {
-          name: this.track.name,
-          uri: this.track.uri,
-          typeName: '曲',
-          artists: this.track.artistList,
-          externalUrls: this.track.externalUrls,
+          name: this.episode.name,
+          uri: this.episode.uri,
+          typeName: 'エピソード',
+          artists: this.publisher,
+          externalUrls: this.episode.externalUrls,
           left: true,
         };
         return {
@@ -151,14 +108,12 @@ export default Vue.extend({
       return this.playlistId != null
         ? [
           [addItemToQueue()],
-          [artistPage(), releasePage()],
-          [saveTrack(), addItemToPlaylist(), removePlaylistItem()],
+          [addItemToPlaylist(), removePlaylistItem()],
           [share()],
         ]
         : [
           [addItemToQueue()],
-          [artistPage(), releasePage()],
-          [saveTrack(), addItemToPlaylist()],
+          [addItemToPlaylist()],
           [share()],
         ];
     },

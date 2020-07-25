@@ -2,11 +2,11 @@
   <client-only>
     <v-data-table
       :headers="headers"
-      :items="trackList"
+      :items="episodeList"
       disable-pagination
       hide-default-footer
       :no-data-text="noDataText"
-      :class="$style.PlaylistTrackTable"
+      :class="$style.EpisodeTable"
     >
       <template #header.duration>
         <v-icon
@@ -22,23 +22,22 @@
         <v-icon
           :size="16"
           color="subtext"
-          title="保存した日"
+          title="公開日"
         >
           mdi-calendar-outline
         </v-icon>
       </template>
 
       <template #item="{ item }">
-        <PlaylistTrackTableRow
+        <EpisodeTableRow
           :item="item"
-          :playlist-id="playlistId"
+          :publisher="publisher"
           :added-at="addedAt"
           :is-active="item.id === activeRowId"
-          :is-track-set="isTrackSet(item.id)"
-          :is-playing-track="isPlayingTrack(item.id)"
+          :is-episode-set="isEpisodeSet(item.id)"
+          :is-playing-episode="isPlayingEpisode(item.id)"
           @on-row-clicked="onRowClicked"
           @on-media-button-clicked="onMediaButtonClicked"
-          @on-favorite-button-clicked="onFavoriteButtonClicked"
         />
       </template>
     </v-data-table>
@@ -49,7 +48,7 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
@@ -57,38 +56,27 @@ export type Data = {
   activeRowId: string | undefined
 };
 
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
-
-export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
-}
-
 export default Vue.extend({
   components: {
-    PlaylistTrackTableRow,
+    EpisodeTableRow,
   },
 
   props: {
-    trackList: {
-      type: Array as PropType<App.PlaylistTrackDetail[]>,
+    episodeList: {
+      type: Array as PropType<App.EpisodeDetail[]>,
       required: true,
     },
-    playlistId: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
-    },
     uri: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
+      type: String,
+      required: true,
+    },
+    publisher: {
+      type: String,
+      required: true,
     },
     noDataText: {
       type: String,
-      default: 'まだトラックが追加されていません。',
-    },
-    // customContext を使用するか (uri は指定するけど contextUri を渡したくない場合)
-    custom: {
-      type: Boolean,
-      default: false,
+      default: 'エピソードがありません。',
     },
     addedAt: {
       type: Boolean,
@@ -98,10 +86,10 @@ export default Vue.extend({
 
   data(): Data {
     // 左右の padding: 8px を含めた幅
-    const isSavedColumn = {
+    const mediaButtonColumn = {
       text: '',
-      value: 'isSaved',
-      width: 96,
+      value: 'index',
+      width: 60,
       sortable: false,
       filterable: false,
     };
@@ -133,14 +121,14 @@ export default Vue.extend({
     // addedAt が有効かどうか
     const headers = this.addedAt
       ? [
-        isSavedColumn,
+        mediaButtonColumn,
         titleColumn,
         addedAtColumn,
         durationColumn,
         menuColumn,
       ]
       : [
-        isSavedColumn,
+        mediaButtonColumn,
         titleColumn,
         durationColumn,
         menuColumn,
@@ -153,51 +141,27 @@ export default Vue.extend({
   },
 
   computed: {
-    isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['playback/isTrackSet'](trackId);
+    isEpisodeSet(): (episodeId: string) => boolean {
+      return (episodeId: string) => this.$getters()['playback/isTrackSet'](episodeId);
     },
-    isPlayingTrack(): (trackId: string) => boolean {
-      return (trackId: string) => this.isTrackSet(trackId)
+    isPlayingEpisode(): (episodeId: string) => boolean {
+      return (episodeId: string) => this.isEpisodeSet(episodeId)
         && this.$state().playback.isPlaying;
     },
   },
 
   methods: {
-    setCustomContext(trackUriList: string[]) {
-      this.$dispatch('playback/setCustomContext', {
-        contextUri: this.uri,
-        trackUriList,
-      });
-    },
-    onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
-      if (this.isPlayingTrack(id)) {
+    onMediaButtonClicked({ id, uri }: OnRow['on-media-button-clicked']) {
+      if (this.isPlayingEpisode(id)) {
         this.$dispatch('playback/pause');
-        return;
-      }
-
-      if (this.isTrackSet(id)) {
-        this.$dispatch('playback/play');
-        return;
-      }
-
-      // trackUriList は更新されうる
-      const trackUriList = this.trackList.map((track) => track.uri);
-      // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-      this.$dispatch('playback/play', !this.custom && this.uri != null
-        ? {
+      } else {
+        this.$dispatch('playback/play', {
           contextUri: this.uri,
-          offset: { position: index },
-        }
-        : {
-          trackUriList,
-          offset: { uri },
+          offset: {
+            uri,
+          },
         });
-
-      this.setCustomContext(trackUriList);
-    },
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
+      }
     },
     onRowClicked({ id }: OnRow['on-row-clicked']) {
       this.activeRowId = id;
@@ -207,7 +171,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.PlaylistTrackTable {
+.EpisodeTable {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
 

@@ -27,8 +27,7 @@ const generatePath = (type: SpotifyAPI.SearchType, id: string) => {
     artist: 'artists',
     track: 'releases',
     playlist: 'playlists',
-    // @todo
-    show: 'episodes',
+    show: 'shows',
     episode: 'episodes',
   }[type];
 

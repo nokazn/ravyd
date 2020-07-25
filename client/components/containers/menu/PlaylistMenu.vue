@@ -162,7 +162,8 @@ export default Vue.extend({
         const props: ShareMenuProps = {
           name: this.playlist.name,
           uri: this.playlist.uri,
-          typeName: '曲',
+          typeName: 'プレイリスト',
+          artists: undefined,
           externalUrls: this.playlist.externalUrls,
           left: this.left,
           right: this.right,
