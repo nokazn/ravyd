@@ -10,7 +10,7 @@
       mdi-music-box-multiple-outline
     </v-icon>
     <span :style="textStyles">
-      {{ totalTracks }}曲
+      {{ text }}
     </span>
   </span>
 </template>
@@ -26,9 +26,13 @@ export type Data = {
 
 export default Vue.extend({
   props: {
-    totalTracks: {
+    total: {
       type: Number,
       required: true,
+    },
+    unit: {
+      type: String,
+      default: '曲',
     },
     size: {
       type: Number,
@@ -37,7 +41,7 @@ export default Vue.extend({
   },
 
   data() {
-    const text = `${this.totalTracks}曲`;
+    const text = `${this.total}${this.unit}`;
     const title = `全${text}`;
     const textStyles = {
       fontSize: `${this.size * 0.8}px`,

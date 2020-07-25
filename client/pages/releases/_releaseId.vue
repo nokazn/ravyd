@@ -90,7 +90,7 @@
             />
 
             <ReleaseTotalTracks
-              :total-tracks="releaseInfo.totalTracks"
+              :total="releaseInfo.totalTracks"
             />
 
             <ReleaseDuration

@@ -119,7 +119,7 @@
 
           <div :class="$style.Info__detail">
             <ReleaseTotalTracks
-              :total-tracks="playlistInfo.totalTracks"
+              :total="playlistInfo.totalTracks"
             />
 
             <ReleaseDuration
