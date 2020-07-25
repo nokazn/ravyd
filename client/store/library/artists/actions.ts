@@ -36,7 +36,7 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedArtistList({ commit, getters }, payload) {
+  async getSavedArtistList({ getters, commit }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
 

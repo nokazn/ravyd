@@ -37,7 +37,7 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedTrackList({ commit, getters, rootGetters }, payload) {
+  async getSavedTrackList({ getters, commit, rootGetters }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
 
