@@ -170,6 +170,50 @@ export namespace App {
     artworkList: SpotifyAPI.Image[]
   }
 
+  // /shows/:showId page
+  export type ShowInfo = {
+    id: string
+    name: string
+    uri: string
+    publisher: string
+    artworkList: SpotifyAPI.Image[]
+    totalEpisodes: number
+    externalUrls: SpotifyAPI.ExternalUrls
+    explicit: boolean
+    description: string
+    episodeList: EpisodeDetail[]
+    copyrightList: SpotifyAPI.Copyright[]
+    isFullEpisodeList: boolean
+  }
+  export type ShowCardInfo = {
+    id: string
+    name: string
+    uri: string
+    publisher: string
+    description: string | null
+    artworkList: SpotifyAPI.Image[]
+    externalUrls: SpotifyAPI.ExternalUrls
+  }
+
+  // /episodes/:episodeId page
+  export type EpisodeDetail = {
+    index: number
+    id: string
+    name: string
+    uri: string
+    description: string
+    artworkList: SpotifyAPI.Image[]
+    isPlayable: boolean
+    explicit: boolean
+    releaseDate: string
+    releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
+    durationMs: number
+    externalUrls: SpotifyAPI.ExternalUrls
+    previewUrl: string | null
+    showId: string
+    showName: string
+  }
+
   export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
     type: T
     id: string

@@ -3,6 +3,7 @@ import * as Auth from '~/store/auth/types';
 import * as LibraryTracks from '~/store/library/tracks/types';
 import * as LibraryReleases from '~/store/library/releases/types';
 import * as LibraryArtists from '~/store/library/artists/types';
+import * as LibraryShows from '~/store/library/shows/types';
 import * as Playback from '~/store/playback/types';
 import * as Player from '~/store/player/types';
 import * as Playlists from '~/store/playlists/types';
@@ -18,6 +19,7 @@ declare module 'typed-vuex' {
       tracks: LibraryTracks.LibraryTracksState
       releases: LibraryReleases.LibraryReleasesState
       artists: LibraryArtists.LibraryArtistsState
+      shows: LibraryShows.LibraryShowsState
     }
     playback: Playback.PlaybackState
     player: Player.PlayerState
@@ -30,6 +32,7 @@ declare module 'typed-vuex' {
     & LibraryTracks.RootGetters
     & LibraryReleases.RootGetters
     & LibraryArtists.RootGetters
+    & LibraryShows.RootGetters
     & Playback.RootGetters
     & Player.RootGetters
     & Playlists.RootGetters
@@ -40,6 +43,7 @@ declare module 'typed-vuex' {
     & LibraryTracks.RootMutations
     & LibraryReleases.RootMutations
     & LibraryArtists.RootMutations
+    & LibraryShows.RootMutations
     & Playback.RootMutations
     & Player.RootMutations
     & Playlists.RootMutations
@@ -50,6 +54,7 @@ declare module 'typed-vuex' {
     & LibraryTracks.RootActions
     & LibraryReleases.RootActions
     & LibraryArtists.RootActions
+    & LibraryShows.RootActions
     & Playback.RootActions
     & Player.RootActions
     & Playlists.RootActions
