@@ -356,7 +356,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           dispatch('getCurrentPlayback', 500);
         }
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('warning', 'エラーが発生しました。');
 
