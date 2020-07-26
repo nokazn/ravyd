@@ -207,7 +207,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       this.$dispatch('setDefaultDominantBackgroundColor');
     }
 
-    // プレイリストをフォロー/アンフォローした後呼ばれる
+    // エピソードをフォロー/アンフォローした後呼ばれる
     const subscribeSavedShow = (mutationPayload: ExtendedMutationPayload<'library/shows/SET_ACTUAL_IS_SAVED'>) => {
       if (this.showInfo == null) return;
 
