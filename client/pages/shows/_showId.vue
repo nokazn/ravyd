@@ -107,6 +107,8 @@
       :is-loading="!showInfo.isFullEpisodeList"
       @on-appeared="appendEpisodeList"
     />
+
+    <Copyrights :copyright-list="showInfo.copyrightList" />
   </div>
 
   <Fallback v-else>
@@ -125,6 +127,7 @@ import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/butto
 import ShowMenu, { On as OnMenu } from '~/components/containers/menu/ShowMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShowInfo, getIsSaved } from '~/plugins/local/_showId';
@@ -156,6 +159,7 @@ interface Data {
     ShowMenu,
     ReleaseTotalTracks,
     IntersectionLoadingCircle,
+    Copyrights,
     Fallback,
   },
 

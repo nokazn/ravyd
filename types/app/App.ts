@@ -208,6 +208,7 @@ export namespace App {
     releaseDate: string
     releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
     durationMs: number
+    resumePoint: SpotifyAPI.ResumePoint
     externalUrls: SpotifyAPI.ExternalUrls
     previewUrl: string | null
     showId: string

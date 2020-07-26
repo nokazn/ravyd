@@ -1,46 +1,57 @@
 <template>
   <client-only>
-    <v-data-table
-      :headers="headers"
-      :items="episodeList"
-      disable-pagination
-      hide-default-footer
-      :no-data-text="noDataText"
-      :class="$style.EpisodeTable"
-    >
-      <template #header.duration>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="再生時間"
-        >
-          mdi-clock-outline
-        </v-icon>
-      </template>
+    <div>
+      <v-select
+        v-model="searchText"
+        :items="selectItems"
+        dense
+        :class="$style.EpisodeSelect"
+      />
 
-      <template #header.addedAt>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="公開日"
-        >
-          mdi-calendar-outline
-        </v-icon>
-      </template>
+      <v-data-table
+        :headers="headers"
+        :items="episodeList"
+        disable-pagination
+        hide-default-footer
+        :search="searchText"
+        :custom-filter="customFilter"
+        :no-data-text="noDataText"
+        :class="$style.EpisodeTable"
+      >
+        <template #header.duration>
+          <v-icon
+            :size="16"
+            color="subtext"
+            title="再生時間"
+          >
+            mdi-clock-outline
+          </v-icon>
+        </template>
 
-      <template #item="{ item }">
-        <EpisodeTableRow
-          :item="item"
-          :publisher="publisher"
-          :added-at="addedAt"
-          :is-active="item.id === activeRowId"
-          :is-episode-set="isEpisodeSet(item.id)"
-          :is-playing-episode="isPlayingEpisode(item.id)"
-          @on-row-clicked="onRowClicked"
-          @on-media-button-clicked="onMediaButtonClicked"
-        />
-      </template>
-    </v-data-table>
+        <template #header.addedAt>
+          <v-icon
+            :size="16"
+            color="subtext"
+            title="公開日"
+          >
+            mdi-calendar-outline
+          </v-icon>
+        </template>
+
+        <template #item="{ item }">
+          <EpisodeTableRow
+            :item="item"
+            :publisher="publisher"
+            :added-at="addedAt"
+            :is-active="item.id === activeRowId"
+            :is-episode-set="isEpisodeSet(item.id)"
+            :is-playing-episode="isPlayingEpisode(item.id)"
+            @on-row-clicked="onRowClicked"
+            @on-media-button-clicked="onMediaButtonClicked"
+          />
+        </template>
+      </v-data-table>
+    </div>
   </client-only>
 </template>
 
@@ -51,8 +62,16 @@ import { DataTableHeader } from 'vuetify';
 import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTableRow.vue';
 import { App } from '~~/types';
 
-export type Data = {
+type EpisodeSelector = 'all' | 'inProgress' | 'unplayed';
+
+type Data = {
   headers: DataTableHeader[]
+  searchText: EpisodeSelector
+  selectItems: {
+    text: string
+    value: EpisodeSelector
+  }[]
+  customFilter: (value: any, search: EpisodeSelector | null, item: App.EpisodeDetail) => boolean
   activeRowId: string | undefined
 };
 
@@ -97,6 +116,12 @@ export default Vue.extend({
       text: 'タイトル',
       value: 'name',
     };
+    const progressColumn = {
+      text: '進捗',
+      value: 'resumePoint',
+      width: 72,
+      align: 'center' as const,
+    };
     const addedAtColumn = {
       text: '',
       value: 'addedAt',
@@ -106,7 +131,7 @@ export default Vue.extend({
     const durationColumn = {
       text: '',
       value: 'duration',
-      width: 72,
+      width: 60,
       align: 'center' as const,
     };
     const menuColumn = {
@@ -123,6 +148,7 @@ export default Vue.extend({
       ? [
         mediaButtonColumn,
         titleColumn,
+        progressColumn,
         addedAtColumn,
         durationColumn,
         menuColumn,
@@ -130,12 +156,49 @@ export default Vue.extend({
       : [
         mediaButtonColumn,
         titleColumn,
+        progressColumn,
         durationColumn,
         menuColumn,
       ];
 
+    const customFilter = (
+      _: any,
+      search: EpisodeSelector | null,
+      item: App.EpisodeDetail,
+    ): boolean => {
+      if (search == null) return true;
+      const position = item.resumePoint.resume_position_ms;
+      const isFulllyPlayed = item.resumePoint.fully_played;
+      switch (search) {
+        case 'inProgress':
+          return position > 0 && !isFulllyPlayed;
+        case 'unplayed':
+          return position === 0;
+        default:
+          return true;
+      }
+    };
+
+    const selectItems = [
+      {
+        text: 'すべてのエピソード',
+        value: 'all' as const,
+      },
+      {
+        text: '未再生のエピソード',
+        value: 'unplayed' as const,
+      },
+      {
+        text: '再生中のエピソード',
+        value: 'inProgress' as const,
+      },
+    ];
+
     return {
       headers,
+      searchText: 'all',
+      selectItems,
+      customFilter,
       activeRowId: undefined,
     };
   },
@@ -171,6 +234,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
+.EpisodeSelect {
+  max-width: 300px;
+}
+
 .EpisodeTable {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;

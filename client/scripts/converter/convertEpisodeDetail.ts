@@ -32,6 +32,7 @@ export const convertEpisodeDetail = <
       releaseDate: episode.release_date,
       releaseDatePrecision: episode.release_date_precision,
       durationMs: episode.duration_ms,
+      resumePoint: episode.resume_point,
       externalUrls: episode.external_urls,
       previewUrl: episode.audio_preview_url,
       showId: showId ?? (episode as SpotifyAPI.Episode).show.id,
