@@ -40,6 +40,7 @@
             </div>
 
             <div
+              v-if="item.type !== 'episode'"
               :class="[$style.Content__subtitle, subtitleColor]"
               class="g-ellipsis-text"
             >
@@ -52,6 +53,18 @@
 
               <nuxt-link
                 :to="`/releases/${item.releaseId}`"
+                :title="item.releaseName"
+              >
+                {{ item.releaseName }}
+              </nuxt-link>
+            </div>
+            <div
+              v-else
+              :class="[$style.Content__subtitle, subtitleColor]"
+              class="g-ellipsis-text"
+            >
+              <nuxt-link
+                :to="`/shows/${item.releaseId}`"
                 :title="item.releaseName"
               >
                 {{ item.releaseName }}
