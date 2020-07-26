@@ -279,10 +279,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       }
 
       /**
-       * 再生中のアイテムの情報が存在し、現在の再生状況を取得できなかった場合はリトライ
+       * 再生中のアイテムの情報が存在し、エピソード以外の現在のアイテムが取得できなかった場合はリトライ
        * そうでない場合は regularPeriod 後かアイテムが変わった後
        */
-      const retryTimeout = hasTrack && (!currentPlayback || currentPlayback?.item == null)
+      const isEmptyItem = !currentPlayback || currentPlayback?.item == null;
+      const isEpisode = !currentPlayback || currentPlayback.currently_playing_type === 'episode';
+      const retryTimeout = hasTrack && isEmptyItem && !isEpisode
         ? 1000
         : undefined;
       setTimer(handler, retryTimeout);
