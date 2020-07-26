@@ -2,10 +2,7 @@ import { convertAddedAt } from '~/scripts/converter/convertAddedAt';
 import { App, SpotifyAPI } from '~~/types';
 
 export const convertPlaylistTrackDetail = (
-  {
-    isTrackSavedList,
-    offset = 0,
-  }: {
+  { isTrackSavedList, offset = 0 }: {
     isTrackSavedList: boolean[],
     offset?: number
   },
@@ -14,6 +11,7 @@ export const convertPlaylistTrackDetail = (
   index: number,
 ): App.PlaylistTrackDetail => {
   const detail = {
+    type: track.type,
     index: index + offset,
     name: track.name,
     id: track.id,

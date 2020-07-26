@@ -3,7 +3,7 @@
     <tr
       :class="{
         [$style.PlaylistTrackTableRow]: true,
-        'inactive--text': !item.isPlayable
+        'inactive--text': disabled
       }"
       :data-is-active="isActive"
       @click="onRowClicked"
@@ -16,11 +16,12 @@
           <PlaylistMediaButton
             :is-hovered="isRowHovered"
             :is-playing-track="isPlayingTrack"
-            :disabled="!item.isPlayable"
+            :disabled="disabled"
             @on-clicked="onMediaButtonClicked"
           />
 
           <FavoriteButton
+            v-if="item.type !== 'episode'"
             :is-favorited="item.isSaved"
             @on-clicked="onFavoriteButtonClicked"
           />
@@ -85,7 +86,14 @@
       </td>
 
       <td>
+        <EpisodeMenu
+          v-if="item.type === 'episode'"
+          :episode="item"
+          :playlist-id="playlistId"
+          :publisher="publisher"
+        />
         <TrackMenu
+          v-else
           :track="item"
           :playlist-id="playlistId"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
@@ -104,6 +112,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
+import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -124,6 +133,7 @@ export default Vue.extend({
     ExplicitChip,
     TrackTime,
     TrackMenu,
+    EpisodeMenu,
   },
 
   props: {
@@ -154,14 +164,26 @@ export default Vue.extend({
   },
 
   computed: {
+    /**
+     * @todo
+     * エピソードは isPlayable が false でも再生できるようにしている
+     */
+    disabled(): boolean {
+      return this.item.type !== 'episode' && !this.item.isPlayable;
+    },
+    publisher(): string {
+      return this.item.artistList
+        .map((artist) => artist.name)
+        .join(', ');
+    },
     titleColor(): string | undefined {
-      if (!this.item.isPlayable) return 'inactive--text';
+      if (this.disabled) return 'inactive--text';
       return this.isTrackSet
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
-      if (!this.item.isPlayable) return 'inactive--text';
+      if (this.disabled) return 'inactive--text';
       return this.isTrackSet
         ? 'active--text'
         : 'subtext--text';
