@@ -32,7 +32,6 @@
     </portal>
 
     <div
-      v-if="releaseInfo != null"
       :ref="HEADER_REF"
       :class="$style.ReleaseIdPage__header"
     >

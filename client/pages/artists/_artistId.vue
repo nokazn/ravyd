@@ -32,7 +32,6 @@
     </portal>
 
     <div
-      v-if="artistInfo != null"
       :ref="HEADER_REF"
       :class="$style.ArtistIdPage__header"
     >

@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.GenreIdPage">
-    <h1
-      v-if="categoryInfo != null"
-      :class="$style.GenreIdPage__title"
-    >
+  <div
+    v-if="categoryInfo != null"
+    :class="$style.GenreIdPage"
+  >
+    <h1 :class="$style.GenreIdPage__title">
       {{ categoryInfo.name }}
     </h1>
 
@@ -32,9 +32,13 @@
 
     <IntersectionLoadingCircle
       :is-loading="!isFullPlaylists"
-      @on-appeared="getCategoryPlaylist"
+      @on-appeared="appendCategoryPlaylist"
     />
   </div>
+
+  <Fallback v-else>
+    プレイリストの一覧を取得できませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
@@ -42,9 +46,10 @@ import { Vue, Component } from 'nuxt-property-decorator';
 
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
-import { App } from '~~/types';
+import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {
   categoryInfo: App.CategoryInfo | undefined
@@ -65,6 +70,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   components: {
     PlaylistCard,
     IntersectionLoadingCircle,
+    Fallback,
   },
 
   validate({ params }) {
@@ -98,19 +104,19 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
   }
 
   /**
-   * @todo リファクタリング
    * plugins/local の getCategoryPlaylist と同じ処理で、スクロールが下限に到達したとき呼ばれる
    */
-  async getCategoryPlaylist() {
+  async appendCategoryPlaylist(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
     if (this.isFullPlaylists) return;
 
+    const { playlists: currentPlaylists } = this;
     const { genreId: categoryId } = this.$route.params;
     const country = this.$getters()['auth/userCountryCode'];
-    const offset = this.playlists?.length;
+    const offset = this.playlists.length;
     const { playlists } = await this.$spotify.browse.getCategoryPlaylist({
       categoryId,
       country,
-      limit: LIMIT_OF_PLAYLISTS,
+      limit,
       offset,
     });
     if (playlists == null) {
@@ -119,8 +125,8 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
     }
 
     const addedPlaylists = playlists.items.map(convertPlaylistForCard);
-    this.playlists = this.playlists != null
-      ? [...this.playlists, ...addedPlaylists]
+    this.playlists = currentPlaylists != null
+      ? [...currentPlaylists, ...addedPlaylists]
       : addedPlaylists;
 
     if (playlists.next == null) {

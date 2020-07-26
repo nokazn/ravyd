@@ -45,7 +45,6 @@
     </portal>
 
     <div
-      v-if="playlistInfo != null"
       :ref="HEADER_REF"
       :class="$style.PlaylistIdPage__header"
     >
