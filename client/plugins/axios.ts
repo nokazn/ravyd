@@ -24,7 +24,6 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   });
 
   spotifyApi.onResponseError(async (err) => {
-    console.error({ err });
     if (err.response?.status === 401) {
       await app.$dispatch('auth/refreshAccessToken');
       if (!app.$getters()['auth/isLoggedin']) {
@@ -33,6 +32,8 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
         app.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
       }
     }
+
+    throw new Error(err.message);
   });
 
   inject('spotifyApi', spotifyApi);
