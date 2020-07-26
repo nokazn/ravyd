@@ -253,7 +253,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       const currentPlayback = await this.$spotify.player.getCurrentPlayback({ market });
 
       if (!currentPlayback) {
-        resetPlayback(hasTrack);
+        // @todo 再生状況の取得に失敗した場合のみリセット
+        if (currentPlayback == null) {
+          resetPlayback(hasTrack);
+        }
 
         // 再生状況が取得できない場合はこのデバイスで再生
         await dispatch('transferPlayback', {
