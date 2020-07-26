@@ -6,21 +6,27 @@
     }"
     :title="artistNames"
   >
-    <template
-      v-for="({ name, id }, index) in artistList"
-    >
-      <nuxt-link
-        :key="id"
-        :to="artistPath(id)"
-        :title="name"
-        @click.native.stop="onClicked"
-      >
-        {{ name }}
-      </nuxt-link><span
-        v-if="index !== artistList.length - 1"
-        :key="`${id}-comma`"
-        :class="$style.ArtistNames__comma"
-      >, </span>
+    <template v-if="text">
+      <span :title="name">
+        {{ artistNames }}
+      </span>
+    </template>
+
+    <template v-else>
+      <template v-for="({ name, id }, index) in artistList">
+        <nuxt-link
+          :key="id"
+          :to="artistPath(id)"
+          :title="name"
+          @click.native.stop="onClicked"
+        >
+          {{ name }}
+        </nuxt-link><span
+          v-if="index !== artistList.length - 1"
+          :key="`${id}-comma`"
+          :class="$style.ArtistNames__comma"
+        >, </span>
+      </template>
     </template>
   </div>
 </template>
@@ -49,6 +55,10 @@ export default Vue.extend({
       validator(value) {
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
+    },
+    text: {
+      type: Boolean,
+      default: false,
     },
     inline: {
       type: Boolean,
