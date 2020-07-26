@@ -224,7 +224,7 @@ export type Data = {
   },
 
   validate({ params }: Context) {
-    return params.artistId !== '';
+    return params.artistId != null && params.artistId !== '';
   },
 
   async asyncData(context): Promise<AsyncData> {

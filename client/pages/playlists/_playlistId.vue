@@ -222,7 +222,7 @@ interface Data {
   },
 
   validate({ params }) {
-    return params.playlistId !== '';
+    return params.playlistId != null && params.playlistId !== '';
   },
 
   async asyncData(context): Promise<AsyncData> {

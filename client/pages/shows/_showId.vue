@@ -160,7 +160,7 @@ interface Data {
   },
 
   validate({ params }) {
-    return params.showId !== '';
+    return params.showId != null && params.showId !== '';
   },
 
   async asyncData(context): Promise<AsyncData> {

@@ -68,7 +68,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 
   validate({ params }) {
-    return params.genreId !== '';
+    return params.genreId != null && params.genreId !== '';
   },
 
   async asyncData(context): Promise<AsyncData> {

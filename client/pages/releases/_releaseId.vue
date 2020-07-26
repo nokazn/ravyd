@@ -208,7 +208,7 @@ interface Data {
   },
 
   validate({ params }: Context) {
-    return params.releaseId !== '';
+    return params.releaseId != null && params.releaseId !== '';
   },
 
   async asyncData(context: Context): Promise<AsyncData> {
