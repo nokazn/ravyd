@@ -8,7 +8,6 @@
       disable-sort
       hide-default-footer
       no-data-text="トラックがありません。"
-      :class="$style.TrackTable"
       class="TrackTable"
     >
       <template #header.duration>
@@ -164,7 +163,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 .TrackTable {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
@@ -182,11 +181,7 @@ export default Vue.extend({
       }
     }
   }
-}
-</style>
 
-<style lang="scss">
-.TrackTable {
   .v-row-group__header {
     // 表全体の背景と同じ色にする
     background: inherit !important;

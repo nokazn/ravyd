@@ -16,7 +16,7 @@
         :search="searchText"
         :custom-filter="customFilter"
         :no-data-text="noDataText"
-        :class="$style.EpisodeTable"
+        class="EpisodeTable"
       >
         <template #header.duration>
           <v-icon
@@ -237,7 +237,9 @@ export default Vue.extend({
 .EpisodeSelect {
   max-width: 300px;
 }
+</style>
 
+<style lang="scss">
 .EpisodeTable {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
@@ -251,8 +253,13 @@ export default Vue.extend({
       th {
         padding: 0 8px !important;
       }
+
+      // .v-aplication .active を無効化する
+      th.active {
+        background-color: inherit !important;
+        border-color: inherit !important;
+      }
     }
   }
 }
-
 </style>
