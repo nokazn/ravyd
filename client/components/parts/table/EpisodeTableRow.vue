@@ -8,18 +8,16 @@
       :data-is-active="isActive"
       @click="onRowClicked"
     >
-      <td>
-        <div
-          :class="$style.EpisodeTableRow_buttons"
-          class="text-center"
-        >
-          <PlaylistMediaButton
-            :is-hovered="isRowHovered"
-            :is-playing-track="isPlayingEpisode"
-            :disabled="!item.isPlayable"
-            @on-clicked="onMediaButtonClicked"
-          />
-        </div>
+      <td
+        :class="$style.EpisodeTableRow_buttons"
+        class="text-center"
+      >
+        <PlaylistMediaButton
+          :is-hovered="isRowHovered"
+          :is-playing-track="isPlayingEpisode"
+          :disabled="!item.isPlayable"
+          @on-clicked="onMediaButtonClicked"
+        />
       </td>
 
       <td>
@@ -179,10 +177,6 @@ export default Vue.extend({
 
   &__buttons {
     display: flex;
-
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
   }
 
   &__smallText {
