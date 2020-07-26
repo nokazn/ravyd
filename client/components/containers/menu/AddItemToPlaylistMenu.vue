@@ -137,7 +137,7 @@ export default Vue.extend({
         : name;
 
       this.$dispatch('playlists/createPlaylist', {
-        name,
+        name: title,
         description: '',
         uriList: this.uriList,
       }).then(() => {
