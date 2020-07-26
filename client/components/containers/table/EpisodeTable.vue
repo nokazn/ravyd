@@ -97,6 +97,12 @@ export default Vue.extend({
       text: 'タイトル',
       value: 'name',
     };
+    const progressColumn = {
+      text: '進捗',
+      value: 'resumePoint',
+      width: 72,
+      align: 'center' as const,
+    };
     const addedAtColumn = {
       text: '',
       value: 'addedAt',
@@ -106,7 +112,7 @@ export default Vue.extend({
     const durationColumn = {
       text: '',
       value: 'duration',
-      width: 72,
+      width: 60,
       align: 'center' as const,
     };
     const menuColumn = {
@@ -123,6 +129,7 @@ export default Vue.extend({
       ? [
         mediaButtonColumn,
         titleColumn,
+        progressColumn,
         addedAtColumn,
         durationColumn,
         menuColumn,
@@ -130,6 +137,7 @@ export default Vue.extend({
       : [
         mediaButtonColumn,
         titleColumn,
+        progressColumn,
         durationColumn,
         menuColumn,
       ];

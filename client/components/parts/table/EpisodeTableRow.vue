@@ -49,6 +49,17 @@
       </td>
 
       <td
+        :title="resumePointTitle"
+        class="text-center"
+      >
+        <v-progress-linear
+          rounded
+          color="grey lighten-4"
+          :value="resumePointPersent"
+        />
+      </td>
+
+      <td
         :title="item.releaseDate"
         :class="$style.EpisodeTableRow__smallText"
         class="text-center"
@@ -83,6 +94,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
+import { mssTime } from '~~/utils/mssTime';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -142,6 +154,15 @@ export default Vue.extend({
       return this.isEpisodeSet
         ? 'active--text'
         : 'subtext--text';
+    },
+    resumePointTitle(): string {
+      const position = this.item.resumePoint.resume_position_ms;
+      return position !== 0
+        ? `${mssTime(position)}まで再生`
+        : '未再生';
+    },
+    resumePointPersent(): number {
+      return (this.item.resumePoint.resume_position_ms / this.item.durationMs) * 100;
     },
     releaseDate(): string {
       return convertReleaseDate({
