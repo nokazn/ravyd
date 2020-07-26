@@ -10,13 +10,16 @@
       >
         <ContextMediaButton
           :height="32"
+          fab
           :is-playing="isArtistSet && isPlaying "
           @on-clicked="onContextMediaButtonClicked"
         />
 
-        <FollowButton
-          :is-following="isFollowing"
-          :height="32"
+        <FavoriteButton
+          outlined
+          :size="32"
+          :is-favorited="isFollowing"
+          text="フォロー"
           @on-clicked="toggleFolloingState"
         />
 
@@ -162,6 +165,7 @@ import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
+import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ArtistMenu, { On as OnMenu } from '~/components/containers/menu/ArtistMenu.vue';
 import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
 import CardsSection from '~/components/parts/section/CardsSection.vue';
@@ -213,6 +217,7 @@ export type Data = {
     UserAvatar,
     HashTags,
     ContextMediaButton,
+    FavoriteButton,
     FollowButton,
     ArtistMenu,
     TrackListWrapper,
@@ -345,7 +350,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleFolloingState(nextFollowingState: OnFollow['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFolloingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

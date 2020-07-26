@@ -35,6 +35,10 @@ export default Vue.extend({
       type: Number,
       default: 36,
     },
+    text: {
+      type: String,
+      default: '保存',
+    },
     outlined: {
       type: Boolean,
       default: false,
@@ -53,8 +57,8 @@ export default Vue.extend({
     },
     title(): string {
       return this.isFavorited
-        ? '保存しない'
-        : '保存する';
+        ? `${this.text}しない`
+        : `${this.text}する`;
     },
     iconSize(): number {
       return (this.size * 0.8) / Math.SQRT2;

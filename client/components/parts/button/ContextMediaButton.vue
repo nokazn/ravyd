@@ -1,5 +1,19 @@
 <template>
   <v-btn
+    v-if="fab"
+    fab
+    color="success"
+    :width="height"
+    :height="height"
+    :title="text"
+    @click="onClicked"
+  >
+    <v-icon>
+      {{ icon }}
+    </v-icon>
+  </v-btn>
+  <v-btn
+    v-else
     color="success"
     rounded
     :height="height"
@@ -33,6 +47,10 @@ export default Vue.extend({
     height: {
       type: Number,
       default: 36,
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     disabled: {
       type: Boolean,

@@ -2,6 +2,7 @@
   <div :class="$style.LibraryTracksPage">
     <portal :to="$header.PORTAL_NAME">
       <ContextMediaButton
+        fav
         :height="32"
         :is-playing="isPlaylistSet && isPlaying"
         @on-clicked="onContextMediaButtonClicked"

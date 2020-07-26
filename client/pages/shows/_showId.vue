@@ -9,6 +9,7 @@
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
+          fab
           :height="32"
           :is-playing="isShowSet && isPlaying"
           :disabled="!hasEpisodes"
