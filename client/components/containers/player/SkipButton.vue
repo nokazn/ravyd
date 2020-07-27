@@ -49,10 +49,25 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      const positionMs = this.$state().playback.positionMs + this.seconds * 1000;
-      this.$dispatch('playback/seek', {
-        positionMs,
-      });
+      const milliSeconds = this.seconds * 1000;
+      const positionMs = this.$state().playback.positionMs + milliSeconds;
+      // 戻る
+      if (milliSeconds < 0) {
+        this.$dispatch('playback/seek', {
+          positionMs: Math.max(positionMs, 0),
+        });
+        return;
+      }
+
+      if (positionMs < this.$state().playback.durationMs) {
+        // 進む
+        this.$dispatch('playback/seek', {
+          positionMs,
+        });
+      } else {
+        // 次の曲
+        this.$dispatch('playback/next');
+      }
     },
   },
 });
