@@ -46,7 +46,7 @@
           :class="$style.Footer__seekBar"
         />
 
-        <MediaControllersWrapper />
+        <MediaControllersWrapper :type="trackType" />
       </div>
 
       <div :class="$style.Footer__right">
