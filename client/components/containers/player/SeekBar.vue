@@ -7,7 +7,7 @@
       :disabled="disabled"
       thumb-color="white"
       :color="seekbarColor"
-      :max="maxMs"
+      :max="durationMs"
       :class="$style.SeekBar__slider"
       @mousedown="onMouseDown"
       @input="onInput"
@@ -78,9 +78,6 @@ export default Vue.extend({
       return this.$state().playback.disabledPlayingFromBegining;
     },
 
-    maxMs(): number {
-      return this.durationMs || 1;
-    },
     isPlaying(): RootState['playback']['isPlaying'] {
       return this.$state().playback.isPlaying;
     },

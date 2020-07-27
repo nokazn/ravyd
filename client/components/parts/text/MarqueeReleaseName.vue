@@ -4,31 +4,48 @@
     :class="[$style.ReleaseName, 'g-text-gradation']"
   >
     <nuxt-link
-      id="releaseNameLink"
+      v-if="releasePath != null"
+      :id="RELEASE_NAME_LINK"
       :to="releasePath"
       :style="marqueeStyles"
       @mouseover.native="onHovered"
     >
       {{ name }}
     </nuxt-link>
+    <span
+      v-else
+      :id="RELEASE_NAME_LINK"
+      :style="marqueeStyles"
+      @mouseover="onHovered"
+    >
+      {{ name }}
+    </span>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import { sleep } from '~~/utils/sleep';
+import { SpotifyAPI } from '~~/types';
+
+const RELEASE_NAME_LINK = 'RELEASE_NAME_LINK';
 
 type Data = {
   isHovered: boolean
   animationTimeoutId: ReturnType<typeof setTimeout> | undefined
   parentWidth: number | undefined
   linkWidth: number | undefined
+  RELEASE_NAME_LINK: string
 };
 
 export default Vue.extend({
   props: {
     name: {
       type: String,
+      required: true,
+    },
+    type: {
+      type: String as PropType<SpotifyAPI.Player.PlayingType>,
       required: true,
     },
     releaseId: {
@@ -43,12 +60,20 @@ export default Vue.extend({
       animationTimeoutId: undefined,
       parentWidth: undefined,
       linkWidth: undefined,
+      RELEASE_NAME_LINK,
     };
   },
 
   computed: {
-    releasePath(): string {
-      return `/releases/${this.releaseId}`;
+    releasePath(): string | undefined {
+      switch (this.type) {
+        case 'track':
+          return `/releases/${this.releaseId}`;
+        case 'episode':
+          return `/shows/${this.releaseId}`;
+        default:
+          return undefined;
+      }
     },
     marqueeSeconds(): number | undefined {
       if (!this.isHovered || this.parentWidth == null || this.linkWidth == null) return undefined;
@@ -72,9 +97,9 @@ export default Vue.extend({
 
   methods: {
     calculateWidth() {
-      const linkEle = document.getElementById('releaseNameLink');
+      const linkEle = document.getElementById(RELEASE_NAME_LINK);
       if (linkEle == null) {
-        console.error('Not Found Element of which id is "releaseNameLink"');
+        console.error(`Not Found Element of which id is "${RELEASE_NAME_LINK}"`);
         return;
       }
 

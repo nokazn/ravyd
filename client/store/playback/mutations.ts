@@ -97,6 +97,7 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
     state.trackName = currentTrack?.name;
     state.trackId = currentTrack?.id ?? undefined;
     state.trackUri = currentTrack?.uri;
+    state.trackType = currentTrack?.type;
     state.releaseName = currentTrack?.album.name;
     state.releaseUri = currentTrack?.album.uri;
     state.artistList = currentTrack?.artists.map((artist) => ({

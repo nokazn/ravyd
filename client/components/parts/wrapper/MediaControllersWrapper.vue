@@ -1,29 +1,57 @@
 <template>
   <div :class="$style.MediaController">
-    <shuffle-button />
-    <previous-button />
-    <media-button />
-    <next-button />
-    <repeat-button />
+    <SkipButton
+      v-if="isEpisode"
+      :seconds="-15"
+    />
+    <ShuffleButton v-else />
+
+    <PreviousButton />
+
+    <MediaButton />
+
+    <NextButton />
+
+    <SkipButton
+      v-if="isEpisode"
+      :seconds="15"
+    />
+    <RepeatButton v-else />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
+import SkipButton from '~/components/containers/player/SkipButton.vue';
 import PreviousButton from '~/components/containers/player/PreviousButton.vue';
 import MediaButton from '~/components/containers/player/MediaButton.vue';
 import NextButton from '~/components/containers/player/NextButton.vue';
 import RepeatButton from '~/components/containers/player/RepeatButton.vue';
+import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
   components: {
     ShuffleButton,
+    SkipButton,
     PreviousButton,
     MediaButton,
     NextButton,
     RepeatButton,
+  },
+
+  props: {
+    type: {
+      type: String as PropType<SpotifyAPI.Player.PlayingType>,
+      required: true,
+    },
+  },
+
+  computed: {
+    isEpisode(): boolean {
+      return this.type === 'episode';
+    },
   },
 });
 </script>
