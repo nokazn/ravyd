@@ -44,8 +44,6 @@ export default Vue.extend({
 
   computed: {
     remainingTime(): string {
-      if (this.resumePoint.fully_played) return '再生済み';
-
       const positionMs = this.resumePoint.resume_position_ms;
       const remainingMs = this.durationMs - positionMs;
       return positionMs > 0
