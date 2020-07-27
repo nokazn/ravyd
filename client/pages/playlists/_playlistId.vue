@@ -141,20 +141,21 @@
       v-html="playlistInfo.description"
     />
 
-    <PlaylistTrackTable
-      v-if="playlistTrackInfo != null"
-      :track-list="playlistTrackInfo.trackList"
-      :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
-      :uri="playlistInfo.uri"
-      :class="$style.PlaylistIdPage__table"
-      @on-favorite-button-clicked="toggleTrackFavoritState"
-    />
+    <template v-if="playlistTrackInfo != null">
+      <PlaylistTrackTable
+        :track-list="playlistTrackInfo.trackList"
+        :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
+        :uri="playlistInfo.uri"
+        :class="$style.PlaylistIdPage__table"
+        @on-favorite-button-clicked="toggleTrackFavoritState"
+      />
 
-    <IntersectionLoadingCircle
-      v-if="playlistTrackInfo != null"
-      :is-loading="!playlistTrackInfo.isFullTrackList"
-      @on-appeared="appendTrackList"
-    />
+      <IntersectionLoadingCircle
+        v-if="!playlistTrackInfo.isFullTrackList"
+        :is-loading="!playlistTrackInfo.isFullTrackList"
+        @on-appeared="appendTrackList"
+      />
+    </template>
   </div>
 
   <Fallback v-else>
@@ -619,10 +620,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         margin-right: 8px;
       }
     }
-  }
-
-  &__table {
-    margin-bottom: 32px;
   }
 }
 </style>

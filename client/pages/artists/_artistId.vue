@@ -102,7 +102,7 @@
       </div>
     </div>
 
-    <section v-if="artistInfo != null && topTrackList != null && topTrackList.length > 0">
+    <section v-if="isTopTrackListShown">
       <TrackListWrapper
         :abbreviated-length="ABBREVIATED_TOP_TRACK_LENGTH"
         :track-list="topTrackList"
@@ -272,6 +272,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get isTopTrackListShown(): boolean {
+    return this.artistInfo != null && (this.topTrackList?.length ?? 0) > 0;
+  }
   get avatarSrc(): string | undefined {
     return getImageSrc(this.artistInfo?.avatarList, AVATAR_SIZE);
   }
