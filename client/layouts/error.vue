@@ -39,7 +39,11 @@ export default Vue.extend({
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
-    console.error(this.error);
+
+    const { error } = this;
+    if (error.statusCode === 404) {
+      console.error(error);
+    }
   },
 
   head(): { title: string } {
