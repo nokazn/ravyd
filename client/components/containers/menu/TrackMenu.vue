@@ -1,9 +1,12 @@
 <template>
   <ContextMenu
     :item-lists="menuItemLists"
+    :size="size"
     :outlined="outlined"
-    offset-x
-    left
+    :offset-x="offsetX"
+    :offset-y="offsetY"
+    :left="left"
+    :right="right"
   />
 </template>
 
@@ -36,7 +39,27 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
+    size: {
+      type: Number,
+      default: 36,
+    },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    left: {
+      type: Boolean,
+      default: false,
+    },
+    right: {
+      type: Boolean,
+      default: false,
+    },
+    offsetX: {
+      type: Boolean,
+      default: false,
+    },
+    offsetY: {
       type: Boolean,
       default: false,
     },

@@ -109,6 +109,8 @@
         />
         <TrackMenu
           v-else
+          offset-x
+          left
           :track="item"
           :playlist-id="playlistId"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
