@@ -43,8 +43,8 @@ export default Vue.extend({
 
   props: {
     type: {
-      type: String as PropType<SpotifyAPI.Player.PlayingType>,
-      required: true,
+      type: String as PropType<SpotifyAPI.Player.PlayingType | undefined>,
+      default: undefined,
     },
   },
 
