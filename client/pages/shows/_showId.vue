@@ -47,8 +47,14 @@
       />
 
       <div :class="$style.Info">
-        <div class="g-small-text">
-          ポッドキャスト
+        <div>
+          <span class="g-small-text">
+            ポッドキャスト
+          </span>
+          <ExplicitChip
+            v-if="showInfo.explicit"
+            :class="$style.Info__explicitIcon"
+          />
         </div>
 
         <h1 :class="$style.Info__name">
@@ -122,6 +128,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeTable from '~/components/containers/table/EpisodeTable.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
@@ -154,6 +161,7 @@ interface Data {
 @Component({
   components: {
     ReleaseArtwork,
+    ExplicitChip,
     EpisodeTable,
     ContextMediaButton,
     FavoriteButton,
@@ -347,6 +355,10 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     display: inline-flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    &__explicitIcon {
+      margin-bottom: 0.1rem;
+    }
 
     &__name {
       font-size: 2em;
