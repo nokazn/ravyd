@@ -78,6 +78,8 @@
 
       <td>
         <EpisodeMenu
+          offset-x
+          left
           :episode="item"
           :publisher="publisher"
         />

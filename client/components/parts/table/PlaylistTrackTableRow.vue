@@ -101,6 +101,8 @@
       <td>
         <EpisodeMenu
           v-if="item.type === 'episode'"
+          offset-x
+          left
           :episode="item"
           :playlist-id="playlistId"
           :publisher="publisher"
