@@ -106,7 +106,7 @@
       text
       :resume-point="episodeInfo.resumePoint"
       :duration-ms="episodeInfo.durationMs"
-      :max-width="200"
+      :max-width="300"
     />
   </div>
 
