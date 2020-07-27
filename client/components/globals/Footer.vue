@@ -21,18 +21,19 @@
           <MarqueeReleaseName
             v-if="hasTrack"
             :name="trackName"
+            :type="trackType"
             :release-id="releaseId"
           />
 
           <MarqueeArtistNames
-            v-if="hasTrack"
+            v-if="isTrack && hasTrack"
             :artist-list="artistList"
           />
         </div>
 
         <div :class="$style.Footer__favoriteButton">
           <FavoriteButton
-            v-if="hasTrack"
+            v-if="isTrack && hasTrack"
             :is-favorited="isSavedTrack"
             :size="36"
             @on-clicked="onFavoriteButtonClicked"
@@ -111,6 +112,9 @@ export default Vue.extend({
     hasTrack(): RootGetters['playback/hasTrack'] {
       return this.$getters()['playback/hasTrack'];
     },
+    isTrack(): boolean {
+      return this.trackType === 'track';
+    },
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['playback/artworkSrc'](size);
     },
@@ -120,6 +124,9 @@ export default Vue.extend({
     },
     trackId(): RootState['playback']['trackId'] {
       return this.$state().playback.trackId;
+    },
+    trackType(): RootState['playback']['trackType'] {
+      return this.$state().playback.trackType;
     },
     releaseId(): RootGetters['playback/releaseId'] {
       return this.$getters()['playback/releaseId'];
@@ -188,8 +195,11 @@ export default Vue.extend({
   &__favoriteButton {
     display: flex;
     align-items: center;
-    transform: translateY(-12px);
     height: 100%;
+
+    & > *:first-child {
+      transform: translateY(-30%);
+    }
   }
 
   &__center {

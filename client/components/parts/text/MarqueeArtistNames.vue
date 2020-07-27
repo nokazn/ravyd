@@ -5,7 +5,7 @@
     class="g-text-gradation subtext--text"
   >
     <div
-      id="marqueeArtistNameLink"
+      :id="MARQUEE_ARTIST_NAME_LINK"
       :style="marqueeStyles"
       @mouseover="onHovered"
     >
@@ -34,11 +34,14 @@ import { hasProp } from '~~/utils/hasProp';
 import { sleep } from '~~/utils/sleep';
 import { App } from '~~/types';
 
-export type Data = {
+const MARQUEE_ARTIST_NAME_LINK = 'MARQUEE_ARTIST_NAME_LINK';
+
+type Data = {
   isHovered: boolean
   animationTimeoutId: ReturnType<typeof setTimeout> | undefined
   parentWidth: number | undefined
   linkWidth: number | undefined
+  MARQUEE_ARTIST_NAME_LINK: string
 }
 
 export default Vue.extend({
@@ -58,6 +61,7 @@ export default Vue.extend({
       animationTimeoutId: undefined,
       parentWidth: undefined,
       linkWidth: undefined,
+      MARQUEE_ARTIST_NAME_LINK,
     };
   },
 
@@ -93,9 +97,9 @@ export default Vue.extend({
 
   methods: {
     calculateWidth() {
-      const linkEle = document.getElementById('marqueeArtistNameLink');
+      const linkEle = document.getElementById(MARQUEE_ARTIST_NAME_LINK);
       if (linkEle == null) {
-        console.error('Not Found Element of which id is "marqueeArtistNameLink"');
+        console.error(`Not Found Element of which id is "${MARQUEE_ARTIST_NAME_LINK}"`);
         return;
       }
 
