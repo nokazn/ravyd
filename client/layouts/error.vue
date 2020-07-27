@@ -41,7 +41,7 @@ export default Vue.extend({
     this.$dispatch('resetDominantBackgroundColor');
 
     const { error } = this;
-    if (error.statusCode === 404) {
+    if (error.statusCode !== 404) {
       console.error(error);
     }
   },
