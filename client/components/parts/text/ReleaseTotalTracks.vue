@@ -19,8 +19,6 @@
 import Vue from 'vue';
 
 export type Data = {
-  text: string
-  title: string
   textStyles: { fontSize: string }
 }
 
@@ -41,17 +39,22 @@ export default Vue.extend({
   },
 
   data() {
-    const text = `${this.total}${this.unit}`;
-    const title = `全${text}`;
     const textStyles = {
       fontSize: `${this.size * 0.8}px`,
     };
 
     return {
-      text,
-      title,
       textStyles,
     };
+  },
+
+  computed: {
+    text(): string {
+      return `${this.total}${this.unit}`;
+    },
+    title(): string {
+      return `全${this.text}`;
+    },
   },
 });
 </script>

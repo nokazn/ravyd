@@ -327,8 +327,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       const [playlistId, limit] = mutationPayload.payload;
       const { isFullTrackList } = this.playlistTrackInfo;
       // すべて読み込み済みの表示中のプレイリストにアイテムが追加された場合
-      if (playlistId === this.$route.params.playlistId || isFullTrackList) {
-        await this.appendTrackList(limit);
+      if (playlistId === this.$route.params.playlistId && isFullTrackList) {
+        await this.appendTrackList(limit, { force: true });
         const { playlistInfo } = this;
         this.playlistInfo = {
           ...playlistInfo,
@@ -444,9 +444,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  async appendTrackList(counts: number = LIMIT_OF_TRACKS) {
+  async appendTrackList(counts: number = LIMIT_OF_TRACKS, payload?: { force: true } | undefined) {
     type PagingTracks = SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>;
-    if (this.playlistTrackInfo == null || this.playlistTrackInfo.isFullTrackList) return;
+    const force = payload?.force ?? false;
+    // 強制更新出ない場合、すでにトラックがすべて取得されていたら何もしない
+    if (this.playlistTrackInfo == null
+      || (!force && this.playlistTrackInfo.isFullTrackList)) return;
 
     const { playlistId } = this.$route.params;
     const currentPlaylistTrackInfo = this.playlistTrackInfo;
@@ -502,7 +505,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const isFullTrackList = tracks.next == null;
 
     this.playlistTrackInfo = {
-      ...this.playlistTrackInfo,
+      ...currentPlaylistTrackInfo,
       trackList: [...currentPlaylistTrackInfo.trackList, ...trackList],
       isFullTrackList,
     };
