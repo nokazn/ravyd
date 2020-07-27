@@ -52,10 +52,9 @@
         :title="resumePointTitle"
         class="text-center"
       >
-        <v-progress-linear
-          rounded
-          color="grey lighten-4"
-          :value="resumePointPersent"
+        <EpisodeProgressBar
+          :resume-point="item.resumePoint"
+          :duration-ms="item.durationMs"
         />
       </td>
 
@@ -94,9 +93,9 @@ import Vue, { PropType } from 'vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
+import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
-import { mssTime } from '~~/utils/mssTime';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
@@ -114,6 +113,7 @@ export default Vue.extend({
     PlaylistMediaButton,
     ExplicitChip,
     TrackTime,
+    EpisodeProgressBar,
     EpisodeMenu,
   },
 
@@ -156,15 +156,6 @@ export default Vue.extend({
       return this.isEpisodeSet
         ? 'active--text'
         : 'subtext--text';
-    },
-    resumePointTitle(): string {
-      const position = this.item.resumePoint.resume_position_ms;
-      return position !== 0
-        ? `${mssTime(position)}まで再生`
-        : '未再生';
-    },
-    resumePointPersent(): number {
-      return (this.item.resumePoint.resume_position_ms / this.item.durationMs) * 100;
     },
     releaseDate(): string {
       return convertReleaseDate({
