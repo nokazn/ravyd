@@ -17,11 +17,12 @@
         />
 
         <EpisodeMenu
-          :episode="episodeInfo"
-          :publisher="episodeInfo.showName"
-          :size="32"
           outlined
           left
+          offset-y
+          :size="32"
+          :episode="episodeInfo"
+          :publisher="episodeInfo.showName"
         />
       </div>
     </portal>
@@ -68,10 +69,10 @@
             />
 
             <EpisodeMenu
+              offset-y
+              outlined
               :episode="episodeInfo"
               :publisher="episodeInfo.showName"
-              outlined
-              left
             />
           </div>
 
