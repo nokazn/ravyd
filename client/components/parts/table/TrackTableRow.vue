@@ -60,6 +60,8 @@
 
       <td>
         <TrackMenu
+          offset-x
+          left
           :track="item"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
         />

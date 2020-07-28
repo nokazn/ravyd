@@ -36,34 +36,38 @@
               class="g-ellipsis-text"
               :title="item.name"
             >
-              {{ item.name }}
-            </div>
-
-            <div
-              v-if="item.type !== 'episode'"
-              :class="[$style.Content__subtitle, subtitleColor]"
-              class="g-ellipsis-text"
-            >
-              <ArtistNames
-                inline
-                :artist-list="item.artistList"
-              />
-
-              <span :class="$style['Content__subtitle--divider']">-</span>
-
+              <span v-if="item.type !== 'episode'">
+                {{ item.name }}
+              </span>
               <nuxt-link
-                :to="`/releases/${item.releaseId}`"
-                :title="item.releaseName"
+                v-else
+                :to="`/episodes/${item.id}`"
               >
-                {{ item.releaseName }}
+                {{ item.name }}
               </nuxt-link>
             </div>
+
             <div
-              v-else
               :class="[$style.Content__subtitle, subtitleColor]"
               class="g-ellipsis-text"
             >
+              <template v-if="item.type !== 'episode'">
+                <ArtistNames
+                  inline
+                  :artist-list="item.artistList"
+                />
+
+                <span :class="$style['Content__subtitle--divider']">-</span>
+
+                <nuxt-link
+                  :to="`/releases/${item.releaseId}`"
+                  :title="item.releaseName"
+                >
+                  {{ item.releaseName }}
+                </nuxt-link>
+              </template>
               <nuxt-link
+                v-else
                 :to="`/shows/${item.releaseId}`"
                 :title="item.releaseName"
               >
@@ -101,12 +105,16 @@
       <td>
         <EpisodeMenu
           v-if="item.type === 'episode'"
+          offset-x
+          left
           :episode="item"
           :playlist-id="playlistId"
           :publisher="publisher"
         />
         <TrackMenu
           v-else
+          offset-x
+          left
           :track="item"
           :playlist-id="playlistId"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"

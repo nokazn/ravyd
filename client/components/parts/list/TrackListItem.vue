@@ -62,6 +62,8 @@
           <TrackTime :time-ms="item.durationMs" />
 
           <TrackMenu
+            offset-x
+            left
             :track="item"
             @on-favorite-menu-clicked="onFavoriteButtonClicked"
           />
