@@ -85,7 +85,7 @@
       <td
         v-if="collaborative"
         :class="$style.PlaylistTrackTableRow__smallText"
-        class="text-center g-ellipsis-text"
+        class="g-ellipsis-text"
       >
         <nuxt-link
           :to="`/users/${item.addedBy.id}`"
@@ -98,7 +98,6 @@
         v-if="addedAt"
         :title="item.addedAt.title"
         :class="$style.PlaylistTrackTableRow__smallText"
-        class="text-center"
       >
         <time
           v-if="item.addedAt.text"
