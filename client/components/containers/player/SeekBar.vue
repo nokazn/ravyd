@@ -31,7 +31,7 @@ import Vue from 'vue';
 import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import { mssTime } from '~~/utils/mssTime';
+import { elapsedTime } from '~~/utils/elapsedTime';
 
 export type Data = {
   value: number
@@ -68,7 +68,7 @@ export default Vue.extend({
       return this.$state().playback.durationMs;
     },
     durationMss(): string {
-      return mssTime(this.durationMs);
+      return elapsedTime(this.durationMs);
     },
 
     disabled(): boolean {

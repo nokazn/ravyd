@@ -100,7 +100,7 @@ export default Vue.extend({
     const durationColumn = {
       text: '',
       value: 'duration',
-      width: 60,
+      width: 72,
       align: 'center' as const,
     };
     const menuColumn = {

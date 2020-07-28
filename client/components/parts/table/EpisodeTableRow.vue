@@ -48,10 +48,7 @@
         </div>
       </td>
 
-      <td
-        :title="resumePointTitle"
-        class="text-center"
-      >
+      <td :title="resumePointTitle">
         <EpisodeProgressBar
           :resume-point="item.resumePoint"
           :duration-ms="item.durationMs"
@@ -61,7 +58,6 @@
       <td
         :title="item.releaseDate"
         :class="$style.EpisodeTableRow__smallText"
-        class="text-center"
       >
         <time :datetime="item.releaseDate">
           {{ releaseDate }}

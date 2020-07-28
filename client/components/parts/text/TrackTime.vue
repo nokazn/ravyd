@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { elapsedTime } from '~~/utils/elapsedTime';
 
@@ -17,6 +17,10 @@ export default Vue.extend({
     timeMs: {
       type: Number,
       required: true,
+    },
+    format: {
+      type: String as PropType<'mss' | 'hmmss'>,
+      default: 'mss',
     },
   },
 

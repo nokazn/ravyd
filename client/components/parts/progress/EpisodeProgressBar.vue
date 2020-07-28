@@ -19,7 +19,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
-import { mssTime } from '~~/utils/mssTime';
+import { elapsedTime } from '~~/utils/elapsedTime';
 import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
@@ -53,7 +53,7 @@ export default Vue.extend({
     title(): string {
       const position = this.resumePoint.resume_position_ms;
       return position !== 0
-        ? `${mssTime(position)}まで再生`
+        ? `${elapsedTime(position)}まで再生`
         : '未再生';
     },
     value(): number {

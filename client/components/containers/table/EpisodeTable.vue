@@ -120,13 +120,11 @@ export default Vue.extend({
       text: '進捗',
       value: 'resumePoint',
       width: 72,
-      align: 'center' as const,
     };
     const addedAtColumn = {
       text: '',
       value: 'addedAt',
-      width: 72,
-      align: 'center' as const,
+      width: 80,
     };
     const durationColumn = {
       text: '',
