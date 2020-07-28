@@ -119,7 +119,7 @@ export default Vue.extend({
     const progressColumn = {
       text: '進捗',
       value: 'resumePoint',
-      width: 72,
+      width: 96,
     };
     const addedAtColumn = {
       text: '',
