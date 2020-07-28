@@ -37,6 +37,7 @@ export namespace App {
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
     addedAt: AddedAtInfo
+    addedBy: SpotifyAPI.UserData
   }
 
   export type TrackQueueInfo = {

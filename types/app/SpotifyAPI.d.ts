@@ -267,6 +267,7 @@ export namespace SpotifyAPI {
   }
   type PlaylistTrack = {
     added_at: string // timestamp
+    // @todo display_name など取得できないフィールドがある
     added_by: UserData
     is_local: boolean
     track: Track | null

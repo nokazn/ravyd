@@ -7,7 +7,7 @@ export const convertPlaylistTrackDetail = (
     offset?: number
   },
 ) => (
-  { track, added_at }: { track: SpotifyAPI.Track, added_at: string },
+  { track, added_at, added_by }: SpotifyAPI.PlaylistTrack & { track: SpotifyAPI.Track },
   index: number,
 ): App.PlaylistTrackDetail => {
   const detail = {
@@ -35,6 +35,7 @@ export const convertPlaylistTrackDetail = (
     releaseName: track.album.name,
     artworkList: track.album.images,
     addedAt: convertAddedAt(added_at),
+    addedBy: added_by,
   };
 
   return detail;
