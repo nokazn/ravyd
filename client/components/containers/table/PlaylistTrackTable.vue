@@ -8,6 +8,16 @@
       :no-data-text="noDataText"
       class="PlaylistTrackTable"
     >
+      <template #header.addedBy>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="追加したユーザー"
+        >
+          mdi-account
+        </v-icon>
+      </template>
+
       <template #header.duration>
         <v-icon
           :size="16"
@@ -115,7 +125,7 @@ export default Vue.extend({
       value: 'name',
     };
     const addedByColumn = {
-      text: 'ユーザー',
+      text: '',
       value: 'addedBy',
       width: 96,
       align: 'center' as const,
