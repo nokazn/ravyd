@@ -8,6 +8,16 @@
       :no-data-text="noDataText"
       class="PlaylistTrackTable"
     >
+      <template #header.addedBy>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="追加したユーザー"
+        >
+          mdi-account
+        </v-icon>
+      </template>
+
       <template #header.duration>
         <v-icon
           :size="16"
@@ -33,6 +43,7 @@
           :item="item"
           :playlist-id="playlistId"
           :added-at="addedAt"
+          :collaborative="collaborative"
           :is-active="item.id === activeRowId"
           :is-track-set="isTrackSet(item.id)"
           :is-playing-track="isPlayingTrack(item.id)"
@@ -90,6 +101,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    collaborative: {
+      type: Boolean,
+      default: false,
+    },
     addedAt: {
       type: Boolean,
       default: true,
@@ -109,11 +124,15 @@ export default Vue.extend({
       text: 'タイトル',
       value: 'name',
     };
+    const addedByColumn = {
+      text: '',
+      value: 'addedBy',
+      width: 96,
+    };
     const addedAtColumn = {
       text: '',
       value: 'addedAt',
-      width: 72,
-      align: 'center' as const,
+      width: 80,
     };
     const durationColumn = {
       text: '',
@@ -130,21 +149,15 @@ export default Vue.extend({
       filterable: false,
     };
 
-    // addedAt が有効かどうか
-    const headers = this.addedAt
-      ? [
-        isSavedColumn,
-        titleColumn,
-        addedAtColumn,
-        durationColumn,
-        menuColumn,
-      ]
-      : [
-        isSavedColumn,
-        titleColumn,
-        durationColumn,
-        menuColumn,
-      ];
+    // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
+    const headers = [
+      isSavedColumn,
+      titleColumn,
+      this.collaborative ? addedByColumn : undefined,
+      this.addedAt ? addedAtColumn : undefined,
+      durationColumn,
+      menuColumn,
+    ].filter((header) => header != null) as DataTableHeader[];
 
     return {
       headers,

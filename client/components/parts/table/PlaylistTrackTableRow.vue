@@ -30,7 +30,7 @@
 
       <td>
         <div :class="$style.Content">
-          <div class="g-ellipsis-text">
+          <div>
             <div
               :class="titleColor"
               class="g-ellipsis-text"
@@ -83,9 +83,21 @@
       </td>
 
       <td
+        v-if="collaborative"
+        :class="$style.PlaylistTrackTableRow__smallText"
+        class="g-ellipsis-text"
+      >
+        <nuxt-link
+          :to="`/users/${item.addedBy.id}`"
+        >
+          {{ item.addedBy.display_name || item.addedBy.id }}
+        </nuxt-link>
+      </td>
+
+      <td
+        v-if="addedAt"
         :title="item.addedAt.title"
         :class="$style.PlaylistTrackTableRow__smallText"
-        class="text-center"
       >
         <time
           v-if="item.addedAt.text"
@@ -181,6 +193,10 @@ export default Vue.extend({
     addedAt: {
       type: Boolean,
       default: true,
+    },
+    collaborative: {
+      type: Boolean,
+      default: false,
     },
   },
 
