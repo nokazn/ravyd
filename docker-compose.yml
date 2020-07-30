@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./Dockerfile.nuxt.dev
+      dockerfile: ./client/Dockerfile
     container_name: nuxt
     tty: true
     ports:
