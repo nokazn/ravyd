@@ -42,7 +42,7 @@
         <PlaylistTrackTableRow
           :item="item"
           :playlist-id="playlistId"
-          :added-at="addedAt"
+          :hide-added-at="hideAddedAt"
           :collaborative="collaborative"
           :is-active="item.id === activeRowId"
           :is-track-set="isTrackSet(item.id)"
@@ -105,9 +105,9 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    addedAt: {
+    hideAddedAt: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -154,7 +154,7 @@ export default Vue.extend({
       isSavedColumn,
       titleColumn,
       this.collaborative ? addedByColumn : undefined,
-      this.addedAt ? addedAtColumn : undefined,
+      this.hideAddedAt ? undefined : addedAtColumn,
       durationColumn,
       menuColumn,
     ].filter((header) => header != null) as DataTableHeader[];

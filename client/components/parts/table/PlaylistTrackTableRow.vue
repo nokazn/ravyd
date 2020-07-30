@@ -83,11 +83,12 @@
       </td>
 
       <td
-        v-if="isAddedByShown"
+        v-if="collaborative"
         :class="$style.PlaylistTrackTableRow__smallText"
         class="g-ellipsis-text"
       >
         <nuxt-link
+          v-if="isAddedByShown"
           :to="`/users/${item.addedBy.id}`"
         >
           {{ item.addedBy.display_name || item.addedBy.id }}
@@ -95,7 +96,7 @@
       </td>
 
       <td
-        v-if="addedAt"
+        v-if="!hideAddedAt"
         :title="item.addedAt.title"
         :class="$style.PlaylistTrackTableRow__smallText"
       >
@@ -190,9 +191,9 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    addedAt: {
+    hideAddedAt: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     collaborative: {
       type: Boolean,
