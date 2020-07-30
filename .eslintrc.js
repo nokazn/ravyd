@@ -8,7 +8,11 @@ module.exports = {
     Spotify: 'readonly',
   },
   extends: [
-    // @nuxtjs などを含む
+    /**
+     * #129
+     * .eslintignore に .nuxt/, dist/, static/, node_modules/ を記載する
+     * fork-ts-checker-webpack-plugin が無限ループで死ぬ
+     */
     '@nuxtjs/eslint-config-typescript',
     'plugin:nuxt/recommended',
     'airbnb-base',
