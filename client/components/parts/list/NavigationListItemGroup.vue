@@ -47,7 +47,7 @@
 import Vue, { PropType } from 'vue';
 import NavigationListItem, { Item } from '~/components/parts/list/NavigationListItem.vue';
 
-export { Item } from '~/components/parts/list/NavigationListItem.vue';
+export type { Item } from '~/components/parts/list/NavigationListItem.vue';
 
 const VIRTUAL_SCROLLER_WRAPPER_REF = 'VIRTUAL_SCROLLER_WRAPPER_REF';
 const ON_LOADED = 'on-loaded';
