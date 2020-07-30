@@ -30,7 +30,7 @@
 
       <td>
         <div :class="$style.Content">
-          <div>
+          <div class="g-ellipsis-text">
             <div
               :class="titleColor"
               class="g-ellipsis-text"
