@@ -83,7 +83,7 @@
       </td>
 
       <td
-        v-if="collaborative"
+        v-if="isAddedByShown"
         :class="$style.PlaylistTrackTableRow__smallText"
         class="g-ellipsis-text"
       >
@@ -212,6 +212,9 @@ export default Vue.extend({
       return this.item.artistList
         .map((artist) => artist.name)
         .join(', ');
+    },
+    isAddedByShown(): boolean {
+      return this.collaborative && this.item.addedBy != null;
     },
     titleColor(): string | undefined {
       if (this.disabled) return 'inactive--text';

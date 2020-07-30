@@ -7,7 +7,11 @@ export const convertPlaylistTrackDetail = (
     offset?: number
   },
 ) => (
-  { track, added_at, added_by }: SpotifyAPI.PlaylistTrack & { track: SpotifyAPI.Track },
+  { track, added_at, added_by }: {
+    track: SpotifyAPI.Track
+    added_at: string
+    added_by?: SpotifyAPI.UserData
+  },
   index: number,
 ): App.PlaylistTrackDetail => {
   const detail = {
