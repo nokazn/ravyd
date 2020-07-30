@@ -35,12 +35,11 @@
     "nuxt-property-decorator": "^2.7.2",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.11",
-    "vuex": "^3.5.1",
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@babel/compat-data": "^7.10.5",
-    "@babel/core": "^7.10.5",
+    "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.10.4",
     "@babel/runtime-corejs3": "^7.10.5",
     "@mdi/font": "^5.4.55",
@@ -62,18 +61,17 @@
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-jest": "^26.1.0",
     "core-js": "3",
-    "eslint": "^6.0.0",
+    "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-nuxt": ">=0.4.2",
     "jest": "^25.5.4",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
-    "typescript": "^3.9.7",
     "vue-jest": "^4.0.0-beta.4",
-    "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.0.0",
+    "vue-template-compiler": "^2.6.10",
     "worker-loader": "^2.0.0"
   }
 }

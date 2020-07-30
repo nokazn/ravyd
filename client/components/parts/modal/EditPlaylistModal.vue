@@ -19,7 +19,7 @@ import PlaylistModal, {
   Handler,
 } from '~/components/containers/modal/PaylistModal.vue';
 
-export { Form } from '~/components/containers/modal/PaylistModal.vue';
+export type { Form } from '~/components/containers/modal/PaylistModal.vue';
 
 export type Data = {
   handler: Handler<'edit'>
