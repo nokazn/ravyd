@@ -20,12 +20,14 @@
     :disabled="disabled"
     @click="onClicked"
   >
-    <v-icon left>
-      {{ icon }}
-    </v-icon>
-    <span>
-      {{ text }}
-    </span>
+    <div :class="$style.Container">
+      <v-icon left>
+        {{ icon }}
+      </v-icon>
+      <span>
+        {{ text }}
+      </span>
+    </div>
   </v-btn>
 </template>
 
@@ -78,3 +80,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" module>
+.Container {
+  padding: 0 0.75em;
+}
+</style>
