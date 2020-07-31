@@ -72,7 +72,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async getUserData({ state, commit }): Promise<void> {
     if (state.accessToken == null) return;
 
-    const userData = await this.$spotify.user.getCurrentUserProfile();
+    const userData = await this.$spotify.users.getCurrentUserProfile();
 
     commit('SET_USER_DATA', userData);
   },

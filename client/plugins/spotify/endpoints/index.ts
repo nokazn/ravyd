@@ -11,7 +11,7 @@ import { playlists } from './playlists';
 import { search } from './search';
 import { shows } from './shows';
 import { top } from './top';
-import { user } from './user';
+import { users } from './users';
 
 export const endpoints = (context: Context) => ({
   albums: albums(context),
@@ -25,7 +25,7 @@ export const endpoints = (context: Context) => ({
   search: search(context),
   shows: shows(context),
   top: top(context),
-  user: user(context),
+  users: users(context),
 });
 
 const spotifyEndpoints = (context: Context) => endpoints(context);
