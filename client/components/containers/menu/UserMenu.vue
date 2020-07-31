@@ -76,12 +76,15 @@ import { MENU_BACKGROUND_COLOR } from '~/variables';
 
 const AVATAR_SIZE = 32;
 
+type Item = {
+  title: string
+  to: string | undefined
+  disabled?: boolean
+}
+
 type Data = {
   isOpened: boolean
-  itemLists: {
-    title: string
-    to: string
-  }[][]
+  itemLists: Item[][]
   MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
   AVATAR_SIZE: number
 };
@@ -92,6 +95,11 @@ export default Vue.extend({
   },
 
   data(): Data {
+    const userId = this.$getters()['auth/userId'];
+    const profilePath = userId != null
+      ? `/users/${userId}`
+      : undefined;
+
     return {
       isOpened: false,
       itemLists: [
@@ -100,7 +108,15 @@ export default Vue.extend({
             title: 'アカウント',
             to: '/account',
           },
-        ], [
+        ],
+        [
+          {
+            title: 'プロフィール',
+            to: profilePath,
+            disabled: profilePath == null,
+          },
+        ],
+        [
           {
             title: 'ログアウト',
             to: '/logout',
