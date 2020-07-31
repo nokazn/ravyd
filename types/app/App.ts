@@ -227,6 +227,11 @@ export namespace App {
     type: 'user'
     uri: string
   }
+  export type UserPlaylistInfo = {
+    playlists: PlaylistCardInfo[]
+    hasNext: boolean
+    total: number
+  }
 
   export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
     type: T

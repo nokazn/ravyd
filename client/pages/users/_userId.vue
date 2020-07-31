@@ -22,11 +22,45 @@
           {{ userName }}
         </h1>
 
-        <p>
-          {{ userInfo.followersText }}
+        <p class="subtext--text">
+          {{ playlistCountsText }}・{{ userInfo.followersText }}
         </p>
       </div>
     </div>
+
+    <h2>
+      公開プレイリスト
+    </h2>
+
+    <v-divider :class="$style.Divider" />
+
+    <div
+      v-if="userPlaylistInfo.playlists.length > 0"
+      :class="$style.Cards"
+    >
+      <PlaylistCard
+        v-for="playlist in userPlaylistInfo.playlists"
+        :key="playlist.id"
+        v-bind="playlist"
+        :min-width="MIN_IMAGE_SIZE"
+        :max-width="MAX_IMAGE_SIZE"
+        :class="$style.Cards__card"
+      />
+
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+    </div>
+
+    <IntersectionLoadingCircle
+      :is-loading="userPlaylistInfo.hasNext"
+      @on-appeared="appendPlaylists"
+    />
   </div>
   <Fallback v-else>
     ユーザーの情報を取得できませんでした。
@@ -37,24 +71,35 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-import { getUserInfo } from '~/plugins/local/_userId';
+import { getUserInfo, getUserPlaylists } from '~/plugins/local/_userId';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { App } from '~~/types';
+import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { App, OneToFifty } from '~~/types';
 
-const AVATAR_SIZE = 220;
+const AVATAR_SIZE = 180;
+const MIN_IMAGE_SIZE = 180;
+const MAX_IMAGE_SIZE = 240;
+const LIMIT_OF_PLAYLISTS = 30;
 
 interface AsyncData {
   userInfo: App.UserInfo | undefined
+  userPlaylistInfo: App.UserPlaylistInfo
 }
 
 interface Data {
   AVATAR_SIZE: number
+  MIN_IMAGE_SIZE: number
+  MAX_IMAGE_SIZE: number
 }
 
 @Component({
   components: {
     UserAvatar,
+    PlaylistCard,
+    IntersectionLoadingCircle,
     Fallback,
   },
 
@@ -63,19 +108,28 @@ interface Data {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const [userInfo] = await Promise.all([
+    const [userInfo, userPlaylistInfo] = await Promise.all([
       getUserInfo(context),
-    ]);
+      getUserPlaylists(context, { limit: LIMIT_OF_PLAYLISTS }),
+    ] as const);
 
     return {
       userInfo,
+      userPlaylistInfo,
     };
   },
 })
 export default class UserIdPage extends Vue implements AsyncData, Data {
   userInfo: App.UserInfo | undefined = undefined;
+  userPlaylistInfo: App.UserPlaylistInfo = {
+    playlists: [],
+    hasNext: false,
+    total: 0,
+  };
 
   AVATAR_SIZE = AVATAR_SIZE;
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
 
   head() {
     return {
@@ -90,6 +144,10 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     const { userInfo } = this;
     return userInfo?.displayName ?? userInfo?.id;
   }
+  get playlistCountsText(): string {
+    const { total } = this.userPlaylistInfo;
+    return `${total}個のプレイリスト`;
+  }
 
   mounted() {
     // 小さい画像から抽出
@@ -100,6 +158,33 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
       this.$dispatch('setDefaultDominantBackgroundColor');
     }
   }
+
+  async appendPlaylists(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
+    if (!this.userPlaylistInfo.hasNext) return;
+
+    const { userPlaylistInfo } = this;
+    const { userId } = this.$route.params;
+    const offset = userPlaylistInfo.playlists.length;
+    const playlists = await this.$spotify.playlists.getListOfUserPlaylist({
+      userId,
+      limit,
+      offset,
+    });
+    if (playlists == null) {
+      this.userPlaylistInfo = {
+        ...userPlaylistInfo,
+        hasNext: false,
+      };
+      return;
+    }
+
+    const addedPlaylists = playlists.items.map(convertPlaylistForCard);
+    this.userPlaylistInfo = {
+      playlists: [...userPlaylistInfo.playlists, ...addedPlaylists],
+      hasNext: playlists.next != null,
+      total: userPlaylistInfo.total + playlists.total,
+    };
+  }
 }
 </script>
 
@@ -109,7 +194,7 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
   &__header {
     display: grid;
-    grid-template-columns: 220px auto;
+    grid-template-columns: 180px auto;
     grid-column-gap: 24px;
     margin-bottom: 32px;
   }
@@ -123,6 +208,36 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
+    }
+  }
+
+  .Tabs {
+    margin-bottom: 32px;
+  }
+
+  .Divider {
+    margin: 6px 0 16px;
+  }
+
+  .Cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    & > * {
+      margin-left: 16px;
+      margin-right: 16px;
+      flex: 1 0 180px;
+      min-width: 180px;
+      max-width: 240px;
+    }
+
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    &__spacer {
+      height: 0;
     }
   }
 }
