@@ -108,8 +108,6 @@ export default Vue.extend({
             title: 'アカウント',
             to: '/account',
           },
-        ],
-        [
           {
             title: 'プロフィール',
             to: profilePath,
