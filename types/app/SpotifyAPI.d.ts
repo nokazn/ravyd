@@ -369,15 +369,12 @@ export namespace SpotifyAPI {
     external_urls: {
       [key: string]: string
     }
-    followers: {
-      href: string | null,
-      total: number
-    }
+    followers: Followers
     href: string
     id: string
     images: Image[]
     product: string
-    type: string
+    type: 'user'
     uri: string
   }
 }
