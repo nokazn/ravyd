@@ -180,9 +180,9 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
     const addedPlaylists = playlists.items.map(convertPlaylistForCard);
     this.userPlaylistInfo = {
+      ...userPlaylistInfo,
       playlists: [...userPlaylistInfo.playlists, ...addedPlaylists],
       hasNext: playlists.next != null,
-      total: userPlaylistInfo.total + playlists.total,
     };
   }
 }
