@@ -5,20 +5,21 @@ import { RootState } from './state';
 import { App } from '~~/types';
 
 export type RootGetters = {
-  backgroundStyles: { background: string } | undefined
+  backgroundStyles: (height: number) => { background: string } | undefined
   headerStyles: { backgroundColor: string } | undefined
 }
 
 const getters: Getters<RootState, RootGetters> = {
   backgroundStyles(state) {
-    const gradationHeight = 320;
-    const rgb = state.dominantBackgroundColor?.rgb
-      .map((color) => color * DARKEN_FILTER_RATIO)
-      .join(',');
+    return (gradationHeight: number) => {
+      const rgb = state.dominantBackgroundColor?.rgb
+        .map((color) => color * DARKEN_FILTER_RATIO)
+        .join(',');
 
-    return rgb != null
-      ? { background: `linear-gradient(to bottom, rgb(${rgb}) 80px, ${BACKGROUND_COLOR} ${gradationHeight}px)` }
-      : undefined;
+      return rgb != null
+        ? { background: `linear-gradient(to bottom, rgb(${rgb}) 80px, ${BACKGROUND_COLOR} ${gradationHeight}px)` }
+        : undefined;
+    };
   },
 
   headerStyles(state) {

@@ -101,8 +101,8 @@ export default Vue.extend({
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
-    styles(): RootGetters['backgroundStyles'] {
-      return this.$getters().backgroundStyles;
+    styles(): { background: string } | undefined {
+      return this.$getters().backgroundStyles(320);
     },
   },
 
