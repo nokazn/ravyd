@@ -217,6 +217,17 @@ export namespace App {
     showName: string
   }
 
+  export type UserInfo = {
+    displayName: string | null
+    externalUrls: SpotifyAPI.ExternalUrls
+    followersText: string | undefined
+    href: string
+    id: string
+    images: SpotifyAPI.Image[]
+    type: 'user'
+    uri: string
+  }
+
   export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
     type: T
     id: string
