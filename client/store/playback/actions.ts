@@ -16,8 +16,9 @@ export type PlaybackActions = {
   setCustomContext: (params: {
     contextUri?: string
     trackUriList: string[]
+    trackIndex?: number
   }) => void
-  resetCustomContext: () => void
+  resetCustomContext: (uri: string | null) => void
   getCurrentPlayback: (timeout?: number) => void
   getRecentlyPlayed: () => Promise<void>
   play: (payload?: ({
@@ -137,19 +138,27 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   /**
    * 再生するコンテキストを手動でセット
    */
-  setCustomContext({ commit }, { contextUri, trackUriList }) {
+  setCustomContext({ commit }, { contextUri, trackUriList, trackIndex }) {
     if (contextUri != null) {
       commit('SET_CUSTOM_CONTEXT_URI', contextUri);
     }
     commit('SET_CUSTOM_TRACK_URI_LIST', trackUriList);
+    console.log(trackIndex);
+    commit('SET_TRACK_INDEX', trackIndex);
   },
 
   /**
-   * Playback SDK から取得できる場合は再生するコンテキストをリセット
+   * Web Playback SDK から取得できる場合は再生するコンテキストをリセット
    */
-  resetCustomContext({ commit }) {
-    commit('SET_CUSTOM_CONTEXT_URI', undefined);
-    commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
+  resetCustomContext({ commit }, uri) {
+    if (uri != null) {
+      commit('SET_CUSTOM_CONTEXT_URI', undefined);
+      commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
+      // プレイリストを再生する場合は setCustomContext で設定したイデックスを保持したいのでパス
+      if (!uri.includes('playlist')) {
+        commit('SET_TRACK_INDEX', undefined);
+      }
+    }
   },
 
   /**

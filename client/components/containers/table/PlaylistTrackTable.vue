@@ -44,7 +44,7 @@
           :playlist-id="playlistId"
           :hide-added-at="hideAddedAt"
           :collaborative="collaborative"
-          :is-active="item.id === activeRowId"
+          :is-active="item.index === activeRowIndex"
           :is-track-set="isTrackSet(item.id)"
           :is-playing-track="isPlayingTrack(item.id)"
           @on-row-clicked="onRowClicked"
@@ -65,7 +65,7 @@ import { App } from '~~/types';
 
 export type Data = {
   headers: DataTableHeader[]
-  activeRowId: string | undefined
+  activeRowIndex: number | undefined
 };
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -161,13 +161,14 @@ export default Vue.extend({
 
     return {
       headers,
-      activeRowId: undefined,
+      activeRowIndex: undefined,
     };
   },
 
   computed: {
     isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['playback/isTrackSet'](trackId);
+      return (trackId: string) => this.$getters()['playback/contextUri'] === this.uri
+        && this.$getters()['playback/isTrackSet'](trackId);
     },
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
@@ -176,10 +177,11 @@ export default Vue.extend({
   },
 
   methods: {
-    setCustomContext(trackUriList: string[]) {
+    setCustomContext(trackUriList: string[], trackIndex: number) {
       this.$dispatch('playback/setCustomContext', {
         contextUri: this.uri,
         trackUriList,
+        trackIndex,
       });
     },
     onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
@@ -195,7 +197,10 @@ export default Vue.extend({
 
       // trackUriList は更新されうる
       const trackUriList = this.trackList.map((track) => track.uri);
-      // プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
+      /**
+       * プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
+       * ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
+       */
       this.$dispatch('playback/play', !this.custom && this.uri != null
         ? {
           contextUri: this.uri,
@@ -206,14 +211,14 @@ export default Vue.extend({
           offset: { uri },
         });
 
-      this.setCustomContext(trackUriList);
+      this.setCustomContext(trackUriList, index);
     },
     // row をコピーしたものを参照する
     onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
-    onRowClicked({ id }: OnRow['on-row-clicked']) {
-      this.activeRowId = id;
+    onRowClicked({ index }: OnRow['on-row-clicked']) {
+      this.activeRowIndex = index;
     },
   },
 });

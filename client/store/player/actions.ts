@@ -167,9 +167,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
         }
         // playback-sdk から提供される uri が存在する場合は customContext をリセット
-        if (uri != null) {
-          dispatch('playback/resetCustomContext', undefined, { root: true });
-        }
+        dispatch('playback/resetCustomContext', uri, { root: true });
       }));
 
       await player.connect();
