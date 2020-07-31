@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { addComma } from '~~/utils/addComma';
+import { getFollowersText } from '~/scripts/converter/getFollowersText';
 import { App } from '~~/types';
 
 export const getPlaylistInfo = async (
@@ -39,10 +39,6 @@ export const getPlaylistInfo = async (
 
   const isOwnPlaylist = owner.id === userId;
 
-  const followersText = followers.total != null
-    ? `フォロワー ${addComma(followers.total)}人`
-    : undefined;
-
   return {
     id,
     name,
@@ -55,7 +51,7 @@ export const getPlaylistInfo = async (
     durationMs,
     isPublic,
     isOwnPlaylist,
-    followersText,
+    followersText: getFollowersText(followers.total),
     externalUrls,
     trackUriList,
   };
