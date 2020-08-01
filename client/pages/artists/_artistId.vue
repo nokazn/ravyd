@@ -71,7 +71,7 @@
           </v-icon>
         </div>
 
-        <h1 :class="$style.Info__artistName">
+        <h1 :class="$style.Info__title">
           {{ artistInfo.name }}
         </h1>
 
@@ -515,7 +515,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       margin-bottom: 0.15rem;
     }
 
-    &__artistName {
+    &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
