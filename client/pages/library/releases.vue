@@ -89,7 +89,7 @@ export default class LibraryReleasesPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryReleasesPage {
-  padding: 16px 3% 48px;
+  padding: 16px max(12px, 3vw) 48px;
 
   & > * {
     margin-bottom: 24px;

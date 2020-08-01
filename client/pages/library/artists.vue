@@ -94,7 +94,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryArtistsPage {
-  padding: 16px 3% 48px;
+  padding: 16px max(12px, 3vw) 48px;
 
   & > * {
     margin-bottom: 24px;

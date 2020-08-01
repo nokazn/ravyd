@@ -410,7 +410,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 }
 
 .ReleaseIdPage {
-  padding: 16px 6% 48px;
+  padding: 16px max(12px, 4vw) 48px;
 
   &__header {
     display: grid;

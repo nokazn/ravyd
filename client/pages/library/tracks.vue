@@ -168,7 +168,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryTracksPage {
-  padding: 16px 3% 48px;
+  padding: 16px max(12px, 3vw) 48px;
 
   & > * {
     margin-bottom: 16px;

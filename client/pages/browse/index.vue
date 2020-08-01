@@ -130,7 +130,7 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .BrowsePage {
-  padding: 16px 3% 48px;
+  padding: 16px max(12px, 4vw) 48px;
 
   &__title {
     margin-left: 3%;
