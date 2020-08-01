@@ -16,7 +16,7 @@
       class="g-custom-scroll-bar"
     >
       <div :class="$style.List__header">
-        <UserMenu />
+        <AccountMenu />
       </div>
 
       <v-divider :class="$style.List__divider" />
@@ -74,7 +74,7 @@
 import Vue from 'vue';
 import { RootState } from 'typed-vuex';
 
-import UserMenu from '~/components/containers/menu/UserMenu.vue';
+import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
 import { NAVIGATION_DRAWER_BACKGROUND_COLOR, NAVIGATION_DRAWER_WIDTH } from '~/variables';
@@ -95,7 +95,7 @@ type Data = {
 
 export default Vue.extend({
   components: {
-    UserMenu,
+    AccountMenu,
     NavigationListItemGroup,
     CreatePlaylistModal,
   },
