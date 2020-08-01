@@ -20,7 +20,7 @@
           :size="32"
           :is-favorited="isFollowing"
           text="フォロー"
-          @on-clicked="toggleFolloingState"
+          @on-clicked="toggleFollowingState"
         />
 
         <ArtistMenu
@@ -29,7 +29,7 @@
           :size="32"
           outlined
           left
-          @on-follow-menu-clicked="toggleFolloingState"
+          @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
     </portal>
@@ -88,14 +88,14 @@
 
             <FollowButton
               :is-following="isFollowing"
-              @on-clicked="toggleFolloingState"
+              @on-clicked="toggleFollowingState"
             />
 
             <ArtistMenu
               :artist="artistInfo"
               :is-following="isFollowing"
               outlined
-              @on-follow-menu-clicked="toggleFolloingState"
+              @on-follow-menu-clicked="toggleFollowingState"
             />
           </div>
         </div>
@@ -306,7 +306,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       this.topTrackList = trackList;
     };
 
-    // アーティストを編集した後呼ばれる
+    // アーティストをフォロー/アンフォローした後呼ばれる
     const subscribeArtist = (mutationPayload: ExtendedMutationPayload<'library/artists/SET_ACTUAL_IS_SAVED'>) => {
       if (this.artistInfo == null) return;
 
@@ -353,7 +353,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleFolloingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
