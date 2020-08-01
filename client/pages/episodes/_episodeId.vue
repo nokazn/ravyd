@@ -185,6 +185,25 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get artworkSrc(): string | undefined {
+    return getImageSrc(this.episodeInfo?.artworkList, ARTWORK_SIZE);
+  }
+  get isEpisodeSet(): boolean {
+    return this.$getters()['playback/isContextSet'](this.episodeInfo?.uri);
+  }
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
+  }
+  get remainingTime(): string | undefined {
+    if (this.episodeInfo == null) return undefined;
+
+    const positionMs = this.episodeInfo.resumePoint.resume_position_ms;
+    const remainingMs = this.episodeInfo.durationMs - positionMs;
+    return positionMs > 0
+      ? `残り${elapsedTimeInJapanese(remainingMs)}`
+      : '未再生';
+  }
+
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.episodeInfo != null) {
@@ -203,25 +222,6 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
   beforeDestroy() {
     this.$header.disconnectObserver();
-  }
-
-  get artworkSrc(): string | undefined {
-    return getImageSrc(this.episodeInfo?.artworkList, ARTWORK_SIZE);
-  }
-  get isEpisodeSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.episodeInfo?.uri);
-  }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
-  }
-  get remainingTime(): string | undefined {
-    if (this.episodeInfo == null) return undefined;
-
-    const positionMs = this.episodeInfo.resumePoint.resume_position_ms;
-    const remainingMs = this.episodeInfo.durationMs - positionMs;
-    return positionMs > 0
-      ? `残り${elapsedTimeInJapanese(remainingMs)}`
-      : '未再生';
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {

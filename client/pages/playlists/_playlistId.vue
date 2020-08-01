@@ -260,6 +260,39 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get artworkSrc(): string | undefined {
+    return getImageSrc(this.playlistInfo?.artworkList, ARTWORK_SIZE);
+  }
+  get isPlaylistSet(): boolean {
+    return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
+  }
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
+  }
+  get hasTracks(): boolean {
+    return this.playlistTrackInfo != null
+      ? this.playlistTrackInfo.trackList.length > 0
+      : false;
+  }
+  get editPlaylistForm(): Form | undefined {
+    if (this.playlistInfo == null) return undefined;
+
+    const {
+      name, description, artworkList, isPublic, isCollaborative,
+    } = this.playlistInfo;
+
+    return {
+      playlistId: this.$route.params.playlistId,
+      name,
+      description: description ?? '',
+      artworkList,
+      isPrivate: isPublic != null
+        ? !isPublic
+        : false,
+      isCollaborative,
+    };
+  }
+
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.playlistInfo != null) {
@@ -410,39 +443,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
     }
-  }
-
-  get artworkSrc(): string | undefined {
-    return getImageSrc(this.playlistInfo?.artworkList, ARTWORK_SIZE);
-  }
-  get isPlaylistSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
-  }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
-  }
-  get hasTracks(): boolean {
-    return this.playlistTrackInfo != null
-      ? this.playlistTrackInfo.trackList.length > 0
-      : false;
-  }
-  get editPlaylistForm(): Form | undefined {
-    if (this.playlistInfo == null) return undefined;
-
-    const {
-      name, description, artworkList, isPublic, isCollaborative,
-    } = this.playlistInfo;
-
-    return {
-      playlistId: this.$route.params.playlistId,
-      name,
-      description: description ?? '',
-      artworkList,
-      isPrivate: isPublic != null
-        ? !isPublic
-        : false,
-      isCollaborative,
-    };
   }
 
   async appendTrackList(counts: number = LIMIT_OF_TRACKS, payload?: { force: true } | undefined) {

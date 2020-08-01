@@ -234,6 +234,16 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get artworkSrc(): string | undefined {
+    return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
+  }
+  get isReleaseSet(): boolean {
+    return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
+  }
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
+  }
+
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
     if (this.releaseInfo != null) {
@@ -297,16 +307,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
     }
-  }
-
-  get artworkSrc(): string | undefined {
-    return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
-  }
-  get isReleaseSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
-  }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
   }
 
   async appendTrackList(limit: OneToFifty = LIMIT_OF_TRACKS) {

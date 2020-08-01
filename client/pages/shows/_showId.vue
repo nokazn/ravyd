@@ -204,6 +204,18 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       title: this.showInfo?.name ?? 'エラー',
     };
   }
+  get artworkSrc(): string | undefined {
+    return getImageSrc(this.showInfo?.artworkList, ARTWORK_SIZE);
+  }
+  get isShowSet(): boolean {
+    return this.$getters()['playback/isContextSet'](this.showInfo?.uri);
+  }
+  get isPlaying(): RootState['playback']['isPlaying'] {
+    return this.$state().playback.isPlaying;
+  }
+  get hasEpisodes(): boolean {
+    return (this.showInfo?.episodeList.length ?? 0) > 0;
+  }
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
@@ -252,19 +264,6 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
     }
-  }
-
-  get artworkSrc(): string | undefined {
-    return getImageSrc(this.showInfo?.artworkList, ARTWORK_SIZE);
-  }
-  get isShowSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.showInfo?.uri);
-  }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
-  }
-  get hasEpisodes(): boolean {
-    return (this.showInfo?.episodeList.length ?? 0) > 0;
   }
 
   async appendEpisodeList(limit: OneToFifty = LIMIT_OF_EPISODES) {
