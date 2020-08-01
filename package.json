@@ -25,7 +25,7 @@
     "@nuxtjs/pwa": "^3.0.0-0",
     "@nuxtjs/style-resources": "^1.0.0",
     "connect-redis": "^5.0.0",
-    "dayjs": "^1.8.30",
+    "dayjs": "^1.8.31",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "ioredis": "^4.16.0",
