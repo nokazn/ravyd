@@ -132,7 +132,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeTable from '~/components/containers/table/EpisodeTable.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
-import ShowMenu, { On as OnMenu } from '~/components/containers/menu/ShowMenu.vue';
+import ShowMenu, { On as OnMenu } from '~/components/parts/menu/ShowMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
