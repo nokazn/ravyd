@@ -76,7 +76,7 @@
         </h1>
 
         <div :class="$style.Info__footer">
-          <p>
+          <p class="subtext--text">
             {{ artistInfo.followersText }}
           </p>
 

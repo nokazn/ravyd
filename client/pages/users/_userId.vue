@@ -1,0 +1,341 @@
+<template>
+  <div
+    v-if="userInfo != null"
+    :class="$style.UserIdPage"
+  >
+    <portal :to="$header.PORTAL_NAME">
+      <div
+        v-if="userInfo != null"
+        :class="$style.AdditionalHeaderContent"
+      >
+        <FavoriteButton
+          v-if="isFollowing != null"
+          outlined
+          :size="32"
+          :is-favorited="isFollowing"
+          text="フォロー"
+          @on-clicked="toggleFollowingState"
+        />
+
+        <UserMenu
+          outlined
+          left
+          :size="32"
+          :user="userInfo"
+          :is-following="isFollowing"
+          @on-follow-menu-clicked="toggleFollowingState"
+        />
+      </div>
+    </portal>
+
+    <div
+      :ref="HEADER_REF"
+      :class="$style.UserIdPage__header"
+    >
+      <UserAvatar
+        :src="avatarSrc"
+        :size="AVATAR_SIZE"
+        :alt="userName"
+        :title="userName"
+        default-user-icon="mdi-account"
+        shadow
+      />
+
+      <div :class="$style.Info">
+        <div class="g-small-text">
+          ユーザー
+        </div>
+
+        <h1 :class="$style.Info__title">
+          {{ userName }}
+        </h1>
+
+        <p class="subtext--text">
+          {{ playlistCountsText }}・{{ userInfo.followersText }}
+        </p>
+
+        <div :class="$style.Info__buttons">
+          <FollowButton
+            v-if="isFollowing != null"
+            :is-following="isFollowing"
+            @on-clicked="toggleFollowingState"
+          />
+
+          <UserMenu
+            outlined
+            right
+            :user="userInfo"
+            :is-following="isFollowing"
+            @on-follow-menu-clicked="toggleFollowingState"
+          />
+        </div>
+      </div>
+    </div>
+
+    <h2>
+      公開プレイリスト
+    </h2>
+
+    <v-divider :class="$style.Divider" />
+
+    <div
+      v-if="userPlaylistInfo.playlists.length > 0"
+      :class="$style.Cards"
+    >
+      <PlaylistCard
+        v-for="playlist in userPlaylistInfo.playlists"
+        :key="playlist.id"
+        v-bind="playlist"
+        :min-width="MIN_IMAGE_SIZE"
+        :max-width="MAX_IMAGE_SIZE"
+        :class="$style.Cards__card"
+      />
+
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+    </div>
+
+    <IntersectionLoadingCircle
+      :is-loading="userPlaylistInfo.hasNext"
+      @on-appeared="appendPlaylists"
+    />
+  </div>
+  <Fallback v-else>
+    ユーザーの情報を取得できませんでした。
+  </Fallback>
+</template>
+
+<script lang="ts">
+import { Vue, Component } from 'nuxt-property-decorator';
+
+import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
+import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
+import UserMenu, { On as OnUserMenu } from '~/components/parts/menu/UserMenu.vue';
+import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
+import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
+import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { App, OneToFifty } from '~~/types';
+
+const AVATAR_SIZE = 180;
+const MIN_IMAGE_SIZE = 180;
+const MAX_IMAGE_SIZE = 240;
+const LIMIT_OF_PLAYLISTS = 30;
+const HEADER_REF = 'HEADER_REF';
+
+interface AsyncData {
+  userInfo: App.UserInfo | undefined
+  isFollowing: boolean | undefined
+  userPlaylistInfo: App.UserPlaylistInfo
+}
+
+interface Data {
+  AVATAR_SIZE: number
+  MIN_IMAGE_SIZE: number
+  MAX_IMAGE_SIZE: number
+  HEADER_REF: string
+}
+
+@Component({
+  components: {
+    UserAvatar,
+    FollowButton,
+    FavoriteButton,
+    UserMenu,
+    PlaylistCard,
+    IntersectionLoadingCircle,
+    Fallback,
+  },
+
+  validate({ params }) {
+    return params.userId != null && params.userId !== '';
+  },
+
+  async asyncData(context): Promise<AsyncData> {
+    const [userInfo, isFollowing, userPlaylistInfo] = await Promise.all([
+      getUserInfo(context),
+      getIsFollowing(context),
+      getUserPlaylists(context, { limit: LIMIT_OF_PLAYLISTS }),
+    ] as const);
+
+    return {
+      userInfo,
+      isFollowing,
+      userPlaylistInfo,
+    };
+  },
+})
+export default class UserIdPage extends Vue implements AsyncData, Data {
+  userInfo: App.UserInfo | undefined = undefined;
+  isFollowing: boolean | undefined = undefined;
+  userPlaylistInfo: App.UserPlaylistInfo = {
+    playlists: [],
+    hasNext: false,
+    total: 0,
+  };
+
+  AVATAR_SIZE = AVATAR_SIZE;
+  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
+  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
+  HEADER_REF = HEADER_REF;
+
+  head() {
+    return {
+      title: this.userName ?? 'エラー',
+    };
+  }
+
+  get avatarSrc(): string | undefined {
+    return getImageSrc(this.userInfo?.images);
+  }
+  get userName(): string | undefined {
+    const { userInfo } = this;
+    return userInfo?.displayName ?? userInfo?.id;
+  }
+  get playlistCountsText(): string {
+    const { total } = this.userPlaylistInfo;
+    return `${total}個のプレイリスト`;
+  }
+
+  mounted() {
+    if (this.userInfo != null) {
+      const ref = this.$refs[HEADER_REF] as HTMLDivElement;
+      this.$header.observe(ref);
+    }
+
+    // 小さい画像から抽出
+    const artworkSrc = getImageSrc(this.userInfo?.images, 40);
+    if (artworkSrc != null) {
+      this.$dispatch('extractDominantBackgroundColor', artworkSrc);
+    } else {
+      this.$dispatch('setDefaultDominantBackgroundColor');
+    }
+  }
+
+  beforeDestroy() {
+    this.$header.disconnectObserver();
+  }
+
+  async appendPlaylists(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
+    if (!this.userPlaylistInfo.hasNext) return;
+
+    const { userPlaylistInfo } = this;
+    const { userId } = this.$route.params;
+    const offset = userPlaylistInfo.playlists.length;
+    const playlists = await this.$spotify.playlists.getListOfUserPlaylist({
+      userId,
+      limit,
+      offset,
+    });
+    if (playlists == null) {
+      this.userPlaylistInfo = {
+        ...userPlaylistInfo,
+        hasNext: false,
+      };
+      return;
+    }
+
+    const addedPlaylists = playlists.items.map(convertPlaylistForCard);
+    this.userPlaylistInfo = {
+      ...userPlaylistInfo,
+      playlists: [...userPlaylistInfo.playlists, ...addedPlaylists],
+      hasNext: playlists.next != null,
+    };
+  }
+
+  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnFavoriteButton['on-clicked']| OnUserMenu['on-follow-menu-clicked']) {
+    const handler = (params: {
+      type: 'artist' | 'user',
+      idList: string[],
+    }) => (nextFollowingState
+      ? this.$spotify.following.follow(params)
+      : this.$spotify.following.unfollow(params));
+
+    handler({
+      type: 'user',
+      idList: [this.$route.params.userId],
+    }).then(() => {
+      this.isFollowing = nextFollowingState;
+    }).catch((err: Error) => {
+      console.error({ err });
+      const message = nextFollowingState
+        ? 'ユーザーをフォローすることができませんでした。'
+        : 'ユーザーのフォローを解除することができませんでした。';
+      this.$toast.show('error', message);
+    });
+  }
+}
+</script>
+
+<style lang="scss" module>
+.UserIdPage {
+  padding: 16px 6% 48px;
+
+  &__header {
+    display: grid;
+    grid-template-columns: 180px auto;
+    grid-column-gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .Tabs {
+    margin-bottom: 32px;
+  }
+
+  .Divider {
+    margin: 6px 0 16px;
+  }
+
+  .Cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    & > * {
+      margin-left: 16px;
+      margin-right: 16px;
+      flex: 1 0 180px;
+      min-width: 180px;
+      max-width: 240px;
+    }
+
+    &__card {
+      margin-bottom: 32px;
+    }
+
+    &__spacer {
+      height: 0;
+    }
+  }
+
+  .Info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &__title {
+      font-size: 2em;
+      margin: 0.3em 0;
+      line-height: 1.2em;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-wrap: nowrap;
+
+      & > *:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+}
+</style>

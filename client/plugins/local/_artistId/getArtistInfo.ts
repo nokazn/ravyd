@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
-import { addComma } from '~~/utils/addComma';
 import { App } from '~~/types';
+import { getFollowersText } from '~/scripts/converter/getFollowersText';
 
 export const getArtistInfo = async (
   { app, params }: Context,
@@ -19,16 +19,13 @@ export const getArtistInfo = async (
     genres: genreList,
     external_urls: externalUrls,
   } = artist;
-  const followersText = followers.total != null
-    ? `フォロワー ${addComma(followers.total)}人`
-    : undefined;
 
   return {
     name,
     id,
     uri,
     avatarList,
-    followersText,
+    followersText: getFollowersText(followers.total),
     genreList,
     externalUrls,
   };

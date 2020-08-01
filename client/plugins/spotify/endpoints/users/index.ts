@@ -2,7 +2,7 @@ import { Context } from '@nuxt/types';
 import { getCurrentUserProfile } from './getCurrentUserProfile';
 import { getUserProfile } from './getUserProfile';
 
-export const user = (context: Context) => ({
+export const users = (context: Context) => ({
   getCurrentUserProfile: getCurrentUserProfile(context),
   getUserProfile: getUserProfile(context),
 });

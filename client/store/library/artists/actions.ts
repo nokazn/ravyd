@@ -9,8 +9,8 @@ import { SpotifyAPI, OneToFifty, TODO } from '~~/types';
 export type LibraryArtistsActions = {
   getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedArtistList: () => Promise<void>
-  followArtists: (artistIdList: string[]) => Promise<void>
-  unfollowArtists: (artistIdList: string[]) => Promise<void>
+  followArtists: (idList: string[]) => Promise<void>
+  unfollowArtists: (idList: string[]) => Promise<void>
   modifyArtistSavedState: ({ artistId, isSaved }: {
     artistId: string
     isSaved: boolean
@@ -96,16 +96,16 @@ const actions: Actions<
     commit('RESET_UNUPDATED_COUNTS');
   },
 
-  async followArtists({ dispatch }, artistIdList) {
+  async followArtists({ dispatch }, idList) {
     await this.$spotify.following.follow({
       type: 'artist',
-      artistIdList,
+      idList,
     }).catch((err: Error) => {
       console.error({ err });
       this.$toast.show('error', 'フォローに失敗しました。');
     });
 
-    artistIdList.forEach((artistId) => {
+    idList.forEach((artistId) => {
       dispatch('modifyArtistSavedState', {
         artistId,
         isSaved: true,
@@ -113,16 +113,16 @@ const actions: Actions<
     });
   },
 
-  async unfollowArtists({ dispatch }, artistIdList) {
+  async unfollowArtists({ dispatch }, idList) {
     await this.$spotify.following.unfollow({
       type: 'artist',
-      artistIdList,
+      idList,
     }).catch((err: Error) => {
       console.error({ err });
       this.$toast.show('error', 'フォローの解除に失敗しました。');
     });
 
-    artistIdList.forEach((artistId) => {
+    idList.forEach((artistId) => {
       dispatch('modifyArtistSavedState', {
         artistId,
         isSaved: false,

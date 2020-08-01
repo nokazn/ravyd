@@ -5,12 +5,12 @@ export const checkUserFollowed = (context: Context) => {
 
   return ({
     type,
-    artistIdList,
+    idList,
   }: {
     type: 'artist' | 'user'
-    artistIdList: string[]
+    idList: string[]
   }): Promise<boolean[]> => {
-    const { length } = artistIdList;
+    const { length } = idList;
     if (length === 0) {
       return Promise.resolve([]);
     }
@@ -18,7 +18,7 @@ export const checkUserFollowed = (context: Context) => {
     const limit = 50;
     const handler = (index: number): Promise<boolean[]> => {
       // limit ごとに分割
-      const ids = artistIdList.slice(limit * index, limit).join(',');
+      const ids = idList.slice(limit * index, limit).join(',');
       return app.$spotifyApi.$get('/me/following/contains', {
         params: {
           type,

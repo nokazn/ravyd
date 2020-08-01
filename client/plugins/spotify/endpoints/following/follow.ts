@@ -3,11 +3,11 @@ import { Context } from '@nuxt/types';
 export const follow = (context: Context) => {
   const { app } = context;
 
-  return ({ type, artistIdList }: {
+  return ({ type, idList }: {
     type: 'artist' | 'user'
-    artistIdList: string[]
+    idList: string[]
   }): Promise<void> => {
-    const { length } = artistIdList;
+    const { length } = idList;
     if (length === 0) {
       return Promise.resolve();
     }
@@ -15,7 +15,7 @@ export const follow = (context: Context) => {
     const limit = 50;
     const handler = (index: number): Promise<void> => {
       // limit ごとに分割
-      const ids = artistIdList.slice(limit * index, limit).join(',');
+      const ids = idList.slice(limit * index, limit).join(',');
       return app.$spotifyApi.$put('/me/following', null, {
         params: {
           type,
