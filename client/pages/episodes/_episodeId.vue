@@ -50,7 +50,7 @@
           />
         </div>
 
-        <h1 :class="$style.Info__name">
+        <h1 :class="$style.Info__title">
           {{ episodeInfo.name }}
         </h1>
 
@@ -266,6 +266,10 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
     }
   }
 
+  &__table {
+    margin-bottom: 32px;
+  }
+
   .Info {
     display: inline-flex;
     flex-direction: column;
@@ -275,7 +279,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
       margin-bottom: 0.1rem;
     }
 
-    &__name {
+    &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
@@ -305,10 +309,6 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
         margin-right: 8px;
       }
     }
-  }
-
-  &__table {
-    margin-bottom: 32px;
   }
 }
 </style>

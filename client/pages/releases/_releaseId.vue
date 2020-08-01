@@ -57,7 +57,7 @@
           {{ releaseInfo.releaseType }}
         </div>
 
-        <h1 :class="$style.Info__releaseName">
+        <h1 :class="$style.Info__title">
           {{ releaseInfo.name }}
         </h1>
 
@@ -430,7 +430,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       margin-bottom: 12px;
     }
 
-    &__releaseName {
+    &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;

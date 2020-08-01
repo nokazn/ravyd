@@ -57,7 +57,7 @@
           />
         </div>
 
-        <h1 :class="$style.Info__name">
+        <h1 :class="$style.Info__title">
           {{ showInfo.name }}
         </h1>
 
@@ -359,7 +359,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       margin-bottom: 0.1rem;
     }
 
-    &__name {
+    &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;

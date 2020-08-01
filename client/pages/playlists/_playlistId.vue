@@ -70,7 +70,7 @@
           </v-icon>
         </div>
 
-        <h1 :class="$style.Info__playlistName">
+        <h1 :class="$style.Info__title">
           {{ playlistInfo.name }}
         </h1>
 
@@ -590,7 +590,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     flex-direction: column;
     justify-content: flex-end;
 
-    &__playlistName {
+    &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;

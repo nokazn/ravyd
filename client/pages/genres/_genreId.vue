@@ -9,7 +9,7 @@
 
     <div
       v-if="playlists.length > 0"
-      :class="$style.GenreIdPage__playlistCardContainer"
+      :class="$style.Cards"
     >
       <PlaylistCard
         v-for="playlist in playlists"
@@ -17,17 +17,17 @@
         v-bind="playlist"
         :min-width="MIN_IMAGE_SIZE"
         :max-width="MAX_IMAGE_SIZE"
-        :class="$style.GenreIdPage__playlistCard"
+        :class="$style.Cards__card"
       />
 
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
-      <div :class="$style.GenreIdPage__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
     </div>
 
     <IntersectionLoadingCircle
@@ -144,7 +144,11 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
     padding-left: 3%;
   }
 
-  &__playlistCardContainer {
+  & > *:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
+  .Cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -156,18 +160,14 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
       min-width: 180px;
       max-width: 240px;
     }
-  }
 
-  &__playlistCard {
-    margin-bottom: 32px;
-  }
+    &__card {
+      margin-bottom: 32px;
+    }
 
-  &__spacer {
-    height: 0;
-  }
-
-  & > *:not(:last-child) {
-    margin-bottom: 24px;
+    &__spacer {
+      height: 0;
+    }
   }
 }
 </style>

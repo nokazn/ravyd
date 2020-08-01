@@ -4,7 +4,7 @@
       {{ title }}
     </h1>
 
-    <div :class="$style.CardWrapper">
+    <div :class="$style.Cards">
       <template v-if="artistList != null">
         <ArtistCard
           v-for="artist in artistList"
@@ -12,18 +12,18 @@
           v-bind="artist"
           :min-width="180"
           :max-width="240"
-          :class="$style.CardWrapper__card"
+          :class="$style.Cards__card"
         />
       </template>
 
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
-      <div :class="$style.CardWrapper__cardSpacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
     </div>
 
     <IntersectionLoadingCircle
@@ -100,7 +100,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
     margin-bottom: 24px;
   }
 
-  .CardWrapper {
+  .Cards {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -118,7 +118,7 @@ export default class LibraryArtistsPage extends Vue implements Data {
     }
 
     // 最終行の余りの部分を埋める
-    &__cardSpacer {
+    &__spacer {
       height: 0;
     }
   }

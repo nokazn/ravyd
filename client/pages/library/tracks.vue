@@ -174,16 +174,6 @@ export default class LibraryTracksPage extends Vue implements Data {
     margin-bottom: 16px;
   }
 
-  .ExtendedHeader {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-
-    &__title {
-      font-size: 1.4em;
-    }
-  }
-
   &__table {
     width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }

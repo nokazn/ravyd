@@ -6,7 +6,7 @@
 
     <div
       v-if="categoryList != null"
-      :class="$style.BrowsePage__categoryCardContainer"
+      :class="$style.Cards"
     >
       <CategoryCard
         v-for="category in categoryList"
@@ -14,17 +14,17 @@
         v-bind="category"
         :min-size="MIN_IMAGE_SIZE"
         :max-size="MAX_IMAGE_SIZE"
-        :class="$style.BrowsePage__categoryCard"
+        :class="$style.Cards__card"
       />
 
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
-      <div :class="$style.BrowsePage__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
+      <div :class="$style.Cards__spacer" />
     </div>
 
     <IntersectionLoadingCircle
@@ -136,7 +136,11 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
     margin-left: 3%;
   }
 
-  &__categoryCardContainer {
+  & > *:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
+  .Cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -148,18 +152,14 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
       min-width: 180px;
       max-width: 220px;
     }
-  }
 
-  &__categoryCard {
-    margin-bottom: 32px;
-  }
+    &__card {
+      margin-bottom: 32px;
+    }
 
-  &__spacer {
-    height: 0;
-  }
-
-  & > *:not(:last-child) {
-    margin-bottom: 24px;
+    &__spacer {
+      height: 0;
+    }
   }
 }
 </style>
