@@ -153,7 +153,7 @@ import HashTags from '~/components/parts/chip/HashTags.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
-import ReleaseMenu, { On as OnMenu } from '~/components/containers/menu/ReleaseMenu.vue';
+import ReleaseMenu, { On as OnMenu } from '~/components/parts/menu/ReleaseMenu.vue';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
