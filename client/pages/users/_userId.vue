@@ -9,6 +9,7 @@
         :class="$style.AdditionalHeaderContent"
       >
         <FavoriteButton
+          v-if="isFollowing != null"
           outlined
           :size="32"
           :is-favorited="isFollowing"
@@ -55,6 +56,7 @@
 
         <div :class="$style.Info__buttons">
           <FollowButton
+            v-if="isFollowing != null"
             :is-following="isFollowing"
             @on-clicked="toggleFollowingState"
           />
@@ -132,7 +134,7 @@ const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
   userInfo: App.UserInfo | undefined
-  isFollowing: boolean
+  isFollowing: boolean | undefined
   userPlaylistInfo: App.UserPlaylistInfo
 }
 
@@ -174,7 +176,7 @@ interface Data {
 })
 export default class UserIdPage extends Vue implements AsyncData, Data {
   userInfo: App.UserInfo | undefined = undefined;
-  isFollowing = false;
+  isFollowing: boolean | undefined = undefined;
   userPlaylistInfo: App.UserPlaylistInfo = {
     playlists: [],
     hasNext: false,

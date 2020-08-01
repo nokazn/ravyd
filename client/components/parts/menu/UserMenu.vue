@@ -34,8 +34,8 @@ export default Vue.extend({
       required: true,
     },
     isFollowing: {
-      type: Boolean,
-      required: true,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     size: {
       type: Number,
@@ -63,6 +63,7 @@ export default Vue.extend({
           const nextFollowingState = !this.isFollowing;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         },
+        disabled: this.isFollowing == null,
       });
 
       const share = () => {
@@ -81,10 +82,14 @@ export default Vue.extend({
         };
       };
 
-      return [
-        [followArtist()],
-        [share()],
-      ];
+      return this.isFollowing != null
+        ? [
+          [followArtist()],
+          [share()],
+        ]
+        : [
+          [share()],
+        ];
     },
   },
 });
