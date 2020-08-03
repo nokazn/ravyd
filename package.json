@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@babel/compat-data": "^7.10.5",
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/runtime-corejs3": "^7.11.0",
     "@mdi/font": "^5.4.55",
