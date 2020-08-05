@@ -8,7 +8,7 @@ import { emptyPaging } from '~/variables';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryShowsActions = {
-  getSavedSShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
+  getSavedShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedShowList: () => Promise<void>
   saveShows: (showIdList: string[]) => Promise<void>
   removeShows: (showIdList: string[]) => Promise<void>
@@ -19,7 +19,7 @@ export type LibraryShowsActions = {
 }
 
 export type RootActions = {
-  'library/shows/getSavedSShowList': LibraryShowsActions['getSavedSShowList']
+  'library/shows/getSavedShowList': LibraryShowsActions['getSavedShowList']
   'library/shows/updateLatestSavedShowList': LibraryShowsActions['updateLatestSavedShowList']
   'library/shows/saveShows': LibraryShowsActions['saveShows']
   'library/shows/removeShows': LibraryShowsActions['removeShows']
@@ -35,7 +35,7 @@ const actions: Actions<
   /**
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedSShowList({ getters, commit, rootGetters }, payload) {
+  async getSavedShowList({ getters, commit, rootGetters }, payload) {
     if (getters.isFull) return;
 
     const limit = payload?.limit ?? 30;
