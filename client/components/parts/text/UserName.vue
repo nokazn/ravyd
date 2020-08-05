@@ -1,7 +1,7 @@
 <template>
   <nuxt-link
-    v-if="user != null && text != null"
-    :to="to"
+    v-if="text != null"
+    :to="userPath"
   >
     {{ text }}
   </nuxt-link>
@@ -11,11 +11,6 @@
 import Vue, { PropType } from 'vue';
 import { SpotifyAPI } from '~~/types';
 
-export type Data = {
-  to: string
-  text: string | null
-}
-
 export default Vue.extend({
   props: {
     user: {
@@ -24,11 +19,13 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      to: `/users/${this.user.id}`,
-      text: this.user.display_name,
-    };
+  computed: {
+    userPath(): string {
+      return `/users/${this.user.id}`;
+    },
+    text(): string | null {
+      return this.user.display_name;
+    },
   },
 });
 </script>
