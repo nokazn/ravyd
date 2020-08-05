@@ -12,7 +12,10 @@
     class="g-no-text-decoration"
   >
     <v-list-item-icon v-if="icon != null">
-      <v-icon :title="name">
+      <v-icon
+        color="subtext"
+        title="name"
+      >
         {{ icon }}
       </v-icon>
     </v-list-item-icon>
