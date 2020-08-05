@@ -16,8 +16,8 @@
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <div :class="$style.TrackListItem__content">
-          <div :class="$style['TrackListItem__content--left']">
+        <div :class="$style.Content">
+          <div :class="$style.Content__left">
             <TrackListMediaButton
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
@@ -30,12 +30,12 @@
               @on-clicked="onFavoriteButtonClicked"
             />
 
-            <span
-              :class="$style.TrackListItem__contentTitle"
+            <div
+              :class="$style.Content__title"
               class="g-ellipsis-text"
             >
               <nuxt-link
-                :to="path"
+                :to="releasePath"
                 :title="item.name"
                 :class="textColor"
               >
@@ -50,7 +50,7 @@
                   :class="subtextColor"
                 />
               </template>
-            </span>
+            </div>
           </div>
         </div>
       </v-list-item-content>
@@ -88,7 +88,6 @@ import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { App } from '~~/types';
 
 export type Data = {
-  path: string
   TRACK_LIST_ARTWORK_SIZE: number
 }
 
@@ -127,10 +126,7 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const path = `/releases/${this.item.releaseId}#${this.item.hash}`;
-
     return {
-      path,
       TRACK_LIST_ARTWORK_SIZE,
     };
   },
@@ -138,6 +134,9 @@ export default Vue.extend({
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.item.artworkList, TRACK_LIST_ARTWORK_SIZE);
+    },
+    releasePath(): string {
+      return `/releases/${this.item.releaseId}#${this.item.hash}`;
     },
     textColor(): string | undefined {
       return this.isTrackSet
@@ -166,12 +165,18 @@ export default Vue.extend({
 .TrackListItem {
   padding: 0.3em 0;
 
-  &__content {
+  &__action {
+    & > *:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  .Content {
     display: flex;
     justify-content: space-between;
     overflow-x: hidden;
 
-    &--left {
+    &__left {
       display: flex;
       align-items: center;
       overflow-x: hidden;
@@ -181,18 +186,12 @@ export default Vue.extend({
       }
     }
 
-    &Title {
+    &__title {
       font-size: 0.9em;
 
       & > *:not(:last-child) {
         margin-right: 0.3em;
       }
-    }
-  }
-
-  &__action {
-    & > *:not(:last-child) {
-      margin-right: 1em;
     }
   }
 }
