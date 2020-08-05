@@ -14,6 +14,7 @@
     <v-list-item-icon v-if="icon != null">
       <v-icon
         color="subtext"
+        :size="20"
         title="name"
       >
         {{ icon }}
