@@ -39,10 +39,6 @@ import { App } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';
 
-type Data = {
-  artistNames: string
-}
-
 export type On = {
   [ON_CLICKED]: void
 }
@@ -66,17 +62,12 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const artistNames = this.artistList
-      .map((artist) => artist.name)
-      .join(', ');
-
-    return {
-      artistNames,
-    };
-  },
-
   computed: {
+    artistNames(): string {
+      return this.artistList
+        .map((artist) => artist.name)
+        .join(', ');
+    },
     artistPath(): (id: string) => string {
       return (id: string) => `/artists/${id}`;
     },
@@ -92,12 +83,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ArtistNames {
-  white-space: nowrap;
-
-  & > * {
-    display: inline-block;
-  }
-
   &__comma {
     margin-right: 0.5em;
   }

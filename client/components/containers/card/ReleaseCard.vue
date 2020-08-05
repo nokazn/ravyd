@@ -4,7 +4,6 @@
     type="card"
     boilerplate
     :width="width"
-
     :min-width="width"
     :max-width="maxWidth || width"
   />
@@ -21,13 +20,13 @@
     <div :class="$style.ReleaseCard__container">
       <nuxt-link :to="releasePath">
         <ReleaseArtwork
+          is-overlayed
           :src="artworkSrc"
           :alt="name"
           :title="name"
-          :min-size="minWidth || width"
           :size="width"
+          :min-size="minWidth || width"
           :max-size="maxWidth || width"
-          is-overlayed
           :icon="mediaIcon"
           @on-media-button-clicked="onMediaButtonClicked"
         />
@@ -45,36 +44,22 @@
 
       <v-card-subtitle
         :class="$style.ReleaseCard__subtitle"
-        class="g-ellipsis-text"
       >
         <template v-if="discograpy">
           <time
             v-if="releaseYear != null"
             :datetime="releaseYear"
+            class="g-ellipsis-text"
           >
             {{ releaseYear }}
           </time>
         </template>
 
         <template v-else>
-          <template
-            v-for="({
-              name: artistName,
-              id: artistId
-            }, index) in artists"
-          >
-            <nuxt-link
-              :key="artistId"
-              :to="`/artists/${artistId}`"
-              :title="artistsName"
-              @click.native.stop
-            >
-              {{ artistName }}
-            </nuxt-link><span
-              v-if="index !== artists.length - 1"
-              :key="`${artistId}-comma`"
-            >, </span>
-          </template>
+          <ArtistNames
+            :artist-list="artists"
+            class="g-ellipsis-text"
+          />
         </template>
       </v-card-subtitle>
     </div>
@@ -87,19 +72,19 @@ import { RawLocation } from 'vue-router';
 import { RootState } from 'typed-vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { hasProp } from '~~/utils/hasProp';
 import { SpotifyAPI, App } from '~~/types';
 
-export type Data = {
+type Data = {
   isLoaded: boolean
-  releasePath: RawLocation
-  artistsName: string
 }
 
 export default Vue.extend({
   components: {
     ReleaseArtwork,
+    ArtistNames,
   },
 
   props: {
@@ -170,24 +155,20 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const releasePath = {
-      path: `/releases/${this.releaseId}`,
-      hash: this.hash,
-    };
-    const artistsName = this.artists
-      .map((artist) => artist.name)
-      .join(', ');
-
     return {
       isLoaded: false,
-      releasePath,
-      artistsName,
     };
   },
 
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.artworkList, this.maxWidth ?? this.width);
+    },
+    releasePath(): RawLocation {
+      return {
+        path: `/releases/${this.releaseId}`,
+        hash: this.hash,
+      };
     },
     isReleaseSet(): boolean {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
