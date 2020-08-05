@@ -135,6 +135,11 @@ export default Vue.extend({
           to: '/library/artists',
           icon: 'mdi-account-music',
         },
+        {
+          name: 'ポッドキャスト',
+          to: '/library/shows',
+          icon: 'mdi-podcast',
+        },
       ],
       name: 'library',
     };
