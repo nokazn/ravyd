@@ -9,6 +9,7 @@
         v-for="release in releaseList"
         :key="release.id"
         v-bind="release"
+        :min-width="180"
         :max-width="240"
         :class="$style.Cards__card"
       />
@@ -41,7 +42,7 @@ interface Data {
   title: string
 }
 
-const LIMIT_OF_RELEASES = 30 as const;
+const LIMIT_OF_RELEASES = 30;
 
 @Component({
   components: {

@@ -45,7 +45,7 @@ interface Data {
   title: string
 }
 
-const LIMIT_OF_ARTISTS = 30 as const;
+const LIMIT_OF_ARTISTS = 30;
 
 @Component({
   components: {
