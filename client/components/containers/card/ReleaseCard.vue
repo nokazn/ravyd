@@ -1,86 +1,84 @@
 <template>
-  <div>
-    <v-skeleton-loader
-      v-if="!isLoaded"
-      type="card"
-      boilerplate
-      :width="width"
+  <v-skeleton-loader
+    v-if="!isLoaded"
+    type="card"
+    boilerplate
+    :width="width"
 
-      :min-width="width"
-      :max-width="maxWidth || width"
-    />
-    <v-card
-      v-else
-      hover
-      ripple
-      :width="width"
-      :min-width="width"
-      :max-width="maxWidth || width"
-      :class="$style.ReleaseCard"
-      @click="onCardClicked"
-    >
-      <div :class="$style.ReleaseCard__container">
-        <nuxt-link :to="releasePath">
-          <ReleaseArtwork
-            :src="artworkSrc"
-            :alt="name"
-            :title="name"
-            :min-size="minWidth || width"
-            :size="width"
-            :max-size="maxWidth || width"
-            is-overlayed
-            :icon="mediaIcon"
-            @on-media-button-clicked="onMediaButtonClicked"
-          />
-        </nuxt-link>
+    :min-width="width"
+    :max-width="maxWidth || width"
+  />
+  <v-card
+    v-else
+    hover
+    ripple
+    :width="width"
+    :min-width="width"
+    :max-width="maxWidth || width"
+    :class="$style.ReleaseCard"
+    @click="onCardClicked"
+  >
+    <div :class="$style.ReleaseCard__container">
+      <nuxt-link :to="releasePath">
+        <ReleaseArtwork
+          :src="artworkSrc"
+          :alt="name"
+          :title="name"
+          :min-size="minWidth || width"
+          :size="width"
+          :max-size="maxWidth || width"
+          is-overlayed
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </nuxt-link>
 
-        <v-card-title :class="$style.ReleaseCard__title">
-          <nuxt-link
-            :to="releasePath"
-            :title="name"
-            class="g-ellipsis-text"
-          >
-            {{ name }}
-          </nuxt-link>
-        </v-card-title>
-
-        <v-card-subtitle
-          :class="$style.ReleaseCard__subtitle"
+      <v-card-title :class="$style.ReleaseCard__title">
+        <nuxt-link
+          :to="releasePath"
+          :title="name"
           class="g-ellipsis-text"
         >
-          <template v-if="discograpy">
-            <time
-              v-if="releaseYear != null"
-              :datetime="releaseYear"
-            >
-              {{ releaseYear }}
-            </time>
-          </template>
+          {{ name }}
+        </nuxt-link>
+      </v-card-title>
 
-          <template v-else>
-            <template
-              v-for="({
-                name: artistName,
-                id: artistId
-              }, index) in artists"
+      <v-card-subtitle
+        :class="$style.ReleaseCard__subtitle"
+        class="g-ellipsis-text"
+      >
+        <template v-if="discograpy">
+          <time
+            v-if="releaseYear != null"
+            :datetime="releaseYear"
+          >
+            {{ releaseYear }}
+          </time>
+        </template>
+
+        <template v-else>
+          <template
+            v-for="({
+              name: artistName,
+              id: artistId
+            }, index) in artists"
+          >
+            <nuxt-link
+              :key="artistId"
+              :to="`/artists/${artistId}`"
+              :title="artistsName"
+              @click.native.stop
             >
-              <nuxt-link
-                :key="artistId"
-                :to="`/artists/${artistId}`"
-                :title="artistsName"
-                @click.native.stop
-              >
-                {{ artistName }}
-              </nuxt-link><span
-                v-if="index !== artists.length - 1"
-                :key="`${artistId}-comma`"
-              >, </span>
-            </template>
+              {{ artistName }}
+            </nuxt-link><span
+              v-if="index !== artists.length - 1"
+              :key="`${artistId}-comma`"
+            >, </span>
           </template>
-        </v-card-subtitle>
-      </div>
-    </v-card>
-  </div>
+        </template>
+      </v-card-subtitle>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">

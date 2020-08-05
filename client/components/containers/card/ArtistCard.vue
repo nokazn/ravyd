@@ -1,52 +1,50 @@
 <template>
-  <div>
-    <v-skeleton-loader
-      v-if="!isLoaded"
-      type="card"
-      boilerplate
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-    />
-    <v-card
-      v-else
-      hover
-      ripple
-      nuxt
-      :to="artistPath"
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-      :class="$style.ArtistCard"
-    >
-      <div :class="$style.ArtistCard__container">
-        <div :class="$style.ArtistCard__avatar">
-          <UserAvatar
-            :src="avatarSrc"
-            :alt="name"
-            :size="width"
-            :min-size="minWidth"
-            :max-size="maxWidth"
-            :icon="mediaIcon"
-            default-user-icon="mdi-account-music"
-            small-icon
-            :title="name"
-            is-overlayed
-            @on-media-button-clicked="onMediaButtonClicked"
-          />
-        </div>
-
-        <v-card-title :class="$style.ArtistCard__title">
-          <span
-            :title="name"
-            class="g-ellipsis-text"
-          >
-            {{ name }}
-          </span>
-        </v-card-title>
+  <v-skeleton-loader
+    v-if="!isLoaded"
+    type="card"
+    boilerplate
+    :width="width"
+    :min-width="minWidth || width"
+    :max-width="maxWidth || width"
+  />
+  <v-card
+    v-else
+    hover
+    ripple
+    nuxt
+    :to="artistPath"
+    :width="width"
+    :min-width="minWidth || width"
+    :max-width="maxWidth || width"
+    :class="$style.ArtistCard"
+  >
+    <div :class="$style.ArtistCard__container">
+      <div :class="$style.ArtistCard__avatar">
+        <UserAvatar
+          :src="avatarSrc"
+          :alt="name"
+          :size="width"
+          :min-size="minWidth"
+          :max-size="maxWidth"
+          :icon="mediaIcon"
+          default-user-icon="mdi-account-music"
+          small-icon
+          :title="name"
+          is-overlayed
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
       </div>
-    </v-card>
-  </div>
+
+      <v-card-title :class="$style.ArtistCard__title">
+        <span
+          :title="name"
+          class="g-ellipsis-text"
+        >
+          {{ name }}
+        </span>
+      </v-card-title>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
