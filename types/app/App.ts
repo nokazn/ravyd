@@ -193,7 +193,7 @@ export namespace App {
     uri: string
     publisher: string
     description: string | null
-    artworkList: SpotifyAPI.Image[]
+    images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
 

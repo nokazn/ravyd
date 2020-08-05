@@ -9,7 +9,7 @@ export const convertShowForCard = (
     uri: show.uri,
     publisher: show.publisher,
     description: show.description,
-    artworkList: show.images,
+    images: show.images,
     externalUrls: show.external_urls,
   };
 
