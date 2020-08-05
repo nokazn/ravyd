@@ -199,7 +199,6 @@ export default Vue.extend({
         this.$dispatch(this.isPlaying
           ? 'playback/pause'
           : 'playback/play');
-
         return;
       }
 

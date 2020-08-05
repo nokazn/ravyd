@@ -3,8 +3,8 @@
     v-if="!isLoaded"
     type="card"
     boilerplate
-    :min-width="minWidth || width"
     :width="width"
+    :min-width="minWidth || width"
     :max-width="maxWidth || width"
   />
   <v-card
@@ -12,21 +12,21 @@
     hover
     ripple
     nuxt
-    :min-width="minWidth || width"
+    :to="playlistPath"
     :width="width"
+    :min-width="minWidth || width"
     :max-width="maxWidth || width"
     :class="$style.PlaylistCard"
-    :to="playlistPath"
   >
     <div :class="$style.PlaylistCard__container">
       <ReleaseArtwork
+        is-overlayed
         :src="artworkSrc"
         :alt="name"
         :title="name"
-        :min-size="minWidth || width"
         :size="width"
+        :min-size="minWidth || width"
         :max-size="maxWidth || width"
-        is-overlayed
         :icon="mediaIcon"
         @on-media-button-clicked="onMediaButtonClicked"
       />
@@ -60,8 +60,7 @@ import { App, SpotifyAPI } from '~~/types';
 
 export type PlaylistCardInfo = App.PlaylistCardInfo
 
-export type Data = {
-  playlistPath: string
+type Data = {
   isLoaded: boolean
 }
 
@@ -111,7 +110,6 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      playlistPath: `/playlists/${this.id}`,
       isLoaded: false,
     };
   },
@@ -119,6 +117,9 @@ export default Vue.extend({
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.artworkList, this.maxWidth ?? this.width);
+    },
+    playlistPath(): string {
+      return `/playlists/${this.id}`;
     },
     isPlaylistSet(): boolean {
       return this.$getters()['playback/isContextSet'](this.uri);
@@ -140,15 +141,15 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      // 現在再生中のプレイリストの場合
-      if (this.isPlaying && this.isPlaylistSet) {
-        this.$dispatch('playback/pause');
+      // 現在再生中の場合
+      if (this.isPlaylistSet) {
+        this.$dispatch(this.isPlaying
+          ? 'playback/pause'
+          : 'playback/play');
       } else {
-        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-        const params = this.isPlaylistSet
-          ? undefined
-          : { contextUri: this.uri };
-        this.$dispatch('playback/play', params);
+        this.$dispatch('playback/play', {
+          contextUri: this.uri,
+        });
       }
     },
   },

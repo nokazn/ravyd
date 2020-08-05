@@ -148,13 +148,11 @@ export default Vue.extend({
         this.$dispatch(this.isPlaying
           ? 'playback/pause'
           : 'playback/play');
-
-        return;
+      } else {
+        this.$dispatch('playback/play', {
+          contextUri: this.uri,
+        });
       }
-
-      this.$dispatch('playback/play', {
-        contextUri: this.uri,
-      });
     },
   },
 });

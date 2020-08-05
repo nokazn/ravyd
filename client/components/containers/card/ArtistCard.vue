@@ -35,11 +35,11 @@
         />
       </div>
 
-      <v-card-title :class="$style.ArtistCard__title">
-        <span
-          :title="name"
-          class="g-ellipsis-text"
-        >
+      <v-card-title
+        :title="name"
+        :class="$style.ArtistCard__title"
+      >
+        <span class="g-ellipsis-text">
           {{ name }}
         </span>
       </v-card-title>
@@ -55,8 +55,7 @@ import UserAvatar, { MediaIcon } from '~/components/parts/avatar/UserAvatar.vue'
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
-export type Data = {
-  artistPath: string
+type Data = {
   isLoaded: boolean
 }
 
@@ -102,20 +101,22 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      artistPath: `/artists/${this.id}`,
       isLoaded: false,
     };
   },
 
   computed: {
+    artistPath(): string {
+      return `/artists/${this.id}`;
+    },
     avatarSrc(): string | undefined {
       return getImageSrc(this.avatarList, this.maxWidth ?? this.width);
     },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
     isArtistSet(): boolean {
       return this.$getters()['playback/isContextSet'](this.uri);
+    },
+    isPlaying(): RootState['playback']['isPlaying'] {
+      return this.$state().playback.isPlaying;
     },
 
     mediaIcon(): MediaIcon {
@@ -131,15 +132,15 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      // 現在再生中のトラック/アルバムの場合
-      if (this.isPlaying && this.isArtistSet) {
-        this.$dispatch('playback/pause');
+      // 現在再生中の場合
+      if (this.isArtistSet) {
+        this.$dispatch(this.isPlaying
+          ? 'playback/pause'
+          : 'playback/play');
       } else {
-        const params = this.isArtistSet
-          ? undefined
-          : { contextUri: this.uri };
-        // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-        this.$dispatch('playback/play', params);
+        this.$dispatch('playback/play', {
+          contextUri: this.uri,
+        });
       }
     },
   },
