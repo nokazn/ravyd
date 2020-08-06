@@ -4,7 +4,7 @@
       dense
       :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
-      class="track-list-item"
+      class="TrackListItem"
     >
       <v-list-item-avatar tile>
         <ReleaseArtwork
@@ -198,7 +198,7 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.track-list-item .v-list-item {
+.TrackListItem .v-list-item {
   &__avatar {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
