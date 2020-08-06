@@ -183,7 +183,7 @@ interface Data {
     ] = await Promise.all([
       await getShowInfo(context),
       await getIsSaved(context),
-    ]);
+    ] as const);
 
     return {
       showInfo,
@@ -205,7 +205,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     };
   }
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.showInfo?.artworkList, ARTWORK_SIZE);
+    return getImageSrc(this.showInfo?.images, ARTWORK_SIZE);
   }
   get isShowSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.showInfo?.uri);
@@ -225,7 +225,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.showInfo?.artworkList, 40);
+    const artworkSrc = getImageSrc(this.showInfo?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {

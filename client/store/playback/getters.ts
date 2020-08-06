@@ -62,7 +62,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       artistList,
       releaseName,
       releaseUri,
-      artworkList,
+      artworkList: images,
       durationMs,
       isSavedTrack: isSaved,
     } = state;
@@ -74,7 +74,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       || artistList == null
       || releaseName == null
       || releaseUri == null
-      || artworkList == null
+      || images == null
       || releaseId == null) return undefined;
 
     // Spotify で開く用のリンク
@@ -96,7 +96,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       isSaved,
       releaseId,
       releaseName,
-      artworkList,
+      images,
     };
   },
 
@@ -114,7 +114,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       releaseId: getters.releaseId!,
       releaseName: state.releaseName!,
       artistList: state.artistList!,
-      artworkList: state.artworkList ?? [],
+      images: state.artworkList ?? [],
       durationMs: state.durationMs,
     };
 

@@ -14,7 +14,7 @@ export const getCategoryList = async (
   const categoryList = categories.items.map((category) => ({
     id: category.id,
     name: category.name,
-    artworkList: category.icons,
+    images: category.icons,
   }));
 
   return categoryList;

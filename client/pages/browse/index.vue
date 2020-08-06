@@ -110,7 +110,7 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
     const addedCategoryList = categories.items.map((category) => ({
       id: category.id,
       name: category.name,
-      artworkList: category.icons,
+      images: category.icons,
     }));
 
     this.categoryList = this.categoryList != null

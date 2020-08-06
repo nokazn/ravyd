@@ -26,7 +26,7 @@ export const convertEpisodeDetail = <
       name: episode.name,
       uri: episode.uri,
       description: episode.description,
-      artworkList: episode.images,
+      images: episode.images,
       isPlayable: episode.is_playable,
       explicit: episode.explicit,
       releaseDate: episode.release_date,

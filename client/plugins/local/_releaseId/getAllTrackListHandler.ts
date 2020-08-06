@@ -12,14 +12,14 @@ export const getAllTrackListHandler = ({ app, params }: Context) => async (
     releaseId,
     releaseName,
     artistIdList,
-    artworkList,
+    images,
   } : {
     offset: number
     counts: number
     releaseId: string
     releaseName: string
     artistIdList: string[]
-    artworkList: SpotifyAPI.Image[]
+    images: SpotifyAPI.Image[]
   },
 ): Promise<App.TrackDetail[]> => {
   const market = app.$getters()['auth/userCountryCode'];
@@ -44,7 +44,7 @@ export const getAllTrackListHandler = ({ app, params }: Context) => async (
         releaseId,
         releaseName,
         artistIdList,
-        artworkList,
+        images,
       })(track, i);
 
       return detail;

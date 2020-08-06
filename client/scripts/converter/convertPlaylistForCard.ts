@@ -9,7 +9,7 @@ export const convertPlaylistForCard = (
     uri: playlist.uri,
     description: playlist.description,
     externalUrls: playlist.external_urls,
-    artworkList: playlist.images,
+    images: playlist.images,
   };
 
   return info;

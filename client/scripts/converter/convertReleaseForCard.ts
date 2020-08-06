@@ -20,7 +20,7 @@ export const convertReleaseForCard = (
       releaseDatePrecision: release.release_date_precision,
       format: 'YYYY年',
     }),
-    artworkList: release.images,
+    images: release.images,
     externalUrls: release.external_urls,
   };
 

@@ -24,7 +24,7 @@ export const getReleaseInfo = async (
     release_date_precision: releaseDatePrecision,
     total_tracks: totalTracks,
     label,
-    images: artworkList,
+    images,
     tracks,
     copyrights: copyrightList,
     external_urls: externalUrls,
@@ -70,7 +70,7 @@ export const getReleaseInfo = async (
       releaseId: id,
       releaseName: name,
       artistIdList: artistList.map((artist) => artist.id),
-      artworkList,
+      images,
     })(track, index);
 
     return detail;
@@ -88,7 +88,7 @@ export const getReleaseInfo = async (
     artistList,
     releaseDate,
     releaseDatePrecision,
-    artworkList,
+    images,
     totalTracks,
     durationMs,
     label,

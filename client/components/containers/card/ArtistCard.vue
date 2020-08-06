@@ -77,7 +77,7 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    avatarList: {
+    images: {
       type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
@@ -110,7 +110,7 @@ export default Vue.extend({
       return `/artists/${this.id}`;
     },
     avatarSrc(): string | undefined {
-      return getImageSrc(this.avatarList, this.maxWidth ?? this.width);
+      return getImageSrc(this.images, this.maxWidth ?? this.width);
     },
     isArtistSet(): boolean {
       return this.$getters()['playback/isContextSet'](this.uri);

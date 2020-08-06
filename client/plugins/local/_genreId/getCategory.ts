@@ -14,6 +14,6 @@ export const getCategory = async (
   return {
     id: categoryInfo.id,
     name: categoryInfo.name,
-    artworkList: categoryInfo.icons,
+    images: categoryInfo.icons,
   };
 };

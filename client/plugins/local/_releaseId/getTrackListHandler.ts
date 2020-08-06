@@ -11,13 +11,13 @@ export const getTrackListHandler = ({ app, params }: Context) => async (
     releaseId,
     releaseName,
     artistIdList,
-    artworkList,
+    images,
   } : {
     offset: number
     releaseId: string
     releaseName: string
     artistIdList: string[]
-    artworkList: SpotifyAPI.Image[]
+    images: SpotifyAPI.Image[]
   },
 ): Promise<{
   trackList: App.TrackDetail[]
@@ -50,7 +50,7 @@ export const getTrackListHandler = ({ app, params }: Context) => async (
       offset,
       releaseId,
       releaseName,
-      artworkList,
+      images,
       artistIdList,
     })(track, i);
 

@@ -120,7 +120,7 @@ export type Form = {
   playlistId: string
   name: string,
   description: string,
-  artworkList: SpotifyAPI.Image[],
+  images: SpotifyAPI.Image[],
   isPrivate: boolean
   isCollaborative: boolean
 }

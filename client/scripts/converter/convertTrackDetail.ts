@@ -8,7 +8,7 @@ export const convertTrackDetail = <
     releaseId,
     releaseName,
     artistIdList,
-    artworkList,
+    images,
   }: T extends SpotifyAPI.Track
   // Track の場合は release の情報は不要
   ? {
@@ -17,7 +17,7 @@ export const convertTrackDetail = <
     releaseId?: undefined
     releaseName?: undefined
     artistIdList?: string[]
-    artworkList?: undefined
+    images?: undefined
   }
   : {
     isTrackSavedList: boolean[]
@@ -25,7 +25,7 @@ export const convertTrackDetail = <
     releaseId: string
     releaseName: string
     artistIdList: string[]
-    artworkList: SpotifyAPI.Image[]
+    images: SpotifyAPI.Image[]
   },
   ) => (
     track: T,
@@ -68,7 +68,7 @@ export const convertTrackDetail = <
       isSaved: isTrackSavedList[index],
       releaseId: releaseId ?? (track as SpotifyAPI.Track).album.id,
       releaseName: releaseName ?? (track as SpotifyAPI.Track).album.name,
-      artworkList: artworkList ?? (track as SpotifyAPI.Track).album.images,
+      images: images ?? (track as SpotifyAPI.Track).album.images,
     };
 
     return detail;

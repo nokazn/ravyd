@@ -235,7 +235,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.releaseInfo?.artworkList, ARTWORK_SIZE);
+    return getImageSrc(this.releaseInfo?.images, ARTWORK_SIZE);
   }
   get isReleaseSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
@@ -252,7 +252,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.releaseInfo?.artworkList, 40);
+    const artworkSrc = getImageSrc(this.releaseInfo?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -339,7 +339,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       releaseId,
       releaseName: releaseInfo.name,
       artistIdList: releaseInfo.artistList.map((artist) => artist.id),
-      artworkList: releaseInfo.artworkList,
+      images: releaseInfo.images,
     }));
     const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);
     const isFullTrackList = tracks.next == null;

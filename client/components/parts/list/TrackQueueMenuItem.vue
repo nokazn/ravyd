@@ -139,7 +139,7 @@ export default Vue.extend({
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
     },
-    artworkList: {
+    images: {
       type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
@@ -151,7 +151,7 @@ export default Vue.extend({
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.artworkList, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
     },
   },
 

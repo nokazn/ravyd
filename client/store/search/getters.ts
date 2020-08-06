@@ -50,7 +50,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId,
         name: track.name,
         uri: track.uri,
-        artworkList: track.album.images,
+        images: track.album.images,
         artistList: track.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -74,7 +74,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name: artist.name,
         uri: artist.uri,
-        artworkList: artist.images,
+        images: artist.images,
         to,
       };
 
@@ -94,7 +94,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name: album.name,
         uri: album.uri,
-        artworkList: album.images,
+        images: album.images,
         artistList: album.artists.map((artist) => ({
           id: artist.id,
           name: artist.name,
@@ -118,7 +118,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name: playlist.name,
         uri: playlist.uri,
-        artworkList: playlist.images,
+        images: playlist.images,
         to,
       };
 
@@ -138,7 +138,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name: show.name,
         uri: show.uri,
-        artworkList: show.images,
+        images: show.images,
         to,
       };
 
@@ -158,7 +158,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         releaseId: id,
         name: episode.name,
         uri: episode.uri,
-        artworkList: episode.images,
+        images: episode.images,
         to,
       };
 

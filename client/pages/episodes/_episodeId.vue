@@ -186,7 +186,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.episodeInfo?.artworkList, ARTWORK_SIZE);
+    return getImageSrc(this.episodeInfo?.images, ARTWORK_SIZE);
   }
   get isEpisodeSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.episodeInfo?.uri);
@@ -212,7 +212,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.episodeInfo?.artworkList, 40);
+    const artworkSrc = getImageSrc(this.episodeInfo?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {

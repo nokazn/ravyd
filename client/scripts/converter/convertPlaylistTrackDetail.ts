@@ -37,7 +37,7 @@ export const convertPlaylistTrackDetail = (
     isSaved: isTrackSavedList[index],
     releaseId: track.album.id,
     releaseName: track.album.name,
-    artworkList: track.album.images,
+    images: track.album.images,
     addedAt: convertAddedAt(added_at),
     addedBy: added_by,
   };

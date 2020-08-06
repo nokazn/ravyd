@@ -276,7 +276,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     return this.artistInfo != null && (this.topTrackList?.length ?? 0) > 0;
   }
   get avatarSrc(): string | undefined {
-    return getImageSrc(this.artistInfo?.avatarList, AVATAR_SIZE);
+    return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
   }
   get isArtistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.artistInfo?.uri);

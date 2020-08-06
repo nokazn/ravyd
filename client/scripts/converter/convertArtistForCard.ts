@@ -7,7 +7,7 @@ export const convertArtistForCard = (
     name: artist.name,
     id: artist.id,
     uri: artist.uri,
-    avatarList: artist.images,
+    images: artist.images,
     externalUrls: artist.external_urls,
   };
 

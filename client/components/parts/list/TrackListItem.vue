@@ -133,7 +133,7 @@ export default Vue.extend({
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.item.artworkList, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.item.images, TRACK_LIST_ARTWORK_SIZE);
     },
     releasePath(): string {
       return `/releases/${this.item.releaseId}#${this.item.hash}`;

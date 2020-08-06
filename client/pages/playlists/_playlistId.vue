@@ -235,7 +235,7 @@ interface Data {
       await getPlaylistInfo(context),
       await getIsFollowing(context),
       await getPlaylistTrackInfo(context, { limit: LIMIT_OF_TRACKS }),
-    ]);
+    ] as const);
 
     return {
       playlistInfo,
@@ -261,7 +261,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.playlistInfo?.artworkList, ARTWORK_SIZE);
+    return getImageSrc(this.playlistInfo?.images, ARTWORK_SIZE);
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
@@ -278,14 +278,14 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (this.playlistInfo == null) return undefined;
 
     const {
-      name, description, artworkList, isPublic, isCollaborative,
+      name, description, images, isPublic, isCollaborative,
     } = this.playlistInfo;
 
     return {
       playlistId: this.$route.params.playlistId,
       name,
       description: description ?? '',
-      artworkList,
+      images,
       isPrivate: isPublic != null
         ? !isPublic
         : false,
@@ -301,7 +301,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.playlistInfo?.artworkList, 40);
+    const artworkSrc = getImageSrc(this.playlistInfo?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
