@@ -1,6 +1,6 @@
 import { Getters } from 'typed-vuex';
 
-import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, HEADER_BACKGROUND_COLOR_RGB } from '~/variables';
+import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, BACKGROUND_COLOR_RGB } from '~/variables';
 import { RootState } from './state';
 import { App } from '~~/types';
 
@@ -25,7 +25,7 @@ const getters: Getters<RootState, RootGetters> = {
   headerStyles(state) {
     const opacity = 0.6;
     const rgbList = state.dominantBackgroundColor?.rgb
-      ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColorInfo['rgb'] ?? HEADER_BACKGROUND_COLOR_RGB;
+      ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColorInfo['rgb'] ?? BACKGROUND_COLOR_RGB;
 
     return { backgroundColor: `rgba(${rgbList.join(',')},${opacity})` };
   },
