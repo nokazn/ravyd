@@ -16,7 +16,7 @@ export type Header = {
   readonly hasAdditionalContent: boolean
   readonly PORTAL_NAME: typeof PORTAL_NAME
   readonly backdropFiltered: boolean
-  observe: (element: Element | null) => void
+  observe: (element: Element | null, margin?: number) => void
   disconnectObserver: () => void
   toggleBackdropFilter:(isEnabled: boolean) => void
 }
@@ -42,7 +42,10 @@ export const $header: Header = {
     return state.backdropFiltered;
   },
 
-  observe(element) {
+  /**
+   * margin は正の値で受け取る
+   */
+  observe(element, margin) {
     if (element == null) return;
 
     if (state.intersectionObserver != null) {
@@ -52,7 +55,7 @@ export const $header: Header = {
     state.hasAdditionalContent = true;
 
     // ヘッダーの分のマージン
-    const rootMargin = `-${HEADER_HEIGHT}px 0px`;
+    const rootMargin = `-${margin ?? HEADER_HEIGHT}px 0px`;
     state.intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         // element がヘッダーに隠れて見えなくなったら additional contents を表示
