@@ -8,7 +8,7 @@
       <client-only>
         <v-tabs
           v-model="tab"
-          show-arrows
+          show-arrows="mobile"
           color="success"
           :background-color="BACKGROUND_COLOR"
         >
