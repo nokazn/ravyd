@@ -5,7 +5,7 @@
         <PlaylistCard
           v-for="(playlist, index) in playlists"
           :key="`${playlist.id}-${index}`"
-          v-bind="playlist"
+          v-bind="convertPlaylistForCard(playlist)"
           :min-width="180"
           :max-width="240"
           :class="$style.Cards__card"
@@ -26,12 +26,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'typed-vuex';
 
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { SpotifyAPI } from '~~/types';
 
 interface Data {
+  convertPlaylistForCard: typeof convertPlaylistForCard
 }
 
 @Component({
@@ -47,8 +49,10 @@ interface Data {
   },
 })
 export default class LibraryPlaylistPage extends Vue implements Data {
-  get playlists(): RootState['playlists']['playlists'] {
-    return this.$state().playlists.playlists;
+  convertPlaylistForCard = convertPlaylistForCard;
+
+  get playlists(): SpotifyAPI.SimplePlaylist[] {
+    return this.$state().playlists.playlists ?? [];
   }
 
   mounted() {
