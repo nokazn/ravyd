@@ -1,9 +1,5 @@
 <template>
   <div :class="$style.LibraryPlaylistsPage">
-    <h1 :class="$style.LibraryPlaylistsPage__title">
-      {{ title }}
-    </h1>
-
     <div :class="$style.Cards">
       <template v-if="playlists != null">
         <PlaylistCard
@@ -36,7 +32,6 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 interface Data {
-  title: string
 }
 
 @Component({
@@ -44,30 +39,26 @@ interface Data {
     PlaylistCard,
     IntersectionLoadingCircle,
   },
-})
-export default class LibraryPlaylistPage extends Vue implements Data {
-  title = 'フォロー中のプレイリスト';
 
   head() {
     return {
-      title: this.title,
+      title: 'フォロー中のプレイリスト',
     };
-  }
-
+  },
+})
+export default class LibraryPlaylistPage extends Vue implements Data {
   get playlists(): RootState['playlists']['playlists'] {
     return this.$state().playlists.playlists;
   }
 
   mounted() {
-    this.$dispatch('setDefaultDominantBackgroundColor');
+    this.$dispatch('resetDominantBackgroundColor');
   }
 }
 </script>
 
 <style lang="scss" module>
 .LibraryPlaylistsPage {
-  padding: 16px max(12px, 3vw) 48px;
-
   & > * {
     margin-bottom: 24px;
   }

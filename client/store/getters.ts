@@ -6,7 +6,7 @@ import { App } from '~~/types';
 
 export type RootGetters = {
   backgroundStyles: (height: number) => { background: string } | undefined
-  headerStyles: { backgroundColor: string } | undefined
+  headerStyles: { backgroundColor: string }
 }
 
 const getters: Getters<RootState, RootGetters> = {

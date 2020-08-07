@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     app
-    :elevation="elevation"
+    :elevation="headerElevation"
     :height="HEADER_HEIGHT"
     :style="styles"
     :class="$style.Header"
@@ -55,14 +55,18 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_HEIGHT } from '~/variables';
+import { HEADER_HEIGHT, BACKGROUND_COLOR } from '~/variables';
 
 type Data = {
   HEADER_HEIGHT: number
+}
+
+type HeaderStyles = {
+  backgroundColor: string
+  backdropFilter?: string
 }
 
 export default Vue.extend({
@@ -85,8 +89,27 @@ export default Vue.extend({
   },
 
   computed: {
-    styles(): RootGetters['headerStyles'] {
-      return this.$getters().headerStyles;
+    styles(): HeaderStyles {
+      const backgroundStyles = this.$getters().headerStyles;
+      const { backdropFiltered } = this.$header;
+      if (backdropFiltered) {
+        return {
+          ...backgroundStyles,
+          backdropFilter: 'blur(16px)',
+        };
+      }
+
+      const dominantColor = this.$state().dominantBackgroundColor;
+      return {
+        backgroundColor: dominantColor?.hex ?? BACKGROUND_COLOR,
+      };
+    },
+    // backdrop-filter が有効のときはヘッダーの下に sticky なコンテンツがないので elavation を有効にする
+    headerElevation(): number {
+      const { backdropFiltered } = this.$header;
+      return backdropFiltered
+        ? this.elevation
+        : 0;
     },
   },
 
@@ -104,7 +127,6 @@ export default Vue.extend({
 <style lang="scss" module>
 .Header {
   z-index: z-index-of(header) !important;
-  backdrop-filter: blur(16px);
 
   &__container {
     display: flex;

@@ -9,10 +9,6 @@
       />
     </portal>
 
-    <h1>
-      {{ title }}
-    </h1>
-
     <ContextMediaButton
       :ref="MEDIA_BUTTON_REF"
       :is-playing="isPlaylistSet && isPlaying"
@@ -45,7 +41,6 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
 
 interface Data {
-  title: string
   uri: string
   observer: IntersectionObserver | undefined
   mutationUnsubscribe: (() => void) | undefined
@@ -73,20 +68,19 @@ const MEDIA_BUTTON_REF = 'MEDIA_BUTTON_REF';
 
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
+
+  head() {
+    return {
+      title: 'お気に入りの曲',
+    };
+  },
 })
 export default class LibraryTracksPage extends Vue implements Data {
-  title = 'お気に入りの曲';
   // @non-null ログイン中なので userId は必ず存在
   uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
   observer: IntersectionObserver | undefined = undefined;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   MEDIA_BUTTON_REF = MEDIA_BUTTON_REF;
-
-  head() {
-    return {
-      title: this.title,
-    };
-  }
 
   get trackList(): RootState['library']['tracks']['trackList'] {
     return this.$state().library.tracks.trackList;
@@ -105,7 +99,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     const element = this.$refs[MEDIA_BUTTON_REF] as Vue;
     this.$header.observe(element.$el);
 
-    this.$dispatch('setDefaultDominantBackgroundColor');
+    this.$dispatch('resetDominantBackgroundColor');
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
@@ -168,8 +162,6 @@ export default class LibraryTracksPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryTracksPage {
-  padding: 16px max(12px, 3vw) 48px;
-
   & > * {
     margin-bottom: 16px;
   }

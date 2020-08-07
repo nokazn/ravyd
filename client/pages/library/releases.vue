@@ -1,9 +1,5 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <h1>
-      {{ title }}
-    </h1>
-
     <div :class="$style.Cards">
       <ReleaseCard
         v-for="release in releaseList"
@@ -38,9 +34,7 @@ import { RootState, RootGetters } from 'typed-vuex';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-interface Data {
-  title: string
-}
+interface Data {}
 
 const LIMIT_OF_RELEASES = 30;
 
@@ -59,16 +53,14 @@ const LIMIT_OF_RELEASES = 30;
       await app.$dispatch('library/releases/updateLatestSavedReleaseList');
     }
   },
-})
-export default class LibraryReleasesPage extends Vue implements Data {
-  title = 'お気に入りのアルバム';
 
   head() {
     return {
-      title: this.title,
+      title: 'お気に入りのアルバム',
     };
-  }
-
+  },
+})
+export default class LibraryReleasesPage extends Vue implements Data {
   get releaseList(): RootState['library']['releases']['releaseList'] {
     return this.$state().library.releases.releaseList;
   }
@@ -90,8 +82,6 @@ export default class LibraryReleasesPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryReleasesPage {
-  padding: 16px max(12px, 3vw) 48px;
-
   & > * {
     margin-bottom: 24px;
   }

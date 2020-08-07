@@ -8,31 +8,38 @@ type HeaderState = {
   hasAdditionalContent: boolean
   isAdditionalContentShown: boolean
   intersectionObserver: IntersectionObserver | undefined
+  backdropFiltered: boolean
 }
 
 export type Header = {
   readonly isAdditionalContentShown: boolean
   readonly hasAdditionalContent: boolean
   readonly PORTAL_NAME: typeof PORTAL_NAME
+  readonly backdropFiltered: boolean
   observe: (element: Element | null) => void
   disconnectObserver: () => void
+  toggleBackdropFilter:(isEnabled: boolean) => void
 }
 
 const state = Vue.observable<HeaderState>({
   hasAdditionalContent: false,
   isAdditionalContentShown: false,
   intersectionObserver: undefined,
+  backdropFiltered: true,
 });
 
 export const $header: Header = {
-  get isAdditionalContentShown(): boolean {
+  get isAdditionalContentShown() {
     return state.isAdditionalContentShown;
   },
-  get hasAdditionalContent(): boolean {
+  get hasAdditionalContent() {
     return state.hasAdditionalContent;
   },
   get PORTAL_NAME(): typeof PORTAL_NAME {
     return PORTAL_NAME;
+  },
+  get backdropFiltered() {
+    return state.backdropFiltered;
   },
 
   observe(element) {
@@ -54,6 +61,7 @@ export const $header: Header = {
     }, { rootMargin });
     state.intersectionObserver.observe(element);
   },
+
   disconnectObserver() {
     if (state.intersectionObserver != null) {
       state.intersectionObserver.disconnect();
@@ -62,5 +70,9 @@ export const $header: Header = {
 
     state.isAdditionalContentShown = false;
     state.hasAdditionalContent = false;
+  },
+
+  toggleBackdropFilter(isEnabled: boolean) {
+    state.backdropFiltered = isEnabled;
   },
 };

@@ -1,9 +1,5 @@
 <template>
   <div :class="$style.LibraryShowsPage">
-    <h1 :class="$style.LibraryShowsPage__title">
-      {{ title }}
-    </h1>
-
     <div :class="$style.Cards">
       <template v-if="showList != null">
         <ShowCard
@@ -40,9 +36,7 @@ import { RootState, RootGetters } from 'typed-vuex';
 import ShowCard from '~/components/containers/card/ShowCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-interface Data {
-  title: string
-}
+interface Data {}
 
 const LIMIT_OF_SHOWS = 30;
 
@@ -61,16 +55,14 @@ const LIMIT_OF_SHOWS = 30;
       await app.$dispatch('library/shows/updateLatestSavedShowList');
     }
   },
-})
-export default class LibraryShowsPage extends Vue implements Data {
-  title = 'お気に入りのポッドキャスト'
 
   head() {
     return {
-      title: this.title,
+      title: 'お気に入りのポッドキャスト',
     };
-  }
-
+  },
+})
+export default class LibraryShowsPage extends Vue implements Data {
   get showList(): RootState['library']['shows']['showList'] {
     return this.$state().library.shows.showList;
   }
@@ -92,8 +84,6 @@ export default class LibraryShowsPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryShowsPage {
-  padding: 16px max(12px, 3vw) 48px;
-
   & > * {
     margin-bottom: 24px;
   }

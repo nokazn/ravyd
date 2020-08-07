@@ -40,6 +40,7 @@ export const Z_INDEX_OF = {
   navigationDrawer: 4,
   footer: 4,
   floatingButton: 3,
+  tab: 3,
   textGradation: 2,
 } as const;
 

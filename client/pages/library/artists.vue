@@ -1,9 +1,5 @@
 <template>
   <div :class="$style.LibraryArtistsPage">
-    <h1 :class="$style.LibraryArtistsPage__title">
-      {{ title }}
-    </h1>
-
     <div :class="$style.Cards">
       <template v-if="artistList != null">
         <ArtistCard
@@ -42,7 +38,6 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 
 interface Data {
   observer: IntersectionObserver | undefined
-  title: string
 }
 
 const LIMIT_OF_ARTISTS = 30;
@@ -62,16 +57,15 @@ const LIMIT_OF_ARTISTS = 30;
       await app.$dispatch('library/artists/updateLatestSavedArtistList');
     }
   },
-})
-export default class LibraryArtistsPage extends Vue implements Data {
-  observer: IntersectionObserver | undefined = undefined
-  title = 'お気に入りのアーティスト'
 
   head() {
     return {
-      title: this.title,
+      title: 'お気に入りのアーティスト',
     };
-  }
+  },
+})
+export default class LibraryArtistsPage extends Vue implements Data {
+  observer: IntersectionObserver | undefined = undefined
 
   get artistList(): RootState['library']['artists']['artistList'] {
     return this.$state().library.artists.artistList;
@@ -94,8 +88,6 @@ export default class LibraryArtistsPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryArtistsPage {
-  padding: 16px max(12px, 3vw) 48px;
-
   & > * {
     margin-bottom: 24px;
   }
