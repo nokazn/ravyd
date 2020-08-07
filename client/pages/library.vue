@@ -5,23 +5,25 @@
     </h1>
 
     <div :class="$style.LibraryPage__tabs">
-      <v-tabs
-        v-model="tab"
-        show-arrows
-        color="success"
-        :background-color="BACKGROUND_COLOR"
-      >
-        <v-tab
-          v-for="item in tabItemList"
-          :key="item.title"
-          nuxt
-          :to="item.to"
+      <client-only>
+        <v-tabs
+          v-model="tab"
+          show-arrows
+          color="success"
+          :background-color="BACKGROUND_COLOR"
         >
-          {{ item.title }}
-        </v-tab>
-      </v-tabs>
+          <v-tab
+            v-for="item in tabItemList"
+            :key="item.title"
+            nuxt
+            :to="item.to"
+          >
+            {{ item.title }}
+          </v-tab>
+        </v-tabs>
 
-      <v-divider />
+        <v-divider />
+      </client-only>
     </div>
 
     <nuxt-child />
