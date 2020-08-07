@@ -41,7 +41,7 @@
     "@babel/compat-data": "^7.10.5",
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
-    "@babel/runtime-corejs3": "^7.11.0",
+    "@babel/runtime-corejs3": "^7.11.2",
     "@mdi/font": "^5.4.55",
     "@nuxt/typescript-build": "^1.0.3",
     "@nuxtjs/eslint-config-typescript": "^1.0.0",
