@@ -5,10 +5,12 @@ import { SpotifyAPI } from '~~/types';
 
 export type PlaylistsGetters = {
   ownPlaylists: SpotifyAPI.SimplePlaylist[]
+  playlistCounts: number
 }
 
 export type RootGetters = {
   'playlists/ownPlaylists': PlaylistsGetters['ownPlaylists']
+  'playlists/playlistCounts': PlaylistsGetters['playlistCounts']
 }
 
 const getters: Getters<PlaylistsState, PlaylistsGetters> = {
@@ -17,6 +19,10 @@ const getters: Getters<PlaylistsState, PlaylistsGetters> = {
 
     return state.playlists
       ?.filter((playlist) => playlist.owner.id === userId || playlist.collaborative) ?? [];
+  },
+
+  playlistCounts(state) {
+    return state.playlists?.length ?? 0;
   },
 };
 

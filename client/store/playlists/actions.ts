@@ -253,7 +253,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
     }
 
-    const currentUnupdatedCounts = state.numberOfUnupdatedTracksMap.get(playlistId) ?? 0;
+    const currentUnupdatedCounts = state.unupdatedTrackCountsMap.get(playlistId) ?? 0;
     commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
 
     this.$toast.show('primary', `"${name}" を "${playlistName}" に追加しました。`);

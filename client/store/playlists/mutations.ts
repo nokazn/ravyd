@@ -122,11 +122,11 @@ const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
   },
 
   INCREMENT_UNUPDATED_TRACKS_MAP(state, [key, isTrackSavedMap]) {
-    state.numberOfUnupdatedTracksMap.set(key, isTrackSavedMap);
+    state.unupdatedTrackCountsMap.set(key, isTrackSavedMap);
   },
 
   DELETE_UNUPDATED_TRACKS_MAP(state, key) {
-    state.numberOfUnupdatedTracksMap.delete(key);
+    state.unupdatedTrackCountsMap.delete(key);
   },
 
   SET_ACTUALLY_DELETED_TRACK(state, [key, track]) {
