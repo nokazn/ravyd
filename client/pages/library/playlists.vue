@@ -1,35 +1,25 @@
 <template>
-  <div :class="$style.LibraryPlaylistsPage">
-    <div :class="$style.Cards">
-      <template v-if="playlists != null">
-        <PlaylistCard
-          v-for="(playlist, index) in playlists"
-          :key="`${playlist.id}-${index}`"
-          v-bind="convertPlaylistForCard(playlist)"
-          :min-width="180"
-          :max-width="240"
-          :class="$style.Cards__card"
-        />
-      </template>
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+  <div>
+    <CardsWrapper>
+      <PlaylistCard
+        v-for="(playlist, index) in playlists"
+        :key="`${playlist.id}-${index}`"
+        v-bind="convertPlaylistForCard(playlist)"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
+      />
+    </CardsWrapper>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 import { SpotifyAPI } from '~~/types';
 
 interface Data {
@@ -38,6 +28,7 @@ interface Data {
 
 @Component({
   components: {
+    CardsWrapper,
     PlaylistCard,
     IntersectionLoadingCircle,
   },
@@ -50,6 +41,8 @@ interface Data {
 })
 export default class LibraryPlaylistPage extends Vue implements Data {
   convertPlaylistForCard = convertPlaylistForCard;
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   get playlists(): SpotifyAPI.SimplePlaylist[] {
     return this.$state().playlists.playlists ?? [];
@@ -60,33 +53,3 @@ export default class LibraryPlaylistPage extends Vue implements Data {
   }
 }
 </script>
-
-<style lang="scss" module>
-.LibraryPlaylistsPage {
-  & > * {
-    margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    &__spacer {
-      height: 0;
-    }
-  }
-}
-</style>

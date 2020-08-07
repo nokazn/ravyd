@@ -1,26 +1,15 @@
 <template>
   <div :class="$style.LibraryShowsPage">
-    <div :class="$style.Cards">
-      <template v-if="showList != null">
-        <ShowCard
-          v-for="(show, index) in showList"
-          :key="`${show.id}-${index}`"
-          v-bind="show"
-          :min-width="180"
-          :max-width="240"
-          :class="$style.Cards__card"
-        />
-      </template>
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    <CardsWrapper>
+      <ShowCard
+        v-for="(show, index) in showList"
+        :key="`${show.id}-${index}`"
+        v-bind="show"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
+        :class="$style.Cards__card"
+      />
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="!isFull"
@@ -33,8 +22,10 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, RootGetters } from 'typed-vuex';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ShowCard from '~/components/containers/card/ShowCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 
 interface Data {}
 
@@ -42,6 +33,7 @@ const LIMIT_OF_SHOWS = 30;
 
 @Component({
   components: {
+    CardsWrapper,
     ShowCard,
     IntersectionLoadingCircle,
   },
@@ -63,6 +55,9 @@ const LIMIT_OF_SHOWS = 30;
   },
 })
 export default class LibraryShowsPage extends Vue implements Data {
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
+
   get showList(): RootState['library']['shows']['showList'] {
     return this.$state().library.shows.showList;
   }
@@ -86,29 +81,6 @@ export default class LibraryShowsPage extends Vue implements Data {
 .LibraryShowsPage {
   & > * {
     margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    // 最終行の余りの部分を埋める
-    &__spacer {
-      height: 0;
-    }
   }
 }
 </style>

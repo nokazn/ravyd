@@ -108,7 +108,7 @@
         :track-list="topTrackList"
         :uri="artistInfo.uri"
         title="人気の曲"
-        :class="$style.ArtistIdPage__trackListSection"
+        :class="$style.TrackListSection"
         @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
       />
     </section>
@@ -120,33 +120,21 @@
         :title="releaseInfo.title"
         :is-abbreviated="releaseInfo.isAbbreviated"
         :is-full="releaseInfo.isFull"
-        :class="$style.CardSection"
+        :class="$style.DiscographySection"
         @on-button-clicked="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
         @on-loading-appeared="appendReleaseList(type)"
       >
-        <div :class="$style.CardSection__wrapper">
-          <template v-for="(item, index) in releaseInfo.items">
-            <ReleaseCard
-              v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
-              :key="item.id"
-              v-bind="item"
-              :min-width="ARTWORK_MIN_SIZE"
-              :max-width="ARTWORK_MAX_SIZE"
-              discograpy
-              :class="$style.CardSection__card"
-            />
-          </template>
-
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-          <div :class="$style.CradSection__spacer" />
-        </div>
+        <ReleaseCard
+          v-for="(item, index) in releaseInfo.items"
+          v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
+          :key="item.id"
+          v-bind="item"
+          :min-width="FLEX_CARD_MIN_WIDTH"
+          :max-width="FLEX_CARD_MAX_WIDTH"
+          discograpy
+          :class="$style.CardSection__card"
+        />
       </CardsSection>
     </template>
   </div>
@@ -185,17 +173,16 @@ import {
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
-const ARTWORK_MIN_SIZE = 180;
-const ARTWORK_MAX_SIZE = 240;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const ABBREVIATED_RELEASE_LENGTH = 10;
 const LIMIT_OF_RELEASES = 30;
 const HEADER_REF = 'HEADER_REF';
 
-export type AsyncData = {
+interface AsyncData {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
   topTrackList: App.TrackDetail[] | undefined
@@ -203,12 +190,12 @@ export type AsyncData = {
   ABBREVIATED_RELEASE_LENGTH: number
 }
 
-export type Data = {
+interface Data {
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
   AVATAR_SIZE: number
-  ARTWORK_MIN_SIZE: number
-  ARTWORK_MAX_SIZE: number
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
@@ -263,8 +250,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
   AVATAR_SIZE = AVATAR_SIZE;
-  ARTWORK_MAX_SIZE = ARTWORK_MAX_SIZE;
-  ARTWORK_MIN_SIZE = ARTWORK_MIN_SIZE;
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   head() {
     return {
@@ -465,41 +452,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     margin-bottom: 32px;
   }
 
-  &__trackListSection {
-    margin-bottom: 32px;
-  }
-
-  .CardSection {
-    &:not(:last-child) {
-      margin-bottom: 16px;
-    }
-
-    &__wrapper {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin-bottom: -8px;
-
-      // card と spacer 両方に適用
-      & > * {
-        margin-left: 16px;
-        margin-right: 16px;
-        flex: 1 0 180px;
-        min-width: 180px;
-        max-width: 240px;
-      }
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    // 最終行の余りの部分を埋める
-    &__spacer {
-      height: 0;
-    }
-  }
-
   .Info {
     display: flex;
     flex-direction: column;
@@ -528,6 +480,16 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       & > *:not(:last-child) {
         margin-right: 12px;
       }
+    }
+  }
+
+  .TrackListSection {
+    margin-bottom: 32px;
+  }
+
+  .DiscographySection {
+    &:not(:last-child) {
+      margin-bottom: 16px;
     }
   }
 }

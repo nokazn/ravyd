@@ -1,26 +1,15 @@
 <template>
   <div :class="$style.LibraryArtistsPage">
-    <div :class="$style.Cards">
-      <template v-if="artistList != null">
-        <ArtistCard
-          v-for="artist in artistList"
-          :key="artist.id"
-          v-bind="artist"
-          :min-width="180"
-          :max-width="240"
-          :class="$style.Cards__card"
-        />
-      </template>
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    <CardsWrapper>
+      <ArtistCard
+        v-for="artist in artistList"
+        :key="artist.id"
+        v-bind="artist"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
+        :class="$style.Cards__card"
+      />
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="!isFull"
@@ -33,11 +22,15 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, RootGetters } from 'typed-vuex';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 
 interface Data {
   observer: IntersectionObserver | undefined
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
 }
 
 const LIMIT_OF_ARTISTS = 30;
@@ -45,6 +38,7 @@ const LIMIT_OF_ARTISTS = 30;
 @Component({
   components: {
     ArtistCard,
+    CardsWrapper,
     IntersectionLoadingCircle,
   },
 
@@ -65,10 +59,12 @@ const LIMIT_OF_ARTISTS = 30;
   },
 })
 export default class LibraryArtistsPage extends Vue implements Data {
-  observer: IntersectionObserver | undefined = undefined
+  observer: IntersectionObserver | undefined = undefined;
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   get artistList(): RootState['library']['artists']['artistList'] {
-    return this.$state().library.artists.artistList;
+    return this.$state().library.artists.artistList ?? [];
   }
   get isFull(): RootGetters['library/artists/isFull'] {
     return this.$getters()['library/artists/isFull'];
@@ -90,29 +86,6 @@ export default class LibraryArtistsPage extends Vue implements Data {
 .LibraryArtistsPage {
   & > * {
     margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    // 最終行の余りの部分を埋める
-    &__spacer {
-      height: 0;
-    }
   }
 }
 </style>

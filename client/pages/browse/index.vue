@@ -4,28 +4,19 @@
       {{ title }}
     </h1>
 
-    <div
+    <CardsWrapper
       v-if="categoryList != null"
-      :class="$style.Cards"
+      :max-width="FLEX_CARD_MAX_WIDTH"
     >
       <CategoryCard
         v-for="category in categoryList"
         :key="category.id"
         v-bind="category"
-        :min-size="MIN_IMAGE_SIZE"
-        :max-size="MAX_IMAGE_SIZE"
+        :min-size="FLEX_CARD_MIN_WIDTH"
+        :max-size="FLEX_CARD_MAX_WIDTH"
         :class="$style.Cards__card"
       />
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="!isFullCategoryList"
@@ -37,9 +28,12 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+
 import { getCategoryList } from '~/plugins/local/browse';
+import { FLEX_CARD_MIN_WIDTH } from '~/variables';
 import { App } from '~~/types';
 
 interface AsyncData {
@@ -49,16 +43,16 @@ interface AsyncData {
 
 interface Data {
   title: string
-  MIN_IMAGE_SIZE: number
-  MAX_IMAGE_SIZE: number
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
 }
 
-const MIN_IMAGE_SIZE = 180;
-const MAX_IMAGE_SIZE = 240;
+const FLEX_CARD_MAX_WIDTH = 220;
 const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
   components: {
+    CardsWrapper,
     CategoryCard,
     IntersectionLoadingCircle,
   },
@@ -79,8 +73,8 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
   categoryList: App.CategoryInfo[] | undefined = undefined;
 
   title = '見つける';
-  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
-  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   head() {
     return {
@@ -138,28 +132,6 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
 
   & > *:not(:last-child) {
     margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 220px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    &__spacer {
-      height: 0;
-    }
   }
 }
 </style>

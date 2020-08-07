@@ -16,7 +16,13 @@
 
     <v-divider :class="$style.CardSection__divider" />
 
-    <slot />
+    <CardsWrapper
+      :margin="margin"
+      :min-width="minWidth"
+      :max-width="maxWidth"
+    >
+      <slot />
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       v-if="isAbbreviated === false"
@@ -41,9 +47,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
-
 
 const ON_BUTTON_CLICKED = 'on-button-clicked';
 const ON_BUTTON_HOVERED = 'on-button-hovered';
@@ -57,6 +63,7 @@ export type On = {
 
 export default Vue.extend({
   components: {
+    CardsWrapper,
     IntersectionLoadingCircle,
     ShowAllButton,
   },
@@ -73,6 +80,18 @@ export default Vue.extend({
     isFull: {
       type: Boolean,
       required: true,
+    },
+    margin: {
+      type: Number,
+      default: 32,
+    },
+    minWidth: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+    },
+    maxWidth: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
   },
 

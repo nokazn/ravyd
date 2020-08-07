@@ -7,28 +7,16 @@
       {{ categoryInfo.name }}
     </h1>
 
-    <div
-      v-if="playlists.length > 0"
-      :class="$style.Cards"
-    >
+    <CardsWrapper v-if="playlists.length > 0">
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="MIN_IMAGE_SIZE"
-        :max-width="MAX_IMAGE_SIZE"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
         :class="$style.Cards__card"
       />
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="!isFullPlaylists"
@@ -44,11 +32,14 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
+
 import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {
@@ -58,16 +49,15 @@ interface AsyncData {
 }
 
 interface Data {
-  MIN_IMAGE_SIZE: number
-  MAX_IMAGE_SIZE: number
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
 }
 
-const MIN_IMAGE_SIZE = 180;
-const MAX_IMAGE_SIZE = 240;
 const LIMIT_OF_PLAYLISTS = 30;
 
 @Component({
   components: {
+    CardsWrapper,
     PlaylistCard,
     IntersectionLoadingCircle,
     Fallback,
@@ -96,8 +86,8 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
   playlists: App.PlaylistCardInfo[] = [];
   isFullPlaylists = false;
 
-  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE
-  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
@@ -146,28 +136,6 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
 
   & > *:not(:last-child) {
     margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    &__spacer {
-      height: 0;
-    }
   }
 }
 </style>

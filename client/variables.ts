@@ -18,6 +18,8 @@ export const MENU_BACKGROUND_COLOR = '#3c3c3c';
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;
 export const NAVIGATION_DRAWER_WIDTH = 200;
+export const FLEX_CARD_MIN_WIDTH = 160;
+export const FLEX_CARD_MAX_WIDTH = 240;
 
 export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'off',

@@ -1,24 +1,15 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <div :class="$style.Cards">
+    <CardsWrapper>
       <ReleaseCard
         v-for="release in releaseList"
         :key="release.id"
         v-bind="release"
-        :min-width="180"
-        :max-width="240"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
         :class="$style.Cards__card"
       />
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="!isFull"
@@ -31,10 +22,15 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, RootGetters } from 'typed-vuex';
 
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 
-interface Data {}
+interface Data {
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
+}
 
 const LIMIT_OF_RELEASES = 30;
 
@@ -42,6 +38,7 @@ const LIMIT_OF_RELEASES = 30;
   components: {
     ReleaseCard,
     IntersectionLoadingCircle,
+    CardsWrapper,
   },
 
   async fetch({ app }): Promise<void> {
@@ -61,6 +58,9 @@ const LIMIT_OF_RELEASES = 30;
   },
 })
 export default class LibraryReleasesPage extends Vue implements Data {
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
+
   get releaseList(): RootState['library']['releases']['releaseList'] {
     return this.$state().library.releases.releaseList;
   }
@@ -84,29 +84,6 @@ export default class LibraryReleasesPage extends Vue implements Data {
 .LibraryReleasesPage {
   & > * {
     margin-bottom: 24px;
-  }
-
-  .Cards {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    // 最終行の余りの部分を埋める
-    &__spacer {
-      height: 0;
-    }
   }
 }
 </style>

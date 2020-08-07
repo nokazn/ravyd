@@ -78,28 +78,16 @@
 
     <v-divider :class="$style.Divider" />
 
-    <div
-      v-if="userPlaylistInfo.playlists.length > 0"
-      :class="$style.Cards"
-    >
+    <CardsWrapper v-if="userPlaylistInfo.playlists.length > 0">
       <PlaylistCard
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="MIN_IMAGE_SIZE"
-        :max-width="MAX_IMAGE_SIZE"
+        :min-width="FLEX_CARD_MIN_WIDTH"
+        :max-width="FLEX_CARD_MAX_WIDTH"
         :class="$style.Cards__card"
       />
-
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-      <div :class="$style.Cards__spacer" />
-    </div>
+    </CardsWrapper>
 
     <IntersectionLoadingCircle
       :is-loading="userPlaylistInfo.hasNext"
@@ -118,17 +106,18 @@ import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import UserMenu, { On as OnUserMenu } from '~/components/parts/menu/UserMenu.vue';
+import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
+
 import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
 import { App, OneToFifty } from '~~/types';
 
 const AVATAR_SIZE = 180;
-const MIN_IMAGE_SIZE = 180;
-const MAX_IMAGE_SIZE = 240;
 const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';
 
@@ -140,8 +129,8 @@ interface AsyncData {
 
 interface Data {
   AVATAR_SIZE: number
-  MIN_IMAGE_SIZE: number
-  MAX_IMAGE_SIZE: number
+  FLEX_CARD_MIN_WIDTH: number
+  FLEX_CARD_MAX_WIDTH: number
   HEADER_REF: string
 }
 
@@ -151,6 +140,7 @@ interface Data {
     FollowButton,
     FavoriteButton,
     UserMenu,
+    CardsWrapper,
     PlaylistCard,
     IntersectionLoadingCircle,
     Fallback,
@@ -184,8 +174,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
   };
 
   AVATAR_SIZE = AVATAR_SIZE;
-  MIN_IMAGE_SIZE = MIN_IMAGE_SIZE;
-  MAX_IMAGE_SIZE = MAX_IMAGE_SIZE;
+  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
+  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -293,28 +283,6 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
   .Divider {
     margin: 6px 0 16px;
-  }
-
-  .Cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-
-    & > * {
-      margin-left: 16px;
-      margin-right: 16px;
-      flex: 1 0 180px;
-      min-width: 180px;
-      max-width: 240px;
-    }
-
-    &__card {
-      margin-bottom: 32px;
-    }
-
-    &__spacer {
-      height: 0;
-    }
   }
 
   .Info {
