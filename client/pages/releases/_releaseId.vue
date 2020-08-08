@@ -61,7 +61,7 @@
           {{ releaseInfo.name }}
         </h1>
 
-        <ArtistNames :artist-list="releaseInfo.artists" />
+        <ArtistNames :artists="releaseInfo.artists" />
 
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
