@@ -83,7 +83,7 @@ export default Vue.extend({
     },
     margin: {
       type: Number,
-      default: 32,
+      default: undefined,
     },
     minWidth: {
       type: Number as PropType<number | undefined>,

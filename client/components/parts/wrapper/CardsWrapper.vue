@@ -32,7 +32,7 @@ export default Vue.extend({
   props: {
     margin: {
       type: Number,
-      default: 32,
+      default: 24,
     },
     minWidth: {
       type: Number,
