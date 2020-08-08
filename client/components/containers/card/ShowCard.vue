@@ -1,54 +1,56 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="card"
-    boilerplate
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-  />
-  <v-card
-    v-else
-    hover
-    ripple
-    nuxt
-    :to="showPath"
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-    :class="$style.ShowCard"
-  >
-    <div :class="$style.ShowCard__container">
-      <ReleaseArtwork
-        is-overlayed
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
-        :size="width"
-        :min-size="minWidth || width"
-        :max-size="maxWidth || width"
-        :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="card"
+      boilerplate
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+    />
+    <v-card
+      v-else
+      hover
+      ripple
+      nuxt
+      :to="showPath"
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+      :class="$style.ShowCard"
+    >
+      <div :class="$style.ShowCard__container">
+        <ReleaseArtwork
+          is-overlayed
+          :src="artworkSrc"
+          :alt="name"
+          :title="name"
+          :size="width"
+          :min-size="minWidth || width"
+          :max-size="maxWidth || width"
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
 
-      <v-card-title
-        :title="name"
-        :class="$style.ShowCard__title"
-      >
-        <span class="g-ellipsis-text">
-          {{ name }}
-        </span>
-      </v-card-title>
+        <v-card-title
+          :title="name"
+          :class="$style.ShowCard__title"
+        >
+          <span class="g-ellipsis-text">
+            {{ name }}
+          </span>
+        </v-card-title>
 
-      <v-card-subtitle
-        :title="publisher"
-        :class="$style.ShowCard__subtitle"
-        class="g-ellipsis-text"
-      >
-        {{ publisher }}
-      </v-card-subtitle>
-    </div>
-  </v-card>
+        <v-card-subtitle
+          :title="publisher"
+          :class="$style.ShowCard__subtitle"
+          class="g-ellipsis-text"
+        >
+          {{ publisher }}
+        </v-card-subtitle>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">

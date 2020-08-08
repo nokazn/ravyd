@@ -54,12 +54,12 @@ import debounce from 'lodash/debounce';
 const CARDS_WRAPPER_MARGIN = 24;
 const SCROLLABLE_CARDS_WRAPPER_REF = 'SCROLLABLE_CARDS_WRAPPER_REF';
 
-export type Data = {
+type Data = {
   cardList: {
     isVisible: boolean
     element: HTMLDivElement
   }[],
-  scrollMax: number
+  scrollableWidth: number
   scrollLeft: number
   SCROLLABLE_CARDS_WRAPPER_REF: string
 }
@@ -70,7 +70,7 @@ export default Vue.extend({
   data(): Data {
     return {
       cardList: [],
-      scrollMax: 0,
+      scrollableWidth: 0,
       scrollLeft: 0,
       SCROLLABLE_CARDS_WRAPPER_REF,
     };
@@ -81,27 +81,31 @@ export default Vue.extend({
       return this.scrollLeft === 0;
     },
     isScrollOnRightEdge(): boolean {
-      return this.scrollLeft === this.scrollMax;
+      return this.scrollLeft === this.scrollableWidth;
     },
   },
 
   mounted() {
     const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
     if (cardsWrapperRef == null) {
-      console.warn('Cannot find the ref of "cardsWrapperRef".');
+      console.warn('Cannot find the ref of "CARDS_WRAPPER_REF".');
       return;
     }
 
-    this.scrollMax = cardsWrapperRef.scrollWidth - cardsWrapperRef.clientWidth;
+    this.scrollableWidth = cardsWrapperRef.scrollWidth - cardsWrapperRef.clientWidth;
     this.scrollLeft = cardsWrapperRef.scrollLeft;
 
     const observer = (index: number) => new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const target = entry.target as HTMLDivElement;
-        this.cardList[index] = {
+        console.log(target);
+        const { cardList } = this;
+        cardList[index] = {
           isVisible: entry.isIntersecting,
           element: target,
         };
+        this.cardList = cardList;
+        console.log(this.cardList.map((card) => card.isVisible));
       }, {
         threshold: [0, 1],
       });
@@ -120,40 +124,51 @@ export default Vue.extend({
 
   methods: {
     onLeftButtonClicked() {
+      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement | null;
+      if (cardsWrapperRef == null) return;
+
+      // ラッパーの右端の right - 余白
+      const rightSideEdgeRight = cardsWrapperRef
+        .getBoundingClientRect().right - CARDS_WRAPPER_MARGIN;
+
+      // 表示されている一番左端のカードの right
       const leftSideElementRight = this.cardList
         .find((element) => element.isVisible)?.element.getBoundingClientRect().right;
       if (leftSideElementRight == null) return;
 
-      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
-      // ラッパーの右端の絶対位置 - 余白
-      const rightSideEdgeRight = cardsWrapperRef
-        .getBoundingClientRect().right - CARDS_WRAPPER_MARGIN;
-
+      // 表示されている一番左端のカードを右端までスクロールさせる
       cardsWrapperRef.scrollBy({
         left: leftSideElementRight - rightSideEdgeRight,
         behavior: 'smooth',
       });
     },
     onRightButtonClicked() {
-      const rightSideElementLeft = () => {
-        const { length } = this.cardList;
-        let previousIsVisible: boolean = false;
-        for (let i = 0; i < length; i += 1) {
-          // true -> false に変わるところ
-          if (previousIsVisible && !this.cardList[i].isVisible) {
-            return this.cardList[i - 1].element.getBoundingClientRect().left;
-          }
-          previousIsVisible = this.cardList[i].isVisible;
-        }
-        return this.cardList[length - 1].element.getBoundingClientRect().left;
-      };
+      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement | null;
+      if (cardsWrapperRef == null) return;
 
-      const cardsWrapperRef = this.$refs[SCROLLABLE_CARDS_WRAPPER_REF] as HTMLDivElement;
-      // ラッパーの左端の絶対位置 ⁺ 余白
+      // ラッパーの左端の left ⁺ 余白
       const leftSideEdgeLeft = cardsWrapperRef
         .getBoundingClientRect().left + CARDS_WRAPPER_MARGIN;
+
+      // 表示されている一番右端のカードの left
+      const getRightSideElementLeft = (): number | undefined => {
+        const { length } = this.cardList;
+        if (length === 0) return undefined;
+
+        // 末尾からたどっていき、初めて true になるカード
+        for (let i = length - 1; i > 0; i -= 1) {
+          const card = this.cardList[i];
+          if (card.isVisible) {
+            return card.element.getBoundingClientRect().left;
+          }
+        }
+        return undefined;
+      };
+      const rightSideElementLeft = getRightSideElementLeft();
+      if (rightSideElementLeft == null) return;
+
       cardsWrapperRef.scrollBy({
-        left: rightSideElementLeft() - leftSideEdgeLeft,
+        left: rightSideElementLeft - leftSideEdgeLeft,
         behavior: 'smooth',
       });
     },

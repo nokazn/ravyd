@@ -1,53 +1,55 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="card"
-    boilerplate
-    :width="width"
-    :min-width="minWidth || width"
-    :max-width="maxWidth || width"
-  />
-  <v-card
-    v-else
-    hover
-    ripple
-    nuxt
-    :to="playlistPath"
-    :width="width"
-    :min-width="minWidth || width"
-    :max-width="maxWidth || width"
-    :class="$style.PlaylistCard"
-  >
-    <div :class="$style.PlaylistCard__container">
-      <ReleaseArtwork
-        is-overlayed
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
-        :size="width"
-        :min-size="minWidth || width"
-        :max-size="maxWidth || width"
-        :icon="mediaIcon"
-        @on-media-button-clicked="onMediaButtonClicked"
-      />
-
-      <v-card-title :class="$style.PlaylistCard__title">
-        <span
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="card"
+      boilerplate
+      :width="width"
+      :min-width="minWidth || width"
+      :max-width="maxWidth || width"
+    />
+    <v-card
+      v-else
+      hover
+      ripple
+      nuxt
+      :to="playlistPath"
+      :width="width"
+      :min-width="minWidth || width"
+      :max-width="maxWidth || width"
+      :class="$style.PlaylistCard"
+    >
+      <div :class="$style.PlaylistCard__container">
+        <ReleaseArtwork
+          is-overlayed
+          :src="artworkSrc"
+          :alt="name"
           :title="name"
-          class="g-ellipsis-text"
-        >
-          {{ name }}
-        </span>
-      </v-card-title>
-
-      <v-card-subtitle :class="$style.PlaylistCard__text">
-        <span
-          :title="description"
-          v-html="description"
+          :size="width"
+          :min-size="minWidth || width"
+          :max-size="maxWidth || width"
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
         />
-      </v-card-subtitle>
-    </div>
-  </v-card>
+
+        <v-card-title :class="$style.PlaylistCard__title">
+          <span
+            :title="name"
+            class="g-ellipsis-text"
+          >
+            {{ name }}
+          </span>
+        </v-card-title>
+
+        <v-card-subtitle :class="$style.PlaylistCard__text">
+          <span
+            :title="description"
+            v-html="description"
+          />
+        </v-card-subtitle>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">

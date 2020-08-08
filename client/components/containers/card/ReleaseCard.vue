@@ -1,69 +1,71 @@
 <template>
-  <v-skeleton-loader
-    v-if="!isLoaded"
-    type="card"
-    boilerplate
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-  />
-  <v-card
-    v-else
-    hover
-    ripple
-    :width="width"
-    :min-width="width"
-    :max-width="maxWidth || width"
-    :class="$style.ReleaseCard"
-    @click="onCardClicked"
-  >
-    <div :class="$style.ReleaseCard__container">
-      <nuxt-link :to="releasePath">
-        <ReleaseArtwork
-          is-overlayed
-          :src="artworkSrc"
-          :alt="name"
-          :title="name"
-          :size="width"
-          :min-size="minWidth || width"
-          :max-size="maxWidth || width"
-          :icon="mediaIcon"
-          @on-media-button-clicked="onMediaButtonClicked"
-        />
-      </nuxt-link>
-
-      <v-card-title :class="$style.ReleaseCard__title">
-        <nuxt-link
-          :to="releasePath"
-          :title="name"
-          class="g-ellipsis-text"
-        >
-          {{ name }}
+  <div>
+    <v-skeleton-loader
+      v-if="!isLoaded"
+      type="card"
+      boilerplate
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+    />
+    <v-card
+      v-else
+      hover
+      ripple
+      :width="width"
+      :min-width="width"
+      :max-width="maxWidth || width"
+      :class="$style.ReleaseCard"
+      @click="onCardClicked"
+    >
+      <div :class="$style.ReleaseCard__container">
+        <nuxt-link :to="releasePath">
+          <ReleaseArtwork
+            is-overlayed
+            :src="artworkSrc"
+            :alt="name"
+            :title="name"
+            :size="width"
+            :min-size="minWidth || width"
+            :max-size="maxWidth || width"
+            :icon="mediaIcon"
+            @on-media-button-clicked="onMediaButtonClicked"
+          />
         </nuxt-link>
-      </v-card-title>
 
-      <v-card-subtitle
-        :class="$style.ReleaseCard__subtitle"
-      >
-        <template v-if="discograpy">
-          <time
-            v-if="releaseYear != null"
-            :datetime="releaseYear"
+        <v-card-title :class="$style.ReleaseCard__title">
+          <nuxt-link
+            :to="releasePath"
+            :title="name"
             class="g-ellipsis-text"
           >
-            {{ releaseYear }}
-          </time>
-        </template>
+            {{ name }}
+          </nuxt-link>
+        </v-card-title>
 
-        <template v-else>
-          <ArtistNames
-            :artist-list="artists"
-            class="g-ellipsis-text"
-          />
-        </template>
-      </v-card-subtitle>
-    </div>
-  </v-card>
+        <v-card-subtitle
+          :class="$style.ReleaseCard__subtitle"
+        >
+          <template v-if="discograpy">
+            <time
+              v-if="releaseYear != null"
+              :datetime="releaseYear"
+              class="g-ellipsis-text"
+            >
+              {{ releaseYear }}
+            </time>
+          </template>
+
+          <template v-else>
+            <ArtistNames
+              :artist-list="artists"
+              class="g-ellipsis-text"
+            />
+          </template>
+        </v-card-subtitle>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
