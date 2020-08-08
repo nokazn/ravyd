@@ -51,7 +51,7 @@ import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableR
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import { App } from '~~/types';
 
-export type Data = {
+type Data = {
   headers: DataTableHeader[]
   activeRowId: string | undefined
 };

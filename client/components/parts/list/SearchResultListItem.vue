@@ -62,10 +62,6 @@ import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
 
-type Data = {
-  isTwoLine: boolean
-}
-
 const ON_CLICKED = 'on-clicked';
 
 export type On = {
@@ -118,15 +114,10 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const isTwoLine = this.artistList != null;
-
-    return {
-      isTwoLine,
-    };
-  },
-
   computed: {
+    isTwoLine(): boolean {
+      return this.artists != null;
+    },
     artworkSrc(): string | undefined {
       return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
     },
