@@ -1,17 +1,20 @@
 <template>
-  <div :class="$style.CardsWrapper">
+  <div
+    :class="$style.CardsWrapper"
+    :style="cssProps"
+  >
     <transition name="fade">
       <v-btn
         v-show="!isScrollOnLeftEdge"
         icon
-        large
+        absolute
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--left']
         ]"
         @click="onLeftButtonClicked"
       >
-        <v-icon :size="48">
+        <v-icon :size="40">
           mdi-chevron-left
         </v-icon>
       </v-btn>
@@ -22,14 +25,13 @@
         v-show="!isScrollOnRightEdge"
         icon
         absolute
-        large
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--right']
         ]"
         @click="onRightButtonClicked"
       >
-        <v-icon :size="48">
+        <v-icon :size="40">
           mdi-chevron-right
         </v-icon>
       </v-btn>
@@ -64,9 +66,14 @@ type Data = {
   SCROLLABLE_CARDS_WRAPPER_REF: string
 }
 
-export type CardType = 'release' | 'artist'
-
 export default Vue.extend({
+  props: {
+    margin: {
+      type: Number,
+      default: 24,
+    },
+  },
+
   data(): Data {
     return {
       cardList: [],
@@ -77,6 +84,11 @@ export default Vue.extend({
   },
 
   computed: {
+    cssProps(): { [k: string]: string } {
+      return {
+        '--margin-right': `${this.margin}px`,
+      };
+    },
     isScrollOnLeftEdge(): boolean {
       return this.scrollLeft === 0;
     },
@@ -98,14 +110,12 @@ export default Vue.extend({
     const observer = (index: number) => new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const target = entry.target as HTMLDivElement;
-        console.log(target);
         const { cardList } = this;
         cardList[index] = {
           isVisible: entry.isIntersecting,
           element: target,
         };
         this.cardList = cardList;
-        console.log(this.cardList.map((card) => card.isVisible));
       }, {
         threshold: [0, 1],
       });
@@ -193,11 +203,11 @@ $gradation-width: 24px;
     z-index: z-index-of(floating-button);
 
     &--left {
-      left: -12px;
+      left: -0;
     }
 
     &--right {
-      right: -12px;
+      right: 0;
     }
   }
 
@@ -215,7 +225,7 @@ $gradation-width: 24px;
     }
 
     & > *:not(:last-child) {
-      margin-right: 32px;
+      margin-right: var(--margin-right);
     }
   }
 
