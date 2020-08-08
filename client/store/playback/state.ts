@@ -13,7 +13,7 @@ export type PlaybackState = {
   trackIndex: number | undefined
   releaseName: string | undefined
   releaseUri: string | undefined
-  artworkList: SpotifyAPI.Image[] | undefined
+  images: SpotifyAPI.Image[] | undefined
   artists: App.SimpleArtistInfo[] | undefined
   customContextUri: string | undefined
   customTrackUriList: string[] | undefined
@@ -37,7 +37,7 @@ const state = (): PlaybackState => ({
   deviceId: undefined,
   activeDeviceId: undefined,
   deviceList: [],
-  artworkList: undefined,
+  images: undefined,
   contextUri: undefined,
   trackId: undefined,
   trackName: undefined,

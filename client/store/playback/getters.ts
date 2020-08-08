@@ -62,7 +62,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       artists,
       releaseName,
       releaseUri,
-      artworkList: images,
+      images,
       durationMs,
       isSavedTrack: isSaved,
     } = state;
@@ -114,7 +114,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       releaseId: getters.releaseId!,
       releaseName: state.releaseName!,
       artists: state.artists!,
-      images: state.artworkList ?? [],
+      images: state.images ?? [],
       durationMs: state.durationMs,
     };
 
@@ -151,7 +151,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   },
 
   artworkSrc(state) {
-    return (minSize?: number) => getImageSrc(state.artworkList, minSize);
+    return (minSize?: number) => getImageSrc(state.images, minSize);
   },
 
   hasTrack(state) {
