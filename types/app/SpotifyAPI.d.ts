@@ -74,6 +74,78 @@ export namespace SpotifyAPI {
     type NewReleases = Paging<Album>
     type TopArtists = Paging<Artist>
     type TopTracks = Paging<Track>
+
+    type TrackAttributes = 'acousticness' // 0.0 ~ 1.0
+      | 'danceability' // 0.0 ~ 1.0
+      | 'duration_ms' // milliseconds
+      | 'energy' // 0.0 ~ 1.0
+      | 'instrumentalness' // 0.0 ~ 1.0
+      | 'key' // 0: C, 1: C#/D♭, 2: D ...
+      | 'liveness' // 0.0 ~ 1.0?
+      | 'loudness' // -60db ~ 0db
+      | 'mode' // 0: minor, 1: major
+      | 'popularity' // 0 ~ 100
+      | 'speechiness' // 0.0 ~ 1.0
+      | 'tempo' // BPM
+      | 'time_signature' // 拍子
+      | 'valence' // 0.0 ~ 1.0
+    // min_TrackAttributes
+    type MinTrackAttributes = 'min_acousticness'
+      | 'min_danceability'
+      | 'min_duration_ms'
+      | 'min_energy'
+      | 'min_instrumentalness'
+      | 'min_key'
+      | 'min_liveness'
+      | 'min_loudness'
+      | 'min_mode'
+      | 'min_popularity'
+      | 'min_speechiness'
+      | 'min_tempo'
+      | 'min_time_signature'
+      | 'min_valence'
+    // max_TrackAttributes
+    type MaxTrackAttributes = 'max_acousticness'
+      | 'max_danceability'
+      | 'max_duration_ms'
+      | 'max_energy'
+      | 'max_instrumentalness'
+      | 'max_key'
+      | 'max_liveness'
+      | 'max_loudness'
+      | 'max_mode'
+      | 'max_popularity'
+      | 'max_speechiness'
+      | 'max_tempo'
+      | 'max_time_signature'
+      | 'max_valence'
+    // target_TrackAttributes
+    type TargetTrackAttributes = 'target_acousticness'
+      | 'target_danceability'
+      | 'target_duration_ms'
+      | 'target_energy'
+      | 'target_instrumentalness'
+      | 'target_key'
+      | 'target_liveness'
+      | 'target_loudness'
+      | 'target_mode'
+      | 'target_popularity'
+      | 'target_speechiness'
+      | 'target_tempo'
+      | 'target_time_signature'
+      | 'target_valence'
+    type RecommendationSeed = {
+      afterFilteringSize: number
+      afterRelinkingSize: number
+      href: string | string
+      id: string
+      initialPoolSize: number
+      type: 'artist' | 'track' | 'genre'
+    }
+    type Recommendations = {
+      seeds: RecommendationSeed[]
+      tracks: SimpleTrack[]
+    }
   }
 
   type Category = {
