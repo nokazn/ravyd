@@ -143,7 +143,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       commit('SET_CUSTOM_CONTEXT_URI', contextUri);
     }
     commit('SET_CUSTOM_TRACK_URI_LIST', trackUriList);
-    console.log(trackIndex);
     commit('SET_TRACK_INDEX', trackIndex);
   },
 
