@@ -5,7 +5,6 @@ export const convertTrackForCard = (
 ): App.ReleaseCardInfo<'track'> => {
   const info = {
     type: track.type,
-    releaseType: track.album.album_type,
     releaseId: track.album.id,
     id: track.id,
     name: track.name,

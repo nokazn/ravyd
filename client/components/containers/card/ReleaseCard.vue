@@ -94,10 +94,6 @@ export default Vue.extend({
       type: String as PropType<App.ReleaseCardInfo['type']>,
       required: true,
     },
-    releaseType: {
-      type: String as PropType<App.ReleaseCardInfo['releaseType']>,
-      required: true,
-    },
     name: {
       type: String,
       required: true,

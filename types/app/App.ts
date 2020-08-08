@@ -88,7 +88,6 @@ export namespace App {
   type CardType = 'album' | 'track'
   type ReleaseCardInfoBase<T extends CardType> = {
     type: T
-    releaseType: 'album' | 'single' | 'compilation' | 'appears_on'
     releaseId: string // id と同じ場合 (track のカードの場合) もある
     id: string // track または album の id
     name: string // track または album の name
