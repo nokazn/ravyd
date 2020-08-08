@@ -56,11 +56,20 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const artistPage = () => {
-        const { artistList } = this.release;
+        const { artists } = this.release;
+        const { length } = artists;
+        const name = 'アーティストページに移動';
+        if (length === 0) {
+          return {
+            name,
+            handler: () => {},
+            disabled: true,
+          };
+        }
         //  アーティストが複数の時
-        if (artistList.length > 1) {
+        if (length > 1) {
           const props: ArtistLinkMenuProps = {
-            artistList,
+            artists,
             left: this.left,
             right: this.right,
           };
@@ -70,11 +79,11 @@ export default Vue.extend({
           };
         }
 
-        const artist = artistList[0] as App.SimpleArtistInfo | undefined;
+        const artistId = artists[0].id;
         return {
           name: 'アーティストページに移動',
-          to: `/artists/${artist?.id}`,
-          disabled: artist == null || this.$route.params.artistId === artist.id,
+          to: `/artists/${artistId}`,
+          disabled: this.$route.params.artistId === artistId,
         };
       };
 
@@ -91,7 +100,7 @@ export default Vue.extend({
         const props: AddItemToPlaylistMenuProps = {
           name: this.release.name,
           uriList,
-          artists: this.release.artistList,
+          artists: this.release.artists,
           left: this.left,
           right: this.right,
         };
@@ -107,7 +116,7 @@ export default Vue.extend({
           name: this.release.name,
           uri: this.release.uri,
           typeName: 'アルバム',
-          artists: this.release.artistList,
+          artists: this.release.artists,
           externalUrls: this.release.externalUrls,
           left: this.left,
           right: this.right,

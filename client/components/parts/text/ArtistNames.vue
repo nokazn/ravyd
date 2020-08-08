@@ -13,7 +13,7 @@
     </template>
 
     <template v-else>
-      <template v-for="({ name, id }, index) in artistList">
+      <template v-for="({ name, id }, index) in artists">
         <nuxt-link
           :key="id"
           :to="artistPath(id)"
@@ -22,7 +22,7 @@
         >
           {{ name }}
         </nuxt-link><span
-          v-if="index !== artistList.length - 1"
+          v-if="index !== artists.length - 1"
           :key="`${id}-comma`"
           :class="$style.ArtistNames__comma"
         >, </span>
@@ -45,7 +45,7 @@ export type On = {
 
 export default Vue.extend({
   props: {
-    artistList: {
+    artists: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
       validator(value) {
@@ -64,7 +64,7 @@ export default Vue.extend({
 
   computed: {
     artistNames(): string {
-      return this.artistList
+      return this.artists
         .map((artist) => artist.name)
         .join(', ');
     },

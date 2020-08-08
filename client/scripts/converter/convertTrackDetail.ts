@@ -36,17 +36,13 @@ export const convertTrackDetail = <
       ?? (track as SpotifyAPI.Track).album.artists.map((artist) => artist.id);
 
     // artistIdList に含まれるかどうかで分ける
-    const artistList: App.SimpleArtistInfo[] = [];
-    const featuredArtistList: App.SimpleArtistInfo[] = [];
+    const artists: SpotifyAPI.SimpleArtist[] = [];
+    const featuredArtists: SpotifyAPI.SimpleArtist[] = [];
     track.artists.forEach((artist) => {
-      const info = {
-        id: artist.id,
-        name: artist.name,
-      };
       if (releaseArtistIdList.includes(artist.id)) {
-        artistList.push(info);
+        artists.push(artist);
       } else {
-        featuredArtistList.push(info);
+        featuredArtists.push(artist);
       }
     });
 
@@ -58,8 +54,8 @@ export const convertTrackDetail = <
       trackNumber: track.track_number,
       discNumber: track.disc_number,
       hash: `${track.disc_number}-${track.track_number}`,
-      artistList,
-      featuredArtistList,
+      artists,
+      featuredArtists,
       isPlayable: track.is_playable,
       explicit: track.explicit,
       durationMs: track.duration_ms,

@@ -23,11 +23,8 @@ export const convertPlaylistTrackDetail = (
     trackNumber: track.track_number,
     discNumber: track.disc_number,
     hash: `${track.disc_number}-${track.track_number}`,
-    artistList: track.artists.map((artist) => ({
-      name: artist.name,
-      id: artist.id,
-    })),
-    featuredArtistList: [],
+    artists: track.artists,
+    featuredArtists: [],
     explicit: track.explicit,
     isPlayable: track.is_playable,
     durationMs: track.duration_ms,

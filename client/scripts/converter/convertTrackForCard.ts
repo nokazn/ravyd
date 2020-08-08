@@ -9,10 +9,7 @@ export const convertTrackForCard = (
     id: track.id,
     name: track.name,
     uri: track.uri,
-    artists: track.artists.map((artist) => ({
-      name: artist.name,
-      id: artist.id,
-    })),
+    artists: track.artists,
     hash: `${track.disc_number}-${track.track_number}`,
     images: track.album.images,
     externalUrls: track.external_urls,

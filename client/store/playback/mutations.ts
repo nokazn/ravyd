@@ -2,9 +2,8 @@
 import { Mutations } from 'typed-vuex';
 import { PlaybackState } from './state';
 import { DEFAULT_DURATION_MS } from '~/variables';
-import type { SpotifyAPI, ZeroToHundred } from '~~/types';
-
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
+import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 export type PlaybackMutations = {
   SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
@@ -106,8 +105,8 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
     state.trackType = currentTrack?.type;
     state.releaseName = currentTrack?.album.name;
     state.releaseUri = currentTrack?.album.uri;
-    state.artistList = currentTrack?.artists.map((artist) => ({
-      name: artist.name,
+    state.artists = currentTrack?.artists.map((artist) => ({
+      ...artist,
       id: convertUriToId(artist.uri),
     }));
   },

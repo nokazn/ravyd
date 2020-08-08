@@ -171,7 +171,7 @@ export default Vue.extend({
 
   data(): Data {
     const { artists } = this;
-    const artistNames = Array.isArray(artists)
+    const artistNames: string | undefined = Array.isArray(artists)
       ? artists.map((artist) => artist.name).join(', ')
       : artists;
     const text = artistNames != null

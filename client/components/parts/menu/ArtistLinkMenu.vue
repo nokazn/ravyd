@@ -61,7 +61,7 @@ type MenuItem = {
 }
 
 export type Props = {
-  artistList: App.SimpleArtistInfo[]
+  artists: App.SimpleArtistInfo[]
   left?: boolean
   right?: boolean
 }
@@ -74,7 +74,7 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    artistList: {
+    artists: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
     },
@@ -89,7 +89,7 @@ export default Vue.extend({
   },
 
   data(): Data {
-    const menuItemList = this.artistList.map((artist) => ({
+    const menuItemList = this.artists.map((artist) => ({
       name: artist.name,
       to: `/artists/${artist.id}`,
       disabled: artist.id === this.$route.params.artistId,

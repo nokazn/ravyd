@@ -51,10 +51,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         name: track.name,
         uri: track.uri,
         images: track.album.images,
-        artistList: track.artists.map((artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
+        artists: track.artists,
         to,
       };
 
@@ -95,10 +92,7 @@ const getters: Getters<SearchState, SearchGetters> = {
         name: album.name,
         uri: album.uri,
         images: album.images,
-        artistList: album.artists.map((artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
+        artists: album.artists,
         to,
       };
 

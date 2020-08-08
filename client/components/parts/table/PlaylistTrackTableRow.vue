@@ -54,7 +54,7 @@
               <template v-if="item.type !== 'episode'">
                 <ArtistNames
                   inline
-                  :artist-list="item.artistList"
+                  :artists="item.artists"
                 />
 
                 <span :class="$style['Content__subtitle--divider']">-</span>
@@ -210,7 +210,7 @@ export default Vue.extend({
       return this.item.type !== 'episode' && !this.item.isPlayable;
     },
     publisher(): string {
-      return this.item.artistList
+      return this.item.artists
         .map((artist) => artist.name)
         .join(', ');
     },

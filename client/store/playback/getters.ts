@@ -59,7 +59,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       trackId,
       trackName,
       trackUri,
-      artistList,
+      artists,
       releaseName,
       releaseUri,
       artworkList: images,
@@ -71,7 +71,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
     if (trackId == null
       || trackName == null
       || trackUri == null
-      || artistList == null
+      || artists == null
       || releaseName == null
       || releaseUri == null
       || images == null
@@ -88,7 +88,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       id: trackId,
       name: trackName,
       uri: trackUri,
-      artistList,
+      artists,
       featuredArtistList: [],
       durationMs,
       externalUrls,
@@ -103,7 +103,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   trackQueue(state, getters) {
     if (!getters.hasTrack) return [];
 
-    // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artistList は存在
+    // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artists は存在
     const currentTrack = {
       isSet: true,
       isPlaying: state.isPlaying,
@@ -113,7 +113,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       uri: state.trackUri!,
       releaseId: getters.releaseId!,
       releaseName: state.releaseName!,
-      artistList: state.artistList!,
+      artists: state.artists!,
       images: state.artworkList ?? [],
       durationMs: state.durationMs,
     };
@@ -160,7 +160,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       && state.trackUri != null
       && state.releaseName != null
       && state.releaseUri != null
-      && state.artistList != null
+      && state.artists != null
       && state.durationMs > 0 && state.durationMs !== DEFAULT_DURATION_MS;
   },
 

@@ -10,7 +10,7 @@
       @mouseover="onHovered"
     >
       <template
-        v-for="({ name, id }, index) in artistList"
+        v-for="({ name, id }, index) in artists"
       >
         <nuxt-link
           :key="id"
@@ -19,7 +19,7 @@
           {{ name }}
         </nuxt-link>
         <span
-          v-if="index !== artistList.length - 1"
+          v-if="index !== artists.length - 1"
           :key="`${id}-comma`"
         >, </span>
       </template>
@@ -46,7 +46,7 @@ type Data = {
 
 export default Vue.extend({
   props: {
-    artistList: {
+    artists: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
       validator(value) {
@@ -70,7 +70,7 @@ export default Vue.extend({
       return (id: string) => `/artists/${id}`;
     },
     title(): string {
-      return this.artistList
+      return this.artists
         .map((artist) => artist.name)
         .join(', ');
     },
@@ -89,7 +89,7 @@ export default Vue.extend({
   },
 
   watch: {
-    artistList(): void {
+    artists(): void {
       this.clearTimeout();
       this.calculateWidth();
     },

@@ -49,7 +49,7 @@
         ]"
       >
         <ArtistNames
-          :artist-list="artistList"
+          :artists="artists"
           class="g-ellipsis-text"
           @on-clicked="onLinkClicked"
         />
@@ -135,7 +135,7 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    artistList: {
+    artists: {
       type: Array as PropType<App.SimpleArtistInfo[]>,
       required: true,
     },

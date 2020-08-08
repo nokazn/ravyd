@@ -23,9 +23,9 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
     uri: track.uri,
     releaseName: track.album.name,
     releaseId: convertUriToId(track.album.uri),
-    artistList: artists.map((artist) => ({
+    artists: artists.map((artist) => ({
+      ...artist,
       id: convertUriToId(artist.uri),
-      name: artist.name,
     })),
     images: track.album.images,
     durationMs: track.duration_ms,

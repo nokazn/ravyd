@@ -61,7 +61,7 @@
           {{ releaseInfo.name }}
         </h1>
 
-        <ArtistNames :artist-list="releaseInfo.artistList" />
+        <ArtistNames :artist-list="releaseInfo.artists" />
 
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
@@ -337,7 +337,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       offset,
       releaseId,
       releaseName: releaseInfo.name,
-      artistIdList: releaseInfo.artistList.map((artist) => artist.id),
+      artistIdList: releaseInfo.artists.map((artist) => artist.id),
       images: releaseInfo.images,
     }));
     const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);

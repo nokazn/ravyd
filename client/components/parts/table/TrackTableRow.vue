@@ -39,7 +39,7 @@
             <template v-if="item.featuredArtistList.length > 0">
               <span :class="subtextColor">-</span>
               <ArtistNames
-                :artist-list="item.featuredArtistList"
+                :artists="item.featuredArtists"
                 inline
                 :class="subtextColor"
               />

@@ -17,7 +17,6 @@ import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 
@@ -73,19 +72,18 @@ export default Vue.extend({
 
       const artistPage = () => {
         const name = 'アーティストページに移動';
-        const artistList = this.track?.artistList;
-        if (artistList == null) {
+        const artists = this.track?.artists;
+        if (artists == null || artists.length === 0) {
           return {
             name,
             handler: () => {},
             disabled: true,
           };
         }
-
         //  アーティストが複数の時
-        if (artistList.length > 1) {
+        if (artists.length > 1) {
           const props: ArtistLinkMenuProps = {
-            artistList,
+            artists,
             left: true,
           };
           return {
@@ -93,11 +91,12 @@ export default Vue.extend({
             props,
           };
         }
-        const artist = artistList[0] as App.SimpleArtistInfo | undefined;
+
+        const artistId = artists[0].id;
         return {
           name,
-          to: `/artists/${artist?.id}`,
-          disabled: artist == null || this.$route.params.artistId === artist.id,
+          to: `/artists/${artistId}`,
+          disabled: this.$route.params.artistId === artistId,
         };
       };
 
@@ -145,11 +144,10 @@ export default Vue.extend({
             disabled: true,
           };
         }
-
         const props: AddItemToPlaylistMenuProps = {
           name: track.name,
           uriList: [track.uri],
-          artists: track.artistList,
+          artists: track.artists,
           left: true,
         };
         return {
@@ -172,7 +170,7 @@ export default Vue.extend({
           uri: track.uri,
           url: `/releases/${track.releaseId}`,
           typeName: '曲',
-          artists: track.artistList,
+          artists: track.artists,
           externalUrls: track.externalUrls,
           left: true,
         };

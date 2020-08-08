@@ -58,7 +58,7 @@
 
           <template v-else>
             <ArtistNames
-              :artist-list="artists"
+              :artists="artists"
               class="g-ellipsis-text"
             />
           </template>

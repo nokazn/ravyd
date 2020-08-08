@@ -10,10 +10,7 @@ export const convertReleaseForCard = (
     id: release.id,
     name: release.name,
     uri: release.uri,
-    artists: release.artists.map((artist) => ({
-      name: artist.name,
-      id: artist.id,
-    })),
+    artists: release.artists,
     releaseYear: convertReleaseDate({
       releaseDate: release.release_date,
       releaseDatePrecision: release.release_date_precision,

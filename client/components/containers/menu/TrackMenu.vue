@@ -85,11 +85,20 @@ export default Vue.extend({
       };
 
       const artistPage = () => {
-        const artistList = [...this.track.artistList, ...this.track.featuredArtistList];
+        const artists = [...this.track.artists, ...this.track.featuredArtists];
+        const { length } = artists;
+        const name = 'アーティストページに移動';
+        if (length === 0) {
+          return {
+            name,
+            handler: () => {},
+            disabled: true,
+          };
+        }
         //  アーティストが複数の時
-        if (artistList.length > 1) {
+        if (artists.length > 1) {
           const props: ArtistLinkMenuProps = {
-            artistList,
+            artists,
             left: true,
           };
           return {
@@ -98,11 +107,11 @@ export default Vue.extend({
           };
         }
 
-        const artist = artistList[0] as App.SimpleArtistInfo | undefined;
+        const artistId = artists[0].id;
         return {
-          name: 'アーティストページに移動',
-          to: `/artists/${artist?.id}`,
-          disabled: artist == null || this.$route.params.artistId === artist.id,
+          name,
+          to: `/artists/${artistId}`,
+          disabled: this.$route.params.artistId === artistId,
         };
       };
 
@@ -128,7 +137,7 @@ export default Vue.extend({
         const props: AddItemToPlaylistMenuProps = {
           name: this.track.name,
           uriList: [this.track.uri],
-          artists: this.track.artistList,
+          artists: this.track.artists,
           left: true,
         };
 
@@ -160,7 +169,7 @@ export default Vue.extend({
           name: this.track.name,
           uri: this.track.uri,
           typeName: '曲',
-          artists: this.track.artistList,
+          artists: this.track.artists,
           externalUrls: this.track.externalUrls,
           left: true,
         };

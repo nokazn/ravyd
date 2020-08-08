@@ -27,7 +27,7 @@
 
           <MarqueeArtistNames
             v-if="isTrack && hasTrack"
-            :artist-list="artistList"
+            :artists="artists"
           />
         </div>
 
@@ -131,8 +131,8 @@ export default Vue.extend({
     releaseId(): RootGetters['playback/releaseId'] {
       return this.$getters()['playback/releaseId'];
     },
-    artistList(): RootState['playback']['artistList'] {
-      return this.$state().playback.artistList;
+    artists(): RootState['playback']['artists'] {
+      return this.$state().playback.artists;
     },
     isSavedTrack(): RootState['playback']['isSavedTrack'] {
       return this.$state().playback.isSavedTrack;

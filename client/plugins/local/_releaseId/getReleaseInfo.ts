@@ -91,7 +91,7 @@ export const getReleaseInfo = async (
     id,
     name,
     uri,
-    artistList: artists,
+    artists,
     releaseDate,
     releaseDatePrecision,
     images,

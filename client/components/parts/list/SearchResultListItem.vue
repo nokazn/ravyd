@@ -43,7 +43,7 @@
 
       <v-list-item-subtitle v-if="isTwoLine">
         <ArtistNames
-          :artist-list="artistList"
+          :artists="artists"
           class="g-ellipsis-text"
         />
       </v-list-item-subtitle>
@@ -104,7 +104,7 @@ export default Vue.extend({
       type: Array as PropType<SpotifyAPI.Image[]>,
       default: undefined,
     },
-    artistList: {
+    artists: {
       type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
       default: undefined,
     },
