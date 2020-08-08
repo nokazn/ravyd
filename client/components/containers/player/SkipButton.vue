@@ -5,7 +5,7 @@
     :title="skipButton.title"
     @click="onClicked"
   >
-    <v-icon :size="16">
+    <v-icon :size="size">
       {{ skipButton.icon }}
     </v-icon>
   </v-btn>
@@ -24,6 +24,10 @@ export default Vue.extend({
     seconds: {
       type: Number,
       required: true,
+    },
+    size: {
+      type: Number,
+      default: 20,
     },
   },
 

@@ -6,7 +6,7 @@
     :title="shuffleButton.title"
     @click="onClicked"
   >
-    <v-icon :size="16">
+    <v-icon :size="size">
       mdi-shuffle-variant
     </v-icon>
   </v-btn>
@@ -21,6 +21,13 @@ export type ShuffleButton = {
 }
 
 export default Vue.extend({
+  props: {
+    size: {
+      type: Number,
+      default: 20,
+    },
+  },
+
   computed: {
     shuffleButton(): ShuffleButton {
       return this.$state().playback.isShuffled
