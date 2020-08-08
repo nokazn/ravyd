@@ -182,9 +182,9 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
-  HEADER_REF: string
   ARTWORK_SIZE: number
   CARD_WIDTH: number
+  HEADER_REF: string
 }
 
 @Component({
@@ -221,11 +221,10 @@ interface Data {
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
-  releaseTrackInfo: App.ReleaseTrackInfo | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
-  CARD_WIDTH = CARD_WIDTH;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
+  ARTWORK_SIZE = ARTWORK_SIZE;
+  CARD_WIDTH = CARD_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {

@@ -1,8 +1,8 @@
 import { Context } from '@nuxt/types';
 import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { App, SpotifyAPI, OneToFifty } from '~~/types';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { App, SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getReleaseInfo = async (
   { app, params }: Context,
@@ -33,20 +33,21 @@ export const getReleaseInfo = async (
 
   const releaseType = convertReleaseType(album_type, totalTracks);
 
-  const artistList = artists.map((artist) => ({
-    id: artist.id,
-    name: artist.name,
-  }));
+  const LIMIT_OF_RELEASES = 10;
 
-  const limit = 10;
-  const artistReleaseList = await Promise.all(artistList.map(async (artist) => {
+  /**
+   * アーティストの他のリリースを取得
+   */
+  const getArtistReleaseList = (
+    limit: number = LIMIT_OF_RELEASES,
+  ): Promise<App.ReleaseInfo['artistReleaseList']> => Promise.all(artists.map(async (artist) => {
     const releases = await app.$spotify.artists.getArtistAlbums({
       artistId: artist.id,
       country: market,
-      // 同じリリースが含まれる場合は除いて 10 件にするため
+      // 同じリリースが含まれる場合は除いて limit 件にするため
       limit: limit + 1 as OneToFifty,
     });
-    // 同じリリースを除いて 10 件にする
+    // 同じリリースを除いて limit 件にする
     const items = releases?.items
       .map(convertReleaseForCard)
       .filter((item) => item.id !== params.releaseId)
@@ -59,17 +60,22 @@ export const getReleaseInfo = async (
   }));
 
   const trackIdList = tracks.items.map((track) => track.id);
-  const [[isSaved], isTrackSavedList] = await Promise.all([
+  const [
+    [isSaved],
+    isTrackSavedList,
+    artistReleaseList,
+  ] = await Promise.all([
     app.$spotify.library.checkUserSavedAlbums({ albumIdList: [id] }),
     app.$spotify.library.checkUserSavedTracks({ trackIdList }),
-  ]);
+    getArtistReleaseList(),
+  ] as const);
 
   const trackList: App.TrackDetail[] = tracks.items.map((track, index) => {
     const detail = convertTrackDetail<SpotifyAPI.SimpleTrack>({
       isTrackSavedList,
       releaseId: id,
       releaseName: name,
-      artistIdList: artistList.map((artist) => artist.id),
+      artistIdList: artists.map((artist) => artist.id),
       images,
     })(track, index);
 
@@ -85,7 +91,7 @@ export const getReleaseInfo = async (
     id,
     name,
     uri,
-    artistList,
+    artistList: artists,
     releaseDate,
     releaseDatePrecision,
     images,
