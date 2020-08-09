@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
-export const getArtistRelatedArtists = (context: Context) => {
+export const getRelatedArtists = (context: Context) => {
   const { app } = context;
 
   return ({ artistId }: {
