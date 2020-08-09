@@ -54,9 +54,7 @@
           {{ episodeInfo.name }}
         </h1>
 
-        <nuxt-link
-          :to="`/shows/${episodeInfo.showId}`"
-        >
+        <nuxt-link :to="showPath">
           {{ episodeInfo.showName }}
         </nuxt-link>
 
@@ -187,6 +185,11 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
   get artworkSrc(): string | undefined {
     return getImageSrc(this.episodeInfo?.images, ARTWORK_SIZE);
+  }
+  get showPath(): string | undefined {
+    return this.episodeInfo != null
+      ? `/shows/${this.episodeInfo?.showId}`
+      : undefined;
   }
   get isEpisodeSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.episodeInfo?.uri);

@@ -28,7 +28,7 @@
               class="g-ellipsis-text"
               :title="item.name"
             >
-              <nuxt-link :to="`/episodes/${item.id}`">
+              <nuxt-link :to="episodePath">
                 {{ item.name }}
               </nuxt-link>
             </div>
@@ -142,6 +142,9 @@ export default Vue.extend({
   },
 
   computed: {
+    episodePath(): string {
+      return `/episodes/${this.item.id}`;
+    },
     titleColor(): string | undefined {
       if (!this.item.isPlayable) return 'inactive--text';
       return this.isEpisodeSet

@@ -33,7 +33,7 @@
       >
         <div class="g-ellipsis-text">
           <nuxt-link
-            :to="`/releases/${releaseId}`"
+            :to="releasePath"
             :title="releaseName"
             @click.native.stop="onLinkClicked"
           >
@@ -152,6 +152,9 @@ export default Vue.extend({
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
+    },
+    releasePath(): string {
+      return `/releases/${this.releaseId}`;
     },
   },
 

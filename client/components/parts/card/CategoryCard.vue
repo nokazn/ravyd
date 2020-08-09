@@ -17,7 +17,7 @@
       hover
       tile
       nuxt
-      :to="`/genres/${id}`"
+      :to="genrePath"
     >
       <v-img
         v-if="artworkSrc != null"
@@ -112,6 +112,9 @@ export default Vue.extend({
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.images, this.maxSize ?? this.size);
+    },
+    genrePath(): string {
+      return `/genres/${this.id}`;
     },
   },
 
