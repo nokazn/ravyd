@@ -11,7 +11,10 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
   } = item;
   const to = generateContentPath(type, id);
 
-  type OneLineItem = SpotifyAPI.Artist | SpotifyAPI.Playlist | SpotifyAPI.Show | SpotifyAPI.Episode;
+  type OneLineItem = SpotifyAPI.Artist
+    | SpotifyAPI.SimplePlaylist
+    | SpotifyAPI.SimpleShow
+    | SpotifyAPI.SimpleEpisode;
   const getOneLineItem = (oneLineItem: OneLineItem) => ({
     releaseId: id,
     images: oneLineItem.images,
@@ -28,7 +31,7 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
       };
     },
     album() {
-      const album = item as SpotifyAPI.Album;
+      const album = item as SpotifyAPI.SimpleAlbum;
       return {
         releaseId: id,
         images: album.images,
@@ -39,13 +42,13 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
       return getOneLineItem(item as SpotifyAPI.Artist);
     },
     playlist() {
-      return getOneLineItem(item as SpotifyAPI.Playlist);
+      return getOneLineItem(item as SpotifyAPI.SimplePlaylist);
     },
     show() {
-      return getOneLineItem(item as SpotifyAPI.Show);
+      return getOneLineItem(item as SpotifyAPI.SimpleShow);
     },
     episode() {
-      return getOneLineItem(item as SpotifyAPI.Episode);
+      return getOneLineItem(item as SpotifyAPI.SimpleEpisode);
     },
   };
 

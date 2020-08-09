@@ -74,11 +74,11 @@ export namespace App {
   // ContentListItem component
   export type ContentItems = {
     track: SpotifyAPI.Track
-    album: SpotifyAPI.Album
+    album: SpotifyAPI.SimpleAlbum
     artist: SpotifyAPI.Artist
-    playlist: SpotifyAPI.Playlist
-    show: SpotifyAPI.Show
-    episode: SpotifyAPI.Episode
+    playlist: SpotifyAPI.SimplePlaylist
+    show: SpotifyAPI.SimpleShow
+    episode: SpotifyAPI.SimpleEpisode
   }
   export type ContentItemType = keyof ContentItems
   export type ContentItemInfo<T extends ContentItemType = ContentItemType> = {
