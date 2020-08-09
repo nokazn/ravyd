@@ -9,6 +9,22 @@ export namespace App {
     rgb: Swatch['rgb']
   }
 
+  export type SimpleArtistInfo = {
+    name: string
+    id: string
+    uri: string
+  }
+
+  export type AddedAtInfo = {
+    text: string | undefined
+    title: string
+    dateTime: string
+  }
+
+  /**
+   * Component
+   */
+
   // TrackTable, TrackList component
   export type SimpleTrackDetail = {
     id: SpotifyAPI.SimpleTrack['id']
@@ -33,6 +49,7 @@ export namespace App {
     externalIds?: SpotifyAPI.ExternalId
     previewUrl: string
   }
+
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
@@ -40,6 +57,7 @@ export namespace App {
     addedBy?: SpotifyAPI.UserData
   }
 
+  // TracuQueueMenu component
   export type TrackQueueInfo = {
     isSet: boolean
     isPlaying: boolean
@@ -54,7 +72,72 @@ export namespace App {
     durationMs: number | undefined
   }
 
-  // /releases/:releaseId page
+  // SearchResultList component
+  export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
+    type: T
+    id: string
+    releaseId: string
+    name: string
+    uri: string
+    images: SpotifyAPI.Image[]
+    artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
+    to: string | RawLocation
+  }
+
+  /**
+   * Card component
+   */
+
+  type _ReleaseCardType = 'album' | 'track'
+  type _ReleaseCardInfoBase<T extends _ReleaseCardType> = {
+    type: T
+    releaseId: string // id と同じ場合 (track のカードの場合) もある
+    id: string // track または album の id
+    name: string // track または album の name
+    uri: string // track または album の name
+    artists: App.SimpleArtistInfo[]
+    images: SpotifyAPI.Image[]
+    externalUrls: SpotifyAPI.ExternalUrls
+  }
+  export type ReleaseCardInfo<
+    T extends _ReleaseCardType = _ReleaseCardType
+  > = _ReleaseCardInfoBase<T>
+    & (T extends 'album'
+      ? { releaseYear: string }
+      : { hash: string })
+
+  export type ArtistCardInfo = {
+    id: string
+    name: string
+    uri: string
+    images: SpotifyAPI.Image[]
+    externalUrls: SpotifyAPI.ExternalUrls
+  }
+
+  export type PlaylistCardInfo = {
+    id: string
+    name: string
+    uri: string
+    description: string | null
+    images: SpotifyAPI.Image[]
+    externalUrls: SpotifyAPI.ExternalUrls
+  }
+
+  export type ShowCardInfo = {
+    id: string
+    name: string
+    uri: string
+    publisher: string
+    description: string | null
+    images: SpotifyAPI.Image[]
+    externalUrls: SpotifyAPI.ExternalUrls
+  }
+
+  /**
+   * Page
+   */
+
+   // /releases/:releaseId page
   export type ReleaseInfo = {
     releaseType: 'アルバム' | 'シングル' | 'EP' | 'コンピレーション'
     id: string
@@ -75,33 +158,7 @@ export namespace App {
     isFullTrackList: boolean
     artistReleaseList: (SimpleArtistInfo & { items: ReleaseCardInfo[] })[]
   }
-  export type ReleaseTrackInfo = {
-    trackList: App.TrackDetail[]
-    isFullTrackList: boolean
-    durationMs: number
-  }
 
-  type CardType = 'album' | 'track'
-  type ReleaseCardInfoBase<T extends CardType> = {
-    type: T
-    releaseId: string // id と同じ場合 (track のカードの場合) もある
-    id: string // track または album の id
-    name: string // track または album の name
-    uri: string // track または album の name
-    artists: App.SimpleArtistInfo[]
-    images: SpotifyAPI.Image[]
-    externalUrls: SpotifyAPI.ExternalUrls
-  }
-  export type ReleaseCardInfo<T extends CardType = CardType> = ReleaseCardInfoBase<T>
-    & (T extends 'album'
-      ? { releaseYear: string }
-      : { hash: string })
-
-  export type SimpleArtistInfo = {
-    name: string
-    id: string
-    uri: string
-  }
   // /artists/:artistId page
   export type ArtistInfo = {
     name: string
@@ -110,14 +167,6 @@ export namespace App {
     images: SpotifyAPI.Image[]
     followersText: string | undefined
     genreList: string[]
-    externalUrls: SpotifyAPI.ExternalUrls
-  }
-
-  export type ArtistCardInfo = {
-    id: string
-    name: string
-    uri: string
-    images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
 
@@ -147,21 +196,7 @@ export namespace App {
     track: SpotifyAPI.Track
   }
 
-  export type PlaylistCardInfo = {
-    id: string
-    name: string
-    uri: string
-    description: string | null
-    images: SpotifyAPI.Image[]
-    externalUrls: SpotifyAPI.ExternalUrls
-  }
-
-  export type AddedAtInfo = {
-    text: string | undefined
-    title: string
-    dateTime: string
-  }
-
+  // /genres/:genreId page
   export type CategoryInfo = {
     id: string
     name: string
@@ -182,15 +217,6 @@ export namespace App {
     episodeList: EpisodeDetail[]
     copyrightList: SpotifyAPI.Copyright[]
     isFullEpisodeList: boolean
-  }
-  export type ShowCardInfo = {
-    id: string
-    name: string
-    uri: string
-    publisher: string
-    description: string | null
-    images: SpotifyAPI.Image[]
-    externalUrls: SpotifyAPI.ExternalUrls
   }
 
   // /episodes/:episodeId page
@@ -213,6 +239,7 @@ export namespace App {
     showName: string
   }
 
+  // /users/:userId page
   export type UserInfo = {
     displayName: string | null
     externalUrls: SpotifyAPI.ExternalUrls
@@ -227,16 +254,5 @@ export namespace App {
     playlists: PlaylistCardInfo[]
     hasNext: boolean
     total: number
-  }
-
-  export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
-    type: T
-    id: string
-    releaseId: string
-    name: string
-    uri: string
-    images: SpotifyAPI.Image[]
-    artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
-    to: string | RawLocation
   }
 }
