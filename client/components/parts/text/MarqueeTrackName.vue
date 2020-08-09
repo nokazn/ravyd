@@ -1,12 +1,12 @@
 <template>
   <div
     :title="name"
-    :class="[$style.ReleaseName, 'g-text-gradation']"
+    :class="[$style.TrackName, 'g-text-gradation']"
   >
     <nuxt-link
-      v-if="releasePath != null"
-      :id="RELEASE_NAME_LINK"
-      :to="releasePath"
+      v-if="trackPath != null"
+      :id="TRACK_NAME_LINK"
+      :to="trackPath"
       :style="marqueeStyles"
       @mouseover.native="onHovered"
     >
@@ -14,7 +14,7 @@
     </nuxt-link>
     <span
       v-else
-      :id="RELEASE_NAME_LINK"
+      :id="TRACK_NAME_LINK"
       :style="marqueeStyles"
       @mouseover="onHovered"
     >
@@ -25,31 +25,37 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RawLocation } from 'vue-router';
+
 import { sleep } from '~~/utils/sleep';
 import { SpotifyAPI } from '~~/types';
 
-const RELEASE_NAME_LINK = 'RELEASE_NAME_LINK';
+const TRACK_NAME_LINK = 'TRACK_NAME_LINK';
 
 type Data = {
   isHovered: boolean
   animationTimeoutId: ReturnType<typeof setTimeout> | undefined
   parentWidth: number | undefined
   linkWidth: number | undefined
-  RELEASE_NAME_LINK: string
+  TRACK_NAME_LINK: string
 };
 
 export default Vue.extend({
   props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    releaseId: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
     },
     type: {
       type: String as PropType<SpotifyAPI.Player.PlayingType>,
-      required: true,
-    },
-    releaseId: {
-      type: String,
       required: true,
     },
   },
@@ -60,17 +66,20 @@ export default Vue.extend({
       animationTimeoutId: undefined,
       parentWidth: undefined,
       linkWidth: undefined,
-      RELEASE_NAME_LINK,
+      TRACK_NAME_LINK,
     };
   },
 
   computed: {
-    releasePath(): string | undefined {
+    trackPath(): RawLocation | undefined {
       switch (this.type) {
         case 'track':
-          return `/releases/${this.releaseId}`;
+          return {
+            path: `/releases/${this.releaseId}`,
+            query: { track: this.id },
+          };
         case 'episode':
-          return `/shows/${this.releaseId}`;
+          return `/episodes/${this.id}`;
         default:
           return undefined;
       }
@@ -97,9 +106,9 @@ export default Vue.extend({
 
   methods: {
     calculateWidth() {
-      const linkEle = document.getElementById(RELEASE_NAME_LINK);
+      const linkEle = document.getElementById(TRACK_NAME_LINK);
       if (linkEle == null) {
-        console.error(`Not Found Element of which id is "${RELEASE_NAME_LINK}"`);
+        console.error(`Not Found Element of which id is "${TRACK_NAME_LINK}"`);
         return;
       }
 
@@ -136,7 +145,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ReleaseName {
+.TrackName {
   color: $g-title-color;
   font-size: 0.9em;
   line-height: 1em;

@@ -41,7 +41,7 @@ const getters: Getters<SearchState, SearchGetters> = {
       const { id, album: { id: releaseId } } = track;
       const to = {
         path: generatePath(type, releaseId),
-        hash: `${track.disc_number}-${track.track_number}`,
+        query: { track: id },
       };
 
       const info = {

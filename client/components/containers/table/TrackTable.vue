@@ -49,6 +49,7 @@ import { DataTableHeader } from 'vuetify';
 
 import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
+import { getQuery } from '~/scripts/text/getQuery';
 import { App } from '~~/types';
 
 type Data = {
@@ -110,8 +111,10 @@ export default Vue.extend({
       align: 'center' as const,
     };
     const headers = [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
-    const hash = this.$route.hash.replace('#', '');
-    const activeRowId = this.trackList.find((item) => item.hash === hash)?.id;
+    const trackId = getQuery(this.$route.query, 'track');
+    const activeRowId = trackId != null
+      ? this.trackList.find((item) => item.id === trackId)?.id
+      : undefined;
 
     return {
       headers,

@@ -117,10 +117,6 @@ export default Vue.extend({
         return value.every((ele) => hasProp(ele, ['name', 'id']));
       },
     },
-    hash: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
-    },
     releaseYear: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -163,9 +159,12 @@ export default Vue.extend({
       return getImageSrc(this.images, this.maxWidth ?? this.width);
     },
     releasePath(): RawLocation {
+      const path = `/releases/${this.releaseId}`;
+      if (this.type === 'album') return path;
+
       return {
-        path: `/releases/${this.releaseId}`,
-        hash: this.hash,
+        path,
+        query: { track: this.id },
       };
     },
     isReleaseSet(): boolean {

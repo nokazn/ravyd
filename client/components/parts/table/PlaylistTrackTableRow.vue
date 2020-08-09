@@ -36,13 +36,7 @@
               class="g-ellipsis-text"
               :title="item.name"
             >
-              <span v-if="item.type !== 'episode'">
-                {{ item.name }}
-              </span>
-              <nuxt-link
-                v-else
-                :to="`/episodes/${item.id}`"
-              >
+              <nuxt-link :to="trackPath">
                 {{ item.name }}
               </nuxt-link>
             </div>
@@ -51,24 +45,16 @@
               :class="[$style.Content__subtitle, subtitleColor]"
               class="g-ellipsis-text"
             >
-              <template v-if="item.type !== 'episode'">
+              <template v-if="item.type === 'track'">
                 <ArtistNames
                   inline
                   :artists="item.artists"
                 />
-
                 <span :class="$style['Content__subtitle--divider']">-</span>
-
-                <nuxt-link
-                  :to="`/releases/${item.releaseId}`"
-                  :title="item.releaseName"
-                >
-                  {{ item.releaseName }}
-                </nuxt-link>
               </template>
+
               <nuxt-link
-                v-else
-                :to="`/shows/${item.releaseId}`"
+                :to="releasePath"
                 :title="item.releaseName"
               >
                 {{ item.releaseName }}
@@ -88,8 +74,8 @@
         class="g-ellipsis-text"
       >
         <nuxt-link
-          v-if="isAddedByShown"
-          :to="`/users/${item.addedBy.id}`"
+          v-if="userPath != null"
+          :to="userPath"
         >
           {{ item.addedBy.display_name || item.addedBy.id }}
         </nuxt-link>
@@ -139,6 +125,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RawLocation } from 'vue-router';
 
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
@@ -209,13 +196,29 @@ export default Vue.extend({
     disabled(): boolean {
       return this.item.type !== 'episode' && !this.item.isPlayable;
     },
+    trackPath(): RawLocation {
+      return this.item.type === 'track'
+        ? {
+          path: `/releases/${this.item.releaseId}`,
+          query: { track: this.item.id },
+        }
+        : `/episodes/${this.item.id}`;
+    },
+    releasePath(): RawLocation {
+      return this.item.type === 'track'
+        ? `/releases/${this.item.releaseId}`
+        : `/shows/${this.item.releaseId}`;
+    },
+    userPath(): RawLocation | undefined {
+      const addedBy = this.item;
+      return this.collaborative && addedBy != null
+        ? `/users/${addedBy.id}`
+        : undefined;
+    },
     publisher(): string {
       return this.item.artists
         .map((artist) => artist.name)
         .join(', ');
-    },
-    isAddedByShown(): boolean {
-      return this.collaborative && this.item.addedBy != null;
     },
     titleColor(): string | undefined {
       if (this.disabled) return 'inactive--text';

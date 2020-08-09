@@ -22,7 +22,6 @@ export const convertPlaylistTrackDetail = (
     uri: track.uri,
     trackNumber: track.track_number,
     discNumber: track.disc_number,
-    hash: `${track.disc_number}-${track.track_number}`,
     artists: track.artists,
     featuredArtists: [],
     explicit: track.explicit,

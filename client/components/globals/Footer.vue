@@ -18,11 +18,12 @@
         />
 
         <div :class="$style.Footer__trackInfo">
-          <MarqueeReleaseName
+          <MarqueeTrackName
             v-if="hasTrack"
+            :id="trackId"
+            :release-id="releaseId"
             :name="trackName"
             :type="trackType"
-            :release-id="releaseId"
           />
 
           <MarqueeArtistNames
@@ -69,7 +70,7 @@ import Vue from 'vue';
 import { RootState, RootGetters } from 'typed-vuex';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
-import MarqueeReleaseName from '~/components/parts/text/MarqueeReleaseName.vue';
+import MarqueeTrackName from '~/components/parts/text/MarqueeTrackName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import SeekBar from '~/components/containers/player/SeekBar.vue';
@@ -89,7 +90,7 @@ type Data = {
 export default Vue.extend({
   components: {
     ReleaseArtwork,
-    MarqueeReleaseName,
+    MarqueeTrackName,
     MarqueeArtistNames,
     FavoriteButton,
     SeekBar,
