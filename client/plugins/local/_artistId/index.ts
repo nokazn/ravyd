@@ -19,7 +19,8 @@ export type ReleaseInfo<T extends ReleaseType> = {
   isAppended: boolean
 }
 
-export * from './getReleaseListMap';
 export * from './getArtistInfo';
 export * from './getIsFollowing';
+export * from './getRelatedArtistList';
+export * from './getReleaseListMap';
 export * from './getTopTrackList';

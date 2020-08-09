@@ -163,18 +163,18 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import {
   getReleaseListMap,
-  ArtistReleaseInfo,
   getArtistInfo,
+  getRelatedArtistList,
   getTopTrackList,
   getIsFollowing,
   initalReleaseListMap,
-  ReleaseType,
 } from '~/plugins/local/_artistId';
+import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
 const AVATAR_SIZE = 220;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
@@ -185,6 +185,7 @@ const HEADER_REF = 'HEADER_REF';
 interface AsyncData {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
+  relatedArtistList: SpotifyAPI.Artist[]
   topTrackList: App.TrackDetail[]
   releaseListMap: ArtistReleaseInfo
   ABBREVIATED_RELEASE_LENGTH: number
@@ -223,17 +224,20 @@ interface Data {
       artistInfo,
       isFollowing,
       topTrackList,
+      relatedArtistList,
       releaseListMap,
     ] = await Promise.all([
       getArtistInfo(context),
       getIsFollowing(context),
       getTopTrackList(context),
+      getRelatedArtistList(context),
       getReleaseListMap(context, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
     return {
       artistInfo,
       isFollowing,
       topTrackList,
+      relatedArtistList,
       releaseListMap,
       ABBREVIATED_RELEASE_LENGTH,
     };
@@ -243,6 +247,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
   topTrackList: App.TrackDetail[] = [];
+  relatedArtistList: SpotifyAPI.Artist[] = [];
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
