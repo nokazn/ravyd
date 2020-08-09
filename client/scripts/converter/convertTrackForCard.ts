@@ -10,7 +10,6 @@ export const convertTrackForCard = (
     name: track.name,
     uri: track.uri,
     artists: track.artists,
-    hash: `${track.disc_number}-${track.track_number}`,
     images: track.album.images,
     externalUrls: track.external_urls,
   };

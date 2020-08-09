@@ -53,7 +53,6 @@ export const convertTrackDetail = <
       uri: track.uri,
       trackNumber: track.track_number,
       discNumber: track.disc_number,
-      hash: `${track.disc_number}-${track.track_number}`,
       artists,
       featuredArtists,
       isPlayable: track.is_playable,

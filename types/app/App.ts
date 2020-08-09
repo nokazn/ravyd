@@ -42,7 +42,6 @@ export namespace App {
     index: number
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
-    hash: string
     featuredArtists: App.SimpleArtistInfo[]
     explicit: boolean
     isPlayable: boolean
@@ -99,12 +98,9 @@ export namespace App {
     images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
-  export type ReleaseCardInfo<
-    T extends _ReleaseCardType = _ReleaseCardType
-  > = _ReleaseCardInfoBase<T>
-    & (T extends 'album'
-      ? { releaseYear: string }
-      : { hash: string })
+  export type ReleaseCardInfo<T extends _ReleaseCardType = _ReleaseCardType> = T extends 'album'
+    ? _ReleaseCardInfoBase<T> & { releaseYear: string }
+    : _ReleaseCardInfoBase<T>
 
   export type ArtistCardInfo = {
     id: string

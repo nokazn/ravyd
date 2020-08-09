@@ -75,6 +75,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { RawLocation } from 'vue-router';
 
 import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -135,8 +136,11 @@ export default Vue.extend({
     artworkSrc(): string | undefined {
       return getImageSrc(this.item.images, TRACK_LIST_ARTWORK_SIZE);
     },
-    releasePath(): string {
-      return `/releases/${this.item.releaseId}#${this.item.hash}`;
+    releasePath(): RawLocation {
+      return {
+        path: `/releases/${this.item.releaseId}`,
+        query: { track: this.item.id },
+      };
     },
     textColor(): string | undefined {
       return this.isTrackSet
