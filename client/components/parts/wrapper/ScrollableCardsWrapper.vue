@@ -8,6 +8,7 @@
         v-show="!isScrollOnLeftEdge"
         icon
         absolute
+        large
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--left']
@@ -25,6 +26,7 @@
         v-show="!isScrollOnRightEdge"
         icon
         absolute
+        large
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--right']
