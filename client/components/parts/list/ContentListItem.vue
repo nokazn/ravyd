@@ -6,12 +6,12 @@
     two-linea
     :title="name"
     :data-is-selected="isSelected"
-    :class="$style.SearchResultListItem"
+    :class="$style.ContentListItem"
     @click.native="onClicked"
   >
     <v-list-item-avatar
       tile
-      :class="$style.SearchResultListItem__avatar"
+      :class="$style.ContentListItem__avatar"
     >
       <UserAvatar
         v-if="type === 'artist'"
@@ -136,7 +136,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.SearchResultListItem {
+.ContentListItem {
   &[data-is-selected=true] {
     background-color: lighten($g-menu-background-color, 15%);
   }
