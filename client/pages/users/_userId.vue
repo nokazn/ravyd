@@ -85,7 +85,6 @@
         v-bind="playlist"
         :min-width="FLEX_CARD_MIN_WIDTH"
         :max-width="FLEX_CARD_MAX_WIDTH"
-        :class="$style.Cards__card"
       />
     </CardsWrapper>
 
