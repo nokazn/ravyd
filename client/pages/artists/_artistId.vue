@@ -185,7 +185,7 @@ const HEADER_REF = 'HEADER_REF';
 interface AsyncData {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
-  topTrackList: App.TrackDetail[] | undefined
+  topTrackList: App.TrackDetail[]
   releaseListMap: ArtistReleaseInfo
   ABBREVIATED_RELEASE_LENGTH: number
 }
@@ -242,7 +242,7 @@ interface Data {
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
-  topTrackList: App.TrackDetail[] | undefined = undefined;
+  topTrackList: App.TrackDetail[] = [];
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
@@ -260,7 +260,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   get isTopTrackListShown(): boolean {
-    return this.artistInfo != null && (this.topTrackList?.length ?? 0) > 0;
+    return this.artistInfo != null && this.topTrackList.length > 0;
   }
   get avatarSrc(): string | undefined {
     return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
@@ -283,8 +283,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     // トラックを保存/削除した後呼ばれる
     const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.topTrackList == null) return;
-
       const trackList = checkTrackSavedState<App.TrackDetail>(
         mutationPayload,
         this.$commit,
@@ -355,8 +353,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
-    if (this.topTrackList == null) return;
-
     const nextSavedState = !isSaved;
     const topTrackList = [...this.topTrackList];
     topTrackList[index].isSaved = nextSavedState;
