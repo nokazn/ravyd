@@ -1,9 +1,6 @@
 <template>
   <div
-    :class="{
-      [$style.ArtistNames]: true,
-      [$style.inline]: inline,
-    }"
+    :class="{ [$style.inline]: inline }"
     :title="artistNames"
   >
     <template v-if="text">
@@ -24,7 +21,6 @@
         </nuxt-link><span
           v-if="index !== artists.length - 1"
           :key="`${id}-comma`"
-          :class="$style.ArtistNames__comma"
         >, </span>
       </template>
     </template>
@@ -82,12 +78,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ArtistNames {
-  &__comma {
-    margin-right: 0.5em;
-  }
-}
-
 .inline {
   display: inline;
 }
