@@ -1,6 +1,11 @@
+import { RawLocation } from 'vue-router';
 import { App } from '~~/types';
 
-export const generateContentPath = (type: App.ContentItemType, id: string) => {
+export const generateContentPath = (
+  type: App.ContentItemType,
+  id: string,
+  trackId?: string,
+): RawLocation => {
   const linkType = {
     album: 'releases',
     artist: 'artists',
@@ -10,5 +15,10 @@ export const generateContentPath = (type: App.ContentItemType, id: string) => {
     episode: 'episodes',
   }[type];
 
-  return `/${linkType}/${id}`;
+  return type === 'track'
+    ? {
+      path: `/${linkType}/${id}`,
+      query: { track: trackId },
+    }
+    : `/${linkType}/${id}`;
 };
