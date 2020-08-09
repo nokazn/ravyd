@@ -71,8 +71,17 @@ export namespace App {
     durationMs: number | undefined
   }
 
-  // SearchResultList component
-  export type ContentItemInfo<T extends SpotifyAPI.SearchType = SpotifyAPI.SearchType> = {
+  // ContentListItem component
+  export type ContentItems = {
+    track: SpotifyAPI.Track
+    album: SpotifyAPI.Album
+    artist: SpotifyAPI.Artist
+    playlist: SpotifyAPI.Playlist
+    show: SpotifyAPI.Show
+    episode: SpotifyAPI.Episode
+  }
+  export type ContentItemType = keyof ContentItems
+  export type ContentItemInfo<T extends ContentItemType = ContentItemType> = {
     type: T
     id: string
     releaseId: string

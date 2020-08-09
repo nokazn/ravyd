@@ -1,10 +1,12 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+
+import { convertToContentListItem } from '~/scripts/converter/convertToContentListItem';
+import { App } from '~~/types';
 
 export const getRelatedArtistList = async (
   { app, params }: Context,
-): Promise<SpotifyAPI.Artist[]> => {
+): Promise<App.ContentItemInfo<'artist'>[]> => {
   const { artistId } = params;
   const { artists } = await app.$spotify.artists.getRelatedArtists({ artistId });
-  return artists ?? [];
+  return artists?.map(convertToContentListItem('artist')) ?? [];
 };

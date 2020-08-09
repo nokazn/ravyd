@@ -174,7 +174,7 @@ import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState'
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
-import { App, SpotifyAPI } from '~~/types';
+import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
@@ -185,7 +185,7 @@ const HEADER_REF = 'HEADER_REF';
 interface AsyncData {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
-  relatedArtistList: SpotifyAPI.Artist[]
+  relatedArtistList: App.ContentItemInfo<'artist'>[]
   topTrackList: App.TrackDetail[]
   releaseListMap: ArtistReleaseInfo
   ABBREVIATED_RELEASE_LENGTH: number
@@ -247,7 +247,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
   topTrackList: App.TrackDetail[] = [];
-  relatedArtistList: SpotifyAPI.Artist[] = [];
+  relatedArtistList: App.ContentItemInfo<'artist'>[] = [];
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
@@ -264,9 +264,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  get isTopTrackListShown(): boolean {
-    return this.artistInfo != null && this.topTrackList.length > 0;
-  }
   get avatarSrc(): string | undefined {
     return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
   }
@@ -275,6 +272,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
+  }
+  get isTopTrackListShown(): boolean {
+    return this.artistInfo != null && this.topTrackList.length > 0;
   }
 
   mounted() {
