@@ -45,7 +45,9 @@ type Data = {
   BACKGROUND_COLOR: string
 }
 
-@Component({})
+@Component({
+  scrollToTop: true,
+})
 export default class LibraryPage extends Vue implements Data {
   tab: number | null = null;
   tabItemList: TabItem[] = [

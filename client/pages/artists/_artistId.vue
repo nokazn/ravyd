@@ -206,6 +206,8 @@ interface Data {
       relatedArtistList,
     };
   },
+
+  scrollToTop: true,
 })
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
