@@ -102,24 +102,26 @@
       </div>
     </div>
 
-    <div>
-      <v-tabs
-        v-model="tab"
-        :height="32"
-        show-arrows="mobile"
-        color="active"
-        background-color="transparent"
+    <v-tabs
+      v-model="tab"
+      :height="32"
+      show-arrows="mobile"
+      color="active"
+      background-color="transparent"
+    >
+      <v-tab
+        v-for="item in tabItemList"
+        :key="item.title"
+        nuxt
+        :to="item.to"
       >
-        <v-tab
-          v-for="item in tabItemList"
-          :key="item.title"
-          nuxt
-          :to="item.to"
+        <span
+          :class="[$route.fullPath === item.to ? 'active--text' : 'subtext--text']"
         >
           {{ item.title }}
-        </v-tab>
-      </v-tabs>
-    </div>
+        </span>
+      </v-tab>
+    </v-tabs>
 
     <nuxt-child
       keep-alive
@@ -239,7 +241,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     return [
       {
         title: 'トップ',
-        to: `/artists/${artistId}/`,
+        to: `/artists/${artistId}`,
       },
       {
         title: '関連アーティスト',
