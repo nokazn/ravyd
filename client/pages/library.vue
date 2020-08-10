@@ -9,7 +9,7 @@
         <v-tabs
           v-model="tab"
           show-arrows="mobile"
-          color="success"
+          color="active"
           :background-color="BACKGROUND_COLOR"
         >
           <v-tab
