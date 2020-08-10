@@ -8,6 +8,7 @@
       <ShowAllButton
         v-if="isAbbreviated != null"
         small
+        icon
         :is-abbreviated="isAbbreviated"
         @on-clicked="onShowAllButtonClicked"
       />
