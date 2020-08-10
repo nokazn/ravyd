@@ -510,11 +510,15 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   .TwoColumns {
+    $related-artist-width: 300px;
+    $column-gap: 32px;
+    $top-track-list-width: calc(100% - #{$related-artist-width} - #{$column-gap});
+
     display: grid;
-    grid-template-columns: calc(100% - 240px - 32px) 240px;
-    column-gap: 32px;
-    margin-bottom: 12px;
+    grid-template-columns: $top-track-list-width $related-artist-width;
+    column-gap: $column-gap;
     width: 100%;
+    margin-bottom: 12px;
   }
 
   .DiscographySection {
