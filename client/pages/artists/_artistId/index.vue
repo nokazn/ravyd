@@ -3,11 +3,16 @@
     v-if="artistInfo != null"
     :class="$style.ArtistIdTopPage"
   >
-    <div :class="$style.TwoColumns">
+    <div
+      :class="[
+        relatedArtistList.length > 0 ? $style.TwoColumns : undefined
+      ]"
+    >
       <TrackListSection
-        v-if="artistInfo != null && topTrackList.length > 0"
+        v-if="artistInfo != null"
         title="人気の曲"
         :is-abbreviated="isTrackListAbbreviated"
+        :class="$style.TrackListSection"
         @on-clicked="toggleAbbreviatedTrackList"
       >
         <TrackList
@@ -268,6 +273,10 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     grid-template-columns: $top-track-list-width $related-artist-width;
     column-gap: $column-gap;
     width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .TrackListSection {
     margin-bottom: 12px;
   }
 
