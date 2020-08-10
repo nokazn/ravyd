@@ -1,12 +1,12 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
-export const getArtistRelatedArtists = (context: Context) => {
+export const getRelatedArtists = (context: Context) => {
   const { app } = context;
 
   return ({ artistId }: {
     artistId: string
-  }): Promise<{ artists: SpotifyAPI.Artist | undefined }> => {
+  }): Promise<{ artists: SpotifyAPI.Artist[] | undefined }> => {
     const request = app.$spotifyApi.$get(`/artists/${artistId}/related-artists`)
       .catch((err: Error) => {
         console.error({ err });

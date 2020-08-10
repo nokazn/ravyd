@@ -1,7 +1,8 @@
 import { Getters } from 'typed-vuex';
 
+import { convertToContentListItem } from '~/scripts/converter/convertToContentListItem';
 import { SearchState } from './state';
-import { App, SpotifyAPI } from '~~/types';
+import { App } from '~~/types';
 
 export type SearchGetters = {
   tracks: App.ContentItemInfo<'track'>[]
@@ -21,143 +22,29 @@ export type RootGetters = {
   'search/episodes': SearchGetters['episodes']
 }
 
-const generatePath = (type: SpotifyAPI.SearchType, id: string) => {
-  const linkType = {
-    album: 'releases',
-    artist: 'artists',
-    track: 'releases',
-    playlist: 'playlists',
-    show: 'shows',
-    episode: 'episodes',
-  }[type];
-
-  return `/${linkType}/${id}`;
-};
-
 const getters: Getters<SearchState, SearchGetters> = {
   tracks(state) {
-    return state.tracks?.map((track) => {
-      const type = 'track' as const;
-      const { id, album: { id: releaseId } } = track;
-      const to = {
-        path: generatePath(type, releaseId),
-        query: { track: id },
-      };
-
-      const info = {
-        type,
-        id,
-        releaseId,
-        name: track.name,
-        uri: track.uri,
-        images: track.album.images,
-        artists: track.artists,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.tracks?.map(convertToContentListItem('track')) ?? [];
   },
 
   artists(state) {
-    return state.artists?.map((artist) => {
-      const type = 'artist' as const;
-      const { id } = artist;
-      const to = generatePath(type, id);
-
-      const info = {
-        type,
-        id,
-        releaseId: id,
-        name: artist.name,
-        uri: artist.uri,
-        images: artist.images,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.artists?.map(convertToContentListItem('artist')) ?? [];
   },
 
   albums(state) {
-    return state.albums?.map((album) => {
-      const type = 'album' as const;
-      const { id } = album;
-      const to = generatePath(type, id);
-
-      const info = {
-        type,
-        id,
-        releaseId: id,
-        name: album.name,
-        uri: album.uri,
-        images: album.images,
-        artists: album.artists,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.albums?.map(convertToContentListItem('album')) ?? [];
   },
 
   playlists(state) {
-    return state.playlists?.map((playlist) => {
-      const type = 'playlist' as const;
-      const { id } = playlist;
-      const to = generatePath(type, id);
-
-      const info = {
-        type,
-        id,
-        releaseId: id,
-        name: playlist.name,
-        uri: playlist.uri,
-        images: playlist.images,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.playlists?.map(convertToContentListItem('playlist')) ?? [];
   },
 
   shows(state) {
-    return state.shows?.map((show) => {
-      const type = 'show' as const;
-      const { id } = show;
-      const to = generatePath(type, id);
-
-      const info = {
-        type,
-        id,
-        releaseId: id,
-        name: show.name,
-        uri: show.uri,
-        images: show.images,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.shows?.map(convertToContentListItem('show')) ?? [];
   },
 
   episodes(state) {
-    return state.episodes?.map((episode) => {
-      const type = 'episode' as const;
-      const { id } = episode;
-      const to = generatePath(type, id);
-
-      const info = {
-        type,
-        id,
-        releaseId: id,
-        name: episode.name,
-        uri: episode.uri,
-        images: episode.images,
-        to,
-      };
-
-      return info;
-    }) ?? [];
+    return state.episodes?.map(convertToContentListItem('episode')) ?? [];
   },
 };
 

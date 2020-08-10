@@ -47,7 +47,7 @@
                 <v-divider />
 
                 <v-list-item-group>
-                  <SearchResultListItem
+                  <ContentListItem
                     v-for="item in items"
                     :key="item.id"
                     v-bind="item"
@@ -90,7 +90,7 @@ import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 import { RawLocation } from 'vue-router';
 
-import SearchResultListItem from '~/components/parts/list/SearchResultListItem.vue';
+import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
 import { MENU_BACKGROUND_COLOR } from '~/variables';
 import { SpotifyAPI, App } from '~~/types';
@@ -112,7 +112,7 @@ export type ItemInfo = {
 
 export default Vue.extend({
   components: {
-    SearchResultListItem,
+    ContentListItem,
   },
 
   data(): Data {

@@ -9,13 +9,13 @@
   >
     <div :class="$style.ShowAllButton__wrapper">
       <v-icon
-        left
+        :left="!icon"
         :small="small"
       >
         {{ showAllButton.icon }}
       </v-icon>
 
-      <span>
+      <span v-if="!icon">
         {{ showAllButton.text }}
       </span>
     </div>
@@ -47,6 +47,10 @@ export default Vue.extend({
       default: undefined,
     },
     small: {
+      type: Boolean,
+      default: false,
+    },
+    icon: {
       type: Boolean,
       default: false,
     },

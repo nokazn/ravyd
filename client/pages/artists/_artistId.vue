@@ -102,16 +102,28 @@
       </div>
     </div>
 
-    <section v-if="isTopTrackListShown">
-      <TrackListWrapper
-        :abbreviated-length="ABBREVIATED_TOP_TRACK_LENGTH"
-        :track-list="topTrackList"
-        :uri="artistInfo.uri"
+    <div :class="$style.TwoColumns">
+      <TrackListSection
+        v-if="artistInfo != null && topTrackList.length > 0"
         title="人気の曲"
-        :class="$style.TrackListSection"
-        @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
+        :is-abbreviated="isTrackListAbbreviated"
+        @on-clicked="toggleAbbreviatedTrackList"
+      >
+        <TrackList
+          :track-list="topTrackList"
+          :length="abbreviatedContentLength"
+          :uri="artistInfo.uri"
+          @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
+        />
+      </TrackListSection>
+
+      <ContentListSection
+        v-if="relatedArtistList.length > 0"
+        title="関連アーティスト"
+        :items="relatedArtistList"
+        :length="abbreviatedContentLength"
       />
-    </section>
+    </div>
 
     <template v-for="[type, releaseInfo] in Array.from(releaseListMap.entries())">
       <CardsSection
@@ -155,21 +167,26 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ArtistMenu, { On as OnMenu } from '~/components/parts/menu/ArtistMenu.vue';
-import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
+
+import TrackListSection, { On as OnListSection } from '~/components/parts/section/TrackListSection.vue';
+import TrackList, { On as OnList } from '~/components/containers/list/TrackList.vue';
+import ContentListSection from '~/components/parts/section/ContentListSection.vue';
+
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import {
   getReleaseListMap,
-  ArtistReleaseInfo,
   getArtistInfo,
+  getRelatedArtistList,
   getTopTrackList,
   getIsFollowing,
   initalReleaseListMap,
-  ReleaseType,
 } from '~/plugins/local/_artistId';
+import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
@@ -185,12 +202,14 @@ const HEADER_REF = 'HEADER_REF';
 interface AsyncData {
   artistInfo: App.ArtistInfo | undefined
   isFollowing: boolean
-  topTrackList: App.TrackDetail[] | undefined
+  relatedArtistList: App.ContentItemInfo<'artist'>[]
+  topTrackList: App.TrackDetail[]
   releaseListMap: ArtistReleaseInfo
   ABBREVIATED_RELEASE_LENGTH: number
 }
 
 interface Data {
+  isTrackListAbbreviated: boolean
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
   AVATAR_SIZE: number
@@ -207,7 +226,9 @@ interface Data {
     FavoriteButton,
     FollowButton,
     ArtistMenu,
-    TrackListWrapper,
+    TrackListSection,
+    TrackList,
+    ContentListSection,
     CardsSection,
     ReleaseCard,
     IntersectionLoadingCircle,
@@ -223,17 +244,20 @@ interface Data {
       artistInfo,
       isFollowing,
       topTrackList,
+      relatedArtistList,
       releaseListMap,
     ] = await Promise.all([
       getArtistInfo(context),
       getIsFollowing(context),
       getTopTrackList(context),
+      getRelatedArtistList(context),
       getReleaseListMap(context, ABBREVIATED_RELEASE_LENGTH),
     ] as const);
     return {
       artistInfo,
       isFollowing,
       topTrackList,
+      relatedArtistList,
       releaseListMap,
       ABBREVIATED_RELEASE_LENGTH,
     };
@@ -242,10 +266,12 @@ interface Data {
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artistInfo: App.ArtistInfo | undefined = undefined;
   isFollowing = false;
-  topTrackList: App.TrackDetail[] | undefined = undefined;
+  topTrackList: App.TrackDetail[] = [];
+  relatedArtistList: App.ContentItemInfo<'artist'>[] = [];
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
+  isTrackListAbbreviated = true;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
@@ -259,9 +285,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  get isTopTrackListShown(): boolean {
-    return this.artistInfo != null && (this.topTrackList?.length ?? 0) > 0;
-  }
   get avatarSrc(): string | undefined {
     return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
   }
@@ -270,6 +293,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
+  }
+  get abbreviatedContentLength(): number {
+    return this.isTrackListAbbreviated ? 5 : 10;
   }
 
   mounted() {
@@ -283,8 +309,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     // トラックを保存/削除した後呼ばれる
     const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.topTrackList == null) return;
-
       const trackList = checkTrackSavedState<App.TrackDetail>(
         mutationPayload,
         this.$commit,
@@ -354,9 +378,11 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
-    if (this.topTrackList == null) return;
+  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
+    this.isTrackListAbbreviated = nextIsAbbreviated;
+  }
 
+  onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
     const nextSavedState = !isSaved;
     const topTrackList = [...this.topTrackList];
     topTrackList[index].isSaved = nextSavedState;
@@ -483,8 +509,16 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  .TrackListSection {
-    margin-bottom: 32px;
+  .TwoColumns {
+    $related-artist-width: 300px;
+    $column-gap: 32px;
+    $top-track-list-width: calc(100% - #{$related-artist-width} - #{$column-gap});
+
+    display: grid;
+    grid-template-columns: $top-track-list-width $related-artist-width;
+    column-gap: $column-gap;
+    width: 100%;
+    margin-bottom: 12px;
   }
 
   .DiscographySection {

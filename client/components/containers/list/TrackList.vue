@@ -9,7 +9,7 @@
         :key="`${track.id}-divider`"
       />
       <TrackListItem
-        v-show="track.index < length"
+        v-show="length == null || track.index < length"
         :key="track.id"
         :item="track"
         :is-playing-track="isPlayingTrack(track.id)"
@@ -54,8 +54,8 @@ export default Vue.extend({
       required: true,
     },
     length: {
-      type: Number,
-      required: true,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
   },
 
