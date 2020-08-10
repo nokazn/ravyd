@@ -414,7 +414,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   &__header {
     display: grid;
     grid-template-columns: 220px auto;
-    grid-column-gap: 24px;
+    column-gap: 24px;
     margin-bottom: 32px;
   }
 
