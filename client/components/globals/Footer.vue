@@ -93,6 +93,7 @@ import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT, Z_INDEX_OF } from '~/variables'
 type Data = {
   isLoaded: boolean
   deviceSelectMenu: boolean
+  mutationUnsubscribe: (() => void) | undefined
   FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
   FOOTER_HEIGHT: number
   Z_INDEX: number
@@ -116,6 +117,7 @@ export default Vue.extend({
     return {
       isLoaded: false,
       deviceSelectMenu: false,
+      mutationUnsubscribe: undefined,
       FOOTER_BACKGROUND_COLOR,
       FOOTER_HEIGHT,
       Z_INDEX: Z_INDEX_OF.loading,
@@ -155,7 +157,23 @@ export default Vue.extend({
 
   mounted() {
     this.$dispatch('player/initPlayer');
-    this.isLoaded = true;
+
+    this.mutationUnsubscribe = this.$subscribe((mutation) => {
+      const { type } = mutation;
+      switch (type) {
+        case 'player/SET_PLAYBACK_PLAYER':
+          setTimeout(() => {
+            this.isLoaded = true;
+          }, 500);
+          break;
+        default:
+          break;
+      }
+    });
+  },
+
+  beforeDestroy() {
+    this.mutationUnsubscribe = undefined;
   },
 
   methods: {
