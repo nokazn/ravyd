@@ -8,18 +8,20 @@
 
     <v-divider :class="$style.ContentListSection__divider" />
 
-    <v-list
-      dense
-      color="transparent"
-      :class="$style.ContentListItem__list"
-    >
-      <ContentListItem
-        v-for="(item, index) in items"
-        v-show="length == null || index < length"
-        :key="item.id"
-        v-bind="item"
-      />
-    </v-list>
+    <client-only>
+      <v-list
+        dense
+        color="transparent"
+        :class="$style.ContentListItem__list"
+      >
+        <ContentListItem
+          v-for="(item, index) in items"
+          v-show="length == null || index < length"
+          :key="item.id"
+          v-bind="item"
+        />
+      </v-list>
+    </client-only>
   </section>
 </template>
 
@@ -69,7 +71,7 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin-top: 4px;
+    margin-top: 6px;
   }
 }
 </style>
