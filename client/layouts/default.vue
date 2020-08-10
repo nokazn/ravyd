@@ -156,11 +156,11 @@ export default Vue.extend({
 }
 
 .ProgressCircular {
+  bottom: $g-footer-height;
   z-index: z-index-of(loading);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 </style>
 

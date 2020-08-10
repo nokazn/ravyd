@@ -62,6 +62,15 @@
         <VolumeSlider />
       </div>
     </div>
+
+    <v-overlay
+      v-if="!isLoaded"
+      absolute
+      :z-index="Z_INDEX"
+      :color="FOOTER_BACKGROUND_COLOR"
+      :opacity="1"
+      :class="$style.Overlay"
+    />
   </v-footer>
 </template>
 
@@ -79,12 +88,14 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT } from '~/variables';
+import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT, Z_INDEX_OF } from '~/variables';
 
 type Data = {
+  isLoaded: boolean
   deviceSelectMenu: boolean
   FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
   FOOTER_HEIGHT: number
+  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -103,9 +114,11 @@ export default Vue.extend({
 
   data(): Data {
     return {
+      isLoaded: false,
       deviceSelectMenu: false,
       FOOTER_BACKGROUND_COLOR,
       FOOTER_HEIGHT,
+      Z_INDEX: Z_INDEX_OF.loading,
     };
   },
 
@@ -142,6 +155,7 @@ export default Vue.extend({
 
   mounted() {
     this.$dispatch('player/initPlayer');
+    this.isLoaded = true;
   },
 
   methods: {
@@ -227,6 +241,10 @@ export default Vue.extend({
     & > *:not(:last-child) {
       margin-right: 8px;
     }
+  }
+
+  .Overlay {
+    z-index: z-index-of(loading);
   }
 }
 </style>
