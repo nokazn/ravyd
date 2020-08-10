@@ -102,16 +102,28 @@
       </div>
     </div>
 
-    <section v-if="isTopTrackListShown">
-      <TrackListWrapper
-        :abbreviated-length="ABBREVIATED_TOP_TRACK_LENGTH"
-        :track-list="topTrackList"
-        :uri="artistInfo.uri"
+    <div :class="$style.TwoColumns">
+      <TrackListSection
+        v-if="artistInfo != null && topTrackList.length > 0"
         title="人気の曲"
-        :class="$style.TrackListSection"
-        @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
+        :is-abbreviated="isTrackListAbbreviated"
+        @on-clicked="toggleAbbreviatedTrackList"
+      >
+        <TrackList
+          :track-list="topTrackList"
+          :length="abbreviatedContentLength"
+          :uri="artistInfo.uri"
+          @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
+        />
+      </TrackListSection>
+
+      <ContentListSection
+        v-if="relatedArtistList.length > 0"
+        title="関連アーティスト"
+        :items="relatedArtistList"
+        :length="abbreviatedContentLength"
       />
-    </section>
+    </div>
 
     <template v-for="[type, releaseInfo] in Array.from(releaseListMap.entries())">
       <CardsSection
@@ -155,10 +167,15 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ArtistMenu, { On as OnMenu } from '~/components/parts/menu/ArtistMenu.vue';
-import TrackListWrapper, { On as OnList } from '~/components/parts/wrapper/TrackListWrapper.vue';
+
+import TrackListSection, { On as OnListSection } from '~/components/parts/section/TrackListSection.vue';
+import TrackList, { On as OnList } from '~/components/containers/list/TrackList.vue';
+import ContentListSection from '~/components/parts/section/ContentListSection.vue';
+
 import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import {
@@ -192,6 +209,7 @@ interface AsyncData {
 }
 
 interface Data {
+  isTrackListAbbreviated: boolean
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
   AVATAR_SIZE: number
@@ -208,7 +226,9 @@ interface Data {
     FavoriteButton,
     FollowButton,
     ArtistMenu,
-    TrackListWrapper,
+    TrackListSection,
+    TrackList,
+    ContentListSection,
     CardsSection,
     ReleaseCard,
     IntersectionLoadingCircle,
@@ -251,6 +271,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
+  isTrackListAbbreviated = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
   ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
@@ -273,8 +294,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
   }
-  get isTopTrackListShown(): boolean {
-    return this.artistInfo != null && this.topTrackList.length > 0;
+  get abbreviatedContentLength(): number {
+    return this.isTrackListAbbreviated ? 5 : 10;
   }
 
   mounted() {
@@ -355,6 +376,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     } else {
       this.$dispatch('library/artists/unfollowArtists', artistIdList);
     }
+  }
+
+  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
+    this.isTrackListAbbreviated = nextIsAbbreviated;
   }
 
   onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
@@ -484,8 +509,12 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  .TrackListSection {
+  .TwoColumns {
+    display: grid;
+    grid-template-columns: calc(100% - 240px - 32px) 240px;
+    column-gap: 32px;
     margin-bottom: 32px;
+    width: 100%;
   }
 
   .DiscographySection {

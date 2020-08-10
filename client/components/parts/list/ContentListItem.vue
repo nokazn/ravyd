@@ -110,7 +110,7 @@ export default Vue.extend({
     },
     isSelected: {
       type: Boolean,
-      required: true,
+      default: false,
     },
   },
 
