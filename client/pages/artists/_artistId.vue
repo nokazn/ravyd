@@ -513,7 +513,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     display: grid;
     grid-template-columns: calc(100% - 240px - 32px) 240px;
     column-gap: 32px;
-    margin-bottom: 32px;
+    margin-bottom: 12px;
     width: 100%;
   }
 
