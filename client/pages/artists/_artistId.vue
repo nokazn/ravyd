@@ -238,16 +238,18 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
   get tabItemList(): TabItem[] {
     const { artistId } = this.$route.params;
-    return [
-      {
-        title: 'トップ',
-        to: `/artists/${artistId}`,
-      },
-      {
-        title: '関連アーティスト',
-        to: `/artists/${artistId}/related`,
-      },
-    ];
+    const { length } = this.relatedArtistList;
+    const top = {
+      title: 'トップ',
+      to: `/artists/${artistId}`,
+    };
+    const relatedArtist = {
+      title: '関連アーティスト',
+      to: `/artists/${artistId}/related`,
+    };
+    return length > 0
+      ? [top, relatedArtist]
+      : [top];
   }
 
   mounted() {
