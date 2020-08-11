@@ -9,7 +9,7 @@
       ]"
     >
       <TrackListSection
-        v-if="artistInfo != null"
+        v-if="artistInfo != null && topTrackList.length > 0"
         title="人気の曲"
         :is-abbreviated="isFirstSectionAbbreviated"
         :class="$style.TrackListSection"
