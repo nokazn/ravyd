@@ -150,9 +150,9 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
       : undefined;
   }
   get abbreviatedContentLength(): number | undefined {
-    if (this.isFirstSectionAbbreviated == null) return undefined;
-
-    return this.isFirstSectionAbbreviated ? ABBREVIATED_TOP_TRACK_LENGTH : 10;
+    return this.isFirstSectionAbbreviated == null || this.isFirstSectionAbbreviated
+      ? ABBREVIATED_TOP_TRACK_LENGTH
+      : 10;
   }
 
   mounted() {
