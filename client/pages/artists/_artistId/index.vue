@@ -11,7 +11,7 @@
       <TrackListSection
         v-if="artistInfo != null"
         title="人気の曲"
-        :is-abbreviated="isTrackListAbbreviated"
+        :is-abbreviated="isFirstSectionAbbreviated"
         :class="$style.TrackListSection"
         @on-clicked="toggleAbbreviatedTrackList"
       >
@@ -93,11 +93,10 @@ interface AsyncData {
 }
 
 interface Data {
-  isTrackListAbbreviated: boolean
+  isTrackListAbbreviated: boolean | undefined
   mutationUnsubscribe: (() => void) | undefined
   FLEX_CARD_MIN_WIDTH: number
   FLEX_CARD_MAX_WIDTH: number
-  ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH
 }
 
 @Component({
@@ -142,12 +141,18 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
   isTrackListAbbreviated = true;
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  ABBREVIATED_TOP_TRACK_LENGTH: typeof ABBREVIATED_TOP_TRACK_LENGTH = ABBREVIATED_TOP_TRACK_LENGTH;
   FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
   FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
-  get abbreviatedContentLength(): number {
-    return this.isTrackListAbbreviated ? 5 : 10;
+  get isFirstSectionAbbreviated(): boolean | undefined {
+    return this.topTrackList.length > ABBREVIATED_TOP_TRACK_LENGTH
+      ? this.isTrackListAbbreviated
+      : undefined;
+  }
+  get abbreviatedContentLength(): number | undefined {
+    if (this.isFirstSectionAbbreviated == null) return undefined;
+
+    return this.isFirstSectionAbbreviated ? ABBREVIATED_TOP_TRACK_LENGTH : 10;
   }
 
   mounted() {
