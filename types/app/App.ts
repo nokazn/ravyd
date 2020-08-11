@@ -87,6 +87,7 @@ export namespace App {
     releaseId: string
     name: string
     uri: string
+    externalUrls: SpotifyAPI.ExternalUrls
     images: SpotifyAPI.Image[]
     artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
     to: string | RawLocation
