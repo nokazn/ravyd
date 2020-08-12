@@ -8,6 +8,7 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
     id,
     name,
     uri,
+    external_urls: externalUrls,
   } = item;
 
   type OneLineItem = SpotifyAPI.Artist
@@ -20,7 +21,7 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
     to: generateContentPath(type, id),
   });
 
-  type CommonPropKey = 'type' | 'id' | 'name' | 'uri';
+  type CommonPropKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
   const info: { [k in App.ContentItemType]: () => Omit<App.ContentItemInfo<k>, CommonPropKey> } = {
     track() {
       const { album } = item as SpotifyAPI.Track;
@@ -59,6 +60,7 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
     id,
     name,
     uri,
+    externalUrls,
     ...info[type](),
   };
 };
