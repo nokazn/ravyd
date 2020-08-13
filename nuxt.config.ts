@@ -8,6 +8,7 @@ const nuxtConfig: Configuration = {
   mode: 'universal',
   srcDir: './client/',
   rootDir: './',
+  telemetry: false,
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
     title: process.env.npm_package_name || '',
@@ -67,7 +68,7 @@ const nuxtConfig: Configuration = {
     'portal-vue/nuxt',
   ],
   axios: {
-    baseURL: process.env.BASE_URL || 'https://127.0.0.1:3000',
+    baseURL: process.env.BASE_URL,
     browserBaseURL: process.env.SPOTIFY_URL,
     progress: false,
     retry: true,
@@ -117,7 +118,7 @@ const nuxtConfig: Configuration = {
     fix: true,
   },
   server: {
-    https: process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production'
+    https: process.env.NODE_ENV === 'development'
       ? {
         key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
         cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
