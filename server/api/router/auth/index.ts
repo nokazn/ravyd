@@ -21,11 +21,6 @@ export const auth = async (req: Request<RequestParams>, res: Response<ResponseBo
 
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session?.token;
   if (currentToken == null) {
-    console.error(JSON.stringify({
-      session: req.session,
-      currentToken,
-    }, undefined, 2));
-
     return res.send({
       accessToken: undefined,
       expireIn: 0,
