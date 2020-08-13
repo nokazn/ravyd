@@ -7,23 +7,25 @@ const host = process.env.REDIS_URL;
 const port = process.env.REDIS_PORT;
 const password = process.env.REDIS_PASSWORD;
 
-if (host == null || port == null || password == null) {
+if (host == null) {
   console.error({
     host,
     port,
-    password,
+    password: password ? 'Password is set' : 'Password is not set.',
   });
-  throw new Error('redis 初期化の際に必要な環境変数が設定されていません。');
+  throw new Error('An envirionment variable "REDIS_URL" is not set.');
 }
 
-const client = new Redis({
+const client = new Redis(host, {
   host,
-  port: parseInt(port, 10),
+  port: port != null
+    ? parseInt(port, 10)
+    : undefined,
   password,
 });
 
 client.on('connect', () => {
-  console.log('Redis client connected. 🎉\n');
+  console.log('Redis client has connected. 🎉\n');
 });
 
 client.on('error', (err: Error) => {
