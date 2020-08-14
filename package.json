@@ -15,7 +15,7 @@
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . --fix",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
   },
   "dependencies": {
@@ -66,6 +66,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-nuxt": ">=0.4.2",
+    "husky": "^4.2.5",
     "jest": "^25.5.4",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
@@ -73,5 +74,11 @@
     "vue-jest": "^4.0.0-beta.5",
     "vue-template-compiler": "^2.6.10",
     "worker-loader": "^2.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint && npm run test"
+    }
   }
 }
