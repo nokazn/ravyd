@@ -16,7 +16,7 @@
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . && tsc --noEmit",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . --fix",
     "test": "jest --passWithNoTests",
-    "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
+    "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.4.10",
