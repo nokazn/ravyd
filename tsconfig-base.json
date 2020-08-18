@@ -8,8 +8,7 @@
       "DOM"
     ],
     "resolveJsonModule": true,
-    "allowJs": true,
-    
+    "allowJs": false,
     // "checkJs": true,
     // "jsx": "preserve",
     // "declaration": true,
