@@ -13,8 +13,8 @@
     "analyze": "nuxt-ts build --analyze",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
-    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . && tsc --noEmit",
-    "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .gitignore . --fix",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . && tsc --noEmit",
+    "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . --fix",
     "test": "jest --passWithNoTests",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
   },
