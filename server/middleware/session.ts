@@ -1,4 +1,4 @@
-import session from 'express-session';
+import sessionMiddleware from 'express-session';
 import dotenv from 'dotenv';
 import connectRedis from 'connect-redis';
 
@@ -11,9 +11,9 @@ if (process.env.SESSION_SECRET == null) {
   throw new Error('セッションIDを署名するための seed が設定されていません。');
 }
 
-const RedisStore = connectRedis(session);
+const RedisStore = connectRedis(sessionMiddleware);
 
-export default session({
+export const session = sessionMiddleware({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
