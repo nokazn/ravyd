@@ -1,5 +1,19 @@
 <template>
   <v-app dark>
+    <v-overlay
+      v-if="!isLoaded"
+      :z-index="Z_INDEX"
+      :color="BACKGROUND_COLOR"
+      :opacity="1"
+      :class="$style.ProgressCircular"
+    >
+      <transition name="fade">
+        <v-progress-circular
+          indeterminate
+        />
+      </transition>
+    </v-overlay>
+
     <Header
       v-if="isLoggedin"
       :elevation="elevation"
@@ -35,20 +49,6 @@
       :name="SEARCH_FORM_PORTAL_NAME"
       role="menu"
     />
-
-    <v-overlay
-      v-if="!isLoaded"
-      :z-index="Z_INDEX"
-      :color="BACKGROUND_COLOR"
-      :opacity="1"
-      :class="$style.ProgressCircular"
-    >
-      <transition name="fade">
-        <v-progress-circular
-          indeterminate
-        />
-      </transition>
-    </v-overlay>
   </v-app>
 </template>
 
