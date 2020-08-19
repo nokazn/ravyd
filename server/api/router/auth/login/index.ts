@@ -6,11 +6,9 @@ import { createUrl } from '../../../../../utils/createUrl';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
-type RequestParams = {}
-
 type ResponseBody = ServerAPI.Auth.Login
 
-export const login = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
+export const login = async (req: Request, res: Response<ResponseBody>) => {
   if (req.session == null) {
     console.error(JSON.stringify(req.session, undefined, 2));
 

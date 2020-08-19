@@ -52,12 +52,15 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
   },
 
-  async exchangeCodeToAccessToken({ commit }, params) {
+  async exchangeCodeToAccessToken({ commit }, { code, state }) {
     const {
       accessToken,
       expireIn,
     }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth/login/callback', {
-      params,
+      params: {
+        code,
+        state,
+      },
     }).catch((err: Error) => {
       console.error({ err });
       return {};

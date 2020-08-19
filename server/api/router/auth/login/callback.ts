@@ -4,7 +4,7 @@ import { getAccessToken } from '../../../../auth/getAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { ServerAPI } from '~~/types';
 
-type RequestParams = {
+type RequestQuery = {
   code: string
   state: string
 }
@@ -12,7 +12,7 @@ type RequestParams = {
 type ResponseBody = ServerAPI.Auth.Token
 
 export const callback = async (
-  req: Request<RequestParams>,
+  req: Request<{}, {}, {}, RequestQuery>,
   res: Response<ResponseBody>,
 ) => {
   if (req.session == null) {
@@ -25,8 +25,9 @@ export const callback = async (
     });
   }
 
-  const { code, state } = req.params;
+  const { code, state } = req.query;
   if (code == null) {
+    console.log();
     console.error(
       'code が取得できませんでした。',
       JSON.stringify({
@@ -44,8 +45,7 @@ export const callback = async (
   }
 
   // 送られてきた state と、認可時に送信し、cookie に埋め込んだ csrfState を比較
-  console.log(req.session);
-  const csrfState: { csrfState: string | undefined } = req.cookies?.csrfState;
+  const { csrfState } = req.cookies;
   if (state != null && state !== csrfState) {
     const message = 'state が一致しないため、アクセストークンを発行できません。';
     console.error(

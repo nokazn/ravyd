@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 
-type RequestParams = {}
-
-type ResponseBody = {}
-
-export const logout = (req: Request<RequestParams>, res: Response<ResponseBody>) => {
+export const logout = (req: Request, res: Response) => {
   if (req.session == null) {
     return res.status(204);
   }

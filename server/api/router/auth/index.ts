@@ -4,11 +4,9 @@ import { refreshAccessToken } from '../../../auth/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../index';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
-type RequestParams = {}
-
 type ResponseBody = ServerAPI.Auth.Token
 
-export const auth = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
+export const auth = async (req: Request, res: Response<ResponseBody>) => {
   if (req.session == null) {
     console.error(JSON.stringify(req.session, undefined, 2));
 
