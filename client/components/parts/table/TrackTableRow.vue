@@ -12,7 +12,7 @@
         <TrackListMediaButton
           :is-hovered="isRowHovered"
           :is-playing-track="isPlayingTrack"
-          :track-number="item.trackNumber"
+          :track-number="trackNumber"
           :disabled="!item.isPlayable"
           @on-clicked="onMediaButtonClicked"
         />
@@ -121,6 +121,13 @@ export default Vue.extend({
   },
 
   computed: {
+    // relink されたトラックを含む場合はインデックスを表示
+    trackNumber(): number {
+      const { item } = this;
+      return item.linkedFrom != null
+        ? item.index + 1
+        : item.trackNumber;
+    },
     titleColor(): string | undefined {
       return this.isTrackSet
         ? 'active--text'

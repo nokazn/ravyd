@@ -130,12 +130,16 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
     },
+    // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
-      const discNumberList = Array.from(
-        new Set(this.trackList.map((track) => track.discNumber)),
-      );
+      const { trackList } = this;
+      const relinkedTrack = trackList.find((track) => track.linkedFrom != null);
+      const discNumberList = Array.from(new Set(trackList
+        .map((track) => track.discNumber)));
 
-      return discNumberList.length > 1;
+      return relinkedTrack != null
+        ? false
+        : discNumberList.length > 1;
     },
     isActiveRow(): (id: string) => boolean {
       return (id: string) => this.activeRowId === id;
@@ -146,14 +150,17 @@ export default Vue.extend({
     onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
       if (this.isPlayingTrack(row.id)) {
         this.$dispatch('playback/pause');
-      } else {
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-          offset: {
-            uri: row.uri,
-          },
-        });
+        return;
       }
+
+      const offset = row.linkedFrom != null
+        ? { position: row.index }
+        : { uri: row.uri };
+
+      this.$dispatch('playback/play', {
+        contextUri: this.uri,
+        offset,
+      });
     },
     // row をコピーしたものを参照する
     onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
