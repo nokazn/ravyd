@@ -31,7 +31,7 @@ router.post('/auth/login', login);
  *   { accessToken: string, expireIn: number } | { message: string }
  * }
  */
-router.post('/auth/login/callback', callback);
+router.get('/auth/login/callback', callback);
 
 /**
  * @return {

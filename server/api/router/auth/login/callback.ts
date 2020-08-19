@@ -4,8 +4,7 @@ import { getAccessToken } from '../../../../auth/getAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { ServerAPI } from '~~/types';
 
-type RequestParams = {}
-type RequestBody = {
+type RequestParams = {
   code: string
   state: string
 }
@@ -13,7 +12,7 @@ type RequestBody = {
 type ResponseBody = ServerAPI.Auth.Token
 
 export const callback = async (
-  req: Request<RequestParams, RequestBody>,
+  req: Request<RequestParams>,
   res: Response<ResponseBody>,
 ) => {
   if (req.session == null) {
@@ -26,7 +25,7 @@ export const callback = async (
     });
   }
 
-  const { code, state } = req.body;
+  const { code, state } = req.params;
   if (code == null) {
     console.error(
       'code が取得できませんでした。',
