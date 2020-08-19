@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 
 import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
-import { generateRandomString } from '../../../../../utils/generateRandomString';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
@@ -66,7 +66,7 @@ export const login = async (req: Request<RequestParams>, res: Response<ResponseB
 
   // 認可用のページの URL を返す
   const baseUrl = 'https://accounts.spotify.com/authorize';
-  const state = generateRandomString();
+  const csrfState = crypto.randomBytes(100).toString('base64');
   const scope = [
     'user-read-private',
     'user-read-email',
@@ -91,8 +91,15 @@ export const login = async (req: Request<RequestParams>, res: Response<ResponseB
     client_id: clientId,
     response_type: 'code',
     redirect_uri: `${spotifyBaseUrl}/login/callback`,
-    state,
+    state: csrfState,
     scope,
+  });
+
+  res.cookie('csrfState', csrfState, {
+    // 10分間のみ有効
+    maxAge: 1000 * 60 * 10,
+    httpOnly: true,
+    secure: true,
   });
 
   return res.send({ url });

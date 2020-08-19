@@ -4,13 +4,18 @@ import { getAccessToken } from '../../../../auth/getAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { ServerAPI } from '~~/types';
 
-type RequestParams = {
+type RequestParams = {}
+type RequestBody = {
   code: string
+  state: string
 }
 
 type ResponseBody = ServerAPI.Auth.Token
 
-export const callback = async (req: Request<RequestParams>, res: Response<ResponseBody>) => {
+export const callback = async (
+  req: Request<RequestParams, RequestBody>,
+  res: Response<ResponseBody>,
+) => {
   if (req.session == null) {
     console.error(JSON.stringify(req.session, undefined, 2));
 
@@ -21,10 +26,8 @@ export const callback = async (req: Request<RequestParams>, res: Response<Respon
     });
   }
 
-  const { code }: { code: string | undefined} = req.body;
-
+  const { code, state } = req.body;
   if (code == null) {
-    const { error }: { error?: string } = req.query;
     console.error(
       'code が取得できませんでした。',
       JSON.stringify({
@@ -37,7 +40,30 @@ export const callback = async (req: Request<RequestParams>, res: Response<Respon
     return res.status(400).send({
       accessToken: undefined,
       expireIn: 0,
-      message: error ?? '認証時にエラーが発生しました。',
+      message: '認証時にエラーが発生しました。',
+    });
+  }
+
+  // 送られてきた state と、認可時に送信し、cookie に埋め込んだ csrfState を比較
+  console.log(req.session);
+  const csrfState: { csrfState: string | undefined } = req.cookies?.csrfState;
+  if (state != null && state !== csrfState) {
+    const message = 'state が一致しないため、アクセストークンを発行できません。';
+    console.error(
+      message,
+      JSON.stringify({
+        params: req.params,
+        body: req.body,
+        code,
+        state,
+        csrfState,
+      }, undefined, 2),
+    );
+
+    return res.status(403).send({
+      accessToken: undefined,
+      expireIn: 0,
+      message,
     });
   }
 
