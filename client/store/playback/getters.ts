@@ -65,6 +65,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       images,
       durationMs,
       isSavedTrack: isSaved,
+      linkedFrom,
     } = state;
     const { releaseId } = getters;
 
@@ -97,6 +98,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       releaseId,
       releaseName,
       images,
+      linkedFrom,
     };
   },
 
@@ -116,6 +118,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       artists: state.artists!,
       images: state.images ?? [],
       durationMs: state.durationMs,
+      linkedFrom: state.linkedFrom,
     };
 
     const prevLength = Math.min(state.previousTrackList.length, 2);

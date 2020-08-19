@@ -24,12 +24,14 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
   type CommonPropKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
   const info: { [k in App.ContentItemType]: () => Omit<App.ContentItemInfo<k>, CommonPropKey> } = {
     track() {
-      const { album } = item as SpotifyAPI.Track;
+      const track = item as SpotifyAPI.Track;
+      const { album } = track;
       return {
         releaseId: album.id,
         images: album.images,
         artists: album.artists,
         to: generateContentPath('track', album.id, id),
+        linkedFrom: track.linked_from,
       };
     },
     album() {

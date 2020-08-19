@@ -4,6 +4,7 @@ import { App, SpotifyAPI } from '~~/types';
 // @todo
 type ExtendedTrack = Spotify.Track & {
   duration_ms?: number
+  linked_from?: SpotifyAPI.LinkedTrack
 }
 
 export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
@@ -29,6 +30,7 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
     })),
     images: track.album.images,
     durationMs: track.duration_ms,
+    linkedFrom: track.linked_from,
   };
 
   return info;

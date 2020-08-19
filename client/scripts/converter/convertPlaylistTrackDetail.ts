@@ -34,6 +34,7 @@ export const convertPlaylistTrackDetail = (
     releaseId: track.album.id,
     releaseName: track.album.name,
     images: track.album.images,
+    linkedFrom: track.linked_from,
     addedAt: convertAddedAt(added_at),
     addedBy: added_by,
   };

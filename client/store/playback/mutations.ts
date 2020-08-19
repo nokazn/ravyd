@@ -5,6 +5,11 @@ import { DEFAULT_DURATION_MS } from '~/variables';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
+// @todo
+type ExtendedTrack = Spotify.Track & {
+  linked_from?: SpotifyAPI.LinkedTrack
+}
+
 export type PlaybackMutations = {
   SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
   SET_DEVICE_ID: string | undefined
@@ -14,9 +19,9 @@ export type PlaybackMutations = {
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_TRACK_INDEX: number | undefined
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
-  SET_CURRENT_TRACK: Spotify.Track | undefined
-  SET_NEXT_TRACK_LIST: Spotify.Track[]
-  SET_PREVIOUS_TRACK_LIST: Spotify.Track[]
+  SET_CURRENT_TRACK: ExtendedTrack | undefined
+  SET_NEXT_TRACK_LIST: ExtendedTrack[]
+  SET_PREVIOUS_TRACK_LIST: ExtendedTrack[]
   SET_IS_SAVED_TRACK: boolean
   SET_IS_PLAYING: boolean
   SET_CONTEXT_URI: string | undefined
@@ -98,13 +103,16 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {
-    state.images = currentTrack?.album.images;
     state.trackName = currentTrack?.name;
     state.trackId = currentTrack?.id ?? undefined;
     state.trackUri = currentTrack?.uri;
     state.trackType = currentTrack?.type;
+    state.linkedFrom = currentTrack?.linked_from;
+
+    state.images = currentTrack?.album.images;
     state.releaseName = currentTrack?.album.name;
     state.releaseUri = currentTrack?.album.uri;
+
     state.artists = currentTrack?.artists.map((artist) => ({
       ...artist,
       id: convertUriToId(artist.uri),

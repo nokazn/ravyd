@@ -415,7 +415,7 @@ export namespace SpotifyAPI {
     href: string
     id: string
     is_playable: boolean
-    linked_from: LinkedTrack
+    linked_from?: LinkedTrack
     restrictions: Restriction
     name: string
     preview_url: string
