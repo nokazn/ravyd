@@ -94,8 +94,8 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   });
 
   res.cookie('csrfState', csrfState, {
-    // 10分間のみ有効
-    maxAge: 1000 * 60 * 10,
+    // 30分間有効
+    maxAge: 1000 * 60 * 30,
     httpOnly: true,
     secure: true,
   });

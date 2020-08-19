@@ -65,6 +65,9 @@ export const callback = async (
     });
   }
 
+  // csrfState を削除
+  res.clearCookie('csrfState');
+
   // code と token を交換する
   const token = await getAccessToken(code);
   if (token == null) {
