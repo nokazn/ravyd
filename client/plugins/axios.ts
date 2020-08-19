@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import https from 'https';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { Plugin } from '@nuxt/types';
@@ -12,7 +13,6 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
 
   spotifyApi.onRequest((config) => {
     const { accessToken } = app.$state().auth;
-    // eslint-disable-next-line no-param-reassign
     config.headers = {
       ...config.headers,
       Authorization: `Bearer ${accessToken}`,
@@ -20,10 +20,12 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   });
 
   spotifyApi.onResponse(() => {
+    // アクセストークンの期限が切れていたらリクエストが終わった後に更新
     app.$dispatch('auth/refreshAccessToken');
   });
 
   spotifyApi.onResponseError(async (err) => {
+    // 認可リクエストによるエラーだった場合はアクセストークンを更新
     if (err.response?.status === 401) {
       await app.$dispatch('auth/refreshAccessToken');
       if (!app.$getters()['auth/isLoggedin']) {
@@ -50,7 +52,6 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   if (process.env.NODE_ENV === 'development') {
     const agent = new https.Agent({ rejectUnauthorized: false });
     serverApi.onRequest((config) => {
-      // eslint-disable-next-line no-param-reassign
       config.httpsAgent = agent;
     });
   }

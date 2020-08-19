@@ -23,8 +23,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     dispatch,
     rootGetters,
   }) {
-    const isLoggedin = rootGetters['auth/isLoggedin'];
-    if (!isLoggedin) {
+    if (!rootGetters['auth/isLoggedin']) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
@@ -49,27 +48,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
           commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
 
-          const currentTimerId = this.$state().auth.refreshTokenTimerId;
-          if (currentTimerId != null) {
-            clearTimeout(currentTimerId);
-          }
-
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
             this.$router.push('/login');
             this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
             return;
           }
-
-          // 50 分後にまだトークンが更新されてなかった場合更新
-          const interval = 1000 * 60 * 50;
-          const refreshTokenTimer = setTimeout(() => {
-            // interval 経過後の状態を取得するため、引数の getters ではなく context から呼び出している
-            if (this.$getters()['auth/isTokenExpired']) {
-              dispatch('auth/refreshAccessToken', undefined, { root: true });
-            }
-          }, interval);
-          commit('auth/SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer, { root: true });
 
           callback(accessToken);
         },

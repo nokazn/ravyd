@@ -37,11 +37,20 @@ const actions: Actions<
   LibraryReleasesMutations
 > = {
   /**
+   * 保存済みのリリースを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedReleaseList({ getters, commit, rootGetters }, payload) {
+  async getSavedReleaseList({
+    getters,
+    commit,
+    dispatch,
+    rootGetters,
+  }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.releaseListLength;
@@ -62,9 +71,14 @@ const actions: Actions<
   },
 
   /**
-   * 未更新分を追加
+   * 未更新のリリースを追加
    */
-  async updateLatestSavedReleaseList({ state, commit, rootGetters }) {
+  async updateLatestSavedReleaseList({
+    state,
+    commit,
+    dispatch,
+    rootGetters,
+  }) {
     type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -72,6 +86,9 @@ const actions: Actions<
       releaseList: currentReleaseList,
     } = state;
     if (unupdatedCounts === 0) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
@@ -119,7 +136,13 @@ const actions: Actions<
     commit('RESET_UNUPDATED_COUNTS');
   },
 
+  /**
+   * リリースを保存
+   */
   async saveReleases({ dispatch }, albumIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.saveAlbums({ albumIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -134,7 +157,13 @@ const actions: Actions<
     });
   },
 
+  /**
+   * 保存済のリリースを取得
+   */
   async removeReleases({ dispatch }, albumIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -149,6 +178,9 @@ const actions: Actions<
     });
   },
 
+  /**
+   * saveReleases, removeReleases から呼ばれる
+   */
   modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
     const currentReleaseList = state.releaseList;
     const savedReleaseIndex = currentReleaseList

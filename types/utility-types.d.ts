@@ -10,7 +10,7 @@ export type Merge<FirstType, SecondType> = Except<
 > & SecondType
 
 export type ActionMethodMap = {
-  [k: string]: (...args: any) => Promise<void> | void
+  [k: string]: (...args: any) => Promise<any> | any
 }
 
 export type TODO = any;

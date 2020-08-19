@@ -35,11 +35,20 @@ const actions: Actions<
   LibraryTracksMutations
 > = {
   /**
+   * 保存済みのトラックを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedTrackList({ getters, commit, rootGetters }, payload) {
+  async getSavedTrackList({
+    getters,
+    commit,
+    dispatch,
+    rootGetters,
+  }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.trackListLength;
@@ -66,9 +75,14 @@ const actions: Actions<
   },
 
   /**
-   * 未更新分を追加
+   * 未更新のトラックを追加
    */
-  async updateLatestSavedTrackList({ state, commit, rootGetters }) {
+  async updateLatestSavedTrackList({
+    state,
+    commit,
+    dispatch,
+    rootGetters,
+  }) {
     type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -76,6 +90,9 @@ const actions: Actions<
       trackList: currentTrackList,
     } = state;
     if (unupdatedCounts === 0) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
@@ -128,6 +145,10 @@ const actions: Actions<
     commit('RESET_UNUPDATED_COUNTS');
   },
 
+  /**
+   * 保存していないトラックが含まれている場合は除外する
+   * ライブラリページでトラックの保存を解除してもページ遷移するまでは表示を削除しないため、保存されていないトラックが混じっていることがある
+   */
   removeUnsavedTracks({ state, commit }) {
     const { trackList } = state;
     if (trackList == null) return;
@@ -136,7 +157,13 @@ const actions: Actions<
     commit('SET_TRACK_LIST', filteredTrackList);
   },
 
+  /**
+   * トラックを保存
+   */
   async saveTracks({ dispatch }, trackIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.saveTracks({ trackIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -151,7 +178,13 @@ const actions: Actions<
     });
   },
 
+  /**
+   * 保存済みのトラックを削除
+   */
   async removeTracks({ dispatch }, trackIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.removeUserSavedTracks({ trackIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -166,6 +199,9 @@ const actions: Actions<
     });
   },
 
+  /**
+   * saveTracks, removeTracks から呼ばれる
+   */
   modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
     const currentTrackList = state.trackList;
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);

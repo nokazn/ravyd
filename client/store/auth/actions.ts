@@ -10,7 +10,8 @@ export type AuthActions = {
   getUserData: () => Promise<void>
   getAccessToken: () => Promise<void>
   refreshAccessToken: () => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
+  confirmAuthState: () => Promise<boolean>
 }
 
 export type RootActions = {
@@ -20,6 +21,7 @@ export type RootActions = {
   'auth/getAccessToken': AuthActions['getAccessToken']
   'auth/refreshAccessToken': AuthActions['refreshAccessToken']
   'auth/logout': AuthActions['logout']
+  'auth/confirmAuthState': AuthActions['confirmAuthState']
 }
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
@@ -47,8 +49,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
   },
 
-  async exchangeCodeToAccessToken({ commit }, code): Promise<void> {
-    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/login/callback', { code })
+  async exchangeCodeToAccessToken({ commit }, code) {
+    const {
+      accessToken,
+      expireIn,
+    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/login/callback', { code })
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -59,7 +64,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async getAccessToken({ commit }) {
-    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth')
+    const {
+      accessToken,
+      expireIn,
+    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth')
+
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -78,12 +87,16 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async refreshAccessToken({ getters, commit, dispatch }) {
-    if (!getters.isTokenExpired()) return;
+    // 現在ログイン済でアクセストークンの期限が切れている場合のみ更新
+    if (!getters.isLoggedin || !getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
     commit('SET_EXPIRE_MILLIS', undefined);
 
-    const { accessToken, expireIn }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/refresh')
+    const {
+      accessToken,
+      expireIn,
+    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/refresh')
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -91,25 +104,12 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
-    commit('CLEAR_REFRESH_TOKEN_TIMER');
 
     if (accessToken == null) {
       dispatch('logout');
       this.$router.push('/login');
       this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
-      return;
     }
-
-    // 50 分後にまだトークンが更新されてなかった場合更新
-    const time = 1000 * 60 * 50;
-    const refreshTokenTimer = setTimeout(() => {
-      // time 経過後の状態を取得するため、引数の getters ではなく context から呼び出している
-      if (this.$getters()['auth/isTokenExpired']) {
-        dispatch('refreshAccessToken');
-      }
-    }, time);
-
-    commit('SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer);
   },
 
   async logout({ commit, dispatch }) {
@@ -123,6 +123,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     commit('SET_ACCESS_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);
+  },
+
+  async confirmAuthState({ getters, dispatch }) {
+    if (!getters.isLoggedin) {
+      await dispatch('refreshAccessToken');
+    }
+    return getters.isLoggedin ?? false;
   },
 };
 

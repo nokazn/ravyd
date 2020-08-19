@@ -34,11 +34,15 @@ const actions: Actions<
   LibraryArtistsMutations
 > = {
   /**
+   * フォロー済みのアーティストを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedArtistList({ getters, commit }, payload) {
+  async getSavedArtistList({ getters, commit, dispatch }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const after = getters.lastArtistId;
@@ -62,13 +66,16 @@ const actions: Actions<
    * 未更新分を追加
    * @todo 追加順に取得できないので未更新分を上から見ていっても意味ない
    */
-  async updateLatestSavedArtistList({ state, commit }) {
+  async updateLatestSavedArtistList({ state, commit, dispatch }) {
     // ライブラリの情報が更新されていないものの数
     const {
       unupdatedCounts,
       artistList: currentArtistList,
     } = state;
     if (unupdatedCounts === 0) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const maxLimit = 50;
     // @todo コンパイルを通すためにとりあえずキャストする
@@ -96,7 +103,13 @@ const actions: Actions<
     commit('RESET_UNUPDATED_COUNTS');
   },
 
+  /**
+   * アーティストをフォローする
+   */
   async followArtists({ dispatch }, idList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.following.follow({
       type: 'artist',
       idList,
@@ -113,7 +126,13 @@ const actions: Actions<
     });
   },
 
+  /**
+   * アーティストのフォローを解除する
+   */
   async unfollowArtists({ dispatch }, idList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.following.unfollow({
       type: 'artist',
       idList,
@@ -130,6 +149,9 @@ const actions: Actions<
     });
   },
 
+  /**
+   * followArtists, unfollowArtists から呼ばれる
+   */
   modifyArtistSavedState({ state, commit }, { artistId, isSaved }) {
     const currentArtistList = state.artistList;
     const savedArtistIndex = currentArtistList

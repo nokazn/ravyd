@@ -33,10 +33,20 @@ const actions: Actions<
   LibraryShowsMutations
 > = {
   /**
+   * 保存済みのポッドキャストを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedShowList({ getters, commit, rootGetters }, payload) {
+  async getSavedShowList({
+    getters,
+    commit,
+    dispatch,
+    rootGetters,
+  }, payload) {
     if (getters.isFull) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
 
     const limit = payload?.limit ?? 30;
     const offset = getters.showListLength;
@@ -57,9 +67,14 @@ const actions: Actions<
   },
 
   /**
-   * 未更新分を追加
+   * 未更新のポッドキャストを追加
    */
-  async updateLatestSavedShowList({ state, commit, rootGetters }) {
+  async updateLatestSavedShowList({
+    state,
+    commit,
+    dispatch,
+    rootGetters,
+  }) {
     type LibraryOfShows = SpotifyAPI.LibraryOf<'show'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -67,6 +82,9 @@ const actions: Actions<
       unupdatedCounts,
     } = state;
     if (unupdatedCounts === 0) return;
+
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
 
     const maxLimit = 50;
     const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
@@ -111,7 +129,13 @@ const actions: Actions<
     commit('RESET_UNUPDATED_COUNTS');
   },
 
+  /**
+   * ポッドキャストを保存
+   */
   async saveShows({ dispatch }, showIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.saveShows({ showIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -126,7 +150,13 @@ const actions: Actions<
     });
   },
 
+  /**
+   * 保存済のポッドキャストを削除
+   */
   async removeShows({ dispatch }, showIdList) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.library.removeUserSavedShows({ showIdList })
       .catch((err: Error) => {
         console.error({ err });
@@ -141,6 +171,9 @@ const actions: Actions<
     });
   },
 
+  /**
+   * saveShows, removeShows から呼ばれる
+   */
   modifyShowSavedState({ state, commit }, { showId, isSaved }) {
     const currentShowList = state.showList;
     const savedShowIndex = currentShowList

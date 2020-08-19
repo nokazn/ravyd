@@ -79,6 +79,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * 再生するデバイスを変更し、update が指定されればデバイス一覧も更新
    */
   async transferPlayback({ state, commit, dispatch }, params) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     // 指定されなければこのデバイス
     const deviceId = params?.deviceId ?? state.deviceId;
     if (deviceId == null) return;
@@ -116,14 +119,15 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   /**
    * デバイス一覧とデバイスのボリュームを取得
    */
-  async getActiveDeviceList({ commit }) {
+  async getActiveDeviceList({ commit, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
-
-    commit('SET_DEVICE_LIST', deviceList);
-
     const activeDevice = deviceList.find((device) => device.is_active);
 
+    commit('SET_DEVICE_LIST', deviceList);
     commit('SET_VOLUME_PERCENT', {
       volumePercent: activeDevice != null
         ? activeDevice.volume_percent as ZeroToHundred
@@ -165,7 +169,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
    * Web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
    */
-  getCurrentPlayback({ commit, dispatch }, timeout) {
+  async getCurrentPlayback({ commit, dispatch }, timeout) {
     // callback を timeout 後に実行
     const setTimer = (callback: () => Promise<void>, timout?: number) => {
       const isThisAppPlaying = this.$getters()['playback/isThisAppPlaying'];
@@ -301,11 +305,17 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       setTimer(handler, retryTimeout);
     };
 
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     // timeout 後かトラックが変わった後に取得
     setTimer(handler, timeout);
   },
 
-  async getRecentlyPlayed({ commit }) {
+  async getRecentlyPlayed({ commit, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed();
 
     commit('SET_RECENTLY_PLAYED', recentlyPlayed);
@@ -316,8 +326,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * offset.position は playlist を再生する場合のみ?
    */
   async play({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }, payload?) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('resuming') && payload == null) {
       commit('SET_IS_PLAYING', true);
       return;
@@ -329,10 +345,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const offset = payload?.offset;
 
     const isNotUriPassed = contextUri == null && trackUriList == null;
-    const isRestartingTracks = (trackUriList != null
-      && offset?.position != null
-      && state.trackUri === trackUriList[offset.position]
-    ) || state.trackUri === offset?.uri;
+    const isRestartingTracks = state.trackUri === offset?.uri
+      || (
+        trackUriList != null
+        && offset?.position != null
+        && state.trackUri === trackUriList[offset.position]
+      );
 
     // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
     await this.$spotify.player.play(isNotUriPassed || isRestartingTracks
@@ -358,6 +376,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   async pause({ getters, commit, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('pausing')) {
       commit('SET_IS_PLAYING', false);
       return;
@@ -383,6 +404,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   async seek({
     state, getters, commit, dispatch,
   }, { positionMs, currentPositionMs }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('seeking')) return;
 
     const positionMsOfCurrentState = state.positionMs;
@@ -403,6 +427,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   async next({ getters, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('skipping_next')) return;
 
     await this.$spotify.player.next()
@@ -418,6 +445,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   async previous({ getters, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('skipping_prev')) return;
 
     await this.$spotify.player.previous()
@@ -433,8 +463,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   async shuffle({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     if (getters.isDisallowed('toggling_shuffle')) return;
 
     const { isShuffled } = state;
@@ -454,9 +490,18 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
+  /**
+   * リピートの状態を変更
+   */
   async repeat({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     // 初回読み込み時は undefined
     if (state.repeatMode == null
       || getters.isDisallowed('toggling_repeat_context')
@@ -479,9 +524,18 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
+  /**
+   * ボリュームの変更
+   */
   async volume({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }, { volumePercent }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
@@ -500,8 +554,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
+  /**
+   * ミュートにする
+   */
   async mute({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }) {
     const {
       isMuted,
@@ -510,7 +570,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const nextMuteState = !isMuted;
     if (currentVolumePercent === 0) return;
 
-    const volumePercent = nextMuteState ? 0 : currentVolumePercent;
+    const volumePercent = nextMuteState
+      ? 0
+      : currentVolumePercent;
+
     await this.$spotify.player.volume({ volumePercent })
       .then(() => {
         commit('SET_IS_MUTED', nextMuteState);
@@ -526,12 +589,19 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
-  async checkTrackSavedState({ state, commit }, trackId?) {
+  /**
+   * セットされているトラックの保存状態を確認する
+   */
+  async checkTrackSavedState({ state, commit, dispatch }, trackId?) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const id = trackId ?? state.trackId;
     if (id == null) return;
 
-    const trackIdList = [id];
-    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
+    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
+      trackIdList: [id],
+    });
 
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
   },
