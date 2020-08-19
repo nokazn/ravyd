@@ -23,8 +23,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     dispatch,
     rootGetters,
   }) {
-    const isLoggedin = rootGetters['auth/isLoggedin'];
-    if (!isLoggedin) {
+    if (!rootGetters['auth/isLoggedin']) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
@@ -46,13 +45,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
               return {};
             });
 
-          commit('auth/SET_TOKEN', accessToken, { root: true });
+          commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
           commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
-
-          const currentTimerId = this.$state().auth.refreshTokenTimerId;
-          if (currentTimerId != null) {
-            clearTimeout(currentTimerId);
-          }
 
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
@@ -60,16 +54,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
             return;
           }
-
-          // 50 分後にまだトークンが更新されてなかった場合更新
-          const interval = 1000 * 60 * 50;
-          const refreshTokenTimer = setTimeout(() => {
-            // interval 経過後の状態を取得するため、引数の getters ではなく context から呼び出している
-            if (this.$getters()['auth/isTokenExpired']) {
-              dispatch('auth/refreshAccessToken', undefined, { root: true });
-            }
-          }, interval);
-          commit('auth/SET_REFRESH_TOKEN_TIMER_ID', refreshTokenTimer, { root: true });
 
           callback(accessToken);
         },
@@ -187,26 +171,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     // タイマーはクリア
     commit('playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID', undefined, { root: true });
     commit('SET_PLAYBACK_PLAYER', undefined);
-    commit('playback/SET_DEVICE_ID', undefined, { root: true });
-    commit('playback/SET_ACTIVE_DEVICE_ID', undefined, { root: true });
-    commit('playback/SET_DEVICE_LIST', [], { root: true });
-    commit('playback/SET_CUSTOM_CONTEXT_URI', undefined, { root: true });
-    commit('playback/SET_CUSTOM_TRACK_URI_LIST', undefined, { root: true });
-    commit('playback/SET_RECENTLY_PLAYED', undefined, { root: true });
-    commit('playback/SET_CURRENT_TRACK', undefined, { root: true });
-    commit('playback/SET_NEXT_TRACK_LIST', [], { root: true });
-    commit('playback/SET_PREVIOUS_TRACK_LIST', [], { root: true });
-    commit('playback/SET_IS_SAVED_TRACK', false, { root: true });
-    commit('playback/SET_IS_PLAYING', false, { root: true });
-    commit('playback/SET_CONTEXT_URI', undefined, { root: true });
-    commit('playback/SET_POSITION_MS', 0, { root: true });
-    commit('playback/SET_DURATION_MS', undefined, { root: true });
-    commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', false, { root: true });
-    commit('playback/SET_IS_SHUFFLED', false, { root: true });
-    commit('playback/SET_REPEAT_MODE', 0, { root: true });
-    commit('playback/SET_DISALLOWS', {}, { root: true });
-    commit('playback/SET_VOLUME_PERCENT', { volumePercent: 0 }, { root: true });
-    commit('playback/SET_IS_MUTED', false, { root: true });
   },
 };
 

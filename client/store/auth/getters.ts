@@ -27,7 +27,7 @@ const getters: Getters<AuthState, AuthGetters> = {
     return state.accessToken != null && state.userData != null;
   },
 
-  // 関数実行時に Date.now() が評価されるようにするため
+  // 関数実行時に Date.now() が評価されるようにする
   isTokenExpired(state) {
     return () => (state.expireMillis != null
       ? Date.now() > state.expireMillis

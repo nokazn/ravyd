@@ -54,7 +54,13 @@ export type RootActions = {
 }
 
 const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
-  async getPlaylists({ commit }, payload) {
+  /**
+   * ユーザーのプレイリストを取得する
+   */
+  async getPlaylists({ commit, dispatch }, payload) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const limit = payload?.limit ?? 50;
     const offset = payload?.offset;
     const playlists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
@@ -69,7 +75,13 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     commit('SET_PLAYLISTS', playlists?.items);
   },
 
-  async getAllPlaylists({ commit }) {
+  /**
+   * ユーザーのプレイリストを全件取得する
+   */
+  async getAllPlaylists({ commit, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const limit = 50;
     const firstListOfPlaylists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
       limit,
@@ -107,13 +119,19 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     ]);
   },
 
-  async createPlaylist({ commit, rootGetters }, {
+  /**
+   * プレイリストを新規作成する
+   */
+  async createPlaylist({ commit, dispatch, rootGetters }, {
     name,
     description,
     isPublic,
     isCollaborative,
     uriList: uris,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const userId = rootGetters['auth/userId'];
     if (userId == null) return;
 
@@ -158,9 +176,19 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     }
   },
 
-  async editPlaylist({ commit }, {
-    playlistId, name, description, isPublic, isCollaborative,
+  /**
+   * 自分がオーナーのプレイリスト情報を編集数ｒ
+   */
+  async editPlaylist({ commit, dispatch }, {
+    playlistId,
+    name,
+    description,
+    isPublic,
+    isCollaborative,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
@@ -183,7 +211,18 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
   },
 
-  async followPlaylist({ state, commit, rootGetters }, playlistId) {
+  /**
+   * プレイリストをフォローする
+   */
+  async followPlaylist({
+    state,
+    commit,
+    dispatch,
+    rootGetters,
+  }, playlistId) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.following.followPlaylist({ playlistId })
       .then(async () => {
         const currentPlaylists = state.playlists;
@@ -213,7 +252,13 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       });
   },
 
-  async unfollowPlaylist({ commit }, { playlistId, isOwnPlaylist }) {
+  /**
+   * プレイリストのフォローを解除する
+   */
+  async unfollowPlaylist({ commit, dispatch }, { playlistId, isOwnPlaylist }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     await this.$spotify.following.unfollowPlaylist({ playlistId })
       .then(() => {
         commit('REMOVE_PLAYLIST', playlistId);
@@ -232,9 +277,18 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       });
   },
 
-  async addItemToPlaylist({ state, commit }, {
-    playlistId, playlistName, uriList, name,
+  /**
+   * プレイリストにアイテムを追加
+   */
+  async addItemToPlaylist({ state, commit, dispatch }, {
+    playlistId,
+    playlistName,
+    uriList,
+    name,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const { snapshot_id } = await this.$spotify.playlists.addItemToPlaylist({
       playlistId,
       uriList,
@@ -262,7 +316,10 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   /**
    * プレイリストから1曲削除
    */
-  async removePlaylistItem({ state, commit }, { playlistId, track, name }) {
+  async removePlaylistItem({ state, commit, dispatch }, { playlistId, track, name }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const [{ snapshot_id }] = await this.$spotify.playlists.removePlaylistItems({
       playlistId,
       tracks: [track],
