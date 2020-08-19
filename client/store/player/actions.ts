@@ -171,26 +171,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     // タイマーはクリア
     commit('playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID', undefined, { root: true });
     commit('SET_PLAYBACK_PLAYER', undefined);
-    commit('playback/SET_DEVICE_ID', undefined, { root: true });
-    commit('playback/SET_ACTIVE_DEVICE_ID', undefined, { root: true });
-    commit('playback/SET_DEVICE_LIST', [], { root: true });
-    commit('playback/SET_CUSTOM_CONTEXT_URI', undefined, { root: true });
-    commit('playback/SET_CUSTOM_TRACK_URI_LIST', undefined, { root: true });
-    commit('playback/SET_RECENTLY_PLAYED', undefined, { root: true });
-    commit('playback/SET_CURRENT_TRACK', undefined, { root: true });
-    commit('playback/SET_NEXT_TRACK_LIST', [], { root: true });
-    commit('playback/SET_PREVIOUS_TRACK_LIST', [], { root: true });
-    commit('playback/SET_IS_SAVED_TRACK', false, { root: true });
-    commit('playback/SET_IS_PLAYING', false, { root: true });
-    commit('playback/SET_CONTEXT_URI', undefined, { root: true });
-    commit('playback/SET_POSITION_MS', 0, { root: true });
-    commit('playback/SET_DURATION_MS', undefined, { root: true });
-    commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', false, { root: true });
-    commit('playback/SET_IS_SHUFFLED', false, { root: true });
-    commit('playback/SET_REPEAT_MODE', 0, { root: true });
-    commit('playback/SET_DISALLOWS', {}, { root: true });
-    commit('playback/SET_VOLUME_PERCENT', { volumePercent: 0 }, { root: true });
-    commit('playback/SET_IS_MUTED', false, { root: true });
   },
 };
 

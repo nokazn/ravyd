@@ -52,6 +52,7 @@ export type PlaybackActions = {
     trackId?: string
     isSaved: boolean
   }) => void
+  resetPlayback: () => void
 };
 
 export type RootActions = {
@@ -72,6 +73,7 @@ export type RootActions = {
   'playback/mute': PlaybackActions['mute']
   'playback/checkTrackSavedState': PlaybackActions['checkTrackSavedState']
   'playback/modifyTrackSavedState': PlaybackActions['modifyTrackSavedState']
+  'playback/resetPlayback': PlaybackActions['resetPlayback']
 };
 
 const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, PlaybackMutations> = {
@@ -594,6 +596,29 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (state.trackId == null || state.trackId !== trackId) return;
 
     commit('SET_IS_SAVED_TRACK', isSaved);
+  },
+
+  resetPlayback({ commit }) {
+    commit('SET_DEVICE_ID', undefined);
+    commit('SET_ACTIVE_DEVICE_ID', undefined);
+    commit('SET_DEVICE_LIST', []);
+    commit('SET_CUSTOM_CONTEXT_URI', undefined);
+    commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
+    commit('SET_RECENTLY_PLAYED', undefined);
+    commit('SET_CURRENT_TRACK', undefined);
+    commit('SET_NEXT_TRACK_LIST', []);
+    commit('SET_PREVIOUS_TRACK_LIST', []);
+    commit('SET_IS_SAVED_TRACK', false);
+    commit('SET_IS_PLAYING', false);
+    commit('SET_CONTEXT_URI', undefined);
+    commit('SET_POSITION_MS', 0);
+    commit('SET_DURATION_MS', undefined);
+    commit('SET_DISABLED_PLAYING_FROM_BEGINING', false);
+    commit('SET_IS_SHUFFLED', false);
+    commit('SET_REPEAT_MODE', 0);
+    commit('SET_DISALLOWS', {});
+    commit('SET_VOLUME_PERCENT', { volumePercent: 0 });
+    commit('SET_IS_MUTED', false);
   },
 };
 

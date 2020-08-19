@@ -123,6 +123,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     commit('SET_ACCESS_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);
+    // playback をリセット
+    dispatch('playback/resetPlayback', undefined, { root: true });
   },
 
   async confirmAuthState({ getters, dispatch }) {
