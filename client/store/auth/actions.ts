@@ -31,7 +31,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       });
 
     if (data.accessToken != null && data.expireIn != null) {
-      commit('SET_TOKEN', data.accessToken);
+      commit('SET_ACCESS_TOKEN', data.accessToken);
       commit('SET_EXPIRE_MILLIS', data.expireIn);
 
       await dispatch('getUserData');
@@ -54,7 +54,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         return {};
       });
 
-    commit('SET_TOKEN', accessToken);
+    commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
   },
 
@@ -65,7 +65,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         return {};
       });
 
-    commit('SET_TOKEN', accessToken);
+    commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
   },
 
@@ -89,7 +89,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         return {};
       });
 
-    commit('SET_TOKEN', accessToken);
+    commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
     commit('CLEAR_REFRESH_TOKEN_TIMER');
 
@@ -121,7 +121,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
         console.error({ err });
       });
 
-    commit('SET_TOKEN', undefined);
+    commit('SET_ACCESS_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);
   },
 };

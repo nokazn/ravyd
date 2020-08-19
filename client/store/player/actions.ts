@@ -46,7 +46,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
               return {};
             });
 
-          commit('auth/SET_TOKEN', accessToken, { root: true });
+          commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
           commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
 
           const currentTimerId = this.$state().auth.refreshTokenTimerId;
