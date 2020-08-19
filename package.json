@@ -22,7 +22,7 @@
     "@nuxt/typescript-runtime": "^0.4.10",
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/pwa": "^3.0.0-0",
+    "@nuxtjs/pwa": "^3.0.1",
     "@nuxtjs/style-resources": "^1.0.0",
     "connect-redis": "^5.0.0",
     "cookie-parser": "^1.4.5",
