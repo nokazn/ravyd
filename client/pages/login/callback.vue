@@ -10,11 +10,18 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { getQuery } from '~/scripts/text/getQuery';
 
 export default Vue.extend({
   async fetch({ query, app, redirect }): Promise<void> {
-    const code = query.code as string;
-    await app.$dispatch('auth/exchangeCodeToAccessToken', code);
+    const code = getQuery(query, 'code');
+    const state = getQuery(query, 'state');
+    if (code != null && state != null) {
+      await app.$dispatch('auth/exchangeCodeToAccessToken', {
+        code,
+        state,
+      });
+    }
 
     redirect('/');
   },

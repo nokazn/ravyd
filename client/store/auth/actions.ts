@@ -6,7 +6,10 @@ import { ServerAPI } from '~~/types';
 
 export type AuthActions = {
   login: () => Promise<void>
-  exchangeCodeToAccessToken: (code: string) => Promise<void>
+  exchangeCodeToAccessToken: (params: {
+    code: string;
+    state: string;
+  }) => Promise<void>
   getUserData: () => Promise<void>
   getAccessToken: () => Promise<void>
   refreshAccessToken: () => Promise<void>
@@ -49,15 +52,19 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
   },
 
-  async exchangeCodeToAccessToken({ commit }, code) {
+  async exchangeCodeToAccessToken({ commit }, { code, state }) {
     const {
       accessToken,
       expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/login/callback', { code })
-      .catch((err: Error) => {
-        console.error({ err });
-        return {};
-      });
+    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth/login/callback', {
+      params: {
+        code,
+        state,
+      },
+    }).catch((err: Error) => {
+      console.error({ err });
+      return {};
+    });
 
     commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRE_MILLIS', expireIn);
