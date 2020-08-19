@@ -27,7 +27,6 @@ export const callback = async (
 
   const { code, state } = req.query;
   if (code == null) {
-    console.log();
     console.error(
       'code が取得できませんでした。',
       JSON.stringify({
