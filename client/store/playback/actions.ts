@@ -237,7 +237,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     };
 
     const handler = async () => {
-      if (!this.getters()['auth/isLoggedin']) return;
+      if (!this.$getters()['auth/isLoggedin']) return;
 
       const {
         deviceId,
