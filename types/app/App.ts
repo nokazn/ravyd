@@ -37,6 +37,7 @@ export namespace App {
     releaseId: string
     releaseName: string
     images: SpotifyAPI.Image[]
+    linkedFrom: SpotifyAPI.LinkedTrack | undefined
   }
   export type TrackDetail = SimpleTrackDetail & {
     index: number
@@ -68,6 +69,7 @@ export namespace App {
     releaseName: string
     artists: App.SimpleArtistInfo[]
     images: SpotifyAPI.Image[]
+    linkedFrom: SpotifyAPI.LinkedTrack | undefined
     durationMs: number | undefined
   }
 
@@ -89,8 +91,9 @@ export namespace App {
     uri: string
     externalUrls: SpotifyAPI.ExternalUrls
     images: SpotifyAPI.Image[]
-    artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
     to: string | RawLocation
+    artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
+    linkedFrom?: SpotifyAPI.LinkedTrack | undefined
   }
 
   /**
@@ -110,7 +113,7 @@ export namespace App {
   }
   export type ReleaseCardInfo<T extends _ReleaseCardType = _ReleaseCardType> = T extends 'album'
     ? _ReleaseCardInfoBase<T> & { releaseYear: string }
-    : _ReleaseCardInfoBase<T>
+    : _ReleaseCardInfoBase<T> & { linkedFrom: SpotifyAPI.LinkedTrack | undefined }
 
   export type ArtistCardInfo = {
     id: string

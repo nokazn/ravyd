@@ -64,6 +64,7 @@ export const convertTrackDetail = <
       releaseId: releaseId ?? (track as SpotifyAPI.Track).album.id,
       releaseName: releaseName ?? (track as SpotifyAPI.Track).album.name,
       images: images ?? (track as SpotifyAPI.Track).album.images,
+      linkedFrom: track.linked_from,
     };
 
     return detail;

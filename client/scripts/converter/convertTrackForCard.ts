@@ -12,6 +12,7 @@ export const convertTrackForCard = (
     artists: track.artists,
     images: track.album.images,
     externalUrls: track.external_urls,
+    linkedFrom: track.linked_from,
   };
 
   return info;
