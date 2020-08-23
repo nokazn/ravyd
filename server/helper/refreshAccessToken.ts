@@ -11,13 +11,10 @@ export const refreshAccessToken = (
   const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
   const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
   if (CLIENT_ID == null || CLIENT_SECRET == null) {
-    console.error(
-      '環境変数が設定されていません。',
-      JSON.stringify({
-        CLIENT_ID,
-        CLIENT_SECRET,
-      }, undefined, 2),
-    );
+    console.error('環境変数が設定されていません。', {
+      CLIENT_ID,
+      CLIENT_SECRET,
+    });
     return Promise.resolve(undefined);
   }
 

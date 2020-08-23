@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 export const logout = (req: Request, res: Response) => {
   if (req.session == null) {
-    return res.status(204);
+    return res.status(204).send();
   }
 
   return req.session.destroy((err: Error) => {

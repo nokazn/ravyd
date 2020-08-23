@@ -16,7 +16,7 @@ export const callback = async (
   res: Response<ResponseBody>,
 ) => {
   if (req.session == null) {
-    console.error(JSON.stringify(req.session, undefined, 2));
+    console.error({ session: req.session });
 
     return res.status(401).send({
       accessToken: undefined,
@@ -27,14 +27,11 @@ export const callback = async (
 
   const { code, state } = req.query;
   if (code == null) {
-    console.error(
-      'code が取得できませんでした。',
-      JSON.stringify({
-        params: req.params,
-        body: req.body,
-        code,
-      }, undefined, 2),
-    );
+    console.error('code が取得できませんでした。', {
+      params: req.params,
+      body: req.body,
+      code,
+    });
 
     return res.status(400).send({
       accessToken: undefined,
@@ -47,16 +44,13 @@ export const callback = async (
   const { [CSRF_STATE_COOKIE_KEY]: csrfState } = req.cookies;
   if (state != null && state !== csrfState) {
     const message = 'state が一致しないため、アクセストークンを発行できません。';
-    console.error(
-      message,
-      JSON.stringify({
-        params: req.params,
-        body: req.body,
-        code,
-        state,
-        csrfState,
-      }, undefined, 2),
-    );
+    console.error(message, {
+      params: req.params,
+      body: req.body,
+      code,
+      state,
+      csrfState,
+    });
 
     return res.status(403).send({
       accessToken: undefined,
@@ -71,11 +65,11 @@ export const callback = async (
   // code と token を交換する
   const token = await getAccessToken(code);
   if (token == null) {
-    console.error(JSON.stringify({
+    console.error({
       session: req.session,
       code,
       token,
-    }, undefined, 2));
+    });
 
     return res.status(400).send({
       accessToken: undefined,

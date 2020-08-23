@@ -8,7 +8,7 @@ type ResponseBody = ServerAPI.Auth.Token
 
 export const refresh = async (req: Request, res: Response<ResponseBody>) => {
   if (req.session == null) {
-    console.error(JSON.stringify(req.session, undefined, 2));
+    console.error({ session: req.session });
 
     return res.status(401).send({
       accessToken: undefined,
@@ -52,11 +52,11 @@ export const refresh = async (req: Request, res: Response<ResponseBody>) => {
     }
 
     if (req.session == null) {
-      console.error(JSON.stringify({
+      console.error({
         session: req.session,
         currentToken,
         token,
-      }, undefined, 2));
+      });
 
       return res.status(401).send({
         accessToken: undefined,

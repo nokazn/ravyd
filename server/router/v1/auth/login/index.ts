@@ -3,14 +3,14 @@ import { Request, Response } from 'express';
 
 import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
-import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '../../../../config/constants';
+import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, SPOTIFY_AUTHORIZE_BASE_URL } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Login
 
 export const login = async (req: Request, res: Response<ResponseBody>) => {
   if (req.session == null) {
-    console.error(JSON.stringify(req.session, undefined, 2));
+    console.error({ session: req.session });
 
     return res.status(401).send({
       accessToken: undefined,
@@ -24,11 +24,11 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   if (currentToken?.refresh_token != null) {
     const token = await refreshAccessToken(currentToken.refresh_token);
     if (token == null) {
-      console.error(JSON.stringify({
+      console.error({
         session: req.session,
         currentToken,
         token,
-      }, undefined, 2));
+      });
 
       return res.status(400).send({
         accessToken: undefined,
@@ -48,13 +48,10 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     });
   }
 
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const spotifyBaseUrl = process.env.BASE_URL;
-  if (clientId == null || spotifyBaseUrl == null) {
-    console.error(
-      '環境変数が設定されていません。',
-      JSON.stringify(process.env, undefined, 2),
-    );
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+  const SPOTIFY_BASE_URL = process.env.BASE_URL;
+  if (CLIENT_ID == null || SPOTIFY_BASE_URL == null) {
+    console.error('環境変数が設定されていません。', process.env);
     return res.status(500).send({
       message: 'エラーが発生しました。',
       accessToken: undefined,
@@ -63,7 +60,6 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   }
 
   // 認可用のページの URL を返す
-  const baseUrl = 'https://accounts.spotify.com/authorize';
   const csrfState = crypto.randomBytes(100).toString('base64');
   const scope = [
     'user-read-private',
@@ -85,10 +81,10 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     'user-follow-modify',
   ].join(' ');
 
-  const url = createUrl(baseUrl, {
-    client_id: clientId,
+  const url = createUrl(SPOTIFY_AUTHORIZE_BASE_URL, {
+    client_id: CLIENT_ID,
     response_type: 'code',
-    redirect_uri: `${spotifyBaseUrl}/login/callback`,
+    redirect_uri: `${SPOTIFY_BASE_URL}/login/callback`,
     state: csrfState,
     scope,
   });
