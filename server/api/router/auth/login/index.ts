@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import crypto from 'crypto';
+import { Request, Response } from 'express';
 
 import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
