@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { getAccessToken } from '../../../../auth/getAccessToken';
+import { getAccessToken } from '../../../../helper/getAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { ServerAPI } from '~~/types';
 

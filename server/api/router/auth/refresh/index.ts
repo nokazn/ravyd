@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
+import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../index';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 

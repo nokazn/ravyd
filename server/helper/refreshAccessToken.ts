@@ -1,5 +1,7 @@
 import axios from 'axios';
+
 import { SpotifyAPI } from '~~/types';
+import { SPOTIFY_TOKEN_BASE_URL } from '../config/constants';
 
 export const refreshAccessToken = (
   refresh_token: string | undefined,
@@ -19,13 +21,12 @@ export const refreshAccessToken = (
     return Promise.resolve(undefined);
   }
 
-  const baseUrl = 'https://accounts.spotify.com/api/token';
   const params: SpotifyAPI.Auth.RefreshToken.Params = {
     grant_type: 'refresh_token',
     refresh_token,
   };
 
-  return axios.post(baseUrl, undefined, {
+  return axios.post(SPOTIFY_TOKEN_BASE_URL, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
