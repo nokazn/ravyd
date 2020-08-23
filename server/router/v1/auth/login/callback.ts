@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { getAccessToken } from '../../../../helper/getAccessToken';
-import { TOKEN_EXPIRE_IN } from '../../index';
+import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
 import { ServerAPI } from '~~/types';
 
 type RequestQuery = {

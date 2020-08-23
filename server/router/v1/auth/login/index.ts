@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
-import { TOKEN_EXPIRE_IN } from '../../index';
+import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Login

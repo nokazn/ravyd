@@ -2,7 +2,7 @@ import express from 'express';
 
 // @ のような alias は serverMiddleware では動作しない
 import { cookieParser, session } from '../middleware';
-import router from '../api/router';
+import router from '../router/v1';
 
 const app = express();
 
@@ -16,6 +16,6 @@ app.use((_req, res) => res.status(404).send({
 }));
 
 export default {
-  path: '/api/',
+  path: '/api',
   handler: app,
 };
