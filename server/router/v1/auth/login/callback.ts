@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { getAccessToken } from '../../../../helper/getAccessToken';
-import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
+import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '../../../../config/constants';
 import { ServerAPI } from '~~/types';
 
 type RequestQuery = {
@@ -44,7 +44,7 @@ export const callback = async (
   }
 
   // 送られてきた state と、認可時に送信し、cookie に埋め込んだ csrfState を比較
-  const { csrfState } = req.cookies;
+  const { [CSRF_STATE_COOKIE_KEY]: csrfState } = req.cookies;
   if (state != null && state !== csrfState) {
     const message = 'state が一致しないため、アクセストークンを発行できません。';
     console.error(
@@ -66,7 +66,7 @@ export const callback = async (
   }
 
   // csrfState を削除
-  res.clearCookie('csrfState');
+  res.clearCookie(CSRF_STATE_COOKIE_KEY);
 
   // code と token を交換する
   const token = await getAccessToken(code);

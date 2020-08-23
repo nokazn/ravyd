@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { createUrl } from '../../../../../utils/createUrl';
-import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
+import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Login
@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     scope,
   });
 
-  res.cookie('csrfState', csrfState, {
+  res.cookie(CSRF_STATE_COOKIE_KEY, csrfState, {
     // 30分間有効
     maxAge: 1000 * 60 * 30,
     httpOnly: true,
