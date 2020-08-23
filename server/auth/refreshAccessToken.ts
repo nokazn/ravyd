@@ -3,20 +3,20 @@ import { SpotifyAPI } from '~~/types';
 
 export const refreshAccessToken = (
   refresh_token: string | undefined,
-): Promise<SpotifyAPI.Auth.Token> | undefined => {
-  if (refresh_token == null) return undefined;
+): Promise<SpotifyAPI.Auth.Token | undefined> => {
+  if (refresh_token == null) return Promise.resolve(undefined);
 
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (clientId == null || clientSecret == null) {
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+  const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+  if (CLIENT_ID == null || CLIENT_SECRET == null) {
     console.error(
       '環境変数が設定されていません。',
       JSON.stringify({
-        clientId,
-        clientSecret,
+        CLIENT_ID,
+        CLIENT_SECRET,
       }, undefined, 2),
     );
-    return undefined;
+    return Promise.resolve(undefined);
   }
 
   const baseUrl = 'https://accounts.spotify.com/api/token';
@@ -30,8 +30,8 @@ export const refreshAccessToken = (
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     auth: {
-      username: clientId,
-      password: clientSecret,
+      username: CLIENT_ID,
+      password: CLIENT_SECRET,
     },
     params,
   })

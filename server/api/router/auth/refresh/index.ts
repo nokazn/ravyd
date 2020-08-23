@@ -19,30 +19,30 @@ export const refresh = async (req: Request, res: Response<ResponseBody>) => {
 
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   if (currentToken?.refresh_token == null) {
-    console.error(JSON.stringify({
+    console.error('リフレッシュトークンを取得できず、トークンを更新できませんでした。', {
       session: req.session,
       currentToken,
-    }, undefined, 2));
+    });
 
     return res.status(400).send({
       accessToken: undefined,
       expireIn: 0,
-      message: 'トークンを更新できませんでした。',
+      message: 'リフレッシュトークンを取得できず、トークンを更新できませんでした。',
     });
   }
 
   const token = await refreshAccessToken(currentToken.refresh_token);
   if (token == null) {
-    console.error(JSON.stringify({
+    console.error('トークンの更新に失敗しました。', {
       session: req.session,
       currentToken,
       token,
-    }, undefined, 2));
+    });
 
     return res.status(400).send({
       accessToken: undefined,
       expireIn: 0,
-      message: 'トークンを更新できませんでした。',
+      message: 'トークンの更新に失敗しました。',
     });
   }
 
