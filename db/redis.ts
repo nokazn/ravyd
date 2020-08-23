@@ -17,7 +17,6 @@ if (host == null) {
 }
 
 const client = new Redis(host, {
-  host,
   port: port != null
     ? parseInt(port, 10)
     : undefined,
