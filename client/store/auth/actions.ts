@@ -29,7 +29,7 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
-    const data: ServerAPI.Auth.Login = await this.$serverApi.$post('/api/auth/login')
+    const data: ServerAPI.Auth.Login = await this.$serverApi.$post('/auth/login')
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -56,7 +56,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     const {
       accessToken,
       expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth/login/callback', {
+    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth/login/callback', {
       params: {
         code,
         state,
@@ -74,7 +74,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     const {
       accessToken,
       expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/api/auth')
+    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
 
       .catch((err: Error) => {
         console.error({ err });
@@ -103,7 +103,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     const {
       accessToken,
       expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/refresh')
+    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/auth/refresh')
       .catch((err: Error) => {
         console.error({ err });
         return {};
@@ -123,7 +123,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     // プレイヤーをリセット
     dispatch('player/disconnectPlayer', undefined, { root: true });
     // セッションを削除
-    await this.$serverApi.$post('/api/auth/logout')
+    await this.$serverApi.$post('/auth/logout')
       .catch((err: Error) => {
         console.error({ err });
       });

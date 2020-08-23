@@ -39,7 +39,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           const {
             accessToken,
             expireIn,
-          }: ServerAPI.Auth.Token = await this.$serverApi.$post('/api/auth/refresh')
+          }: ServerAPI.Auth.Token = await this.$serverApi.$post('/auth/refresh')
             .catch((err: Error) => {
               console.error({ err });
               return {};

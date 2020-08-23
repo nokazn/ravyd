@@ -16,6 +16,6 @@ app.use((_req, res) => res.status(404).send({
 }));
 
 export default {
-  path: '/api',
+  path: '/api/v1',
   handler: app,
 };
