@@ -37,7 +37,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
     if (data.accessToken != null && data.expireIn != null) {
       commit('SET_ACCESS_TOKEN', data.accessToken);
-      commit('SET_EXPIRE_MILLIS', data.expireIn);
+      commit('SET_EXPIRATION_MS', data.expireIn);
 
       await dispatch('getUserData');
       // @todo
@@ -67,7 +67,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     });
 
     commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRE_MILLIS', expireIn);
+    commit('SET_EXPIRATION_MS', expireIn);
   },
 
   async getAccessToken({ commit }) {
@@ -75,14 +75,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       accessToken,
       expireIn,
     }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
-
       .catch((err: Error) => {
         console.error({ err });
         return {};
       });
 
     commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRE_MILLIS', expireIn);
+    commit('SET_EXPIRATION_MS', expireIn);
   },
 
   async getUserData({ state, commit }): Promise<void> {
@@ -98,7 +97,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (!getters.isLoggedin || !getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
-    commit('SET_EXPIRE_MILLIS', undefined);
+    commit('SET_EXPIRATION_MS', undefined);
 
     const {
       accessToken,
@@ -110,7 +109,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       });
 
     commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRE_MILLIS', expireIn);
+    commit('SET_EXPIRATION_MS', expireIn);
 
     if (accessToken == null) {
       dispatch('logout');

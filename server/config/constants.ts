@@ -3,5 +3,5 @@ export const SPOTIFY_AUTHORIZE_BASE_URL = 'https://accounts.spotify.com/authoriz
 
 export const CSRF_STATE_COOKIE_KEY = 'csrfState';
 
-// 10分でトークンを更新させる
-export const TOKEN_EXPIRE_IN = 1000 * 60 * 10;
+// // 20分でトークンを更新させる
+export const TOKEN_EXPIRE_IN = 1000 * 60 * 20;

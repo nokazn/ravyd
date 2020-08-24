@@ -39,14 +39,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           const {
             accessToken,
             expireIn,
-          }: ServerAPI.Auth.Token = await this.$serverApi.$post('/auth/refresh')
+          }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
             .catch((err: Error) => {
-              console.error({ err });
+              console.error('プレイヤーがトークンを取得できませんでした。', { err });
               return {};
             });
 
           commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
-          commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
+          commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
 
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
