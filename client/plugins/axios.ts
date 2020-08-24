@@ -44,7 +44,7 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
    * serverMiddleware と通信する axios インスタンス
    */
   const serverApi = $axios.create({
-    baseURL: process.env.BASE_URL,
+    baseURL: `${process.env.BASE_URL}/api/v1`,
     withCredentials: true,
   }) as NuxtAxiosInstance;
 

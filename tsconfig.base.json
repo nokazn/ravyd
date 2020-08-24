@@ -7,7 +7,7 @@
       "ESNext.AsyncIterable",
       "DOM"
     ],
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     "allowJs": false,
     // "checkJs": true,
     // "jsx": "preserve",
@@ -29,10 +29,9 @@
 
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
-    // "noImplicitReturns": true,
+    "noImplicitReturns": true,
     // "noFallthroughCasesInSwitch": true,
 
-    /* Module Resolution Options */
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {

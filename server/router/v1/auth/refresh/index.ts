@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import { refreshAccessToken } from '../../../../auth/refreshAccessToken';
-import { TOKEN_EXPIRE_IN } from '../../index';
+import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
+import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Token
 
 export const refresh = async (req: Request, res: Response<ResponseBody>) => {
   if (req.session == null) {
-    console.error(JSON.stringify(req.session, undefined, 2));
+    console.error({ session: req.session });
 
     return res.status(401).send({
       accessToken: undefined,
@@ -52,11 +52,11 @@ export const refresh = async (req: Request, res: Response<ResponseBody>) => {
     }
 
     if (req.session == null) {
-      console.error(JSON.stringify({
+      console.error({
         session: req.session,
         currentToken,
         token,
-      }, undefined, 2));
+      });
 
       return res.status(401).send({
         accessToken: undefined,

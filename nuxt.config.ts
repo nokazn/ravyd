@@ -33,7 +33,7 @@ const nuxtConfig: Configuration = {
     './assets/global.scss',
   ],
   serverMiddleware: [
-    '~~/server/api/',
+    '~~/server/app/',
   ],
   plugins: [
     { src: '~/plugins/dayjs' },

@@ -1,39 +1,37 @@
 import axios from 'axios';
+
+import { SPOTIFY_TOKEN_BASE_URL } from '../config/constants';
 import { SpotifyAPI } from '~~/types';
 
 export const getAccessToken = (
   code: string,
 ): Promise<SpotifyAPI.Auth.Token> | undefined => {
-  const redirectUrl = process.env.BASE_URL;
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (redirectUrl == null || clientId == null || clientSecret == null) {
-    console.error(
-      '環境変数が設定されていません。',
-      JSON.stringify({
-        redirectUrl,
-        clientId,
-        clientSecret,
-      }, undefined, 2),
-    );
+  const REDIRECT_URL = process.env.BASE_URL;
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+  const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+  if (REDIRECT_URL == null || CLIENT_ID == null || CLIENT_SECRET == null) {
+    console.error('環境変数が設定されていません。', {
+      REDIRECT_URL,
+      CLIENT_ID,
+      CLIENT_SECRET,
+    });
     return undefined;
   }
 
-  const baseUrl = 'https://accounts.spotify.com/api/token';
   const params: SpotifyAPI.Auth.GetToken.Params = {
     grant_type: 'authorization_code',
     code,
     // validation のためのもので実際にレダイレクトされるわけではない
-    redirect_uri: `${redirectUrl}/login/callback`,
+    redirect_uri: `${REDIRECT_URL}/login/callback`,
   };
 
-  return axios.post(baseUrl, undefined, {
+  return axios.post(SPOTIFY_TOKEN_BASE_URL, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     auth: {
-      username: clientId,
-      password: clientSecret,
+      username: CLIENT_ID,
+      password: CLIENT_SECRET,
     },
     params,
   })

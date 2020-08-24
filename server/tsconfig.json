@@ -1,11 +1,13 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "target": "es2019",
+    "module": "CommonJS",
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
-      "DOM" // .vue ファイルはこの設定ファイルしか読み取らない?
     ],
+    "esModuleInterop": true,
     "baseUrl": "../"
   }
 }
