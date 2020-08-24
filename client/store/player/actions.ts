@@ -46,7 +46,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             });
 
           commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
-          commit('auth/SET_EXPIRE_MILLIS', expireIn, { root: true });
+          commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
 
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });

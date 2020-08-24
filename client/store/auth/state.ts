@@ -2,13 +2,13 @@ import { SpotifyAPI } from '~~/types';
 
 export type AuthState = {
   accessToken: string | undefined;
-  expireMillis: number | undefined
+  expirationMs: number | undefined
   userData: SpotifyAPI.UserData | undefined;
 }
 
 const state = (): AuthState => ({
   accessToken: undefined,
-  expireMillis: undefined,
+  expirationMs: undefined,
   userData: undefined,
 });
 

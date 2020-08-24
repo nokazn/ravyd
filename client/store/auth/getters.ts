@@ -29,8 +29,8 @@ const getters: Getters<AuthState, AuthGetters> = {
 
   // 関数実行時に Date.now() が評価されるようにする
   isTokenExpired(state) {
-    return () => (state.expireMillis != null
-      ? Date.now() > state.expireMillis
+    return () => (state.expirationMs != null
+      ? Date.now() > state.expirationMs
       : false);
   },
 
