@@ -27,7 +27,7 @@ export const auth = async (req: Request, res: Response<ResponseBody>) => {
 
   const { expires_in } = currentToken;
   // 期限切れでない場合はそのまま返す
-  if (Date.now() < expires_in) {
+  if (expires_in - Date.now() > TOKEN_EXPIRE_IN) {
     return res.send({
       accessToken: currentToken.access_token,
       expireIn: TOKEN_EXPIRE_IN,
