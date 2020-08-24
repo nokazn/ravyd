@@ -39,9 +39,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           const {
             accessToken,
             expireIn,
-          }: ServerAPI.Auth.Token = await this.$serverApi.$post('/auth/refresh')
+          }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
             .catch((err: Error) => {
-              console.error({ err });
+              console.error('プレイヤーがトークンを取得できませんでした。', { err });
               return {};
             });
 

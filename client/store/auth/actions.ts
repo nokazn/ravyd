@@ -75,7 +75,6 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       accessToken,
       expireIn,
     }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
-
       .catch((err: Error) => {
         console.error({ err });
         return {};
