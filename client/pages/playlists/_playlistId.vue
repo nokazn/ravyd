@@ -186,7 +186,7 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
-import { emptyPaging } from '~/variables';
+import { emptyPaging } from '~/constants';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;

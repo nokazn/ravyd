@@ -51,7 +51,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 import { App } from '~~/types';
 
 type MenuItem = {

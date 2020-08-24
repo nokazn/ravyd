@@ -19,7 +19,7 @@ import { Vue, Component, Prop } from 'nuxt-property-decorator';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
 interface Data {

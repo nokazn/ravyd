@@ -4,7 +4,7 @@ import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistT
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
-import { emptyPaging } from '~/variables';
+import { emptyPaging } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryTracksActions = {

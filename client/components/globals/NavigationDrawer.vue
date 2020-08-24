@@ -77,7 +77,7 @@ import { RootState } from 'typed-vuex';
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
-import { NAVIGATION_DRAWER_BACKGROUND_COLOR, NAVIGATION_DRAWER_WIDTH } from '~/variables';
+import { NAVIGATION_DRAWER_BACKGROUND_COLOR, NAVIGATION_DRAWER_WIDTH } from '~/constants';
 
 type NavigationGroup = {
   items: Item[]

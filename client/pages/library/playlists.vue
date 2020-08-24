@@ -19,7 +19,7 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 interface Data {

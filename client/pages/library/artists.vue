@@ -24,7 +24,7 @@ import { RootState, RootGetters } from 'typed-vuex';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
 interface Data {
   observer: IntersectionObserver | undefined

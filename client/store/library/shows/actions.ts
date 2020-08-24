@@ -4,7 +4,7 @@ import { LibraryShowsState } from './state';
 import { LibraryShowsGetters } from './getters';
 import { LibraryShowsMutations } from './mutations';
 import { convertShowForCard } from '~/scripts/converter/convertShowForCard';
-import { emptyPaging } from '~/variables';
+import { emptyPaging } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryShowsActions = {

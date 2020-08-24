@@ -58,7 +58,7 @@ import Vue from 'vue';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_HEIGHT, BACKGROUND_COLOR } from '~/variables';
+import { HEADER_HEIGHT, BACKGROUND_COLOR } from '~/constants';
 
 type Data = {
   HEADER_HEIGHT: number

@@ -85,7 +85,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App } from '~~/types';
 
 export type Data = {

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { BACKGROUND_COLOR } from '~/variables';
+import { BACKGROUND_COLOR } from '~/constants';
 
 type TabItem = {
   title: string

@@ -74,7 +74,7 @@ import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plug
 import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
 import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;

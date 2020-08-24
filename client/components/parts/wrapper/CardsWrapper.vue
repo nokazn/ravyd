@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
 type CssProps = {
   [k: string]: string

@@ -92,7 +92,7 @@ import { RawLocation } from 'vue-router';
 
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
-import { MENU_BACKGROUND_COLOR } from '~/variables';
+import { MENU_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;

@@ -25,7 +25,7 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
-import { BACKGROUND_COLOR } from '~/variables';
+import { BACKGROUND_COLOR } from '~/constants';
 import { App } from '~~/types';
 
 export type Data = {

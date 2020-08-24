@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 import { PlaybackState } from './state';
-import { DEFAULT_DURATION_MS } from '~/variables';
+import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 

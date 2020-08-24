@@ -88,7 +88,7 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT, Z_INDEX_OF } from '~/variables';
+import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT, Z_INDEX_OF } from '~/constants';
 
 type Data = {
   isLoaded: boolean

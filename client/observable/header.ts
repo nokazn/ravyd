@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import { HEADER_HEIGHT } from '~/variables';
+import { HEADER_HEIGHT } from '~/constants';
 
 const PORTAL_NAME = 'CONTENT_HEADER';
 

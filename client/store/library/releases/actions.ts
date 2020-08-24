@@ -4,7 +4,7 @@ import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard
 import { LibraryReleasesState } from './state';
 import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
-import { emptyPaging } from '~/variables';
+import { emptyPaging } from '~/constants';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export type LibraryReleasesActions = {

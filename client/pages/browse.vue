@@ -32,7 +32,7 @@ import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 import { getCategoryList } from '~/plugins/local/browse';
-import { FLEX_CARD_MIN_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
 interface AsyncData {

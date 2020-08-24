@@ -69,7 +69,7 @@
 import Vue from 'vue';
 
 import DeviceSelectMenuItem, { DeviceInfo, On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
+import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 type Data = {

@@ -1,6 +1,6 @@
 import { Getters } from 'typed-vuex';
 
-import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, BACKGROUND_COLOR_RGB } from '~/variables';
+import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, BACKGROUND_COLOR_RGB } from '~/constants';
 import { RootState } from './state';
 import { App } from '~~/types';
 

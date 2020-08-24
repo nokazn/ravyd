@@ -113,7 +113,7 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
 const AVATAR_SIZE = 180;

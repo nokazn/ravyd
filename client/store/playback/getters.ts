@@ -1,7 +1,7 @@
 import { Getters } from 'typed-vuex';
 
 import { PlaybackState } from './state';
-import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/variables';
+import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { convertTrackForQueue } from '~/scripts/converter/convertTrackForQueue';
 import { convertUriToId } from '~/scripts/converter/convertUriToId';

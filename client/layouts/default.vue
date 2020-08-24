@@ -62,7 +62,7 @@ import Footer from '~/components/globals/Footer.vue';
 import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
-import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/variables';
+import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 const SPACER_REF = 'SPACER_REF';
 

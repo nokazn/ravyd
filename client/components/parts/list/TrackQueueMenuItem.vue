@@ -81,7 +81,7 @@ import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';

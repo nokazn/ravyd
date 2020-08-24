@@ -38,7 +38,7 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/variables';
+import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {

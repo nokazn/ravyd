@@ -3,7 +3,7 @@ import { Actions } from 'typed-vuex';
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
-import { APP_NAME } from '~/variables';
+import { APP_NAME } from '~/constants';
 import { ServerAPI } from '~~/types';
 
 export type PlayerActions = {

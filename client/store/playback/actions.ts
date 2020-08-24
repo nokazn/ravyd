@@ -3,7 +3,7 @@ import { Actions } from 'typed-vuex';
 import { PlaybackState } from './state';
 import { PlaybackGetters } from './getters';
 import { PlaybackMutations } from './mutations';
-import { REPEAT_STATE_LIST } from '~/variables';
+import { REPEAT_STATE_LIST } from '~/constants';
 import { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 export type PlaybackActions = {

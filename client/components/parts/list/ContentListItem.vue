@@ -59,7 +59,7 @@ import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/variables';
+import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';
