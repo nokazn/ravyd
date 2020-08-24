@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import { Configuration } from '@nuxt/types';
+import { SPOTIFY_API_URL } from './client/constants';
 
 const nuxtConfig: Configuration = {
   mode: 'universal',
@@ -51,7 +52,6 @@ const nuxtConfig: Configuration = {
   },
   env: {
     BASE_URL: process.env.BASE_URL || 'https://127.0.0.1:3000',
-    SPOTIFY_URL: process.env.SPOTIFY_URL || 'https://api.spotify.com/v1',
   },
   loading: { color: '#fff' },
   buildModules: [
@@ -69,7 +69,7 @@ const nuxtConfig: Configuration = {
   ],
   axios: {
     baseURL: process.env.BASE_URL,
-    browserBaseURL: process.env.SPOTIFY_URL,
+    browserBaseURL: SPOTIFY_API_URL,
     progress: false,
     retry: true,
     debug: process.env.NODE_ENV === 'development',

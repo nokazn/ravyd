@@ -3,12 +3,14 @@ import https from 'https';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { Plugin } from '@nuxt/types';
 
+import { SPOTIFY_API_URL } from '~/constants';
+
 const plugin: Plugin = ({ $axios, app }, inject) => {
   /**
    * Spotify API と通信する axios インスタンス
    */
   const spotifyApi = $axios.create({
-    baseURL: process.env.SPOTIFY_URL,
+    baseURL: SPOTIFY_API_URL,
   }) as NuxtAxiosInstance;
 
   spotifyApi.onRequest((config) => {

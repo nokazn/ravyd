@@ -1,5 +1,7 @@
 import { SpotifyAPI, App } from '~~/types';
 
+export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
+
 const rgb: [number, number, number] = [60, 60, 60];
 export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
   hex: '#3c3c3c',
