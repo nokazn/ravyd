@@ -2,10 +2,10 @@
 import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
-import { Configuration } from '@nuxt/types';
+import { NuxtConfig } from '@nuxt/types';
 import { SPOTIFY_API_URL } from './client/constants';
 
-const nuxtConfig: Configuration = {
+const nuxtConfig: NuxtConfig = {
   mode: 'universal',
   srcDir: './client/',
   rootDir: './',
@@ -168,7 +168,9 @@ const nuxtConfig: Configuration = {
   },
   typescript: {
     typeCheck: {
-      eslint: true,
+      eslint: {
+        files: './client/**/*.{ts,js,vue}',
+      },
     },
   },
 };

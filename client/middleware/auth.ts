@@ -1,6 +1,6 @@
 import { Middleware } from '@nuxt/types';
 
-const middleware:Middleware = ({ app, route, redirect }) => {
+const middleware: Middleware = ({ app, route, redirect }) => {
   const isLoggedin = app.$getters()['auth/isLoggedin'];
   if (route.path === '/login/callback') {
     return;

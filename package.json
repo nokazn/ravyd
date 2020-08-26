@@ -19,7 +19,7 @@
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l"
   },
   "dependencies": {
-    "@nuxt/typescript-runtime": "^0.4.10",
+    "@nuxt/typescript-runtime": "^1.0.0",
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.0.0-0",
@@ -44,7 +44,8 @@
     "@babel/preset-env": "^7.11.0",
     "@babel/runtime-corejs3": "^7.11.2",
     "@mdi/font": "^5.5.55",
-    "@nuxt/typescript-build": "^1.0.3",
+    "@nuxt/types": "^2.14.3",
+    "@nuxt/typescript-build": "^2.0.2",
     "@nuxtjs/eslint-config-typescript": "^1.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
