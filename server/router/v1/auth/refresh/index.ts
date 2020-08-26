@@ -4,11 +4,20 @@ import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
+type ReqestBody = {
+  accessToken: string;
+}
+
 type ResponseBody = ServerAPI.Auth.Token
 
-export const refresh = async (req: Request, res: Response<ResponseBody>) => {
+export const refresh = async (
+  req: Request<{}, {}, ReqestBody>,
+  res: Response<ResponseBody>,
+) => {
   if (req.session == null) {
-    console.error({ session: req.session });
+    console.error('セッションを取得できず、トークンを更新できませんでした。', {
+      session: req.session,
+    });
 
     return res.status(401).send({
       accessToken: undefined,
@@ -28,6 +37,19 @@ export const refresh = async (req: Request, res: Response<ResponseBody>) => {
       accessToken: undefined,
       expireIn: 0,
       message: 'リフレッシュトークンを取得できず、トークンを更新できませんでした。',
+    });
+  }
+  // 現在のトークンが一致しない場合はそのまま返す
+  if (currentToken.access_token !== req.body.accessToken) {
+    console.warn('現在のトークンが一致しないため、トークンを更新できませんでした。', {
+      session: req.session,
+      currentToken,
+    });
+
+    return res.status(204).send({
+      accessToken: req.body.accessToken,
+      expireIn: 0,
+      message: '現在のトークンが一致しないため、トークンを更新できませんでした。',
     });
   }
 

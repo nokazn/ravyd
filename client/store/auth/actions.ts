@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { Actions } from 'typed-vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
@@ -92,29 +93,46 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_USER_DATA', userData);
   },
 
-  async refreshAccessToken({ getters, commit, dispatch }) {
+  // @todo
+  async refreshAccessToken({
+    state,
+    getters,
+    commit,
+    dispatch,
+  }) {
     // 現在ログイン済でアクセストークンの期限が切れている場合のみ更新
     if (!getters.isLoggedin || !getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
+    const currentExpirationMs = state.expirationMs;
     commit('SET_EXPIRATION_MS', undefined);
 
-    const {
-      accessToken,
-      expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$post('/auth/refresh')
+    const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh')
       .catch((err: Error) => {
         console.error({ err });
-        return {};
+        return undefined;
       });
 
-    commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRATION_MS', expireIn);
+    // アクセストークンが取得できなかった場合はログアウト
+    if (res?.data.accessToken == null) {
+      commit('SET_ACCESS_TOKEN', undefined);
+      commit('SET_EXPIRATION_MS', undefined);
 
-    if (accessToken == null) {
-      dispatch('logout');
+      await dispatch('logout');
       this.$router.push('/login');
       this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
+      return;
+    }
+
+    const { accessToken, expireIn } = res.data;
+
+    // 現在のトークンが一致しない場合 (204) はトークンを更新しない
+    if (res.status === 200) {
+      commit('SET_ACCESS_TOKEN', accessToken);
+      commit('SET_EXPIRATION_MS', expireIn);
+    } else {
+      // 一度リセットした expirationMs を元に戻す
+      commit('SET_EXPIRATION_MS', currentExpirationMs);
     }
   },
 
