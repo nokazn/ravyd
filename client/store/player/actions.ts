@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { Actions } from 'typed-vuex';
 
 import { PlayerState } from './state';
@@ -28,6 +29,55 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       return;
     }
 
+    const checkAccessToken = async (): Promise<string | undefined> => {
+      const {
+        accessToken,
+        expireIn,
+      }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
+        .catch((err: Error) => {
+          console.error('プレイヤーがトークンを取得できませんでした。', { err });
+          return {};
+        });
+
+      commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
+      commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+
+      return accessToken;
+    };
+
+    const refreshAccessToken = async (
+      currentAccessToken: string,
+      currentExpirationMs: number | undefined,
+    ): Promise<string | undefined> => {
+      // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
+      commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
+
+      const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh', {
+        accessToken: currentAccessToken,
+      }).catch((err: Error) => {
+        console.error({ err });
+        return undefined;
+      });
+
+      if (res?.data.accessToken == null) {
+        commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
+        commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
+        return undefined;
+      }
+
+      if (res.status !== 200) {
+        // 一度リセットした expirationMs を元に戻す
+        commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+        return currentAccessToken;
+      }
+
+      const { accessToken, expireIn } = res.data;
+      // 現在のトークンが一致しない場合 (204) はトークンを更新しない
+      commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
+      commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+      return accessToken;
+    };
+
     window.onSpotifyWebPlaybackSDKReady = async () => {
       // player が登録されていないときのみ初期化
       if (getters.isPlayerConnected || window.Spotify == null) return;
@@ -37,16 +87,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         // アクセストークンの更新が必要になったら呼ばれる
         getOAuthToken: async (callback) => {
           const {
-            accessToken,
-            expireIn,
-          }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
-            .catch((err: Error) => {
-              console.error('プレイヤーがトークンを取得できませんでした。', { err });
-              return {};
-            });
-
-          commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
-          commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+            accessToken: currentAccessToken,
+            expirationMs,
+          } = this.$state().auth;
+          const accessToken = currentAccessToken == null
+            ? await checkAccessToken()
+            : await refreshAccessToken(currentAccessToken, expirationMs);
 
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
