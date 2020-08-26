@@ -44,6 +44,7 @@ export const refresh = async (
     console.warn('現在のトークンが一致しないため、トークンを更新できませんでした。', {
       session: req.session,
       currentToken,
+      tokenInRequest: req.body.accessToken,
     });
 
     return res.status(204).send({

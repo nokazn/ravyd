@@ -107,11 +107,12 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     const currentExpirationMs = state.expirationMs;
     commit('SET_EXPIRATION_MS', undefined);
 
-    const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh')
-      .catch((err: Error) => {
-        console.error({ err });
-        return undefined;
-      });
+    const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh', {
+      accessToken: state.accessToken,
+    }).catch((err: Error) => {
+      console.error({ err });
+      return undefined;
+    });
 
     // アクセストークンが取得できなかった場合はログアウト
     if (res?.data.accessToken == null) {
