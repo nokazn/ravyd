@@ -1,9 +1,7 @@
-import { AxiosResponse } from 'axios';
 import { Actions } from 'typed-vuex';
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
 import { AuthMutations } from './mutations';
-import { ServerAPI } from '~~/types';
 
 export type AuthActions = {
   login: () => Promise<void>
@@ -30,11 +28,7 @@ export type RootActions = {
 
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
-    const data: ServerAPI.Auth.Login = await this.$serverApi.$post('/auth/login')
-      .catch((err: Error) => {
-        console.error({ err });
-        return {};
-      });
+    const data = await this.$server.auth.login();
 
     if (data.accessToken != null && data.expireIn != null) {
       commit('SET_ACCESS_TOKEN', data.accessToken);
@@ -44,7 +38,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       // @todo
       this.$router.push('/');
       return;
-    } if (data.url != null) {
+    }
+    if (data.url != null) {
       window.location.href = data.url;
       return;
     }
@@ -54,17 +49,9 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async exchangeCodeToAccessToken({ commit }, { code, state }) {
-    const {
-      accessToken,
-      expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth/login/callback', {
-      params: {
-        code,
-        state,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      return {};
+    const { accessToken, expireIn } = await this.$server.auth.callback({
+      code,
+      state,
     });
 
     commit('SET_ACCESS_TOKEN', accessToken);
@@ -72,14 +59,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async getAccessToken({ commit }) {
-    const {
-      accessToken,
-      expireIn,
-    }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
-      .catch((err: Error) => {
-        console.error({ err });
-        return {};
-      });
+    const { accessToken, expireIn } = await this.$server.auth.root();
 
     commit('SET_ACCESS_TOKEN', accessToken);
     commit('SET_EXPIRATION_MS', expireIn);
@@ -89,11 +69,9 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (state.accessToken == null) return;
 
     const userData = await this.$spotify.users.getCurrentUserProfile();
-
     commit('SET_USER_DATA', userData);
   },
 
-  // @todo
   async refreshAccessToken({
     state,
     getters,
@@ -101,18 +79,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     dispatch,
   }) {
     // 現在ログイン済でアクセストークンの期限が切れている場合のみ更新
-    if (!getters.isLoggedin || !getters.isTokenExpired()) return;
+    if (state.accessToken == null || !getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
     const currentExpirationMs = state.expirationMs;
     commit('SET_EXPIRATION_MS', undefined);
 
-    const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh', {
-      accessToken: state.accessToken,
-    }).catch((err: Error) => {
-      console.error({ err });
-      return undefined;
-    });
+    const res = await this.$server.auth.refresh(state.accessToken);
 
     // アクセストークンが取得できなかった場合はログアウト
     if (res?.data.accessToken == null) {
@@ -126,7 +99,6 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     const { accessToken, expireIn } = res.data;
-
     // 現在のトークンが一致しない場合 (204) はトークンを更新しない
     if (res.status === 200) {
       commit('SET_ACCESS_TOKEN', accessToken);
@@ -141,10 +113,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     // プレイヤーをリセット
     dispatch('player/disconnectPlayer', undefined, { root: true });
     // セッションを削除
-    await this.$serverApi.$post('/auth/logout')
-      .catch((err: Error) => {
-        console.error({ err });
-      });
+    await this.$server.auth.logout();
 
     commit('SET_ACCESS_TOKEN', undefined);
     commit('SET_USER_DATA', undefined);

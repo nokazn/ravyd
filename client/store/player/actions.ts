@@ -1,11 +1,9 @@
-import { AxiosResponse } from 'axios';
 import { Actions } from 'typed-vuex';
 
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { APP_NAME } from '~/constants';
-import { ServerAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -30,14 +28,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     }
 
     const checkAccessToken = async (): Promise<string | undefined> => {
-      const {
-        accessToken,
-        expireIn,
-      }: ServerAPI.Auth.Token = await this.$serverApi.$get('/auth')
-        .catch((err: Error) => {
-          console.error('プレイヤーがトークンを取得できませんでした。', { err });
-          return {};
-        });
+      const { accessToken, expireIn } = await this.$server.auth.root();
 
       commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
       commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
@@ -52,12 +43,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
 
-      const res: AxiosResponse<ServerAPI.Auth.Token> | undefined = await this.$serverApi.post('/auth/refresh', {
-        accessToken: currentAccessToken,
-      }).catch((err: Error) => {
-        console.error({ err });
-        return undefined;
-      });
+      const res = await this.$server.auth.refresh(currentAccessToken);
 
       if (res?.data.accessToken == null) {
         commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
