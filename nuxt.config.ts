@@ -41,6 +41,7 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/vuex' },
     { src: '~/plugins/axios' },
     { src: '~/plugins/spotify' },
+    { src: '~/plugins/server' },
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/toast' },
