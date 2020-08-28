@@ -1,4 +1,5 @@
 import { Context } from '@nuxt/types';
+import { AxiosError } from 'axios';
 import { ServerAPI } from '~~/types';
 
 export const callback = (context: Context) => {
@@ -7,16 +8,16 @@ export const callback = (context: Context) => {
   return ({ code, state }: {
     code: string;
     state: string;
-  }): Promise<ServerAPI.Auth.Token | undefined> => {
+  }): Promise<ServerAPI.Auth.Token> => {
     // @todo path
     const request = app.$serverApi.$get('/auth/login/callback', {
       params: {
         code,
         state,
       },
-    }).catch((err: Error) => {
+    }).catch((err: AxiosError<ServerAPI.Auth.Token>) => {
       console.error({ err });
-      return undefined;
+      return err.response?.data ?? {};
     });
 
     return request;

@@ -1,14 +1,15 @@
 import { Context } from '@nuxt/types';
+import { AxiosError } from 'axios';
 import { ServerAPI } from '~~/types';
 
 export const login = (context: Context) => {
   const { app } = context;
 
-  return (): Promise<ServerAPI.Auth.Login | undefined> => {
+  return (): Promise<ServerAPI.Auth.Login> => {
     const request = app.$serverApi.$post('/auth/login')
-      .catch((err: Error) => {
+      .catch((err: AxiosError<ServerAPI.Auth.Login>) => {
         console.error({ err });
-        return undefined;
+        return err.response?.data ?? {};
       });
 
     return request;
