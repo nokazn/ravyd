@@ -80,14 +80,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             ? await checkAccessToken()
             : await refreshAccessToken(currentAccessToken, expirationMs);
 
-          if (accessToken == null) {
-            await dispatch('auth/logout', undefined, { root: true });
-            this.$router.push('/login');
-            this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
-            return;
-          }
-
-          callback(accessToken);
+          // @as currentAccessToken は string
+          callback(accessToken ?? currentAccessToken!);
         },
       });
 
