@@ -26,16 +26,17 @@ export const refresh = async (
     });
   }
 
+  const tokenInReqBody = req.body.accessToken;
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   // リフレッシュトークンが存在しないか、現在のトークンが一致しない場合はそのまま返す
-  if (currentToken?.refresh_token == null || currentToken.access_token !== req.body.accessToken) {
+  if (currentToken?.refresh_token == null || currentToken.access_token !== tokenInReqBody) {
     const message = currentToken?.refresh_token == null
       ? 'リフレッシュトークンを取得できず、トークンを更新できませんでした。'
       : '現在のトークンが一致しないため、トークンを更新できませんでした。';
-    console.error(message, {
+    console.warn(message, {
       session: req.session,
       currentToken,
-      tokenInRequest: req.body.accessToken,
+      tokenInReqBody,
     });
 
     return res.status(204).send({
