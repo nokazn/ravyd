@@ -38,7 +38,7 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     }
 
     req.session.token = {
-      ...req.session.token,
+      ...currentToken,
       ...token,
     };
 

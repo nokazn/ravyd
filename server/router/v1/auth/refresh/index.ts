@@ -61,33 +61,13 @@ export const refresh = async (
     });
   }
 
-  return req.session.regenerate((err) => {
-    if (err != null) {
-      return console.error({ err });
-    }
+  req.session.token = {
+    ...currentToken,
+    ...token,
+  };
 
-    if (req.session == null) {
-      console.error({
-        session: req.session,
-        currentToken,
-        token,
-      });
-
-      return res.status(401).send({
-        accessToken: undefined,
-        expireIn: 0,
-        message: 'トークンを更新できませんでした。',
-      });
-    }
-
-    req.session.token = {
-      ...currentToken,
-      ...token,
-    };
-
-    return res.send({
-      accessToken: token.access_token,
-      expireIn: TOKEN_EXPIRE_IN,
-    });
+  return res.send({
+    accessToken: token.access_token,
+    expireIn: TOKEN_EXPIRE_IN,
   });
 };
