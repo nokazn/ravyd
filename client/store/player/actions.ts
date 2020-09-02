@@ -39,19 +39,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     const refreshAccessToken = async (
       currentAccessToken: string,
       currentExpirationMs: number | undefined,
-    ): Promise<string | undefined> => {
+    ): Promise<string> => {
       // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
 
       const res = await this.$server.auth.refresh(currentAccessToken);
 
-      if (res?.data.accessToken == null) {
-        commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
-        commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
-        return undefined;
-      }
-
-      if (res.status !== 200) {
+      if (res?.data.accessToken == null || res.status !== 200) {
         // 一度リセットした expirationMs を元に戻す
         commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
         return currentAccessToken;
