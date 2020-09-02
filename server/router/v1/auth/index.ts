@@ -6,7 +6,10 @@ import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Token
 
-export const auth = async (req: Request, res: Response<ResponseBody>) => {
+export const auth = async (
+  req: Request,
+  res: Response<ResponseBody>,
+) => {
   if (req.session == null) {
     console.error({ session: req.session });
 
@@ -17,7 +20,7 @@ export const auth = async (req: Request, res: Response<ResponseBody>) => {
     });
   }
 
-  const currentToken: SpotifyAPI.Auth.Token | undefined = req.session?.token;
+  const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   if (currentToken == null) {
     return res.send({
       accessToken: undefined,

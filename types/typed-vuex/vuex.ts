@@ -1,5 +1,5 @@
 import { Store, SubscribeOptions } from 'vuex';
-import { IncomingMessage, ServerResponse } from 'http';
+import { Context } from '@nuxt/types';
 
 import { ActionMethodMap } from '~~/types';
 
@@ -117,11 +117,7 @@ declare module 'typed-vuex' {
   } & {
     nuxtServerInit?: (
       context: _StoreContext,
-      payload: {
-        req: IncomingMessage,
-        res: ServerResponse,
-        error: Error,
-      },
+      payload: Context,
     ) => void | Promise<void>
   }
 

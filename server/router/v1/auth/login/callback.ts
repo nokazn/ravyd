@@ -78,8 +78,9 @@ export const callback = async (
     });
   }
 
+  const currentToken = req.session.token;
   req.session.token = {
-    ...req.session.token,
+    ...currentToken,
     ...token,
   };
 
