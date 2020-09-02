@@ -18,7 +18,7 @@ export const callback = async (
   if (req.session == null) {
     console.error({ session: req.session });
 
-    return res.status(401).send({
+    return res.status(500).send({
       accessToken: undefined,
       expireIn: 0,
       message: 'トークンを更新できませんでした。',
