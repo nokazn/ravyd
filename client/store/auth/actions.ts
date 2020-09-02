@@ -99,8 +99,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     const { accessToken, expireIn } = res.data;
-    // 現在のトークンが一致しない場合 (204) はトークンを更新しない
-    if (res.status === 200) {
+    // コンフリクトして現在のトークンが一致しない場合 (409) はトークンを更新しない
+    if (res.status !== 409) {
       commit('SET_ACCESS_TOKEN', accessToken);
       commit('SET_EXPIRATION_MS', expireIn);
     } else {

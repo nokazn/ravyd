@@ -39,22 +39,26 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     const refreshAccessToken = async (
       currentAccessToken: string,
       currentExpirationMs: number | undefined,
-    ): Promise<string> => {
+    ): Promise<string | undefined> => {
       // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
 
       const res = await this.$server.auth.refresh(currentAccessToken);
 
-      if (res?.data.accessToken == null || res.status !== 200) {
-        // 一度リセットした expirationMs を元に戻す
-        commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
-        return currentAccessToken;
+      if (res?.data.accessToken == null) {
+        commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
+        return undefined;
       }
 
       const { accessToken, expireIn } = res.data;
-      // 現在のトークンが一致しない場合 (204) はトークンを更新しない
-      commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
-      commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+      // コンフリクトして現在のトークンが一致しない場合 (409) はトークンを更新しない
+      if (res.status !== 409) {
+        commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
+        commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+      } else {
+        // 一度リセットした expirationMs を元に戻す
+        commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+      }
       return accessToken;
     };
 
@@ -74,8 +78,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             ? await checkAccessToken()
             : await refreshAccessToken(currentAccessToken, expirationMs);
 
-          // @as currentAccessToken は string
-          callback(accessToken ?? currentAccessToken!);
+          if (accessToken == null) {
+            await dispatch('auth/logout', undefined, { root: true });
+            this.$router.push('/login');
+            this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
+            return;
+          }
+
+          callback(accessToken);
         },
       });
 
