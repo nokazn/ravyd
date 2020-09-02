@@ -20,7 +20,6 @@ export type PlaybackState = {
   customTrackUriList: string[] | undefined
   nextTrackList: Spotify.Track[]
   previousTrackList: Spotify.Track[]
-  recentlyPlayed: SpotifyAPI.Player.RecentlyPlayed | undefined
   isPlaying: boolean
   isSavedTrack: boolean
   positionMs: number
@@ -53,7 +52,6 @@ const state = (): PlaybackState => ({
   customTrackUriList: undefined,
   nextTrackList: [],
   previousTrackList: [],
-  recentlyPlayed: undefined,
   isPlaying: false,
   isSavedTrack: false,
   positionMs: 0,

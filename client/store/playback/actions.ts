@@ -20,7 +20,6 @@ export type PlaybackActions = {
   }) => void
   resetCustomContext: (uri: string | null) => void
   getCurrentPlayback: (timeout?: number) => void
-  getRecentlyPlayed: () => Promise<void>
   play: (payload?: ({
     contextUri: string
     trackUriList?: undefined
@@ -61,7 +60,6 @@ export type RootActions = {
   'playback/setCustomContext': PlaybackActions['setCustomContext']
   'playback/resetCustomContext': PlaybackActions['resetCustomContext']
   'playback/getCurrentPlayback': PlaybackActions['getCurrentPlayback']
-  'playback/getRecentlyPlayed': PlaybackActions['getRecentlyPlayed']
   'playback/play': PlaybackActions['play']
   'playback/pause': PlaybackActions['pause']
   'playback/seek': PlaybackActions['seek']
@@ -296,15 +294,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     // timeout 後かトラックが変わった後に取得
     setTimer(handler, timeout);
-  },
-
-  async getRecentlyPlayed({ commit, dispatch }) {
-    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
-    if (!isAuthorized) return;
-
-    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed();
-
-    commit('SET_RECENTLY_PLAYED', recentlyPlayed);
   },
 
   /**
@@ -604,7 +593,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     commit('SET_DEVICE_LIST', []);
     commit('SET_CUSTOM_CONTEXT_URI', undefined);
     commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
-    commit('SET_RECENTLY_PLAYED', undefined);
     commit('SET_CURRENT_TRACK', undefined);
     commit('SET_NEXT_TRACK_LIST', []);
     commit('SET_PREVIOUS_TRACK_LIST', []);
