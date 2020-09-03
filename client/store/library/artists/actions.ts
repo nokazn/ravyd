@@ -158,6 +158,7 @@ const actions: Actions<
       .findIndex((artist) => artist.id === artistId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedArtistIndex !== -1) {
+      // @todo コピーしないと表示に反映されない
       const artistList = [...currentArtistList];
       // savedArtistIndex から1個取り除く
       artistList.splice(savedArtistIndex, 1);

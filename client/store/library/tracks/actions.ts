@@ -165,17 +165,18 @@ const actions: Actions<
     if (!isAuthorized) return;
 
     await this.$spotify.library.saveTracks({ trackIdList })
+      .then(() => {
+        trackIdList.forEach((trackId) => {
+          dispatch('modifyTrackSavedState', {
+            trackId,
+            isSaved: true,
+          });
+        });
+      })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリにトラックを保存できませんでした。');
       });
-
-    trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', {
-        trackId,
-        isSaved: true,
-      });
-    });
   },
 
   /**
@@ -186,17 +187,18 @@ const actions: Actions<
     if (!isAuthorized) return;
 
     await this.$spotify.library.removeUserSavedTracks({ trackIdList })
+      .then(() => {
+        trackIdList.forEach((trackId) => {
+          dispatch('modifyTrackSavedState', {
+            trackId,
+            isSaved: false,
+          });
+        });
+      })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリからトラックを削除できませんでした。');
       });
-
-    trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', {
-        trackId,
-        isSaved: false,
-      });
-    });
   },
 
   /**
@@ -207,6 +209,7 @@ const actions: Actions<
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedTrackIndex !== -1) {
+      // @todo コピーしないと表示に反映されない
       const trackList = [...currentTrackList];
       trackList[savedTrackIndex] = {
         ...currentTrackList[savedTrackIndex],
@@ -217,6 +220,12 @@ const actions: Actions<
 
     // プレイヤーを更新
     dispatch('playback/modifyTrackSavedState', { trackId, isSaved }, { root: true });
+
+    // 履歴に該当のトラックがあれば更新
+    dispatch('library/history/modifyTrackSavedState', {
+      trackId,
+      isSaved,
+    }, { root: true });
 
     // ライブラリ一覧に表示されてない曲を保存した場合
     if (isSaved && savedTrackIndex === -1) {

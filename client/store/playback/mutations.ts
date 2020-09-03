@@ -18,7 +18,6 @@ export type PlaybackMutations = {
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_TRACK_INDEX: number | undefined
-  SET_RECENTLY_PLAYED: SpotifyAPI.Player.RecentlyPlayed | undefined
   SET_CURRENT_TRACK: ExtendedTrack | undefined
   SET_NEXT_TRACK_LIST: ExtendedTrack[]
   SET_PREVIOUS_TRACK_LIST: ExtendedTrack[]
@@ -43,7 +42,6 @@ export type RootMutations = {
   'playback/SET_CUSTOM_CONTEXT_URI': PlaybackMutations['SET_CUSTOM_CONTEXT_URI']
   'playback/SET_CUSTOM_TRACK_URI_LIST': PlaybackMutations['SET_CUSTOM_TRACK_URI_LIST']
   'playback/SET_TRACK_INDEX': PlaybackMutations['SET_TRACK_INDEX']
-  'playback/SET_RECENTLY_PLAYED': PlaybackMutations['SET_RECENTLY_PLAYED']
   'playback/SET_CURRENT_TRACK': PlaybackMutations['SET_CURRENT_TRACK']
   'playback/SET_NEXT_TRACK_LIST': PlaybackMutations['SET_NEXT_TRACK_LIST']
   'playback/SET_PREVIOUS_TRACK_LIST': PlaybackMutations['SET_PREVIOUS_TRACK_LIST']
@@ -96,10 +94,6 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
 
   SET_TRACK_INDEX(state, trackIndex) {
     state.trackIndex = trackIndex;
-  },
-
-  SET_RECENTLY_PLAYED(state, recentlyPlayed) {
-    state.recentlyPlayed = recentlyPlayed;
   },
 
   SET_CURRENT_TRACK(state, currentTrack) {

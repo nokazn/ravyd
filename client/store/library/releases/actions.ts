@@ -187,6 +187,7 @@ const actions: Actions<
       .findIndex((release) => release.id === releaseId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedReleaseIndex !== -1) {
+      // @todo コピーしないと表示に反映されない
       const releaseList = [...currentReleaseList];
       // savedReleaseIndex から1個取り除く
       releaseList.splice(savedReleaseIndex, 1);

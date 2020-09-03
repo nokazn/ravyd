@@ -64,9 +64,9 @@
           text
           small
           nuxt
-          to="/queue"
+          to="/library/history"
         >
-          すべて表示
+          最近再生した項目
         </v-btn>
       </div>
     </v-list>

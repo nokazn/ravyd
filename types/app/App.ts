@@ -53,7 +53,7 @@ export namespace App {
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
-    addedAt: AddedAtInfo
+    addedAt?: AddedAtInfo
     addedBy?: SpotifyAPI.UserData
   }
 

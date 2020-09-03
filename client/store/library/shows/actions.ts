@@ -180,6 +180,7 @@ const actions: Actions<
       .findIndex((show) => show.id === showId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedShowIndex !== -1) {
+      // @todo コピーしないと表示に反映されない
       const showList = [...currentShowList];
       // savedShowIndex から1個取り除く
       showList.splice(savedShowIndex, 1);
