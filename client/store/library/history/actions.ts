@@ -50,6 +50,7 @@ const actions: Actions<
     const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedTrackIndex !== -1) {
+      // @todo コピーしないと表示に反映されない
       const trackList = [...currentTrackList];
       trackList[savedTrackIndex] = {
         ...trackList[savedTrackIndex],
