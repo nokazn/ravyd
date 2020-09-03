@@ -287,11 +287,12 @@ export namespace SpotifyAPI {
   }
 
   export namespace Player {
-    type RecentlyPlayed = CursorPaging<{
+    type History = {
       context: Context
       played_at: string // timestamp
-      track: SimpleTrack
-    }>
+      track: Track
+    }
+    type RecentlyPlayed = CursorPaging<History>
 
     type PlayingType = 'track' | 'episode' | 'ad' | 'unknown'
     // アクティブなデバイスが存在しない場合は空文字が返ってくる
