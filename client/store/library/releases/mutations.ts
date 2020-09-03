@@ -32,16 +32,12 @@ const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
 
   ADD_TO_RELEASE_LIST(state, releaseList) {
     const currentReleaseList = state.releaseList;
-    state.releaseList = currentReleaseList != null
-      ? [...currentReleaseList, ...releaseList]
-      : releaseList;
+    state.releaseList = [...currentReleaseList, ...releaseList];
   },
 
   UNSHIFT_TO_RELEASE_LIST(state, releaseList) {
     const currentReleaseList = state.releaseList;
-    state.releaseList = currentReleaseList != null
-      ? [...releaseList, ...currentReleaseList]
-      : releaseList;
+    state.releaseList = [...releaseList, ...currentReleaseList];
   },
 
   SET_TOTAL(state, total) {

@@ -32,16 +32,12 @@ const mutations: Mutations<LibraryArtistsState, LibraryArtistsMutations> = {
 
   ADD_TO_ARTIST_LIST(state, artistList) {
     const currentArtistList = state.artistList;
-    state.artistList = currentArtistList != null
-      ? [...currentArtistList, ...artistList]
-      : artistList;
+    state.artistList = [...currentArtistList, ...artistList];
   },
 
   UNSHIFT_TO_ARTIST_LIST(state, artistList) {
     const currentArtistList = state.artistList;
-    state.artistList = currentArtistList != null
-      ? [...artistList, ...currentArtistList]
-      : artistList;
+    state.artistList = [...artistList, ...currentArtistList];
   },
 
   SET_TOTAL(state, total) {

@@ -32,16 +32,12 @@ const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
 
   ADD_TO_TRACK_LIST(state, trackList) {
     const currentTrackList = state.trackList;
-    state.trackList = currentTrackList != null
-      ? [...currentTrackList, ...trackList]
-      : trackList;
+    state.trackList = [...currentTrackList, ...trackList];
   },
 
   UNSHIFT_TO_TRACK_LIST(state, trackList) {
     const currentTrackList = state.trackList;
-    state.trackList = currentTrackList != null
-      ? [...trackList, ...currentTrackList]
-      : trackList;
+    state.trackList = [...trackList, ...currentTrackList];
   },
 
   SET_TOTAL(state, total) {

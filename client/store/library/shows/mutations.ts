@@ -29,30 +29,33 @@ const mutations: Mutations<LibraryShowsState, LibraryShowsMutations> = {
   SET_SHOW_LIST(state, showList) {
     state.showList = showList;
   },
+
   ADD_TO_SHOW_LIST(state, showList) {
     const currentShowList = state.showList;
-    state.showList = currentShowList != null
-      ? [...currentShowList, ...showList]
-      : showList;
+    state.showList = [...currentShowList, ...showList];
   },
+
   UNSHIFT_TO_SHOW_LIST(state, showList) {
     const currentShowList = state.showList;
-    state.showList = currentShowList != null
-      ? [...showList, ...currentShowList]
-      : showList;
+    state.showList = [...showList, ...currentShowList];
   },
+
   SET_TOTAL(state, total) {
     state.total = total;
   },
+
   INCREMENT_UNUPDATED_COUNTS(state) {
     state.unupdatedCounts += 1;
   },
+
   RESET_UNUPDATED_COUNTS(state) {
     state.unupdatedCounts = 0;
   },
+
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {
     state.actualIsSavedMap.set(key, isSaved);
   },
+
   DELETE_ACTUAL_IS_SAVED(state, key) {
     state.actualIsSavedMap.delete(key);
   },
