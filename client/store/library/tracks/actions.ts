@@ -218,6 +218,12 @@ const actions: Actions<
     // プレイヤーを更新
     dispatch('playback/modifyTrackSavedState', { trackId, isSaved }, { root: true });
 
+    // 履歴に該当のトラックがあれば更新
+    dispatch('library/history/modifyTrackSavedState', {
+      trackId,
+      isSaved,
+    }, { root: true });
+
     // ライブラリ一覧に表示されてない曲を保存した場合
     if (isSaved && savedTrackIndex === -1) {
       commit('INCREMENT_UNUPDATED_COUNTS');

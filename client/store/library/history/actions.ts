@@ -7,10 +7,15 @@ import { LibraryHistoryMutations } from './mutations';
 
 export type LibraryHistoryActions = {
   getRecentlyPlayed: () => Promise<void>
+  modifyTrackSavedState: (params: {
+    trackId: string
+    isSaved: boolean
+  }) => void
 }
 
 export type RootActions = {
   'library/history/getRecentlyPlayed': LibraryHistoryActions['getRecentlyPlayed'];
+  'library/history/modifyTrackSavedState': LibraryHistoryActions['modifyTrackSavedState']
 }
 
 const actions: Actions<
@@ -38,6 +43,20 @@ const actions: Actions<
     commit('SET_RECENTLY_PLAYED', recentlyPlayed.items);
     commit('SET_TRACK_HISTORY_LIST', trackList);
     commit('SET_TOTAL', recentlyPlayed.total);
+  },
+
+  modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
+    const currentTrackList = state.trackHistoryList;
+    const savedTrackIndex = currentTrackList.findIndex((track) => track.id === trackId);
+    // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
+    if (savedTrackIndex !== -1) {
+      const trackList = [...currentTrackList];
+      trackList[savedTrackIndex] = {
+        ...trackList[savedTrackIndex],
+        isSaved,
+      };
+      commit('SET_TRACK_HISTORY_LIST', trackList);
+    }
   },
 };
 
