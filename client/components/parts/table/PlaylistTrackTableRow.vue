@@ -82,7 +82,7 @@
       </td>
 
       <td
-        v-if="!hideAddedAt"
+        v-if="!hideAddedAt && item.addedAt != null"
         :title="item.addedAt.title"
         :class="$style.PlaylistTrackTableRow__smallText"
       >
