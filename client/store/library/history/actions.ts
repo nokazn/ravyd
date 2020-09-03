@@ -1,4 +1,6 @@
 import { Actions } from 'typed-vuex';
+
+import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { LibraryHistoryState } from './state';
 import { LibraryHistoryGetters } from './getters';
 import { LibraryHistoryMutations } from './mutations';
@@ -17,17 +19,25 @@ const actions: Actions<
   LibraryHistoryGetters,
   LibraryHistoryMutations
 > = {
-  async getRecentlyPlayed({ state, commit, dispatch }) {
+  async getRecentlyPlayed({ commit, dispatch }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
-    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed();
+    const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit: 50 });
 
-    const currentRecentluPlayed = state.recentlyPlayed;
-    // 再生履歴を保持していて、再生履歴が取得できなかった場合はパス
-    if (recentlyPlayed == null && currentRecentluPlayed != null) return;
+    // 再生履歴が取得できなかった場合はパス
+    if (recentlyPlayed == null) return;
 
-    commit('SET_RECENTLY_PLAYED', recentlyPlayed);
+    const trackIdList = recentlyPlayed.items.map((history) => history.track.id);
+    const isTrackSavedList = await this.$spotify.library.checkUserSavedTracks({ trackIdList });
+    const trackList = recentlyPlayed.items.map((history, i) => ({
+      ...convertTrackDetail({ isTrackSavedList })(history.track, i),
+      type: 'track' as const,
+    }));
+
+    commit('SET_RECENTLY_PLAYED', recentlyPlayed.items);
+    commit('SET_TRACK_HISTORY_LIST', trackList);
+    commit('SET_TOTAL', recentlyPlayed.total);
   },
 };
 
