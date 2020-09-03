@@ -175,13 +175,11 @@ const actions: Actions<
    * saveShows, removeShows から呼ばれる
    */
   modifyShowSavedState({ state, commit }, { showId, isSaved }) {
-    const currentShowList = state.showList;
-    const savedShowIndex = currentShowList
-      .findIndex((show) => show.id === showId);
+    // @todo コピーしないと表示に反映されない
+    const showList = [...state.showList];
+    const savedShowIndex = showList.findIndex((show) => show.id === showId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedShowIndex !== -1) {
-      // @todo コピーしないと表示に反映されない
-      const showList = [...currentShowList];
       // savedShowIndex から1個取り除く
       showList.splice(savedShowIndex, 1);
       commit('SET_SHOW_LIST', showList);
