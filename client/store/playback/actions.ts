@@ -314,22 +314,27 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       return;
     }
 
-    const { positionMs } = state;
+    const currentPositionMs = state.positionMs;
+    const currentTrackUri = state.trackUri;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
     const offset = payload?.offset;
 
+    // uri を指定していない場合
     const isNotUriPassed = contextUri == null && trackUriList == null;
-    const isRestartingTracks = state.trackUri === offset?.uri
-      || (
-        trackUriList != null
-        && offset?.position != null
-        && state.trackUri === trackUriList[offset.position]
-      );
+    // offset.uri で指定された uri が同じ場合か、trackUriList と offset.position で指定された uri が同じ場合
+    const isRestartingTracks = (
+      currentTrackUri != null
+      && currentTrackUri === offset?.uri
+    ) || (
+      trackUriList != null
+      && offset?.position != null
+      && currentTrackUri === trackUriList[offset.position]
+    );
 
     // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
     await this.$spotify.player.play(isNotUriPassed || isRestartingTracks
-      ? { positionMs }
+      ? { positionMs: currentPositionMs }
       : {
         contextUri,
         trackUriList,
