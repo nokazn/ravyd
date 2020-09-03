@@ -194,7 +194,7 @@ export default Vue.extend({
      * エピソードは isPlayable が false でも再生できるようにしている
      */
     disabled(): boolean {
-      return this.item.type !== 'episode' && !this.item.isPlayable;
+      return this.item.type !== 'episode' && this.item.isPlayable === false;
     },
     trackPath(): RawLocation {
       return this.item.type === 'track'
