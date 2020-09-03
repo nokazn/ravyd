@@ -18,6 +18,7 @@ import { RootState } from 'typed-vuex';
 
 type Data = {
   firstClicked: boolean
+  previousTimer: ReturnType<typeof setTimeout> | undefined
 }
 
 export default Vue.extend({
@@ -31,6 +32,7 @@ export default Vue.extend({
   data(): Data {
     return {
       firstClicked: false,
+      previousTimer: undefined,
     };
   },
 
@@ -50,15 +52,28 @@ export default Vue.extend({
     onPreivousClicked() {
       // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
       if (this.firstClicked) {
-        this.$dispatch('playback/previous');
+        console.log('double');
+        if (this.previousTimer != null) {
+          clearTimeout(this.previousTimer);
+          this.previousTimer = undefined;
+        }
+        // 二回クリックされても前の曲がなければ 0:00 から再生
+        if (this.disabledSkippingPrev) {
+          this.$dispatch('playback/seek', { positionMs: 0 });
+        } else {
+          this.$dispatch('playback/previous');
+        }
       } else {
         this.firstClicked = true;
-        const interval = 1000;
         setTimeout(() => {
           this.firstClicked = false;
-        }, interval);
+        }, 1000);
 
-        this.$dispatch('playback/seek', { positionMs: 0 });
+        // 二回目のクリックがないか 400ms は待ってキャンセルされなければ(とりあえず) 0:00 から再生
+        this.previousTimer = setTimeout(() => {
+          this.$dispatch('playback/seek', { positionMs: 0 });
+          this.previousTimer = undefined;
+        }, 400);
       }
     },
   },
