@@ -165,17 +165,18 @@ const actions: Actions<
     if (!isAuthorized) return;
 
     await this.$spotify.library.saveTracks({ trackIdList })
+      .then(() => {
+        trackIdList.forEach((trackId) => {
+          dispatch('modifyTrackSavedState', {
+            trackId,
+            isSaved: true,
+          });
+        });
+      })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリにトラックを保存できませんでした。');
       });
-
-    trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', {
-        trackId,
-        isSaved: true,
-      });
-    });
   },
 
   /**
@@ -186,17 +187,18 @@ const actions: Actions<
     if (!isAuthorized) return;
 
     await this.$spotify.library.removeUserSavedTracks({ trackIdList })
+      .then(() => {
+        trackIdList.forEach((trackId) => {
+          dispatch('modifyTrackSavedState', {
+            trackId,
+            isSaved: false,
+          });
+        });
+      })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'ライブラリからトラックを削除できませんでした。');
       });
-
-    trackIdList.forEach((trackId) => {
-      dispatch('modifyTrackSavedState', {
-        trackId,
-        isSaved: false,
-      });
-    });
   },
 
   /**
