@@ -71,6 +71,10 @@ export default class LibraryPage extends Vue implements Data {
       title: 'ポッドキャスト',
       to: '/library/shows',
     },
+    {
+      title: '最近再生した項目',
+      to: '/library/history',
+    },
   ];
   BACKGROUND_COLOR = BACKGROUND_COLOR;
 
