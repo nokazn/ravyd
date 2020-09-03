@@ -50,26 +50,26 @@ export default Vue.extend({
 
   methods: {
     onPreivousClicked() {
+      // 前の曲がない場合はすぐに先頭から再生
+      if (this.disabledSkippingPrev) {
+        this.$dispatch('playback/seek', { positionMs: 0 });
+        return;
+      }
+
       // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
       if (this.firstClicked) {
-        console.log('double');
         if (this.previousTimer != null) {
           clearTimeout(this.previousTimer);
           this.previousTimer = undefined;
         }
-        // 二回クリックされても前の曲がなければ 0:00 から再生
-        if (this.disabledSkippingPrev) {
-          this.$dispatch('playback/seek', { positionMs: 0 });
-        } else {
-          this.$dispatch('playback/previous');
-        }
+        this.$dispatch('playback/previous');
       } else {
         this.firstClicked = true;
         setTimeout(() => {
           this.firstClicked = false;
         }, 1000);
 
-        // 二回目のクリックがないか 400ms は待ってキャンセルされなければ(とりあえず) 0:00 から再生
+        // 二回目のクリックがないか 400ms は待ってキャンセルされなければ(とりあえず) 先頭から再生
         this.previousTimer = setTimeout(() => {
           this.$dispatch('playback/seek', { positionMs: 0 });
           this.previousTimer = undefined;
