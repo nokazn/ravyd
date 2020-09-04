@@ -126,13 +126,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
     const activeDevice = deviceList.find((device) => device.is_active);
+    const volumePercent = activeDevice != null
+      ? activeDevice.volume_percent
+      : 100;
 
     commit('SET_DEVICE_LIST', deviceList);
-    commit('SET_VOLUME_PERCENT', {
-      volumePercent: activeDevice != null
-        ? activeDevice.volume_percent as ZeroToHundred
-        : 100,
-    });
+    commit('SET_VOLUME_PERCENT', { volumePercent });
 
     if (activeDevice?.id != null) {
       commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
