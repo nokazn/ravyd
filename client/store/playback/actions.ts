@@ -91,20 +91,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const deviceId = params?.deviceId ?? state.deviceId;
     if (deviceId == null) return;
 
-    // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
-    await this.$spotify.player.transferPlayback({
-      deviceId,
-      play: params?.play ?? state.isPlaying,
-    }).then(() => {
-      commit('SET_ACTIVE_DEVICE_ID', deviceId);
-
+    const updateDeviceInfo = async () => {
       // update が指定された場合は必ずデバイスのリストを取得し直す
       const update = params?.update;
       const { deviceList } = state;
       const activeDevice = deviceList.find((device) => device.id === deviceId);
       if (update || activeDevice == null) {
         // デバイスのリストを取得しなおす
-        dispatch('getActiveDeviceList');
+        await dispatch('getActiveDeviceList');
       } else {
         // 再生されているデバイスの isActive を true にする
         const activeDeviceList: SpotifyAPI.Device[] = deviceList.map((device) => ({
@@ -113,6 +107,20 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         }));
 
         commit('SET_DEVICE_LIST', activeDeviceList);
+      }
+    };
+
+    // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
+    this.$spotify.player.transferPlayback({
+      deviceId,
+      play: params?.play ?? state.isPlaying,
+    }).then(async () => {
+      commit('SET_ACTIVE_DEVICE_ID', deviceId);
+
+      await updateDeviceInfo();
+      // 他のデバイスに変更した場合
+      if (deviceId !== state.deviceId) {
+        dispatch('getCurrentPlayback');
       }
     }).catch((err: Error) => {
       console.error({ err });
