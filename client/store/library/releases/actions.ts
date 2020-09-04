@@ -182,13 +182,11 @@ const actions: Actions<
    * saveReleases, removeReleases から呼ばれる
    */
   modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
-    const currentReleaseList = state.releaseList;
-    const savedReleaseIndex = currentReleaseList
-      .findIndex((release) => release.id === releaseId);
+    // @todo コピーしないと表示に反映されない
+    const releaseList = [...state.releaseList];
+    const savedReleaseIndex = releaseList.findIndex((release) => release.id === releaseId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedReleaseIndex !== -1) {
-      // @todo コピーしないと表示に反映されない
-      const releaseList = [...currentReleaseList];
       // savedReleaseIndex から1個取り除く
       releaseList.splice(savedReleaseIndex, 1);
       commit('SET_RELEASE_LIST', releaseList);
