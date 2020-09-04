@@ -19,7 +19,10 @@
         {{ positionMinutes }}:{{ positionSeconds }}
       </span>
 
-      <span :class="$style['SeekBar__mss--right']">
+      <span
+        :title="durationMsTitle"
+        :class="$style['SeekBar__mss--right']"
+      >
         {{ durationMss }}
       </span>
     </div>
@@ -32,8 +35,9 @@ import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import { elapsedTime } from '~~/utils/elapsedTime';
+import { DEFAULT_DURATION_MS } from '~/constants';
 
-export type Data = {
+type Data = {
   value: number
   debounceSetter: (positionMs: number) => number
   updateInterval: ReturnType<typeof setInterval> | undefined
@@ -72,7 +76,9 @@ export default Vue.extend({
     },
 
     disabled(): boolean {
-      return this.$getters()['playback/isDisallowed']('seeking');
+      // durationMs が不適な値の場合もシークバーを操作できないようにするs
+      return this.$getters()['playback/isDisallowed']('seeking')
+        || this.durationMs === DEFAULT_DURATION_MS;
     },
     disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
       return this.$state().playback.disabledPlayingFromBegining;
@@ -85,6 +91,11 @@ export default Vue.extend({
       return this.isPlaying
         ? 'active-icon'
         : 'inactive';
+    },
+    durationMsTitle(): string | undefined {
+      return this.durationMs === DEFAULT_DURATION_MS
+        ? '再生時間が取得できません'
+        : undefined;
     },
   },
 
@@ -154,6 +165,7 @@ export default Vue.extend({
       this.updateInterval = setInterval(() => {
         this.value += intervalMs;
 
+        // 1000ms 以内かどうかの情報がストアと異なる場合は更新
         const disabledPlayingFromBegining = this.value <= 1000;
         if (disabledPlayingFromBegining !== this.disabledPlayingFromBegining) {
           this.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBegining);

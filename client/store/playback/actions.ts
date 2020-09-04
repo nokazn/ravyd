@@ -377,13 +377,18 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   async seek({
-    state, getters, commit, dispatch,
+    state,
+    getters,
+    commit,
+    dispatch,
   }, { positionMs, currentPositionMs }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     if (getters.isDisallowed('seeking')) return;
 
+    // Playback SDK からの通知が来ない場合が偶にあるので先に変更しておく
+    commit('SET_POSITION_MS', positionMs);
     const positionMsOfCurrentState = state.positionMs;
 
     await this.$spotify.player.seek({ positionMs })
