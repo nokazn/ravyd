@@ -107,10 +107,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
 
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
-        const interval = activeDevice?.id === device_id
+        const firstTimeout = activeDevice?.id === device_id
           ? 30 * 1000
           : 0;
-        await dispatch('playback/getCurrentPlayback', interval, { root: true });
+        await dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
 
         console.log('Ready with this device 🎉');
       });
@@ -199,7 +199,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     playbackPlayer.disconnect();
 
     // タイマーはクリア
-    commit('playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID', undefined, { root: true });
+    commit('playback/SET_POLLING_PLAYBACK_TIMER', undefined, { root: true });
     commit('SET_PLAYBACK_PLAYER', undefined);
   },
 };

@@ -1,4 +1,4 @@
-import { Merge } from '~~/types/utility-types';
+import { Merge, ZeroToHundred } from '~~/types/utility-types';
 
 export namespace SpotifyAPI {
   export namespace Auth {
@@ -175,7 +175,7 @@ export namespace SpotifyAPI {
     is_restricted: boolean
     name: string
     type: 'Computer' | 'Tablet' | 'Smartphone' | 'Speaker' | 'TV' | 'AVR' | 'STB' | 'AudioDongle' | 'GameConsole' | 'CastVideo' | 'CastAudio' | 'Automobile' | 'Unknown'
-    volume_percent: number
+    volume_percent: ZeroToHundred
   }
 
   type Disallows = {
