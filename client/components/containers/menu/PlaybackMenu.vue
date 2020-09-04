@@ -185,7 +185,7 @@ export default Vue.extend({
         handler: () => {
           this.isLoading = true;
           Promise.all([
-            this.$dispatch('playback/getCurrentPlayback', 0),
+            this.$dispatch('playback/getCurrentPlayback'),
             this.$dispatch('playback/getActiveDeviceList'),
           ]).then(() => {
             this.isLoading = false;

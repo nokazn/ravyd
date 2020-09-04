@@ -19,7 +19,8 @@ export type PlaybackActions = {
     trackIndex?: number
   }) => void
   resetCustomContext: (uri: string | null) => void
-  getCurrentPlayback: (timeout?: number) => void
+  getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
+  pollCurrentPlayback: (timeout?: number) => void
   play: (payload?: ({
     contextUri: string
     trackUriList?: undefined
@@ -60,6 +61,7 @@ export type RootActions = {
   'playback/setCustomContext': PlaybackActions['setCustomContext']
   'playback/resetCustomContext': PlaybackActions['resetCustomContext']
   'playback/getCurrentPlayback': PlaybackActions['getCurrentPlayback']
+  'playback/pollCurrentPlayback': PlaybackActions['pollCurrentPlayback']
   'playback/play': PlaybackActions['play']
   'playback/pause': PlaybackActions['pause']
   'playback/seek': PlaybackActions['seek']
@@ -73,6 +75,9 @@ export type RootActions = {
   'playback/modifyTrackSavedState': PlaybackActions['modifyTrackSavedState']
   'playback/resetPlayback': PlaybackActions['resetPlayback']
 };
+
+// プレイヤーを操作した後に polling するまでの初回の timeout
+const DEFAULT_TIMEOUT = 500;
 
 const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, PlaybackMutations> = {
   /**
@@ -168,28 +173,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
    * Web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
    */
-  async getCurrentPlayback({ commit, dispatch }, timeout) {
-    // callback を アイテムが変わった後か、timeout ?? regularPeriod 後に実行
-    const setTimer = (callback: () => Promise<void>, timout?: number) => {
-      const isThisAppPlaying = this.$getters()['playback/isThisAppPlaying'];
-      const hasTrack = this.$getters()['playback/hasTrack'];
-      const remainingTimeMs = this.$getters()['playback/remainingTimeMs'];
-      const { isPlaying } = this.$state().playback;
-
-      // このデバイスで再生中の場合は30秒、そうでなければ15秒
-      const regurarPeriod = isThisAppPlaying
-        ? 30 * 1000
-        : 15 * 1000;
-      // トラックがセットされていて再生中の場合
-      const interval = hasTrack && isPlaying
-        // 曲を再生しきって 500ms の方が先に来ればそれを採用
-        ? Math.min(remainingTimeMs + 500, timout ?? regurarPeriod)
-        : timout ?? regurarPeriod;
-      const timer = setTimeout(callback, interval);
-
-      commit('SET_GET_CURRENT_PLAYBACK_TIMER_ID', timer);
-    };
-
+  async getCurrentPlayback({ commit, dispatch }) {
+    // currentTrack と durationMs を設定
     const setTrack = (
       item: SpotifyAPI.Track | SpotifyAPI.Episode | null,
       currentTrackId: string | undefined,
@@ -202,7 +187,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         }
         : undefined;
 
-      // @todo このデバイスで再生中でエピソードの内容が取得できなかった場合はパスする
+      // このデバイスで再生中でアイテムの内容が取得できなかった場合は Playback SDK の情報を信頼してパスする
       if (track == null && this.$getters()['playback/isThisAppPlaying']) return;
 
       const trackId = track?.id;
@@ -215,6 +200,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       commit('SET_DURATION_MS', item?.duration_ms);
     };
 
+    // アイテムの情報以外を設定
     const setPlayback = (playbackState: SpotifyAPI.Player.CurrentPlayback): void => {
       if (!playbackState) return;
 
@@ -233,66 +219,106 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       }
     };
 
-    const handler = async () => {
-      if (!this.$getters()['auth/isLoggedin']) return;
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return undefined;
 
-      const {
-        deviceId,
-        activeDeviceId: currentActiveDeviceId,
-        trackId: currentTrackId,
-      } = this.$state().playback;
+    const {
+      deviceId,
+      activeDeviceId: currentActiveDeviceId,
+      trackId: currentTrackId,
+    } = this.$state().playback;
+    // const hasTrack = this.$getters()['playback/hasTrack'];
+    const market = this.$getters()['auth/userCountryCode'];
+    const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
+
+    // 何らかのエラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合
+    if (playbackState == null) return undefined;
+
+    // デバイスが見つからないなどの理由で再生状況が取得できない場合
+    if (playbackState === '') {
+      // @todo 複数タブ開いた場合はデバイスが消失する場合がある?
+      await dispatch('transferPlayback', {
+        play: false,
+        update: true,
+      });
+
+      // 他のデバイスからこのデバイスに変更した場合はトーストを表示
+      if (deviceId !== currentActiveDeviceId) {
+        this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
+      }
+    } else {
+      setTrack(playbackState.item, currentTrackId);
+      setPlayback(playbackState);
+
+      const activeDeviceId = playbackState.device.id;
+      // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
+      if (activeDeviceId !== currentActiveDeviceId) {
+        dispatch('getActiveDeviceList')
+          .then(() => {
+            this.$toast.show('primary', 'デバイスの変更を検知しました。');
+          });
+      }
+    }
+
+    return playbackState;
+  },
+
+  /**
+   * getCurrentPlayback を定期的に実行する
+   * firstTimeout が指定された場合は、現在のタイマーを削除して、firstTimeout 後 (または1トラックの再生が終わってトラックが変わった後) に polling を開始する
+   */
+  pollCurrentPlayback({ commit, dispatch }, firstTimeout) {
+    // callback を アイテムが変わった後か、timeout ?? regularPeriod 後に実行
+    const setTimer = (callback: () => Promise<void>, timeout?: number) => {
+      const isThisAppPlaying = this.$getters()['playback/isThisAppPlaying'];
+      const remainingTimeMs = this.$getters()['playback/remainingTimeMs'];
       const hasTrack = this.$getters()['playback/hasTrack'];
-      const market = this.$getters()['auth/userCountryCode'];
+      const { isPlaying } = this.$state().playback;
 
-      const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
+      // @todo 設定で間隔設定できるようにしたい
+      // timeout が指定されない場合は、このデバイスで再生中の場合は30秒、そうでなければ10秒
+      const nextTimeout = timeout ?? (isThisAppPlaying
+        ? 30 * 1000
+        : 10 * 1000);
+      // トラックがセットされていて再生中の場合、曲を再生しきって 500ms の方が先に来ればそれを採用
+      const timer = setTimeout(callback, hasTrack && isPlaying
+        ? Math.min(remainingTimeMs + 500, nextTimeout)
+        : nextTimeout);
 
-      // 何らかのエラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合
+      commit('SET_POLLING_PLAYBACK_TIMER', timer);
+    };
+
+    const handler = async () => {
+      // getCurrentPlayback する前に再生中のアイテムの情報を保持していていたか
+      const previousHasTrack = this.$getters()['playback/hasTrack'];
+      const playbackState = await dispatch('getCurrentPlayback');
+
+      // 何らかのエラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合は普通にタイマーを設定
       if (playbackState == null) {
         setTimer(handler);
         return;
       }
 
+      // @todo 無限にリトライしちゃう
+      const retryTimeout = 2000;
+      // デバイスが見つからないなどの理由で再生状況が取得できない場合はリトライ
       if (playbackState === '') {
-        // デバイスが見つからないなどの理由で再生状況が取得できない場合はこのデバイスで再生
-        await dispatch('transferPlayback', {
-          play: false,
-          update: true,
-        });
-
-        // 他のデバイスからこのデバイスに変更した場合はトーストを表示
-        if (deviceId !== currentActiveDeviceId) {
-          this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
-        }
-      } else {
-        setTrack(playbackState.item, currentTrackId);
-        setPlayback(playbackState);
-
-        const activeDeviceId = playbackState.device.id;
-        // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
-        if (activeDeviceId !== currentActiveDeviceId) {
-          dispatch('getActiveDeviceList')
-            .then(() => {
-              this.$toast.show('primary', 'デバイスの変更を検知しました。');
-            });
-        }
+        setTimer(handler, retryTimeout);
+        return;
       }
 
-      /**
-       * 再生中のアイテムの情報が存在し、エピソード以外の現在のアイテムが取得できなかった場合はリトライ
-       */
-      const isEmptyItem = playbackState === '' || playbackState?.item == null;
-      const isEpisode = playbackState === '' || playbackState.currently_playing_type === 'episode';
-      const retryTimeout = hasTrack && isEmptyItem && !isEpisode
-        ? 2000
-        : undefined;
-      setTimer(handler, retryTimeout);
+      // 再生中のアイテムの情報を保持していて、エピソード以外でアイテムが取得できなかった場合はリトライ
+      const shouldRetry = previousHasTrack
+        && playbackState.item == null
+        && playbackState.currently_playing_type !== 'episode';
+
+      setTimer(handler, shouldRetry
+        ? retryTimeout
+        : undefined);
     };
 
-    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
-    if (!isAuthorized) return;
-
-    // timeout 後かトラックが変わった後に取得
-    setTimer(handler, timeout);
+    // firstTimeout ms 経過後、再帰的に getCurrentPlayback を実行
+    setTimer(handler, firstTimeout);
   },
 
   /**
@@ -343,14 +369,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         commit('SET_IS_PLAYING', true);
 
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('error', 'エラーが発生し、再生できません。');
 
-        dispatch('getCurrentPlayback');
+        dispatch('pollCurrentPlayback', 0);
       });
   },
 
@@ -366,16 +392,16 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     await this.$spotify.player.pause()
       .then(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.show('warning', 'エラーが発生しました。');
 
-        dispatch('getCurrentPlayback');
+        dispatch('pollCurrentPlayback', 0);
       }).finally(() => {
-        // エラーが発生しても停止させる
+        // エラーが発生しても表示は停止させる
         commit('SET_IS_PLAYING', false);
       });
   },
@@ -405,7 +431,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 1000);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -423,7 +449,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -441,7 +467,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -469,7 +495,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -503,7 +529,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -533,7 +559,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },
@@ -568,7 +594,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
-          dispatch('getCurrentPlayback', 500);
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
   },

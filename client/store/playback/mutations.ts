@@ -11,7 +11,7 @@ type ExtendedTrack = Spotify.Track & {
 }
 
 export type PlaybackMutations = {
-  SET_GET_CURRENT_PLAYBACK_TIMER_ID: ReturnType<typeof setTimeout> | number | undefined
+  SET_POLLING_PLAYBACK_TIMER: ReturnType<typeof setTimeout> | number | undefined
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_ID: string | undefined
   SET_DEVICE_LIST: SpotifyAPI.Device[]
@@ -35,7 +35,7 @@ export type PlaybackMutations = {
 };
 
 export type RootMutations = {
-  'playback/SET_GET_CURRENT_PLAYBACK_TIMER_ID': PlaybackMutations['SET_GET_CURRENT_PLAYBACK_TIMER_ID']
+  'playback/SET_POLLING_PLAYBACK_TIMER': PlaybackMutations['SET_POLLING_PLAYBACK_TIMER']
   'playback/SET_DEVICE_ID': PlaybackMutations['SET_DEVICE_ID']
   'playback/SET_ACTIVE_DEVICE_ID': PlaybackMutations['SET_ACTIVE_DEVICE_ID']
   'playback/SET_DEVICE_LIST': PlaybackMutations['SET_DEVICE_LIST']
@@ -59,17 +59,17 @@ export type RootMutations = {
 };
 
 const mutations: Mutations<PlaybackState, PlaybackMutations> = {
-  SET_GET_CURRENT_PLAYBACK_TIMER_ID(state, timer) {
-    const { getCurrentPlaybackTimer } = state;
-    if (typeof getCurrentPlaybackTimer === 'number') {
+  SET_POLLING_PLAYBACK_TIMER(state, timer) {
+    const { pollingPlaybackTimer } = state;
+    if (typeof pollingPlaybackTimer === 'number') {
       // クライアントサイドで実行
-      window.clearTimeout(getCurrentPlaybackTimer);
-    } else if (getCurrentPlaybackTimer != null) {
+      window.clearTimeout(pollingPlaybackTimer);
+    } else if (pollingPlaybackTimer != null) {
       // サーバーサイドで実行
-      clearTimeout(getCurrentPlaybackTimer);
+      clearTimeout(pollingPlaybackTimer);
     }
 
-    state.getCurrentPlaybackTimer = timer;
+    state.pollingPlaybackTimer = timer;
   },
 
   SET_DEVICE_ID(state, deviceId) {
