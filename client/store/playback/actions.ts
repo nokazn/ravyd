@@ -581,6 +581,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     commit,
     dispatch,
   }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
+    if (!isAuthorized) return;
+
     const {
       isMuted,
       volumePercent: currentVolumePercent,
