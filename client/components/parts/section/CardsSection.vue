@@ -10,7 +10,7 @@
         small
         :is-abbreviated="isAbbreviated"
         @on-clicked="onButtonClicked"
-        @mouseenter.native="onButtonHovered"
+        @mouseover.native="onButtonHovered"
       />
     </div>
 
@@ -38,7 +38,7 @@
       <ShowAllButton
         :is-abbreviated="isAbbreviated"
         @on-clicked="onButtonClicked"
-        @mouseenter.native="onButtonHovered"
+        @mouseover.native="onButtonHovered"
       />
     </div>
   </section>

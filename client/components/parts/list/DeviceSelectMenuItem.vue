@@ -49,7 +49,19 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { SpotifyAPI } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
+
+export type DeviceInfo = App.DeviceInfo;
+
+type Data = {
+  icon: string
+}
+
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: App.DeviceInfo['id']
+}
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
   switch (type) {
@@ -79,25 +91,6 @@ const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
       return 'mdi-help';
   }
 };
-
-export type DeviceInfo = {
-  id: string | undefined
-  type: string
-  isActive: boolean
-  disabled: boolean
-  title: string
-  subtitle: string
-}
-
-type Data = {
-  icon: string
-}
-
-const ON_CLICKED = 'on-clicked';
-
-export type On = {
-  [ON_CLICKED]: DeviceInfo['id']
-}
 
 export default Vue.extend({
   props: {
