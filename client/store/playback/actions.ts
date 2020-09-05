@@ -102,26 +102,26 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     };
 
     // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
-    await this.$spotify.player.transferPlayback({
-      deviceId,
-      play: params?.play ?? state.isPlaying,
-    }).then(async () => {
-      commit('SET_ACTIVE_DEVICE_ID', deviceId);
+    const play = params?.play ?? state.isPlaying;
+    await this.$spotify.player.transferPlayback({ deviceId, play })
+      .then(async () => {
+        commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
-      // deviceList はまだ前の状態のままなので更新
-      await updateDeviceList();
+        // deviceList はまだ前の状態のままなので更新
+        await updateDeviceList();
 
-      // 他のデバイスに変更した場合
-      if (deviceId !== thisDeviceId) {
-        dispatch('getCurrentPlayback');
-      }
-    }).catch((err: Error) => {
-      console.error({ err });
-      if (deviceId === thisDeviceId) {
-        dispatch('player/disconnectPlayer', undefined, { root: true });
-        dispatch('player/initPlayer', undefined, { root: true });
-      }
-    });
+        // 他のデバイスに変更した場合
+        if (deviceId !== thisDeviceId) {
+          dispatch('getCurrentPlayback');
+        }
+      })
+      .catch((err: Error) => {
+        console.error({ err });
+        if (deviceId === thisDeviceId) {
+          dispatch('player/disconnectPlayer', undefined, { root: true });
+          dispatch('player/initPlayer', undefined, { root: true });
+        }
+      });
   },
 
   /**
