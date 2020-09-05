@@ -176,7 +176,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
    * Web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
    */
-  async getCurrentPlayback({ commit, dispatch }) {
+  async getCurrentPlayback({ state, commit, dispatch }) {
     // currentTrack と durationMs を設定
     const setTrack = (
       item: SpotifyAPI.Track | SpotifyAPI.Episode | null,
@@ -226,10 +226,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (!isAuthorized) return undefined;
 
     const {
-      deviceId,
+      deviceId: thisDeviceId,
       activeDeviceId: currentActiveDeviceId,
       trackId: currentTrackId,
-    } = this.$state().playback;
+    } = state;
     // const hasTrack = this.$getters()['playback/hasTrack'];
     const market = this.$getters()['auth/userCountryCode'];
     const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
@@ -246,7 +246,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
 
       // 他のデバイスからこのデバイスに変更した場合はトーストを表示
-      if (currentActiveDeviceId != null && deviceId !== currentActiveDeviceId) {
+      if (currentActiveDeviceId != null && thisDeviceId !== currentActiveDeviceId) {
         this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
       }
     } else {
