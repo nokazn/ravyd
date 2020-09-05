@@ -311,7 +311,7 @@ export namespace SpotifyAPI {
         : null
       progress_ms: number | null
       repeat_state: RepeatState
-      shuffle_state: 'on' | 'off'
+      shuffle_state: boolean
       timestamp: number
     }
   }

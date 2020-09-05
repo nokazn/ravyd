@@ -214,7 +214,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
       commit('SET_IS_PLAYING', playbackState.is_playing);
       commit('SET_CONTEXT_URI', playbackState.context?.uri);
-      commit('SET_IS_SHUFFLED', playbackState.shuffle_state === 'on');
+      commit('SET_IS_SHUFFLED', playbackState.shuffle_state);
       commit('SET_DISALLOWS', playbackState.actions.disallows);
       commit('SET_POSITION_MS', playbackState.progress_ms ?? 0);
 
