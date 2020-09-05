@@ -51,7 +51,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   },
 
   isThisAppPlaying(state, getters) {
-    return getters.activeDevice?.id === state.deviceId;
+    return state.deviceId != null && getters.activeDevice?.id === state.deviceId;
   },
 
   currentTrack(state, getters) {
