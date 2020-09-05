@@ -97,8 +97,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         await dispatch('playback/getActiveDeviceList', undefined, { root: true });
 
-        const activeDevice = this.$getters()['playback/activeDevice'];
-        if (activeDevice == null) {
+        const currentActiveDevice = this.$getters()['playback/activeDevice'];
+        if (currentActiveDevice == null) {
           // アクティブなデバイスがない場合はこのデバイスで再生
           await dispatch('playback/transferPlayback', {
             deviceId: device_id,
@@ -107,10 +107,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
 
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
-        const firstTimeout = activeDevice?.id === device_id
+        const firstTimeout = this.$state().playback.activeDeviceId === device_id
           ? 30 * 1000
           : 0;
-        await dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
+        dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
 
         console.log('Ready with this device 🎉');
       });
@@ -147,12 +147,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         // playerState は Nullable
         if (playerState == null) return;
 
+        // @todo
+        console.log(playerState);
+
         const {
           trackId: currentTrackId,
           repeatMode: currentRepeatMode,
         } = this.$state().playback;
-        // @todo
-        console.log(playerState);
         const {
           context: { uri },
           track_window: { current_track: track },
