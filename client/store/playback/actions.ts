@@ -21,20 +21,12 @@ export type PlaybackActions = {
   resetCustomContext: (uri: string | null) => void
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
   pollCurrentPlayback: (timeout?: number) => void
-  play: (payload?: ({
-    contextUri: string
-    trackUriList?: undefined
-  } | {
-    contextUri?: undefined
-    trackUriList: string[]
-  }) & {
-    offset?: {
-      uri: string
-      position?: undefined
-    } | {
-      uri?: undefined
-      position: number
-    }
+  play: (payload?: (
+    { contextUri: string; trackUriList?: undefined }
+    | { contextUri?: undefined; trackUriList: string[] }
+  ) & {
+    offset?: { uri: string; position?: undefined }
+      | { uri?: undefined; position: number }
   }) => Promise<void>
   pause: () => Promise<void>
   seek: (payload: {
