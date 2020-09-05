@@ -5,6 +5,7 @@
     top
     left
     offset-y
+    origin="bottom right"
     :z-index="Z_INDEX"
   >
     <template #activator="{ on }">
