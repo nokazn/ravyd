@@ -46,7 +46,7 @@ export type RootGetters = {
 
 const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   activeDevice(state) {
-    const activeDevice = state.deviceList?.find((device) => device.is_active);
+    const activeDevice = state.deviceList.find((device) => device.is_active);
     return activeDevice != null
       ? activeDevice
       : undefined;
