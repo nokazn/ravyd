@@ -51,15 +51,19 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       }
 
       const { accessToken, expireIn } = res.data;
-      // コンフリクトして現在のトークンが一致しない場合 (409) はトークンを更新しない
+      // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
       if (res.status !== 409) {
         commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
         commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
-      } else {
-        // 一度リセットした expirationMs を元に戻す
-        commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+        return accessToken;
       }
-      return accessToken;
+
+      // 一度リセットした expirationMs を元に戻す
+      commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+      // アクセストークンを再取得
+      await dispatch('auth/getAccessToken', undefined, { root: true });
+
+      return this.$state().auth.accessToken;
     };
 
     window.onSpotifyWebPlaybackSDKReady = async () => {
