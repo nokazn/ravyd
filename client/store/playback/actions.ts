@@ -254,7 +254,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
 
       // 他のデバイスからこのデバイスに変更した場合はトーストを表示
-      if (deviceId !== currentActiveDeviceId) {
+      if (currentActiveDeviceId != null && deviceId !== currentActiveDeviceId) {
         this.$toast.show('primary', '再生していたデバイスが見つからないため、このデバイスをアクティブにします。');
       }
     } else {
