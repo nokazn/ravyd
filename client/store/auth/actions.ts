@@ -99,13 +99,15 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     const { accessToken, expireIn } = res.data;
-    // コンフリクトして現在のトークンが一致しない場合 (409) はトークンを更新しない
+    // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
     if (res.status !== 409) {
       commit('SET_ACCESS_TOKEN', accessToken);
       commit('SET_EXPIRATION_MS', expireIn);
     } else {
       // 一度リセットした expirationMs を元に戻す
       commit('SET_EXPIRATION_MS', currentExpirationMs);
+      // アクセストークンを再取得
+      await dispatch('getAccessToken');
     }
   },
 
