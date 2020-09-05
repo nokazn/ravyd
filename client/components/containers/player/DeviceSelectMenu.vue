@@ -68,9 +68,9 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import DeviceSelectMenuItem, { DeviceInfo, On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
+import DeviceSelectMenuItem, { On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
-import { SpotifyAPI } from '~~/types';
+import type { DeviceInfo } from '~/components/parts/list/DeviceSelectMenuItem.vue';
 
 type Data = {
   isShown: boolean
@@ -100,18 +100,7 @@ export default Vue.extend({
         : undefined;
     },
     deviceItemList(): DeviceInfo[] {
-      // @todo any[] で推論されてしまう
-      const deviceList = this.$state().playback.deviceList as SpotifyAPI.Device[];
-      const disabled = this.$getters()['playback/isDisallowed']('transferring_playback');
-
-      return deviceList.map((device) => ({
-        id: device.id ?? undefined,
-        type: device.type,
-        isActive: device.is_active,
-        disabled: device.id == null || disabled,
-        title: device.is_active ? '再生中のデバイス' : device.name,
-        subtitle: device.is_active ? device.name : 'Spotify Connect',
-      }));
+      return this.$getters()['playback/deviceList'];
     },
   },
 

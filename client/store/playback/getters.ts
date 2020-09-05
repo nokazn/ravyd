@@ -10,6 +10,7 @@ import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined
+  deviceList: App.DeviceInfo[]
   isThisAppPlaying: boolean
   currentTrack: App.SimpleTrackDetail | undefined
   trackQueue: App.TrackQueueInfo[]
@@ -27,6 +28,7 @@ export type PlaybackGetters = {
 
 export type RootGetters = {
   'playback/activeDevice': PlaybackGetters['activeDevice']
+  'playback/deviceList': PlaybackGetters['deviceList']
   'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
   'playback/currentTrack': PlaybackGetters['currentTrack']
   'playback/trackQueue': PlaybackGetters['trackQueue']
@@ -48,6 +50,23 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
     return activeDevice != null
       ? activeDevice
       : undefined;
+  },
+
+  deviceList(state, getters) {
+    const disabled = getters.isDisallowed('transferring_playback');
+
+    return state.deviceList.map((device) => ({
+      id: device.id ?? undefined,
+      type: device.type,
+      isActive: device.is_active,
+      disabled: device.id == null || disabled,
+      title: device.is_active
+        ? '再生中のデバイス'
+        : device.name,
+      subtitle: device.is_active
+        ? device.name
+        : 'Spotify Connect',
+    }));
   },
 
   isThisAppPlaying(state, getters) {

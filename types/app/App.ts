@@ -73,6 +73,15 @@ export namespace App {
     durationMs: number | undefined
   }
 
+  export type DeviceInfo = {
+    id: string | undefined
+    type: string
+    isActive: boolean
+    disabled: boolean
+    title: string
+    subtitle: string
+  }
+
   // ContentListItem component
   export type ContentItems = {
     track: SpotifyAPI.Track
