@@ -40,7 +40,7 @@
           small
           :loading="isRefreshingDeviceList"
           title="デバイスの一覧を更新"
-          @click.stop="onUpdateButtonClicked"
+          @click.stop="updateDeviceList"
         >
           <v-icon>
             mdi-refresh
@@ -106,9 +106,12 @@ export default Vue.extend({
 
   methods: {
     toggleMenu() {
+      if (!this.isShown) {
+        this.updateDeviceList();
+      }
       this.isShown = !this.isShown;
     },
-    async onUpdateButtonClicked() {
+    async updateDeviceList() {
       this.isRefreshingDeviceList = true;
       await this.$dispatch('playback/getActiveDeviceList');
       this.isRefreshingDeviceList = false;
