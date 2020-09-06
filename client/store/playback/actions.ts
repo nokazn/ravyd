@@ -107,12 +107,16 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       .then(async () => {
         commit('SET_ACTIVE_DEVICE_ID', deviceId);
 
+        if (deviceId === thisDeviceId) {
+          this.$toast.show('primary', 'このデバイスで再生します');
+        }
+
         // deviceList はまだ前の状態のままなので更新
         await updateDeviceList();
 
         // 他のデバイスに変更した場合
         if (deviceId !== thisDeviceId) {
-          dispatch('getCurrentPlayback');
+          dispatch('pollCurrentPlayback', 1000);
         }
       })
       .catch((err: Error) => {
