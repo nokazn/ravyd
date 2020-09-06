@@ -1,10 +1,13 @@
 <template>
-  <div :class="$style.VolumeSlider">
+  <div
+    :title="sliderTitle"
+    :class="$style.VolumeSlider"
+  >
     <v-btn
       icon
       :width="32"
       :height="32"
-      :title="volumeButtonTitle"
+      :title="buttonTitle"
       @click="onVolumeButtonClicked"
     >
       <v-icon
@@ -16,13 +19,13 @@
     </v-btn>
 
     <v-slider
-      :value="volumePercent"
       color="active-icon"
       thumb-color="white"
       hide-details
       dense
-      @change="onChange"
+      :value="volumePercent"
       @input="onInput"
+      @change="onChange"
     />
   </div>
 </template>
@@ -43,19 +46,16 @@ type Data = {
 type VolumeButtonIcon = 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
 
 const volumeButtonIcon = (volumePercent: number, isMuted: boolean): VolumeButtonIcon => {
-  if (isMuted) return 'mdi-volume-mute';
+  if (isMuted || volumePercent === 0) return 'mdi-volume-mute';
+  if (volumePercent === 100) return 'mdi-volume-high';
 
+  console.log(volumePercent);
   const volumeIconList: Array<VolumeButtonIcon> = [
-    'mdi-volume-mute',
     'mdi-volume-low',
     'mdi-volume-medium',
     'mdi-volume-high',
-    'mdi-volume-high',
   ];
-  const index = Math.min(
-    Math.floor((volumePercent / 100) * volumeIconList.length),
-    volumeIconList.length - 1,
-  );
+  const index = Math.floor((volumePercent / 100) * volumeIconList.length);
 
   return volumeIconList[index];
 };
@@ -63,7 +63,7 @@ const volumeButtonIcon = (volumePercent: number, isMuted: boolean): VolumeButton
 export default Vue.extend({
   data(): Data {
     const volumePercent = 100;
-    const interval = 100;
+    const interval = 10;
     const debounceSetter = debounce((positionMs: number) => positionMs, interval);
 
     return {
@@ -78,10 +78,15 @@ export default Vue.extend({
     isMuted(): RootState['playback']['isMuted'] {
       return this.$state().playback.isMuted;
     },
-    volumeButtonTitle(): string {
+    buttonTitle(): string {
       return this.isMuted
         ? 'ミュートを解除'
         : 'ミュート';
+    },
+    sliderTitle(): string {
+      return this.isMuted
+        ? 'ミュート中'
+        : `ボリューム ${this.volumePercent}%`;
     },
     volumeButtonColor(): string | undefined {
       return this.isMuted
