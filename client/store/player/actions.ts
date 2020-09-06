@@ -70,8 +70,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // player が登録されていないときのみ初期化
       if (getters.isPlayerConnected || window.Spotify == null) return;
 
+      // volumePercent と isMuted は localStorage で永続化されてる
+      const volume = this.$state().playback.isMuted
+        ? 0
+        : this.$state().playback.volumePercent / 100;
       const player = new Spotify.Player({
         name: APP_NAME,
+        // 0 ~ 1 で指定
+        volume,
         // アクセストークンの更新が必要になったら呼ばれる
         getOAuthToken: async (callback) => {
           const {

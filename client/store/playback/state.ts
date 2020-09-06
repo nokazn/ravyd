@@ -60,7 +60,7 @@ const state = (): PlaybackState => ({
   isShuffled: false,
   repeatMode: undefined,
   disallows: {},
-  volumePercent: 0,
+  volumePercent: 100,
   isMuted: false,
 });
 

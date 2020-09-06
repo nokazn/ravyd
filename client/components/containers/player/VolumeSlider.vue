@@ -49,7 +49,6 @@ const volumeButtonIcon = (volumePercent: number, isMuted: boolean): VolumeButton
   if (isMuted || volumePercent === 0) return 'mdi-volume-mute';
   if (volumePercent === 100) return 'mdi-volume-high';
 
-  console.log(volumePercent);
   const volumeIconList: Array<VolumeButtonIcon> = [
     'mdi-volume-low',
     'mdi-volume-medium',
@@ -62,7 +61,10 @@ const volumeButtonIcon = (volumePercent: number, isMuted: boolean): VolumeButton
 
 export default Vue.extend({
   data(): Data {
-    const volumePercent = 100;
+    // volumePercent と isMuted は localStorage で永続化されてる
+    const volumePercent = this.$state().playback.isMuted
+      ? 0
+      : this.$state().playback.volumePercent;
     const interval = 10;
     const debounceSetter = debounce((positionMs: number) => positionMs, interval);
 

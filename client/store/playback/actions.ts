@@ -134,15 +134,16 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const { devices } = await this.$spotify.player.getActiveDeviceList();
     const deviceList = devices ?? [];
     const activeDevice = deviceList.find((device) => device.is_active);
-    const volumePercent = activeDevice != null
-      ? activeDevice.volume_percent
-      : 100;
 
     commit('SET_DEVICE_LIST', deviceList);
-    commit('SET_VOLUME_PERCENT', { volumePercent });
 
-    if (activeDevice?.id != null) {
-      commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+    if (activeDevice != null) {
+      // activeDevice がなく、このデバイスで再生する場合は localStorage で永続化されてる volumePercent が採用される
+      commit('SET_VOLUME_PERCENT', { volumePercent: activeDevice.volume_percent });
+
+      if (activeDevice.id != null) {
+        commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+      }
     }
   },
 
@@ -657,7 +658,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
     commit('SET_DISALLOWS', {});
-    commit('SET_VOLUME_PERCENT', { volumePercent: 0 });
     commit('SET_IS_MUTED', false);
   },
 };
