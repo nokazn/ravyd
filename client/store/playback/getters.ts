@@ -49,9 +49,7 @@ export type RootGetters = {
 const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   activeDevice(state) {
     const activeDevice = state.deviceList.find((device) => device.is_active);
-    return activeDevice != null
-      ? activeDevice
-      : undefined;
+    return activeDevice;
   },
 
   deviceList(state, getters) {
@@ -78,7 +76,9 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
 
   // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
   isAnotherDevicePlaying(state, getters) {
-    return state.deviceId != null && getters.activeDevice?.id !== state.deviceId;
+    return state.deviceId != null
+      && getters.activeDevice != null
+      && getters.activeDevice.id !== state.deviceId;
   },
 
   currentTrack(state, getters) {
