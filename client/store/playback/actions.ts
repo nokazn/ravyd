@@ -84,24 +84,40 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const deviceId = params?.deviceId ?? thisDeviceId;
     if (deviceId == null) return;
 
+    // 変更するデバイスのボリュームを取得
+    const getVolumePercent = async (
+      deviceList: SpotifyAPI.Device[],
+    ): Promise<ZeroToHundred |undefined> => {
+      // 違うデバイスで再生する場合
+      if (deviceId !== thisDeviceId) {
+        return deviceList.find((device) => device.is_active)?.volume_percent;
+      }
+
+      // @todo 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
+      const volume = await this.$state().player.playbackPlayer?.getVolume();
+      return volume != null
+        ? volume * 100 as ZeroToHundred
+        : undefined;
+    };
+
     // デバイス一覧を更新
     const updateDeviceList = async () => {
       if (params?.update) {
         // デバイスのリストを取得しなおす
         await dispatch('getActiveDeviceList');
-      } else {
-        // 再生されているデバイスの isActive を true にする
-        const deviceList: SpotifyAPI.Device[] = this.$state().playback.deviceList.map((device) => ({
-          ...device,
-          is_active: device.id === deviceId,
-        }));
-        commit('SET_DEVICE_LIST', deviceList);
+        return;
+      }
 
-        // 変更したボリュームの値を適用
-        const volumePercent = deviceList.find((device) => device.is_active)?.volume_percent;
-        if (volumePercent != null) {
-          commit('SET_VOLUME_PERCENT', { volumePercent });
-        }
+      // 再生されているデバイスの isActive を true にする
+      const deviceList: SpotifyAPI.Device[] = this.$state().playback.deviceList.map((device) => ({
+        ...device,
+        is_active: device.id === deviceId,
+      }));
+      commit('SET_DEVICE_LIST', deviceList);
+
+      const volumePercent = await getVolumePercent(deviceList);
+      if (volumePercent != null) {
+        commit('SET_VOLUME_PERCENT', { volumePercent });
       }
     };
 
