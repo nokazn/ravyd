@@ -106,6 +106,7 @@ export default Vue.extend({
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
+    // 他のデバイスで再生中の場合高さが変わる
     contentContainerStyles(): { [k in string]?: string } {
       const backgroundStyle = this.$getters().backgroundStyles(320);
       const padding = this.isAnotherDevicePlaying
@@ -117,6 +118,7 @@ export default Vue.extend({
         padding,
       };
     },
+    // 他のデバイスで再生中の場合高さが変わる
     contentOverlayStyles(): { [k in string]?: string } {
       const top = `${HEADER_HEIGHT}px`;
       const left = `${NAVIGATION_DRAWER_WIDTH}px`;

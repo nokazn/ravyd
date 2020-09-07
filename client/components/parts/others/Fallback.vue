@@ -35,7 +35,8 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Fallback {
-  height: calc(100vh - #{$g-header-height} - #{$g-footer-height});
+  // 他のデバイスで再生中の場合に合わせておく
+  height: calc(100vh - #{$g-header-height} - #{$g-footer-height} - #{$g-device-bar-height});
   padding: 1em 2em;
 
   &__wrapper {

@@ -136,6 +136,7 @@ export default Vue.extend({
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
+    // 他のデバイスで再生中の場合高さが変わる
     height(): number {
       return this.isAnotherDevicePlaying
         ? FOOTER_HEIGHT + DEVICE_BAR_HEIGHT
@@ -254,7 +255,7 @@ export default Vue.extend({
 
   &__center {
     position: absolute;
-    top: 45%;
+    top: 48%;
     left: 50%;
     width: 40vw;
     transform: translate(-50%, -50%);
