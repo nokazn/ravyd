@@ -20,20 +20,15 @@
     />
     <NavigationDrawer v-if="isLoggedin" />
 
-    <main
-      :class="$style.ContentContainer"
-      :style="styles"
-    >
+    <main :style="contentContainerStyles">
       <div
         :ref="SPACER_REF"
         :class="$style.Spacer"
       />
-
       <nuxt />
-
       <Overlay
         v-bind="$overlay"
-        :class="$style.ContentOverlay"
+        :style="contentOverlayStyles"
         @on-changed="onOverlayChanged"
       />
     </main>
@@ -62,7 +57,14 @@ import Footer from '~/components/globals/Footer.vue';
 import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
-import { BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
+import {
+  BACKGROUND_COLOR,
+  Z_INDEX_OF,
+  HEADER_HEIGHT,
+  FOOTER_HEIGHT,
+  DEVICE_BAR_HEIGHT,
+  NAVIGATION_DRAWER_WIDTH,
+} from '~/constants';
 
 const SPACER_REF = 'SPACER_REF';
 
@@ -101,8 +103,30 @@ export default Vue.extend({
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
-    styles(): { background: string } | undefined {
-      return this.$getters().backgroundStyles(320);
+    isAnotherDevicePlaying(): boolean {
+      return this.$getters()['playback/isAnotherDevicePlaying'];
+    },
+    // 他のデバイスで再生中の場合高さが変わる
+    contentContainerStyles(): { [k in string]?: string } {
+      const backgroundStyle = this.$getters().backgroundStyles(320);
+      const padding = this.isAnotherDevicePlaying
+        ? `0 0 calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT}px) ${NAVIGATION_DRAWER_WIDTH}px`
+        : `0 0 ${FOOTER_HEIGHT}px ${NAVIGATION_DRAWER_WIDTH}px`;
+
+      return {
+        ...backgroundStyle,
+        padding,
+      };
+    },
+    // 他のデバイスで再生中の場合高さが変わる
+    contentOverlayStyles(): { [k in string]?: string } {
+      const top = `${HEADER_HEIGHT}px`;
+      const left = `${NAVIGATION_DRAWER_WIDTH}px`;
+      const bottom = this.isAnotherDevicePlaying
+        ? `calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT})px`
+        : `${FOOTER_HEIGHT}px`;
+
+      return { top, bottom, left };
     },
   },
 
@@ -141,19 +165,19 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ContentContainer {
+/* .ContentContainer {
   padding: 0 0 $g-footer-height $g-navigation-drawer-width;
-}
+} */
 
 .Spacer {
   height: $g-header-height;
 }
 
-.ContentOverlay {
+/* .ContentOverlay {
   top: $g-header-height;
   bottom: $g-footer-height;
   left: $g-navigation-drawer-width;
-}
+} */
 
 .ProgressCircular {
   bottom: $g-footer-height;

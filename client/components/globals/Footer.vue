@@ -3,21 +3,21 @@
     app
     padless
     :elevation="8"
-    :height="FOOTER_HEIGHT"
+    :height="height"
     :color="FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer"
   >
     <div :class="$style.Footer__container">
-      <div :class="$style.Footer__left">
+      <div :class="$style.Left">
         <ReleaseArtwork
           :src="artWorkSrc(64)"
           :size="64"
           :alt="trackName"
           :title="trackName"
-          :class="$style.Footer__artWork"
+          :class="$style.Left__artWork"
         />
 
-        <div :class="$style.Footer__trackInfo">
+        <div :class="$style.Left__trackInfo">
           <MarqueeTrackName
             v-if="hasTrack"
             :id="trackId"
@@ -32,7 +32,7 @@
           />
         </div>
 
-        <div :class="$style.Footer__favoriteButton">
+        <div :class="$style.Left__favoriteButton">
           <FavoriteButton
             v-if="isTrack && hasTrack"
             :is-favorited="isSavedTrack"
@@ -42,16 +42,16 @@
         </div>
       </div>
 
-      <div :class="$style.Footer__center">
+      <div :class="$style.Center">
         <seek-bar
-          :class="$style.Footer__seekBar"
+          :class="$style.Center__seekBar"
         />
 
         <MediaControllersWrapper :type="trackType" />
       </div>
 
-      <div :class="$style.Footer__right">
-        <div :class="$style.Footer__buttons">
+      <div :class="$style.Right">
+        <div :class="$style.Right__buttons">
           <TrackQueueMenu />
 
           <DeviceSelectMenu />
@@ -62,6 +62,8 @@
         <VolumeSlider />
       </div>
     </div>
+
+    <DeviceBar v-if="isAnotherDevicePlaying" />
 
     <v-overlay
       v-if="!isLoaded"
@@ -88,14 +90,20 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import { FOOTER_BACKGROUND_COLOR, FOOTER_HEIGHT, Z_INDEX_OF } from '~/constants';
+import DeviceBar from '~/components/globals/DeviceBar.vue';
+
+import {
+  FOOTER_BACKGROUND_COLOR,
+  FOOTER_HEIGHT,
+  DEVICE_BAR_HEIGHT,
+  Z_INDEX_OF,
+} from '~/constants';
 
 type Data = {
   isLoaded: boolean
   deviceSelectMenu: boolean
   mutationUnsubscribe: (() => void) | undefined
   FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
-  FOOTER_HEIGHT: number
   Z_INDEX: number
 }
 
@@ -111,6 +119,7 @@ export default Vue.extend({
     DeviceSelectMenu,
     PlaybackMenu,
     VolumeSlider,
+    DeviceBar,
   },
 
   data(): Data {
@@ -119,12 +128,20 @@ export default Vue.extend({
       deviceSelectMenu: false,
       mutationUnsubscribe: undefined,
       FOOTER_BACKGROUND_COLOR,
-      FOOTER_HEIGHT,
       Z_INDEX: Z_INDEX_OF.loading,
     };
   },
 
   computed: {
+    isAnotherDevicePlaying(): boolean {
+      return this.$getters()['playback/isAnotherDevicePlaying'];
+    },
+    // 他のデバイスで再生中の場合高さが変わる
+    height(): number {
+      return this.isAnotherDevicePlaying
+        ? FOOTER_HEIGHT + DEVICE_BAR_HEIGHT
+        : FOOTER_HEIGHT;
+    },
     hasTrack(): RootGetters['playback/hasTrack'] {
       return this.$getters()['playback/hasTrack'];
     },
@@ -193,35 +210,42 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
+$side-margin: 1vw;
+
 .Footer {
   z-index: z-index-of(footer) !important;
 
   &__container {
     display: grid;
     justify-content: space-between;
+    align-content: center;
     grid-template-columns: 25vw 25vw;
     position: relative;
-    width: 100%;
+    width: 100vw;
+    height: $g-footer-height;
   }
+}
 
-  &__left {
-    display: flex;
-    height: 100%;
-    margin-left: 1vw;
+.Left {
+  $track-info-line-space: 0.75em;
 
-    & > *:not(:last-child) {
-      margin-right: 0.3em;
-    }
+  display: flex;
+  align-items: center;
+  margin-left: $side-margin;
+  height: 100%;
+
+  & > *:not(:last-child) {
+    margin-right: 0.3em;
   }
 
   &__trackInfo {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-x: hidden;
+    overflow: hidden;
 
     & > *:not(:last-child) {
-      margin-bottom: 0.75em;
+      margin-bottom: $track-info-line-space;
     }
   }
 
@@ -231,38 +255,38 @@ export default Vue.extend({
     height: 100%;
 
     & > *:first-child {
-      transform: translateY(-30%);
+      transform: translateY(-$track-info-line-space);
     }
   }
+}
 
-  &__center {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    width: 40vw;
-    transform: translate(-50%, -50%);
-  }
+.Center {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  width: 40vw;
+  transform: translate(-50%, -50%);
 
   &__seekBar {
     width: 40vw;
   }
+}
 
-  &__right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    margin-right: 1vw;
-  }
+.Right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  margin-right: $side-margin;
 
   &__buttons {
     & > *:not(:last-child) {
       margin-right: 8px;
     }
   }
+}
 
-  .Overlay {
-    z-index: z-index-of(loading);
-  }
+.Overlay {
+  z-index: z-index-of(loading);
 }
 </style>

@@ -9,11 +9,9 @@
     class="NavigationDrawer"
   >
     <v-list
-      :class="[
-        $style.NavigationDrawer__list,
-        $style.List,
-      ]"
+      :class="$style.List"
       class="g-custom-scroll-bar"
+      :style="listStyles"
     >
       <div :class="$style.List__header">
         <AccountMenu />
@@ -77,7 +75,12 @@ import { RootState } from 'typed-vuex';
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
-import { NAVIGATION_DRAWER_BACKGROUND_COLOR, NAVIGATION_DRAWER_WIDTH } from '~/constants';
+import {
+  NAVIGATION_DRAWER_BACKGROUND_COLOR,
+  NAVIGATION_DRAWER_WIDTH,
+  FOOTER_HEIGHT,
+  DEVICE_BAR_HEIGHT,
+} from '~/constants';
 
 type NavigationGroup = {
   items: Item[]
@@ -192,6 +195,14 @@ export default Vue.extend({
 
       return playlists;
     },
+    // 他のデバイスで再生中の場合高さが変わる
+    listStyles(): { height: string } {
+      const height = this.$getters()['playback/isAnotherDevicePlaying']
+        ? `calc(100vh - ${FOOTER_HEIGHT}px - ${DEVICE_BAR_HEIGHT}px)`
+        : `calc(100vh - ${FOOTER_HEIGHT}px)`;
+
+      return { height };
+    },
   },
 
   methods: {
@@ -214,25 +225,22 @@ export default Vue.extend({
 .NavigationDrawer {
   z-index: z-index-of(navigation-drawer) !important;
 
-  &__list {
+  .List {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - #{$g-footer-height});
     overflow-y: auto;
 
-    .List {
-      &__header {
-        padding: 4px 12px;
-        font-size: 0.8em;
+    &__header {
+      padding: 4px 12px;
+      font-size: 0.8em;
 
-        & > *:not(:last-child) {
-          margin-right: 8px;
-        }
+      & > *:not(:last-child) {
+        margin-right: 8px;
       }
+    }
 
-      &__divider {
-        margin: 8px 0;
-      }
+    &__divider {
+      margin: 8px 0;
     }
   }
 }
