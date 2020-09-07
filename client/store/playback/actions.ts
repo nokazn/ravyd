@@ -10,7 +10,7 @@ export type PlaybackActions = {
   transferPlayback: (params?: {
     deviceId?: string
     play?: boolean
-    update?: boolean
+    update?: true
   }) => Promise<void>
   getActiveDeviceList: () => Promise<void>
   setCustomContext: (params: {
@@ -86,7 +86,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     // デバイス一覧を更新
     const updateDeviceList = async () => {
-      // update が指定された場合は必ずデバイスのリストを取得し直す
       if (params?.update) {
         // デバイスのリストを取得しなおす
         await dispatch('getActiveDeviceList');
@@ -96,8 +95,13 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           ...device,
           is_active: device.id === deviceId,
         }));
-
         commit('SET_DEVICE_LIST', deviceList);
+
+        // 変更したボリュームの値を適用
+        const volumePercent = deviceList.find((device) => device.is_active)?.volume_percent;
+        if (volumePercent != null) {
+          commit('SET_VOLUME_PERCENT', { volumePercent });
+        }
       }
     };
 
@@ -106,10 +110,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     await this.$spotify.player.transferPlayback({ deviceId, play })
       .then(async () => {
         commit('SET_ACTIVE_DEVICE_ID', deviceId);
-
-        if (deviceId === thisDeviceId) {
-          this.$toast.show('primary', 'このデバイスで再生します');
-        }
 
         // deviceList はまだ前の状態のままなので更新
         await updateDeviceList();
