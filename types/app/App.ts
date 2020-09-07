@@ -161,7 +161,7 @@ export namespace App {
     id: string
     name: string
     uri: string
-    artists: SpotifyAPI.SimpleArtist[]
+    artists: SpotifyAPI.Artist[]
     releaseDate: string
     releaseDatePrecision: string
     totalTracks: number

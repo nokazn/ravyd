@@ -54,7 +54,7 @@ import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
-export type Data = {
+type Data = {
   noAvatarIconSize: number
 }
 
@@ -64,6 +64,19 @@ const ON_LOADED = 'on-loaded';
 export type On = {
   ON_MEDIA_BUTTON_CLICKED: void
   ON_LOADED: void
+}
+
+export type Props = {
+  src: string | undefined
+  alt: string
+  size?: number
+  minSize?: number
+  maxSize?: number
+  isOverlayed?: boolean
+  icon?: MediaIcon
+  defaultUserIcon?: string
+  smallIcon?: boolean
+  shadow?: boolean
 }
 
 export default Vue.extend({
@@ -80,10 +93,6 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    icon: {
-      type: String as PropType<MediaIcon>,
-      default: 'mdi-play-circle',
-    },
     size: {
       type: Number as PropType<number | undefined>,
       default: undefined,
@@ -99,6 +108,10 @@ export default Vue.extend({
     isOverlayed: {
       type: Boolean,
       default: false,
+    },
+    icon: {
+      type: String as PropType<MediaIcon>,
+      default: 'mdi-play-circle',
     },
     defaultUserIcon: {
       type: String,

@@ -32,7 +32,7 @@ export namespace SpotifyAPI {
     // artist の album を取得すると├に含まれる値
     album_group?: 'album' | 'single' | 'compilation' | 'appears_on'
     album_type: 'album' | 'single' | 'compilation'
-    artists: Artist[]
+    artists: SimpleArtist[]
     available_markets: Country[]
     copyrights: Copyright[]
     external_urls: ExternalUrls
