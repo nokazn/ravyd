@@ -31,7 +31,7 @@ export default Vue.extend({
 .DeviceBar {
   height: $g-device-bar-height;
   width: 100vw;
-  padding: 0 12px;
+  padding: 0 1vw;
   font-size: 12px;
   line-height: 24px;
   display: flex;
