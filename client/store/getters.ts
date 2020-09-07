@@ -5,7 +5,7 @@ import { RootState } from './state';
 import { App } from '~~/types';
 
 export type RootGetters = {
-  backgroundStyles: (height: number) => { background: string } | undefined
+  backgroundStyles: (height: number) => { background?: string }
   headerStyles: { backgroundColor: string }
 }
 
@@ -18,7 +18,7 @@ const getters: Getters<RootState, RootGetters> = {
 
       return rgb != null
         ? { background: `linear-gradient(to bottom, rgb(${rgb}) 80px, ${BACKGROUND_COLOR} ${gradationHeight}px)` }
-        : undefined;
+        : {};
     };
   },
 

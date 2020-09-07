@@ -12,6 +12,7 @@ export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined
   deviceList: App.DeviceInfo[]
   isThisAppPlaying: boolean
+  isAnotherDevicePlaying: boolean
   currentTrack: App.SimpleTrackDetail | undefined
   trackQueue: App.TrackQueueInfo[]
   releaseId: string | undefined
@@ -30,6 +31,7 @@ export type RootGetters = {
   'playback/activeDevice': PlaybackGetters['activeDevice']
   'playback/deviceList': PlaybackGetters['deviceList']
   'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
+  'playback/isAnotherDevicePlaying': PlaybackGetters['isAnotherDevicePlaying']
   'playback/currentTrack': PlaybackGetters['currentTrack']
   'playback/trackQueue': PlaybackGetters['trackQueue']
   'playback/releaseId': PlaybackGetters['releaseId']
@@ -69,8 +71,14 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
     }));
   },
 
+  // このデバイスの ID が存在し、アクティブなデバイスの ID と同じとき
   isThisAppPlaying(state, getters) {
     return state.deviceId != null && getters.activeDevice?.id === state.deviceId;
+  },
+
+  // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
+  isAnotherDevicePlaying(state, getters) {
+    return state.deviceId != null && getters.activeDevice?.id !== state.deviceId;
   },
 
   currentTrack(state, getters) {
