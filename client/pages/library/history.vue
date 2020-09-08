@@ -2,6 +2,7 @@
   <div :class="$style.LibraryHistoryPage">
     <PlaylistTrackTable
       v-if="trackList != null"
+      image
       hide-added-at
       :track-list="trackList"
       :class="$style.LibraryHistoryPage__table"
@@ -73,7 +74,7 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
 <style lang="scss" module>
 .LibraryHistoryPage {
   & > * {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   &__table {

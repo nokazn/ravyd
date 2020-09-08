@@ -17,9 +17,10 @@
 
     <PlaylistTrackTable
       v-if="trackList != null"
+      image
+      custom
       :track-list="trackList"
       :uri="uri"
-      custom
       :class="$style.LibraryTracksPage__table"
       @on-favorite-button-clicked="onFavoriteButtonClicked"
     />
@@ -165,7 +166,7 @@ export default class LibraryTracksPage extends Vue implements Data {
 <style lang="scss" module>
 .LibraryTracksPage {
   & > * {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   &__table {

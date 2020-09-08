@@ -8,6 +8,17 @@
       :data-is-active="isActive"
       @click="onRowClicked"
     >
+      <td
+        v-if="image"
+        :title="item.name"
+      >
+        <ReleaseArtwork
+          :src="artworkSrc"
+          :alt="item.name"
+          :size="SIZE_OF_ARTWORK"
+        />
+      </td>
+
       <td>
         <div
           :class="$style.PlaylistTrackTableRow__buttons"
@@ -127,6 +138,7 @@
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 
+import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -134,11 +146,18 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
+
+import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { App } from '~~/types';
 
+export const SIZE_OF_ARTWORK = 48;
 const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+
+type Data = {
+  SIZE_OF_ARTWORK: number
+}
 
 export type On = {
   [ON_ROW_CLICKED]: App.PlaylistTrackDetail
@@ -148,6 +167,7 @@ export type On = {
 
 export default Vue.extend({
   components: {
+    ReleaseArtwork,
     PlaylistMediaButton,
     FavoriteButton,
     ArtistNames,
@@ -178,7 +198,7 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    hideAddedAt: {
+    image: {
       type: Boolean,
       default: false,
     },
@@ -186,6 +206,16 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    hideAddedAt: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data(): Data {
+    return {
+      SIZE_OF_ARTWORK,
+    };
   },
 
   computed: {
@@ -195,6 +225,9 @@ export default Vue.extend({
      */
     disabled(): boolean {
       return this.item.type !== 'episode' && this.item.isPlayable === false;
+    },
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.item.images, SIZE_OF_ARTWORK);
     },
     trackPath(): RawLocation {
       return this.item.type === 'track'
@@ -251,7 +284,6 @@ export default Vue.extend({
 <style lang="scss" module>
 .PlaylistTrackTableRow {
   cursor: pointer;
-  padding: 1em 0;
 
   &[data-is-active=true] {
     background-color: lighten($g-data-table-background-color, 15%);
@@ -261,7 +293,7 @@ export default Vue.extend({
     display: flex;
 
     & > *:not(:last-child) {
-      margin-right: 8px;
+      margin-right: 4px;
     }
   }
 
@@ -272,7 +304,7 @@ export default Vue.extend({
   }
 
   .Content {
-    padding: 0.8em 0;
+    padding: 0.75em 0;
     display: flex;
     align-items: center;
     justify-content: space-between;

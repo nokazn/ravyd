@@ -42,8 +42,9 @@
         <PlaylistTrackTableRow
           :item="item"
           :playlist-id="playlistId"
-          :hide-added-at="hideAddedAt"
+          :image="image"
           :collaborative="collaborative"
+          :hide-added-at="hideAddedAt"
           :is-active="item.index === activeRowIndex"
           :is-track-set="isTrackSet(item.id)"
           :is-playing-track="isPlayingTrack(item.id)"
@@ -60,7 +61,7 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import PlaylistTrackTableRow, { On as OnRow, SIZE_OF_ARTWORK } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
@@ -101,6 +102,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    image: {
+      type: Boolean,
+      default: false,
+    },
     collaborative: {
       type: Boolean,
       default: false,
@@ -113,6 +118,12 @@ export default Vue.extend({
 
   data(): Data {
     // 左右の padding: 8px を含めた幅
+    const sidePadding = 16;
+    const imageColumn = {
+      text: '',
+      value: 'images',
+      width: SIZE_OF_ARTWORK + sidePadding,
+    };
     const isSavedColumn = {
       text: '',
       value: 'isSaved',
@@ -151,6 +162,7 @@ export default Vue.extend({
 
     // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
     const headers = [
+      this.image ? imageColumn : undefined,
       isSavedColumn,
       titleColumn,
       this.collaborative ? addedByColumn : undefined,
