@@ -25,7 +25,7 @@ export const getPlaylistInfo = async (
     collaborative: isCollaborative,
     images,
     tracks,
-    owner,
+    owner: simpleOwner,
     followers,
     public: isPublic,
     external_urls: externalUrls,
@@ -37,7 +37,9 @@ export const getPlaylistInfo = async (
   const durationMs = filteredTrackList.reduce((prev, { track }) => track.duration_ms + prev, 0);
   const trackUriList = filteredTrackList.map(({ track }) => track.uri);
 
-  const isOwnPlaylist = owner.id === userId;
+  // simpleOwner には images が含まれていないので別途取得
+  const owner = await app.$spotify.users.getUserProfile({ userId: simpleOwner.id });
+  const isOwnPlaylist = simpleOwner.id === userId;
 
   return {
     id,
@@ -45,7 +47,7 @@ export const getPlaylistInfo = async (
     uri,
     description,
     isCollaborative,
-    owner,
+    owner: owner ?? simpleOwner,
     images,
     totalTracks,
     durationMs,

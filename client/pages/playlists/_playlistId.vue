@@ -75,7 +75,10 @@
         </h1>
 
         <div>
-          <UserName :user="playlistInfo.owner" />
+          <UserName
+            avatar
+            :user="playlistInfo.owner"
+          />
         </div>
 
         <div :class="$style.Info__footer">
@@ -600,7 +603,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
     &__buttons {

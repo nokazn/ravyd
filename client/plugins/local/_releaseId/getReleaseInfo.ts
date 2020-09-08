@@ -7,40 +7,14 @@ import { App, SpotifyAPI, OneToFifty } from '~~/types';
 export const getReleaseInfo = async (
   { app, params }: Context,
 ): Promise<App.ReleaseInfo | undefined> => {
-  const market = app.$getters()['auth/userCountryCode'];
-  const release = await app.$spotify.albums.getAlbum({
-    albumId: params.releaseId,
-    market,
-  });
-  if (release == null) return undefined;
-
-  const {
-    album_type,
-    id,
-    name,
-    uri,
-    artists,
-    release_date: releaseDate,
-    release_date_precision: releaseDatePrecision,
-    total_tracks: totalTracks,
-    label,
-    images,
-    tracks,
-    copyrights: copyrightList,
-    external_urls: externalUrls,
-    genres: genreList,
-  } = release;
-
-  const releaseType = convertReleaseType(album_type, totalTracks);
-
-  const LIMIT_OF_RELEASES = 10;
-
-  /**
-   * アーティストの他のリリースを取得
-   */
+  // アーティストの他のリリースを取得
   const getArtistReleaseList = (
-    limit: number = LIMIT_OF_RELEASES,
-  ): Promise<App.ReleaseInfo['artistReleaseList']> => Promise.all(artists.map(async (artist) => {
+    artistList: SpotifyAPI.SimpleArtist[],
+    { market, limit = 10 }: {
+      market?: SpotifyAPI.Country
+      limit?: OneToFifty
+    },
+  ): Promise<App.ReleaseInfo['artistReleaseList']> => Promise.all(artistList.map(async (artist) => {
     const releases = await app.$spotify.artists.getArtistAlbums({
       artistId: artist.id,
       country: market,
@@ -59,15 +33,42 @@ export const getReleaseInfo = async (
     };
   }));
 
+  const market = app.$getters()['auth/userCountryCode'];
+  const release = await app.$spotify.albums.getAlbum({
+    albumId: params.releaseId,
+    market,
+  });
+  if (release == null) return undefined;
+
+  const {
+    album_type,
+    id,
+    name,
+    uri,
+    artists: simpleArtists,
+    release_date: releaseDate,
+    release_date_precision: releaseDatePrecision,
+    total_tracks: totalTracks,
+    label,
+    images,
+    tracks,
+    copyrights: copyrightList,
+    external_urls: externalUrls,
+    genres: genreList,
+  } = release;
+
   const trackIdList = tracks.items.map((track) => track.id);
+  const artistIdList = simpleArtists.map((artist) => artist.id);
   const [
     [isSaved],
     isTrackSavedList,
+    { artists },
     artistReleaseList,
   ] = await Promise.all([
     app.$spotify.library.checkUserSavedAlbums({ albumIdList: [id] }),
     app.$spotify.library.checkUserSavedTracks({ trackIdList }),
-    getArtistReleaseList(),
+    app.$spotify.artists.getArtists({ artistIdList }),
+    getArtistReleaseList(simpleArtists, { market }),
   ] as const);
 
   const trackList: App.TrackDetail[] = tracks.items.map((track, index) => {
@@ -75,15 +76,17 @@ export const getReleaseInfo = async (
       isTrackSavedList,
       releaseId: id,
       releaseName: name,
-      artistIdList: artists.map((artist) => artist.id),
+      artistIdList,
       images,
     })(track, index);
 
     return detail;
   });
 
-  const isFullTrackList = tracks.next == null;
+  const filteredArtists = artists.filter((artist) => artist != null) as SpotifyAPI.Artist[];
 
+  const releaseType = convertReleaseType(album_type, totalTracks);
+  const isFullTrackList = tracks.next == null;
   const durationMs = tracks.items.reduce((prev, curr) => prev + curr.duration_ms, 0);
 
   return {
@@ -91,7 +94,7 @@ export const getReleaseInfo = async (
     id,
     name,
     uri,
-    artists,
+    artists: filteredArtists,
     releaseDate,
     releaseDatePrecision,
     images,

@@ -61,7 +61,10 @@
           {{ releaseInfo.name }}
         </h1>
 
-        <ArtistNames :artists="releaseInfo.artists" />
+        <ArtistNames
+          avatar
+          :artists="releaseInfo.artists"
+        />
 
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
@@ -439,7 +442,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
     &__buttons {

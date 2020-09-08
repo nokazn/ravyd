@@ -369,7 +369,6 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 12px;
     }
 
     &__buttons {
