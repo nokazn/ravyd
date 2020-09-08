@@ -128,10 +128,10 @@ export default Vue.extend({
 <style lang="scss" module>
 .ArtistNames {
   &__avatar {
-    margin-right: 0.2rem;
+    margin-right: 0.1rem;
 
     &:not(:first-child) {
-      margin-left: 0.6rem;
+      margin-left: 1rem;
     }
   }
 }
