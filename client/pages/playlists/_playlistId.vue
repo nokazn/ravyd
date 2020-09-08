@@ -600,7 +600,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
     &__buttons {
