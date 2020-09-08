@@ -1,87 +1,84 @@
 <template>
-  <v-hover #default="{ hover: isRowHovered }">
-    <tr
-      :class="{
-        [$style.EpisodeTableRow]: true,
-        'inactive--text': !item.isPlayable
-      }"
-      :data-is-active="isActive"
-      @click="onRowClicked"
+  <tr
+    :class="{
+      [$style.EpisodeTableRow]: true,
+      'inactive--text': !item.isPlayable
+    }"
+    :data-is-active="isActive"
+    @click="onRowClicked"
+  >
+    <td
+      :class="$style.EpisodeTableRow_buttons"
+      class="text-center"
     >
-      <td
-        :class="$style.EpisodeTableRow_buttons"
-        class="text-center"
-      >
-        <PlaylistMediaButton
-          :is-hovered="isRowHovered"
-          :is-playing-track="isPlayingEpisode"
-          :disabled="!item.isPlayable"
-          @on-clicked="onMediaButtonClicked"
-        />
-      </td>
+      <PlaylistMediaButton
+        :is-playing-track="isPlayingEpisode"
+        :disabled="!item.isPlayable"
+        @on-clicked="onMediaButtonClicked"
+      />
+    </td>
 
-      <td>
-        <div :class="$style.Content">
-          <div class="g-ellipsis-text">
-            <div
-              :class="titleColor"
-              class="g-ellipsis-text"
-              :title="item.name"
-            >
-              <nuxt-link :to="episodePath">
-                {{ item.name }}
-              </nuxt-link>
-            </div>
-
-            <div
-              :class="[$style.Content__subtitle, subtitleColor]"
-              class="g-ellipsis-text"
-              :title="item.description"
-            >
-              {{ item.description }}
-            </div>
+    <td>
+      <div :class="$style.Content">
+        <div class="g-ellipsis-text">
+          <div
+            :class="titleColor"
+            class="g-ellipsis-text"
+            :title="item.name"
+          >
+            <nuxt-link :to="episodePath">
+              {{ item.name }}
+            </nuxt-link>
           </div>
 
-          <div>
-            <ExplicitChip v-if="item.explicit" />
+          <div
+            :class="[$style.Content__subtitle, subtitleColor]"
+            class="g-ellipsis-text"
+            :title="item.description"
+          >
+            {{ item.description }}
           </div>
         </div>
-      </td>
 
-      <td>
-        <EpisodeProgressBar
-          :resume-point="item.resumePoint"
-          :duration-ms="item.durationMs"
-          :max-width="56"
-        />
-      </td>
+        <div>
+          <ExplicitChip v-if="item.explicit" />
+        </div>
+      </div>
+    </td>
 
-      <td
-        :title="releaseDate"
-        :class="$style.EpisodeTableRow__smallText"
-      >
-        <time :datetime="item.releaseDate">
-          {{ releaseDate }}
-        </time>
-      </td>
+    <td>
+      <EpisodeProgressBar
+        :resume-point="item.resumePoint"
+        :duration-ms="item.durationMs"
+        :max-width="56"
+      />
+    </td>
 
-      <td
-        :class="$style.EpisodeTableRow__smallText"
-        class="text-center"
-      >
-        <TrackTime :time-ms="item.durationMs" />
-      </td>
+    <td
+      :title="releaseDate"
+      :class="$style.EpisodeTableRow__smallText"
+    >
+      <time :datetime="item.releaseDate">
+        {{ releaseDate }}
+      </time>
+    </td>
 
-      <td>
-        <EpisodeMenu
-          offset-x
-          left
-          :episode="item"
-          :publisher="publisher"
-        />
-      </td>
-    </tr>
-  </v-hover>
+    <td
+      :class="$style.EpisodeTableRow__smallText"
+      class="text-center"
+    >
+      <TrackTime :time-ms="item.durationMs" />
+    </td>
+
+    <td>
+      <EpisodeMenu
+        offset-x
+        left
+        :episode="item"
+        :publisher="publisher"
+      />
+    </td>
+  </tr>
 </template>
 
 <script lang="ts">

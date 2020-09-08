@@ -1,137 +1,134 @@
 <template>
-  <v-hover #default="{ hover: isRowHovered }">
-    <tr
-      :class="{
-        [$style.PlaylistTrackTableRow]: true,
-        'inactive--text': disabled
-      }"
-      :data-is-active="isActive"
-      @click="onRowClicked"
+  <tr
+    :class="{
+      [$style.PlaylistTrackTableRow]: true,
+      'inactive--text': disabled
+    }"
+    :data-is-active="isActive"
+    @click="onRowClicked"
+  >
+    <td
+      v-if="image"
+      :title="item.name"
     >
-      <td
-        v-if="image"
-        :title="item.name"
-      >
-        <ReleaseArtwork
-          :src="artworkSrc"
-          :alt="item.name"
-          :size="SIZE_OF_ARTWORK"
-        />
-      </td>
+      <ReleaseArtwork
+        :src="artworkSrc"
+        :alt="item.name"
+        :size="SIZE_OF_ARTWORK"
+      />
+    </td>
 
-      <td>
-        <div
-          :class="$style.PlaylistTrackTableRow__buttons"
-          class="text-center"
-        >
-          <PlaylistMediaButton
-            :is-hovered="isRowHovered"
-            :is-playing-track="isPlayingTrack"
-            :disabled="disabled"
-            @on-clicked="onMediaButtonClicked"
-          />
-
-          <FavoriteButton
-            v-if="item.type !== 'episode'"
-            :is-favorited="item.isSaved"
-            @on-clicked="onFavoriteButtonClicked"
-          />
-        </div>
-      </td>
-
-      <td>
-        <div :class="$style.Content">
-          <div class="g-ellipsis-text">
-            <div
-              :class="titleColor"
-              class="g-ellipsis-text"
-              :title="item.name"
-            >
-              <nuxt-link :to="trackPath">
-                {{ item.name }}
-              </nuxt-link>
-            </div>
-
-            <div
-              :class="[$style.Content__subtitle, subtitleColor]"
-              class="g-ellipsis-text"
-            >
-              <template v-if="item.type === 'track'">
-                <ArtistNames
-                  inline
-                  :artists="item.artists"
-                />
-                <span :class="$style['Content__subtitle--divider']">-</span>
-              </template>
-
-              <nuxt-link
-                :to="releasePath"
-                :title="item.releaseName"
-              >
-                {{ item.releaseName }}
-              </nuxt-link>
-            </div>
-          </div>
-
-          <div>
-            <ExplicitChip v-if="item.explicit" />
-          </div>
-        </div>
-      </td>
-
-      <td
-        v-if="collaborative"
-        :class="$style.PlaylistTrackTableRow__smallText"
-        class="g-ellipsis-text"
-      >
-        <nuxt-link
-          v-if="userPath != null"
-          :to="userPath"
-        >
-          {{ item.addedBy.display_name || item.addedBy.id }}
-        </nuxt-link>
-      </td>
-
-      <td
-        v-if="!hideAddedAt && item.addedAt != null"
-        :title="item.addedAt.title"
-        :class="$style.PlaylistTrackTableRow__smallText"
-      >
-        <time
-          v-if="item.addedAt.text"
-          :datetime="item.addedAt.text"
-        >
-          {{ item.addedAt.text }}
-        </time>
-      </td>
-
-      <td
-        :class="$style.PlaylistTrackTableRow__smallText"
+    <td>
+      <div
+        :class="$style.PlaylistTrackTableRow__buttons"
         class="text-center"
       >
-        <TrackTime :time-ms="item.durationMs" />
-      </td>
+        <PlaylistMediaButton
+          :is-playing-track="isPlayingTrack"
+          :disabled="disabled"
+          @on-clicked="onMediaButtonClicked"
+        />
 
-      <td>
-        <EpisodeMenu
-          v-if="item.type === 'episode'"
-          offset-x
-          left
-          :episode="item"
-          :playlist-id="playlistId"
-          :publisher="publisher"
+        <FavoriteButton
+          v-if="item.type !== 'episode'"
+          :is-favorited="item.isSaved"
+          @on-clicked="onFavoriteButtonClicked"
         />
-        <TrackMenu
-          v-else
-          offset-x
-          left
-          :track="item"
-          :playlist-id="playlistId"
-          @on-favorite-menu-clicked="onFavoriteButtonClicked"
-        />
-      </td>
-    </tr>
-  </v-hover>
+      </div>
+    </td>
+
+    <td>
+      <div :class="$style.Content">
+        <div class="g-ellipsis-text">
+          <div
+            :class="titleColor"
+            class="g-ellipsis-text"
+            :title="item.name"
+          >
+            <nuxt-link :to="trackPath">
+              {{ item.name }}
+            </nuxt-link>
+          </div>
+
+          <div
+            :class="[$style.Content__subtitle, subtitleColor]"
+            class="g-ellipsis-text"
+          >
+            <template v-if="item.type === 'track'">
+              <ArtistNames
+                inline
+                :artists="item.artists"
+              />
+              <span :class="$style['Content__subtitle--divider']">-</span>
+            </template>
+
+            <nuxt-link
+              :to="releasePath"
+              :title="item.releaseName"
+            >
+              {{ item.releaseName }}
+            </nuxt-link>
+          </div>
+        </div>
+
+        <div>
+          <ExplicitChip v-if="item.explicit" />
+        </div>
+      </div>
+    </td>
+
+    <td
+      v-if="collaborative"
+      :class="$style.PlaylistTrackTableRow__smallText"
+      class="g-ellipsis-text"
+    >
+      <nuxt-link
+        v-if="userPath != null"
+        :to="userPath"
+      >
+        {{ item.addedBy.display_name || item.addedBy.id }}
+      </nuxt-link>
+    </td>
+
+    <td
+      v-if="!hideAddedAt && item.addedAt != null"
+      :title="item.addedAt.title"
+      :class="$style.PlaylistTrackTableRow__smallText"
+    >
+      <time
+        v-if="item.addedAt.text"
+        :datetime="item.addedAt.text"
+      >
+        {{ item.addedAt.text }}
+      </time>
+    </td>
+
+    <td
+      :class="$style.PlaylistTrackTableRow__smallText"
+      class="text-center"
+    >
+      <TrackTime :time-ms="item.durationMs" />
+    </td>
+
+    <td>
+      <EpisodeMenu
+        v-if="item.type === 'episode'"
+        offset-x
+        left
+        :episode="item"
+        :playlist-id="playlistId"
+        :publisher="publisher"
+      />
+      <TrackMenu
+        v-else
+        offset-x
+        left
+        :track="item"
+        :playlist-id="playlistId"
+        @on-favorite-menu-clicked="onFavoriteButtonClicked"
+      />
+    </td>
+  </tr>
 </template>
 
 <script lang="ts">

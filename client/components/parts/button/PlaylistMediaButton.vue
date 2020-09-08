@@ -19,12 +19,14 @@ export type MediaButton = {
   title: '再生' | '停止' | '再生中' | '再生できない項目'
 }
 
+const ON_CLICKED = 'on-clicked';
+
+export type On = {
+  [ON_CLICKED]: void
+}
+
 export default Vue.extend({
   props: {
-    isHovered: {
-      type: Boolean,
-      required: true,
-    },
     isPlayingTrack: {
       type: Boolean,
       required: true,
@@ -51,21 +53,16 @@ export default Vue.extend({
         };
       }
 
-      return this.isHovered
-        ? {
-          icon: 'mdi-pause',
-          title: '停止',
-        }
-        : {
-          icon: 'mdi-volume-high',
-          title: '再生中',
-        };
+      return {
+        icon: 'mdi-pause',
+        title: '停止',
+      };
     },
   },
 
   methods: {
     onClick() {
-      this.$emit('on-clicked');
+      this.$emit(ON_CLICKED);
     },
   },
 });
