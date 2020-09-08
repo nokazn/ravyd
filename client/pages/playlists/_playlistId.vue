@@ -75,7 +75,10 @@
         </h1>
 
         <div>
-          <UserName :user="playlistInfo.owner" />
+          <UserName
+            avatar
+            :user="playlistInfo.owner"
+          />
         </div>
 
         <div :class="$style.Info__footer">
