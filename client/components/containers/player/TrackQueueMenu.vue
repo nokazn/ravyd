@@ -29,9 +29,23 @@
       :color="MENU_BACKGROUND_COLOR"
       :class="$style.TrackQueueMenu"
     >
-      <v-subheader :class="$style.TrackQueueMenu__header">
-        再生リスト
-      </v-subheader>
+      <div :class="$style.TrackQueueMenu__header">
+        <v-subheader>
+          再生リスト
+        </v-subheader>
+
+        <v-btn
+          v-if="contextPath != null"
+          icon
+          small
+          title="再生中のコンテクスト"
+          :to="contextPath"
+        >
+          <v-icon>
+            mdi-playlist-music
+          </v-icon>
+        </v-btn>
+      </div>
 
       <v-divider />
 
@@ -78,6 +92,7 @@ import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
+import { convertUriToUrl } from '~/scripts/converter/convertUriToUrl';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 type Data = {
@@ -102,6 +117,10 @@ export default Vue.extend({
   computed: {
     trackQueue(): RootGetters['playback/trackQueue'] {
       return this.$getters()['playback/trackQueue'];
+    },
+    contextPath(): string | undefined {
+      const contextUrl = this.$getters()['playback/contextUri'];
+      return convertUriToUrl(contextUrl);
     },
   },
 
@@ -153,7 +172,10 @@ export default Vue.extend({
   max-width: min(500px, 80vw);
 
   &__header {
-    margin-left: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 12px;
   }
 
   &__wrapper {

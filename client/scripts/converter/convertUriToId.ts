@@ -3,7 +3,5 @@
  */
 export const convertUriToId = (uri: string) => {
   const elementList = uri.split(':');
-  const { length } = elementList;
-
-  return elementList[length - 1];
+  return elementList[2];
 };
