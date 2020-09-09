@@ -10,7 +10,6 @@
       :max="durationMs"
       :class="$style.SeekBar__slider"
       @mousedown="onMouseDown"
-      @input="onInput"
       @change="onChange"
     />
 
@@ -31,7 +30,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import debounce from 'lodash/debounce';
+// import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import { elapsedTime } from '~~/utils/elapsedTime';
@@ -39,7 +38,6 @@ import { DEFAULT_DURATION_MS } from '~/constants';
 
 type Data = {
   value: number
-  debounceSetter: (positionMs: number) => number
   updateInterval: ReturnType<typeof setInterval> | undefined
   mutationUnsubscribe: (() => void) | undefined
 }
@@ -47,12 +45,9 @@ type Data = {
 export default Vue.extend({
   data(): Data {
     const value = 0;
-    const interval = 10;
-    const debounceSetter = debounce((positionMs: number) => positionMs, interval);
 
     return {
       value,
-      debounceSetter,
       updateInterval: undefined,
       mutationUnsubscribe: undefined,
     };
@@ -99,33 +94,32 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    // @todo curr の引数の型指定をすると $state 等の型推論が効かなくなる
-    isPlaying(curr): void {
-      if (curr === true) {
-        this.updatePosition();
-      } else {
-        this.clearInterval();
-      }
-    },
-  },
-
   mounted() {
     if (this.isPlaying) {
       this.updatePosition();
     }
 
-    const subscribePositionMs = (mutationPayload: ExtendedMutationPayload<'playback/SET_POSITION_MS'>) => {
-      this.value = mutationPayload.payload;
+    const subscribeIsPlaying = ({ payload: isPlaying }: ExtendedMutationPayload<'playback/SET_IS_PLAYING'>) => {
+      if (isPlaying) {
+        this.updatePosition();
+      } else {
+        this.clearInterval();
+      }
+    };
+
+    const subscribePositionMs = ({ payload }: ExtendedMutationPayload<'playback/SET_POSITION_MS'>) => {
+      this.value = payload;
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       const { type } = mutation;
       switch (type) {
+        case 'playback/SET_IS_PLAYING':
+          subscribeIsPlaying(mutation as ExtendedMutationPayload<typeof type>);
+          break;
         case 'playback/SET_POSITION_MS':
           subscribePositionMs(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }
@@ -143,9 +137,6 @@ export default Vue.extend({
   methods: {
     onMouseDown() {
       this.clearInterval();
-    },
-    onInput(positionMs: number) {
-      this.value = this.debounceSetter(positionMs);
     },
     async onChange(positionMs: number) {
       const currentPositionMs = this.$state().playback.positionMs;
