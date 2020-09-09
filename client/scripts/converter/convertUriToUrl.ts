@@ -12,6 +12,8 @@ export const convertUriToUrl = (uri: string | undefined): string | undefined => 
   if (uri == null) return undefined;
 
   const elementList = uri.split(':');
+  if (elementList[0] !== 'spotify') return undefined;
+
   const type = elementList[1] as SpotifyAPI.Context['type'] as ContextType;
   const id = elementList[2];
 
@@ -23,6 +25,7 @@ export const convertUriToUrl = (uri: string | undefined): string | undefined => 
     case 'album':
       return genUrl('release', id);
     case 'user':
+      // 最後が collection で終わるとき
       return elementList[elementList.length - 1] === 'collection'
         ? '/library/tracks'
         : undefined;

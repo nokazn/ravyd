@@ -35,11 +35,12 @@
         </v-subheader>
 
         <v-btn
-          v-if="contextPath != null"
           icon
           small
-          title="再生中のコンテクスト"
+          title="再生中のページ"
+          :disabled="contextPath == null || $route.path === contextPath"
           :to="contextPath"
+          class="g-no-text-decoration"
         >
           <v-icon>
             mdi-playlist-music
