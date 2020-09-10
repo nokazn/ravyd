@@ -266,7 +266,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         if (isOwnPlaylist) {
           this.$toast.show('primary', 'プレイリストを削除しました。');
           // @todo プレイリスト一覧に飛ばす
-          this.$router.push('/');
+          this.$router.replace('/');
         }
       })
       .catch((err: Error) => {

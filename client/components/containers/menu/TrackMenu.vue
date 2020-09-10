@@ -16,7 +16,7 @@
       :type="modalType"
       color="error"
       text="削除"
-      @on-changed="onModalChanged"
+      @on-changed="toggleConfirmModal"
       @on-confirmed="onConformed"
     >
       {{ modalText }}
@@ -223,7 +223,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onModalChanged(modal: OnModal['on-changed']) {
+    toggleConfirmModal(modal: OnModal['on-changed']) {
       this.modal = modal;
     },
     onConformed(type: OnModal['on-confirmed']) {
