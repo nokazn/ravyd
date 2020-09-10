@@ -1,25 +1,47 @@
 <template>
-  <ContextMenu
-    :item-lists="menuItemLists"
-    :size="size"
-    :outlined="outlined"
-    :offset-x="offsetX"
-    :offset-y="offsetY"
-    :left="left"
-    :right="right"
-  />
+  <div>
+    <ContextMenu
+      :item-lists="menuItemLists"
+      :size="size"
+      :outlined="outlined"
+      :offset-x="offsetX"
+      :offset-y="offsetY"
+      :left="left"
+      :right="right"
+    />
+
+    <ConfirmModal
+      v-if="playlistId != null"
+      :is-shown="modal"
+      :type="modalType"
+      color="error"
+      text="削除"
+      @on-changed="onModalChanged"
+      @on-confirmed="onConformed"
+    >
+      {{ modalText }}
+    </ConfirmModal>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
 import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
+const REMOVE_ITEM_MODAL = 'REMOVE_ITEM_MODAL';
+
+type Data = {
+  modal: boolean
+  modalType: string
+  modalText: string
+}
 
 export type On = {
   [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
@@ -28,6 +50,7 @@ export type On = {
 export default Vue.extend({
   components: {
     ContextMenu,
+    ConfirmModal,
   },
 
   props: {
@@ -63,6 +86,14 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+  },
+
+  data(): Data {
+    return {
+      modal: false,
+      modalType: '',
+      modalText: '',
+    };
   },
 
   computed: {
@@ -152,14 +183,9 @@ export default Vue.extend({
         handler: () => {
           if (this.playlistId == null) return;
 
-          this.$dispatch('playlists/removePlaylistItem', {
-            playlistId: this.playlistId,
-            track: {
-              uri: this.track.uri,
-              positions: [this.track.index],
-            },
-            name: this.track.name,
-          });
+          this.modalType = REMOVE_ITEM_MODAL;
+          this.modalText = `"${this.track.name}" をプレイリストから削除しますか？`;
+          this.modal = true;
         },
         disabled: this.playlistId == null,
       });
@@ -193,6 +219,36 @@ export default Vue.extend({
           [saveTrack(), addItemToPlaylist()],
           [share()],
         ];
+    },
+  },
+
+  methods: {
+    onModalChanged(modal: OnModal['on-changed']) {
+      this.modal = modal;
+    },
+    onConformed(type: OnModal['on-confirmed']) {
+      const removePlaylistItem = () => {
+        const { playlistId } = this;
+        if (playlistId == null) return;
+
+        this.$dispatch('playlists/removePlaylistItem', {
+          playlistId,
+          track: {
+            uri: this.track.uri,
+            positions: [this.track.index],
+          },
+          name: this.track.name,
+        });
+      };
+
+      switch (type) {
+        case REMOVE_ITEM_MODAL:
+          removePlaylistItem();
+          break;
+
+        default:
+          break;
+      }
     },
   },
 });
