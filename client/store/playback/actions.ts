@@ -313,6 +313,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     };
 
     const handler = async () => {
+      if (document.visibilityState === 'hidden') {
+        // タイマーはセットせず、visibilityState が visible になったときに再度実行
+        document.addEventListener('visibilitychange', handler);
+        return;
+      }
+
+      document.removeEventListener('visibilitychange', handler);
+
       // getCurrentPlayback する前に再生中のアイテムの情報を保持していていたか
       const previousHasTrack = this.$getters()['playback/hasTrack'];
       const playbackState = await dispatch('getCurrentPlayback');
