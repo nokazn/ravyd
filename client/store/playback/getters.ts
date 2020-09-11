@@ -2,9 +2,8 @@ import { Getters } from 'typed-vuex';
 
 import { PlaybackState } from './state';
 import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
-import { getImageSrc } from '~/utils/image/getImageSrc';
-import { convertTrackForQueue } from '~/utils/converter/convertTrackForQueue';
-import { convertUriToId } from '~/utils/converter/convertUriToId';
+import { getImageSrc } from '~/utils/image';
+import { convertTrackForQueue, convertUriToId } from '~/utils/converter';
 import { getExternalUrlFromUri } from '~~/utils/getExternalUrlFromUri';
 import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 

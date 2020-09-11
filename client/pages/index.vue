@@ -46,9 +46,11 @@ import Vue from 'vue';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import { convertTrackForCard } from '~/utils/converter/convertTrackForCard';
-import { convertArtistForCard } from '~/utils/converter/convertArtistForCard';
-import { convertReleaseForCard } from '~/utils/converter/convertReleaseForCard';
+import {
+  convertTrackForCard,
+  convertArtistForCard,
+  convertReleaseForCard,
+} from '~/utils/converter';
 import { App } from '~~/types';
 
 const CARD_WIDTH = 200;

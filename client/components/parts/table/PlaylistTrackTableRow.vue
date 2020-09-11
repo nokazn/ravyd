@@ -144,7 +144,7 @@ import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 
-import { getImageSrc } from '~/utils/image/getImageSrc';
+import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
 export const SIZE_OF_ARTWORK = 48;

@@ -169,9 +169,9 @@ import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getReleaseInfo } from '~/plugins/local/_releaseId';
-import { checkTrackSavedState } from '~/utils/subscriber/checkTrackSavedState';
-import { getImageSrc } from '~/utils/image/getImageSrc';
-import { convertTrackDetail } from '~/utils/converter/convertTrackDetail';
+import { checkTrackSavedState } from '~/utils/subscriber';
+import { getImageSrc } from '~/utils/image';
+import { convertTrackDetail } from '~/utils/converter';
 import { SpotifyAPI, App, OneToFifty } from '~~/types';
 
 const ARTWORK_SIZE = 220;

@@ -58,7 +58,7 @@ import { RawLocation } from 'vue-router';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { getImageSrc } from '~/utils/image/getImageSrc';
+import { getImageSrc } from '~/utils/image';
 import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 

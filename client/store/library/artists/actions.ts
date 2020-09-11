@@ -1,6 +1,6 @@
 import { Actions } from 'typed-vuex';
 
-import { convertArtistForCard } from '~/utils/converter/convertArtistForCard';
+import { convertArtistForCard } from '~/utils/converter';
 import { LibraryArtistsState } from './state';
 import { LibraryArtistsGetters } from './getters';
 import { LibraryArtistsMutations } from './mutations';

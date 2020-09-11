@@ -3,7 +3,7 @@ import { Actions } from 'typed-vuex';
 import { LibraryShowsState } from './state';
 import { LibraryShowsGetters } from './getters';
 import { LibraryShowsMutations } from './mutations';
-import { convertShowForCard } from '~/utils/converter/convertShowForCard';
+import { convertShowForCard } from '~/utils/converter';
 import { emptyPaging } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 

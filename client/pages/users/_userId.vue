@@ -111,8 +111,8 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
-import { getImageSrc } from '~/utils/image/getImageSrc';
-import { convertPlaylistForCard } from '~/utils/converter/convertPlaylistForCard';
+import { getImageSrc } from '~/utils/image';
+import { convertPlaylistForCard } from '~/utils/converter';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 

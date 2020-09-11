@@ -49,7 +49,7 @@ import { DataTableHeader } from 'vuetify';
 
 import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
-import { getQuery } from '~/utils/text/getQuery';
+import { getQuery } from '~/utils/text';
 import { App } from '~~/types';
 
 type Data = {
