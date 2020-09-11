@@ -1,6 +1,6 @@
 import { Actions } from 'typed-vuex';
 
-import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
+import { convertPlaylistTrackDetail } from '~/utils/converter/convertPlaylistTrackDetail';
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';

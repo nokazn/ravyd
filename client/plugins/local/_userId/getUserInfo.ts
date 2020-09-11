@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 import { App } from '~~/types';
-import { getFollowersText } from '~/scripts/converter/getFollowersText';
+import { getFollowersText } from '~/utils/converter/getFollowersText';
 
 export const getUserInfo = async (
   { app, params }: Context,

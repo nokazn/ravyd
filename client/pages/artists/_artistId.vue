@@ -153,7 +153,7 @@ import {
   getIsFollowing,
   getRelatedArtistList,
 } from '~/plugins/local/_artistId';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
+import { getImageSrc } from '~/utils/image/getImageSrc';
 import { App } from '~~/types';
 
 const AVATAR_SIZE = 220;

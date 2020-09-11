@@ -197,9 +197,9 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
-import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
-import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
+import { convertPlaylistTrackDetail } from '~/utils/converter/convertPlaylistTrackDetail';
+import { getImageSrc } from '~/utils/image/getImageSrc';
+import { checkTrackSavedState } from '~/utils/subscriber/checkTrackSavedState';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 import { emptyPaging } from '~/constants';
 

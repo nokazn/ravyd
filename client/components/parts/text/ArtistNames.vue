@@ -54,7 +54,7 @@
 import Vue, { PropType } from 'vue';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
+import { getImageSrc } from '~/utils/image/getImageSrc';
 import { App, SpotifyAPI } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';

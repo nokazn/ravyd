@@ -39,7 +39,7 @@ import { RootState, RootGetters } from 'typed-vuex';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { generateCollectionContextUri } from '~/scripts/text/generateCollectionContextUri';
+import { generateCollectionContextUri } from '~/utils/text/generateCollectionContextUri';
 import { HEADER_HEIGHT } from '~/constants';
 
 interface Data {

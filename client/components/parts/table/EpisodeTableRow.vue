@@ -89,7 +89,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
+import { convertReleaseDate } from '~/utils/converter/convertReleaseDate';
 import { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';

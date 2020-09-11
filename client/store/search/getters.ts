@@ -1,6 +1,6 @@
 import { Getters } from 'typed-vuex';
 
-import { convertToContentListItem } from '~/scripts/converter/convertToContentListItem';
+import { convertToContentListItem } from '~/utils/converter/convertToContentListItem';
 import { SearchState } from './state';
 import { App } from '~~/types';
 

@@ -75,7 +75,7 @@ import { RootState } from 'typed-vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
+import { getImageSrc } from '~/utils/image/getImageSrc';
 import { hasProp } from '~~/utils/hasProp';
 import { SpotifyAPI, App } from '~~/types';
 

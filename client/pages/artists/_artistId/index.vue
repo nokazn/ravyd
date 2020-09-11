@@ -72,8 +72,8 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 
 import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plugins/local/_artistId';
 import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
-import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
-import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { checkTrackSavedState } from '~/utils/subscriber/checkTrackSavedState';
+import { convertReleaseForCard } from '~/utils/converter/convertReleaseForCard';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App } from '~~/types';
 

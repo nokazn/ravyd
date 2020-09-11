@@ -93,7 +93,7 @@ import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
-import { convertUriToUrl } from '~/scripts/converter/convertUriToUrl';
+import { convertUriToUrl } from '~/utils/converter/convertUriToUrl';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 type Data = {

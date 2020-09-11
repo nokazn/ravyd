@@ -80,7 +80,7 @@ import Vue, { PropType } from 'vue';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
+import { getImageSrc } from '~/utils/image/getImageSrc';
 import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 

@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 import { App } from '~~/types';
-import { convertEpisodeDetail } from '~/scripts/converter/convertEpisodeDetail';
+import { convertEpisodeDetail } from '~/utils/converter/convertEpisodeDetail';
 
 export const getShowInfo = async (
   { app, params }: Context,

@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { convertPlaylistForCard } from '~/utils/converter/convertPlaylistForCard';
 import { OneToFifty, App } from '~~/types';
 
 export const getUserPlaylists = async (

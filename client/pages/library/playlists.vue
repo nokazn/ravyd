@@ -18,7 +18,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { convertPlaylistForCard } from '~/utils/converter/convertPlaylistForCard';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 

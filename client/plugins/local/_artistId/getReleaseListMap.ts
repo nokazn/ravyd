@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { convertReleaseForCard } from '~/utils/converter/convertReleaseForCard';
 import {
   TITLE_MAP,
   ReleaseType,

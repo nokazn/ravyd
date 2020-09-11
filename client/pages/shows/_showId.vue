@@ -139,8 +139,8 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShowInfo, getIsSaved } from '~/plugins/local/_showId';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
-import { convertEpisodeDetail } from '~/scripts/converter/convertEpisodeDetail';
+import { getImageSrc } from '~/utils/image/getImageSrc';
+import { convertEpisodeDetail } from '~/utils/converter/convertEpisodeDetail';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;

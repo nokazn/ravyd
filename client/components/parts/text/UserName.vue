@@ -22,7 +22,7 @@
 import Vue, { PropType } from 'vue';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
-import { getImageSrc } from '~/scripts/image/getImageSrc';
+import { getImageSrc } from '~/utils/image/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 
 const SIZE_OF_AVATAR = 28;
