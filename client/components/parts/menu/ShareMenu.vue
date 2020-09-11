@@ -118,7 +118,10 @@ type Data = {
 const copyText = (text: string, name: string, $toast: $Toast): void => {
   const copyEventListener = (e: ClipboardEvent) => {
     if (e.clipboardData == null) {
-      $toast.show('error', `${name}をコピーできませんでした。`);
+      $toast.push({
+        color: 'error',
+        message: `${name}をコピーできませんでした。`,
+      });
       return;
     }
 
@@ -126,7 +129,10 @@ const copyText = (text: string, name: string, $toast: $Toast): void => {
     e.clipboardData.setData('text/plain', text);
     document.removeEventListener('copy', copyEventListener);
 
-    $toast.show('primary', `${name}をコピーしました。`);
+    $toast.push({
+      color: 'primary',
+      message: `${name}をコピーしました。`,
+    });
   };
 
   document.addEventListener('copy', copyEventListener);

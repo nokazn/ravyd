@@ -61,7 +61,11 @@ const actions: Actions<
       market,
     });
     if (releases == null) {
-      this.$toast.show('error', 'お気に入りのアルバムの一覧を取得できませんでした。');
+      this.$toast.push({
+        color: 'error',
+        message: 'お気に入りのアルバムの一覧を取得できませんでした。',
+      });
+
       return;
     }
 
@@ -117,7 +121,11 @@ const actions: Actions<
       }, emptyPaging as LibraryOfReleases));
 
     if (releases == null) {
-      this.$toast.show('error', 'お気に入りのアルバムの一覧を更新できませんでした。');
+      this.$toast.push({
+        color: 'error',
+        message: 'お気に入りのアルバムの一覧を更新できませんでした。',
+      });
+
       return;
     }
 
@@ -146,7 +154,10 @@ const actions: Actions<
     await this.$spotify.library.saveAlbums({ albumIdList })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', 'ライブラリにアルバムを保存できませんでした。');
+        this.$toast.push({
+          color: 'error',
+          message: 'ライブラリにアルバムを保存できませんでした。',
+        });
       });
 
     albumIdList.forEach((releaseId) => {
@@ -167,7 +178,10 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedAlbums({ albumIdList })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', 'ライブラリからアルバムを削除できませんでした。');
+        this.$toast.push({
+          color: 'error',
+          message: 'ライブラリからアルバムを削除できませんでした。',
+        });
       });
 
     albumIdList.forEach((releaseId) => {

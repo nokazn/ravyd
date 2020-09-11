@@ -325,7 +325,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       offset,
     });
     if (tracks == null) {
-      this.$toast.show('error', 'トラックが取得できませんでした。');
+      this.$toast.push({
+        color: 'error',
+        message: 'トラックが取得できませんでした。',
+      });
+
       this.releaseInfo = {
         ...releaseInfo,
         isFullTrackList: true,

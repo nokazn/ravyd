@@ -73,14 +73,20 @@ export default Vue.extend({
               playlistId: this.playlist.id,
               isCollaborative,
             }).then(() => {
-              this.$toast.show('primary', isCollaborative
-                ? 'コラボプレイリストにしました。'
-                : 'コラボプレイリストを解除しました。');
+              this.$toast.push({
+                color: 'primary',
+                message: isCollaborative
+                  ? 'コラボプレイリストにしました。'
+                  : 'コラボプレイリストを解除しました。',
+              });
             }).catch((err: Error) => {
               console.error({ err });
-              this.$toast.show('error', isCollaborative
-                ? 'コラボプレイリストにできませんでした。'
-                : 'コラボプレイリストを解除できませんでした。');
+              this.$toast.push({
+                color: 'error',
+                message: isCollaborative
+                  ? 'コラボプレイリストにできませんでした。'
+                  : 'コラボプレイリストを解除できませんでした。',
+              });
             });
           },
         };
@@ -99,14 +105,20 @@ export default Vue.extend({
               playlistId: this.playlist.id,
               isPublic: !this.playlist.isPublic,
             }).then(() => {
-              this.$toast.show('primary', isPublic
-                ? 'プレイリストを公開しました。'
-                : 'プレイリストを非公開にしました。');
+              this.$toast.push({
+                color: 'primary',
+                message: isPublic
+                  ? 'プレイリストを公開しました。'
+                  : 'プレイリストを非公開にしました。',
+              });
             }).catch((err: Error) => {
               console.error({ err });
-              this.$toast.show('error', isPublic
-                ? 'プレイリストの公開に失敗しました。'
-                : 'プレイリストを非公開にできませんでした。');
+              this.$toast.push({
+                color: 'error',
+                message: isPublic
+                  ? 'プレイリストの公開に失敗しました。'
+                  : 'プレイリストを非公開にできませんでした。',
+              });
             });
           },
           disabled: this.playlist.isCollaborative,
@@ -145,10 +157,16 @@ export default Vue.extend({
             name,
             uriList: this.playlist.trackUriList,
           }).then(() => {
-            this.$toast.show('primary', `"${name}" を作成しました。`);
+            this.$toast.push({
+              color: 'primary',
+              message: `"${name}" を作成しました。`,
+            });
           }).catch((err: Error) => {
             console.error({ err });
-            this.$toast.show('error', err.message);
+            this.$toast.push({
+              color: 'error',
+              message: err.message,
+            });
           });
         };
 
