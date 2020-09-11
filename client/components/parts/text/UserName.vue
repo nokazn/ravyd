@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { SpotifyAPI } from '~~/types';
 

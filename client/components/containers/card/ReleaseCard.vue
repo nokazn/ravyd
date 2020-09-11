@@ -73,7 +73,7 @@ import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 import { RootState } from 'typed-vuex';
 
-import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';
 import { hasProp } from '~~/utils/hasProp';

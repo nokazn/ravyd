@@ -1,29 +1,34 @@
 <template>
   <v-hover #default="{ hover }">
-    <v-img
+    <v-avatar
       v-if="src != null"
-      :src="src"
-      :alt="alt"
       :min-width="minSize || size"
       :min-height="minSize || size"
-      :width="size"
-      :height="size"
+      :size="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
-      :aspect-ratio="1"
       :class="{ 'g-box-shadow': shadow }"
-      @load="onLoaded"
     >
-      <template v-if="isOverlayed">
+      <v-img
+        :src="src"
+        alt="user-avaar"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
+        :height="size"
+        :width="size"
+        :max-height="maxSize || size"
+        :max-width="maxSize || size"
+        :aspect-ratio="1"
+        @load="onLoaded"
+      >
         <AvatarOverlay
-          v-show="hover"
-          :hover="hover"
+          :hover="isOverlayed && hover"
           :size="size"
           :icon="icon"
           @on-clicked="onClicked"
         />
-      </template>
-    </v-img>
+      </v-img>
+    </v-avatar>
 
     <v-sheet
       v-else
@@ -33,10 +38,11 @@
       :height="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
-      :class="$style.ReleaseArtwork__noArtwork"
+      :class="$style.UserAvatar__noAvatar"
+      class="rounded-circle"
     >
-      <v-icon :size="noArtworkIconSize">
-        mdi-music
+      <v-icon :size="noAvatarIconSize">
+        {{ defaultUserIcon }}
       </v-icon>
     </v-sheet>
   </v-hover>
@@ -44,20 +50,33 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import AvatarOverlay from '~/components/parts/avatar/AvatarOverlay.vue';
+import AvatarOverlay from '~/components/parts/image/AvatarOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
-export type Data = {
-  noArtworkIconSize: number
+type Data = {
+  noAvatarIconSize: number
 }
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
 
 export type On = {
-  [ON_MEDIA_BUTTON_CLICKED]: void
-  [ON_LOADED]: void
+  ON_MEDIA_BUTTON_CLICKED: void
+  ON_LOADED: void
+}
+
+export type Props = {
+  src: string | undefined
+  alt: string
+  size?: number
+  minSize?: number
+  maxSize?: number
+  isOverlayed?: boolean
+  icon?: MediaIcon
+  defaultUserIcon?: string
+  smallIcon?: boolean
+  shadow?: boolean
 }
 
 export default Vue.extend({
@@ -86,11 +105,19 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
+    isOverlayed: {
+      type: Boolean,
+      default: false,
+    },
     icon: {
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
-    isOverlayed: {
+    defaultUserIcon: {
+      type: String,
+      default: 'mdi-account-circle-outline',
+    },
+    smallIcon: {
       type: Boolean,
       default: false,
     },
@@ -102,12 +129,17 @@ export default Vue.extend({
 
   data(): Data {
     const baseSize = this.size ?? this.minSize;
-    const noArtworkIconSize = baseSize != null
-      ? baseSize * 0.4
-      : 60;
+    let noAvatarIconSize: number;
+    if (baseSize == null) {
+      noAvatarIconSize = 60;
+    } else {
+      noAvatarIconSize = this.smallIcon
+        ? baseSize * 0.4
+        : baseSize;
+    }
 
     return {
-      noArtworkIconSize,
+      noAvatarIconSize,
     };
   },
 
@@ -123,8 +155,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ReleaseArtwork {
-  &__noArtwork {
+.UserAvatar {
+  &__noAvatar {
     display: flex;
     justify-content: center;
     align-items: center;

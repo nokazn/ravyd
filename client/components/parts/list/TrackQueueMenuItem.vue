@@ -77,7 +77,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/scripts/converter/getImageSrc';

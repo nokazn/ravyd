@@ -71,7 +71,7 @@
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
-import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { MENU_BACKGROUND_COLOR } from '~/constants';
 
 const AVATAR_SIZE = 32;

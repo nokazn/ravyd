@@ -127,7 +127,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeTable from '~/components/containers/table/EpisodeTable.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';

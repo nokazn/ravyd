@@ -181,7 +181,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';

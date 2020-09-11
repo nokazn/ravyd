@@ -77,7 +77,7 @@
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';

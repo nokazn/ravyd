@@ -135,7 +135,7 @@
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';

@@ -101,7 +101,7 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import UserAvatar from '~/components/parts/avatar/UserAvatar.vue';
+import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import UserMenu, { On as OnUserMenu } from '~/components/parts/menu/UserMenu.vue';
