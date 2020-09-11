@@ -235,10 +235,17 @@ export default Vue.extend({
           artwork: fileReader.result as string,
         }).then(() => {
           this.modal = false;
-          this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
+          this.$toast.push({
+            color: 'primary',
+            message: `プレイリストを${this.resultText || this.detailText}しました。`,
+          });
+
           this.resetForm();
         }).catch(() => {
-          this.$toast.show('error', '画像のアップロードに失敗しました。');
+          this.$toast.push({
+            color: 'error',
+            message: '画像のアップロードに失敗しました。',
+          });
         }).finally(() => {
           this.isLoading = false;
         });
@@ -248,7 +255,10 @@ export default Vue.extend({
       fileReader.addEventListener('error', (err) => {
         console.warn(err);
         this.isLoading = false;
-        this.$toast.show('error', '画像の読み込みに失敗しました。');
+        this.$toast.push({
+          color: 'error',
+          message: '画像の読み込みに失敗しました。',
+        });
       });
 
       fileReader.readAsDataURL(this.playlistArtwork);
@@ -294,7 +304,11 @@ export default Vue.extend({
       }).then(() => {
         if (this.playlistArtwork == null) {
           this.modal = false;
-          this.$toast.show('primary', `プレイリストを${this.resultText || this.detailText}しました。`);
+          this.$toast.push({
+            color: 'primary',
+            message: `プレイリストを${this.resultText || this.detailText}しました。`,
+          });
+
           this.resetForm();
         }
       }).finally(() => {

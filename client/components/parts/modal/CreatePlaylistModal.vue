@@ -36,7 +36,10 @@ export default Vue.extend({
     const handler = (payload: Parameters<Handler<'create'>>[0]) => this.$dispatch('playlists/createPlaylist', payload)
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', err.message);
+        this.$toast.push({
+          color: 'error',
+          message: err.message,
+        });
       });
 
     return {

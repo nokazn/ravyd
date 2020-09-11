@@ -121,7 +121,10 @@ export default Vue.extend({
       if (deviceId != null) {
         this.$dispatch('playback/transferPlayback', { deviceId });
       } else {
-        this.$toast.show('error', 'デバイスを変更できません。');
+        this.$toast.push({
+          color: 'error',
+          message: 'デバイスを変更できません。',
+        });
       }
     },
   },

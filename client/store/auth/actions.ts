@@ -45,7 +45,10 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     }
 
     console.error('トークン取得時にエラーが発生しました。');
-    this.$toast.show('error', 'トークン取得時にエラーが発生し、ログインできません。');
+    this.$toast.push({
+      color: 'error',
+      message: 'トークン取得時にエラーが発生し、ログインできません。',
+    });
   },
 
   async exchangeCodeToAccessToken({ commit }, { code, state }) {
@@ -94,7 +97,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
 
       await dispatch('logout');
       this.$router.push('/login');
-      this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
+      this.$toast.push({
+        color: 'error',
+        message: 'トークンを取得できなかったためログアウトしました。',
+      });
+
       return;
     }
 

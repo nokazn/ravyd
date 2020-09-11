@@ -35,10 +35,7 @@
 
     <Footer v-if="isLoggedin" />
 
-    <Toast
-      v-bind="$toast"
-      @on-changed="onToastChanged"
-    />
+    <Toasts />
 
     <portal-target
       :name="SEARCH_FORM_PORTAL_NAME"
@@ -54,7 +51,7 @@ import { RootGetters } from 'typed-vuex';
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
 import Footer from '~/components/globals/Footer.vue';
-import Toast, { On as OnToast } from '~/components/globals/Toast.vue';
+import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
 import {
@@ -84,7 +81,7 @@ export default Vue.extend({
     NavigationDrawer,
     Footer,
     Overlay,
-    Toast,
+    Toasts,
   },
 
   data(): Data {
@@ -156,9 +153,6 @@ export default Vue.extend({
   methods: {
     onOverlayChanged(isShown: OnOverlay['on-changed']) {
       this.$overlay.change(isShown);
-    },
-    onToastChanged(isShown: OnToast['on-changed']) {
-      this.$toast.change(isShown);
     },
   },
 });

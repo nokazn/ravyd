@@ -6,7 +6,7 @@ import {
   ExtendedSubscribe,
 } from 'typed-vuex';
 import dayjs from 'dayjs';
-import { Toast } from '~/plugins/toast';
+import { $Toast } from '~/plugins/toast';
 import { Overlay } from '~/plugins/overlay';
 import { Header } from '~/plugins/observable/header';
 
@@ -23,7 +23,7 @@ declare module 'vue/types/vue' {
     $dayjs: typeof dayjs
     $spotify: SpotifyEndpoints
     $server: ServerEndpoints
-    $toast: Toast
+    $toast: $Toast
     $overlay: Overlay
     $header: Header
   }

@@ -91,7 +91,11 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
             this.$router.push('/login');
-            this.$toast.show('error', 'トークンを取得できなかったためログアウトしました。');
+            this.$toast.push({
+              color: 'error',
+              message: 'トークンを取得できなかったためログアウトしました。',
+            });
+
             return;
           }
 

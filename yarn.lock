@@ -12169,6 +12169,11 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
+v-snackbars@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/v-snackbars/-/v-snackbars-3.0.1.tgz#1e5a8cf8ffc02b84607b56657ad27fc0212aa9f1"
+  integrity sha512-djvBz7BmKb0j3KjzviukeBqYliFvr/sF6K3HTOAwkTMSpcAmd9KNXU2MLwWXp07xEBq1TEkuraYxHSZfv0+hug==
+
 v8-compile-cache@^2.0.3, v8-compile-cache@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.1.1.tgz#54bc3cdd43317bca91e35dcaf305b1a7237de745"

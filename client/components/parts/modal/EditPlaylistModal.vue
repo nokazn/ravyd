@@ -49,7 +49,10 @@ export default Vue.extend({
     const handler = (payload: Parameters<Handler<'edit'>>[0]) => this.$dispatch('playlists/editPlaylist', payload)
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.show('error', err.message);
+        this.$toast.push({
+          color: 'error',
+          message: err.message,
+        });
       });
 
     return {

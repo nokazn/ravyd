@@ -34,7 +34,11 @@ export const getTrackListHandler = ({ app, params }: Context) => async (
     offset,
   });
   if (tracks == null) {
-    app.$toast.show('error', 'トラックが取得できませんでした。');
+    app.$toast.push({
+      color: 'error',
+      message: 'トラックが取得できませんでした。',
+    });
+
     return {
       trackList: [],
       durationMs: 0,
