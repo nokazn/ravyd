@@ -11,6 +11,7 @@ import { playlists } from './playlists';
 import { search } from './search';
 import { shows } from './shows';
 import { top } from './top';
+import { tracks } from './tracks';
 import { users } from './users';
 
 export const endpoints = (context: Context) => ({
@@ -25,6 +26,7 @@ export const endpoints = (context: Context) => ({
   search: search(context),
   shows: shows(context),
   top: top(context),
+  tracks: tracks(context),
   users: users(context),
 });
 
