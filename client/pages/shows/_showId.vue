@@ -139,7 +139,7 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShowInfo, getIsSaved } from '~/plugins/local/_showId';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/scripts/image/getImageSrc';
 import { convertEpisodeDetail } from '~/scripts/converter/convertEpisodeDetail';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 

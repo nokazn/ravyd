@@ -57,7 +57,7 @@ import Vue, { PropType } from 'vue';
 import { RootState } from 'typed-vuex';
 
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/scripts/image/getImageSrc';
 import { App, SpotifyAPI } from '~~/types';
 
 export type PlaylistCardInfo = App.PlaylistCardInfo

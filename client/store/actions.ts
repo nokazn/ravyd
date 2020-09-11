@@ -1,6 +1,6 @@
 import { Actions } from 'typed-vuex';
 
-import { extractDominantColors } from '~/scripts/images/extractDominantColors';
+import { extractDominantColors } from '~/scripts/image/extractDominantColors';
 import { DEFAULT_DOMINANT_COLOR } from '~/constants';
 import { RootState } from './state';
 import { RootGetters } from './getters';

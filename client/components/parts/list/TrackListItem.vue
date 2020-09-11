@@ -84,7 +84,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/scripts/image/getImageSrc';
 import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App } from '~~/types';
 

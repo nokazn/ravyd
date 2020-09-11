@@ -129,7 +129,7 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getEpisodeInfo } from '~/plugins/local/_episodeId';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/scripts/image/getImageSrc';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { App } from '~~/types';
 

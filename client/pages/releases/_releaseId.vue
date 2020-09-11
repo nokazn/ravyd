@@ -170,7 +170,7 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getReleaseInfo } from '~/plugins/local/_releaseId';
 import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/scripts/image/getImageSrc';
 import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
 import { SpotifyAPI, App, OneToFifty } from '~~/types';
 
