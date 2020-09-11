@@ -8,7 +8,7 @@ import {
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
-import { Toast } from '~/plugins/toast';
+import { $Toast } from '~/plugins/toast';
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
 import { ServerEndpoints } from '~/plugins/server/endpoints';
 
@@ -24,6 +24,6 @@ declare module 'vuex/types/index' {
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
     $server: ServerEndpoints
-    $toast: Toast
+    $toast: $Toast
   }
 }

@@ -7,7 +7,7 @@ import {
 } from 'typed-vuex';
 import dayjs from 'dayjs';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Toast } from '~/plugins/toast';
+import { $Toast } from '~/plugins/toast';
 import { Overlay } from '~/plugins/overlay';
 
 import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
@@ -27,7 +27,7 @@ declare module '@nuxt/types/app' {
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
     $server: ServerEndpoints
-    $toast: Toast
+    $toast: $Toast
     $overlay: Overlay
     $header: Header
   }

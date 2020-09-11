@@ -85,7 +85,7 @@ import Vue, { PropType } from 'vue';
 import { createUrl } from '~~/utils/createUrl';
 import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
-import { Toast } from '~/plugins/toast';
+import { $Toast } from '~/plugins/toast';
 
 type MenuItem = {
   name: string
@@ -115,7 +115,7 @@ type Data = {
   Z_INDEX: number
 }
 
-const copyText = (text: string, name: string, $toast: Toast): void => {
+const copyText = (text: string, name: string, $toast: $Toast): void => {
   const copyEventListener = (e: ClipboardEvent) => {
     if (e.clipboardData == null) {
       $toast.show('error', `${name}をコピーできませんでした。`);
