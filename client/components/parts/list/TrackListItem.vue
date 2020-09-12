@@ -170,8 +170,12 @@ export default Vue.extend({
   padding: 0.3em 0;
 
   &__action {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
     & > *:not(:last-child) {
-      margin-right: 1em;
+      margin-right: 1.2em;
     }
   }
 
