@@ -12,14 +12,15 @@
 
     <ConfirmModal
       v-if="playlistId != null"
-      :is-shown="modal"
-      :type="modalType"
-      color="error"
-      text="削除"
+      :is-shown="modal.isShown"
+      :loading="modal.isLoading"
+      :type="modal.type"
+      :color="modal.color"
+      :text="modal.text"
       @on-changed="toggleConfirmModal"
       @on-confirmed="onConformed"
     >
-      {{ modalText }}
+      {{ modal.description }}
     </ConfirmModal>
   </div>
 </template>
@@ -32,15 +33,24 @@ import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmMod
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+
+import type { ToastType } from '~/plugins/toast';
 import { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 const REMOVE_ITEM_MODAL = 'REMOVE_ITEM_MODAL';
 
+type Modal = {
+  isShown: boolean
+  isLoading: boolean
+  type: string
+  color: ToastType | undefined
+  text: string
+  description: string
+}
+
 type Data = {
-  modal: boolean
-  modalType: string
-  modalText: string
+  modal: Modal
 }
 
 export type On = {
@@ -90,9 +100,14 @@ export default Vue.extend({
 
   data(): Data {
     return {
-      modal: false,
-      modalType: '',
-      modalText: '',
+      modal: {
+        isShown: false,
+        isLoading: false,
+        type: '',
+        color: undefined,
+        text: '',
+        description: '',
+      },
     };
   },
 
@@ -189,9 +204,13 @@ export default Vue.extend({
         handler: () => {
           if (this.playlistId == null) return;
 
-          this.modalType = REMOVE_ITEM_MODAL;
-          this.modalText = `"${this.track.name}" をプレイリストから削除しますか？`;
-          this.modal = true;
+          this.toggleConfirmModal(true, {
+            isLoading: false,
+            type: REMOVE_ITEM_MODAL,
+            color: 'error',
+            text: '削除',
+            description: `"${this.track.name}" をプレイリストから削除しますか？`,
+          });
         },
         disabled: this.playlistId == null,
       });
@@ -229,14 +248,22 @@ export default Vue.extend({
   },
 
   methods: {
-    toggleConfirmModal(modal: OnModal['on-changed']) {
-      this.modal = modal;
+    toggleConfirmModal(isShown: OnModal['on-changed'], params?: Partial<Omit<Modal, 'isShown'>>) {
+      const { modal } = this;
+      this.modal = params != null
+        ? { ...modal, isShown, ...params }
+        : { ...modal, isShown };
+    },
+    toggleConfirmModalLoading(isLoading: boolean) {
+      const { modal } = this;
+      this.modal = { ...modal, isLoading };
     },
     onConformed(type: OnModal['on-confirmed']) {
       const removePlaylistItem = () => {
         const { playlistId } = this;
         if (playlistId == null) return;
 
+        this.toggleConfirmModalLoading(true);
         this.$dispatch('playlists/removePlaylistItem', {
           playlistId,
           track: {
@@ -244,6 +271,10 @@ export default Vue.extend({
             positions: [this.track.index],
           },
           name: this.track.name,
+        }).then(() => {
+          this.toggleConfirmModal(false);
+        }).finally(() => {
+          this.toggleConfirmModalLoading(false);
         });
       };
 
