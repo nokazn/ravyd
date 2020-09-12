@@ -139,14 +139,15 @@
     />
 
     <ConfirmModal
-      :is-shown="confirmModal"
-      :type="confirmModalType"
-      color="error"
-      text="削除"
+      :is-shown="confirmModal.isShown"
+      :loading="confirmModal.isLoading"
+      :type="confirmModal.type"
+      :color="confirmModal.color"
+      :text="confirmModal.text"
       @on-changed="toggleConfirmModal"
       @on-confirmed="onConformed"
     >
-      {{ confirmModalText }}
+      {{ confirmModal.description }}
     </ConfirmModal>
 
     <p
@@ -200,13 +201,24 @@ import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import { App, OneToFifty, SpotifyAPI } from '~~/types';
 import { emptyPaging } from '~/constants';
+
+import type { ToastType } from '~/plugins/toast';
+import { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
 const HEADER_REF = 'HEADER_REF';
 const REMOVE_PLAYLIST_MODAL = 'REMOVE_PLAYLIST_MODAL';
+
+type Modal = {
+  isShown: boolean
+  isLoading: boolean
+  type: string,
+  color: ToastType | undefined,
+  text: string,
+  description: string,
+}
 
 interface AsyncData {
   playlistInfo: App.PlaylistInfo | undefined
@@ -216,9 +228,7 @@ interface AsyncData {
 
 interface Data {
   editPlaylistModal: boolean
-  confirmModal: boolean
-  confirmModalText: string
-  confirmModalType: string
+  confirmModal: Modal
   mutationUnsubscribe: (() => void) | undefined
   ARTWORK_SIZE: number
   HEADER_REF: string
@@ -270,9 +280,14 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
 
   editPlaylistModal = false;
-  confirmModal = false;
-  confirmModalText = '';
-  confirmModalType = '';
+  confirmModal: Modal = {
+    isShown: false,
+    isLoading: false,
+    type: '',
+    color: undefined,
+    text: '',
+    description: '',
+  };
   mutationUnsubscribe: (() => void) | undefined = undefined;
   ARTWORK_SIZE = ARTWORK_SIZE;
   HEADER_REF = HEADER_REF;
@@ -551,8 +566,16 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.editPlaylistModal = modal;
   }
 
-  toggleConfirmModal(modal: OnModal['on-changed']) {
-    this.confirmModal = modal;
+  toggleConfirmModal(isShown: OnModal['on-changed'], params?: Partial<Omit<Modal, 'isShown'>>) {
+    const { confirmModal } = this;
+    this.confirmModal = params != null
+      ? { ...confirmModal, isShown, ...params }
+      : { ...confirmModal, isShown };
+  }
+
+  toggleConfirmModalLoading(isLoading: boolean) {
+    const { confirmModal } = this;
+    this.confirmModal = { ...confirmModal, isLoading };
   }
 
   toggleFollowingState(nextFollowingState: OnFavoriteButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
@@ -561,9 +584,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const { isOwnPlaylist } = this.playlistInfo;
     if (!nextFollowingState && isOwnPlaylist) {
       // 自分のプレイリストを削除する場合はモーダルで確認
-      this.confirmModalType = REMOVE_PLAYLIST_MODAL;
-      this.confirmModalText = 'プレイリストを削除しますか？';
-      this.confirmModal = true;
+      this.toggleConfirmModal(true, {
+        type: REMOVE_PLAYLIST_MODAL,
+        color: 'error',
+        text: '削除',
+        description: 'プレイリストを削除しますか？',
+      });
       return;
     }
 
@@ -585,9 +611,14 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       const playlistId = this.playlistInfo?.id;
       if (this.playlistInfo == null || playlistId == null) return;
 
+      this.toggleConfirmModalLoading(true);
       this.$dispatch('playlists/unfollowPlaylist', {
         playlistId,
         isOwnPlaylist: this.playlistInfo.isOwnPlaylist,
+      }).then(() => {
+        this.toggleConfirmModal(false);
+      }).finally(() => {
+        this.toggleConfirmModalLoading(false);
       });
     };
 
