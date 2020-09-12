@@ -135,7 +135,7 @@
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -144,7 +144,7 @@ import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
 export const SIZE_OF_ARTWORK = 48;

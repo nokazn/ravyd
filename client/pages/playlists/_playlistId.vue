@@ -181,7 +181,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import UserName from '~/components/parts/text/UserName.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -197,9 +197,9 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
-import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { checkTrackSavedState } from '~/scripts/subscriber/checkTrackSavedState';
+import { convertPlaylistTrackDetail } from '~/utils/converter';
+import { getImageSrc } from '~/utils/image';
+import { checkTrackSavedState } from '~/utils/subscriber';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 import { emptyPaging } from '~/constants';
 

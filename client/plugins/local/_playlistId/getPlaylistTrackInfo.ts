@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { convertPlaylistTrackDetail } from '~/scripts/converter/convertPlaylistTrackDetail';
+import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 
 /**

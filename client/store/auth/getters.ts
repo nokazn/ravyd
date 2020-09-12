@@ -1,6 +1,6 @@
 import { Getters } from 'typed-vuex';
 
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/utils/image';
 import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 

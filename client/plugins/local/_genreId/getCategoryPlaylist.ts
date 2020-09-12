@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
 import { App, OneToFifty } from '~~/types';
 
-import { convertPlaylistForCard } from '~/scripts/converter/convertPlaylistForCard';
+import { convertPlaylistForCard } from '~/utils/converter';
 
 export const getCategoryPlaylist = async (
   { app, params }: Context,

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { convertReleaseDate } from '~/scripts/converter/convertReleaseDate';
+import { convertReleaseDate } from '~/utils/converter';
 
 export type Data = {
   date: string

@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { getQuery } from '~/scripts/text/getQuery';
+import { getQuery } from '~/utils/text';
 
 export default Vue.extend({
   async fetch({ query, app, redirect }): Promise<void> {

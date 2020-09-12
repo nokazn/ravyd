@@ -2,7 +2,7 @@
 import { Mutations } from 'typed-vuex';
 import { PlaybackState } from './state';
 import { DEFAULT_DURATION_MS } from '~/constants';
-import { convertUriToId } from '~/scripts/converter/convertUriToId';
+import { convertUriToId } from '~/utils/converter';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 // @todo

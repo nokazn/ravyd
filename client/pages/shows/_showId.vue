@@ -127,7 +127,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeTable from '~/components/containers/table/EpisodeTable.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -139,8 +139,8 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShowInfo, getIsSaved } from '~/plugins/local/_showId';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
-import { convertEpisodeDetail } from '~/scripts/converter/convertEpisodeDetail';
+import { getImageSrc } from '~/utils/image';
+import { convertEpisodeDetail } from '~/utils/converter';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;

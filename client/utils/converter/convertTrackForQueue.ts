@@ -1,4 +1,4 @@
-import { convertUriToId } from '~/scripts/converter/convertUriToId';
+import { convertUriToId } from '~/utils/converter';
 import { App, SpotifyAPI } from '~~/types';
 
 // @todo

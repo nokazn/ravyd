@@ -68,7 +68,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {

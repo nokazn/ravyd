@@ -80,7 +80,7 @@
 import Vue from 'vue';
 import { RootState, RootGetters } from 'typed-vuex';
 
-import ReleaseArtwork from '~/components/parts/avatar/ReleaseArtwork.vue';
+import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import MarqueeTrackName from '~/components/parts/text/MarqueeTrackName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';

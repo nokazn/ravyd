@@ -57,8 +57,8 @@
 import Vue, { PropType } from 'vue';
 import { RootState } from 'typed-vuex';
 
-import ReleaseArtwork, { MediaIcon } from '~/components/parts/avatar/ReleaseArtwork.vue';
-import { getImageSrc } from '~/scripts/converter/getImageSrc';
+import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
+import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI } from '~~/types';
 
 export type Data = {

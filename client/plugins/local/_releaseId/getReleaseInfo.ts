@@ -1,7 +1,5 @@
 import { Context } from '@nuxt/types';
-import { convertReleaseType } from '~/scripts/converter/convertReleaseType';
-import { convertTrackDetail } from '~/scripts/converter/convertTrackDetail';
-import { convertReleaseForCard } from '~/scripts/converter/convertReleaseForCard';
+import { convertReleaseType, convertTrackDetail, convertReleaseForCard } from '~/utils/converter';
 import { App, SpotifyAPI, OneToFifty } from '~~/types';
 
 export const getReleaseInfo = async (
