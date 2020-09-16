@@ -227,25 +227,23 @@ $side-margin: 1vw;
 }
 
 .Left {
-  $track-info-line-space: 0.75em;
-
   display: flex;
   align-items: center;
   margin-left: $side-margin;
   height: 100%;
 
   & > *:not(:last-child) {
-    margin-right: 0.3em;
+    margin-right: 0.375em;
   }
 
   &__trackInfo {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow: hidden;
+    overflow-x: hidden;
 
     & > *:not(:last-child) {
-      margin-bottom: $track-info-line-space;
+      margin-bottom: 0.5em;
     }
   }
 
@@ -253,10 +251,7 @@ $side-margin: 1vw;
     display: flex;
     align-items: center;
     height: 100%;
-
-    & > *:first-child {
-      transform: translateY(-$track-info-line-space);
-    }
+    margin-right: 0.1em;
   }
 }
 

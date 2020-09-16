@@ -138,7 +138,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .MarqueeArtistNames {
   font-size: 0.8em;
-  line-height: 1em;
+  line-height: 1.5em;
   padding: 0 0.5em;
   white-space: nowrap;
   position: relative;

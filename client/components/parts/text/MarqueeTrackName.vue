@@ -148,12 +148,8 @@ export default Vue.extend({
 .TrackName {
   color: $g-title-color;
   font-size: 0.9em;
-  line-height: 1em;
-  padding: {
-    right: 0.5em;
-    left: 0.5em;
-  };
-
+  line-height: 1.5em;
+  padding: 0 0.5em;
   white-space: nowrap;
   position: relative;
 
