@@ -15,6 +15,7 @@ type ToastState = {
 export type $Toast = {
   toasts: Toast[]
   push: (toast: Toast) => void
+  set: (toast: Toast) => void
 }
 
 const state = Vue.observable<ToastState>({
@@ -31,5 +32,14 @@ export const $toast: $Toast = {
 
   push(toast: Toast) {
     state.toasts.push(toast);
+  },
+
+  // 同じメッセージがなければセットする
+  set(toast: Toast) {
+    const includedToast = state.toasts
+      .find(({ message, color }) => toast.message === message && toast.color === color);
+    if (includedToast == null) {
+      state.toasts.push(toast);
+    }
   },
 };

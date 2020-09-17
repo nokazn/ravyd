@@ -40,13 +40,22 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       currentAccessToken: string,
       currentExpirationMs: number | undefined,
     ): Promise<string | undefined> => {
+      // トークン更新中であれば待機して、期限切れのときのみ更新
+      await this.$getters()['auth/finishedRefreshingToken'];
+      const isExpired = this.$getters()['auth/isTokenExpired']();
+      if (!isExpired) {
+        return this.$state().auth.accessToken;
+      }
+
       // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
+      commit('auth/SET_IS_REFRESHING', true, { root: true });
 
       const res = await this.$server.auth.refresh(currentAccessToken);
 
       if (res?.data.accessToken == null) {
         commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
         return undefined;
       }
 
@@ -55,11 +64,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       if (res.status !== 409) {
         commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
         commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
         return accessToken;
       }
 
       // 一度リセットした expirationMs を元に戻す
       commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+      commit('auth/SET_IS_REFRESHING', false, { root: true });
       // アクセストークンを再取得
       await dispatch('auth/getAccessToken', undefined, { root: true });
 
@@ -84,6 +95,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             accessToken: currentAccessToken,
             expirationMs,
           } = this.$state().auth;
+          const isExpired = this.$getters()['auth/isTokenExpired']();
+          // すでに保持しているアクセストークンが有効の場合はそれを使う
+          if (currentAccessToken != null && !isExpired) {
+            callback(currentAccessToken);
+            return;
+          }
+
           const accessToken = currentAccessToken == null
             ? await checkAccessToken()
             : await refreshAccessToken(currentAccessToken, expirationMs);
@@ -103,9 +121,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         },
       });
 
-      /**
-       * デバイスの接続が完了したとき
-       */
+      // デバイスの接続が完了したとき
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
 
@@ -129,22 +145,18 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log('Ready with this device 🎉');
       });
 
-      /**
-       * デバイスがオフラインのとき
-       */
+      // デバイスがオフラインのとき
       player.addListener('not_ready', ({ device_id }) => {
         console.log('This device has gone offline 😴', device_id);
       });
 
-      // エラーが発生した場合
-      const errorList: Spotify.ErrorTypes[] = [
-        'initialization_error',
-        'account_error',
-        'playback_error',
-      ];
-      errorList.forEach((errorType) => {
-        player.addListener(errorType, (err) => {
-          console.error({ errorType, err });
+      // ブラウザが EME コンテンツをサポートしていないなどの理由で現在の環境をサポートしていないとき
+      player.addListener('initialization_error', (err) => {
+        console.error({ err });
+        this.$toast.set({
+          color: 'error',
+          message: '現在の環境ではフル再生をサポートしていません。',
+          timeout: 1000 * 30,
         });
       });
 
@@ -154,11 +166,24 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
       });
 
-      /**
-       * 再生状態の変更を受信したとき
-       */
+      // プレミアムアカウントのユーザーでない場合
+      player.addListener('account_error', (err) => {
+        console.error({ err });
+      });
+
+      // ネットワークのエラーなどで、トラックが再生できないとき
+      player.addListener('playback_error', (err) => {
+        console.error({ err });
+        this.$commit('playback/SET_IS_PLAYING', false);
+        this.$toast.set({
+          color: 'error',
+          message: 'トラックを再生できません',
+        });
+      });
+
+      // 再生状態の変更を受信したとき
       player.addListener('player_state_changed', ((playerState) => {
-        // playerState は Nullable
+        // @todo playerState は Nullable
         if (playerState == null) return;
 
         // @todo
@@ -199,9 +224,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         dispatch('playback/resetCustomContext', uri, { root: true });
       }));
 
-      await player.connect();
-
-      commit('SET_PLAYBACK_PLAYER', player);
+      const isConnected = await player.connect();
+      if (isConnected) {
+        commit('SET_PLAYBACK_PLAYER', player);
+      }
     };
 
     window.onSpotifyWebPlaybackSDKReady();

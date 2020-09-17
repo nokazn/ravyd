@@ -370,7 +370,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     dispatch,
   }, payload?) {
     if (getters.isDisallowed('resuming') && payload == null) {
-      commit('SET_IS_PLAYING', true);
+      // @todo resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
+      // commit('SET_IS_PLAYING', true);
+      this.$toast.push({
+        color: 'error',
+        message: 'トラックを再生できません',
+      });
       return;
     }
 
@@ -420,7 +425,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         console.error({ err });
         this.$toast.push({
           color: 'error',
-          message: 'エラーが発生し、再生できません。',
+          message: 'エラーが発生し、トラックを再生できません。',
         });
 
         dispatch('pollCurrentPlayback', 0);
@@ -430,7 +435,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         console.error({ err });
         this.$toast.push({
           color: 'error',
-          message: 'エラーが発生し、再生できません。',
+          message: 'エラーが発生し、トラックを再生できません。',
         });
 
         dispatch('pollCurrentPlayback', 0);
@@ -455,7 +460,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.push({
-          color: 'warning',
+          color: 'error',
           message: 'エラーが発生しました。',
         });
 
@@ -543,6 +548,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       });
   },
 
+  /**
+   * シャッフルのモードを変更
+   */
   async shuffle({
     state,
     getters,
@@ -563,8 +571,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       }).catch((err: Error) => {
         console.error({ err });
         this.$toast.push({
-          color: 'warning',
-          message: 'エラーが発生し、シャッフルの状態を変更できませんでした。',
+          color: 'error',
+          message: 'エラーが発生し、シャッフルのモードを変更できませんでした。',
         });
       })
       .finally(() => {
@@ -575,7 +583,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   /**
-   * リピートの状態を変更
+   * リピートのモードを変更
    */
   async repeat({
     state,
@@ -600,8 +608,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.push({
-          color: 'warning',
-          message: 'エラーが発生し、シャッフルの状態を変更できませんでした。',
+          color: 'error',
+          message: 'エラーが発生し、リピートのモードを変更できませんでした。',
         });
       })
       .finally(() => {
