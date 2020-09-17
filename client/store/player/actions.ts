@@ -40,13 +40,22 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       currentAccessToken: string,
       currentExpirationMs: number | undefined,
     ): Promise<string | undefined> => {
+      // トークン更新中であれば待機して、期限切れのときのみ更新
+      await this.$getters()['auth/finishedRefreshingToken'];
+      const isExpired = this.$getters()['auth/isTokenExpired']();
+      if (!isExpired) {
+        return this.$state().auth.accessToken;
+      }
+
       // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
+      commit('auth/SET_IS_REFRESHING', true, { root: true });
 
       const res = await this.$server.auth.refresh(currentAccessToken);
 
       if (res?.data.accessToken == null) {
         commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
         return undefined;
       }
 
@@ -55,11 +64,13 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       if (res.status !== 409) {
         commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
         commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
         return accessToken;
       }
 
       // 一度リセットした expirationMs を元に戻す
       commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+      commit('auth/SET_IS_REFRESHING', false, { root: true });
       // アクセストークンを再取得
       await dispatch('auth/getAccessToken', undefined, { root: true });
 
@@ -84,6 +95,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             accessToken: currentAccessToken,
             expirationMs,
           } = this.$state().auth;
+          const isExpired = this.$getters()['auth/isTokenExpired']();
+          console.info(isExpired, currentAccessToken);
+          // すでに保持しているアクセストークンが有効の場合はそれを使う
+          if (currentAccessToken != null && !isExpired) {
+            callback(currentAccessToken);
+            return;
+          }
+
           const accessToken = currentAccessToken == null
             ? await checkAccessToken()
             : await refreshAccessToken(currentAccessToken, expirationMs);

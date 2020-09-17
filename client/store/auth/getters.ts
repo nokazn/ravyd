@@ -5,8 +5,9 @@ import { AuthState } from './state';
 import { SpotifyAPI } from '~~/types';
 
 export type AuthGetters = {
-  isLoggedin: boolean | undefined
+  isLoggedin: boolean
   isTokenExpired: () => boolean
+  finishedRefreshingToken: Promise<true>
   userId: string | undefined
   userDisplayName: string | undefined
   userAvatarSrc: (avatarSize?: number) => string| undefined
@@ -16,6 +17,7 @@ export type AuthGetters = {
 export type RootGetters = {
   'auth/isLoggedin': AuthGetters['isLoggedin']
   'auth/isTokenExpired': AuthGetters['isTokenExpired']
+  'auth/finishedRefreshingToken': AuthGetters['finishedRefreshingToken']
   'auth/userId': AuthGetters['userId']
   'auth/userDisplayName': AuthGetters['userDisplayName']
   'auth/userAvatarSrc': AuthGetters['userAvatarSrc']
@@ -32,6 +34,12 @@ const getters: Getters<AuthState, AuthGetters> = {
     return () => (state.expirationMs != null
       ? Date.now() > state.expirationMs
       : false);
+  },
+
+  finishedRefreshingToken(state) {
+    return state.isRefreshing
+      ? new Promise(() => {})
+      : Promise.resolve(true);
   },
 
   userId(state) {

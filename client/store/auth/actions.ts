@@ -81,12 +81,17 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit,
     dispatch,
   }) {
-    // 現在ログイン済でアクセストークンの期限が切れている場合のみ更新
-    if (state.accessToken == null || !getters.isTokenExpired()) return;
+    // 現在ログイン済でないときは更新しない
+    if (state.accessToken == null) return;
+
+    // トークン更新中であれば待機して、期限切れのときのみ更新
+    await getters.finishedRefreshingToken;
+    if (!getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
     const currentExpirationMs = state.expirationMs;
     commit('SET_EXPIRATION_MS', undefined);
+    commit('SET_IS_REFRESHING', true);
 
     const res = await this.$server.auth.refresh(state.accessToken);
 
@@ -94,6 +99,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (res?.data.accessToken == null) {
       commit('SET_ACCESS_TOKEN', undefined);
       commit('SET_EXPIRATION_MS', undefined);
+      commit('SET_IS_REFRESHING', false);
 
       await dispatch('logout');
       this.$router.push('/login');
@@ -110,9 +116,11 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (res.status !== 409) {
       commit('SET_ACCESS_TOKEN', accessToken);
       commit('SET_EXPIRATION_MS', expireIn);
+      commit('SET_IS_REFRESHING', false);
     } else {
       // 一度リセットした expirationMs を元に戻す
       commit('SET_EXPIRATION_MS', currentExpirationMs);
+      commit('SET_IS_REFRESHING', false);
       // アクセストークンを再取得
       await dispatch('getAccessToken');
     }
@@ -131,10 +139,10 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async confirmAuthState({ getters, dispatch }) {
-    if (!getters.isLoggedin) {
+    if (!getters.isLoggedin || getters.isTokenExpired()) {
       await dispatch('refreshAccessToken');
     }
-    return getters.isLoggedin ?? false;
+    return getters.isLoggedin;
   },
 };
 
