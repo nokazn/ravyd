@@ -96,7 +96,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             expirationMs,
           } = this.$state().auth;
           const isExpired = this.$getters()['auth/isTokenExpired']();
-          console.info(isExpired, currentAccessToken);
           // すでに保持しているアクセストークンが有効の場合はそれを使う
           if (currentAccessToken != null && !isExpired) {
             callback(currentAccessToken);
@@ -159,7 +158,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const errorList: Spotify.ErrorTypes[] = [
         'initialization_error',
         'account_error',
-        'playback_error',
       ];
       errorList.forEach((errorType) => {
         player.addListener(errorType, (err) => {
@@ -171,7 +169,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('playback_error', (err) => {
         console.error({ err });
         this.$commit('playback/SET_IS_PLAYING', false);
-        this.$toast.push({
+        this.$toast.set({
           color: 'error',
           message: 'トラックを再生できません',
         });
