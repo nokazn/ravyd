@@ -121,9 +121,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         },
       });
 
-      /**
-       * デバイスの接続が完了したとき
-       */
+      // デバイスの接続が完了したとき
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
 
@@ -147,22 +145,30 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         console.log('Ready with this device 🎉');
       });
 
-      /**
-       * デバイスがオフラインのとき
-       */
+      // デバイスがオフラインのとき
       player.addListener('not_ready', ({ device_id }) => {
         console.log('This device has gone offline 😴', device_id);
       });
 
-      // エラーが発生した場合
-      const errorList: Spotify.ErrorTypes[] = [
-        'initialization_error',
-        'account_error',
-      ];
-      errorList.forEach((errorType) => {
-        player.addListener(errorType, (err) => {
-          console.error({ errorType, err });
+      // ブラウザが EME コンテンツをサポートしていないなどの理由で現在の環境をサポートしていないとき
+      player.addListener('initialization_error', (err) => {
+        console.error({ err });
+        this.$toast.set({
+          color: 'error',
+          message: '現在の環境ではフル再生をサポートしていません。',
+          timeout: 1000 * 30,
         });
+      });
+
+      // 認証エラーが発生した場合
+      player.addListener('authentication_error', async (err) => {
+        console.error({ err });
+        await dispatch('auth/refreshAccessToken', undefined, { root: true });
+      });
+
+      // プレミアムアカウントのユーザーでない場合
+      player.addListener('account_error', (err) => {
+        console.error({ err });
       });
 
       // ネットワークのエラーなどで、トラックが再生できないとき
@@ -175,17 +181,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         });
       });
 
-      // 認証エラーが発生した場合
-      player.addListener('authentication_error', async (err) => {
-        console.error({ err });
-        await dispatch('auth/refreshAccessToken', undefined, { root: true });
-      });
-
-      /**
-       * 再生状態の変更を受信したとき
-       */
+      // 再生状態の変更を受信したとき
       player.addListener('player_state_changed', ((playerState) => {
-        // playerState は Nullable
+        // @todo playerState は Nullable
         if (playerState == null) return;
 
         // @todo
@@ -226,9 +224,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         dispatch('playback/resetCustomContext', uri, { root: true });
       }));
 
-      await player.connect();
-
-      commit('SET_PLAYBACK_PLAYER', player);
+      const isConnected = await player.connect();
+      if (isConnected) {
+        commit('SET_PLAYBACK_PLAYER', player);
+      }
     };
 
     window.onSpotifyWebPlaybackSDKReady();
