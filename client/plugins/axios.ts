@@ -27,9 +27,12 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   });
 
   spotifyApi.onResponseError((err) => {
-    // 認可リクエストによるエラーだった場合はアクセストークンを更新
     if (err.response?.status === 401) {
+      // 認可リクエストによるエラーだった場合はアクセストークンを更新
       app.$dispatch('auth/refreshAccessToken');
+    } else if (err.message === 'Network Error') {
+      // ネットワークエラーだった場合は polling を中止
+      app.$commit('playback/SET_POLLING_PLAYBACK_TIMER', undefined);
     }
 
     throw new Error(err.message);

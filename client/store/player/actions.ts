@@ -148,6 +148,16 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         });
       });
 
+      // ネットワークのエラーなどで、トラックが再生できないとき
+      player.addListener('playback_error', (err) => {
+        console.error({ err });
+        this.$commit('playback/SET_IS_PLAYING', false);
+        this.$toast.push({
+          color: 'error',
+          message: 'トラックを再生できません',
+        });
+      });
+
       // 認証エラーが発生した場合
       player.addListener('authentication_error', async (err) => {
         console.error({ err });
