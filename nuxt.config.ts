@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import { NuxtConfig } from '@nuxt/types';
-import { SPOTIFY_API_URL } from './client/constants';
+import { SPOTIFY_API_URL, BACKGROUND_COLOR } from './client/constants';
 
 const nuxtConfig: NuxtConfig = {
   mode: 'universal',
@@ -96,6 +96,7 @@ const nuxtConfig: NuxtConfig = {
       dark: true,
       themes: {
         dark: {
+          background: BACKGROUND_COLOR,
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
