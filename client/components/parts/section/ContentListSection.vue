@@ -11,6 +11,7 @@
     <client-only>
       <v-list
         dense
+        nav
         color="transparent"
         :class="$style.ContentListItem__list"
       >
@@ -71,7 +72,7 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin-top: 6px;
+    margin-top: 8px;
   }
 }
 </style>

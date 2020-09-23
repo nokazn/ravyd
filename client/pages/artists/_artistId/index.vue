@@ -17,7 +17,7 @@
       >
         <TrackList
           :track-list="topTrackList"
-          :length="abbreviatedContentLength"
+          :length="abbreviatedTopTrackLength"
           :uri="artistInfo.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
         />
@@ -27,7 +27,7 @@
         v-if="relatedArtistList.length > 0"
         title="関連アーティスト"
         :items="relatedArtistList"
-        :length="abbreviatedContentLength"
+        :length="abbreviatedRelatedArtistLength"
       />
     </div>
 
@@ -78,7 +78,9 @@ import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
-const ABBREVIATED_RELEASE_LENGTH = 10;
+const FULL_TOP_TRACK_LENGTH = 10;
+const ABBREVIATED_RELATED_ARTIST_LENGTH = 9;
+const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
 type TabItem = {
@@ -149,10 +151,15 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
       ? this.isTrackListAbbreviated
       : undefined;
   }
-  get abbreviatedContentLength(): number | undefined {
+  get abbreviatedTopTrackLength(): number | undefined {
     return this.isFirstSectionAbbreviated == null || this.isFirstSectionAbbreviated
       ? ABBREVIATED_TOP_TRACK_LENGTH
-      : 10;
+      : FULL_TOP_TRACK_LENGTH;
+  }
+  get abbreviatedRelatedArtistLength(): number | undefined {
+    return this.isFirstSectionAbbreviated == null || this.isFirstSectionAbbreviated
+      ? ABBREVIATED_TOP_TRACK_LENGTH
+      : ABBREVIATED_RELATED_ARTIST_LENGTH;
   }
 
   mounted() {

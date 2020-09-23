@@ -3,7 +3,6 @@
     dense
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
-    two-linea
     :title="name"
     :data-is-selected="isSelected"
     :class="$style.ContentListItem"
@@ -142,8 +141,8 @@ export default Vue.extend({
   }
 
   &__avatar {
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
   }
 }
 </style>
