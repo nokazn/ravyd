@@ -2,14 +2,14 @@ import { SpotifyAPI, App } from '~~/types';
 
 export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
 
-const rgb: [number, number, number] = [130, 132, 132];
+const rgb: [number, number, number] = [120, 122, 122];
 export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
-  hex: '#828484',
+  hex: '#787a7a',
   rgb,
 } as const;
 
 // 背景とヘッダーの明度を下げる割合
-export const DARKEN_FILTER_RATIO = 0.4;
+export const DARKEN_FILTER_RATIO = 0.6;
 export const BACKGROUND_COLOR = '#202224';
 // #1e2024 を10進数の配列にしたもの
 export const BACKGROUND_COLOR_RGB = [32, 34, 36] as const;
