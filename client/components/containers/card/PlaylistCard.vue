@@ -1,76 +1,58 @@
 <template>
-  <div>
-    <v-skeleton-loader
-      v-if="!isLoaded"
-      type="card"
-      boilerplate
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-    />
-    <v-card
-      v-else
-      hover
-      ripple
-      nuxt
-      :color="CARD_BACKGROUND_COLOR"
-      :to="playlistPath"
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-      :class="$style.PlaylistCard"
-    >
-      <div :class="$style.PlaylistCard__container">
-        <ReleaseArtwork
-          is-overlayed
-          :src="artworkSrc"
-          :alt="name"
-          :title="name"
-          :size="width"
-          :min-size="minWidth || width"
-          :max-size="maxWidth || width"
-          :icon="mediaIcon"
-          @on-media-button-clicked="onMediaButtonClicked"
-        />
+  <Card
+    :to="playlistPath"
+    :width="width"
+    :min-width="minWidth || width"
+    :max-width="maxWidth || width"
+    :class="$style.PlaylistCard"
+  >
+    <template #image>
+      <ReleaseArtwork
+        is-overlayed
+        :src="artworkSrc"
+        :alt="name"
+        :title="name"
+        :size="width"
+        :min-size="minWidth || width"
+        :max-size="maxWidth || width"
+        :icon="mediaIcon"
+        @on-media-button-clicked="onMediaButtonClicked"
+      />
+    </template>
 
-        <v-card-title :class="$style.PlaylistCard__title">
-          <span
-            :title="name"
-            class="g-ellipsis-text"
-          >
-            {{ name }}
-          </span>
-        </v-card-title>
+    <template #title>
+      <span
+        :title="name"
+        class="g-ellipsis-text"
+      >
+        {{ name }}
+      </span>
+    </template>
 
-        <v-card-subtitle :class="$style.PlaylistCard__text">
-          <span
-            :title="description"
-            v-html="description"
-          />
-        </v-card-subtitle>
-      </div>
-    </v-card>
-  </div>
+    <template #subtitle>
+      <span
+        :title="description"
+        :class="$style.PlaylistCard__text"
+        v-html="description"
+      />
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { RootState } from 'typed-vuex';
 
+import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import { getImageSrc } from '~/utils/image';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 
 export type PlaylistCardInfo = App.PlaylistCardInfo
 
-type Data = {
-  isLoaded: boolean;
-  CARD_BACKGROUND_COLOR: string;
-}
-
 export default Vue.extend({
   components: {
+    Card,
     ReleaseArtwork,
   },
 
@@ -113,13 +95,6 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      isLoaded: false,
-      CARD_BACKGROUND_COLOR,
-    };
-  },
-
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.images, this.maxWidth ?? this.width);
@@ -141,10 +116,6 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    this.isLoaded = true;
-  },
-
   methods: {
     onMediaButtonClicked() {
       // 現在再生中の場合
@@ -164,27 +135,11 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .PlaylistCard {
-  &__container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__title {
-    font-size: 0.9em;
-    line-height: 1.3em;
-  }
-
   &__text {
-    font-size: 0.8em;
-    line-height: 1.2em;
-    margin-top: -8px !important;
-
-    & > * {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 </style>

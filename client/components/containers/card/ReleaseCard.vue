@@ -1,72 +1,55 @@
 <template>
-  <div>
-    <v-skeleton-loader
-      v-if="!isLoaded"
-      type="card"
-      boilerplate
-      :width="width"
-      :min-width="width"
-      :max-width="maxWidth || width"
-    />
-    <v-card
-      v-else
-      hover
-      ripple
-      :color="CARD_BACKGROUND_COLOR"
-      :width="width"
-      :min-width="width"
-      :max-width="maxWidth || width"
-      :class="$style.ReleaseCard"
-      @click="onCardClicked"
-    >
-      <div :class="$style.ReleaseCard__container">
-        <nuxt-link :to="releasePath">
-          <ReleaseArtwork
-            is-overlayed
-            :src="artworkSrc"
-            :alt="name"
-            :title="name"
-            :size="width"
-            :min-size="minWidth || width"
-            :max-size="maxWidth || width"
-            :icon="mediaIcon"
-            @on-media-button-clicked="onMediaButtonClicked"
-          />
-        </nuxt-link>
+  <Card
+    :width="width"
+    :min-width="width"
+    :max-width="maxWidth || width"
+    @click="onCardClicked"
+  >
+    <template #image>
+      <nuxt-link :to="releasePath">
+        <ReleaseArtwork
+          is-overlayed
+          :src="artworkSrc"
+          :alt="name"
+          :title="name"
+          :size="width"
+          :min-size="minWidth || width"
+          :max-size="maxWidth || width"
+          :icon="mediaIcon"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </nuxt-link>
+    </template>
 
-        <v-card-title :class="$style.ReleaseCard__title">
-          <nuxt-link
-            :to="releasePath"
-            :title="name"
-            class="g-ellipsis-text"
-          >
-            {{ name }}
-          </nuxt-link>
-        </v-card-title>
+    <template #title>
+      <nuxt-link
+        :to="releasePath"
+        :title="name"
+        class="g-ellipsis-text"
+      >
+        {{ name }}
+      </nuxt-link>
+    </template>
 
-        <v-card-subtitle
-          :class="$style.ReleaseCard__subtitle"
+    <template #subtitle>
+      <template v-if="discograpy">
+        <time
+          v-if="releaseYear != null"
+          :datetime="releaseYear"
+          class="g-ellipsis-text"
         >
-          <template v-if="discograpy">
-            <time
-              v-if="releaseYear != null"
-              :datetime="releaseYear"
-              class="g-ellipsis-text"
-            >
-              {{ releaseYear }}
-            </time>
-          </template>
+          {{ releaseYear }}
+        </time>
+      </template>
 
-          <template v-else>
-            <ArtistNames
-              :artists="artists"
-              class="g-ellipsis-text"
-            />
-          </template>
-        </v-card-subtitle>
-      </div>
-    </v-card>
-  </div>
+      <template v-else>
+        <ArtistNames
+          :artists="artists"
+          class="g-ellipsis-text"
+        />
+      </template>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
@@ -74,20 +57,16 @@ import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 import { RootState } from 'typed-vuex';
 
+import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
 import { hasProp } from '~~/utils/hasProp';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
-
-type Data = {
-  isLoaded: boolean;
-  CARD_BACKGROUND_COLOR: string;
-}
 
 export default Vue.extend({
   components: {
+    Card,
     ReleaseArtwork,
     ArtistNames,
   },
@@ -151,13 +130,6 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      isLoaded: false,
-      CARD_BACKGROUND_COLOR,
-    };
-  },
-
   computed: {
     artworkSrc(): string | undefined {
       return getImageSrc(this.images, this.maxWidth ?? this.width);
@@ -186,10 +158,6 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    this.isLoaded = true;
-  },
-
   methods: {
     onCardClicked() {
       this.$router.push(this.releasePath);
@@ -213,23 +181,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" module>
-.ReleaseCard {
-  &__container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__title {
-    font-size: 0.9em;
-    line-height: 1.3em;
-  }
-
-  &__subtitle {
-    font-size: 0.8em;
-    line-height: 1.2em;
-    margin-top: -8px !important;
-  }
-}
-</style>
