@@ -16,7 +16,7 @@ export const BACKGROUND_COLOR_RGB = [32, 34, 36] as const;
 export const FOOTER_BACKGROUND_COLOR = '#3c4042';
 export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#26282a';
 export const MENU_BACKGROUND_COLOR = '#3c3c3c';
-export const CARD_BACKGROUND_COLOR = '#303438';
+export const CARD_BACKGROUND_COLOR = '#303234';
 
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;
