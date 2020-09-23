@@ -12,6 +12,7 @@
       v-else
       hover
       ripple
+      :color="CARD_BACKGROUND_COLOR"
       :width="width"
       :min-width="width"
       :max-width="maxWidth || width"
@@ -77,10 +78,12 @@ import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwo
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
 import { hasProp } from '~~/utils/hasProp';
+import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 
 type Data = {
-  isLoaded: boolean
+  isLoaded: boolean;
+  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -151,6 +154,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isLoaded: false,
+      CARD_BACKGROUND_COLOR,
     };
   },
 

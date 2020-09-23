@@ -13,6 +13,7 @@
       hover
       ripple
       nuxt
+      :color="CARD_BACKGROUND_COLOR"
       :to="artistPath"
       :width="width"
       :min-width="minWidth || width"
@@ -55,10 +56,12 @@ import { RootState } from 'typed-vuex';
 
 import UserAvatar, { MediaIcon } from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
+import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 type Data = {
-  isLoaded: boolean
+  isLoaded: boolean;
+  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -104,6 +107,7 @@ export default Vue.extend({
   data(): Data {
     return {
       isLoaded: false,
+      CARD_BACKGROUND_COLOR,
     };
   },
 
