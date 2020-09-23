@@ -1,78 +1,60 @@
 <template>
-  <v-menu
+  <OptionMenu
     v-model="isOpened"
     offset-y
     :nudge-bottom="2"
   >
-    <template
-      #activator="{ on }"
-    >
+    <template #activator="{ on }">
       <div
         :title="userDisplayName"
-        :class="$style.UserMenu"
+        :class="$style.UserMenuButton"
         v-on="on"
       >
-        <div
-          :class="$style.UserMenu__container"
-        >
-          <UserAvatar
-            :src="userAvatarSrc"
-            :alt="userDisplayName"
-            :size="AVATAR_SIZE"
-          />
+        <UserAvatar
+          :src="userAvatarSrc"
+          :alt="userDisplayName"
+          :size="AVATAR_SIZE"
+        />
 
-          <span
-            :class="$style.UserMenu__userDisplayName"
-          >
-            @{{ userDisplayName }}
-          </span>
+        <span :class="$style.UserMenuButton__name">
+          @{{ userDisplayName }}
+        </span>
 
-          <v-icon
-            x-small
-          >
-            mdi-chevron-down
-          </v-icon>
-        </div>
+        <v-icon x-small>
+          mdi-chevron-down
+        </v-icon>
       </div>
     </template>
 
-    <v-list
-      dense
-      :elevation="12"
-      :color="MENU_BACKGROUND_COLOR"
-    >
-      <template
-        v-for="(itemList, index) in itemLists"
+    <template v-for="(itemList, index) in itemLists">
+      <v-list-item
+        v-for="item in itemList"
+        :key="item.title"
+        nuxt
+        link
+        :to="item.to"
       >
-        <v-list-item
-          v-for="item in itemList"
-          :key="item.title"
-          nuxt
-          link
-          :to="item.to"
-        >
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ item.title }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-        <v-divider
-          v-show="itemLists.length !== index + 1"
-          :key="index"
-        />
-      </template>
-    </v-list>
-  </v-menu>
+      <v-divider
+        v-show="itemLists.length !== index + 1"
+        :key="index"
+      />
+    </template>
+  </OptionMenu>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
+import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
-import { MENU_BACKGROUND_COLOR } from '~/constants';
 
 const AVATAR_SIZE = 32;
 
@@ -84,25 +66,30 @@ type Item = {
 
 type Data = {
   isOpened: boolean
-  itemLists: Item[][]
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
   AVATAR_SIZE: number
 };
 
 export default Vue.extend({
   components: {
+    OptionMenu,
     UserAvatar,
   },
 
   data(): Data {
-    const userId = this.$getters()['auth/userId'];
-    const profilePath = userId != null
-      ? `/users/${userId}`
-      : undefined;
-
     return {
       isOpened: false,
-      itemLists: [
+      AVATAR_SIZE,
+    };
+  },
+
+  computed: {
+    itemLists(): Item[][] {
+      const userId = this.$getters()['auth/userId'];
+      const profilePath = userId != null
+        ? `/users/${userId}`
+        : undefined;
+
+      return [
         [
           {
             title: 'アカウント',
@@ -120,15 +107,7 @@ export default Vue.extend({
             to: '/logout',
           },
         ],
-      ],
-      MENU_BACKGROUND_COLOR,
-      AVATAR_SIZE,
-    };
-  },
-
-  computed: {
-    isLoggedin(): RootGetters['auth/isLoggedin'] {
-      return this.$getters()['auth/isLoggedin'];
+      ];
     },
     userAvatarSrc(): string | undefined {
       return this.$getters()['auth/userAvatarSrc'](AVATAR_SIZE);
@@ -141,22 +120,20 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.UserMenu {
-  &__container {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+.UserMenuButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
 
-    .UserMenu__userDisplayName {
-      font-size: 1.1em;
+  &__name {
+    font-size: 1.1em;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
