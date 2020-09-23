@@ -9,7 +9,7 @@ export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
 } as const;
 
 // 背景とヘッダーの明度を下げる割合
-export const DARKEN_FILTER_RATIO = 0.9;
+export const DARKEN_FILTER_RATIO = 0.4;
 export const BACKGROUND_COLOR = '#1e2024';
 // #121212 を10進数の配列にしたもの
 export const BACKGROUND_COLOR_RGB = [30, 32, 46] as const;
