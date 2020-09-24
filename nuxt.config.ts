@@ -5,7 +5,7 @@ import colors from 'vuetify/es5/util/colors';
 import { NuxtConfig } from '@nuxt/types';
 
 const nuxtConfig: NuxtConfig = {
-  mode: 'universal',
+  ssr: true,
   srcDir: './client/',
   rootDir: './',
   telemetry: false,
