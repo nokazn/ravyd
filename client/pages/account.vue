@@ -2,13 +2,13 @@
   <div :class="$style.AccountPage">
     <h1>アカウント</h1>
 
-    <TwoColumnsListCard
-      v-if="itemList"
-      :item-list="itemList"
-    />
     <v-skeleton-loader
-      v-else
+      v-if="itemList == null"
       type="list-item"
+    />
+    <TwoColumnsListCard
+      v-else
+      :item-list="itemList"
     />
 
     <v-btn
@@ -33,9 +33,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'typed-vuex';
 
-import TwoColumnsListCard, { ItemList } from '~/components/parts/list/TwoColumnsListCard.vue';
+import TwoColumnsListCard, { Item } from '~/components/parts/list/TwoColumnsListCard.vue';
 
 export default Vue.extend({
   components: {
@@ -43,24 +42,26 @@ export default Vue.extend({
   },
 
   computed: {
-    userData(): RootState['auth']['userData'] {
-      return this.$state().auth.userData;
-    },
-    itemList(): ItemList | undefined {
-      if (this.userData == null) return undefined;
+    itemList(): Item[] | undefined {
+      const { userData } = this.$state().auth;
+      if (userData == null) return undefined;
 
       return [
         {
+          title: 'ID',
+          value: userData.id,
+        },
+        {
           title: 'ユーザー名',
-          value: this.userData.display_name,
+          value: userData.display_name,
         },
         {
           title: 'メールアドレス',
-          value: this.userData.email,
+          value: userData.email,
         },
         {
           title: '国',
-          value: this.userData.country,
+          value: userData.country,
         },
       ];
     },
