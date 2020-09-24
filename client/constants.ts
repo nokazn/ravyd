@@ -14,9 +14,9 @@ export const BACKGROUND_COLOR = '#202224';
 // #1e2024 を10進数の配列にしたもの
 export const BACKGROUND_COLOR_RGB = [32, 34, 36] as const;
 export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#282a2a';
-export const FOOTER_BACKGROUND_COLOR = '#3d3f3f';
+export const FOOTER_BACKGROUND_COLOR = '#3c3e3e';
 export const CARD_BACKGROUND_COLOR = '#2e3032';
-export const MENU_BACKGROUND_COLOR = '#3a3c3c';
+export const MENU_BACKGROUND_COLOR = '#383a3a';
 
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;
