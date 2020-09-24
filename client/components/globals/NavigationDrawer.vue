@@ -9,6 +9,7 @@
     class="NavigationDrawer"
   >
     <v-list
+      nav
       :class="$style.List"
       class="g-custom-scroll-bar"
       :style="listStyles"

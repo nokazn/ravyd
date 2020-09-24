@@ -1,108 +1,92 @@
 <template>
-  <v-dialog
+  <Modal
     v-model="modal"
-    :max-width="600"
     :class="$style.PlaylistModal"
   >
-    <v-card :elevation="12">
-      <div :class="$style.PlaylistModal__header">
-        <v-card-title>
-          プレイリストの{{ detailText }}
-        </v-card-title>
+    <template #header>
+      プレイリストの{{ detailText }}
+    </template>
 
-        <v-btn
-          icon
-          title="閉じる"
-          @click="onCloseButtonClicked"
-        >
-          <v-icon>
-            mdi-close
-          </v-icon>
-        </v-btn>
-      </div>
-
-      <v-form
-        :ref="FORM_REF"
-        v-model="isValid"
-        :class="[
-          $style.PlaylistModal__content,
-          $style.Content,
-        ]"
-        class="g-custom-scroll-bar"
+    <template #footer>
+      <v-btn
+        text
+        rounded
+        :min-width="90"
+        @click="onCloseButtonClicked"
       >
-        <v-text-field
-          v-model="playlistName"
-          autofocus
-          label="名前"
-          clearable
-          required
-          :rules="playlistNameRules"
-          @keydown.enter.prevent
-        />
+        キャンセル
+      </v-btn>
 
-        <v-textarea
-          v-model="playlistDescription"
-          label="説明"
-          clearable
-          :rows="3"
-        />
+      <v-btn
+        rounded
+        :min-width="90"
+        color="success"
+        :loading="isLoading"
+        :disabled="!isValid"
+        @click="createPlaylist"
+      >
+        {{ resultText || detailText }}
+      </v-btn>
+    </template>
 
-        <v-file-input
-          v-model="playlistArtwork"
-          label="画像を選択"
-          accept="image/*"
-          prepend-icon="mdi-camera"
-          clearable
-          show-size
-        />
+    <v-form
+      :ref="FORM_REF"
+      v-model="isValid"
+      :class="$style.Content"
+      class="g-custom-scroll-bar"
+    >
+      <v-text-field
+        v-model="playlistName"
+        autofocus
+        label="名前"
+        clearable
+        required
+        :rules="playlistNameRules"
+        @keydown.enter.prevent
+      />
 
-        <v-checkbox
-          v-model="isPrivatePlaylist"
-          label="プレイリストを非公開にする"
-          :disabled="isCollaborativePlaylist"
-        />
+      <v-textarea
+        v-model="playlistDescription"
+        label="説明"
+        clearable
+        :rows="3"
+      />
 
-        <v-checkbox
-          v-model="isCollaborativePlaylist"
-          label="コラボプレイリストにする"
-          :class="$style['Content__collaborative--last']"
-        />
-      </v-form>
+      <v-file-input
+        v-model="playlistArtwork"
+        label="画像を選択"
+        accept="image/*"
+        prepend-icon="mdi-camera"
+        clearable
+        show-size
+      />
 
-      <v-card-actions :class="$style.PlaylistModal__footer">
-        <v-btn
-          text
-          rounded
-          :min-width="90"
-          @click="onCloseButtonClicked"
-        >
-          キャンセル
-        </v-btn>
+      <v-checkbox
+        v-model="isPrivatePlaylist"
+        label="プレイリストを非公開にする"
+        :disabled="isCollaborativePlaylist"
+      />
 
-        <v-btn
-          rounded
-          :min-width="90"
-          color="success"
-          :loading="isLoading"
-          :disabled="!isValid"
-          @click="createPlaylist"
-        >
-          {{ resultText || detailText }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      <v-checkbox
+        v-model="isCollaborativePlaylist"
+        label="コラボプレイリストにする"
+        :class="$style['Content__collaborative--last']"
+      />
+    </v-form>
+  </Modal>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { ExtendedMutationPayload } from 'typed-vuex';
 
+import Modal from '~/components/parts/modal/Modal.vue';
+import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 const FORM_REF = 'FORM_REF';
 
-export type Data = {
+type Data = {
   isValid: boolean
   playlistName: string
   playlistDescription: string
@@ -112,7 +96,8 @@ export type Data = {
   playlistNameRules: ((v: string) => boolean | string)[]
   isLoading: boolean
   mutationUnsubscribe: (() => void) | undefined
-  FORM_REF: string
+  FORM_REF: string;
+  CARD_BACKGROUND_COLOR: string;
 }
 
 // 編集するとき
@@ -147,6 +132,10 @@ export type On = {
 }
 
 export default Vue.extend({
+  components: {
+    Modal,
+  },
+
   props: {
     isShown: {
       type: Boolean,
@@ -190,6 +179,7 @@ export default Vue.extend({
       isLoading: false,
       mutationUnsubscribe: undefined,
       FORM_REF,
+      CARD_BACKGROUND_COLOR,
     };
   },
 
@@ -329,39 +319,19 @@ export default Vue.extend({
 <style lang="scss" module>
 .PlaylistModal {
   z-index: z-index-of(modal);
+}
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.Content {
+  min-height: 72px;
+  // header と footer の分を差し引く
+  max-height: calc(90vh - 2rem - 32px - 68px);
+  // チェックボックスの hover effect がはみ出すのを考慮する
+  margin: 0 -12px;
+  padding: 0 12px;
+  overflow-y: auto;
 
-    & > *:last-child {
-      margin-right: 16px;
-    }
-  }
-
-  &__content {
-    min-height: 72px;
-    // header と footer の分を差し引く
-    max-height: calc(90vh - 2rem - 32px - 68px);
-    padding: 0 24px;
-    overflow-y: auto;
-
-    .Content {
-      &__collaborative--last {
-        margin-top: 0;
-      }
-    }
-  }
-
-  &__footer {
-    padding: 16px;
-    display: flex;
-    justify-content: flex-end;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
-    }
+  &__collaborative--last {
+    margin-top: 0;
   }
 }
 </style>

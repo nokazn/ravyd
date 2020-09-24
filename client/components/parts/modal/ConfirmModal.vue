@@ -1,56 +1,43 @@
 <template>
-  <v-dialog
+  <Modal
     v-model="modal"
-    :max-width="600"
     :class="$style.ConfirmModal"
   >
-    <v-card :elevation="12">
-      <div :class="$style.ConfirmModal__header">
-        <v-card-title>
-          {{ title }}
-        </v-card-title>
+    <template #header>
+      {{ title }}
+    </template>
 
-        <v-btn
-          icon
-          title="閉じる"
-          @click="onCloseButtonClicked"
-        >
-          <v-icon>
-            mdi-close
-          </v-icon>
-        </v-btn>
-      </div>
+    <template #footer>
+      <v-btn
+        text
+        rounded
+        :min-width="90"
+        @click="onCloseButtonClicked"
+      >
+        キャンセル
+      </v-btn>
 
-      <p :class="$style.ConfirmModal__text">
-        <slot />
-      </p>
+      <v-btn
+        rounded
+        :min-width="90"
+        :color="color"
+        :loading="loading"
+        @click.stop="onCOnfirmButtonClicked"
+      >
+        {{ text }}
+      </v-btn>
+    </template>
 
-      <v-card-actions :class="$style.ConfirmModal__footer">
-        <v-btn
-          text
-          rounded
-          :min-width="90"
-          @click="onCloseButtonClicked"
-        >
-          キャンセル
-        </v-btn>
-
-        <v-btn
-          rounded
-          :min-width="90"
-          :color="color"
-          :loading="loading"
-          @click.stop="onCOnfirmButtonClicked"
-        >
-          {{ text }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <p>
+      <slot />
+    </p>
+  </Modal>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import Modal, { On as OnModal } from '~/components/parts/modal/Modal.vue';
+import { CARD_BACKGROUND_COLOR } from '~/constants';
 
 export const ON_CHANGED = 'on-changed';
 export const ON_CONFIRMED = 'on-confirmed';
@@ -60,7 +47,15 @@ export type On = {
   [ON_CONFIRMED]: string
 }
 
+type Data = {
+  CARD_BACKGROUND_COLOR: string;
+}
+
 export default Vue.extend({
+  components: {
+    Modal,
+  },
+
   props: {
     isShown: {
       type: Boolean,
@@ -88,12 +83,18 @@ export default Vue.extend({
     },
   },
 
+  data(): Data {
+    return {
+      CARD_BACKGROUND_COLOR,
+    };
+  },
+
   computed: {
     modal: {
       get(): boolean {
         return this.isShown;
       },
-      set(isShown: boolean) {
+      set(isShown: OnModal['input']) {
         this.$emit(ON_CHANGED, isShown);
       },
     },
@@ -113,29 +114,5 @@ export default Vue.extend({
 <style lang="scss" module>
 .ConfirmModal {
   z-index: z-index-of(modal);
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    & > *:last-child {
-      margin-right: 16px;
-    }
-  }
-
-  &__text {
-    margin: 0 20px 16px;
-  }
-
-  &__footer {
-    padding: 16px;
-    display: flex;
-    justify-content: flex-end;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
-    }
-  }
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <v-app dark>
+  <v-app
+    dark
+    :class="$style.Default"
+  >
     <v-overlay
       v-if="!isLoaded"
       :z-index="Z_INDEX"
@@ -159,6 +162,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
+.Default {
+  background-color: $g-background-color !important;
+}
+
 /* .ContentContainer {
   padding: 0 0 $g-footer-height $g-navigation-drawer-width;
 } */

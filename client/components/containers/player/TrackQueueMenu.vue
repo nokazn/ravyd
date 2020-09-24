@@ -1,11 +1,11 @@
 <template>
-  <v-menu
+  <CustomMenu
     :key="trackQueue.length"
     v-model="isShown"
     top
     left
     offset-y
-    :z-index="Z_INDEX"
+    :class="$style.TrackQueueMenu"
   >
     <template #activator="{ on }">
       <v-btn
@@ -22,13 +22,7 @@
       </v-btn>
     </template>
 
-    <v-list
-      dense
-      :elevation="12"
-      subheader
-      :color="MENU_BACKGROUND_COLOR"
-      :class="$style.TrackQueueMenu"
-    >
+    <template #header>
       <div :class="$style.TrackQueueMenu__header">
         <v-subheader>
           再生リスト
@@ -47,32 +41,9 @@
           </v-icon>
         </v-btn>
       </div>
+    </template>
 
-      <v-divider />
-
-      <v-list-item-group
-        v-if="trackQueue.length > 0"
-        :class="$style.TrackQueueMenu__wrapper"
-        class="g-custom-scroll-bar"
-      >
-        <TrackQueueMenuItem
-          v-for="(track, index) in trackQueue"
-          :key="`${track.id}-${index}`"
-          v-bind="track"
-          @on-item-clicked="onItemClicked"
-          @on-link-clicked="toggleMenu"
-        />
-      </v-list-item-group>
-
-      <div
-        v-else
-        :class="$style['TrackQueueMenu__wrapper--empty']"
-      >
-        再生待ちの曲はありません。
-      </div>
-
-      <v-divider />
-
+    <template #footer>
       <div :class="$style.TrackQueueMenu__footer">
         <v-btn
           rounded
@@ -84,34 +55,52 @@
           最近再生した項目
         </v-btn>
       </div>
-    </v-list>
-  </v-menu>
+    </template>
+
+    <v-list-item-group
+      v-if="trackQueue.length > 0"
+      :class="$style.TrackQueueMenu__wrapper"
+      class="g-custom-scroll-bar"
+    >
+      <TrackQueueMenuItem
+        v-for="(track, index) in trackQueue"
+        :key="`${track.id}-${index}`"
+        v-bind="track"
+        @on-item-clicked="onItemClicked"
+        @on-link-clicked="toggleMenu"
+      />
+    </v-list-item-group>
+
+    <div
+      v-else
+      :class="$style['TrackQueueMenu__wrapper--empty']"
+    >
+      再生待ちの曲はありません。
+    </div>
+  </CustomMenu>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
+import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
 import { convertUriToUrl } from '~/utils/converter';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 type Data = {
   isShown: boolean
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
-  Z_INDEX: number
 }
 
 export default Vue.extend({
   components: {
+    CustomMenu,
     TrackQueueMenuItem,
   },
 
   data(): Data {
     return {
       isShown: false,
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

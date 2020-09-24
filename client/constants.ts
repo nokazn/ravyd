@@ -2,20 +2,21 @@ import { SpotifyAPI, App } from '~~/types';
 
 export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
 
-const rgb: [number, number, number] = [60, 60, 60];
+const rgb: [number, number, number] = [120, 122, 122];
 export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
-  hex: '#3c3c3c',
+  hex: '#787a7a',
   rgb,
 } as const;
 
 // 背景とヘッダーの明度を下げる割合
-export const DARKEN_FILTER_RATIO = 0.9;
-export const BACKGROUND_COLOR = '#121212';
-// #121212 を10進数の配列にしたもの
-export const BACKGROUND_COLOR_RGB = [18, 18, 18] as const;
-export const FOOTER_BACKGROUND_COLOR = '#303030';
-export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#161616';
-export const MENU_BACKGROUND_COLOR = '#3c3c3c';
+export const DARKEN_FILTER_RATIO = 0.6;
+export const BACKGROUND_COLOR = '#202224';
+// #1e2024 を10進数の配列にしたもの
+export const BACKGROUND_COLOR_RGB = [32, 34, 36] as const;
+export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#282a2a';
+export const FOOTER_BACKGROUND_COLOR = '#3c3e3e';
+export const CARD_BACKGROUND_COLOR = '#2e3032';
+export const MENU_BACKGROUND_COLOR = '#383a3a';
 
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;

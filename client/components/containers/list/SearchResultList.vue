@@ -3,12 +3,14 @@
     <transition name="fade">
       <v-card
         v-show="menu && query"
+        rounded="lg"
         :elevation="12"
         :class="$style.SearchResultList"
         :style="styles"
       >
         <v-list
           dense
+          nav
           subheader
           :color="MENU_BACKGROUND_COLOR"
         >

@@ -1,89 +1,72 @@
 <template>
-  <v-menu
+  <OptionMenu
     offset-x
     :left="left"
     :right="right"
-    :z-index="Z_INDEX"
     :nudge-left="1"
     open-on-hover
+    :close-delay="100"
   >
     <template #activator="{ on }">
-      <v-list-item
-        dense
-        v-on="on"
-        @click.stop
-      >
-        <v-list-item-title>
-          シェア
-        </v-list-item-title>
-
-        <v-list-item-action>
-          <v-icon small>
-            mdi-chevron-right
-          </v-icon>
-        </v-list-item-action>
-      </v-list-item>
+      <ChildOptionMenuActivator :on="on">
+        シェア
+      </ChildOptionMenuActivator>
     </template>
 
-    <v-list
-      dense
-      :color="MENU_BACKGROUND_COLOR"
-      :elevation="12"
-    >
-      <v-list-item-group>
-        <template v-for="item in menuItemList">
-          <a
-            v-if="item.to != null"
-            :key="item.name"
-            :href="item.to"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          >
-            <v-list-item>
-              <v-list-item-icon>
-                <v-img
-                  :src="item.iconSrc"
-                  :alt="item.name"
-                  :width="24"
-                  :height="24"
-                  :aspect-ratio="1"
-                />
-              </v-list-item-icon>
-
-              <v-list-item-title>
-                {{ item.name }}
-              </v-list-item-title>
-            </v-list-item>
-          </a>
-
-          <v-list-item
-            v-else
-            :key="item.name"
-            :disabled="item.disabled"
-            :inactive="item.disabled"
-            @click="item.handler"
-          >
-            <v-list-item-icon v-if="item.icon != null">
-              <v-icon small>
-                {{ item.icon }}
-              </v-icon>
+    <v-list-item-group>
+      <template v-for="item in menuItemList">
+        <a
+          v-if="item.to != null"
+          :key="item.name"
+          :href="item.to"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+        >
+          <v-list-item>
+            <v-list-item-icon>
+              <v-img
+                :src="item.iconSrc"
+                :alt="item.name"
+                :width="24"
+                :height="24"
+                :aspect-ratio="1"
+              />
             </v-list-item-icon>
 
             <v-list-item-title>
               {{ item.name }}
             </v-list-item-title>
           </v-list-item>
-        </template>
-      </v-list-item-group>
-    </v-list>
-  </v-menu>
+        </a>
+
+        <v-list-item
+          v-else
+          :key="item.name"
+          :disabled="item.disabled"
+          :inactive="item.disabled"
+          @click="item.handler"
+        >
+          <v-list-item-icon v-if="item.icon != null">
+            <v-icon small>
+              {{ item.icon }}
+            </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>
+            {{ item.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </template>
+    </v-list-item-group>
+  </OptionMenu>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
+import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
 import { createUrl } from '~~/utils/createUrl';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 import { $Toast } from '~/plugins/toast';
 
@@ -110,9 +93,7 @@ export type Props = {
 }
 
 type Data = {
-  text: string
-  MENU_BACKGROUND_COLOR: string
-  Z_INDEX: number
+  text: string;
 }
 
 const copyText = (text: string, name: string, $toast: $Toast): void => {
@@ -140,6 +121,11 @@ const copyText = (text: string, name: string, $toast: $Toast): void => {
 };
 
 export default Vue.extend({
+  components: {
+    OptionMenu,
+    ChildOptionMenuActivator,
+  },
+
   props: {
     name: {
       type: String,
@@ -186,8 +172,6 @@ export default Vue.extend({
 
     return {
       text,
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

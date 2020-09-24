@@ -1,68 +1,54 @@
 <template>
-  <div>
-    <v-skeleton-loader
-      v-if="!isLoaded"
-      type="card"
-      boilerplate
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-    />
-    <v-card
-      v-else
-      hover
-      ripple
-      nuxt
-      :to="artistPath"
-      :width="width"
-      :min-width="minWidth || width"
-      :max-width="maxWidth || width"
-      :class="$style.ArtistCard"
-    >
-      <div :class="$style.ArtistCard__container">
-        <div :class="$style.ArtistCard__avatar">
-          <UserAvatar
-            :src="avatarSrc"
-            :alt="name"
-            :size="width"
-            :min-size="minWidth"
-            :max-size="maxWidth"
-            :icon="mediaIcon"
-            default-user-icon="mdi-account-music"
-            small-icon
-            :title="name"
-            is-overlayed
-            @on-media-button-clicked="onMediaButtonClicked"
-          />
-        </div>
-
-        <v-card-title
+  <Card
+    :to="artistPath"
+    :width="width"
+    :min-width="minWidth || width"
+    :max-width="maxWidth || width"
+    :class="$style.ArtistCard"
+  >
+    <template #image>
+      <div :class="$style.ArtistCard__avatar">
+        <UserAvatar
+          :src="avatarSrc"
+          :alt="name"
+          :size="avatarSize"
+          :min-size="minWidth"
+          :max-size="avatarMaxSize"
+          :icon="mediaIcon"
+          default-user-icon="mdi-account-music"
+          small-icon
           :title="name"
-          :class="$style.ArtistCard__title"
-        >
-          <span class="g-ellipsis-text">
-            {{ name }}
-          </span>
-        </v-card-title>
+          is-overlayed
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
       </div>
-    </v-card>
-  </div>
+    </template>
+
+    <template #title>
+      <div :class="$style.ArtistCard__title">
+        <span
+          :title="name"
+          class="g-ellipsis-text"
+        >
+          {{ name }}
+        </span>
+      </div>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { RootState } from 'typed-vuex';
 
+import Card from '~/components/parts/card/Card.vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI } from '~~/types';
 
-type Data = {
-  isLoaded: boolean
-}
-
 export default Vue.extend({
   components: {
+    Card,
     UserAvatar,
   },
 
@@ -101,12 +87,6 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      isLoaded: false,
-    };
-  },
-
   computed: {
     artistPath(): string {
       return `/artists/${this.id}`;
@@ -126,10 +106,18 @@ export default Vue.extend({
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     },
-  },
-
-  mounted() {
-    this.isLoaded = true;
+    avatarSize(): number | undefined {
+      const { width } = this;
+      return width != null
+        ? width * 0.95
+        : undefined;
+    },
+    avatarMaxSize(): number | undefined {
+      const { maxWidth } = this;
+      return maxWidth != null
+        ? maxWidth * 0.97
+        : undefined;
+    },
   },
 
   methods: {
@@ -151,11 +139,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ArtistCard {
-  &__container {
-    display: flex;
-    flex-direction: column;
-  }
-
   &__avatar {
     display: flex;
     justify-content: center;
@@ -165,8 +148,7 @@ export default Vue.extend({
   &__title {
     display: flex;
     justify-content: center;
-    font-size: 0.9em;
-    line-height: 1.3em;
+    width: 100%;
   }
 }
 </style>

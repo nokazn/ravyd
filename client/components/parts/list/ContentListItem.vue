@@ -3,7 +3,6 @@
     dense
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
-    two-linea
     :title="name"
     :data-is-selected="isSelected"
     :class="$style.ContentListItem"
@@ -138,12 +137,12 @@ export default Vue.extend({
 <style lang="scss" module>
 .ContentListItem {
   &[data-is-selected=true] {
-    background-color: lighten($g-menu-background-color, 15%);
+    background-color: lighten($g-menu-background-color, 16%);
   }
 
   &__avatar {
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
   }
 }
 </style>

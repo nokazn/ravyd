@@ -1,12 +1,11 @@
 <template>
-  <v-menu
+  <CustomMenu
     :key="deviceItemList.length"
     v-model="isShown"
     top
     left
     offset-y
-    origin="bottom right"
-    :z-index="Z_INDEX"
+    :class="$style.DeviceSelectMenu"
   >
     <template #activator="{ on }">
       <v-btn
@@ -24,13 +23,7 @@
       </v-btn>
     </template>
 
-    <v-list
-      dense
-      subheader
-      :elevation="12"
-      :color="MENU_BACKGROUND_COLOR"
-      :class="$style.DeviceSelectMenu"
-    >
+    <template #header>
       <div :class="$style.DeviceSelectMenu__header">
         <v-subheader>
           デバイスを選択
@@ -48,40 +41,37 @@
           </v-icon>
         </v-btn>
       </div>
+    </template>
 
-      <v-divider />
-
-      <v-list-item-group
-        :class="$style.DeviceSelectMenu__wrapper"
-        class="g-custom-scroll-bar"
-      >
-        <DeviceSelectMenuItem
-          v-for="(device, index) in deviceItemList"
-          :key="`${device.id}-${index}`"
-          v-bind="device"
-          @on-clicked="onItemClicked"
-        />
-      </v-list-item-group>
-    </v-list>
-  </v-menu>
+    <v-list-item-group
+      :class="$style.DeviceSelectMenu__wrapper"
+      class="g-custom-scroll-bar"
+    >
+      <DeviceSelectMenuItem
+        v-for="(device, index) in deviceItemList"
+        :key="`${device.id}-${index}`"
+        v-bind="device"
+        @on-clicked="onItemClicked"
+      />
+    </v-list-item-group>
+  </CustomMenu>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
+import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import DeviceSelectMenuItem, { On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 import type { DeviceInfo } from '~/components/parts/list/DeviceSelectMenuItem.vue';
 
 type Data = {
   isShown: boolean
   isRefreshingDeviceList: boolean
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR
-  Z_INDEX: number
 }
 
 export default Vue.extend({
   components: {
+    CustomMenu,
     DeviceSelectMenuItem,
   },
 
@@ -89,8 +79,6 @@ export default Vue.extend({
     return {
       isShown: false,
       isRefreshingDeviceList: false,
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

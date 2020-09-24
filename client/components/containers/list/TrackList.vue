@@ -5,7 +5,7 @@
   >
     <template v-for="track in trackList">
       <v-divider
-        v-show="track.index < length"
+        v-show="length == null || track.index < length"
         :key="`${track.id}-divider`"
       />
       <TrackListItem
