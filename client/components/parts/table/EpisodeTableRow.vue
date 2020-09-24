@@ -183,7 +183,7 @@ export default Vue.extend({
   padding: 1em 0;
 
   &[data-is-active=true] {
-    background-color: lighten($g-background-color, 15%);
+    background-color: lighten($g-background-color, 16%);
   }
 
   &__buttons {

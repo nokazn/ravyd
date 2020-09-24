@@ -137,7 +137,7 @@ export default Vue.extend({
 <style lang="scss" module>
 .ContentListItem {
   &[data-is-selected=true] {
-    background-color: lighten($g-menu-background-color, 15%);
+    background-color: lighten($g-menu-background-color, 16%);
   }
 
   &__avatar {
