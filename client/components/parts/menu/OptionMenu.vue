@@ -52,20 +52,20 @@ type Data = {
 export default Vue.extend({
   props: {
     top: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     bottom: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     left: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     right: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     nudgeTop: {
       type: Number as PropType<number | undefined>,
@@ -84,24 +84,24 @@ export default Vue.extend({
       default: undefined,
     },
     offsetX: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     offsetY: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     origin: {
       type: String as PropType<string | undefined>,
       default: undefined,
     },
     openOnHover: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     openOnClick: {
-      type: Boolean,
-      default: false,
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
     },
     closeDelay: {
       type: Number as PropType<number | undefined>,
