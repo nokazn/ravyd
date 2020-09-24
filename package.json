@@ -38,7 +38,7 @@
     "nuxt-property-decorator": "^2.8.8",
     "portal-vue": "^2.1.7",
     "v-snackbars": "^3.0.1",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
@@ -78,7 +78,7 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
     "vue-jest": "^4.0.0-beta.5",
-    "vue-template-compiler": "^2.6.10",
+    "vue-template-compiler": "^2.6.12",
     "worker-loader": "^2.0.0"
   },
   "husky": {
