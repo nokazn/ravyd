@@ -2324,10 +2324,10 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
-"@types/wicg-mediasession@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/wicg-mediasession/-/wicg-mediasession-1.0.4.tgz#edea7b3741c1100eee8bf60560bb92d81a12581f"
-  integrity sha512-ldlnQ/r5Uoza45wcQF5bNV/wQ2twaTplZujwFDlgP36vahPVcs3fYuCVF5FS+WfqsOlFs1jvJfPgtabMQ3/BtA==
+"@types/wicg-mediasession@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/wicg-mediasession/-/wicg-mediasession-1.1.0.tgz#368bb113ffc1a5410895cbb1e5ba50ee291f162f"
+  integrity sha512-aA6+ZUHgNpXqWEL8UdS1fx/oCFSrh/Hu9BbM8rXYZLiCQSuZ8+Lzu1//LKwHMNBAXgen7/8LoThDEKS9VEaGxw==
 
 "@types/yargs-parser@*":
   version "15.0.0"
