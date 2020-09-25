@@ -1,24 +1,30 @@
 {
   "name": "spotify-player",
   "version": "0.1.0",
-  "description": "",
-  "author": "nokazn",
   "private": true,
-  "engines": {
-    "node": "12.18.0"
+  "description": "",
+  "license": "MIT",
+  "author": {
+    "name": "nokazn",
+    "url": "https://github.com/nokazn"
   },
   "scripts": {
-    "dev": "nuxt-ts",
-    "build": "nuxt-ts build",
     "analyze": "nuxt-ts build --analyze",
-    "start": "nuxt-ts start",
+    "build": "nuxt-ts build",
+    "dev": "nuxt-ts",
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . && tsc --noEmit",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . --fix",
-    "test": "jest --passWithNoTests",
+    "start": "nuxt-ts start",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|)' | xargs wc -l",
-    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.vue$\\|)' | xargs wc -l"
+    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.vue$\\|)' | xargs wc -l",
+    "test": "jest --passWithNoTests"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm run test"
+    }
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
@@ -34,8 +40,8 @@
     "ioredis": "^4.16.0",
     "lodash.debounce": "^4.0.8",
     "node-vibrant": "^3.1.5",
-    "nuxt-property-decorator": "^2.8.8",
     "nuxt": "^2.14.6",
+    "nuxt-property-decorator": "^2.8.8",
     "portal-vue": "^2.1.7",
     "v-snackbars": "^3.0.1",
     "vue": "^2.6.12",
@@ -81,9 +87,7 @@
     "vue-template-compiler": "^2.6.12",
     "worker-loader": "^2.0.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run lint && npm run test"
-    }
+  "engines": {
+    "node": "12.18.0"
   }
 }
