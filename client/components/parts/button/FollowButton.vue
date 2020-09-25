@@ -2,9 +2,10 @@
   <v-hover #default="{ hover }">
     <v-btn
       rounded
-      :outlined="isFollowing"
+      :width="172"
+      :color="color"
+      :outlined="!isFollowing"
       :height="height"
-      :width="160"
       @click="onClicked"
     >
       <v-icon
@@ -44,6 +45,11 @@ export default Vue.extend({
   },
 
   computed: {
+    color(): string | undefined {
+      return this.isFollowing
+        ? 'grey darken-3'
+        : undefined;
+    },
     followIcon(): (hover: boolean) => FollowIcon {
       return (hover: boolean) => {
         if (!this.isFollowing) {
