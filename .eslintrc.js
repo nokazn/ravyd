@@ -80,7 +80,8 @@ module.exports = {
       : 1,
     // 空白行は2行まで
     'no-multiple-empty-lines': [2, { max: 2 }],
-    'import/no-extraneous-dependencies': 1,
+    // dependencies にないパッケージからの import を許容
+    'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
     // typescript-eslint の no-unuserd-vars を有効にする
     'no-unused-vars': 0,
