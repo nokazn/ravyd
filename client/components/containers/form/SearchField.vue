@@ -16,9 +16,9 @@
       [$style.SearchField]: true,
       'g-box-shadow': isFocused || isHovered
     }"
+    @input="debouncedDispatcher"
     @mouseover="handleIsHovered(true)"
     @mouseout="handleIsHovered(false)"
-    @input="debouncedDispatcher"
     @focus="handleIsFocused(true)"
     @blur="handleIsFocused(false)"
   >
@@ -57,8 +57,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import debounce from 'lodash/debounce';
-import { Cancelable } from 'lodash';
+import { debounce } from 'lodash';
+import type { Cancelable } from 'lodash';
 
 import { $searchForm } from '~/observable/searchForm';
 import { SpotifyAPI, App } from '~~/types';

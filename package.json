@@ -1,24 +1,30 @@
 {
   "name": "spotify-player",
   "version": "0.1.0",
-  "description": "",
-  "author": "nokazn",
   "private": true,
-  "engines": {
-    "node": "12.18.0"
+  "description": "",
+  "license": "MIT",
+  "author": {
+    "name": "nokazn",
+    "url": "https://github.com/nokazn"
   },
   "scripts": {
-    "dev": "nuxt-ts",
-    "build": "nuxt-ts build",
     "analyze": "nuxt-ts build --analyze",
-    "start": "nuxt-ts start",
+    "build": "nuxt-ts build",
+    "dev": "nuxt-ts",
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . && tsc --noEmit",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . --fix",
-    "test": "jest --passWithNoTests",
+    "start": "nuxt-ts start",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|)' | xargs wc -l",
-    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.vue$\\|)' | xargs wc -l"
+    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.vue$\\|)' | xargs wc -l",
+    "test": "jest --passWithNoTests"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm run test"
+    }
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
@@ -32,10 +38,10 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "ioredis": "^4.16.0",
-    "lodash.debounce": "^4.0.8",
+    "lodash": "^4.17.20",
     "node-vibrant": "^3.1.5",
-    "nuxt-property-decorator": "^2.8.8",
     "nuxt": "^2.14.6",
+    "nuxt-property-decorator": "^2.8.8",
     "portal-vue": "^2.1.7",
     "v-snackbars": "^3.0.1",
     "vue": "^2.6.12",
@@ -59,6 +65,7 @@
     "@types/express-session": "^1.17.0",
     "@types/ioredis": "^4.17.3",
     "@types/lodash": "^4.14.159",
+    "@types/lodash-webpack-plugin": "^0.11.4",
     "@types/node": "^14.6.0",
     "@types/resize-observer-browser": "^0.1.3",
     "@types/spotify-web-playback-sdk": "^0.1.7",
@@ -66,6 +73,7 @@
     "@typescript-eslint/parser": "^3.7.1",
     "@vue/test-utils": "^1.1.0",
     "babel-jest": "^26.3.0",
+    "babel-plugin-lodash": "^3.3.4",
     "core-js": "3",
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.1.0",
@@ -74,6 +82,7 @@
     "eslint-plugin-nuxt": ">=0.4.2",
     "husky": "^4.2.5",
     "jest": "^25.5.4",
+    "lodash-webpack-plugin": "^0.11.5",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
@@ -81,9 +90,7 @@
     "vue-template-compiler": "^2.6.12",
     "worker-loader": "^2.0.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run lint && npm run test"
-    }
+  "engines": {
+    "node": "12.18.0"
   }
 }

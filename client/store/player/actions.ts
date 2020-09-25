@@ -142,12 +142,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
 
-        console.log('Ready with this device 🎉');
+        console.info('Ready with this device 🎉');
       });
 
       // デバイスがオフラインのとき
       player.addListener('not_ready', ({ device_id }) => {
-        console.log('This device has gone offline 😴', device_id);
+        console.info('This device has gone offline 😴', device_id);
       });
 
       // ブラウザが EME コンテンツをサポートしていないなどの理由で現在の環境をサポートしていないとき
@@ -187,7 +187,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         if (playerState == null) return;
 
         // @todo
-        console.log(playerState);
+        console.info(playerState);
 
         const {
           trackId: currentTrackId,

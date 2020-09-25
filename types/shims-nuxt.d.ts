@@ -17,11 +17,14 @@ import { Header } from '~/plugins/observable/header';
 declare module '@nuxt/types/app' {
 
   interface NuxtAppOptions {
+    // typed-vuex
     $state: () => RootState
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
     $subscribe: ExtendedSubscribe
+
+    // plugin
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
     $spotify: SpotifyEndpoints

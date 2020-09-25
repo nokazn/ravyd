@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 
 const CARDS_WRAPPER_MARGIN = 24;
 const SCROLLABLE_CARDS_WRAPPER_REF = 'SCROLLABLE_CARDS_WRAPPER_REF';
