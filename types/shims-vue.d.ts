@@ -15,11 +15,17 @@ import { ServerEndpoints } from '~/plugins/server/endpoints';
 
 declare module 'vue/types/vue' {
   interface Vue {
+    // css module
+    $style: Record<string, string>,
+
+    // typed-vuex
     $state: () => RootState
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
     $subscribe: ExtendedSubscribe
+
+    // plugin
     $dayjs: typeof dayjs
     $spotify: SpotifyEndpoints
     $server: ServerEndpoints

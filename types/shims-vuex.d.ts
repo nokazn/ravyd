@@ -14,11 +14,14 @@ import { ServerEndpoints } from '~/plugins/server/endpoints';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
+    // typed-vuex
     $state: () => RootState
     $getters: () => RootGetters
     $commit: SFCCommit
     $dispatch: SFCDispatch
     $subscribe: ExtendedSubscribe
+
+    // plugin
     $dayjs: typeof dayjs
     $spotifyApi: NuxtAxiosInstance
     $spotify: SpotifyEndpoints
