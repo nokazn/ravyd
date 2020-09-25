@@ -22,6 +22,7 @@ const nuxtConfig: NuxtConfig = {
       },
     ],
     script: [
+      // eslintrc.globals.Spotify を設定する必要がある
       {
         src: 'https://sdk.scdn.co/spotify-player.js',
         body: true,
