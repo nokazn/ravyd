@@ -2,7 +2,28 @@
 import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
-import { NuxtConfig } from '@nuxt/types';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import type { NuxtConfig } from '@nuxt/types';
+import type { PluginItem } from '@babel/core';
+
+const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
+  const params = {
+    loose: true,
+    buildTarget: isServer ? 'server' : 'client',
+    // corejs のバージョンの競合を防ぐ
+    corejs: { version: 3 },
+    targets: { node: 'current' },
+  };
+
+  return [
+    [
+      '@nuxt/babel-preset-app',
+      options != null
+        ? { ...params, ...options }
+        : params,
+    ],
+  ];
+};
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
@@ -57,23 +78,31 @@ const nuxtConfig: NuxtConfig = {
   build: {
     analyze: process.env.NODE_ENV === 'development',
     babel: {
-      presets({ isServer }) {
-        return [
-          // corejs のバージョンの競合を防ぐ
-          [
-            '@nuxt/babel-preset-app',
-            {
-              loose: true,
-              buildTarget: isServer ? 'server' : 'client',
-              corejs: { version: 3 },
-            },
-          ],
-        ];
-      },
+      presets: ({ isServer }) => babelPresets(isServer),
     },
-    extend(_config) {
+    plugins: [
+      // lodash から必要な関数だけ取り出す
+      new LodashModuleReplacementPlugin(),
+    ],
+    extend(config, { isServer }) {
+      config.module = config.module ?? { rules: [] };
+
+      // lodash から必要な関数だけ取り出す
+      config.module.rules.push({
+        // vue ファイルを js ファイルに変換してから適用させたい
+        enforce: 'post',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: ['lodash'],
+            presets: babelPresets(isServer, { modules: false }),
+          },
+        },
+        test: /\.(ts|js|vue)$/,
+        exclude: /node_modules/,
+      });
+
       // worker-loader を読み込む
-      // config.module = config.module ?? { rules: [] };
       // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
       // config.output = config.output ?? {};
       // config.output.globalObject = 'this';

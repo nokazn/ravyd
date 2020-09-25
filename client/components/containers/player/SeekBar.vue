@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-// import debounce from 'lodash/debounce';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import { elapsedTime } from '~~/utils/elapsedTime';
