@@ -109,9 +109,8 @@ const nuxtConfig: NuxtConfig = {
       if (isClient) {
         config.module.rules.push({
           test: /bundle\.worker\.js$/,
-          use: {
-            loader: 'worker-loader',
-          },
+          loader: 'worker-loader',
+          exclude: /node_modules/,
         });
       }
     },
