@@ -92,7 +92,7 @@ export default Vue.extend({
 
   mounted() {
     if (this.scroll) {
-      const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as Element;
+      const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as HTMLDivElement;
       this.calculateVirtualScrollerHeight(element.clientHeight);
 
       if (typeof ResizeObserver !== 'undefined') {
@@ -117,8 +117,8 @@ export default Vue.extend({
 
   methods: {
     calculateVirtualScrollerHeight(height: number) {
-      this.$nextTick(() => {
-        this.virtualScrollerHeight = Math.max(Math.floor(height - 1), 0);
+      this.$nextTick().then(() => {
+        this.virtualScrollerHeight = Math.max(Math.floor(height), 0);
       });
     },
   },
@@ -128,8 +128,16 @@ export default Vue.extend({
 <style lang="scss" module>
 .NavigationDrawerListItemGroup {
   $subheader-height: 2em;
-  // アイテムを 最低 4 個は表示
-  $scroll-content-min-height: calc(#{$list-dense-min-height} * 4);
+  // アイテムを 最低 3 個は表示
+  $scroll-content-min-height: $list-dense-min-height * 3;
+
+  &__subheader {
+    font-size: 0.75em;
+    height: $subheader-height;
+    vertical-align: text-top;
+    // vertical-align を利かせるために inline にする
+    display: inline-block;
+  }
 
   &--scroll {
     overflow-y: auto;
@@ -141,11 +149,6 @@ export default Vue.extend({
   &__wrapper--scroll {
     height: calc(100% - #{$subheader-height});
     min-height: $scroll-content-min-height;
-  }
-
-  &__subheader {
-    font-size: 0.75em;
-    height: $subheader-height;
   }
 }
 </style>

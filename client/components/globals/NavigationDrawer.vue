@@ -241,7 +241,7 @@ export default Vue.extend({
     }
 
     &__divider {
-      margin: 8px 0;
+      margin: 6px 0;
     }
   }
 }
