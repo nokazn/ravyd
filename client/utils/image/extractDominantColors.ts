@@ -1,5 +1,4 @@
 import Vibrant from 'node-vibrant';
-// @todo #126
 import 'node-vibrant/lib/bundle.worker';
 import { Palette } from 'node-vibrant/lib/color';
 
