@@ -21,9 +21,9 @@
       v-if="isLoggedin"
       :elevation="elevation"
     />
-    <NavigationDrawer v-if="isLoggedin" />
+    <NavigationDrawer v-if="isLoggedin && $window.isPc" />
 
-    <main :style="contentContainerStyles">
+    <v-main :style="contentContainerStyles">
       <div
         :ref="SPACER_REF"
         :class="$style.Spacer"
@@ -32,9 +32,10 @@
       <Overlay
         v-bind="$overlay"
         :style="contentOverlayStyles"
+        :class="$style.ContentOverlay"
         @on-changed="onOverlayChanged"
       />
-    </main>
+    </v-main>
 
     <Footer v-if="isLoggedin" />
 
@@ -63,7 +64,6 @@ import {
   HEADER_HEIGHT,
   FOOTER_HEIGHT,
   DEVICE_BAR_HEIGHT,
-  NAVIGATION_DRAWER_WIDTH,
 } from '~/constants';
 
 const SPACER_REF = 'SPACER_REF';
@@ -106,31 +106,25 @@ export default Vue.extend({
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
-    // 他のデバイスで再生中の場合高さが変わる
     contentContainerStyles(): { [k in string]?: string } {
-      const backgroundStyle = this.$getters().backgroundStyles(320);
-      const padding = this.isAnotherDevicePlaying
-        ? `0 0 calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT}px) ${NAVIGATION_DRAWER_WIDTH}px`
-        : `0 0 ${FOOTER_HEIGHT}px ${NAVIGATION_DRAWER_WIDTH}px`;
-
-      return {
-        ...backgroundStyle,
-        padding,
-      };
+      const gradationHeight = 320;
+      const backgroundStyle = this.$getters().backgroundStyles(gradationHeight);
+      return backgroundStyle;
     },
-    // 他のデバイスで再生中の場合高さが変わる
+    // top, left は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
-      const top = `${HEADER_HEIGHT}px`;
-      const left = `${NAVIGATION_DRAWER_WIDTH}px`;
+      // 他のデバイスで再生中の場合高さが変わる
       const bottom = this.isAnotherDevicePlaying
         ? `calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT})px`
         : `${FOOTER_HEIGHT}px`;
 
-      return { top, bottom, left };
+      return { bottom };
     },
   },
 
   mounted() {
+    this.$window.observe();
+
     this.isLoaded = true;
     // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
     this.$dispatch('player/initPlayer');
@@ -142,12 +136,14 @@ export default Vue.extend({
         this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
       });
     }, {
-      threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      rootMargin: `-${HEADER_HEIGHT}px 0px`,
     });
     this.observer.observe(element);
   },
 
   beforeDestroy() {
+    this.$window.disconnectObserver();
+
     if (this.observer != null) {
       this.observer.disconnect();
     }
@@ -171,14 +167,14 @@ export default Vue.extend({
 } */
 
 .Spacer {
-  height: $g-header-height;
+  height: 0;
 }
 
-/* .ContentOverlay {
+// bottom だけ動的に設定
+.ContentOverlay {
   top: $g-header-height;
-  bottom: $g-footer-height;
   left: $g-navigation-drawer-width;
-} */
+}
 
 .ProgressCircular {
   bottom: $g-footer-height;

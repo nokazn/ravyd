@@ -3,7 +3,7 @@
     app
     permanent
     :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
-    :mobile-breakpoint="768"
+    :mobile-breakpoint="MD_BREAK_POINT"
     :width="NAVIGATION_DRAWER_WIDTH"
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
@@ -71,12 +71,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'typed-vuex';
+import type { RootState } from 'typed-vuex';
 
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
 import {
+  MD_BREAK_POINT,
   NAVIGATION_DRAWER_BACKGROUND_COLOR,
   NAVIGATION_DRAWER_WIDTH,
   FOOTER_HEIGHT,
@@ -93,6 +94,7 @@ type NavigationGroup = {
 type Data = {
   navigationGroupList: NavigationGroup[]
   createPlaylistModal: boolean
+  MD_BREAK_POINT: number;
   NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
   NAVIGATION_DRAWER_WIDTH: number
 }
@@ -153,6 +155,7 @@ export default Vue.extend({
     return {
       navigationGroupList,
       createPlaylistModal: false,
+      MD_BREAK_POINT,
       NAVIGATION_DRAWER_BACKGROUND_COLOR,
       NAVIGATION_DRAWER_WIDTH,
     };
