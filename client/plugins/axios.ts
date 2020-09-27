@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import https from 'https';
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Plugin } from '@nuxt/types';
+import type { NuxtAxiosInstance } from '@nuxtjs/axios';
+import type { Plugin } from '@nuxt/types';
 
 import { SPOTIFY_API_URL } from '~/constants';
 

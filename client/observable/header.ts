@@ -11,7 +11,7 @@ type HeaderState = {
   backdropFiltered: boolean
 }
 
-export type Header = {
+export type $Header = {
   readonly isAdditionalContentShown: boolean
   readonly hasAdditionalContent: boolean
   readonly PORTAL_NAME: typeof PORTAL_NAME
@@ -28,7 +28,7 @@ const state = Vue.observable<HeaderState>({
   backdropFiltered: true,
 });
 
-export const $header: Header = {
+export const $header: $Header = {
   get isAdditionalContentShown() {
     return state.isAdditionalContentShown;
   },

@@ -11,7 +11,7 @@ type OverlayState = {
   zIndex: number | undefined
 }
 
-export type Overlay = {
+export type $Overlay = {
   readonly isShown: boolean
   change: (isShown: boolean, options?: OverlayOptions) => void
 }
@@ -22,7 +22,7 @@ const state = Vue.observable<OverlayState>({
   zIndex: undefined,
 });
 
-export const $overlay: Overlay = {
+export const $overlay: $Overlay = {
   get isShown(): boolean {
     return state.isShown;
   },

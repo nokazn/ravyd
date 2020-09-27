@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import { Plugin } from '@nuxt/types';
-import { ExtendedSubscribe } from 'typed-vuex';
+import type { Plugin } from '@nuxt/types';
+import type { ExtendedSubscribe } from 'typed-vuex';
 
 const injectVuex: Plugin = (context, inject) => {
   inject('state', () => context.store.state);

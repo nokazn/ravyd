@@ -1,16 +1,16 @@
-import {
+import type {
   RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
   ExtendedSubscribe,
 } from 'typed-vuex';
-import dayjs from 'dayjs';
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import type dayjs from 'dayjs';
+import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 
-import { $Toast } from '~/plugins/toast';
-import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { $Toast } from '~/plugins/observable/toast';
+import type { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+import type { ServerEndpoints } from '~/plugins/server/endpoints';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
@@ -27,6 +27,8 @@ declare module 'vuex/types/index' {
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
     $server: ServerEndpoints
+
+    // obserable
     $toast: $Toast
   }
 }
