@@ -4,7 +4,7 @@ import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { LibraryTracksState } from './state';
 import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
-import { emptyPaging } from '~/constants';
+import { EMPTY_PAGING } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryTracksActions = {
@@ -122,7 +122,7 @@ const actions: Actions<
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, emptyPaging as LibraryOfTracks));
+      }, EMPTY_PAGING as LibraryOfTracks));
 
     if (tracks == null) {
       this.$toast.push({

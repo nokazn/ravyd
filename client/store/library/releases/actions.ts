@@ -4,7 +4,7 @@ import { convertReleaseForCard } from '~/utils/converter';
 import { LibraryReleasesState } from './state';
 import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
-import { emptyPaging } from '~/constants';
+import { EMPTY_PAGING } from '~/constants';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
 export type LibraryReleasesActions = {
@@ -118,7 +118,7 @@ const actions: Actions<
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, emptyPaging as LibraryOfReleases));
+      }, EMPTY_PAGING as LibraryOfReleases));
 
     if (releases == null) {
       this.$toast.push({
