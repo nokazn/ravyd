@@ -110,6 +110,7 @@ const nuxtConfig: NuxtConfig = {
       //   config.module.rules.push({
       //     test: /bundle\.worker\.js$/,
       //     loader: 'worker-loader',
+      //     exclude: /node_modules/,
       //   });
       // }
     },
