@@ -34,8 +34,8 @@ import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 
-import type { ToastType } from '~/plugins/toast';
-import { App } from '~~/types';
+import type { ToastType } from '~/plugins/observable/toast';
+import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 const REMOVE_ITEM_MODAL = 'REMOVE_ITEM_MODAL';

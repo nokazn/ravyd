@@ -203,8 +203,8 @@ import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { emptyPaging } from '~/constants';
 
-import type { ToastType } from '~/plugins/toast';
-import { App, OneToFifty, SpotifyAPI } from '~~/types';
+import type { ToastType } from '~/plugins/observable/toast';
+import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;

@@ -16,7 +16,7 @@
     <v-list-item-group>
       <template v-for="item in menuItemList">
         <a
-          v-if="item.to != null"
+          v-if="item.type === 'to'"
           :key="item.name"
           :href="item.to"
           target="_blank"
@@ -67,19 +67,24 @@ import Vue, { PropType } from 'vue';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
 import { createUrl } from '~~/utils/createUrl';
-import { App, SpotifyAPI } from '~~/types';
-import { $Toast } from '~/plugins/toast';
+import type { $Toast } from '~/plugins/observable/toast';
+import type { App, SpotifyAPI } from '~~/types';
 
-type MenuItem = {
-  name: string
-  to: string
-  iconSrc: string
-} | {
-  name: string
-  handler: () => void
-  icon?: string
-  disabled?: boolean
-}
+type MenuType = 'to' | 'custom'
+type MenuItem<T extends MenuType = MenuType> = T extends 'to'
+  ? {
+    type: T;
+    name: string;
+    to: string;
+    iconSrc: string;
+  }
+  : {
+    type: T;
+    name: string;
+    handler: () => void;
+    icon?: string;
+    disabled?: boolean;
+  }
 
 export type Props = {
   name: string
@@ -180,7 +185,8 @@ export default Vue.extend({
       const path = this.url ?? this.$route.path;
       const url = `${process.env.BASE_URL}${path}`;
 
-      const twitter = {
+      const twitter: MenuItem<'to'> = {
+        type: 'to',
         name: 'Twitter',
         to: createUrl('https://twitter.com/share', {
           text: this.text,
@@ -189,7 +195,8 @@ export default Vue.extend({
         iconSrc: '/icon/twitter.png',
       };
 
-      const facebook = {
+      const facebook: MenuItem<'to'> = {
+        type: 'to',
         name: 'Facebook',
         to: createUrl('https://www.facebook.com/sharer/sharer.php', {
           u: url,
@@ -198,13 +205,15 @@ export default Vue.extend({
       };
 
       const text = `${this.text} ${url}`;
-      const line = {
+      const line: MenuItem<'to'> = {
+        type: 'to',
         name: 'LINE',
         to: `https://line.me/R/msg/text/?${encodeURIComponent(text)}`,
         iconSrc: '/icon/line.png',
       };
 
-      const copyTrackUrl = {
+      const copyTrackUrl: MenuItem<'custom'> = {
+        type: 'custom',
         name: `${this.typeName}のリンクをコピー`,
         handler: () => {
           if (this.externalUrls.spotify != null) {
@@ -214,7 +223,8 @@ export default Vue.extend({
         disabled: this.externalUrls.spotify == null,
       };
 
-      const copyUri = {
+      const copyUri: MenuItem<'custom'> = {
+        type: 'custom',
         name: 'Spotify URI をコピー',
         handler: () => {
           copyText(this.uri, 'Spotify URI ', this.$toast);

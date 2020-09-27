@@ -126,9 +126,10 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/server' },
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
-    { src: '~/plugins/toast' },
-    { src: '~/plugins/overlay' },
     { src: '~/plugins/observable/header' },
+    { src: '~/plugins/observable/overlay' },
+    { src: '~/plugins/observable/toast' },
+    { src: '~/plugins/observable/window', mode: 'client' },
   ],
   router: {
     middleware: 'auth',
