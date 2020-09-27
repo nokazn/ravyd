@@ -21,7 +21,7 @@
       v-if="isLoggedin"
       :elevation="elevation"
     />
-    <NavigationDrawer v-if="isLoggedin && $window.isPc" />
+    <NavigationDrawer v-if="isLoggedin && isNavigationDrawerShown" />
 
     <v-main :style="contentContainerStyles">
       <div
@@ -62,6 +62,7 @@ import {
   BACKGROUND_COLOR,
   Z_INDEX_OF,
   HEADER_HEIGHT,
+  NAVIGATION_DRAWER_WIDTH,
   FOOTER_HEIGHT,
   DEVICE_BAR_HEIGHT,
 } from '~/constants';
@@ -100,6 +101,9 @@ export default Vue.extend({
   },
 
   computed: {
+    isNavigationDrawerShown(): boolean {
+      return this.$window.isPc;
+    },
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
@@ -111,14 +115,18 @@ export default Vue.extend({
       const backgroundStyle = this.$getters().backgroundStyles(gradationHeight);
       return backgroundStyle;
     },
-    // top, left は style で設定
+    // top は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
+      // ナビゲーションバーが表示されてるかで変わる
+      const left = this.isNavigationDrawerShown
+        ? `${NAVIGATION_DRAWER_WIDTH}px`
+        : '0';
       // 他のデバイスで再生中の場合高さが変わる
       const bottom = this.isAnotherDevicePlaying
         ? `calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT})px`
         : `${FOOTER_HEIGHT}px`;
 
-      return { bottom };
+      return { left, bottom };
     },
   },
 
@@ -162,18 +170,13 @@ export default Vue.extend({
   background-color: $g-background-color !important;
 }
 
-/* .ContentContainer {
-  padding: 0 0 $g-footer-height $g-navigation-drawer-width;
-} */
-
 .Spacer {
   height: 0;
 }
 
-// bottom だけ動的に設定
+// left, bottom は動的に設定
 .ContentOverlay {
   top: $g-header-height;
-  left: $g-navigation-drawer-width;
 }
 
 .ProgressCircular {
