@@ -129,7 +129,7 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/observable/header' },
     { src: '~/plugins/observable/overlay' },
     { src: '~/plugins/observable/toast' },
-    { src: '~/plugins/observable/window', mode: 'client' },
+    { src: '~/plugins/observable/window' },
   ],
   router: {
     middleware: 'auth',
