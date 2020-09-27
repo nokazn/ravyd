@@ -84,7 +84,7 @@ const nuxtConfig: NuxtConfig = {
       // lodash から必要な関数だけ取り出す
       new LodashModuleReplacementPlugin(),
     ],
-    extend(config, { isServer, isClient }) {
+    extend(config, { isServer }) {
       config.module = config.module ?? { rules: [] };
 
       // lodash から必要な関数だけ取り出す
@@ -104,15 +104,15 @@ const nuxtConfig: NuxtConfig = {
 
       // worker-loader を読み込む
       // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
-      config.output = config.output ?? {};
-      config.output.globalObject = 'this';
-      if (isClient) {
-        config.module.rules.push({
-          test: /bundle\.worker\.js$/,
-          loader: 'worker-loader',
-          exclude: /node_modules/,
-        });
-      }
+      // config.output = config.output ?? {};
+      // config.output.globalObject = 'this';
+      // if (isClient) {
+      //   config.module.rules.push({
+      //     test: /bundle\.worker\.js$/,
+      //     loader: 'worker-loader',
+      //     exclude: /node_modules/,
+      //   });
+      // }
     },
   },
   serverMiddleware: [
