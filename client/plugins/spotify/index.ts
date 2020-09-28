@@ -2,8 +2,8 @@ import type { Plugin } from '@nuxt/types';
 
 import { endpoints } from './endpoints';
 
-const plugin: Plugin = (context, inject) => {
+const injector: Plugin = (context, inject) => {
   inject('spotify', endpoints(context));
 };
 
-export default plugin;
+export default injector;

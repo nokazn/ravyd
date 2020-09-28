@@ -126,6 +126,7 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/server' },
     { src: '~/plugins/vuetify' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/constant' },
     { src: '~/plugins/observable/header' },
     { src: '~/plugins/observable/overlay' },
     { src: '~/plugins/observable/toast' },
