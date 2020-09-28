@@ -48,8 +48,8 @@
           v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
           v-bind="item"
-          :min-width="FLEX_CARD_MIN_WIDTH"
-          :max-width="FLEX_CARD_MAX_WIDTH"
+          :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+          :max-width="$constant.FLEX_CARD_MAX_WIDTH"
           discograpy
           :class="$style.CardSection__card"
         />
@@ -71,11 +71,10 @@ import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plugins/local/_artistId';
-import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
-import { App } from '~~/types';
+import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
+import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const FULL_TOP_TRACK_LENGTH = 10;
@@ -97,8 +96,6 @@ interface AsyncData {
 interface Data {
   isTrackListAbbreviated: boolean | undefined
   mutationUnsubscribe: (() => void) | undefined
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
 }
 
 @Component({
@@ -143,8 +140,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
   isTrackListAbbreviated = true;
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   get isFirstSectionAbbreviated(): boolean | undefined {
     return this.topTrackList.length > ABBREVIATED_TOP_TRACK_LENGTH

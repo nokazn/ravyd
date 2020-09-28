@@ -7,8 +7,8 @@
         v-for="artist in relatedArtistList"
         :key="artist.id"
         v-bind="artist"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
       />
     </CardsWrapper>
   </div>
@@ -19,13 +19,9 @@ import { Vue, Component, Prop } from 'nuxt-property-decorator';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
-interface Data {
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
-}
+interface Data {}
 
 @Component({
   components: {
@@ -39,9 +35,6 @@ export default class RelatedArtistPage extends Vue implements Data {
 
   @Prop([Array])
   relatedArtistList!: App.ContentItemInfo<'artist'>[];
-
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 }
 </script>
 

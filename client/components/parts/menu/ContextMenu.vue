@@ -7,7 +7,7 @@
     :bottom="bottom"
     :left="left"
     :right="right"
-    :z-index="Z_INDEX"
+    :z-index="$constant.Z_INDEX_OF.menu"
   >
     <template #activator="{ on }">
       <v-btn
@@ -28,7 +28,7 @@
 
     <v-list
       dense
-      :color="MENU_BACKGROUND_COLOR"
+      :color="$constant.MENU_BACKGROUND_COLOR"
       :elevation="12"
     >
       <template v-for="(group, index) in itemLists">
@@ -80,8 +80,6 @@
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
 
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
-
 export type MenuItem = {
   name: string
   disabled?: boolean
@@ -93,11 +91,6 @@ export type MenuItem = {
 } | {
   component: VueConstructor
   props: { [k in string]: unknown }
-}
-
-type Data = {
-  MENU_BACKGROUND_COLOR: string
-  Z_INDEX: number
 }
 
 export default Vue.extend({
@@ -146,13 +139,6 @@ export default Vue.extend({
       type: Array as PropType<MenuItem[][]>,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
-    };
   },
 });
 </script>

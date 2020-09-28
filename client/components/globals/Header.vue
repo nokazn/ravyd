@@ -2,7 +2,7 @@
   <v-app-bar
     app
     :elevation="headerElevation"
-    :height="HEADER_HEIGHT"
+    :height="$constant.HEADER_HEIGHT"
     :style="styles"
     :class="$style.Header"
   >
@@ -58,11 +58,6 @@ import Vue from 'vue';
 
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_HEIGHT, BACKGROUND_COLOR } from '~/constants';
-
-type Data = {
-  HEADER_HEIGHT: number
-}
 
 type HeaderStyles = {
   backgroundColor: string
@@ -82,12 +77,6 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      HEADER_HEIGHT,
-    };
-  },
-
   computed: {
     styles(): HeaderStyles {
       const backgroundStyles = this.$getters().headerStyles;
@@ -101,7 +90,7 @@ export default Vue.extend({
 
       const dominantColor = this.$state().dominantBackgroundColor;
       return {
-        backgroundColor: dominantColor?.hex ?? BACKGROUND_COLOR,
+        backgroundColor: dominantColor?.hex ?? this.$constant.BACKGROUND_COLOR,
       };
     },
     // backdrop-filter が有効のときはヘッダーの下に sticky なコンテンツがないので elavation を有効にする

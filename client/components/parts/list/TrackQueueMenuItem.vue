@@ -81,7 +81,6 @@ import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/utils/image';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
@@ -151,7 +150,7 @@ export default Vue.extend({
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
     },
     releasePath(): string {
       return `/releases/${this.releaseId}`;

@@ -40,7 +40,6 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateCollectionContextUri } from '~/utils/text';
-import { HEADER_HEIGHT } from '~/constants';
 
 interface Data {
   uri: string
@@ -100,7 +99,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   mounted() {
     const element = this.$refs[MEDIA_BUTTON_REF] as Vue;
     const TAB_HEIGHT = 80;
-    this.$header.observe(element.$el, HEADER_HEIGHT + TAB_HEIGHT);
+    this.$header.observe(element.$el, this.$constant.HEADER_HEIGHT + TAB_HEIGHT);
 
     this.$dispatch('resetDominantBackgroundColor');
 

@@ -36,10 +36,12 @@ export default Vue.extend({
     },
     minWidth: {
       type: Number,
+      // $constant では参照できない
       default: FLEX_CARD_MIN_WIDTH,
     },
     maxWidth: {
       type: Number,
+      // $constant では参照できない
       default: FLEX_CARD_MAX_WIDTH,
     },
   },

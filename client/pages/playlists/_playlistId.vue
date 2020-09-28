@@ -201,8 +201,6 @@ import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import { EMPTY_PAGING } from '~/constants';
-
 import type { ToastType } from '~/plugins/observable/toast';
 import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 
@@ -517,7 +515,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, EMPTY_PAGING as PagingTracks));
+      }, this.$constant.EMPTY_PAGING as PagingTracks));
 
     if (tracks == null) {
       this.playlistTrackInfo.isFullTrackList = true;

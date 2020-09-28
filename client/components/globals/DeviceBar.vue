@@ -2,7 +2,7 @@
   <v-bottom-navigation
     app
     padless
-    :height="DEVICE_BAR_HEIGHT"
+    :height="$constant.DEVICE_BAR_HEIGHT"
     background-color="primary"
     :class="$style.DeviceBar"
   >
@@ -20,19 +20,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { DEVICE_BAR_HEIGHT } from '~/constants';
-
-type Data = {
-  DEVICE_BAR_HEIGHT: number;
-}
 
 export default Vue.extend({
-  data(): Data {
-    return {
-      DEVICE_BAR_HEIGHT,
-    };
-  },
-
   computed: {
     name(): string {
       return this.$getters()['playback/activeDevice']?.name ?? '他のデバイス';

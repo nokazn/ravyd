@@ -5,8 +5,8 @@
   >
     <v-overlay
       v-if="!isLoaded"
-      :z-index="Z_INDEX"
-      :color="BACKGROUND_COLOR"
+      :z-index="$constant.Z_INDEX_OF.loading"
+      :color="$constant.BACKGROUND_COLOR"
       :opacity="1"
       :class="$style.ProgressCircular"
     >
@@ -63,15 +63,6 @@ import Footer from '~/components/globals/Footer.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
-import {
-  BACKGROUND_COLOR,
-  Z_INDEX_OF,
-  HEADER_HEIGHT,
-  NAVIGATION_DRAWER_WIDTH,
-  FOOTER_HEIGHT,
-  NAVIGATION_BAR_HEIGHT,
-  DEVICE_BAR_HEIGHT,
-} from '~/constants';
 
 const SPACER_REF = 'SPACER_REF';
 
@@ -79,8 +70,6 @@ type Data = {
   isLoaded: boolean
   elevation: number
   observer: IntersectionObserver | undefined
-  BACKGROUND_COLOR: string
-  Z_INDEX: number
   SPACER_REF: string
   SEARCH_FORM_PORTAL_NAME: string
 }
@@ -101,8 +90,6 @@ export default Vue.extend({
       isLoaded: false,
       elevation: 0,
       observer: undefined,
-      BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.loading,
       SPACER_REF,
       SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
@@ -125,14 +112,14 @@ export default Vue.extend({
       const { isPc } = this.$window;
       // ナビゲーションバーが表示されてるかで変わる
       const left = isPc
-        ? `${NAVIGATION_DRAWER_WIDTH}px`
+        ? `${this.$constant.NAVIGATION_DRAWER_WIDTH}px`
         : '0';
 
-      let footerHeight = FOOTER_HEIGHT;
+      let footerHeight = this.$constant.FOOTER_HEIGHT;
       // ナビゲーションバーが表示されているとき
-      if (!isPc) footerHeight += NAVIGATION_BAR_HEIGHT;
+      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
       // 他のデバイスで再生中のとき
-      if (this.isAnotherDevicePlaying) footerHeight += DEVICE_BAR_HEIGHT;
+      if (this.isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
       const bottom = `${footerHeight}px`;
 
       return { left, bottom };
@@ -153,7 +140,7 @@ export default Vue.extend({
         this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
       });
     }, {
-      rootMargin: `-${HEADER_HEIGHT}px 0px`,
+      rootMargin: `-${this.$constant.HEADER_HEIGHT}px 0px`,
     });
     this.observer.observe(element);
   },

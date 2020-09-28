@@ -14,7 +14,7 @@
       ripple
       nuxt
       rounded
-      :color="CARD_BACKGROUND_COLOR"
+      :color="$constant.CARD_BACKGROUND_COLOR"
       :to="to"
       :width="width"
       :min-width="width"
@@ -44,8 +44,6 @@
 import Vue, { PropType } from 'vue';
 import { RawLocation } from 'vue-router';
 
-import { CARD_BACKGROUND_COLOR } from '~/constants';
-
 const CLICK = 'click';
 
 export type On = {
@@ -54,7 +52,6 @@ export type On = {
 
 type Data = {
   isLoaded: boolean;
-  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -84,7 +81,6 @@ export default Vue.extend({
   data(): Data {
     return {
       isLoaded: false,
-      CARD_BACKGROUND_COLOR,
     };
   },
 

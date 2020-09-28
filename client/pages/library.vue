@@ -10,7 +10,7 @@
           v-model="tab"
           show-arrows="mobile"
           color="active"
-          :background-color="BACKGROUND_COLOR"
+          :background-color="$constant.BACKGROUND_COLOR"
         >
           <v-tab
             v-for="item in tabItemList"
@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { BACKGROUND_COLOR } from '~/constants';
 
 type TabItem = {
   title: string
@@ -42,7 +41,6 @@ type TabItem = {
 type Data = {
   tab: number | null;
   tabItemList: TabItem[]
-  BACKGROUND_COLOR: string
 }
 
 @Component({
@@ -76,7 +74,6 @@ export default class LibraryPage extends Vue implements Data {
       to: '/library/history',
     },
   ];
-  BACKGROUND_COLOR = BACKGROUND_COLOR;
 
   mounted() {
     this.$header.toggleBackdropFilter(false);

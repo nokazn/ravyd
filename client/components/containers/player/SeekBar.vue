@@ -33,7 +33,6 @@ import Vue from 'vue';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import { elapsedTime } from '~~/utils/elapsedTime';
-import { DEFAULT_DURATION_MS } from '~/constants';
 
 type Data = {
   value: number
@@ -72,7 +71,7 @@ export default Vue.extend({
     disabled(): boolean {
       // durationMs が不適な値の場合もシークバーを操作できないようにするs
       return this.$getters()['playback/isDisallowed']('seeking')
-        || this.durationMs === DEFAULT_DURATION_MS;
+        || this.durationMs === this.$constant.DEFAULT_DURATION_MS;
     },
     disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
       return this.$state().playback.disabledPlayingFromBegining;
@@ -87,7 +86,7 @@ export default Vue.extend({
         : 'inactive';
     },
     durationMsTitle(): string | undefined {
-      return this.durationMs === DEFAULT_DURATION_MS
+      return this.durationMs === this.$constant.DEFAULT_DURATION_MS
         ? '再生時間が取得できません'
         : undefined;
     },

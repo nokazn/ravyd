@@ -8,7 +8,7 @@
     :offset-x="offsetX"
     :offset-y="offsetY"
     rounded="lg"
-    :z-index="Z_INDEX"
+    :z-index="$constant.Z_INDEX_OF.menu"
   >
     <template #activator="{ on }">
       <slot
@@ -22,7 +22,7 @@
       nav
       :elevation="12"
       subheader
-      :color="MENU_BACKGROUND_COLOR"
+      :color="$constant.MENU_BACKGROUND_COLOR"
       :class="$style.CustomMenu"
     >
       <slot name="header" />
@@ -40,17 +40,11 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
-
-type Data = {
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR;
-  Z_INDEX: number;
 }
 
 export default Vue.extend({
@@ -87,13 +81,6 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
-    };
   },
 
   computed: {

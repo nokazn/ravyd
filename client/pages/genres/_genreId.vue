@@ -12,8 +12,8 @@
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
       />
     </CardsWrapper>
 
@@ -38,7 +38,6 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {
@@ -46,11 +45,7 @@ interface AsyncData {
   playlists: App.PlaylistCardInfo[]
   isFullPlaylists: boolean
 }
-
-interface Data {
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
-}
+interface Data {}
 
 const LIMIT_OF_PLAYLISTS = 30;
 
@@ -84,9 +79,6 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
   categoryInfo: App.CategoryInfo | undefined = undefined;
   playlists: App.PlaylistCardInfo[] = [];
   isFullPlaylists = false;
-
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');

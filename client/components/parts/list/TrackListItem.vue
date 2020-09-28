@@ -9,7 +9,7 @@
       <v-list-item-avatar tile>
         <ReleaseArtwork
           :src="artworkSrc"
-          :size="TRACK_LIST_ARTWORK_SIZE"
+          :size="$constant.TRACK_LIST_ARTWORK_SIZE"
           :alt="item.name"
           :title="item.name"
         />
@@ -85,12 +85,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { getImageSrc } from '~/utils/image';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App } from '~~/types';
-
-export type Data = {
-  TRACK_LIST_ARTWORK_SIZE: number
-}
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -126,15 +121,9 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      TRACK_LIST_ARTWORK_SIZE,
-    };
-  },
-
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.item.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
     },
     releasePath(): RawLocation {
       return {

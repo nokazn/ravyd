@@ -1,7 +1,7 @@
 <template>
   <v-list
     dense
-    :color="BACKGROUND_COLOR"
+    :color="$constant.BACKGROUND_COLOR"
   >
     <template v-for="track in trackList">
       <v-divider
@@ -25,12 +25,10 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
-import { BACKGROUND_COLOR } from '~/constants';
 import { App } from '~~/types';
 
 export type Data = {
   trackUriList: string[]
-  BACKGROUND_COLOR: typeof BACKGROUND_COLOR
 }
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -64,7 +62,6 @@ export default Vue.extend({
     const trackUriList = this.trackList.map((track) => track.uri);
     return {
       trackUriList,
-      BACKGROUND_COLOR,
     };
   },
 

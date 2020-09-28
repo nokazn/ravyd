@@ -5,8 +5,8 @@
         v-for="(playlist, index) in playlists"
         :key="`${playlist.id}-${index}`"
         v-bind="convertPlaylistForCard(playlist)"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
       />
     </CardsWrapper>
   </div>
@@ -19,7 +19,6 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { convertPlaylistForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 interface Data {
@@ -41,8 +40,6 @@ interface Data {
 })
 export default class LibraryPlaylistPage extends Vue implements Data {
   convertPlaylistForCard = convertPlaylistForCard;
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   get playlists(): SpotifyAPI.SimplePlaylist[] {
     return this.$state().playlists.playlists ?? [];

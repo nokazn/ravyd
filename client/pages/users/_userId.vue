@@ -83,8 +83,8 @@
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
       />
     </CardsWrapper>
 
@@ -113,7 +113,6 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
 import { getImageSrc } from '~/utils/image';
 import { convertPlaylistForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
 const AVATAR_SIZE = 180;
@@ -128,8 +127,6 @@ interface AsyncData {
 
 interface Data {
   AVATAR_SIZE: number
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
   HEADER_REF: string
 }
 
@@ -173,8 +170,6 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
   };
 
   AVATAR_SIZE = AVATAR_SIZE;
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {

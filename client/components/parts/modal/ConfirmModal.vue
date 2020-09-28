@@ -37,7 +37,6 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import Modal, { On as OnModal } from '~/components/parts/modal/Modal.vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 
 export const ON_CHANGED = 'on-changed';
 export const ON_CONFIRMED = 'on-confirmed';
@@ -45,10 +44,6 @@ export const ON_CONFIRMED = 'on-confirmed';
 export type On = {
   [ON_CHANGED]: boolean
   [ON_CONFIRMED]: string
-}
-
-type Data = {
-  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -81,12 +76,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-  },
-
-  data(): Data {
-    return {
-      CARD_BACKGROUND_COLOR,
-    };
   },
 
   computed: {

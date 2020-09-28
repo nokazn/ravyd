@@ -3,8 +3,8 @@
     v-if="isLoaded"
     app
     grow
-    :height="48"
-    :background-color="FOOTER_BACKGROUND_COLOR"
+    :height="$constant.NAVIGATION_BAR_HEIGHT"
+    :background-color="$constant.FOOTER_BACKGROUND_COLOR"
     :class="$style.NavigationFooter"
   >
     <template v-for="item in itemList">
@@ -45,7 +45,6 @@ import Vue from 'vue';
 import type { RawLocation } from 'vue-router';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
-import { FOOTER_BACKGROUND_COLOR } from '~/constants';
 
 const ICON_SIZR = 32;
 
@@ -68,7 +67,6 @@ type Item<T extends ItemType = ItemType> = T extends 'to'
 
 type Data = {
   isLoaded: boolean;
-  FOOTER_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -79,7 +77,6 @@ export default Vue.extend({
   data(): Data {
     return {
       isLoaded: false,
-      FOOTER_BACKGROUND_COLOR,
     };
   },
 

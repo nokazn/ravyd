@@ -3,9 +3,8 @@
     v-if="$window.isPc"
     app
     permanent
-    :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
-    :mobile-breakpoint="MD_BREAK_POINT"
-    :width="NAVIGATION_DRAWER_WIDTH"
+    :color="$constant.NAVIGATION_DRAWER_BACKGROUND_COLOR"
+    :width="$constant.NAVIGATION_DRAWER_WIDTH"
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
   >
@@ -74,13 +73,6 @@ import type { RootState } from 'typed-vuex';
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
-import {
-  MD_BREAK_POINT,
-  NAVIGATION_DRAWER_BACKGROUND_COLOR,
-  NAVIGATION_DRAWER_WIDTH,
-  FOOTER_HEIGHT,
-  DEVICE_BAR_HEIGHT,
-} from '~/constants';
 
 type NavigationGroup = {
   items: Item[]
@@ -92,9 +84,6 @@ type NavigationGroup = {
 type Data = {
   navigationGroupList: NavigationGroup[]
   createPlaylistModal: boolean
-  MD_BREAK_POINT: number;
-  NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
-  NAVIGATION_DRAWER_WIDTH: number
 }
 
 export default Vue.extend({
@@ -153,9 +142,6 @@ export default Vue.extend({
     return {
       navigationGroupList,
       createPlaylistModal: false,
-      MD_BREAK_POINT,
-      NAVIGATION_DRAWER_BACKGROUND_COLOR,
-      NAVIGATION_DRAWER_WIDTH,
     };
   },
 
@@ -199,9 +185,14 @@ export default Vue.extend({
     },
     // 他のデバイスで再生中の場合高さが変わる
     listStyles(): { height: string } {
-      const height = this.$getters()['playback/isAnotherDevicePlaying']
-        ? `calc(100vh - ${FOOTER_HEIGHT}px - ${DEVICE_BAR_HEIGHT}px)`
-        : `calc(100vh - ${FOOTER_HEIGHT}px)`;
+      const { isPc } = this.$window;
+      const isAnotherDevicePlaying = this.$getters()['playback/isAnotherDevicePlaying'];
+      let footerHeight = this.$constant.FOOTER_HEIGHT;
+      // ナビゲーションバーが表示されているとき
+      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
+      // 他のデバイスで再生中のとき
+      if (isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
+      const height = `calc(100vh - ${footerHeight}px)`;
 
       return { height };
     },

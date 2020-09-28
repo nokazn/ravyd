@@ -3,8 +3,8 @@
     app
     padless
     :elevation="8"
-    :height="FOOTER_HEIGHT"
-    :color="FOOTER_BACKGROUND_COLOR"
+    :height="$constant.FOOTER_HEIGHT"
+    :color="$constant.FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer"
   >
     <div :class="$style.Footer__container">
@@ -66,8 +66,8 @@
     <v-overlay
       v-if="!isLoaded"
       absolute
-      :z-index="Z_INDEX"
-      :color="FOOTER_BACKGROUND_COLOR"
+      :z-index="$constant.Z_INDEX_OF.loading"
+      :color="$constant.FOOTER_BACKGROUND_COLOR"
       :opacity="1"
       :class="$style.Overlay"
     />
@@ -89,19 +89,10 @@ import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vu
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
-import {
-  FOOTER_BACKGROUND_COLOR,
-  FOOTER_HEIGHT,
-  Z_INDEX_OF,
-} from '~/constants';
-
 type Data = {
   isLoaded: boolean;
   deviceSelectMenu: boolean;
   mutationUnsubscribe: (() => void) | undefined;
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR;
-  FOOTER_HEIGHT: number;
-  Z_INDEX: number;
 }
 
 export default Vue.extend({
@@ -123,9 +114,6 @@ export default Vue.extend({
       isLoaded: false,
       deviceSelectMenu: false,
       mutationUnsubscribe: undefined,
-      FOOTER_BACKGROUND_COLOR,
-      FOOTER_HEIGHT,
-      Z_INDEX: Z_INDEX_OF.loading,
     };
   },
 

@@ -81,7 +81,6 @@ import Vue, { PropType } from 'vue';
 import { ExtendedMutationPayload } from 'typed-vuex';
 
 import Modal from '~/components/parts/modal/Modal.vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 const FORM_REF = 'FORM_REF';
@@ -97,7 +96,6 @@ type Data = {
   isLoading: boolean
   mutationUnsubscribe: (() => void) | undefined
   FORM_REF: string;
-  CARD_BACKGROUND_COLOR: string;
 }
 
 // 編集するとき
@@ -179,7 +177,6 @@ export default Vue.extend({
       isLoading: false,
       mutationUnsubscribe: undefined,
       FORM_REF,
-      CARD_BACKGROUND_COLOR,
     };
   },
 
