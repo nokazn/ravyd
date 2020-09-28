@@ -127,10 +127,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
+$border-color: darken($g-bar-background-color, 6%);
+
 .NavigationBar {
-  z-index: z-index-of(footer) !important;
   display: flex;
   justify-content: space-between;
+  border-top: solid 1px $border-color;
+  border-color: $border-color !important;
+  box-sizing: border-box;
+  z-index: z-index-of(footer) !important;
 }
 
 .Item {
