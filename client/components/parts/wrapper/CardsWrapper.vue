@@ -24,10 +24,6 @@
 import Vue from 'vue';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
-type CssProps = {
-  [k: string]: string
-}
-
 export default Vue.extend({
   props: {
     margin: {
@@ -47,7 +43,7 @@ export default Vue.extend({
   },
 
   computed: {
-    cssProps(): CssProps {
+    cssProps(): Record<string, string> {
       return {
         '--margin': `${this.margin}px`,
         '--min-width': `${this.minWidth}px`,
