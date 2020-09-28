@@ -33,7 +33,7 @@
         v-bind="$overlay"
         :style="contentOverlayStyles"
         :class="$style.ContentOverlay"
-        @on-changed="onOverlayChanged"
+        @input="onOverlayChanged"
       />
     </v-main>
 
@@ -69,6 +69,7 @@ import {
   HEADER_HEIGHT,
   NAVIGATION_DRAWER_WIDTH,
   FOOTER_HEIGHT,
+  NAVIGATION_BAR_HEIGHT,
   DEVICE_BAR_HEIGHT,
 } from '~/constants';
 
@@ -121,14 +122,18 @@ export default Vue.extend({
     },
     // top は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
+      const { isPc } = this.$window;
       // ナビゲーションバーが表示されてるかで変わる
-      const left = this.$window.isPc
+      const left = isPc
         ? `${NAVIGATION_DRAWER_WIDTH}px`
         : '0';
-      // 他のデバイスで再生中の場合高さが変わる
-      const bottom = this.isAnotherDevicePlaying
-        ? `calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT})px`
-        : `${FOOTER_HEIGHT}px`;
+
+      let footerHeight = FOOTER_HEIGHT;
+      // ナビゲーションバーが表示されているとき
+      if (!isPc) footerHeight += NAVIGATION_BAR_HEIGHT;
+      // 他のデバイスで再生中のとき
+      if (this.isAnotherDevicePlaying) footerHeight += DEVICE_BAR_HEIGHT;
+      const bottom = `${footerHeight}px`;
 
       return { left, bottom };
     },
@@ -162,8 +167,8 @@ export default Vue.extend({
   },
 
   methods: {
-    onOverlayChanged(isShown: OnOverlay['on-changed']) {
-      this.$overlay.change(isShown);
+    onOverlayChanged(value: OnOverlay['input']) {
+      this.$overlay.change(value);
     },
   },
 });

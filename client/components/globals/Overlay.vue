@@ -10,21 +10,21 @@
 <script lang="ts">
 import Vue from 'vue';
 
-const ON_CHANGED = 'on-changed';
+const INPUT = 'input';
 
 export type On = {
-  [ON_CHANGED]: boolean
+  [INPUT]: boolean
 }
 
 export default Vue.extend({
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
     opacity: {
       type: Number,
-      default: 0.5,
+      default: 0.6,
     },
     zIndex: {
       type: Number,
@@ -35,10 +35,10 @@ export default Vue.extend({
   computed: {
     overlay: {
       get(): boolean {
-        return this.isShown;
+        return this.value;
       },
-      set(isShown: boolean) {
-        this.$emit(ON_CHANGED, isShown);
+      set(value: boolean) {
+        this.$emit(INPUT, value);
       },
     },
   },

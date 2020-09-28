@@ -31,6 +31,7 @@ export const XL_BREAK_POINT = 1900;
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;
 export const DEVICE_BAR_HEIGHT = 24;
+export const NAVIGATION_BAR_HEIGHT = 48;
 export const NAVIGATION_DRAWER_WIDTH = 200;
 export const FLEX_CARD_MIN_WIDTH = 160;
 export const FLEX_CARD_MAX_WIDTH = 240;
