@@ -75,3 +75,16 @@ $__layer-map: (
     }
   }
 }
+
+// グラデーション自体の横幅
+$g-gradation-width: min(1.25vw, 16px);
+
+/**
+ * ScrollableCardWrapper コンポーネントの横のマージン
+ */
+@mixin scrollable-card-wrapper-side-margin($ratio: 1) {
+  margin: {
+    right: calc(#{$g-gradation-width} * #{$ratio});
+    left: calc(#{$g-gradation-width} * #{$ratio});
+  }
+}

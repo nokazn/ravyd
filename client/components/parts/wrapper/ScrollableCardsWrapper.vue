@@ -189,11 +189,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-$total-side-padding: 40px;
-$gradation-width: 24px;
-
 .CardsWrapper {
-  margin: 0 ($total-side-padding - $gradation-width);
   position: relative;
   scroll-behavior: smooth;
 
@@ -216,18 +212,18 @@ $gradation-width: 24px;
   &__container {
     display: flex;
     overflow-x: auto;
-    padding: 0 $gradation-width;
+    padding: 0 $g-gradation-width;
     height: 100%;
     position: relative;
     // padding-right が効かないので、疑似要素で隙間を作る
     &::after {
       display: block;
-      padding-right: $gradation-width;
+      padding-right: $g-gradation-width;
       content: "";
     }
 
     & > *:not(:last-child) {
-      margin-right: var(--margin-right);
+      margin-right: min(3%, var(--margin-right));
     }
   }
 
@@ -238,7 +234,7 @@ $gradation-width: 24px;
     top: 0;
     left: 0;
     height: 100%;
-    width: $gradation-width;
+    width: $g-gradation-width;
     content: "";
     background-image:
       linear-gradient(
@@ -256,7 +252,7 @@ $gradation-width: 24px;
     top: 0;
     right: 0;
     height: 100%;
-    width: $gradation-width;
+    width: $g-gradation-width;
     content: "";
     background-image:
       linear-gradient(

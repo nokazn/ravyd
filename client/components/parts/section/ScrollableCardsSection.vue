@@ -34,12 +34,15 @@ export default Vue.extend({
 <style lang="scss" module>
 .ScrollableCardSection {
   &__title {
-    margin-left: 40px;
-    margin-bottom: 6px;
+    @include scrollable-card-wrapper-side-margin();
+
+    margin-bottom: 4px;
   }
 
   &__divider {
-    margin: 0 40px 16px;
+    @include scrollable-card-wrapper-side-margin();
+
+    margin-bottom: 12px;
   }
 }
 </style>
