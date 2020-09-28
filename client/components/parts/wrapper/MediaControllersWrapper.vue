@@ -23,8 +23,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
 import SkipButton from '~/components/containers/player/SkipButton.vue';
+import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
 import PreviousButton from '~/components/containers/player/PreviousButton.vue';
 import MediaButton from '~/components/containers/player/MediaButton.vue';
 import NextButton from '~/components/containers/player/NextButton.vue';
@@ -33,8 +33,8 @@ import { SpotifyAPI } from '~~/types';
 
 export default Vue.extend({
   components: {
-    ShuffleButton,
     SkipButton,
+    ShuffleButton,
     PreviousButton,
     MediaButton,
     NextButton,

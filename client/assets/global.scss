@@ -27,19 +27,20 @@ html {
  */
 .v-slider {
   cursor: pointer !important;
+  min-height: 28px !important;
 
   &__track {
     &-container {
-      height: 5px !important;
+      height: $g-slider-height + 1px !important;
     }
 
     &-background,
     &-fill {
-      border-radius: 5px;
+      border-radius: $g-slider-height + 1px;
     }
 
     &-background {
-      height: 4px !important;
+      height: $g-slider-height !important;
     }
   }
 }
