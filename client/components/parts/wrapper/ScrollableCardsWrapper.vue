@@ -8,7 +8,8 @@
         v-show="!isScrollOnLeftEdge"
         icon
         absolute
-        large
+        :width="40"
+        :height="40"
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--left']
@@ -26,7 +27,8 @@
         v-show="!isScrollOnRightEdge"
         icon
         absolute
-        large
+        :width="40"
+        :height="40"
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--right']
@@ -52,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import { debounce } from 'lodash';
 
 const CARDS_WRAPPER_MARGIN = 24;
@@ -71,8 +73,8 @@ type Data = {
 export default Vue.extend({
   props: {
     margin: {
-      type: Number,
-      default: 24,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
   },
 
@@ -87,8 +89,9 @@ export default Vue.extend({
 
   computed: {
     cssProps(): { [k: string]: string } {
+      const margin = this.margin ?? this.$window.cardWidth / 12;
       return {
-        '--margin-right': `${this.margin}px`,
+        '--margin-right': `${margin}px`,
       };
     },
     isScrollOnLeftEdge(): boolean {
