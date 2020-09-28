@@ -50,7 +50,7 @@ export const $window: $Window = {
     return state.width >= MD_BREAK_POINT;
   },
   get isMobile() {
-    return state.width < SM_BREAK_POINT;
+    return state.width < MD_BREAK_POINT;
   },
 
   observe() {
@@ -58,8 +58,12 @@ export const $window: $Window = {
     const observer = debounce(() => {
       state.width = window.innerWidth;
     }, interval);
-    window.addEventListener('resize', observer);
-    state.observer = observer;
+
+    if (typeof window !== 'undefined') {
+      state.width = window.innerWidth;
+      window.addEventListener('resize', observer);
+      state.observer = observer;
+    }
   },
 
   disconnectObserver() {

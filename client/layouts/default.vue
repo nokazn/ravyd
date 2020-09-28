@@ -21,7 +21,7 @@
       v-if="isLoggedin"
       :elevation="elevation"
     />
-    <NavigationDrawer v-if="isLoggedin && isNavigationDrawerShown" />
+    <NavigationDrawer v-if="isLoggedin" />
 
     <v-main :style="contentContainerStyles">
       <div
@@ -38,6 +38,9 @@
     </v-main>
 
     <Footer v-if="isLoggedin" />
+    <v-divider inset />
+    <NavigationFooter v-if="$window.isMobile" />
+    <DeviceBar v-if="isAnotherDevicePlaying && $window.isPc" />
 
     <Toasts />
 
@@ -54,6 +57,8 @@ import { RootGetters } from 'typed-vuex';
 
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
+import NavigationFooter from '~/components/globals/NavigationFooter.mobile.vue';
+import DeviceBar from '~/components/globals/DeviceBar.vue';
 import Footer from '~/components/globals/Footer.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
@@ -84,6 +89,8 @@ export default Vue.extend({
     Header,
     NavigationDrawer,
     Footer,
+    NavigationFooter,
+    DeviceBar,
     Overlay,
     Toasts,
   },
@@ -101,9 +108,6 @@ export default Vue.extend({
   },
 
   computed: {
-    isNavigationDrawerShown(): boolean {
-      return this.$window.isPc;
-    },
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
     },
@@ -118,7 +122,7 @@ export default Vue.extend({
     // top は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
       // ナビゲーションバーが表示されてるかで変わる
-      const left = this.isNavigationDrawerShown
+      const left = this.$window.isPc
         ? `${NAVIGATION_DRAWER_WIDTH}px`
         : '0';
       // 他のデバイスで再生中の場合高さが変わる

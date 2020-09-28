@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    v-if="$window.isPc"
     app
     permanent
     :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
@@ -35,10 +36,7 @@
         />
       </template>
 
-      <NavigationListItemGroup
-        v-bind="playlistGroup"
-        @on-loaded="onPlaylistGroupLoaded"
-      />
+      <NavigationListItemGroup v-bind="playlistGroup" />
 
       <v-divider :class="$style.List__divider" />
 
@@ -209,8 +207,12 @@ export default Vue.extend({
     },
   },
 
+  mounted() {
+    this.getAllPlaylists();
+  },
+
   methods: {
-    onPlaylistGroupLoaded() {
+    getAllPlaylists() {
       if (this.$state().playlists.playlists == null) {
         this.$dispatch('playlists/getAllPlaylists');
       }

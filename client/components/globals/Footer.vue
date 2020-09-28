@@ -3,7 +3,7 @@
     app
     padless
     :elevation="8"
-    :height="height"
+    :height="FOOTER_HEIGHT"
     :color="FOOTER_BACKGROUND_COLOR"
     :class="$style.Footer"
   >
@@ -63,8 +63,6 @@
       </div>
     </div>
 
-    <DeviceBar v-if="isAnotherDevicePlaying" />
-
     <v-overlay
       v-if="!isLoaded"
       absolute
@@ -90,21 +88,20 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import DeviceBar from '~/components/globals/DeviceBar.vue';
 
 import {
   FOOTER_BACKGROUND_COLOR,
   FOOTER_HEIGHT,
-  DEVICE_BAR_HEIGHT,
   Z_INDEX_OF,
 } from '~/constants';
 
 type Data = {
-  isLoaded: boolean
-  deviceSelectMenu: boolean
-  mutationUnsubscribe: (() => void) | undefined
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
-  Z_INDEX: number
+  isLoaded: boolean;
+  deviceSelectMenu: boolean;
+  mutationUnsubscribe: (() => void) | undefined;
+  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR;
+  FOOTER_HEIGHT: number;
+  Z_INDEX: number;
 }
 
 export default Vue.extend({
@@ -119,7 +116,6 @@ export default Vue.extend({
     DeviceSelectMenu,
     PlaybackMenu,
     VolumeSlider,
-    DeviceBar,
   },
 
   data(): Data {
@@ -128,6 +124,7 @@ export default Vue.extend({
       deviceSelectMenu: false,
       mutationUnsubscribe: undefined,
       FOOTER_BACKGROUND_COLOR,
+      FOOTER_HEIGHT,
       Z_INDEX: Z_INDEX_OF.loading,
     };
   },
@@ -135,12 +132,6 @@ export default Vue.extend({
   computed: {
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
-    },
-    // 他のデバイスで再生中の場合高さが変わる
-    height(): number {
-      return this.isAnotherDevicePlaying
-        ? FOOTER_HEIGHT + DEVICE_BAR_HEIGHT
-        : FOOTER_HEIGHT;
     },
     hasTrack(): RootGetters['playback/hasTrack'] {
       return this.$getters()['playback/hasTrack'];

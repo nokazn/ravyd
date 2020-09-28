@@ -50,16 +50,11 @@ import NavigationListItem, { Item } from '~/components/parts/list/NavigationList
 export type { Item } from '~/components/parts/list/NavigationListItem.vue';
 
 const VIRTUAL_SCROLLER_WRAPPER_REF = 'VIRTUAL_SCROLLER_WRAPPER_REF';
-const ON_LOADED = 'on-loaded';
 
 type Data = {
   VIRTUAL_SCROLLER_WRAPPER_REF: string
   virtualScrollerHeight: number
   resizeObserver: ResizeObserver | undefined
-}
-
-type On = {
-  [ON_LOADED]: void
 }
 
 export default Vue.extend({
@@ -103,8 +98,6 @@ export default Vue.extend({
         });
         this.resizeObserver.observe(element);
       }
-
-      this.$emit(ON_LOADED);
     }
   },
 
