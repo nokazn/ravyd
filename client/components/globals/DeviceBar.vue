@@ -38,6 +38,7 @@ export default Vue.extend({
   display: flex;
   // center なのを上書き
   justify-content: flex-end !important;
-  align-content: center;
+  align-items: center;
+  z-index: z-index-of(footer) !important;
 }
 </style>

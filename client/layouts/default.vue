@@ -37,9 +37,9 @@
       />
     </v-main>
 
-    <Footer v-if="isLoggedin" />
+    <PlayerBar v-if="isLoggedin" />
     <v-divider inset />
-    <NavigationFooter v-if="$window.isMobile" />
+    <NavigationBar v-if="$window.isMobile" />
     <DeviceBar v-if="isAnotherDevicePlaying && $window.isPc" />
 
     <Toasts />
@@ -57,9 +57,9 @@ import { RootGetters } from 'typed-vuex';
 
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
-import NavigationFooter from '~/components/globals/NavigationFooter.mobile.vue';
+import PlayerBar from '~/components/globals/PlayerBar.vue';
+import NavigationBar from '~/components/globals/NavigationBar.mobile.vue';
 import DeviceBar from '~/components/globals/DeviceBar.vue';
-import Footer from '~/components/globals/Footer.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
@@ -78,8 +78,8 @@ export default Vue.extend({
   components: {
     Header,
     NavigationDrawer,
-    Footer,
-    NavigationFooter,
+    PlayerBar,
+    NavigationBar,
     DeviceBar,
     Overlay,
     Toasts,

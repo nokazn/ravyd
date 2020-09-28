@@ -3,9 +3,9 @@
     v-if="isLoaded"
     app
     grow
-    :height="$constant.NAVIGATION_BAR_HEIGHT"
     :background-color="$constant.FOOTER_BACKGROUND_COLOR"
-    :class="$style.NavigationFooter"
+    :height="$constant.NAVIGATION_BAR_HEIGHT"
+    :class="$style.NavigationBar"
   >
     <template v-for="item in itemList">
       <v-btn
@@ -127,7 +127,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.NavigationFooter {
+.NavigationBar {
+  z-index: z-index-of(footer) !important;
   display: flex;
   justify-content: space-between;
 }

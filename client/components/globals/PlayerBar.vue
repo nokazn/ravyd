@@ -5,9 +5,9 @@
     :elevation="8"
     :height="$constant.FOOTER_HEIGHT"
     :color="$constant.FOOTER_BACKGROUND_COLOR"
-    :class="$style.Footer"
+    :class="$style.PlayerBar"
   >
-    <div :class="$style.Footer__container">
+    <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
           :src="artWorkSrc(64)"
@@ -191,7 +191,7 @@ export default Vue.extend({
 <style lang="scss" module>
 $side-margin: 1vw;
 
-.Footer {
+.PlayerBar {
   z-index: z-index-of(footer) !important;
 
   &__container {
