@@ -5,6 +5,6 @@ const injector: Plugin = (_, inject) => {
   inject('constant', constant);
 };
 
-export type Constant = typeof constant;
+export type Constant = Readonly<typeof constant>;
 
 export default injector;
