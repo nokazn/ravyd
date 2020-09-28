@@ -23,10 +23,11 @@ export const MENU_BACKGROUND_COLOR = '#383a3a';
 /**
  * size
  */
-export const SM_BREAK_POINT = 600;
-export const MD_BREAK_POINT = 960;
-export const LG_BREAK_POINT = 1200;
-export const XL_BREAK_POINT = 1900;
+export const SM_BREAK_POINT = 480;
+export const MD_BREAK_POINT = 768;
+export const LG_BREAK_POINT = 992;
+export const XL_BREAK_POINT = 1200;
+export const XXL_BREAK_POINT = 1900;
 
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;

@@ -14,6 +14,66 @@ $g-card-background-color: #2e3032;
 $g-menu-background-color: #383a3a;
 
 /**
+ * page layout
+ */
+$g-sm-breakpoint: 480;
+$g-md-breakpoint: 768;
+$g-lg-breakpoint: 992;
+$g-xl-breakpoint: 1200;
+$g-xxl-breakpoint: 1900;
+
+// 0 < x < 480
+@mixin media-xs {
+  @media screen and (min-width: $g-sm-breakpoint) {
+    @content;
+  }
+}
+
+// 480 <= x < 768
+@mixin media-sm {
+  @media screen and (min-width: $g-md-breakpoint) {
+    @content;
+  }
+}
+
+// 768 <= x < 992
+@mixin media-md {
+  @media screen and (min-width: $g-lg-breakpoint) {
+    @content;
+  }
+}
+
+// 992 <= x < 1200
+@mixin media-lg {
+  @media screen and (min-width: $g-xl-breakpoint) {
+    @content;
+  }
+}
+
+// 1200 <= x < 1900
+@mixin media-xl {
+  @media screen and (min-width: $g-xl-breakpoint) {
+    @content;
+  }
+}
+
+// 1900 <= x
+@mixin media-xxl {
+  @media screen and (min-width: $g-xxl-breakpoint) {
+    @content;
+  }
+}
+
+@mixin page-margin($additional-side-padding: 0, $side-ratio: 1) {
+  margin: 16px calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio}) 0;
+}
+
+@mixin page-padding($additional-side-padding: 0, $side-ratio: 1) {
+  padding-left: calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio});
+  padding-right: calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio});
+}
+
+/*
  * size
  */
 $g-header-height: 52px;
@@ -23,6 +83,19 @@ $g-navigation-drawer-width: 200px;
 $g-flex-card-min-width: 160px;
 $g-flex-card-max-width: 240px;
 $g-slider-height: 4px;
+$g-page-side-padding: min(1vw, 16px);
+// グラデーション自体の横幅
+$g-gradation-width: min(1.25vw, 16px);
+
+/**
+ * ScrollableCardWrapper コンポーネントの横のマージン
+ */
+@mixin scrollable-card-wrapper-side-margin($ratio: 1) {
+  margin: {
+    right: calc(#{$g-gradation-width} * #{$ratio});
+    left: calc(#{$g-gradation-width} * #{$ratio});
+  }
+}
 
 /**
  * z-index
@@ -73,18 +146,5 @@ $__layer-map: (
     to {
       transform: translateX(-100%);
     }
-  }
-}
-
-// グラデーション自体の横幅
-$g-gradation-width: min(1.25vw, 16px);
-
-/**
- * ScrollableCardWrapper コンポーネントの横のマージン
- */
-@mixin scrollable-card-wrapper-side-margin($ratio: 1) {
-  margin: {
-    right: calc(#{$g-gradation-width} * #{$ratio});
-    left: calc(#{$g-gradation-width} * #{$ratio});
   }
 }

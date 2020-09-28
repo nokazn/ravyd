@@ -5,10 +5,11 @@ import {
   MD_BREAK_POINT,
   LG_BREAK_POINT,
   XL_BREAK_POINT,
+  XXL_BREAK_POINT,
 } from '~/constants';
 
 type ResizeObserver = ((e?: UIEvent) => void)
-type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 type WindowState = {
   width: number;
@@ -20,6 +21,7 @@ export type $Window = {
   readonly type: DeviceType;
   readonly isPc: boolean;
   readonly isMobile: boolean;
+  readonly cardWidth: number;
   observe: () => void;
   disconnectObserver: () => void;
 }
@@ -33,9 +35,12 @@ export const $window: $Window = {
   get width() {
     return state.width;
   },
+
   get type() {
     const { width } = state;
-    if (width >= XL_BREAK_POINT) {
+    if (width >= XXL_BREAK_POINT) {
+      return 'xxl';
+    } if (width >= XL_BREAK_POINT) {
       return 'xl';
     } if (width >= LG_BREAK_POINT) {
       return 'lg';
@@ -46,11 +51,29 @@ export const $window: $Window = {
     }
     return 'xs';
   },
+
   get isPc() {
-    return state.width >= MD_BREAK_POINT;
+    return state.width >= LG_BREAK_POINT;
   },
+
   get isMobile() {
-    return state.width < MD_BREAK_POINT;
+    return state.width < LG_BREAK_POINT;
+  },
+
+  get cardWidth() {
+    switch (this.type) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+      case 'md':
+        return 200;
+      case 'sm':
+        return 160;
+      case 'xs':
+        return 132;
+      default:
+        return 200;
+    }
   },
 
   observe() {
