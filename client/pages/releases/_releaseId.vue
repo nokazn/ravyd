@@ -415,7 +415,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 .ReleaseIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin(max(#{$g-gradation-width}, 8px));
+  @include page-margin;
   @include page-padding;
 
   &__header {

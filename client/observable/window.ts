@@ -10,8 +10,17 @@ import {
   ARTWORK_BASE_SIZE,
 } from '~/constants';
 
-type ResizeObserver = ((e?: UIEvent) => void)
+const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
+  xs: 0,
+  sm: SM_BREAK_POINT,
+  md: MD_BREAK_POINT,
+  lg: LG_BREAK_POINT,
+  xl: XL_BREAK_POINT,
+  xxl: XXL_BREAK_POINT,
+};
+
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type ResizeObserver = ((e?: UIEvent) => void)
 
 type WindowState = {
   width: number;
@@ -21,8 +30,12 @@ type WindowState = {
 export type $Window = {
   readonly width: number;
   readonly type: DeviceType;
-  readonly isPc: boolean;
   readonly isMobile: boolean;
+  readonly isPc: boolean;
+  readonly isSingleColumn: boolean;
+  readonly isMultiColumn: boolean;
+  readonly smallerThan: (type: DeviceType) => boolean;
+  readonly largerThan: (type: DeviceType) => boolean;
   readonly cardWidth: number;
   readonly artworkSize: number;
   observe: () => void;
@@ -55,12 +68,30 @@ export const $window: $Window = {
     return 'xs';
   },
 
-  get isPc() {
-    return state.width >= LG_BREAK_POINT;
+  // type のブレイクポイントをを含まない
+  get smallerThan() {
+    return (type: DeviceType) => state.width < BREAK_POINTS[type];
+  },
+
+  // type のブレイクポイントをを含む
+  get largerThan() {
+    return (type: DeviceType) => state.width >= BREAK_POINTS[type];
   },
 
   get isMobile() {
-    return state.width < LG_BREAK_POINT;
+    return this.smallerThan('lg');
+  },
+
+  get isPc() {
+    return this.largerThan('lg');
+  },
+
+  get isSingleColumn() {
+    return this.smallerThan('md');
+  },
+
+  get isMultiColumn() {
+    return this.largerThan('md');
   },
 
   get cardWidth() {
@@ -96,6 +127,7 @@ export const $window: $Window = {
   },
 
   observe() {
+    this.disconnectObserver();
     const interval = 300;
     const observer = debounce(() => {
       state.width = window.innerWidth;

@@ -3,10 +3,11 @@
     <v-data-table
       :headers="headers"
       :items="trackList"
-      group-by="discNumber"
       disable-pagination
       disable-sort
       hide-default-footer
+      :mobile-breakpoint="0"
+      group-by="discNumber"
       no-data-text="トラックがありません。"
       class="TrackTable"
     >
@@ -53,7 +54,6 @@ import { getQuery } from '~/utils/text';
 import { App } from '~~/types';
 
 type Data = {
-  headers: DataTableHeader[]
   activeRowId: string | undefined
 };
 
@@ -81,43 +81,12 @@ export default Vue.extend({
   },
 
   data(): Data {
-    // 左右の padding: 8px を含めた幅
-    const indexColumn = {
-      text: '#',
-      value: 'index',
-      width: 44,
-      align: 'center' as const,
-    };
-    const isSavedColumn = {
-      text: '',
-      value: 'isSaved',
-      width: 52,
-      align: 'center' as const,
-    };
-    const nameColumn = {
-      text: 'タイトル',
-      value: 'name',
-    };
-    const durationColumn = {
-      text: '',
-      value: 'duration',
-      width: 72,
-      align: 'center' as const,
-    };
-    const menuColumn = {
-      text: '',
-      value: 'menu',
-      width: 60,
-      align: 'center' as const,
-    };
-    const headers = [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     const trackId = getQuery(this.$route.query, 'track');
     const activeRowId = trackId != null
       ? this.trackList.find((item) => item.id === trackId)?.id
       : undefined;
 
     return {
-      headers,
       activeRowId,
     };
   },
@@ -129,6 +98,40 @@ export default Vue.extend({
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
+    },
+    headers(): DataTableHeader[] {
+      // 左右の padding: 6px を含めた幅
+      const indexColumn = {
+        text: '#',
+        value: 'index',
+        width: 48,
+        align: 'center' as const,
+      };
+      const isSavedColumn = {
+        text: '',
+        value: 'isSaved',
+        width: 48,
+        align: 'center' as const,
+      };
+      const nameColumn = {
+        text: 'タイトル',
+        value: 'name',
+      };
+      const durationColumn = {
+        text: '',
+        value: 'duration',
+        width: 72,
+        align: 'center' as const,
+      };
+      const menuColumn = {
+        text: '',
+        value: 'menu',
+        width: 48,
+        align: 'center' as const,
+      };
+      return this.$window.isMultiColumn
+        ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
+        : [nameColumn, menuColumn, isSavedColumn];
     },
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
@@ -167,7 +170,7 @@ export default Vue.extend({
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
       this.activeRowId = row.id;
-      if (this.$window.isMobile) {
+      if (this.$window.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },
@@ -187,9 +190,17 @@ export default Vue.extend({
     tr {
       td,
       th {
-        padding: 0 8px !important;
-        // 列の幅をデフォルトの 48px から少し狭める
-        height: 44px !important;
+        padding: 0 6px !important;
+
+        @include smaller-than-md {
+          // 列の幅をデフォルトの 48px から少し狭める
+          height: 60px !important;
+        }
+
+        @include larger-than-md {
+          // 列の幅をデフォルトの 48px から少し狭める
+          height: 44px !important;
+        }
       }
     }
   }

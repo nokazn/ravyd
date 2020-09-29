@@ -1,104 +1,43 @@
 <template>
-  <v-hover #default="{ hover: isRowHovered }">
-    <tr
-      :class="{
-        [$style.TrackTableRow]: true,
-        'inactive--text': !item.isPlayable
-      }"
-      :data-is-active="isActive"
-      @click="onRowClicked"
-    >
-      <td class="text-center">
-        <TrackListMediaButton
-          :is-hovered="isRowHovered"
-          :is-playing-track="isPlayingTrack"
-          :track-number="trackNumber"
-          :disabled="!item.isPlayable"
-          @on-clicked="onMediaButtonClicked"
-        />
-      </td>
-
-      <td>
-        <FavoriteButton
-          :is-favorited="item.isSaved"
-          :disableda="!item.isPlayable"
-          @on-clicked="onFavoriteButtonClicked"
-        />
-      </td>
-
-      <td :title="item.name">
-        <div :class="$style.TrackTableRow__content">
-          <span
-            class="g-ellipsis-text"
-            :class="$style.TrackTableRow__contentTitle"
-          >
-            <span :class="titleColor">
-              {{ item.name }}
-            </span>
-
-            <template v-if="item.featuredArtists.length > 0">
-              <span :class="subtextColor">-</span>
-              <ArtistNames
-                :artists="item.featuredArtists"
-                inline
-                :class="subtextColor"
-              />
-            </template>
-          </span>
-
-          <ExplicitChip
-            v-if="item.explicit"
-          />
-        </div>
-      </td>
-
-      <td class="text-center">
-        <TrackTime
-          :time-ms="item.durationMs"
-        />
-      </td>
-
-      <td>
-        <TrackMenu
-          offset-x
-          left
-          :track="item"
-          @on-favorite-menu-clicked="onFavoriteButtonClicked"
-        />
-      </td>
-    </tr>
-  </v-hover>
+  <TrackTableRowMobile
+    v-if="$window.isSingleColumn"
+    :item="item"
+    :is-track-set="isTrackSet"
+    :is-playing-track="isPlayingTrack"
+    :is-active="isActive"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
+  />
+  <TrackTableRowPc
+    v-else-if="$window.isMultiColumn"
+    :item="item"
+    :is-track-set="isTrackSet"
+    :is-playing-track="isPlayingTrack"
+    :is-active="isActive"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
+  />
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
-import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
+import TrackTableRowMobile, { On as OnRowMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
+import TrackTableRowPc, { On as OnRowPc } from '~/components/parts/table/TrackTableRow.pc.vue';
 import { App } from '~~/types';
 
-const ON_ROW_CLICKED = 'on-row-clicked';
-const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+export const ON_ROW_CLICKED = 'on-row-clicked';
+export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-export type On = {
-  [ON_ROW_CLICKED]: App.TrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
-}
+export type On = OnRowMobile & OnRowPc;
 
 export default Vue.extend({
   components: {
-    TrackListMediaButton,
-    FavoriteButton,
-    ArtistNames,
-    ExplicitChip,
-    TrackTime,
-    TrackMenu,
+    TrackTableRowMobile,
+    TrackTableRowPc,
   },
 
   props: {
@@ -120,64 +59,19 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    // relink されたトラックを含む場合はインデックスを表示
-    trackNumber(): number {
-      const { item } = this;
-      return item.linkedFrom != null
-        ? item.index + 1
-        : item.trackNumber;
-    },
-    titleColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : undefined;
-    },
-    subtextColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : 'subtext--text';
-    },
-  },
-
   methods: {
-    onRowClicked() {
+    onRowClicked(row: On['on-row-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
+      this.$emit(ON_ROW_CLICKED, row);
     },
-    onMediaButtonClicked() {
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
     },
-    onFavoriteButtonClicked() {
+    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
 </script>
-
-<style lang="scss" module>
-.TrackTableRow {
-  cursor: pointer;
-
-  &[data-is-active=true] {
-    background-color: lighten($g-background-color, 16%);
-  }
-
-  &__content {
-    display: flex;
-    justify-content: space-between;
-
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
-
-    &Title {
-      & > *:not(:last-child) {
-        margin-right: 4px;
-      }
-    }
-  }
-}
-</style>
