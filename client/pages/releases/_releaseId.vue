@@ -38,8 +38,8 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
+        :size="$window.artworkSize"
         :alt="releaseInfo.name"
-        :size="ARTWORK_SIZE"
         :title="releaseInfo.name"
         shadow
       />
@@ -121,7 +121,10 @@
       @on-appeared="appendTrackList"
     />
 
-    <Copyrights :copyright-list="releaseInfo.copyrightList" />
+    <Copyrights
+      :copyright-list="releaseInfo.copyrightList"
+      :class="$style.ReleaseIdPage__copyrights"
+    />
 
     <template v-for="artist in releaseInfo.artistReleaseList">
       <ScrollableCardsSection
@@ -134,7 +137,7 @@
           v-for="release in artist.items"
           :key="release.id"
           v-bind="release"
-          :width="CARD_WIDTH"
+          :width="$window.cardWidth"
           discograpy
         />
       </ScrollableCardsSection>
@@ -174,8 +177,6 @@ import { getImageSrc } from '~/utils/image';
 import { convertTrackDetail } from '~/utils/converter';
 import { SpotifyAPI, App, OneToFifty } from '~~/types';
 
-const ARTWORK_SIZE = 220;
-const CARD_WIDTH = 200;
 const HEADER_REF = 'HEADER_REF';
 const LIMIT_OF_TRACKS = 30;
 
@@ -185,8 +186,6 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
-  ARTWORK_SIZE: number
-  CARD_WIDTH: number
   HEADER_REF: string
 }
 
@@ -226,8 +225,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
-  CARD_WIDTH = CARD_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -237,7 +234,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.releaseInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.releaseInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isReleaseSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
@@ -416,19 +413,38 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 }
 
 .ReleaseIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  $margin-bottom: 32px;
+
+  @include page-margin($g-gradation-width);
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom * 0.75;
+
+    @include smaller-than-sm {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @include larger-than-sm {
+      display: grid;
+      grid-template-columns: $g-artwork-base-size auto;
+      column-gap: 24px;
+    }
   }
 
   .Info {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+
+    @include smaller-than-sm {
+      align-items: center;
+    }
+
+    @include larger-than-sm {
+      justify-content: flex-end;
+    }
 
     &__hashTags {
       // border-radius の分だけ右にあるように見えてしまうので調整
@@ -440,13 +456,24 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
+
+      @include smaller-than-sm {
+        text-align: center;
+      }
     }
 
     &__footer {
       display: flex;
       flex-wrap: wrap;
-      align-items: flex-end;
       margin-top: 16px;
+
+      @include smaller-than-sm {
+        justify-content: center;
+      }
+
+      @include larger-than-sm {
+        align-items: flex-end;
+      }
     }
 
     &__buttons {
@@ -469,11 +496,12 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   &__table {
-    margin-bottom: 16px;
+    margin-bottom: $margin-bottom / 2;
   }
 
+  &__copyrights,
   &__section {
-    margin: 40px -32px 0;
+    margin-bottom: $margin-bottom;
   }
 }
 </style>

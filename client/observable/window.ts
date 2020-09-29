@@ -6,6 +6,8 @@ import {
   LG_BREAK_POINT,
   XL_BREAK_POINT,
   XXL_BREAK_POINT,
+  FIXED_CARD_BASE_WIDTH,
+  ARTWORK_BASE_SIZE,
 } from '~/constants';
 
 type ResizeObserver = ((e?: UIEvent) => void)
@@ -22,6 +24,7 @@ export type $Window = {
   readonly isPc: boolean;
   readonly isMobile: boolean;
   readonly cardWidth: number;
+  readonly artworkSize: number;
   observe: () => void;
   disconnectObserver: () => void;
 }
@@ -66,13 +69,29 @@ export const $window: $Window = {
       case 'xl':
       case 'lg':
       case 'md':
-        return 200;
+        return FIXED_CARD_BASE_WIDTH;
       case 'sm':
-        return 160;
+        return FIXED_CARD_BASE_WIDTH * 0.8;
       case 'xs':
-        return 132;
+        return FIXED_CARD_BASE_WIDTH * 0.67;
       default:
-        return 200;
+        return FIXED_CARD_BASE_WIDTH;
+    }
+  },
+
+  get artworkSize() {
+    switch (this.type) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+      case 'md':
+        return ARTWORK_BASE_SIZE;
+      case 'sm':
+        return ARTWORK_BASE_SIZE - 20;
+      case 'xs':
+        return ARTWORK_BASE_SIZE - 40;
+      default:
+        return ARTWORK_BASE_SIZE;
     }
   },
 
