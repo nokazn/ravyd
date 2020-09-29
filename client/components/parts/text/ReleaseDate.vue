@@ -1,11 +1,12 @@
 <template>
   <span
     :title="title"
-    class="subtext--text"
+    :class="{ ['subtext--text']: subtext }"
   >
     <v-icon
-      :size="size"
-      color="subtext"
+      v-if="!hideIcon"
+      :size="size * 1.25"
+      :color="subtext ? 'subtext' : undefined"
     >
       mdi-calendar
     </v-icon>
@@ -44,7 +45,15 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 16,
+      default: 12,
+    },
+    subtext: {
+      type: Boolean,
+      default: false,
+    },
+    hideIcon: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -55,10 +64,7 @@ export default Vue.extend({
       releaseDatePrecision,
     });
     const title = `${date}リリース`;
-    const textStyles = {
-      fontSize: `${this.size * 0.8}px`,
-    };
-
+    const textStyles = { fontSize: `${this.size}px` };
     return {
       date,
       datetime: releaseDate,

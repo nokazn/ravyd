@@ -86,25 +86,11 @@
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseDate
-              :release-date="releaseInfo.releaseDate"
-              :release-date-precision="releaseInfo.releaseDatePrecision"
-            />
-
-            <ReleaseTotalTracks
-              :total="releaseInfo.totalTracks"
-            />
-
-            <ReleaseDuration
-              :duration-ms="releaseInfo.durationMs"
-              :is-full="releaseInfo.isFullTrackList"
-            />
-
-            <ReleaseLabel
-              :label="releaseInfo.label"
-            />
-          </div>
+          <ReleaseDetailWrapper
+            v-if="$window.isMultiColumn"
+            :release="releaseInfo"
+            :class="$style.Detail"
+          />
         </div>
       </div>
     </div>
@@ -124,6 +110,12 @@
     <Copyrights
       :copyright-list="releaseInfo.copyrightList"
       :class="$style.ReleaseIdPage__copyrights"
+    />
+
+    <ReleaseDetailWrapper
+      v-if="$window.isSingleColumn"
+      :release="releaseInfo"
+      :class="$style.Detail"
     />
 
     <template v-for="artist in releaseInfo.artistReleaseList">
@@ -160,10 +152,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseMenu, { On as OnMenu } from '~/components/parts/menu/ReleaseMenu.vue';
-import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
-import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
+import ReleaseDetailWrapper from '~/components/parts/wrapper/ReleaseDetailWrapper.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
@@ -197,10 +186,7 @@ interface Data {
     ContextMediaButton,
     FavoriteButton,
     ReleaseMenu,
-    ReleaseDate,
-    ReleaseTotalTracks,
-    ReleaseDuration,
-    ReleaseLabel,
+    ReleaseDetailWrapper,
     TrackTable,
     IntersectionLoadingCircle,
     Copyrights,
@@ -419,15 +405,15 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   @include page-padding;
 
   &__header {
-    margin-bottom: $margin-bottom * 0.75;
-
     @include smaller-than-md {
+      margin-bottom: $margin-bottom / 4;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     @include larger-than-md {
+      margin-bottom: $margin-bottom / 2;
       display: grid;
       grid-template-columns: $g-artwork-base-size auto;
       column-gap: 24px;
@@ -485,14 +471,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
         margin-right: 12px;
       }
     }
-
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
-    }
   }
 
   &__table {
@@ -502,6 +480,18 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   &__copyrights,
   &__section {
     margin-bottom: $margin-bottom;
+  }
+
+  .Detail {
+    @include smaller-than-md {
+      margin-top: $margin-bottom / -2;
+      margin-bottom: $margin-bottom;
+    }
+
+    @include larger-than-md {
+      // 2行になったとき
+      margin-top: 12px;
+    }
   }
 }
 </style>
