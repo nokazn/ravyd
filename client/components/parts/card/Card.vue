@@ -112,6 +112,7 @@ export default Vue.extend({
   &__subtitle {
     font-size: 0.8em;
     line-height: 1.2em;
+    margin-top: -6% !important;
     padding: 6% 6% 12px !important;    /* margin-top: -8px !important; */
   }
 }
