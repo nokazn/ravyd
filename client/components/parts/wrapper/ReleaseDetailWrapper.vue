@@ -84,5 +84,11 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
   }
+
+  @include larger-than-md {
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
 }
 </style>
