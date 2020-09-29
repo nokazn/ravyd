@@ -4,6 +4,7 @@
     :class="{ ['subtext--text']: subtext }"
   >
     <v-icon
+      v-if="!hideIcon"
       :size="size * 1.25"
       :color="subtext ? 'subtext' : undefined"
     >
@@ -34,6 +35,10 @@ export default Vue.extend({
       default: 12,
     },
     subtext: {
+      type: Boolean,
+      default: false,
+    },
+    hideIcon: {
       type: Boolean,
       default: false,
     },

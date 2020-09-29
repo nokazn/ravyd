@@ -6,21 +6,23 @@
     <div>
       <ReleaseDate
         hide-icon
-        :size="16"
         :release-date="release.releaseDate"
         :release-date-precision="release.releaseDatePrecision"
       />
-      <span>
-        ・{{ release.label }}
-      </span>
+      <span ckass="g-small-text">･</span>
+      <ReleaseTotalTracks
+        hide-icon
+        :total="release.totalTracks"
+      />
     </div>
     <div>
-      <span>
-        {{ release.totalTracks }}曲・
-      </span>
+      <ReleaseTotalTracks
+        hide-icon
+        :total="release.totalTracks"
+      />
+      <span ckass="g-small-text">･</span>
       <ReleaseDuration
         hide-icon
-        :size="16"
         :duration-ms="release.durationMs"
         :is-full="release.isFullTrackList"
       />
