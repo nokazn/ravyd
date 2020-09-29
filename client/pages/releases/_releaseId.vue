@@ -415,19 +415,19 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 .ReleaseIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin($g-gradation-width);
+  @include page-margin(max(#{$g-gradation-width}, 8px));
   @include page-padding;
 
   &__header {
     margin-bottom: $margin-bottom * 0.75;
 
-    @include smaller-than-sm {
+    @include smaller-than-md {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    @include larger-than-sm {
+    @include larger-than-md {
       display: grid;
       grid-template-columns: $g-artwork-base-size auto;
       column-gap: 24px;
@@ -438,11 +438,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     display: flex;
     flex-direction: column;
 
-    @include smaller-than-sm {
+    @include smaller-than-md {
       align-items: center;
     }
 
-    @include larger-than-sm {
+    @include larger-than-md {
       justify-content: flex-end;
     }
 
@@ -457,7 +457,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       margin: 0.3em 0;
       line-height: 1.2em;
 
-      @include smaller-than-sm {
+      @include smaller-than-md {
         text-align: center;
       }
     }
@@ -467,11 +467,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       flex-wrap: wrap;
       margin-top: 16px;
 
-      @include smaller-than-sm {
+      @include smaller-than-md {
         justify-content: center;
       }
 
-      @include larger-than-sm {
+      @include larger-than-md {
         align-items: flex-end;
       }
     }

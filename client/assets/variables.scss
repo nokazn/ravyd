@@ -30,6 +30,8 @@ $__breakpoints-map: (
   xxl: $g-xxl-breakpoint,
 );
 
+$g-page-side-margin: min(2vw, 24px);
+
 @mixin larger-than($key) {
   @media screen and (min-width: map-get($__breakpoints-map, $key)) {
     @content;
@@ -44,19 +46,19 @@ $__breakpoints-map: (
 
 // x >= 480
 @mixin larger-than-sm {
-  @include larger-than(md) {
+  @include larger-than(sm) {
     @content;
   }
 }
 // x >= 768
 @mixin larger-than-md {
-  @include larger-than(lg) {
+  @include larger-than(md) {
     @content;
   }
 }
 // x >= 992
 @mixin larger-than-lg {
-  @include larger-than(xl) {
+  @include larger-than(lg) {
     @content;
   }
 }
@@ -75,19 +77,19 @@ $__breakpoints-map: (
 
 // x <= 480
 @mixin smaller-than-sm {
-  @include smaller-than(md) {
+  @include smaller-than(sm) {
     @content;
   }
 }
 // x <= 768
 @mixin smaller-than-md {
-  @include smaller-than(lg) {
+  @include smaller-than(md) {
     @content;
   }
 }
 // x <= 992
 @mixin smaller-than-lg {
-  @include smaller-than(xl) {
+  @include smaller-than(lg) {
     @content;
   }
 }
@@ -105,8 +107,14 @@ $__breakpoints-map: (
 }
 
 // 基本的に全ページに適用
-@mixin page-margin($additional-side-padding: 0, $side-ratio: 1) {
-  margin: 16px calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio}) 0;
+@mixin page-margin($additional: 0, $side-ratio: 1) {
+  @if ($additional == 0) {
+    margin: 16px calc((#{$g-page-side-margin}) * #{$side-ratio}) 0;
+  }
+
+  @else {
+    margin: 16px calc((#{$g-page-side-margin} * #{$side-ratio}) + #{$additional}) 0;
+  }
 }
 
 @mixin __side-padding($padding) {
@@ -116,22 +124,24 @@ $__breakpoints-map: (
 
 // ディスプレイサイズを大きくすると横の余白も大きくする
 @mixin page-padding {
-  @include __side-padding(0);
-
-  @include larger-than-sm {
-    @include __side-padding(min(0.5vw, 8px));
+  @include smaller-than-sm {
+    @include __side-padding(0);
   }
 
   @include larger-than-md {
-    @include __side-padding(4vw);
+    @include __side-padding(min(0.5vw, 8px));
   }
 
   @include larger-than-lg {
-    @include __side-padding(6vw);
+    @include __side-padding(1.5vw);
   }
 
   @include larger-than-xl {
-    @include __side-padding(8vw);
+    @include __side-padding(4vw);
+  }
+
+  @include larger-than-xxl {
+    @include __side-padding(6vw);
   }
 }
 
@@ -144,8 +154,9 @@ $g-device-bar-height: 24px;
 $g-navigation-drawer-width: 200px;
 $g-flex-card-min-width: 160px;
 $g-flex-card-max-width: 240px;
+$g-fixed-card-base-width: 200px;
+$g-artwork-base-size: 220px;
 $g-slider-height: 4px;
-$g-page-side-padding: min(1vw, 16px);
 // グラデーション自体の横幅
 $g-gradation-width: min(1.25vw, 16px);
 

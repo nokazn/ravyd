@@ -100,7 +100,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  @include page-margin($g-gradation-width);
+  @include page-margin($g-gradation-width, 0.5);
 
   &__section {
     margin-bottom: 32px;
