@@ -16,61 +16,123 @@ $g-menu-background-color: #383a3a;
 /**
  * page layout
  */
-$g-sm-breakpoint: 480;
-$g-md-breakpoint: 768;
-$g-lg-breakpoint: 992;
-$g-xl-breakpoint: 1200;
-$g-xxl-breakpoint: 1900;
+$g-sm-breakpoint: 480px;
+$g-md-breakpoint: 768px;
+$g-lg-breakpoint: 992px;
+$g-xl-breakpoint: 1200px;
+$g-xxl-breakpoint: 1900px;
 
-// 0 < x < 480
-@mixin media-xs {
-  @media screen and (min-width: $g-sm-breakpoint) {
+$__breakpoints-map: (
+  sm: $g-sm-breakpoint,
+  md: $g-md-breakpoint,
+  lg: $g-lg-breakpoint,
+  xl: $g-xl-breakpoint,
+  xxl: $g-xxl-breakpoint,
+);
+
+@mixin larger-than($key) {
+  @media screen and (min-width: map-get($__breakpoints-map, $key)) {
     @content;
   }
 }
 
-// 480 <= x < 768
-@mixin media-sm {
-  @media screen and (min-width: $g-md-breakpoint) {
+@mixin smaller-than($key) {
+  @media screen and (max-width: map-get($__breakpoints-map, $key)) {
     @content;
   }
 }
 
-// 768 <= x < 992
-@mixin media-md {
-  @media screen and (min-width: $g-lg-breakpoint) {
+// x >= 480
+@mixin larger-than-sm {
+  @include larger-than(md) {
+    @content;
+  }
+}
+// x >= 768
+@mixin larger-than-md {
+  @include larger-than(lg) {
+    @content;
+  }
+}
+// x >= 992
+@mixin larger-than-lg {
+  @include larger-than(xl) {
+    @content;
+  }
+}
+// x >= 1200
+@mixin larger-than-xl {
+  @include larger-than(xl) {
+    @content;
+  }
+}
+// x >= 1900
+@mixin larger-than-xxl {
+  @include larger-than(xxl) {
     @content;
   }
 }
 
-// 992 <= x < 1200
-@mixin media-lg {
-  @media screen and (min-width: $g-xl-breakpoint) {
+// x <= 480
+@mixin smaller-than-sm {
+  @include smaller-than(md) {
+    @content;
+  }
+}
+// x <= 768
+@mixin smaller-than-md {
+  @include smaller-than(lg) {
+    @content;
+  }
+}
+// x <= 992
+@mixin smaller-than-lg {
+  @include smaller-than(xl) {
+    @content;
+  }
+}
+// x <= 1200
+@mixin smaller-than-xl {
+  @include smaller-than(xl) {
+    @content;
+  }
+}
+// x <= 1900
+@mixin smaller-than-xxl {
+  @include smaller-than(xxl) {
     @content;
   }
 }
 
-// 1200 <= x < 1900
-@mixin media-xl {
-  @media screen and (min-width: $g-xl-breakpoint) {
-    @content;
-  }
-}
-
-// 1900 <= x
-@mixin media-xxl {
-  @media screen and (min-width: $g-xxl-breakpoint) {
-    @content;
-  }
-}
-
+// 基本的に全ページに適用
 @mixin page-margin($additional-side-padding: 0, $side-ratio: 1) {
   margin: 16px calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio}) 0;
 }
 
-@mixin page-padding($additional-side-padding: 0, $side-ratio: 1) {
-  padding-left: calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio});
-  padding-right: calc((#{$g-page-side-padding} + #{$additional-side-padding}) * #{$side-ratio});
+@mixin __side-padding($padding) {
+  padding-left: $padding;
+  padding-right: $padding;
+}
+
+// ディスプレイサイズを大きくすると横の余白も大きくする
+@mixin page-padding {
+  @include __side-padding(0);
+
+  @include larger-than-sm {
+    @include __side-padding(min(0.5vw, 8px));
+  }
+
+  @include larger-than-md {
+    @include __side-padding(4vw);
+  }
+
+  @include larger-than-lg {
+    @include __side-padding(6vw);
+  }
+
+  @include larger-than-xl {
+    @include __side-padding(8vw);
+  }
 }
 
 /*
