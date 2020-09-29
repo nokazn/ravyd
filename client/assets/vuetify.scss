@@ -4,7 +4,15 @@
 
 @import 'vuetify/src/styles/settings/_colors.scss';
 
+/**
+ * list
+ */
 $list-dense-min-height: 36px;
 $list-item-action-icon-margin: 16px;
 $list-item-action-margin: 0 0;
 $list-item-icon-margin-y: 12px;
+
+/**
+ * chip
+ */
+$chip-padding: 0 8px;
