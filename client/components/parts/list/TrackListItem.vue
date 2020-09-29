@@ -145,10 +145,12 @@ export default Vue.extend({
 
   methods: {
     onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
+      // row をコピーしたものを参照する
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
     },
     onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
+      // row をコピーしたものを参照する
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
     },
   },
 });

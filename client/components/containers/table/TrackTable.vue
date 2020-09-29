@@ -162,12 +162,14 @@ export default Vue.extend({
         offset,
       });
     },
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
-    onRowClicked({ id }: OnRow['on-row-clicked']) {
-      this.activeRowId = id;
+    onRowClicked(row: OnRow['on-row-clicked']) {
+      this.activeRowId = row.id;
+      if (this.$window.isMobile) {
+        this.onMediaButtonClicked(row);
+      }
     },
   },
 });

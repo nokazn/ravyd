@@ -225,8 +225,7 @@ export default Vue.extend({
 
       this.setCustomContext(trackUriList, index);
     },
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked({ index }: OnRow['on-row-clicked']) {

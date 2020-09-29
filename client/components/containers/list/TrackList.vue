@@ -93,8 +93,7 @@ export default Vue.extend({
       }
     },
 
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnListItem['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
