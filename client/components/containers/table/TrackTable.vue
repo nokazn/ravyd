@@ -1,11 +1,11 @@
 <template>
   <client-only>
     <v-data-table
-      :headers="headers"
-      :items="trackList"
       disable-pagination
       disable-sort
       hide-default-footer
+      :headers="headers"
+      :items="trackList"
       :mobile-breakpoint="0"
       group-by="discNumber"
       no-data-text="トラックがありません。"
@@ -35,6 +35,7 @@
           :is-active="item.id === activeRowId"
           :is-track-set="isTrackSet(item.id)"
           :is-playing-track="isPlayingTrack(item.id)"
+          :button-size="buttonSize"
           @on-row-clicked="onRowClicked"
           @on-media-button-clicked="onMediaButtonClicked"
           @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -99,8 +100,15 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
     },
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 28;
+    },
     headers(): DataTableHeader[] {
-      // 左右の padding: 6px を含めた幅
+      const totalPadding = 12;
+      // width は 左右の padding を含めた幅
+      const buttonColumnWidth = totalPadding + this.buttonSize;
       const indexColumn = {
         text: '#',
         value: 'index',
@@ -110,7 +118,7 @@ export default Vue.extend({
       const isSavedColumn = {
         text: '',
         value: 'isSaved',
-        width: 48,
+        width: buttonColumnWidth,
         align: 'center' as const,
       };
       const nameColumn = {
@@ -126,7 +134,7 @@ export default Vue.extend({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: 48,
+        width: buttonColumnWidth,
         align: 'center' as const,
       };
       return this.$window.isMultiColumn

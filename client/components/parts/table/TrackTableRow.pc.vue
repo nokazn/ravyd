@@ -20,6 +20,7 @@
 
       <td>
         <FavoriteButton
+          :size="buttonSize"
           :is-favorited="item.isSaved"
           :disableda="!item.isPlayable"
           @on-clicked="onFavoriteButtonClicked"
@@ -46,22 +47,19 @@
             </template>
           </span>
 
-          <ExplicitChip
-            v-if="item.explicit"
-          />
+          <ExplicitChip v-if="item.explicit" />
         </div>
       </td>
 
       <td class="text-center">
-        <TrackTime
-          :time-ms="item.durationMs"
-        />
+        <TrackTime :time-ms="item.durationMs" />
       </td>
 
       <td>
         <TrackMenu
           offset-x
           left
+          :size="buttonSize"
           :track="item"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
         />
@@ -118,6 +116,10 @@ export default Vue.extend({
     isActive: {
       type: Boolean,
       required: true,
+    },
+    buttonSize: {
+      type: Number,
+      default: 36,
     },
   },
 

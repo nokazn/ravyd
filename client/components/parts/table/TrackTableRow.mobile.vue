@@ -15,24 +15,22 @@
         :class="[$style.Content__title, titleColor]"
         class="g-ellipsis-text"
       >
-        <span>
+        <span class="g-ellipsis-text">
           {{ item.name }}
         </span>
         <ExplicitChip v-if="item.explicit" />
       </div>
 
-      <div>
-        <ArtistNames
-          inline
-          :artists="[...item.artists, ...item.featuredArtists]"
-          :class="subtextColor"
-          class="g-small-text"
-        />
-      </div>
+      <ArtistNames
+        :artists="[...item.artists, ...item.featuredArtists]"
+        :class="subtextColor"
+        class="g-small-text g-ellipsis-text"
+      />
     </td>
 
     <td>
       <FavoriteButton
+        :size="buttonSize"
         :is-favorited="item.isSaved"
         :disableda="!item.isPlayable"
         @on-clicked="onFavoriteButtonClicked"
@@ -42,6 +40,7 @@
 
     <td>
       <TrackMenu
+        :size="buttonSize"
         offset-x
         left
         :track="item"
@@ -95,6 +94,10 @@ export default Vue.extend({
     isActive: {
       type: Boolean,
       required: true,
+    },
+    buttonSize: {
+      type: Number,
+      default: 36,
     },
   },
 

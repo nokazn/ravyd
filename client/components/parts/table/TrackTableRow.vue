@@ -5,6 +5,7 @@
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :is-active="isActive"
+    :button-size="buttonSize"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -15,6 +16,7 @@
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :is-active="isActive"
+    :button-size="buttonSize"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -56,6 +58,10 @@ export default Vue.extend({
     isActive: {
       type: Boolean,
       required: true,
+    },
+    buttonSize: {
+      type: Number,
+      default: 36,
     },
   },
 
