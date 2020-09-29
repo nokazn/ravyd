@@ -465,7 +465,10 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     &__buttons {
       display: flex;
       flex-wrap: nowrap;
-      margin-right: 24px;
+
+      @include larger-than-md {
+        margin-right: 24px;
+      }
 
       & > *:not(:last-child) {
         margin-right: 12px;
