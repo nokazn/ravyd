@@ -89,7 +89,7 @@ export default Vue.extend({
 
   computed: {
     cssProps(): { [k: string]: string } {
-      const margin = this.margin ?? this.$window.cardWidth / 12;
+      const margin = this.margin ?? Math.floor(this.$window.cardWidth / 12);
       return {
         '--margin-right': `${margin}px`,
       };
@@ -235,9 +235,10 @@ export default Vue.extend({
     display: block;
     position: absolute;
     top: 0;
-    left: 0;
+    // @todo 少しはみでてしまうのを調整している
+    left: -1px;
     height: 100%;
-    width: $g-gradation-width;
+    width: calc(#{$g-gradation-width} + 10px);
     content: "";
     background-image:
       linear-gradient(
@@ -253,7 +254,8 @@ export default Vue.extend({
     display: block;
     position: absolute;
     top: 0;
-    right: 0;
+    // @todo 少しはみでてしまうのを調整している
+    right: -1px;
     height: 100%;
     width: $g-gradation-width;
     content: "";
