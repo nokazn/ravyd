@@ -1,48 +1,46 @@
 <template>
-  <client-only>
-    <v-data-table
-      disable-pagination
-      disable-sort
-      hide-default-footer
-      :headers="headers"
-      :items="trackList"
-      :mobile-breakpoint="0"
-      group-by="discNumber"
-      no-data-text="トラックがありません。"
-      class="TrackTable"
-    >
-      <template #header.duration>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="再生時間"
-        >
-          mdi-clock-outline
-        </v-icon>
-      </template>
+  <v-data-table
+    disable-pagination
+    disable-sort
+    hide-default-footer
+    :headers="headers"
+    :items="trackList"
+    :mobile-breakpoint="0"
+    group-by="discNumber"
+    no-data-text="トラックがありません。"
+    class="TrackTable"
+  >
+    <template #header.duration>
+      <v-icon
+        :size="16"
+        color="subtext"
+        title="再生時間"
+      >
+        mdi-clock-outline
+      </v-icon>
+    </template>
 
-      <template #group.header="{ group }">
-        <TrackTableGroupHeader
-          v-if="hasMultipleDiscs"
-          :disc-number="group"
-          :colspan="headers.length"
-        />
-      </template>
+    <template #group.header="{ group }">
+      <TrackTableGroupHeader
+        v-if="hasMultipleDiscs"
+        :disc-number="group"
+        :colspan="headers.length"
+      />
+    </template>
 
-      <template #item="{ item }">
-        <TrackTableRow
-          :item="item"
-          :is-active="item.id === activeRowId"
-          :is-track-set="isTrackSet(item.id)"
-          :is-playing-track="isPlayingTrack(item.id)"
-          :button-size="buttonSize"
-          @on-row-clicked="onRowClicked"
-          @on-media-button-clicked="onMediaButtonClicked"
-          @on-favorite-button-clicked="onFavoriteButtonClicked"
-        />
-      </template>
-    </v-data-table>
-  </client-only>
+    <template #item="{ item }">
+      <TrackTableRow
+        :item="item"
+        :is-active="item.id === activeRowId"
+        :is-track-set="isTrackSet(item.id)"
+        :is-playing-track="isPlayingTrack(item.id)"
+        :button-size="buttonSize"
+        @on-row-clicked="onRowClicked"
+        @on-media-button-clicked="onMediaButtonClicked"
+        @on-favorite-button-clicked="onFavoriteButtonClicked"
+      />
+    </template>
+  </v-data-table>
 </template>
 
 <script lang="ts">
@@ -103,7 +101,7 @@ export default Vue.extend({
     buttonSize(): number {
       return this.$window.isMultiColumn
         ? 36
-        : 28;
+        : 32;
     },
     headers(): DataTableHeader[] {
       const totalPadding = 12;
