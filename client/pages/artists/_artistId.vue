@@ -14,7 +14,6 @@
           :is-playing="isArtistSet && isPlaying "
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
           outlined
           :size="32"
@@ -22,7 +21,6 @@
           text="フォロー"
           @on-clicked="toggleFollowingState"
         />
-
         <ArtistMenu
           :artist="artistInfo"
           :is-following="isFollowing"
@@ -40,7 +38,7 @@
     >
       <UserAvatar
         :src="avatarSrc"
-        :size="AVATAR_SIZE"
+        :size="$window.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
         default-user-icon="mdi-account-music"
@@ -75,39 +73,50 @@
           {{ artistInfo.name }}
         </h1>
 
-        <div :class="$style.Info__footer">
-          <p class="subtext--text">
-            {{ artistInfo.followersText }}
-          </p>
+        <p
+          class="subtext--text"
+          :class="$style.Info__followers"
+        >
+          {{ artistInfo.followersText }}
+        </p>
 
-          <div :class="$style.Info__buttons">
-            <ContextMediaButton
-              :is-playing="isArtistSet && isPlaying "
-              @on-clicked="onContextMediaButtonClicked"
-            />
+        <div :class="$style.Info__buttons">
+          <ContextMediaButton
+            :is-playing="isArtistSet && isPlaying "
+            @on-clicked="onContextMediaButtonClicked"
+          />
 
-            <FollowButton
-              :is-following="isFollowing"
-              @on-clicked="toggleFollowingState"
-            />
+          <FavoriteButton
+            v-if="$window.isSingleColumn"
+            outlined
+            :size="32"
+            :is-favorited="isFollowing"
+            text="フォロー"
+            @on-clicked="toggleFollowingState"
+          />
+          <FollowButton
+            v-else-if="$window.isMultiColumn"
+            :is-following="isFollowing"
+            @on-clicked="toggleFollowingState"
+          />
 
-            <ArtistMenu
-              :artist="artistInfo"
-              :is-following="isFollowing"
-              outlined
-              @on-follow-menu-clicked="toggleFollowingState"
-            />
-          </div>
+          <ArtistMenu
+            :artist="artistInfo"
+            :is-following="isFollowing"
+            outlined
+            @on-follow-menu-clicked="toggleFollowingState"
+          />
         </div>
       </div>
     </div>
 
     <v-tabs
       v-model="tab"
-      :height="32"
-      show-arrows="mobile"
       color="active"
       background-color="transparent"
+      :height="32"
+      :show-arrows="false"
+      :class="$style.Tabs"
     >
       <v-tab
         v-for="item in tabItemList"
@@ -156,7 +165,6 @@ import {
 import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
-const AVATAR_SIZE = 220;
 const HEADER_REF = 'HEADER_REF';
 
 type TabItem = {
@@ -174,7 +182,6 @@ interface Data {
   tab: number | null;
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
-  AVATAR_SIZE: number
 }
 
 @Component({
@@ -219,7 +226,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   tab: number | null = null;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
-  AVATAR_SIZE = AVATAR_SIZE;
 
   head() {
     return {
@@ -228,7 +234,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   get avatarSrc(): string | undefined {
-    return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
+    return getImageSrc(this.artistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isArtistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.artistInfo?.uri);
@@ -332,19 +338,38 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 }
 
 .ArtistIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  $margin-bottom: 24px;
+
+  @include page-margin(8px);
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom;
+
+    @include smaller-than-md {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      display: grid;
+      grid-template-columns: $g-artwork-base-size auto;
+      column-gap: 24px;
+    }
   }
 
   .Info {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+
+    @include smaller-than-md {
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      justify-content: flex-end;
+    }
 
     &__hashTags {
       // border-radius の分だけ右にあるように見えてしまうので調整
@@ -360,6 +385,16 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
+
+      @include smaller-than-md {
+        text-align: center;
+      }
+    }
+
+    &__followers {
+      @include smaller-than-md {
+        text-align: center;
+      }
     }
 
     &__buttons {
@@ -373,7 +408,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   .Tabs {
-    margin-bottom: 24px;
+    margin-bottom: $margin-bottom;
   }
 }
 </style>
