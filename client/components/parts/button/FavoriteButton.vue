@@ -6,7 +6,7 @@
     :outlined="outlined"
     :disabled="disabled"
     :title="title"
-    @click="onClicked"
+    @click.stop="onClicked"
   >
     <v-icon :size="iconSize">
       {{ favoriteIcon }}

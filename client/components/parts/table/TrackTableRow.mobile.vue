@@ -34,7 +34,6 @@
         :is-favorited="item.isSaved"
         :disableda="!item.isPlayable"
         @on-clicked="onFavoriteButtonClicked"
-        @click.native.stop
       />
     </td>
 
