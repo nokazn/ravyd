@@ -48,8 +48,11 @@ export default Vue.extend({
 
   & > * {
     margin-bottom: 0.3em;
-    margin-right: 0.6em;
     font-size: 0.6em !important;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 0.6em;
   }
 }
 </style>

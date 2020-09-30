@@ -361,6 +361,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     flex-direction: column;
 
     @include smaller-than-md {
+      margin-top: 12px;
       align-items: center;
     }
 
@@ -369,9 +370,18 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
 
     &__hashTags {
-      // border-radius の分だけ右にあるように見えてしまうので調整
-      margin-left: -8px;
       margin-bottom: 12px;
+
+      @include smaller-than-md {
+        // 1個だけはみ出て2列になったりするとちょっと不格好なのであまり横に広がりすぎないようにする
+        padding: 0 4vw;
+        justify-content: center;
+      }
+
+      @include larger-than-md {
+        // border-radius の分だけ右にあるように見えてしまうので調整
+        margin-left: -8px;
+      }
     }
 
     &__verifiedArtistIcon {
