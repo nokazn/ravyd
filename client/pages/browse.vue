@@ -6,14 +6,15 @@
 
     <CardsWrapper
       v-if="categoryList != null"
-      :max-width="FLEX_CARD_MAX_WIDTH"
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
     >
       <CategoryCard
         v-for="category in categoryList"
         :key="category.id"
         v-bind="category"
-        :min-size="$constant.FLEX_CARD_MIN_WIDTH"
-        :max-size="FLEX_CARD_MAX_WIDTH"
+        :min-size="$window.cardWidthMinMax[0]"
+        :max-size="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 

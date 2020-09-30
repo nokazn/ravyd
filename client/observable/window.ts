@@ -7,6 +7,8 @@ import {
   XL_BREAK_POINT,
   XXL_BREAK_POINT,
   FIXED_CARD_BASE_WIDTH,
+  FLEX_CARD_MIN_WIDTH,
+  FLEX_CARD_MAX_WIDTH,
   ARTWORK_BASE_SIZE,
 } from '~/constants';
 
@@ -17,6 +19,42 @@ const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
   lg: LG_BREAK_POINT,
   xl: XL_BREAK_POINT,
   xxl: XXL_BREAK_POINT,
+};
+
+const cardAdjustor = (type: DeviceType, width: number) => {
+  let ratio = 1;
+  switch (type) {
+    case 'xxl':
+    case 'xl':
+    case 'lg':
+    case 'md':
+      break;
+    case 'sm':
+      ratio = 0.8;
+      break;
+    case 'xs':
+      ratio = 0.67;
+      break;
+    default:
+      break;
+  }
+  return Math.floor(width * ratio);
+};
+
+const linearCardAdjustor = (type: DeviceType, width: number) => {
+  switch (type) {
+    case 'xxl':
+    case 'xl':
+    case 'lg':
+    case 'md':
+      return width;
+    case 'sm':
+      return width - 20;
+    case 'xs':
+      return width - 40;
+    default:
+      return width;
+  }
 };
 
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
@@ -37,6 +75,7 @@ export type $Window = {
   readonly smallerThan: (type: DeviceType) => boolean;
   readonly largerThan: (type: DeviceType) => boolean;
   readonly cardWidth: number;
+  readonly cardWidthMinMax: Readonly<[number, number]>;
   readonly artworkSize: number;
   observe: () => void;
   disconnectObserver: () => void;
@@ -95,35 +134,19 @@ export const $window: $Window = {
   },
 
   get cardWidth() {
-    switch (this.type) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-      case 'md':
-        return FIXED_CARD_BASE_WIDTH;
-      case 'sm':
-        return FIXED_CARD_BASE_WIDTH * 0.8;
-      case 'xs':
-        return FIXED_CARD_BASE_WIDTH * 0.67;
-      default:
-        return FIXED_CARD_BASE_WIDTH;
-    }
+    return cardAdjustor(this.type, FIXED_CARD_BASE_WIDTH);
+  },
+
+  get cardWidthMinMax() {
+    const minMax: readonly [number, number] = [
+      linearCardAdjustor(this.type, FLEX_CARD_MIN_WIDTH),
+      linearCardAdjustor(this.type, FLEX_CARD_MAX_WIDTH),
+    ];
+    return minMax;
   },
 
   get artworkSize() {
-    switch (this.type) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-      case 'md':
-        return ARTWORK_BASE_SIZE;
-      case 'sm':
-        return ARTWORK_BASE_SIZE - 20;
-      case 'xs':
-        return ARTWORK_BASE_SIZE - 40;
-      default:
-        return ARTWORK_BASE_SIZE;
-    }
+    return linearCardAdjustor(this.type, ARTWORK_BASE_SIZE);
   },
 
   observe() {

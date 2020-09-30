@@ -78,15 +78,22 @@
 
     <v-divider :class="$style.Divider" />
 
-    <CardsWrapper v-if="userPlaylistInfo.playlists.length > 0">
+    <CardsWrapper
+      v-if="userPlaylistInfo.playlists.length > 0"
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <PlaylistCard
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
-        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
+    <p v-else>
+      プレイリストがありません。
+    </p>
 
     <IntersectionLoadingCircle
       :is-loading="userPlaylistInfo.hasNext"

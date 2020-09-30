@@ -1,12 +1,15 @@
 <template>
   <div :class="$style.LibraryArtistsPage">
-    <CardsWrapper>
+    <CardsWrapper
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <ArtistCard
         v-for="artist in artistList"
         :key="artist.id"
         v-bind="artist"
-        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
-        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 

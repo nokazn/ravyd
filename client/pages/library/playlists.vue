@@ -1,12 +1,15 @@
 <template>
   <div>
-    <CardsWrapper>
+    <CardsWrapper
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <PlaylistCard
         v-for="(playlist, index) in playlists"
         :key="`${playlist.id}-${index}`"
         v-bind="convertPlaylistForCard(playlist)"
-        :min-width="$constant.FLEX_CARD_MIN_WIDTH"
-        :max-width="$constant.FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
   </div>
