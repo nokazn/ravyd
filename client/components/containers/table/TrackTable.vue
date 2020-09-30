@@ -199,7 +199,7 @@ export default Vue.extend({
         padding: 0 6px !important;
 
         @include smaller-than-md {
-          // 列の幅をデフォルトの 48px から少し狭める
+          // 列の幅をデフォルトの 48px から少し広める
           height: 60px !important;
         }
 
