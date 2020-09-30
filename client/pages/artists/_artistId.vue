@@ -116,7 +116,6 @@
       background-color="transparent"
       :height="32"
       :show-arrows="false"
-      :class="$style.Tabs"
     >
       <v-tab
         v-for="item in tabItemList"
@@ -338,13 +337,11 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 }
 
 .ArtistIdPage {
-  $margin-bottom: 24px;
-
   @include page-margin(8px);
   @include page-padding;
 
   &__header {
-    margin-bottom: $margin-bottom;
+    margin-bottom: 24px;
 
     @include smaller-than-md {
       display: flex;
@@ -405,10 +402,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
         margin-right: 12px;
       }
     }
-  }
-
-  .Tabs {
-    margin-bottom: $margin-bottom;
   }
 }
 </style>

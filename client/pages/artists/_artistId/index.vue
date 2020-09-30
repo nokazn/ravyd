@@ -3,7 +3,12 @@
     v-if="artistInfo != null"
     :class="$style.ArtistIdTopPage"
   >
-    <div :class="relatedArtistList.length > 0 ? $style.TopContent : undefined">
+    <div
+      :class="{
+        [$style.TopContent]: true,
+        [$style['TopContent--twoColumns']]: relatedArtistList.length > 0,
+      }"
+    >
       <TrackListSection
         v-if="topTrackList.length > 0"
         title="人気の曲"
@@ -267,29 +272,36 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   $margin-bottom: 16px;
 
   .TopContent {
-    margin-bottom: $margin-bottom;
+    margin-top: $margin-bottom * 1.5;
 
-    $column-gap: max(4%, 20px);
-
-    @include larger-than-md {
-      $related-artists-width: 220px;
-      $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
-
-      display: grid;
-      grid-template-columns: $top-tracks-width $related-artists-width;
-      column-gap: $column-gap;
+    & > * {
+      margin-bottom: $margin-bottom * 1.5;
     }
 
-    @include larger-than-xl {
-      $related-artists-width: 300px;
-      $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
+    &--twoColumns {
+      $column-gap: max(4%, 20px);
 
-      grid-template-columns: $top-tracks-width $related-artists-width;
+      @include larger-than-md {
+        $related-artists-width: 220px;
+        $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
+
+        display: grid;
+        grid-template-columns: $top-tracks-width $related-artists-width;
+        column-gap: $column-gap;
+
+        & > * {
+          // md 以上で2列のときは小さめにする
+          margin-bottom: $margin-bottom;
+        }
+      }
+
+      @include larger-than-xl {
+        $related-artists-width: 300px;
+        $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
+
+        grid-template-columns: $top-tracks-width $related-artists-width;
+      }
     }
-  }
-
-  .TopTracks {
-    margin-bottom: $margin-bottom;
   }
 
   .DiscographySection {
