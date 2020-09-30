@@ -51,8 +51,8 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
+        :size="$window.artworkSize"
         :alt="playlistInfo.name"
-        :size="ARTWORK_SIZE"
         :title="playlistInfo.name"
         shadow
       />
@@ -114,20 +114,10 @@
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseTotalTracks
-              :total="playlistInfo.totalTracks"
-            />
-
-            <ReleaseDuration
-              :duration-ms="playlistInfo.durationMs"
-            />
-
-            <Followers
-              v-if="playlistInfo.followersText != null"
-              :text="playlistInfo.followersText"
-            />
-          </div>
+          <PlaylistDetailWrapper
+            :playlist="playlistInfo"
+            :class="$style.Info__detail"
+          />
         </div>
       </div>
     </div>
@@ -153,6 +143,7 @@
     <p
       v-if="playlistInfo.description"
       class="subtext--text"
+      :class="$style.PlaylistIdPage__description"
       v-html="playlistInfo.description"
     />
 
@@ -189,9 +180,7 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
-import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import Followers from '~/components/parts/text/Followers.vue';
+import PlaylistDetailWrapper from '~/components/parts/wrapper/PlaylistDetailWrapper.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -204,7 +193,6 @@ import { checkTrackSavedState } from '~/utils/subscriber';
 import type { ToastType } from '~/plugins/observable/toast';
 import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 
-const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
 const HEADER_REF = 'HEADER_REF';
 const REMOVE_PLAYLIST_MODAL = 'REMOVE_PLAYLIST_MODAL';
@@ -228,7 +216,6 @@ interface Data {
   editPlaylistModal: boolean
   confirmModal: Modal
   mutationUnsubscribe: (() => void) | undefined
-  ARTWORK_SIZE: number
   HEADER_REF: string
 }
 
@@ -241,9 +228,7 @@ interface Data {
     CircleButton,
     FavoriteButton,
     PlaylistMenu,
-    ReleaseTotalTracks,
-    ReleaseDuration,
-    Followers,
+    PlaylistDetailWrapper,
     EditPlaylistModal,
     ConfirmModal,
     IntersectionLoadingCircle,
@@ -287,7 +272,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     description: '',
   };
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -297,7 +281,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.playlistInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.playlistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
@@ -657,37 +641,70 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 }
 
 .PlaylistIdPage {
-  padding: 16px 6% 48px;
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+
+    @include smaller-than-md {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      display: grid;
+      grid-template-columns: $g-artwork-base-size auto;
+      column-gap: 24px;
+    }
   }
 
   .Info {
+    // @todo
     display: inline-flex;
     flex-direction: column;
-    justify-content: flex-end;
+
+    @include smaller-than-md {
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      justify-content: flex-end;
+    }
 
     &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
+
+      @include smaller-than-md {
+        text-align: center;
+      }
     }
 
     &__footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
       margin-top: 16px;
+      display: flex;
+
+      @include smaller-than-md {
+        flex-direction: column;
+      }
+
+      @include larger-than-md {
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
     }
 
     &__buttons {
       display: flex;
       flex-wrap: nowrap;
-      margin-right: 24px;
+
+      @include larger-than-md {
+        margin-right: 24px;
+      }
 
       & > *:not(:last-child) {
         margin-right: 12px;
@@ -696,11 +713,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
     &__detail {
       margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
     }
+  }
+
+  &__description {
+    @include smaller-than-md {
+      text-align: center;
+    }
+  }
+
+  &__table {
+    margin-bottom: 32px;
   }
 }
 </style>

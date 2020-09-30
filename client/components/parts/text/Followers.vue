@@ -1,11 +1,12 @@
 <template>
   <span
     :title="text"
-    class="subtext--text"
+    :class="{ ['subtext--text']: subtext }"
   >
     <v-icon
-      :size="size"
-      color="subtext"
+      v-if="!hideIcon"
+      :size="size * 1.25"
+      :color="subtext ? 'subtext' : undefined"
     >
       mdi-account-multiple
     </v-icon>
@@ -19,7 +20,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export type Data = {
+type Data = {
   textStyles: { fontSize: string }
 }
 
@@ -31,14 +32,20 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 16,
+      default: 14,
+    },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
+    subtext: {
+      type: Boolean,
+      default: false,
     },
   },
 
   data(): Data {
-    const textStyles = {
-      fontSize: `${this.size * 0.8}px`,
-    };
+    const textStyles = { fontSize: `${this.size}px` };
 
     return {
       textStyles,
