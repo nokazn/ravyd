@@ -22,7 +22,7 @@ $g-lg-breakpoint: 992px;
 $g-xl-breakpoint: 1200px;
 $g-xxl-breakpoint: 1900px;
 
-$__breakpoints-map: (
+$__breakpoints: (
   sm: $g-sm-breakpoint,
   md: $g-md-breakpoint,
   lg: $g-lg-breakpoint,
@@ -32,45 +32,14 @@ $__breakpoints-map: (
 
 $g-page-side-margin: min(2vw, 24px);
 
-@mixin larger-than($key) {
-  @media screen and (min-width: map-get($__breakpoints-map, $key)) {
-    @content;
-  }
-}
-
 @mixin smaller-than($key) {
-  @media screen and (max-width: map-get($__breakpoints-map, $key)) {
+  @media screen and (max-width: map-get($__breakpoints, $key)) {
     @content;
   }
 }
 
-// x >= 480
-@mixin larger-than-sm {
-  @include larger-than(sm) {
-    @content;
-  }
-}
-// x >= 768
-@mixin larger-than-md {
-  @include larger-than(md) {
-    @content;
-  }
-}
-// x >= 992
-@mixin larger-than-lg {
-  @include larger-than(lg) {
-    @content;
-  }
-}
-// x >= 1200
-@mixin larger-than-xl {
-  @include larger-than(xl) {
-    @content;
-  }
-}
-// x >= 1900
-@mixin larger-than-xxl {
-  @include larger-than(xxl) {
+@mixin larger-than($key) {
+  @media screen and (min-width: calc(#{map-get($__breakpoints, $key)} + 1px)) {
     @content;
   }
 }
@@ -102,6 +71,37 @@ $g-page-side-margin: min(2vw, 24px);
 // x <= 1900
 @mixin smaller-than-xxl {
   @include smaller-than(xxl) {
+    @content;
+  }
+}
+
+// x >= 480
+@mixin larger-than-sm {
+  @include larger-than(sm) {
+    @content;
+  }
+}
+// x >= 768
+@mixin larger-than-md {
+  @include larger-than(md) {
+    @content;
+  }
+}
+// x >= 992
+@mixin larger-than-lg {
+  @include larger-than(lg) {
+    @content;
+  }
+}
+// x >= 1200
+@mixin larger-than-xl {
+  @include larger-than(xl) {
+    @content;
+  }
+}
+// x >= 1900
+@mixin larger-than-xxl {
+  @include larger-than(xxl) {
     @content;
   }
 }
