@@ -27,14 +27,14 @@ import Vue, { PropType } from 'vue';
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
 import { App } from '~~/types';
 
-export type Data = {
-  trackUriList: string[]
-}
-
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked']
+}
+
+type Data = {
+  trackUriList: string[]
 }
 
 export default Vue.extend({

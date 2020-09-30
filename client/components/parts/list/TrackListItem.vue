@@ -4,7 +4,8 @@
       dense
       :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
-      class="TrackListItem"
+      class="track-list-item"
+      @click="onItemClicked"
     >
       <v-list-item-avatar tile>
         <ReleaseArtwork
@@ -19,13 +20,14 @@
         <div :class="$style.Content">
           <div :class="$style.Content__left">
             <TrackListMediaButton
+              v-if="$window.isMultiColumn"
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
               :track-number="item.index + 1"
               @on-clicked="onMediaButtonClicked"
             />
-
             <FavoriteButton
+              v-if="$window.isMultiColumn"
               :is-favorited="item.isSaved"
               @on-clicked="onFavoriteButtonClicked"
             />
@@ -38,11 +40,12 @@
                 :to="releasePath"
                 :title="item.name"
                 :class="textColor"
+                @click.native.stop
               >
                 {{ item.name }}
               </nuxt-link>
 
-              <template v-if="item.featuredArtists.length > 0">
+              <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
                 <span :class="subtextColor">-</span>
                 <ArtistNames
                   :artists="item.featuredArtists"
@@ -58,13 +61,21 @@
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="item.explicit" />
-
-          <TrackTime :time-ms="item.durationMs" />
-
+          <TrackTime
+            v-if="$window.isMultiColumn"
+            :time-ms="item.durationMs"
+          />
+          <FavoriteButton
+            v-if="$window.isSingleColumn"
+            :is-favorited="item.isSaved"
+            :size="buttonSize"
+            @on-clicked="onFavoriteButtonClicked"
+          />
           <TrackMenu
             offset-x
             left
             :track="item"
+            :size="buttonSize"
             @on-favorite-menu-clicked="onFavoriteButtonClicked"
           />
         </div>
@@ -141,6 +152,11 @@ export default Vue.extend({
         ? 'active--text'
         : 'subtext--text';
     },
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 32;
+    },
   },
 
   methods: {
@@ -152,13 +168,18 @@ export default Vue.extend({
       // row をコピーしたものを参照する
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
     },
+    onItemClicked() {
+      if (this.$window.isSingleColumn) {
+        this.onMediaButtonClicked();
+      }
+    },
   },
 });
 </script>
 
 <style lang="scss" module>
 .TrackListItem {
-  padding: 0.3em 0;
+  padding: 0.3em 0.1em;
 
   &__action {
     display: flex;
@@ -166,7 +187,7 @@ export default Vue.extend({
     align-items: center;
 
     & > *:not(:last-child) {
-      margin-right: 1.2em;
+      margin-right: 1em;
     }
   }
 
@@ -189,7 +210,7 @@ export default Vue.extend({
       font-size: 0.9em;
 
       & > *:not(:last-child) {
-        margin-right: 0.3em;
+        margin-right: 0.25em;
       }
     }
   }
@@ -197,7 +218,7 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.TrackListItem .v-list-item {
+.track-list-item .v-list-item {
   &__avatar {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
