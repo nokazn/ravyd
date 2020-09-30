@@ -14,14 +14,12 @@
           :is-playing="isReleaseSet && isPlaying"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
           :size="32"
           outlined
           :is-favorited="releaseInfo.isSaved"
           @on-clicked="toggleSavedState"
         />
-
         <ReleaseMenu
           :release="releaseInfo"
           :size="32"
@@ -72,13 +70,11 @@
               :is-playing="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <FavoriteButton
               :is-favorited="releaseInfo.isSaved"
               outlined
               @on-clicked="toggleSavedState"
             />
-
             <ReleaseMenu
               :release="releaseInfo"
               outlined
@@ -406,6 +402,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   &__header {
     @include smaller-than-md {
+      // トラックのテーブルとの間があいてるようにみえるので
       margin-bottom: $margin-bottom / 4;
       display: flex;
       flex-direction: column;
@@ -425,6 +422,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     flex-direction: column;
 
     @include smaller-than-md {
+      margin-top: 12px;
       align-items: center;
     }
 

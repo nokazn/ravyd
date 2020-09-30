@@ -16,7 +16,6 @@
           text="フォロー"
           @on-clicked="toggleFollowingState"
         />
-
         <UserMenu
           outlined
           left
@@ -34,7 +33,7 @@
     >
       <UserAvatar
         :src="avatarSrc"
-        :size="AVATAR_SIZE"
+        :size="Math.min($window.artworkSize, 200)"
         :alt="userName"
         :title="userName"
         default-user-icon="mdi-account"
@@ -60,7 +59,6 @@
             :is-following="isFollowing"
             @on-clicked="toggleFollowingState"
           />
-
           <UserMenu
             outlined
             right
@@ -122,7 +120,6 @@ import { getImageSrc } from '~/utils/image';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 
-const AVATAR_SIZE = 180;
 const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';
 
@@ -133,7 +130,6 @@ interface AsyncData {
 }
 
 interface Data {
-  AVATAR_SIZE: number
   HEADER_REF: string
 }
 
@@ -176,7 +172,6 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     total: 0,
   };
 
-  AVATAR_SIZE = AVATAR_SIZE;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -272,32 +267,51 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .UserIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 180px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
-  }
+    margin-bottom: 24px;
 
-  .Tabs {
-    margin-bottom: 32px;
+    @include smaller-than-md {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      display: grid;
+      // 200px と少し小さめにする
+      grid-template-columns: 200px auto;
+      column-gap: 24px;
+    }
   }
 
   .Divider {
-    margin: 6px 0 16px;
+    margin: 4px 0 16px;
   }
 
   .Info {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+
+    @include smaller-than-md {
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    @include larger-than-md {
+      justify-content: flex-end;
+    }
 
     &__title {
       font-size: 2em;
       margin: 0.3em 0;
       line-height: 1.2em;
+
+      @include smaller-than-md {
+        text-align: center;
+      }
     }
 
     &__buttons {
