@@ -189,6 +189,15 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
   toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
     this.isTrackListAbbreviated = nextIsAbbreviated;
+    const itemHeight = 50;
+    const aditionalListItems = FULL_TOP_TRACK_LENGTH - ABBREVIATED_TOP_TRACK_LENGTH;
+    // DOMを更新した後に表示し多分スクロールする
+    this.$nextTick().then(() => {
+      window.scrollBy({
+        top: itemHeight * aditionalListItems * (nextIsAbbreviated ? -1 : 1),
+        behavior: 'smooth',
+      });
+    });
   }
 
   onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {

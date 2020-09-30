@@ -1,18 +1,8 @@
 <template>
   <section :class="$style.TrackListSection">
-    <div :class="$style.TrackListSection__header">
-      <h2>
-        {{ title }}
-      </h2>
-
-      <ShowAllButton
-        v-if="isAbbreviated != null"
-        small
-        icon
-        :is-abbreviated="isAbbreviated"
-        @on-clicked="onShowAllButtonClicked"
-      />
-    </div>
+    <h2>
+      {{ title }}
+    </h2>
 
     <slot />
 
@@ -66,12 +56,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListSection {
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   &__footer {
     display: flex;
     justify-content: center;
