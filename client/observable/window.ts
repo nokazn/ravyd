@@ -93,15 +93,15 @@ export const $window: $Window = {
 
   get type() {
     const { width } = state;
-    if (width >= XXL_BREAK_POINT) {
+    if (width > XXL_BREAK_POINT) {
       return 'xxl';
-    } if (width >= XL_BREAK_POINT) {
+    } if (width > XL_BREAK_POINT) {
       return 'xl';
-    } if (width >= LG_BREAK_POINT) {
+    } if (width > LG_BREAK_POINT) {
       return 'lg';
-    } if (width >= MD_BREAK_POINT) {
+    } if (width > MD_BREAK_POINT) {
       return 'md';
-    } if (width >= SM_BREAK_POINT) {
+    } if (width > SM_BREAK_POINT) {
       return 'sm';
     }
     return 'xs';
@@ -109,12 +109,12 @@ export const $window: $Window = {
 
   // type のブレイクポイントをを含まない
   get smallerThan() {
-    return (type: DeviceType) => state.width < BREAK_POINTS[type];
+    return (type: DeviceType) => state.width <= BREAK_POINTS[type];
   },
 
   // type のブレイクポイントをを含む
   get largerThan() {
-    return (type: DeviceType) => state.width >= BREAK_POINTS[type];
+    return (type: DeviceType) => state.width > BREAK_POINTS[type];
   },
 
   get isMobile() {
