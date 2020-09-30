@@ -179,7 +179,8 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListItem {
-  padding: 0.3em 0.1em;
+  // pages/artiss/artistId/index でスクロールさせるときの高さに影響
+  padding: 6px 4px;
 
   &__action {
     display: flex;

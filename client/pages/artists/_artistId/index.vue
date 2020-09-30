@@ -78,7 +78,7 @@ import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const FULL_TOP_TRACK_LENGTH = 10;
-const ABBREVIATED_RELATED_ARTIST_LENGTH = 9;
+const ABBREVIATED_RELATED_ARTIST_LENGTH = 10;
 const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
@@ -189,7 +189,8 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
   toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
     this.isTrackListAbbreviated = nextIsAbbreviated;
-    const itemHeight = 50;
+    // TrackListItem の高さに影響
+    const itemHeight = 52;
     const aditionalListItems = FULL_TOP_TRACK_LENGTH - ABBREVIATED_TOP_TRACK_LENGTH;
     // DOMを更新した後に表示し多分スクロールする
     this.$nextTick().then(() => {
