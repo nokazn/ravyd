@@ -221,3 +221,15 @@ $__layer-map: (
     }
   }
 }
+
+/*
+ * ヘッダーの portal に表示させるボタン
+ */
+@mixin additional-header-content() {
+  display: flex;
+  flex-wrap: nowrap;
+
+  & > *:not(:last-child) {
+    margin-right: max(0.5vw, 6px);
+  }
+}

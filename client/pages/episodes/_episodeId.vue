@@ -243,12 +243,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
-
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
-  }
+  @include additional-header-content();
 }
 
 .EpisodeIdPage {

@@ -266,6 +266,10 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  @include additional-header-content();
+}
+
 .UserIdPage {
   @include page-margin;
   @include page-padding;
