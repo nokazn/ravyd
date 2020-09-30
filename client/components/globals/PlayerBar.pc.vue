@@ -10,8 +10,8 @@
     <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
-          :src="artWorkSrc(64)"
-          :size="64"
+          :src="artWorkSrc(60)"
+          :size="60"
           :alt="trackName"
           :title="trackName"
           :class="$style.Left__artWork"
