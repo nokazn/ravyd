@@ -33,21 +33,17 @@
     :class="$style.ReleaseDetailWrapper"
   >
     <ReleaseDate
-      subtext
       :release-date="release.releaseDate"
       :release-date-precision="release.releaseDatePrecision"
     />
     <ReleaseTotalTracks
-      subtext
       :total="release.totalTracks"
     />
     <ReleaseDuration
-      subtext
       :duration-ms="release.durationMs"
       :is-full="release.isFullTrackList"
     />
     <ReleaseLabel
-      subtext
       :label="release.label"
     />
   </div>

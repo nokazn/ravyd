@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.HashTags">
+  <div
+    v-if="tagList.length > 0"
+    :class="$style.HashTags"
+  >
     <template v-for="tag in tagList">
       <v-chip
         v-if="tag"
