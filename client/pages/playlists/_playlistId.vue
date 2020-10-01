@@ -649,7 +649,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   &__header {
     @include page-header;
 
-    margin-bottom: $margin-bottom / 2;
+    margin-bottom: $margin-bottom * 0.75;
   }
 
   &__description {
