@@ -262,6 +262,20 @@ $__layer-map: (
   }
 }
 
+@mixin page-info() {
+  display: flex;
+  flex-direction: column;
+
+  @include smaller-than-md {
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  @include larger-than-md {
+    justify-content: flex-end;
+  }
+}
+
 @mixin page-header-buttons($has-next-content: false) {
   display: flex;
   flex-wrap: nowrap;

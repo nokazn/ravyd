@@ -342,17 +342,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   .Info {
-    display: flex;
-    flex-direction: column;
-
-    @include smaller-than-md {
-      margin-top: 12px;
-      align-items: center;
-    }
-
-    @include larger-than-md {
-      justify-content: flex-end;
-    }
+    @include page-info;
 
     &__hashTags {
       margin-bottom: 12px;
