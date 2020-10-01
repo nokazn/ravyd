@@ -38,7 +38,10 @@
 
     <td>
       <div :class="$style.Content">
-        <div class="g-ellipsis-text">
+        <div
+          class="g-ellipsis-text"
+          :class="$style.Content__left"
+        >
           <div
             :class="titleColor"
             class="g-ellipsis-text"
@@ -51,7 +54,7 @@
 
           <div
             :class="[$style.Content__subtitle, subtitleColor]"
-            class="g-ellipsis-text"
+            class="g-small-text g-ellipsis-text"
           >
             <template v-if="item.type === 'track'">
               <ArtistNames
@@ -78,8 +81,7 @@
 
     <td
       v-if="collaborative"
-      :class="$style.PlaylistTrackTableRow__smallText"
-      class="g-ellipsis-text"
+      class="g-small-text g-ellipsis-text"
     >
       <nuxt-link
         v-if="userPath != null"
@@ -92,21 +94,20 @@
     <td
       v-if="!hideAddedAt && item.addedAt != null"
       :title="item.addedAt.title"
-      :class="$style.PlaylistTrackTableRow__smallText"
     >
       <time
         v-if="item.addedAt.text"
         :datetime="item.addedAt.text"
+        class="g-small-text"
       >
         {{ item.addedAt.text }}
       </time>
     </td>
 
-    <td
-      :class="$style.PlaylistTrackTableRow__smallText"
-      class="text-center"
-    >
-      <TrackTime :time-ms="item.durationMs" />
+    <td class="g-small-text text-center">
+      <TrackTime
+        :time-ms="item.durationMs"
+      />
     </td>
 
     <td>
@@ -264,36 +265,24 @@ export default Vue.extend({
     background-color: lighten($g-background-color, 16%);
   }
 
-  &__buttons {
-    display: flex;
-
-    & > *:not(:last-child) {
-      margin-right: 4px;
-    }
-  }
-
-  &__smallText {
-    font-size: 0.75em !important;
-    white-space: nowrap;
-    padding: 0 0.25em !important;
-  }
-
   .Content {
-    padding: 0.75em 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     & > *:not(:last-child) {
-      margin-right: 0.25em;
+      margin-right: 0.25rem;
+    }
+
+    &__left {
+      & > *:not(:last-child) {
+        margin-bottom: 0.25rem;
+      }
     }
 
     &__subtitle {
-      margin-top: 0.3em;
-      font-size: 0.9em;
-
       &--divider {
-        margin: 0 0.3em;
+        margin: 0 0.25rem;
       }
     }
   }

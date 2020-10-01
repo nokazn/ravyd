@@ -282,6 +282,7 @@ export default Vue.extend({
       td,
       th {
         padding: 0 6px !important;
+        height: 64px !important;
       }
 
       // .v-aplication .active を無効化する

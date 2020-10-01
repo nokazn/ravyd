@@ -20,42 +20,36 @@
 
     <td>
       <div :class="$style.Content">
-        <div class="g-ellipsis-text">
-          <div
-            :class="titleColor"
-            class="g-ellipsis-text"
-            :title="item.name"
+        <div
+          :title="item.name"
+          :class="[$style.Content__title, titleColor]"
+          class="g-ellipsis-text"
+        >
+          <nuxt-link
+            :to="trackPath"
+            @click.native.stop
           >
-            <nuxt-link
-              :to="trackPath"
-              @click.native.stop
-            >
-              {{ item.name }}
-            </nuxt-link>
-          </div>
-
-          <div
-            :class="[$style.Content__subtitle, subtitleColor]"
-            class="g-ellipsis-text"
-          >
-            <ArtistNames
-              v-if="item.type === 'track'"
-              inline
-              :artists="item.artists"
-            />
-            <nuxt-link
-              v-else-if="item.type === 'episode'"
-              :to="releasePath"
-              :title="item.releaseName"
-              @click.native.stop
-            >
-              {{ item.releaseName }}
-            </nuxt-link>
-          </div>
+            {{ item.name }}
+          </nuxt-link>
+          <ExplicitChip v-if="item.explicit" />
         </div>
 
-        <div>
-          <ExplicitChip v-if="item.explicit" />
+        <div
+          :class="subtitleColor"
+          class="g-small-text g-ellipsis-text"
+        >
+          <ArtistNames
+            v-if="item.type === 'track'"
+            :artists="item.artists"
+          />
+          <nuxt-link
+            v-else-if="item.type === 'episode'"
+            :to="releasePath"
+            :title="item.releaseName"
+            @click.native.stop
+          >
+            {{ item.releaseName }}
+          </nuxt-link>
         </div>
       </div>
     </td>
@@ -220,36 +214,17 @@ export default Vue.extend({
     background-color: lighten($g-background-color, 16%);
   }
 
-  &__buttons {
-    display: flex;
-
-    & > *:not(:last-child) {
-      margin-right: 4px;
-    }
-  }
-
-  &__smallText {
-    font-size: 0.75em !important;
-    white-space: nowrap;
-    padding: 0 0.25em !important;
-  }
-
   .Content {
-    padding: 0.75em 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
     & > *:not(:last-child) {
-      margin-right: 0.25em;
+      margin-bottom: 0.25rem;
     }
 
-    &__subtitle {
-      margin-top: 0.3em;
-      font-size: 0.9em;
+    &__title {
+      display: flex;
+      align-items: center;
 
-      &--divider {
-        margin: 0 0.3em;
+      & > *:not(:last-child) {
+        margin-right: 0.75rem;
       }
     }
   }
