@@ -2,7 +2,7 @@
   <div :class="$style.EpisodeProgressBar">
     <span
       v-if="text && remainingTime != null"
-      class="subtext--text"
+      :class="{ ['subtext--text']: subtext }"
     >
       {{ remainingTime }}
     </span>
@@ -39,6 +39,10 @@ export default Vue.extend({
     maxWidth: {
       type: Number as PropType<number | undefined>,
       default: undefined,
+    },
+    subtext: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -77,7 +81,7 @@ export default Vue.extend({
   align-items: center;
 
   & > *:not(:last-child) {
-    margin-right: 8px;
+    margin-right: 12px;
   }
 }
 </style>

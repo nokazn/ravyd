@@ -13,10 +13,11 @@
         :items="episodeList"
         disable-pagination
         hide-default-footer
+        :mobile-breakpoint="0"
         :search="searchText"
         :custom-filter="customFilter"
         :no-data-text="noDataText"
-        class="EpisodeTable"
+        class="episode-table"
       >
         <template #header.duration>
           <v-icon
@@ -238,7 +239,7 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.EpisodeTable {
+.episode-table {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
 
@@ -247,15 +248,19 @@ export default Vue.extend({
     table-layout: fixed;
 
     tr {
-      td,
-      th {
-        padding: 0 8px !important;
+      td {
+        padding: 0 6px !important;
+        height: 64px !important;
       }
 
       // .v-aplication .active を無効化する
-      th.active {
-        background-color: inherit !important;
-        border-color: inherit !important;
+      th {
+        padding: 0 6px !important;
+
+        &.active {
+          background-color: inherit !important;
+          border-color: inherit !important;
+        }
       }
     }
   }
