@@ -121,6 +121,14 @@ export default Vue.extend({
       type: Number,
       default: 36,
     },
+    titleColor: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
+    subtextColor: {
+      type: String,
+      required: true,
+    },
   },
 
   computed: {
@@ -130,16 +138,6 @@ export default Vue.extend({
       return item.linkedFrom != null
         ? item.index + 1
         : item.trackNumber;
-    },
-    titleColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : undefined;
-    },
-    subtextColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : 'subtext--text';
     },
   },
 

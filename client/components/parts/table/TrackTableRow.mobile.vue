@@ -98,18 +98,13 @@ export default Vue.extend({
       type: Number,
       default: 36,
     },
-  },
-
-  computed: {
-    titleColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : undefined;
+    titleColor: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
-    subtextColor(): string | undefined {
-      return this.isTrackSet
-        ? 'active--text'
-        : 'subtext--text';
+    subtextColor: {
+      type: String,
+      required: true,
     },
   },
 

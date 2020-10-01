@@ -104,9 +104,9 @@ export default Vue.extend({
         : 32;
     },
     headers(): DataTableHeader[] {
-      const totalPadding = 12;
+      const totalSidePadding = 12;
       // width は 左右の padding を含めた幅
-      const buttonColumnWidth = totalPadding + this.buttonSize;
+      const buttonColumnWidth = totalSidePadding + this.buttonSize;
       const indexColumn = {
         text: '#',
         value: 'index',
@@ -118,6 +118,8 @@ export default Vue.extend({
         value: 'isSaved',
         width: buttonColumnWidth,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       };
       const nameColumn = {
         text: 'タイトル',
@@ -134,6 +136,8 @@ export default Vue.extend({
         value: 'menu',
         width: buttonColumnWidth,
         align: 'center' as const,
+        sortable: false,
+        filterable: false,
       };
       return this.$window.isMultiColumn
         ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]

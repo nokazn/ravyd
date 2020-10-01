@@ -6,6 +6,8 @@
     :is-playing-track="isPlayingTrack"
     :is-active="isActive"
     :button-size="buttonSize"
+    :title-color="titleColor"
+    :subtext-color="subtextColor"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -17,6 +19,8 @@
     :is-playing-track="isPlayingTrack"
     :is-active="isActive"
     :button-size="buttonSize"
+    :title-color="titleColor"
+    :subtext-color="subtextColor"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -62,6 +66,19 @@ export default Vue.extend({
     buttonSize: {
       type: Number,
       default: 36,
+    },
+  },
+
+  computed: {
+    titleColor(): string | undefined {
+      return this.isTrackSet
+        ? 'active--text'
+        : undefined;
+    },
+    subtextColor(): string {
+      return this.isTrackSet
+        ? 'active--text'
+        : 'subtext--text';
     },
   },
 
