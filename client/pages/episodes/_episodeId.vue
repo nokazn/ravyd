@@ -15,7 +15,6 @@
           :disabled="!episodeInfo.isPlayable"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <EpisodeMenu
           outlined
           left
@@ -33,8 +32,8 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
+        :size="$window.artworkSize"
         :alt="episodeInfo.name"
-        :size="ARTWORK_SIZE"
         :title="episodeInfo.name"
         shadow
       />
@@ -65,7 +64,6 @@
               :disabled="!episodeInfo.isPlayable"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <EpisodeMenu
               offset-y
               outlined
@@ -79,7 +77,6 @@
               :release-date="episodeInfo.releaseDate"
               :release-date-precision="episodeInfo.releaseDatePrecision"
             />
-
             <ReleaseDuration
               :duration-ms="episodeInfo.durationMs"
               :is-full="true"
@@ -105,6 +102,7 @@
       :resume-point="episodeInfo.resumePoint"
       :duration-ms="episodeInfo.durationMs"
       :max-width="300"
+      :class="$style.EpisodeIdPage__progress"
     />
   </div>
 
@@ -247,65 +245,64 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 }
 
 .EpisodeIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  $margin-bottom: 32px;
+
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom;
+
+    @include page-header;
   }
 
   &__description {
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom;
 
     & > *:not(:last-child) {
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
   }
 
-  &__table {
-    margin-bottom: 32px;
+  &__progress {
+    margin-bottom: $margin-bottom;
+  }
+}
+
+.Info {
+  @include page-info;
+
+  &__explicitIcon {
+    margin-bottom: 0.1rem;
   }
 
-  .Info {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  &__title {
+    @include page-title;
+  }
 
-    &__explicitIcon {
-      margin-bottom: 0.1rem;
+  &__footer {
+    margin-top: 16px;
+    display: flex;
+
+    @include smaller-than-md {
+      flex-direction: column;
     }
 
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__footer {
-      display: flex;
+    @include larger-than-md {
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 16px;
     }
+  }
 
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
+  &__buttons {
+    @include page-header-buttons(true);
+  }
 
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
+  &__detail {
+    margin-top: 12px;
 
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
+    & > *:not(:last-child) {
+      margin-right: 8px;
     }
   }
 }
