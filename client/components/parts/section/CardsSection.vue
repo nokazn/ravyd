@@ -121,7 +121,7 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin: 6px 0 16px;
+    margin: 4px 0 16px;
   }
 
   &__loadingCircle {

@@ -279,13 +279,13 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .ArtistIdTopPage {
-  $margin-bottom: 16px;
+  $margin-bottom: 24px;
 
   .TopContent {
-    margin-top: $margin-bottom * 1.5;
+    margin-top: $margin-bottom;
 
     & > * {
-      margin-bottom: $margin-bottom * 1.5;
+      margin-bottom: $margin-bottom;
     }
 
     &--twoColumns {
@@ -298,11 +298,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
         display: grid;
         grid-template-columns: $top-tracks-width $related-artists-width;
         column-gap: $column-gap;
-
-        & > * {
-          // md 以上で2列のときは小さめにする
-          margin-bottom: $margin-bottom;
-        }
       }
 
       @include larger-than-xl {
@@ -315,9 +310,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   }
 
   .DiscographySection {
-    & > * {
-      margin-bottom: $margin-bottom;
-    }
+    margin-bottom: $margin-bottom;
   }
 }
 </style>

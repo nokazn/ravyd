@@ -332,7 +332,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 }
 
 .ArtistIdPage {
-  @include page-margin(8px);
+  @include page-margin();
   @include page-padding;
 
   &__header {
