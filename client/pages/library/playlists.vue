@@ -47,9 +47,5 @@ export default class LibraryPlaylistPage extends Vue implements Data {
   get playlists(): SpotifyAPI.SimplePlaylist[] {
     return this.$state().playlists.playlists ?? [];
   }
-
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-  }
 }
 </script>

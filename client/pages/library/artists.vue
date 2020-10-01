@@ -67,10 +67,6 @@ export default class LibraryArtistsPage extends Vue implements Data {
     return this.$getters()['library/artists/isFull'];
   }
 
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-  }
-
   onLoadingCircleAppeared() {
     this.$dispatch('library/artists/getSavedArtistList', {
       limit: LIMIT_OF_ARTISTS,

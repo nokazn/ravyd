@@ -63,10 +63,6 @@ export default class LibraryShowsPage extends Vue implements Data {
     return this.$getters()['library/shows/isFull'];
   }
 
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-  }
-
   onLoadingCircleAppeared() {
     this.$dispatch('library/shows/getSavedShowList', {
       limit: LIMIT_OF_SHOWS,

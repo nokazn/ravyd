@@ -76,6 +76,7 @@ export default class LibraryPage extends Vue implements Data {
   ];
 
   mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
     this.$header.toggleBackdropFilter(false);
   }
 
@@ -87,7 +88,7 @@ export default class LibraryPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryPage {
-  padding: 16px max(12px, 2vw) 48px;
+  @include page-margin;
 
   &__title {
     margin-bottom: 8px;

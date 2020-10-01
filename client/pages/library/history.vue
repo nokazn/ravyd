@@ -40,8 +40,6 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
         case 'library/tracks/INCREMENT_UNUPDATED_COUNTS':
@@ -74,10 +72,6 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
 .LibraryHistoryPage {
   & > * {
     margin-bottom: 8px;
-  }
-
-  &__table {
-    width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }
 }
 </style>

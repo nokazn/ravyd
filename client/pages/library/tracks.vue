@@ -100,8 +100,6 @@ export default class LibraryTracksPage extends Vue implements Data {
     const TAB_HEIGHT = 80;
     this.$header.observe(element.$el, this.$constant.HEADER_HEIGHT + TAB_HEIGHT);
 
-    this.$dispatch('resetDominantBackgroundColor');
-
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
         case 'library/tracks/INCREMENT_UNUPDATED_COUNTS':
@@ -165,10 +163,6 @@ export default class LibraryTracksPage extends Vue implements Data {
 .LibraryTracksPage {
   & > * {
     margin-bottom: 8px;
-  }
-
-  &__table {
-    width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
   }
 }
 </style>
