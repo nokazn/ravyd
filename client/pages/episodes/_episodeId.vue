@@ -299,6 +299,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
   }
 
   &__detail {
+    // 2行になったとき
     margin-top: 12px;
 
     & > *:not(:last-child) {

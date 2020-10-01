@@ -338,7 +338,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   &__header {
     @include page-header;
 
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 }
 

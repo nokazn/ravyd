@@ -389,23 +389,16 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   @include additional-header-content();
 }
 
-.ReleaseIdPage {
-  $margin-bottom: 32px;
+$margin-bottom: 32px;
 
+.ReleaseIdPage {
   @include page-margin;
   @include page-padding;
 
   &__header {
     @include page-header;
 
-    @include smaller-than-md {
-      // トラックのテーブルとの間があいてるようにみえるので
-      margin-bottom: $margin-bottom / 4;
-    }
-
-    @include larger-than-md {
-      margin-bottom: $margin-bottom / 2;
-    }
+    margin-bottom: $margin-bottom / 2;
   }
 
   &__table {
