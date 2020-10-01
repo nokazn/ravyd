@@ -61,7 +61,7 @@
 import Vue, { PropType } from 'vue';
 import { DataTableHeader } from 'vuetify';
 
-import PlaylistTrackTableRow, { On as OnRow, SIZE_OF_ARTWORK } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { App } from '~~/types';
 
 export type Data = {
@@ -135,7 +135,7 @@ export default Vue.extend({
       const imageColumn = {
         text: '',
         value: 'images',
-        width: SIZE_OF_ARTWORK + totalSidePadding,
+        width: this.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE + totalSidePadding,
         sortable: false,
         filterable: false,
       };

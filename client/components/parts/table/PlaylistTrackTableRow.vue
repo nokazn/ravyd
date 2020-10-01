@@ -10,6 +10,14 @@
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
+    :disabled="disabled"
+    :artwork-src="artworkSrc"
+    :track-path="trackPath"
+    :release-path="releasePath"
+    :user-path="userPath"
+    :publisher="publisher"
+    :title-color="titleColor"
+    :subtitle-color="subtitleColor"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -25,6 +33,14 @@
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
+    :disabled="disabled"
+    :artwork-src="artworkSrc"
+    :track-path="trackPath"
+    :release-path="releasePath"
+    :user-path="userPath"
+    :publisher="publisher"
+    :title-color="titleColor"
+    :subtitle-color="subtitleColor"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -33,12 +49,13 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import type { RawLocation } from 'vue-router';
 
 import PlaylistTrackTableRowMobile from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
 import PlaylistTrackTableRowPc from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
+import { getImageSrc } from '~/utils/image';
 import type { App } from '~~/types';
 
-export const SIZE_OF_ARTWORK = 48;
 const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -91,6 +108,55 @@ export default Vue.extend({
     buttonSize: {
       type: Number,
       default: 36,
+    },
+  },
+
+  computed: {
+    /**
+     * @todo
+     * エピソードは isPlayable が false でも再生できるようにしている
+     */
+    disabled(): boolean {
+      return this.item.type !== 'episode' && this.item.isPlayable === false;
+    },
+    artworkSrc(): string | undefined {
+      return getImageSrc(this.item.images, this.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE);
+    },
+    trackPath(): RawLocation {
+      return this.item.type === 'track'
+        ? {
+          path: `/releases/${this.item.releaseId}`,
+          query: { track: this.item.id },
+        }
+        : `/episodes/${this.item.id}`;
+    },
+    releasePath(): RawLocation {
+      return this.item.type === 'track'
+        ? `/releases/${this.item.releaseId}`
+        : `/shows/${this.item.releaseId}`;
+    },
+    userPath(): RawLocation | undefined {
+      const addedBy = this.item;
+      return this.collaborative && addedBy != null
+        ? `/users/${addedBy.id}`
+        : undefined;
+    },
+    publisher(): string {
+      return this.item.artists
+        .map((artist) => artist.name)
+        .join(', ');
+    },
+    titleColor(): string | undefined {
+      if (this.disabled) return 'inactive--text';
+      return this.isTrackSet
+        ? 'active--text'
+        : undefined;
+    },
+    subtitleColor(): string {
+      if (this.disabled) return 'inactive--text';
+      return this.isTrackSet
+        ? 'active--text'
+        : 'subtext--text';
     },
   },
 

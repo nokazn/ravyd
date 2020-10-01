@@ -14,7 +14,7 @@
       <ReleaseArtwork
         :src="artworkSrc"
         :alt="item.name"
-        :size="SIZE_OF_ARTWORK"
+        :size="$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE"
       />
     </td>
 
@@ -144,18 +144,11 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
+import type { App } from '~~/types';
 
-import { getImageSrc } from '~/utils/image';
-import { App } from '~~/types';
-
-export const SIZE_OF_ARTWORK = 48;
 const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
-
-type Data = {
-  SIZE_OF_ARTWORK: number
-}
 
 export type On = {
   [ON_ROW_CLICKED]: App.PlaylistTrackDetail
@@ -212,60 +205,37 @@ export default Vue.extend({
       type: Number,
       default: 36,
     },
-  },
-
-  data(): Data {
-    return {
-      SIZE_OF_ARTWORK,
-    };
-  },
-
-  computed: {
-    /**
-     * @todo
-     * エピソードは isPlayable が false でも再生できるようにしている
-     */
-    disabled(): boolean {
-      return this.item.type !== 'episode' && this.item.isPlayable === false;
+    disabled: {
+      type: Boolean,
+      required: true,
     },
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, SIZE_OF_ARTWORK);
+    artworkSrc: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
-    trackPath(): RawLocation {
-      return this.item.type === 'track'
-        ? {
-          path: `/releases/${this.item.releaseId}`,
-          query: { track: this.item.id },
-        }
-        : `/episodes/${this.item.id}`;
+    trackPath: {
+      type: [Object, String] as PropType<RawLocation>,
+      required: true,
     },
-    releasePath(): RawLocation {
-      return this.item.type === 'track'
-        ? `/releases/${this.item.releaseId}`
-        : `/shows/${this.item.releaseId}`;
+    releasePath: {
+      type: [Object, String] as PropType<RawLocation>,
+      required: true,
     },
-    userPath(): RawLocation | undefined {
-      const addedBy = this.item;
-      return this.collaborative && addedBy != null
-        ? `/users/${addedBy.id}`
-        : undefined;
+    userPath: {
+      type: [Object, String] as PropType<RawLocation | undefined>,
+      default: undefined,
     },
-    publisher(): string {
-      return this.item.artists
-        .map((artist) => artist.name)
-        .join(', ');
+    publisher: {
+      type: String,
+      required: true,
     },
-    titleColor(): string | undefined {
-      if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
-        ? 'active--text'
-        : undefined;
+    titleColor: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
-    subtitleColor(): string {
-      if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
-        ? 'active--text'
-        : 'subtext--text';
+    subtitleColor: {
+      type: String,
+      required: true,
     },
   },
 

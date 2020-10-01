@@ -39,6 +39,7 @@ export const FLEX_CARD_MAX_WIDTH = 240;
 export const FIXED_CARD_BASE_WIDTH = 200;
 export const ARTWORK_BASE_SIZE = 220;
 export const TRACK_LIST_ARTWORK_SIZE = 40;
+export const PLAYLIST_TRACK_TABLE_ARTWORK_SIZE = 48;
 
 /**
  * z-index
