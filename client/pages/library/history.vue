@@ -2,7 +2,6 @@
   <div :class="$style.LibraryHistoryPage">
     <PlaylistTrackTable
       v-if="trackList != null"
-      image
       hide-added-at
       :track-list="trackList"
       :class="$style.LibraryHistoryPage__table"

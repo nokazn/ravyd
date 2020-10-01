@@ -17,7 +17,6 @@
 
     <PlaylistTrackTable
       v-if="trackList != null"
-      image
       custom
       :track-list="trackList"
       :uri="uri"
