@@ -204,7 +204,7 @@ export default Vue.extend({
 
         @include smaller-than-md {
           // 列の幅をデフォルトの 48px から少し広める
-          height: 60px !important;
+          height: 56px !important;
         }
 
         @include larger-than-md {
