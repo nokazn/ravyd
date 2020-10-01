@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="modal"
-    :fullscreen="$window.isSingleColumn"
+    :fullscreen="fullscreen"
     :max-width="600"
     :class="$style.Modal"
   >
@@ -52,6 +52,10 @@ export default Vue.extend({
     value: {
       type: Boolean,
       required: true,
+    },
+    fullscreen: {
+      type: Boolean,
+      default: false,
     },
   },
 
