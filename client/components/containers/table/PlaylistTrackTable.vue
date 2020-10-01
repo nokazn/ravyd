@@ -59,10 +59,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { DataTableHeader } from 'vuetify';
+import type { DataTableHeader } from 'vuetify';
 
 import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 export type Data = {
   activeRowIndex: number | undefined

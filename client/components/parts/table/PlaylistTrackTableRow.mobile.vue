@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RawLocation } from 'vue-router';
+import type { RawLocation } from 'vue-router';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
