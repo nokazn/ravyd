@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="modal"
+    :fullscreen="$window.isSingleColumn"
     :max-width="600"
     :class="$style.Modal"
   >
