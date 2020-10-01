@@ -349,48 +349,48 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     margin-bottom: 32px;
   }
 
-  .Info {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  &__table {
+    margin-bottom: 32px;
+  }
+}
 
-    &__explicitIcon {
-      margin-bottom: 0.1rem;
-    }
+.Info {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
+  &__explicitIcon {
+    margin-bottom: 0.1rem;
+  }
 
-    &__footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
+  &__title {
+    font-size: 2em;
+    margin: 0.3em 0;
+    line-height: 1.2em;
+  }
 
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
 
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
+  &__buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-right: 24px;
 
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
+    & > *:not(:last-child) {
+      margin-right: 12px;
     }
   }
 
-  &__table {
-    margin-bottom: 32px;
+  &__detail {
+    margin-top: 12px;
+
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 }
 </style>

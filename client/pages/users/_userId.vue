@@ -280,21 +280,21 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     // 200px と少し小さめにする
     @include page-header(200px);
   }
+}
 
-  .Divider {
-    margin: 4px 0 16px;
+.Divider {
+  margin: 4px 0 16px;
+}
+
+.Info {
+  @include page-info;
+
+  &__title {
+    @include page-title;
   }
 
-  .Info {
-    @include page-info;
-
-    &__title {
-      @include page-title;
-    }
-
-    &__buttons {
-      @include page-header-buttons;
-    }
+  &__buttons {
+    @include page-header-buttons;
   }
 }
 </style>

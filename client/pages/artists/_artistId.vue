@@ -340,42 +340,42 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     margin-bottom: 24px;
   }
+}
 
-  .Info {
-    @include page-info;
+.Info {
+  @include page-info;
 
-    &__hashTags {
-      margin-bottom: 12px;
+  &__hashTags {
+    margin-bottom: 12px;
 
-      @include smaller-than-md {
-        // 1個だけはみ出て2列になったりするとちょっと不格好なのであまり横に広がりすぎないようにする
-        padding: 0 4vw;
-        justify-content: center;
-      }
-
-      @include larger-than-md {
-        // border-radius の分だけ右にあるように見えてしまうので調整
-        margin-left: -8px;
-      }
+    @include smaller-than-md {
+      // 1個だけはみ出て2列になったりするとちょっと不格好なのであまり横に広がりすぎないようにする
+      padding: 0 4vw;
+      justify-content: center;
     }
 
-    &__verifiedArtistIcon {
-      margin-bottom: 0.15rem;
+    @include larger-than-md {
+      // border-radius の分だけ右にあるように見えてしまうので調整
+      margin-left: -8px;
     }
+  }
 
-    &__title {
-      @include page-title;
-    }
+  &__verifiedArtistIcon {
+    margin-bottom: 0.15rem;
+  }
 
-    &__followers {
-      @include smaller-than-md {
-        text-align: center;
-      }
-    }
+  &__title {
+    @include page-title;
+  }
 
-    &__buttons {
-      @include page-header-buttons;
+  &__followers {
+    @include smaller-than-md {
+      text-align: center;
     }
+  }
+
+  &__buttons {
+    @include page-header-buttons;
   }
 }
 </style>

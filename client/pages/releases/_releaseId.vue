@@ -408,34 +408,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  .Info {
-    @include page-info;
-
-    &__hashTags {
-      // border-radius の分だけ右にあるように見えてしまうので調整
-      margin-left: -8px;
-      margin-bottom: 12px;
-    }
-
-    &__title {
-      @include page-title;
-    }
-
-    &__footer {
-      margin-top: 16px;
-
-      @include larger-than-md {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
-      }
-    }
-
-    &__buttons {
-      @include page-header-buttons(true);
-    }
-  }
-
   &__table {
     margin-bottom: $margin-bottom / 2;
   }
@@ -444,17 +416,45 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   &__section {
     margin-bottom: $margin-bottom;
   }
+}
 
-  .Detail {
-    @include smaller-than-md {
-      margin-top: $margin-bottom / -2;
-      margin-bottom: $margin-bottom;
-    }
+.Info {
+  @include page-info;
+
+  &__hashTags {
+    // border-radius の分だけ右にあるように見えてしまうので調整
+    margin-left: -8px;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    @include page-title;
+  }
+
+  &__footer {
+    margin-top: 16px;
 
     @include larger-than-md {
-      // 2行になったとき
-      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
     }
+  }
+
+  &__buttons {
+    @include page-header-buttons(true);
+  }
+}
+
+.Detail {
+  @include smaller-than-md {
+    margin-top: $margin-bottom / -2;
+    margin-bottom: $margin-bottom;
+  }
+
+  @include larger-than-md {
+    // 2行になったとき
+    margin-top: 12px;
   }
 }
 </style>
