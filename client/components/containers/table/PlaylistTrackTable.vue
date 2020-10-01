@@ -1,60 +1,60 @@
 <template>
-  <client-only>
-    <v-data-table
-      :headers="headers"
-      :items="trackList"
-      disable-pagination
-      hide-default-footer
-      :no-data-text="noDataText"
-      class="PlaylistTrackTable"
-    >
-      <template #header.addedBy>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="追加したユーザー"
-        >
-          mdi-account
-        </v-icon>
-      </template>
+  <v-data-table
+    disable-pagination
+    hide-default-footer
+    :headers="headers"
+    :items="trackList"
+    :mobile-breakpoint="0"
+    :no-data-text="noDataText"
+    class="PlaylistTrackTable"
+  >
+    <template #header.addedBy>
+      <v-icon
+        :size="16"
+        color="subtext"
+        title="追加したユーザー"
+      >
+        mdi-account
+      </v-icon>
+    </template>
 
-      <template #header.duration>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="再生時間"
-        >
-          mdi-clock-outline
-        </v-icon>
-      </template>
+    <template #header.duration>
+      <v-icon
+        :size="16"
+        color="subtext"
+        title="再生時間"
+      >
+        mdi-clock-outline
+      </v-icon>
+    </template>
 
-      <template #header.addedAt>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="保存した日"
-        >
-          mdi-calendar-outline
-        </v-icon>
-      </template>
+    <template #header.addedAt>
+      <v-icon
+        :size="16"
+        color="subtext"
+        title="保存した日"
+      >
+        mdi-calendar-outline
+      </v-icon>
+    </template>
 
-      <template #item="{ item }">
-        <PlaylistTrackTableRow
-          :item="item"
-          :playlist-id="playlistId"
-          :image="image"
-          :collaborative="collaborative"
-          :hide-added-at="hideAddedAt"
-          :is-active="item.index === activeRowIndex"
-          :is-track-set="isTrackSet(item.id)"
-          :is-playing-track="isPlayingTrack(item.id)"
-          @on-row-clicked="onRowClicked"
-          @on-media-button-clicked="onMediaButtonClicked"
-          @on-favorite-button-clicked="onFavoriteButtonClicked"
-        />
-      </template>
-    </v-data-table>
-  </client-only>
+    <template #item="{ item }">
+      <PlaylistTrackTableRow
+        :item="item"
+        :playlist-id="playlistId"
+        :hide-image="hideImage"
+        :collaborative="collaborative"
+        :hide-added-at="hideAddedAt"
+        :is-active="item.index === activeRowIndex"
+        :is-track-set="isTrackSet(item.id)"
+        :is-playing-track="isPlayingTrack(item.id)"
+        :button-size="buttonSize"
+        @on-row-clicked="onRowClicked"
+        @on-media-button-clicked="onMediaButtonClicked"
+        @on-favorite-button-clicked="onFavoriteButtonClicked"
+      />
+    </template>
+  </v-data-table>
 </template>
 
 <script lang="ts">
@@ -65,7 +65,6 @@ import PlaylistTrackTableRow, { On as OnRow, SIZE_OF_ARTWORK } from '~/component
 import { App } from '~~/types';
 
 export type Data = {
-  headers: DataTableHeader[]
   activeRowIndex: number | undefined
 };
 
@@ -102,7 +101,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    image: {
+    hideImage: {
       type: Boolean,
       default: false,
     },
@@ -117,67 +116,99 @@ export default Vue.extend({
   },
 
   data(): Data {
-    // 左右の padding: 8px を含めた幅
-    const sidePadding = 16;
-    const imageColumn = {
-      text: '',
-      value: 'images',
-      width: SIZE_OF_ARTWORK + sidePadding,
-    };
-    const isSavedColumn = {
-      text: '',
-      value: 'isSaved',
-      width: 96,
-      sortable: false,
-      filterable: false,
-    };
-    const titleColumn = {
-      text: 'タイトル',
-      value: 'name',
-    };
-    const addedByColumn = {
-      text: '',
-      value: 'addedBy',
-      width: 96,
-    };
-    const addedAtColumn = {
-      text: '',
-      value: 'addedAt',
-      width: 80,
-    };
-    const durationColumn = {
-      text: '',
-      value: 'duration',
-      width: 72,
-      align: 'center' as const,
-    };
-    const menuColumn = {
-      text: '',
-      value: 'menu',
-      width: 60,
-      align: 'center' as const,
-      sortable: false,
-      filterable: false,
-    };
-
-    // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
-    const headers = [
-      this.image ? imageColumn : undefined,
-      isSavedColumn,
-      titleColumn,
-      this.collaborative ? addedByColumn : undefined,
-      this.hideAddedAt ? undefined : addedAtColumn,
-      durationColumn,
-      menuColumn,
-    ].filter((header) => header != null) as DataTableHeader[];
-
     return {
-      headers,
       activeRowIndex: undefined,
     };
   },
 
   computed: {
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 32;
+    },
+    // マウント後に変化するのは $window だけで、他の prop はキャッシュする必要なし
+    headers(): DataTableHeader[] {
+      // 左右の padding: 8px を含めた幅
+      const totalSidePadding = 12;
+      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const imageColumn = {
+        text: '',
+        value: 'images',
+        width: SIZE_OF_ARTWORK + totalSidePadding,
+        sortable: false,
+        filterable: false,
+      };
+      const mediaColumn = {
+        text: '',
+        value: 'media',
+        width: buttonColumnWidth,
+        sortable: false,
+        filterable: false,
+      };
+      const isSavedColumn = {
+        text: '',
+        value: 'isSaved',
+        width: buttonColumnWidth,
+        sortable: false,
+        filterable: false,
+      };
+      const titleColumn = {
+        text: 'タイトル',
+        value: 'name',
+      };
+      const addedByColumn = {
+        text: '',
+        value: 'addedBy',
+        width: 96,
+      };
+      const addedAtColumn = {
+        text: '',
+        value: 'addedAt',
+        width: 72,
+      };
+      const durationColumn = {
+        text: '',
+        value: 'duration',
+        width: 72,
+        align: 'center' as const,
+      };
+      const menuColumn = {
+        text: '',
+        value: 'menu',
+        width: buttonColumnWidth,
+        align: 'center' as const,
+        sortable: false,
+        filterable: false,
+      };
+
+      let headers: (DataTableHeader | undefined)[];
+      if (this.$window.isSingleColumn) {
+        headers = [
+          // hideImage が指定されれば非表示
+          this.hideImage ? undefined : imageColumn,
+          titleColumn,
+          isSavedColumn,
+          menuColumn,
+        ];
+      } else {
+        headers = [
+          // hideImage が指定されれば非表示
+          this.hideImage ? undefined : imageColumn,
+          mediaColumn,
+          isSavedColumn,
+          titleColumn,
+          // collaborative が指定されれば表示
+          this.collaborative ? addedByColumn : undefined,
+          // hideImage が指定されれば非表示
+          this.hideAddedAt ? undefined : addedAtColumn,
+          durationColumn,
+          menuColumn,
+        ];
+      }
+      // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
+      return headers.filter((header) => header != null) as DataTableHeader[];
+    },
     isTrackSet(): (trackId: string) => boolean {
       return (trackId: string) => this.$getters()['playback/contextUri'] === this.uri
         && this.$getters()['playback/isTrackSet'](trackId);
@@ -228,8 +259,11 @@ export default Vue.extend({
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
-    onRowClicked({ index }: OnRow['on-row-clicked']) {
-      this.activeRowIndex = index;
+    onRowClicked(row: OnRow['on-row-clicked']) {
+      this.activeRowIndex = row.index;
+      if (this.$window.isSingleColumn) {
+        this.onMediaButtonClicked(row);
+      }
     },
   },
 });
@@ -247,7 +281,7 @@ export default Vue.extend({
     tr {
       td,
       th {
-        padding: 0 8px !important;
+        padding: 0 6px !important;
       }
 
       // .v-aplication .active を無効化する
