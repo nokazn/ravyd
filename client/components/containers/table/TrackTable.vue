@@ -8,7 +8,7 @@
     :mobile-breakpoint="0"
     group-by="discNumber"
     no-data-text="トラックがありません。"
-    class="TrackTable"
+    class="track-table"
   >
     <template #header.duration>
       <v-icon
@@ -189,7 +189,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.TrackTable {
+.track-table {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
 
@@ -198,9 +198,9 @@ export default Vue.extend({
     table-layout: fixed;
 
     tr {
-      td,
-      th {
+      td {
         padding: 0 6px !important;
+        height: 64px !important;
 
         @include smaller-than-md {
           // 列の幅をデフォルトの 48px から少し広める
@@ -211,6 +211,10 @@ export default Vue.extend({
           // 列の幅をデフォルトの 48px から少し狭める
           height: 44px !important;
         }
+      }
+
+      th {
+        padding: 0 6px !important;
       }
     }
   }

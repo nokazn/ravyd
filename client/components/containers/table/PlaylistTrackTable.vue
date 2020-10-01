@@ -6,7 +6,7 @@
     :items="trackList"
     :mobile-breakpoint="0"
     :no-data-text="noDataText"
-    class="PlaylistTrackTable"
+    class="playlist-track-table"
   >
     <template #header.addedBy>
       <v-icon
@@ -270,7 +270,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.PlaylistTrackTable {
+.playlist-track-table {
   // 表の背景を透過にし、全体の背景と同じ色にする
   background-color: rgba(0, 0, 0, 0) !important;
 
@@ -279,16 +279,19 @@ export default Vue.extend({
     table-layout: fixed;
 
     tr {
-      td,
-      th {
+      td {
         padding: 0 6px !important;
         height: 64px !important;
       }
 
       // .v-aplication .active を無効化する
-      th.active {
-        background-color: inherit !important;
-        border-color: inherit !important;
+      th {
+        padding: 0 6px !important;
+
+        &.active {
+          background-color: inherit !important;
+          border-color: inherit !important;
+        }
       }
     }
   }
