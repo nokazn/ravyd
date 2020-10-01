@@ -1,79 +1,76 @@
 <template>
-  <client-only>
-    <div>
-      <v-select
-        v-model="searchText"
-        :items="selectItems"
-        dense
-        :class="$style.EpisodeSelect"
-      />
+  <div>
+    <v-select
+      v-model="searchText"
+      dense
+      :items="selectItems"
+      :class="$style.EpisodeSelect"
+    />
 
-      <v-data-table
-        :headers="headers"
-        :items="episodeList"
-        disable-pagination
-        hide-default-footer
-        :mobile-breakpoint="0"
-        :search="searchText"
-        :custom-filter="customFilter"
-        :no-data-text="noDataText"
-        class="episode-table"
-      >
-        <template #header.duration>
-          <v-icon
-            :size="16"
-            color="subtext"
-            title="再生時間"
-          >
-            mdi-clock-outline
-          </v-icon>
-        </template>
+    <v-data-table
+      disable-pagination
+      hide-default-footer
+      :headers="headers"
+      :items="episodeList"
+      :mobile-breakpoint="0"
+      :search="searchText"
+      :custom-filter="customFilter"
+      :no-data-text="noDataText"
+      class="episode-table"
+    >
+      <template #header.duration>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="再生時間"
+        >
+          mdi-clock-outline
+        </v-icon>
+      </template>
 
-        <template #header.addedAt>
-          <v-icon
-            :size="16"
-            color="subtext"
-            title="公開日"
-          >
-            mdi-calendar-outline
-          </v-icon>
-        </template>
+      <template #header.addedAt>
+        <v-icon
+          :size="16"
+          color="subtext"
+          title="公開日"
+        >
+          mdi-calendar-outline
+        </v-icon>
+      </template>
 
-        <template #item="{ item }">
-          <EpisodeTableRow
-            :item="item"
-            :publisher="publisher"
-            :added-at="addedAt"
-            :is-active="item.id === activeRowId"
-            :is-episode-set="isEpisodeSet(item.id)"
-            :is-playing-episode="isPlayingEpisode(item.id)"
-            @on-row-clicked="onRowClicked"
-            @on-media-button-clicked="onMediaButtonClicked"
-          />
-        </template>
-      </v-data-table>
-    </div>
-  </client-only>
+      <template #item="{ item }">
+        <EpisodeTableRow
+          :item="item"
+          :publisher="publisher"
+          :added-at="addedAt"
+          :is-active="item.id === activeRowId"
+          :is-episode-set="isEpisodeSet(item.id)"
+          :is-playing-episode="isPlayingEpisode(item.id)"
+          @on-row-clicked="onRowClicked"
+          @on-media-button-clicked="onMediaButtonClicked"
+        />
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { DataTableHeader } from 'vuetify';
+import type { DataTableHeader } from 'vuetify';
 
 import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTableRow.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 type EpisodeSelector = 'all' | 'inProgress' | 'unplayed';
 
 type Data = {
-  headers: DataTableHeader[]
-  searchText: EpisodeSelector
+  searchText: EpisodeSelector;
   selectItems: {
     text: string
     value: EpisodeSelector
-  }[]
-  customFilter: (value: any, search: EpisodeSelector | null, item: App.EpisodeDetail) => boolean
-  activeRowId: string | undefined
+  }[];
+  customFilter: (value: any, search: EpisodeSelector, item: App.EpisodeDetail) => boolean;
+  activeRowId: string | undefined;
 };
 
 export default Vue.extend({
@@ -105,67 +102,11 @@ export default Vue.extend({
   },
 
   data(): Data {
-    // 左右の padding: 8px を含めた幅
-    const mediaButtonColumn = {
-      text: '',
-      value: 'index',
-      width: 60,
-      sortable: false,
-      filterable: false,
-    };
-    const titleColumn = {
-      text: 'タイトル',
-      value: 'name',
-    };
-    const progressColumn = {
-      text: '進捗',
-      value: 'resumePoint',
-      width: 96,
-    };
-    const addedAtColumn = {
-      text: '',
-      value: 'addedAt',
-      width: 80,
-    };
-    const durationColumn = {
-      text: '',
-      value: 'duration',
-      width: 60,
-      align: 'center' as const,
-    };
-    const menuColumn = {
-      text: '',
-      value: 'menu',
-      width: 60,
-      align: 'center' as const,
-      sortable: false,
-      filterable: false,
-    };
-
-    // addedAt が有効かどうか
-    const headers = this.addedAt
-      ? [
-        mediaButtonColumn,
-        titleColumn,
-        progressColumn,
-        addedAtColumn,
-        durationColumn,
-        menuColumn,
-      ]
-      : [
-        mediaButtonColumn,
-        titleColumn,
-        progressColumn,
-        durationColumn,
-        menuColumn,
-      ];
-
     const customFilter = (
       _: any,
-      search: EpisodeSelector | null,
+      search: EpisodeSelector,
       item: App.EpisodeDetail,
     ): boolean => {
-      if (search == null) return true;
       const position = item.resumePoint.resume_position_ms;
       const isFulllyPlayed = item.resumePoint.fully_played;
       switch (search) {
@@ -173,6 +114,8 @@ export default Vue.extend({
           return position > 0 && !isFulllyPlayed;
         case 'unplayed':
           return position === 0;
+        case 'all':
+          return true;
         default:
           return true;
       }
@@ -194,7 +137,6 @@ export default Vue.extend({
     ];
 
     return {
-      headers,
       searchText: 'all',
       selectItems,
       customFilter,
@@ -203,6 +145,68 @@ export default Vue.extend({
   },
 
   computed: {
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 32;
+    },
+    headers(): DataTableHeader[] {
+      const totalSidePadding = 12;
+      // width は 左右の padding を含めた幅
+      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const mediaButtonColumn = {
+        text: '',
+        value: 'index',
+        width: 60,
+        sortable: false,
+        filterable: false,
+      };
+      const titleColumn = {
+        text: 'タイトル',
+        value: 'name',
+      };
+      const progressColumn = {
+        text: '進捗',
+        value: 'resumePoint',
+        width: 84,
+      };
+      const addedAtColumn = {
+        text: '',
+        value: 'addedAt',
+        width: 72,
+      };
+      const durationColumn = {
+        text: '',
+        value: 'duration',
+        width: 72,
+        align: 'center' as const,
+      };
+      const menuColumn = {
+        text: '',
+        value: 'menu',
+        width: buttonColumnWidth,
+        align: 'center' as const,
+        sortable: false,
+        filterable: false,
+      };
+
+      // addedAt が有効かどうか
+      const headers: (DataTableHeader | undefined)[] = this.$window.isSingleColumn
+        ? [
+          titleColumn,
+          progressColumn,
+          menuColumn,
+        ]
+        : [
+          mediaButtonColumn,
+          titleColumn,
+          progressColumn,
+          this.addedAt ? addedAtColumn : undefined,
+          durationColumn,
+          menuColumn,
+        ];
+      return headers.filter((header) => header != null) as DataTableHeader[];
+    },
     isEpisodeSet(): (episodeId: string) => boolean {
       return (episodeId: string) => this.$getters()['playback/isTrackSet'](episodeId);
     },
@@ -219,9 +223,7 @@ export default Vue.extend({
       } else {
         this.$dispatch('playback/play', {
           contextUri: this.uri,
-          offset: {
-            uri,
-          },
+          offset: { uri },
         });
       }
     },
