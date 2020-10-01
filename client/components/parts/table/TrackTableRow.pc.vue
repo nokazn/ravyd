@@ -173,13 +173,13 @@ export default Vue.extend({
   justify-content: space-between;
   align-items: center;
 
-  & > *:not(:last-child) {
-    margin-right: 0.75rem;
+  & > *:not(:first-child) {
+    margin-left: 0.25rem;
   }
 
   &__title {
-    & > *:not(:last-child) {
-      margin-right: 0.3rem;
+    & > *:not(:first-child) {
+      margin-left: 0.25rem;
     }
   }
 }

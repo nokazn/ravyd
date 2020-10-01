@@ -270,8 +270,8 @@ export default Vue.extend({
     align-items: center;
     justify-content: space-between;
 
-    & > *:not(:last-child) {
-      margin-right: 0.25rem;
+    & > *:not(:first-child) {
+      margin-left: 0.25rem;
     }
 
     &__left {

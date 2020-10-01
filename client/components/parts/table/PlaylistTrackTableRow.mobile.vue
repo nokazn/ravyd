@@ -36,7 +36,7 @@
 
         <div
           :class="subtitleColor"
-          class="g-small-text"
+          class="g-small-text g-ellipsis-text"
         >
           <ArtistNames
             v-if="item.type === 'track'"
@@ -225,8 +225,8 @@ export default Vue.extend({
       display: flex;
       align-items: center;
 
-      & > *:not(:last-child) {
-        margin-right: 0.75rem;
+      & > *:not(:first-child) {
+        margin-left: 0.25rem;
       }
     }
   }
