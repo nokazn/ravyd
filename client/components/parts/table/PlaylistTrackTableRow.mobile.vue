@@ -23,10 +23,10 @@
         <div
           :title="item.name"
           :class="[$style.Content__title, titleColor]"
-          class="g-ellipsis-text"
         >
           <nuxt-link
             :to="trackPath"
+            class="g-ellipsis-text"
             @click.native.stop
           >
             {{ item.name }}
@@ -36,16 +36,18 @@
 
         <div
           :class="subtitleColor"
-          class="g-small-text g-ellipsis-text"
+          class="g-small-text"
         >
           <ArtistNames
             v-if="item.type === 'track'"
             :artists="item.artists"
+            class="g-ellipsis-text"
           />
           <nuxt-link
             v-else-if="item.type === 'episode'"
             :to="releasePath"
             :title="item.releaseName"
+            class="g-ellipsis-text"
             @click.native.stop
           >
             {{ item.releaseName }}
