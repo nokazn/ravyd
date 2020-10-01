@@ -336,19 +336,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   @include page-padding;
 
   &__header {
+    @include page-header;
+
     margin-bottom: 24px;
-
-    @include smaller-than-md {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @include larger-than-md {
-      display: grid;
-      grid-template-columns: $g-artwork-base-size auto;
-      column-gap: 24px;
-    }
   }
 
   .Info {
@@ -384,13 +374,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
 
     &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-
-      @include smaller-than-md {
-        text-align: center;
-      }
+      @include page-title;
     }
 
     &__followers {
@@ -400,12 +384,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
 
     &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
+      @include page-header-buttons;
     }
   }
 }

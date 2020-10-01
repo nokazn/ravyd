@@ -396,19 +396,15 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   @include page-padding;
 
   &__header {
+    @include page-header;
+
     @include smaller-than-md {
       // トラックのテーブルとの間があいてるようにみえるので
       margin-bottom: $margin-bottom / 4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     @include larger-than-md {
       margin-bottom: $margin-bottom / 2;
-      display: grid;
-      grid-template-columns: $g-artwork-base-size auto;
-      column-gap: 24px;
     }
   }
 
@@ -432,40 +428,21 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
 
     &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-
-      @include smaller-than-md {
-        text-align: center;
-      }
+      @include page-title;
     }
 
     &__footer {
-      display: flex;
-      flex-wrap: wrap;
       margin-top: 16px;
 
-      @include smaller-than-md {
-        justify-content: center;
-      }
-
       @include larger-than-md {
+        display: flex;
+        flex-wrap: wrap;
         align-items: flex-end;
       }
     }
 
     &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-
-      @include larger-than-md {
-        margin-right: 24px;
-      }
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
+      @include page-header-buttons(true);
     }
   }
 

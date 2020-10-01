@@ -645,24 +645,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   @include page-padding;
 
   &__header {
+    @include page-header;
+
     margin-bottom: 24px;
-
-    @include smaller-than-md {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @include larger-than-md {
-      display: grid;
-      grid-template-columns: $g-artwork-base-size auto;
-      column-gap: 24px;
-    }
   }
 
   .Info {
-    // @todo
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
 
     @include smaller-than-md {
@@ -675,13 +664,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
 
     &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-
-      @include smaller-than-md {
-        text-align: center;
-      }
+      @include page-title;
     }
 
     &__footer {
@@ -693,22 +676,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       }
 
       @include larger-than-md {
-        align-items: flex-end;
         flex-wrap: wrap;
+        align-items: flex-end;
       }
     }
 
     &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-
-      @include larger-than-md {
-        margin-right: 24px;
-      }
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
+      @include page-header-buttons(true);
     }
 
     &__detail {
