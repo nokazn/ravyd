@@ -18,6 +18,7 @@
         <template v-if="avatar">
           <UserAvatar
             v-if="hasImages(artist)"
+            type="artist"
             :size="avatarSize"
             :src="getImageSrc(artist, avatarSize)"
             :alt="artist.name"

@@ -32,11 +32,11 @@
       :class="$style.UserIdPage__header"
     >
       <UserAvatar
+        type="user"
         :src="avatarSrc"
         :size="Math.min($window.artworkSize, 200)"
         :alt="userName"
         :title="userName"
-        default-user-icon="mdi-account"
         shadow
       />
 

@@ -31,6 +31,7 @@
         @click="item.handler"
       >
         <UserAvatar
+          type="user"
           :src="item.iconSrc"
           :alt="item.text"
           :size="36"

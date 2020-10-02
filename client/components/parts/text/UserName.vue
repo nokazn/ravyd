@@ -7,6 +7,7 @@
   >
     <UserAvatar
       v-if="avatar && src != null"
+      type="user"
       :src="src"
       :size="SIZE_OF_AVATAR"
       :alt="userName"

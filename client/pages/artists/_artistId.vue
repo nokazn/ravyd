@@ -37,11 +37,11 @@
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
+        type="artist"
         :src="avatarSrc"
         :size="$window.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
-        default-user-icon="mdi-account-music"
         shadow
       />
 

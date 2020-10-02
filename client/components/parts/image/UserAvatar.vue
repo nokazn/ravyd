@@ -11,7 +11,7 @@
     >
       <v-img
         :src="src"
-        alt="user avatar"
+        :alt="type"
         :min-width="minSize || size"
         :min-height="minSize || size"
         :height="size"
@@ -39,11 +39,11 @@
       :height="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
-      :class="$style.UserAvatar__noAvatar"
+      :class="$style.UserAvatar__default"
       class="rounded-circle"
     >
-      <v-icon :size="noAvatarIconSize">
-        {{ defaultUserIcon }}
+      <v-icon :size="defaultIconSize">
+        {{ defaultIcon }}
       </v-icon>
     </v-sheet>
   </v-hover>
@@ -53,12 +53,6 @@
 import Vue, { PropType } from 'vue';
 import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
-export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
-
-type Data = {
-  noAvatarIconSize: number
-}
-
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
 
@@ -66,6 +60,8 @@ export type On = {
   ON_MEDIA_BUTTON_CLICKED: void
   ON_LOADED: void
 }
+export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle';
+type AvatarType = 'user' | 'artist';
 
 export default Vue.extend({
   components: {
@@ -73,6 +69,10 @@ export default Vue.extend({
   },
 
   props: {
+    type: {
+      type: String as PropType<AvatarType>,
+      default: 'user',
+    },
     src: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -101,10 +101,6 @@ export default Vue.extend({
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
-    defaultUserIcon: {
-      type: String,
-      default: 'mdi-account-circle-outline',
-    },
     smallIcon: {
       type: Boolean,
       default: false,
@@ -115,20 +111,19 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const baseSize = this.size ?? this.minSize;
-    let noAvatarIconSize: number;
-    if (baseSize == null) {
-      noAvatarIconSize = 60;
-    } else {
-      noAvatarIconSize = this.smallIcon
+  computed: {
+    defaultIcon(): string {
+      return this.type === 'user'
+        ? 'mdi-account'
+        : 'mdi-account-music';
+    },
+    defaultIconSize(): number {
+      const baseSize = this.size ?? this.minSize;
+      if (baseSize == null) return 60;
+      return this.smallIcon
         ? baseSize * 0.4
         : baseSize;
-    }
-
-    return {
-      noAvatarIconSize,
-    };
+    },
   },
 
   methods: {
@@ -144,7 +139,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .UserAvatar {
-  &__noAvatar {
+  &__default {
     display: flex;
     justify-content: center;
     align-items: center;

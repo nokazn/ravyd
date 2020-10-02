@@ -9,9 +9,9 @@
     <template #image>
       <div :class="$style.ArtistCard__avatar">
         <UserAvatar
-          default-user-icon="mdi-account-music"
           small-icon
           overlay
+          type="artist"
           :src="avatarSrc"
           :alt="name"
           :size="avatarSize"

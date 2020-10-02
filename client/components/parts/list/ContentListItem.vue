@@ -14,6 +14,7 @@
     >
       <UserAvatar
         v-if="type === 'artist'"
+        type="artist"
         :src="artworkSrc"
         :alt="name"
         :title="name"

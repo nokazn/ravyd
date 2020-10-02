@@ -11,6 +11,7 @@
         v-on="on"
       >
         <UserAvatar
+          type="user"
           :src="userAvatarSrc"
           :alt="userDisplayName"
           :size="AVATAR_SIZE"
