@@ -9,16 +9,16 @@
     <template #image>
       <div :class="$style.ArtistCard__avatar">
         <UserAvatar
+          default-user-icon="mdi-account-music"
+          small-icon
+          overlay
           :src="avatarSrc"
           :alt="name"
           :size="avatarSize"
           :min-size="minWidth"
           :max-size="avatarMaxSize"
           :icon="mediaIcon"
-          default-user-icon="mdi-account-music"
-          small-icon
           :title="name"
-          is-overlayed
           @on-media-button-clicked="onMediaButtonClicked"
         />
       </div>

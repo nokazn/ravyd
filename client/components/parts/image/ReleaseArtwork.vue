@@ -15,6 +15,7 @@
       @load="onLoaded"
     >
       <ImageOverlay
+        v-if="overlay"
         :hover="hover"
         :size="size"
         :icon="icon"
@@ -87,7 +88,7 @@ export default Vue.extend({
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
-    isOverlayed: {
+    overlay: {
       type: Boolean,
       default: false,
     },

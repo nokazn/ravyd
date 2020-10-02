@@ -22,7 +22,8 @@
         @load="onLoaded"
       >
         <ImageOverlay
-          :hover="isOverlayed && hover"
+          v-if="overlay"
+          :hover="hover"
           :size="size"
           :icon="icon"
           @on-clicked="onClicked"
@@ -66,19 +67,6 @@ export type On = {
   ON_LOADED: void
 }
 
-export type Props = {
-  src: string | undefined
-  alt: string
-  size?: number
-  minSize?: number
-  maxSize?: number
-  isOverlayed?: boolean
-  icon?: MediaIcon
-  defaultUserIcon?: string
-  smallIcon?: boolean
-  shadow?: boolean
-}
-
 export default Vue.extend({
   components: {
     ImageOverlay,
@@ -105,7 +93,7 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-    isOverlayed: {
+    overlay: {
       type: Boolean,
       default: false,
     },

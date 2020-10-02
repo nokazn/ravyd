@@ -8,14 +8,14 @@
     <template #image>
       <nuxt-link :to="releasePath">
         <ReleaseArtwork
-          is-overlayed
+          overlay
           :src="artworkSrc"
           :alt="name"
-          :title="name"
           :size="width"
           :min-size="minWidth || width"
           :max-size="maxWidth || width"
           :icon="mediaIcon"
+          :title="name"
           @on-media-button-clicked="onMediaButtonClicked"
         />
       </nuxt-link>
