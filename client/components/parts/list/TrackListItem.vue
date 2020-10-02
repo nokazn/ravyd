@@ -2,6 +2,7 @@
   <v-hover #default="{ hover }">
     <v-list-item
       dense
+      :ripple="false"
       :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
       class="track-list-item"
