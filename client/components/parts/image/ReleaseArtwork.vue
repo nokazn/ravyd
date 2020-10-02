@@ -14,15 +14,12 @@
       :class="{ 'g-box-shadow': shadow }"
       @load="onLoaded"
     >
-      <template v-if="isOverlayed">
-        <AvatarOverlay
-          v-show="hover"
-          :hover="hover"
-          :size="size"
-          :icon="icon"
-          @on-clicked="onClicked"
-        />
-      </template>
+      <ImageOverlay
+        :hover="hover"
+        :size="size"
+        :icon="icon"
+        @on-clicked="onClicked"
+      />
     </v-img>
 
     <v-sheet
@@ -44,7 +41,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import AvatarOverlay from '~/components/parts/image/AvatarOverlay.vue';
+import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
@@ -62,7 +59,7 @@ export type On = {
 
 export default Vue.extend({
   components: {
-    AvatarOverlay,
+    ImageOverlay,
   },
 
   props: {

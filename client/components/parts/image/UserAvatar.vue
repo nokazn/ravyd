@@ -11,7 +11,7 @@
     >
       <v-img
         :src="src"
-        alt="user-avaar"
+        alt="user avatar"
         :min-width="minSize || size"
         :min-height="minSize || size"
         :height="size"
@@ -21,7 +21,7 @@
         :aspect-ratio="1"
         @load="onLoaded"
       >
-        <AvatarOverlay
+        <ImageOverlay
           :hover="isOverlayed && hover"
           :size="size"
           :icon="icon"
@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import AvatarOverlay from '~/components/parts/image/AvatarOverlay.vue';
+import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
 
@@ -81,7 +81,7 @@ export type Props = {
 
 export default Vue.extend({
   components: {
-    AvatarOverlay,
+    ImageOverlay,
   },
 
   props: {
