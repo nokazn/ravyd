@@ -40,7 +40,7 @@
         >
           {{ artist.name }}
         </nuxt-link>
-        <span v-if="!avatar && index !== artists.length - 1">, </span>
+        <span v-if="!avatar && index !== artists.length - 1">,&nbsp;</span>
       </span>
     </template>
   </div>
@@ -132,12 +132,15 @@ export default Vue.extend({
   display: inline-flex;
   flex-wrap: nowrap;
 
-  &:not(:first-child) {
-    margin-left: 1rem;
-  }
-
   &__avatar {
     margin-right: 0.25rem;
+  }
+
+  &:not(:first-child) {
+    // avatar を表示するときはアーティスト間に空白を入れる
+    .Artist__avatar {
+      margin-left: 1rem;
+    }
   }
 }
 
