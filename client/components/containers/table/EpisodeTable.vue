@@ -62,13 +62,14 @@ import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTa
 import type { App } from '~~/types';
 
 type EpisodeSelector = 'all' | 'inProgress' | 'unplayed';
+type SelectItem = {
+  text: string;
+  value: EpisodeSelector;
+}
 
 type Data = {
   searchText: EpisodeSelector;
-  selectItems: {
-    text: string
-    value: EpisodeSelector
-  }[];
+  selectItems: SelectItem[];
   customFilter: (value: any, search: EpisodeSelector, item: App.EpisodeDetail) => boolean;
   activeRowId: string | undefined;
 };
@@ -121,7 +122,7 @@ export default Vue.extend({
       }
     };
 
-    const selectItems = [
+    const selectItems: SelectItem[] = [
       {
         text: 'すべてのエピソード',
         value: 'all' as const,
@@ -227,8 +228,11 @@ export default Vue.extend({
         });
       }
     },
-    onRowClicked({ id }: OnRow['on-row-clicked']) {
-      this.activeRowId = id;
+    onRowClicked(row: OnRow['on-row-clicked']) {
+      this.activeRowId = row.id;
+      if (this.$window.isSingleColumn) {
+        this.onMediaButtonClicked(row);
+      }
     },
   },
 });
