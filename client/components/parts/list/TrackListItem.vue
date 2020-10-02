@@ -32,7 +32,10 @@
               @on-clicked="onFavoriteButtonClicked"
             />
           </template>
-          <span v-else-if="$window.isSingleColumn">
+          <span
+            v-else-if="$window.isSingleColumn"
+            :class="$style.Content__index"
+          >
             {{ item.index + 1 }}.
           </span>
 
@@ -202,6 +205,10 @@ export default Vue.extend({
 
     & > *:not(:last-child) {
       margin-right: 0.75em;
+    }
+
+    &__index {
+      font-size: 0.825em;
     }
 
     &__title {
