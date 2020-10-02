@@ -15,14 +15,12 @@
           :disabled="!hasEpisodes"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
           :size="32"
           outlined
           :is-favorited="isSaved"
           @on-clicked="toggleSavedState"
         />
-
         <ShowMenu
           :show="showInfo"
           :is-saved="isSaved"
@@ -62,7 +60,7 @@
         </h1>
 
         <p>
-          {{ showInfo.publisher }}
+          {{ showInfo.publisher }}・{{ showInfo.totalEpisodes }}個のエピソード
         </p>
 
         <div :class="$style.Info__footer">
@@ -72,25 +70,16 @@
               :disabled="!hasEpisodes"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <FavoriteButton
               :is-favorited="isSaved"
               outlined
               @on-clicked="toggleSavedState"
             />
-
             <ShowMenu
               :show="showInfo"
               :is-saved="isSaved"
               outlined
               @on-save-menu-clicked="toggleSavedState"
-            />
-          </div>
-
-          <div :class="$style.Info__detail">
-            <ReleaseTotalTracks
-              :total="showInfo.totalEpisodes"
-              unit="個のエピソード"
             />
           </div>
         </div>
@@ -100,6 +89,7 @@
     <p
       v-if="showInfo.description"
       class="subtext--text"
+      :class="$style.ShowIdPage__description"
       v-html="showInfo.description"
     />
 
@@ -339,34 +329,34 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   @include additional-header-content();
 }
 
+$margin-bottom: 32px;
+
 .ShowIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    @include page-header;
+
+    margin-bottom: $margin-bottom;
   }
 
+  &__description,
   &__table {
-    margin-bottom: 32px;
+    // v-application p のデフォルトのスタイルを上書き
+    margin-bottom: $margin-bottom !important;
   }
 }
 
 .Info {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  @include page-info;
 
   &__explicitIcon {
     margin-bottom: 0.1rem;
   }
 
   &__title {
-    font-size: 2em;
-    margin: 0.3em 0;
-    line-height: 1.2em;
+    @include page-title;
   }
 
   &__footer {
@@ -376,21 +366,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   }
 
   &__buttons {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-right: 24px;
-
-    & > *:not(:last-child) {
-      margin-right: 12px;
-    }
-  }
-
-  &__detail {
-    margin-top: 12px;
-
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
+    @include page-header-buttons;
   }
 }
 </style>
