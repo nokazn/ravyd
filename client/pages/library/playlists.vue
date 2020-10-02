@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.LibraryPlaylistsPage">
     <CardsWrapper
       :min-width="$window.cardWidthMinMax[0]"
       :max-width="$window.cardWidthMinMax[1]"
@@ -49,3 +49,11 @@ export default class LibraryPlaylistPage extends Vue implements Data {
   }
 }
 </script>
+
+<style lang="scss" module>
+.LibraryPlaylistsPage {
+  & > * {
+    margin-bottom: 24px;
+  }
+}
+</style>

@@ -71,7 +71,7 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
 <style lang="scss" module>
 .LibraryHistoryPage {
   & > * {
-    margin-bottom: 8px;
+    margin-bottom: 24px;
   }
 }
 </style>

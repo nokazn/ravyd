@@ -164,5 +164,9 @@ export default class LibraryTracksPage extends Vue implements Data {
   & > * {
     margin-bottom: 8px;
   }
+
+  &__table {
+    margin-bottom: 24px;
+  }
 }
 </style>

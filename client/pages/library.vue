@@ -99,7 +99,7 @@ export default class LibraryPage extends Vue implements Data {
     position: sticky;
     top: $g-header-height;
     z-index: z-index-of(tab);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 }
 </style>
