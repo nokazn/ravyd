@@ -72,16 +72,10 @@
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseDate
-              :release-date="episodeInfo.releaseDate"
-              :release-date-precision="episodeInfo.releaseDatePrecision"
-            />
-            <ReleaseDuration
-              :duration-ms="episodeInfo.durationMs"
-              :is-full="true"
-            />
-          </div>
+          <EpisodeDetailWrapper
+            :episode="episodeInfo"
+            :class="$style.Info__detail"
+          />
         </div>
       </div>
     </div>
@@ -118,8 +112,7 @@ import { RootState } from 'typed-vuex';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
-import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
+import EpisodeDetailWrapper from '~/components/parts/wrapper/EpisodeDetailWrapper.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -149,8 +142,7 @@ interface Data {
     ExplicitChip,
     ContextMediaButton,
     EpisodeMenu,
-    ReleaseDate,
-    ReleaseDuration,
+    EpisodeDetailWrapper,
     EpisodeProgressBar,
     IntersectionLoadingCircle,
     Copyrights,
@@ -301,10 +293,6 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
   &__detail {
     // 2行になったとき
     margin-top: 12px;
-
-    & > *:not(:last-child) {
-      margin-right: 8px;
-    }
   }
 }
 </style>
