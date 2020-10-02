@@ -206,6 +206,7 @@ export default Vue.extend({
 
     &__title {
       font-size: 0.9em;
+      line-height: 1.4em;
 
       & > *:not(:first-child) {
         margin-left: 0.25em;
