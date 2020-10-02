@@ -105,14 +105,14 @@ export default Vue.extend({
 
   &__title {
     font-size: 0.9em;
-    line-height: 1.3em;
+    line-height: 1.4em;
     padding: 12px 6%  6% !important;
   }
 
   &__subtitle {
-    font-size: 0.8em;
-    line-height: 1.2em;
-    margin-top: -6% !important;
+    font-size: 0.825em;
+    line-height: 1.3em;
+    margin-top: -8% !important;
     padding: 6% 6% 12px !important;    /* margin-top: -8px !important; */
   }
 }
