@@ -12,9 +12,11 @@
     :offset-x="offsetX"
     :offset-y="offsetY"
     :z-index="$constant.Z_INDEX_OF.menu"
-    :open-on-hover="openOnHover"
+    :open-on-hover="openOnHover && !$window.isTouchScreen"
     :open-on-click="openOnClick"
     :close-delay="closeDelay"
+    close-on-content-click
+    close-on-click
   >
     <template #activator="{ on }">
       <slot

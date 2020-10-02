@@ -12,6 +12,13 @@ import {
   ARTWORK_BASE_SIZE,
 } from '~/constants';
 
+const touchScreenDetector = (): boolean => {
+  if (typeof window !== 'undefined') {
+    return 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+  }
+  return false;
+};
+
 const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
   xs: 0,
   sm: SM_BREAK_POINT,
@@ -62,11 +69,13 @@ type ResizeObserver = ((e?: UIEvent) => void)
 
 type WindowState = {
   width: number;
+  isTouchScreen: boolean;
   observer: ResizeObserver | undefined;
 }
 
 export type $Window = {
   readonly width: number;
+  readonly isTouchScreen: boolean;
   readonly type: DeviceType;
   readonly isMobile: boolean;
   readonly isPc: boolean;
@@ -83,12 +92,17 @@ export type $Window = {
 
 const state = Vue.observable<WindowState>({
   width: 0,
+  isTouchScreen: false,
   observer: undefined,
 });
 
 export const $window: $Window = {
   get width() {
     return state.width;
+  },
+
+  get isTouchScreen() {
+    return state.isTouchScreen;
   },
 
   get type() {
@@ -151,13 +165,15 @@ export const $window: $Window = {
 
   observe() {
     this.disconnectObserver();
-    const interval = 300;
-    const observer = debounce(() => {
+    const observe = () => {
       state.width = window.innerWidth;
-    }, interval);
+      state.isTouchScreen = touchScreenDetector();
+    };
 
     if (typeof window !== 'undefined') {
-      state.width = window.innerWidth;
+      observe();
+      const interval = 300;
+      const observer = debounce(observe, interval);
       window.addEventListener('resize', observer);
       state.observer = observer;
     }
