@@ -62,6 +62,7 @@
         <ArtistNames
           avatar
           :artists="releaseInfo.artists"
+          :class="$style.Info__artists"
         />
 
         <div :class="$style.Info__footer">
@@ -422,6 +423,16 @@ $margin-bottom: 32px;
 
   &__title {
     @include page-title;
+  }
+
+  &__artists {
+    display: flex;
+    flex-wrap: wrap;
+
+    @include smaller-than-md {
+      // 複数行になってもセンタリングさせる
+      justify-content: center;
+    }
   }
 
   &__footer {
