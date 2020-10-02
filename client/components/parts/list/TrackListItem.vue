@@ -19,9 +19,8 @@
 
       <v-list-item-content>
         <div :class="$style.Content">
-          <div :class="$style.Content__left">
+          <template v-if="$window.isMultiColumn">
             <TrackListMediaButton
-              v-if="$window.isMultiColumn"
               :is-hovered="hover"
               :is-playing-track="isPlayingTrack"
               :track-number="item.index + 1"
@@ -32,29 +31,32 @@
               :is-favorited="item.isSaved"
               @on-clicked="onFavoriteButtonClicked"
             />
+          </template>
+          <span v-else-if="$window.isSingleColumn">
+            {{ item.index + 1 }}.
+          </span>
 
-            <div
-              :class="$style.Content__title"
-              class="g-ellipsis-text"
+          <div
+            :class="$style.Content__title"
+            class="g-ellipsis-text"
+          >
+            <nuxt-link
+              :to="releasePath"
+              :title="item.name"
+              :class="textColor"
+              @click.native.stop
             >
-              <nuxt-link
-                :to="releasePath"
-                :title="item.name"
-                :class="textColor"
-                @click.native.stop
-              >
-                {{ item.name }}
-              </nuxt-link>
+              {{ item.name }}
+            </nuxt-link>
 
-              <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
-                <span :class="subtextColor">-</span>
-                <ArtistNames
-                  :artists="item.featuredArtists"
-                  inline
-                  :class="subtextColor"
-                />
-              </template>
-            </div>
+            <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
+              <span :class="subtextColor">-</span>
+              <ArtistNames
+                :artists="item.featuredArtists"
+                inline
+                :class="subtextColor"
+              />
+            </template>
           </div>
         </div>
       </v-list-item-content>
@@ -67,7 +69,7 @@
             :time-ms="item.durationMs"
           />
           <FavoriteButton
-            v-if="$window.isSingleColumn"
+            v-else-if="$window.isSingleColumn"
             :is-favorited="item.isSaved"
             :size="buttonSize"
             @on-clicked="onFavoriteButtonClicked"
@@ -189,30 +191,24 @@ export default Vue.extend({
     align-items: center;
 
     & > *:not(:last-child) {
-      margin-right: 1em;
+      margin-right: 0.25em;
     }
   }
 
   .Content {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     overflow-x: hidden;
 
-    &__left {
-      display: flex;
-      align-items: center;
-      overflow-x: hidden;
-
-      & > * {
-        margin-right: 0.8em;
-      }
+    & > *:not(:last-child) {
+      margin-right: 0.75em;
     }
 
     &__title {
       font-size: 0.9em;
 
-      & > *:not(:last-child) {
-        margin-right: 0.25em;
+      & > *:not(:first-child) {
+        margin-left: 0.25em;
       }
     }
   }
