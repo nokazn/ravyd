@@ -184,7 +184,7 @@ export default Vue.extend({
     justify-content: space-between;
 
     & > *:not(:first-child) {
-      margin-left: 0.25em;
+      margin-left: 0.25rem;
     }
 
     &__left {
@@ -195,7 +195,7 @@ export default Vue.extend({
 
     &__subtitle {
       &--divider {
-        margin: 0 0.25em;
+        margin: 0 0.25rem;
       }
     }
   }
