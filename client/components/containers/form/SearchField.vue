@@ -17,10 +17,10 @@
       'g-box-shadow': isFocused || isHovered
     }"
     @input="debouncedDispatcher"
-    @mouseover="handleIsHovered(true)"
-    @mouseout="handleIsHovered(false)"
-    @focus="handleIsFocused(true)"
-    @blur="handleIsFocused(false)"
+    @mouseover="toggleIsHovered(true)"
+    @mouseout="toggleIsHovered(false)"
+    @focus="toggleIsFocused(true)"
+    @blur="toggleIsFocused(false)"
   >
     <template #prepend-inner>
       <div :class="$style.SearchField__prependInnerIcon">
@@ -124,10 +124,10 @@ export default Vue.extend({
       get(): boolean {
         return $searchForm.isMenuShown;
       },
-      set(isShown: boolean) {
-        $searchForm.handleMenu(isShown);
+      set(menu: boolean) {
+        $searchForm.handleMenu(menu);
         // メニュー表示時に overlay も表示
-        this.$overlay.change(isShown);
+        this.$overlay.change(menu);
       },
     },
   },
@@ -161,7 +161,7 @@ export default Vue.extend({
   },
 
   methods: {
-    handleIsFocused(isFocused: boolean) {
+    toggleIsFocused(isFocused: boolean) {
       this.isFocused = isFocused;
 
       // フォーカスされたらメニューの位置を計算する
@@ -178,7 +178,7 @@ export default Vue.extend({
       // フォーカスの有無でメニューの表示が決まる
       this.menu = isFocused;
     },
-    handleIsHovered(isHovered: boolean) {
+    toggleIsHovered(isHovered: boolean) {
       this.isHovered = isHovered;
     },
     clearText() {
