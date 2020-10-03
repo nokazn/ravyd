@@ -12,9 +12,9 @@
           v-if="isFollowing != null"
           outlined
           :size="32"
-          :is-favorited="isFollowing"
+          :value="isFollowing"
           text="フォロー"
-          @on-clicked="toggleFollowingState"
+          @input="toggleFollowingState"
         />
         <UserMenu
           outlined
@@ -238,7 +238,7 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnFavoriteButton['on-clicked']| OnUserMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnFavoriteButton['input']| OnUserMenu['on-follow-menu-clicked']) {
     const handler = (params: {
       type: 'artist' | 'user',
       idList: string[],

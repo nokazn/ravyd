@@ -21,9 +21,8 @@
       <td>
         <FavoriteButton
           :size="buttonSize"
-          :is-favorited="item.isSaved"
-          :disableda="!item.isPlayable"
-          @on-clicked="onFavoriteButtonClicked"
+          :value="item.isSaved"
+          @input="onFavoriteButtonClicked"
         />
       </td>
 

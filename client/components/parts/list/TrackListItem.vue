@@ -28,8 +28,8 @@
             />
             <FavoriteButton
               v-if="$window.isMultiColumn"
-              :is-favorited="item.isSaved"
-              @on-clicked="onFavoriteButtonClicked"
+              :value="item.isSaved"
+              @input="onFavoriteButtonClicked"
             />
           </template>
           <span
@@ -73,9 +73,9 @@
           />
           <FavoriteButton
             v-else-if="$window.isSingleColumn"
-            :is-favorited="item.isSaved"
             :size="buttonSize"
-            @on-clicked="onFavoriteButtonClicked"
+            :value="item.isSaved"
+            @input="onFavoriteButtonClicked"
           />
           <TrackMenu
             offset-x

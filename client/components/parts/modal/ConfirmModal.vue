@@ -83,8 +83,8 @@ export default Vue.extend({
       get(): boolean {
         return this.value;
       },
-      set(value: OnModal['input']) {
-        this.$emit(INPUT, value);
+      set(modal: OnModal['input']) {
+        this.$emit(INPUT, modal);
       },
     },
   },

@@ -31,17 +31,16 @@
     <td>
       <FavoriteButton
         :size="buttonSize"
-        :is-favorited="item.isSaved"
-        :disableda="!item.isPlayable"
-        @on-clicked="onFavoriteButtonClicked"
+        :value="item.isSaved"
+        @input="onFavoriteButtonClicked"
       />
     </td>
 
     <td>
       <TrackMenu
-        :size="buttonSize"
-        offset-x
         left
+        offset-x
+        :size="buttonSize"
         :track="item"
         @on-favorite-menu-clicked="onFavoriteButtonClicked"
       />

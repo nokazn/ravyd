@@ -16,10 +16,10 @@
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :size="32"
           outlined
-          :is-favorited="isSaved"
-          @on-clicked="toggleSavedState"
+          :size="32"
+          :value="isSaved"
+          @input="toggleSavedState"
         />
         <ShowMenu
           :show="showInfo"
@@ -71,14 +71,14 @@
               @on-clicked="onContextMediaButtonClicked"
             />
             <FavoriteButton
-              :is-favorited="isSaved"
               outlined
-              @on-clicked="toggleSavedState"
+              :value="isSaved"
+              @input="toggleSavedState"
             />
             <ShowMenu
+              outlined
               :show="showInfo"
               :is-saved="isSaved"
-              outlined
               @on-save-menu-clicked="toggleSavedState"
             />
           </div>
@@ -309,7 +309,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleSavedState(nextSavedState: OnFavoriteButton['on-clicked'] | OnMenu['on-save-menu-clicked']) {
+  toggleSavedState(nextSavedState: OnFavoriteButton['input'] | OnMenu['on-save-menu-clicked']) {
     if (this.showInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

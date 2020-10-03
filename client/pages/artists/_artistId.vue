@@ -16,10 +16,10 @@
         />
         <FavoriteButton
           outlined
-          :size="32"
-          :is-favorited="isFollowing"
           text="フォロー"
-          @on-clicked="toggleFollowingState"
+          :size="32"
+          :value="isFollowing"
+          @input="toggleFollowingState"
         />
         <ArtistMenu
           :artist="artistInfo"
@@ -89,10 +89,10 @@
           <FavoriteButton
             v-if="$window.isSingleColumn"
             outlined
-            :size="32"
-            :is-favorited="isFollowing"
             text="フォロー"
-            @on-clicked="toggleFollowingState"
+            :size="32"
+            :value="isFollowing"
+            @input="toggleFollowingState"
           />
           <FollowButton
             v-else-if="$window.isMultiColumn"
@@ -310,7 +310,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleFollowingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['input'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

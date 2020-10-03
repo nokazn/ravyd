@@ -15,10 +15,10 @@
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :size="32"
           outlined
-          :is-favorited="releaseInfo.isSaved"
-          @on-clicked="toggleSavedState"
+          :size="32"
+          :value="releaseInfo.isSaved"
+          @input="toggleSavedState"
         />
         <ReleaseMenu
           :release="releaseInfo"
@@ -72,9 +72,9 @@
               @on-clicked="onContextMediaButtonClicked"
             />
             <FavoriteButton
-              :is-favorited="releaseInfo.isSaved"
               outlined
-              @on-clicked="toggleSavedState"
+              :value="releaseInfo.isSaved"
+              @input="toggleSavedState"
             />
             <ReleaseMenu
               :release="releaseInfo"
@@ -338,7 +338,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnFavorite['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnFavorite['input']) {
     if (this.releaseInfo == null) return;
 
     if (nextPlayingState) {

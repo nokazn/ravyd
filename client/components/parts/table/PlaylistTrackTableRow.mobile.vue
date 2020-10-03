@@ -59,16 +59,16 @@
       <FavoriteButton
         v-if="item.type !== 'episode'"
         :size="buttonSize"
-        :is-favorited="item.isSaved"
-        @on-clicked="onFavoriteButtonClicked"
+        :value="item.isSaved"
+        @input="onFavoriteButtonClicked"
       />
     </td>
 
     <td>
       <EpisodeMenu
         v-if="item.type === 'episode'"
-        offset-x
         left
+        offset-x
         :size="buttonSize"
         :episode="item"
         :playlist-id="playlistId"
@@ -76,8 +76,8 @@
       />
       <TrackMenu
         v-else
-        offset-x
         left
+        offset-x
         :size="buttonSize"
         :track="item"
         :playlist-id="playlistId"

@@ -30,8 +30,8 @@
       <FavoriteButton
         v-if="item.type !== 'episode'"
         :size="buttonSize"
-        :is-favorited="item.isSaved"
-        @on-clicked="onFavoriteButtonClicked"
+        :value="item.isSaved"
+        @input="onFavoriteButtonClicked"
       />
     </td>
 

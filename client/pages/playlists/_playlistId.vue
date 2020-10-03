@@ -27,10 +27,10 @@
         </CircleButton>
         <FavoriteButton
           v-else
-          :size="32"
           outlined
-          :is-favorited="isFollowing"
-          @on-clicked="toggleFollowingState"
+          :size="32"
+          :value="isFollowing"
+          @input="toggleFollowingState"
         />
 
         <PlaylistMenu
@@ -100,9 +100,9 @@
             </CircleButton>
             <FavoriteButton
               v-else
-              :is-favorited="isFollowing"
               outlined
-              @on-clicked="toggleFollowingState"
+              :value="isFollowing"
+              @input="toggleFollowingState"
             />
 
             <PlaylistMenu
@@ -565,7 +565,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.confirmModalParams = { ...confirmModalParams, loading };
   }
 
-  toggleFollowingState(nextFollowingState: OnFavoriteButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFavoriteButton['input'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     const { isOwnPlaylist } = this.playlistInfo;

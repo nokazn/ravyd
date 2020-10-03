@@ -33,10 +33,9 @@
 
         <FavoriteButton
           v-if="isTrack && hasTrack"
-          :is-favorited="isSavedTrack"
+          v-model="isSavedTrack"
           :size="44"
           :class="$style.Left__favoriteButton"
-          @on-clicked="onFavoriteButtonClicked"
         />
       </div>
 
@@ -152,22 +151,21 @@ export default Vue.extend({
     artists(): RootState['playback']['artists'] {
       return this.$state().playback.artists;
     },
-    isSavedTrack(): RootState['playback']['isSavedTrack'] {
-      return this.$state().playback.isSavedTrack;
-    },
-  },
+    isSavedTrack: {
+      get(): RootState['playback']['isSavedTrack'] {
+        return this.$state().playback.isSavedTrack;
+      },
+      set(isSaved: OnFavorite['input']) {
+        if (this.trackId == null) return;
 
-  methods: {
-    onFavoriteButtonClicked(isSaved: OnFavorite['on-clicked']) {
-      if (this.trackId == null) return;
-
-      // API との通信の結果を待たずに先に表示を変更させておく
-      this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
-      if (isSaved) {
-        this.$dispatch('library/tracks/saveTracks', [this.trackId]);
-      } else {
-        this.$dispatch('library/tracks/removeTracks', [this.trackId]);
-      }
+        // API との通信の結果を待たずに先に表示を変更させておく
+        this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
+        if (isSaved) {
+          this.$dispatch('library/tracks/saveTracks', [this.trackId]);
+        } else {
+          this.$dispatch('library/tracks/removeTracks', [this.trackId]);
+        }
+      },
     },
   },
 });
