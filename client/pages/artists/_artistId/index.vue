@@ -12,8 +12,8 @@
       <TrackListSection
         v-if="topTrackList.length > 0"
         title="人気の曲"
-        :is-abbreviated="isFirstSectionAbbreviated"
-        @on-clicked="toggleAbbreviatedTrackList"
+        :value="isFirstSectionAbbreviated"
+        @input="toggleAbbreviatedTrackList"
       >
         <TrackList
           :track-list="topTrackList"
@@ -36,10 +36,10 @@
         v-if="releaseInfo.items.length > 0"
         :key="type"
         :title="releaseInfo.title"
-        :is-abbreviated="releaseInfo.isAbbreviated"
         :full="releaseInfo.isFull"
+        :value="releaseInfo.isAbbreviated"
         :class="$style.DiscographySection"
-        @on-button-clicked="onShowAllButtonClicked(type)"
+        @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
         @on-loading-appeared="appendReleaseList(type)"
       >
@@ -187,7 +187,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
+  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['input']) {
     this.isTrackListAbbreviated = nextIsAbbreviated;
     // TrackListItem の高さに影響
     const itemHeight = 52;

@@ -30,15 +30,15 @@ export type ShowALlButton = {
   text: string
 }
 
-const ON_CLICKED = 'on-clicked';
+export const INPUT = 'input';
 
 export type On = {
-  [ON_CLICKED]: void
+  [INPUT]: boolean;
 }
 
 export default Vue.extend({
   props: {
-    isAbbreviated: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -58,7 +58,7 @@ export default Vue.extend({
 
   computed: {
     showAllButton(): ShowALlButton {
-      return this.isAbbreviated
+      return this.value
         ? {
           text: 'すべて表示',
           icon: 'mdi-chevron-down',
@@ -72,7 +72,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED);
+      this.$emit(INPUT, !this.value);
     },
   },
 });

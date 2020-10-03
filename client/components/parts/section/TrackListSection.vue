@@ -7,13 +7,12 @@
     <slot />
 
     <div
-      v-if="isAbbreviated != null"
+      v-if="value != null"
       :class="$style.TrackListSection__footer"
     >
       <ShowAllButton
+        v-model="abbreviated"
         small
-        :is-abbreviated="isAbbreviated"
-        @on-clicked="onShowAllButtonClicked"
       />
     </div>
   </section>
@@ -21,12 +20,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
-
-const ON_CLICKED = 'on-clicked';
+import ShowAllButton, { On as OnShowAll, INPUT } from '~/components/parts/button/ShowAllButton.vue';
 
 export type On = {
-  [ON_CLICKED]: boolean
+  [INPUT]: OnShowAll['input'];
 }
 
 export default Vue.extend({
@@ -35,7 +32,7 @@ export default Vue.extend({
   },
 
   props: {
-    isAbbreviated: {
+    value: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
@@ -45,10 +42,14 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onShowAllButtonClicked() {
-      const nextIsAbbreviated = !this.isAbbreviated;
-      this.$emit(ON_CLICKED, nextIsAbbreviated);
+  computed: {
+    abbreviated: {
+      get(): boolean | undefined {
+        return this.value;
+      },
+      set(abbreviated: OnShowAll['input']) {
+        this.$emit(INPUT, abbreviated);
+      },
     },
   },
 });
