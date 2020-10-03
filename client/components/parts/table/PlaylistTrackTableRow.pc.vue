@@ -4,7 +4,6 @@
       [$style.PlaylistTrackTableRow]: true,
       'inactive--text': disabled
     }"
-    :data-is-active="isActive"
     @click="onRowClicked"
   >
     <td
@@ -186,10 +185,6 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isActive: {
-      type: Boolean,
-      required: true,
-    },
     hideImage: {
       type: Boolean,
       default: false,
@@ -260,10 +255,6 @@ export default Vue.extend({
 <style lang="scss" module>
 .PlaylistTrackTableRow {
   cursor: pointer;
-
-  &[data-is-active=true] {
-    background-color: lighten($g-background-color, 16%);
-  }
 
   .Content {
     display: flex;

@@ -43,7 +43,6 @@
           :item="item"
           :publisher="publisher"
           :added-at="addedAt"
-          :is-active="item.id === activeRowId"
           :is-episode-set="isEpisodeSet(item.id)"
           :is-playing-episode="isPlayingEpisode(item.id)"
           @on-row-clicked="onRowClicked"
@@ -71,7 +70,6 @@ type Data = {
   searchText: EpisodeSelector;
   selectItems: SelectItem[];
   customFilter: (value: any, search: EpisodeSelector, item: App.EpisodeDetail) => boolean;
-  activeRowId: string | undefined;
 };
 
 export default Vue.extend({
@@ -141,7 +139,6 @@ export default Vue.extend({
       searchText: 'all',
       selectItems,
       customFilter,
-      activeRowId: undefined,
     };
   },
 
@@ -229,7 +226,6 @@ export default Vue.extend({
       }
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      this.activeRowId = row.id;
       if (this.$window.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }

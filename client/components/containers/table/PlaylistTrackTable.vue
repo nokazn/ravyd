@@ -45,7 +45,6 @@
         :hide-image="hideImage"
         :collaborative="collaborative"
         :hide-added-at="hideAddedAt"
-        :is-active="item.index === activeRowIndex"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :button-size="buttonSize"
@@ -63,10 +62,6 @@ import type { DataTableHeader } from 'vuetify';
 
 import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import type { App } from '~~/types';
-
-export type Data = {
-  activeRowIndex: number | undefined
-};
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
@@ -113,12 +108,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-  },
-
-  data(): Data {
-    return {
-      activeRowIndex: undefined,
-    };
   },
 
   computed: {
@@ -260,7 +249,6 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      this.activeRowIndex = row.index;
       if (this.$window.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }

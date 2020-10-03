@@ -4,7 +4,6 @@
       [$style.EpisodeTableRow]: true,
       'inactive--text': !item.isPlayable
     }"
-    :data-is-active="isActive"
     @click="onRowClicked"
   >
     <td>
@@ -94,10 +93,6 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isActive: {
-      type: Boolean,
-      required: true,
-    },
     addedAt: {
       type: Boolean,
       default: true,
@@ -138,10 +133,6 @@ export default Vue.extend({
 .EpisodeTableRow {
   cursor: pointer;
   padding: 1em 0;
-
-  &[data-is-active=true] {
-    background-color: lighten($g-background-color, 16%);
-  }
 
   .Content {
     & > *:not(:last-child) {

@@ -6,7 +6,6 @@
     :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
-    :is-active="isActive"
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
@@ -29,7 +28,6 @@
     :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
-    :is-active="isActive"
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
@@ -86,10 +84,6 @@ export default Vue.extend({
       required: true,
     },
     isPlayingTrack: {
-      type: Boolean,
-      required: true,
-    },
-    isActive: {
       type: Boolean,
       required: true,
     },

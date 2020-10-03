@@ -179,7 +179,6 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      this.activeRowId = row.id;
       if (this.$window.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
