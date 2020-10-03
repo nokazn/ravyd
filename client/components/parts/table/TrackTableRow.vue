@@ -27,15 +27,15 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import TrackTableRowMobile, { On as OnRowMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
-import TrackTableRowPc, { On as OnRowPc } from '~/components/parts/table/TrackTableRow.pc.vue';
+import TrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
+import TrackTableRowPc, { On as OnPc } from '~/components/parts/table/TrackTableRow.pc.vue';
 import { App } from '~~/types';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
 export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-export type On = OnRowMobile & OnRowPc;
+export type On = OnMobile | OnPc;
 
 export default Vue.extend({
   components: {

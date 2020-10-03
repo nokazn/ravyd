@@ -46,20 +46,16 @@
 import Vue, { PropType } from 'vue';
 import type { RawLocation } from 'vue-router';
 
-import PlaylistTrackTableRowMobile from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
-import PlaylistTrackTableRowPc from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
+import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
+import PlaylistTrackTableRowPc, { On as OnPc } from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { getImageSrc } from '~/utils/image';
 import type { App } from '~~/types';
 
-const ON_ROW_CLICKED = 'on-row-clicked';
-const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+export const ON_ROW_CLICKED = 'on-row-clicked';
+export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
-}
+export type On = OnMobile | OnPc;
 
 export default Vue.extend({
   components: {
@@ -152,17 +148,17 @@ export default Vue.extend({
   },
 
   methods: {
-    onRowClicked() {
+    onRowClicked(row: On['on-row-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
+      this.$emit(ON_ROW_CLICKED, row);
     },
-    onMediaButtonClicked() {
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
     },
-    onFavoriteButtonClicked() {
+    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
       // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
