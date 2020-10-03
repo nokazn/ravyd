@@ -11,7 +11,6 @@
     <span ckass="g-small-text">･</span>
     <ReleaseDuration
       hide-icon
-      is-full
       :duration-ms="episode.durationMs"
     />
   </div>
@@ -24,7 +23,6 @@
       :release-date-precision="episode.releaseDatePrecision"
     />
     <ReleaseDuration
-      is-full
       :duration-ms="episode.durationMs"
     />
   </div>
