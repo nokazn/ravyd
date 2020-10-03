@@ -194,7 +194,7 @@ export default Vue.extend({
     align-items: center;
 
     & > *:not(:last-child) {
-      margin-right: 0.25em;
+      margin-right: 0.75em;
     }
   }
 
