@@ -37,7 +37,7 @@
         :key="type"
         :title="releaseInfo.title"
         :is-abbreviated="releaseInfo.isAbbreviated"
-        :is-full="releaseInfo.isFull"
+        :full="releaseInfo.isFull"
         :class="$style.DiscographySection"
         @on-button-clicked="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"

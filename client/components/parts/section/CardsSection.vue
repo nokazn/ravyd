@@ -26,7 +26,7 @@
 
     <IntersectionLoadingCircle
       v-if="isAbbreviated === false"
-      :is-loading="!isFull"
+      :is-loading="!full"
       :class="$style.CardSection__loadingCircle"
       @on-appeared="onLoadingAppeared"
     />
@@ -77,7 +77,7 @@ export default Vue.extend({
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
-    isFull: {
+    full: {
       type: Boolean,
       required: true,
     },
