@@ -94,8 +94,8 @@
     </p>
 
     <IntersectionLoadingCircle
-      :is-loading="userPlaylistInfo.hasNext"
-      @on-appeared="appendPlaylists"
+      :loading="userPlaylistInfo.hasNext"
+      @appear="appendPlaylists"
     />
   </div>
   <Fallback v-else>

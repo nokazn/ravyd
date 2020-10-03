@@ -100,8 +100,8 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!releaseInfo.isFullTrackList"
-      @on-appeared="appendTrackList"
+      :loading="!releaseInfo.isFullTrackList"
+      @appear="appendTrackList"
     />
 
     <Copyrights

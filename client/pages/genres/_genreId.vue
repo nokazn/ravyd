@@ -25,8 +25,8 @@
     </p>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullPlaylists"
-      @on-appeared="appendCategoryPlaylist"
+      :loading="!isFullPlaylists"
+      @appear="appendCategoryPlaylist"
     />
   </div>
 

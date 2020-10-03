@@ -155,9 +155,8 @@
       />
 
       <IntersectionLoadingCircle
-        v-if="!playlistTrackInfo.isFullTrackList"
-        :is-loading="!playlistTrackInfo.isFullTrackList"
-        @on-appeared="appendTrackList"
+        :loading="!playlistTrackInfo.isFullTrackList"
+        @appear="appendTrackList"
       />
     </template>
   </div>

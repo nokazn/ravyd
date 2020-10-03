@@ -14,8 +14,8 @@
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFull"
-      @on-appeared="onLoadingCircleAppeared"
+      :loading="!isFull"
+      @appear="onLoadingCircleAppeared"
     />
   </div>
 </template>

@@ -101,8 +101,8 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!showInfo.isFullEpisodeList"
-      @on-appeared="appendEpisodeList"
+      :loading="!showInfo.isFullEpisodeList"
+      @appear="appendEpisodeList"
     />
 
     <Copyrights :copyright-list="showInfo.copyrightList" />

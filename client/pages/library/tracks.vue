@@ -25,8 +25,8 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!isFull"
-      @on-appeared="onLoadingCircleAppear"
+      :loading="!isFull"
+      @appear="onLoadingCircleAppear"
     />
   </div>
 </template>

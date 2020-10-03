@@ -26,9 +26,9 @@
 
     <IntersectionLoadingCircle
       v-if="isAbbreviated === false"
-      :is-loading="!full"
+      :loading="!full"
       :class="$style.CardSection__loadingCircle"
-      @on-appeared="onLoadingAppeared"
+      @appear="onLoadingAppeared"
     />
 
     <div
