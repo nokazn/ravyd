@@ -129,15 +129,14 @@
     />
 
     <ConfirmModal
-      :is-shown="confirmModal.isShown"
-      :loading="confirmModal.isLoading"
-      :type="confirmModal.type"
-      :color="confirmModal.color"
-      :text="confirmModal.text"
-      @on-changed="toggleConfirmModal"
+      v-model="confirmModal"
+      :loading="confirmModalParams.loading"
+      :type="confirmModalParams.type"
+      :color="confirmModalParams.color"
+      :text="confirmModalParams.text"
       @on-confirmed="onConformed"
     >
-      {{ confirmModal.description }}
+      {{ confirmModalParams.description }}
     </ConfirmModal>
 
     <p
@@ -198,8 +197,8 @@ const HEADER_REF = 'HEADER_REF';
 const REMOVE_PLAYLIST_MODAL = 'REMOVE_PLAYLIST_MODAL';
 
 type Modal = {
-  isShown: boolean
-  isLoading: boolean
+  value: boolean
+  loading: boolean
   type: string,
   color: ToastType | undefined,
   text: string,
@@ -214,7 +213,7 @@ interface AsyncData {
 
 interface Data {
   editPlaylistModal: boolean
-  confirmModal: Modal
+  confirmModalParams: Modal
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
 }
@@ -263,9 +262,9 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
 
   editPlaylistModal = false;
-  confirmModal: Modal = {
-    isShown: false,
-    isLoading: false,
+  confirmModalParams: Modal = {
+    value: false,
+    loading: false,
     type: '',
     color: undefined,
     text: '',
@@ -278,6 +277,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     return {
       title: this.playlistInfo?.name ?? 'エラー',
     };
+  }
+
+  get confirmModal(): boolean {
+    return this.confirmModalParams.value;
+  }
+  set confirmModal(value: boolean) {
+    this.toggleConfirmModal(true);
   }
 
   get artworkSrc(): string | undefined {
@@ -548,16 +554,16 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.editPlaylistModal = modal;
   }
 
-  toggleConfirmModal(isShown: OnModal['on-changed'], params?: Partial<Omit<Modal, 'isShown'>>) {
-    const { confirmModal } = this;
-    this.confirmModal = params != null
-      ? { ...confirmModal, isShown, ...params }
-      : { ...confirmModal, isShown };
+  toggleConfirmModal(value: OnModal['input'], params?: Partial<Omit<Modal, 'value'>>) {
+    const { confirmModalParams } = this;
+    this.confirmModalParams = params != null
+      ? { ...confirmModalParams, value, ...params }
+      : { ...confirmModalParams, value };
   }
 
-  toggleConfirmModalLoading(isLoading: boolean) {
-    const { confirmModal } = this;
-    this.confirmModal = { ...confirmModal, isLoading };
+  toggleConfirmModalLoading(loading: boolean) {
+    const { confirmModalParams } = this;
+    this.confirmModalParams = { ...confirmModalParams, loading };
   }
 
   toggleFollowingState(nextFollowingState: OnFavoriteButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {

@@ -38,11 +38,11 @@
 import Vue, { PropType } from 'vue';
 import Modal, { On as OnModal } from '~/components/parts/modal/Modal.vue';
 
-export const ON_CHANGED = 'on-changed';
+export const INPUT = 'input';
 export const ON_CONFIRMED = 'on-confirmed';
 
 export type On = {
-  [ON_CHANGED]: boolean
+  [INPUT]: boolean
   [ON_CONFIRMED]: string
 }
 
@@ -52,7 +52,7 @@ export default Vue.extend({
   },
 
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -81,10 +81,10 @@ export default Vue.extend({
   computed: {
     modal: {
       get(): boolean {
-        return this.isShown;
+        return this.value;
       },
-      set(isShown: OnModal['input']) {
-        this.$emit(ON_CHANGED, isShown);
+      set(value: OnModal['input']) {
+        this.$emit(INPUT, value);
       },
     },
   },
