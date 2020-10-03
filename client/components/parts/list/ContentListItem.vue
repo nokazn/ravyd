@@ -4,7 +4,7 @@
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
     :title="name"
-    :data-is-selected="isSelected"
+    :data-is-selected="selected"
     :class="$style.ContentListItem"
     @click.native="onClicked"
   >
@@ -107,7 +107,7 @@ export default Vue.extend({
       type: [String, Object] as PropType<string | RawLocation>,
       required: true,
     },
-    isSelected: {
+    selected: {
       type: Boolean,
       default: false,
     },

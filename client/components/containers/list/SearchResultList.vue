@@ -53,7 +53,7 @@
                     v-for="item in items"
                     :key="item.id"
                     v-bind="item"
-                    :is-selected="selectedItem != null ? item.id === selectedItem.id : false"
+                    :selected="selectedItem != null ? item.id === selectedItem.id : false"
                     @on-clicked="onItemClicked"
                   />
                 </v-list-item-group>
