@@ -32,8 +32,8 @@
       <TrackTableRow
         :item="item"
         :active="item.id === activeRowId"
-        :is-track-set="isTrackSet(item.id)"
-        :is-playing-track="isPlayingTrack(item.id)"
+        :set="isTrackSet(item.id)"
+        :playing="isPlayingTrack(item.id)"
         :button-size="buttonSize"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"

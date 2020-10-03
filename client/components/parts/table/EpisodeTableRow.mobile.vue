@@ -57,7 +57,7 @@ import Vue, { PropType } from 'vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -83,14 +83,6 @@ export default Vue.extend({
     },
     publisher: {
       type: String,
-      required: true,
-    },
-    isEpisodeSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingEpisode: {
-      type: Boolean,
       required: true,
     },
     addedAt: {

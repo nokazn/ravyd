@@ -3,8 +3,6 @@
     v-if="$window.isSingleColumn"
     :item="item"
     :publisher="publisher"
-    :is-episode-set="isEpisodeSet"
-    :is-playing-episode="isPlayingEpisode"
     :added-at="addedAt"
     :episode-path="episodePath"
     :title-color="titleColor"
@@ -15,8 +13,7 @@
     v-else-if="$window.isMultiColumn"
     :item="item"
     :publisher="publisher"
-    :is-episode-set="isEpisodeSet"
-    :is-playing-episode="isPlayingEpisode"
+    :playing="playing"
     :added-at="addedAt"
     :episode-path="episodePath"
     :title-color="titleColor"
@@ -58,11 +55,11 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    isEpisodeSet: {
+    set: {
       type: Boolean,
       required: true,
     },
-    isPlayingEpisode: {
+    playing: {
       type: Boolean,
       required: true,
     },
@@ -78,13 +75,13 @@ export default Vue.extend({
     },
     titleColor(): string | undefined {
       if (!this.item.isPlayable) return 'inactive--text';
-      return this.isEpisodeSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
       if (!this.item.isPlayable) return 'inactive--text';
-      return this.isEpisodeSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
     },

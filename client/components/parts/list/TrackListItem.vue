@@ -22,7 +22,7 @@
           <template v-if="$window.isMultiColumn">
             <TrackListMediaButton
               :hover="hover"
-              :is-playing-track="isPlayingTrack"
+              :playing="playing"
               :track-number="item.index + 1"
               @on-clicked="onMediaButtonClicked"
             />
@@ -128,11 +128,11 @@ export default Vue.extend({
       type: Object as PropType<App.TrackDetail>,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
-    isTrackSet: {
+    set: {
       type: Boolean,
       required: true,
     },
@@ -149,12 +149,12 @@ export default Vue.extend({
       };
     },
     textColor(): string | undefined {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtextColor(): string | undefined {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
     },

@@ -14,7 +14,7 @@
       </v-btn>
 
       <v-icon
-        v-show="!hover && isPlayingTrack"
+        v-show="!hover && playing"
         title="再生中"
       >
         mdi-volume-high
@@ -23,7 +23,7 @@
 
     <template v-if="trackNumber != null">
       <span
-        v-show="disabled || (!hover && !isPlayingTrack)"
+        v-show="disabled || (!hover && !playing)"
         :title="disabledTitle"
         :class="{ 'inactive--text': disabled }"
       >
@@ -51,7 +51,7 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
@@ -73,7 +73,7 @@ export default Vue.extend({
 
   computed: {
     mediaButton(): MediaButton {
-      return this.isPlayingTrack
+      return this.playing
         ? {
           icon: 'mdi-pause',
           title: '停止',

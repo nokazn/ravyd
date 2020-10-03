@@ -20,7 +20,7 @@
     <td class="text-center">
       <PlaylistMediaButton
         :size="buttonSize"
-        :is-playing-track="isPlayingTrack"
+        :playing="playing"
         :disabled="disabled"
         @on-clicked="onMediaButtonClicked"
       />
@@ -177,11 +177,7 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    isTrackSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },

@@ -3,8 +3,6 @@
     v-if="$window.isSingleColumn"
     :item="item"
     :active="active"
-    :is-track-set="isTrackSet"
-    :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
     :title-color="titleColor"
     :subtext-color="subtextColor"
@@ -16,8 +14,7 @@
     v-else-if="$window.isMultiColumn"
     :item="item"
     :active="active"
-    :is-track-set="isTrackSet"
-    :is-playing-track="isPlayingTrack"
+    :playing="playing"
     :button-size="buttonSize"
     :title-color="titleColor"
     :subtext-color="subtextColor"
@@ -55,11 +52,11 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isTrackSet: {
+    set: {
       type: Boolean,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
@@ -71,12 +68,12 @@ export default Vue.extend({
 
   computed: {
     titleColor(): string | undefined {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtextColor(): string {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
     },

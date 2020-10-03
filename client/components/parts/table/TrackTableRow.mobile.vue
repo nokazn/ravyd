@@ -85,14 +85,6 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isTrackSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingTrack: {
-      type: Boolean,
-      required: true,
-    },
     buttonSize: {
       type: Number,
       default: 36,

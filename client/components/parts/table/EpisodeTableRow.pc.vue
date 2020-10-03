@@ -11,7 +11,7 @@
       class="text-center"
     >
       <PlaylistMediaButton
-        :is-playing-track="isPlayingEpisode"
+        :playing="playing"
         :disabled="!item.isPlayable"
         @on-clicked="onMediaButtonClicked"
       />
@@ -120,11 +120,7 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    isEpisodeSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingEpisode: {
+    playing: {
       type: Boolean,
       required: true,
     },

@@ -12,8 +12,8 @@
         v-show="length == null || track.index < length"
         :key="track.id"
         :item="track"
-        :is-playing-track="isPlayingTrack(track.id)"
-        :is-track-set="isTrackSet(track.id)"
+        :set="isTrackSet(track.id)"
+        :playing="isPlayingTrack(track.id)"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />

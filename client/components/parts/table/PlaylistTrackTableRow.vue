@@ -6,8 +6,6 @@
     :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
-    :is-track-set="isTrackSet"
-    :is-playing-track="isPlayingTrack"
     :button-size="buttonSize"
     :disabled="disabled"
     :artwork-src="artworkSrc"
@@ -28,8 +26,7 @@
     :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
-    :is-track-set="isTrackSet"
-    :is-playing-track="isPlayingTrack"
+    :playing="playing"
     :button-size="buttonSize"
     :disabled="disabled"
     :artwork-src="artworkSrc"
@@ -79,11 +76,11 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    isTrackSet: {
+    set: {
       type: Boolean,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
@@ -142,13 +139,13 @@ export default Vue.extend({
     },
     titleColor(): string | undefined {
       if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
       if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
     },

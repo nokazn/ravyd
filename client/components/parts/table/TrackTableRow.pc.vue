@@ -11,7 +11,7 @@
       <td class="text-center">
         <TrackListMediaButton
           :hover="isRowHovered"
-          :is-playing-track="isPlayingTrack"
+          :playing="playing"
           :track-number="trackNumber"
           :disabled="!item.isPlayable"
           @on-clicked="onMediaButtonClicked"
@@ -108,11 +108,7 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-    isTrackSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },

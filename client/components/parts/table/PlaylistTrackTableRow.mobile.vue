@@ -128,14 +128,6 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    isTrackSet: {
-      type: Boolean,
-      required: true,
-    },
-    isPlayingTrack: {
-      type: Boolean,
-      required: true,
-    },
     hideImage: {
       type: Boolean,
       default: false,

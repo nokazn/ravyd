@@ -43,8 +43,8 @@
           :item="item"
           :publisher="publisher"
           :added-at="addedAt"
-          :is-episode-set="isEpisodeSet(item.id)"
-          :is-playing-episode="isPlayingEpisode(item.id)"
+          :set="isEpisodeSet(item.id)"
+          :playing="isPlayingEpisode(item.id)"
           @on-row-clicked="onRowClicked"
           @on-media-button-clicked="onMediaButtonClicked"
         />
