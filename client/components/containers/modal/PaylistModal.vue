@@ -124,10 +124,10 @@ export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' 
     isCollaborative: boolean
   }) => Promise<void>
 
-export const ON_CHANGED = 'on-changed';
+export const INPUT = 'input';
 
 export type On = {
-  [ON_CHANGED]: boolean
+  [INPUT]: boolean
 }
 
 export default Vue.extend({
@@ -136,7 +136,7 @@ export default Vue.extend({
   },
 
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -184,15 +184,15 @@ export default Vue.extend({
   computed: {
     modal: {
       get(): boolean {
-        return this.isShown;
+        return this.value;
       },
-      set(isShown: boolean) {
+      set(value: boolean) {
         const ref = this.$refs[FORM_REF];
-        if (!isShown && ref != null) {
+        if (!value && ref != null) {
           // モーダルを閉じたときにバリデーションをリセット
           (ref as Vue & { resetValidation(): void }).resetValidation();
         }
-        this.$emit(ON_CHANGED, isShown);
+        this.$emit(INPUT, value);
       },
     },
   },
@@ -275,7 +275,7 @@ export default Vue.extend({
 
   methods: {
     onCloseButtonClicked() {
-      this.$emit(ON_CHANGED, false);
+      this.modal = false;
     },
     createPlaylist() {
       const userId = this.$getters()['auth/userId'];

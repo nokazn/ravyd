@@ -59,10 +59,7 @@
       </v-list-item-group>
     </v-list>
 
-    <CreatePlaylistModal
-      :is-shown="createPlaylistModal"
-      @on-changed="onCreatePlaylistModalChanged"
-    />
+    <CreatePlaylistModal v-model="createPlaylistModal" />
   </v-navigation-drawer>
 </template>
 
@@ -72,7 +69,7 @@ import type { RootState } from 'typed-vuex';
 
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
-import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
+import CreatePlaylistModal from '~/components/parts/modal/CreatePlaylistModal.vue';
 
 type NavigationGroup = {
   items: Item[]
@@ -210,9 +207,6 @@ export default Vue.extend({
     },
     onPlaylistButtonClicked() {
       this.createPlaylistModal = true;
-    },
-    onCreatePlaylistModalChanged(isShown: On['on-changed']) {
-      this.createPlaylistModal = isShown;
     },
   },
 });

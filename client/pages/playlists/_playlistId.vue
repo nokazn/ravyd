@@ -21,7 +21,7 @@
           :size="32"
           outlined
           title="編集する"
-          @on-clicked="editPlaylistModal = true"
+          @on-clicked="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
@@ -94,7 +94,7 @@
               :size="36"
               outlined
               title="編集する"
-              @on-clicked="editPlaylistModal = true"
+              @on-clicked="toggleEditPlaylistModal(true)"
             >
               mdi-pencil
             </CircleButton>
@@ -109,7 +109,7 @@
               :playlist="playlistInfo"
               :is-following="isFollowing"
               outlined
-              @on-edit-menu-clicked="toggleEditPlaylistModal"
+              @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
             />
           </div>
@@ -123,9 +123,8 @@
     </div>
 
     <EditPlaylistModal
-      :is-shown="editPlaylistModal"
+      v-model="editPlaylistModal"
       :form="editPlaylistForm"
-      @on-changed="toggleEditPlaylistModal"
     />
 
     <ConfirmModal
@@ -550,7 +549,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleEditPlaylistModal(modal: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
+  toggleEditPlaylistModal(modal: OnEditModal['input'] | OnMenu['on-edit-menu-clicked']) {
     this.editPlaylistModal = modal;
   }
 
