@@ -254,8 +254,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .PlaylistTrackTableRow {
-  cursor: pointer;
-
   .Content {
     display: flex;
     align-items: center;

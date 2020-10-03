@@ -160,8 +160,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackTableRow {
-  cursor: pointer;
-
   &[data-is-active=true] {
     background-color: lighten($g-background-color, 16%);
   }

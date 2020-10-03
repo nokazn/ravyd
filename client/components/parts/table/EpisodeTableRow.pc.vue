@@ -166,9 +166,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .EpisodeTableRow {
-  cursor: pointer;
-  padding: 1em 0;
-
   .Content {
     display: flex;
     align-items: center;
