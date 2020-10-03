@@ -11,7 +11,11 @@
       :max-width="maxSize || size"
       :max-height="maxSize || size"
       :aspect-ratio="1"
-      :class="{ 'g-box-shadow': shadow }"
+      :class="{
+        'g-box-shadow': shadow,
+        [$style.ReleaseArtwork]: true,
+      }"
+      :style="cssProps"
       @load="onLoaded"
     >
       <ImageOverlay
@@ -31,9 +35,9 @@
       :height="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
-      :class="$style.ReleaseArtwork__noArtwork"
+      :class="$style['ReleaseArtwork--empty']"
     >
-      <v-icon :size="noArtworkIconSize">
+      <v-icon :size="defaultIconSize">
         mdi-music
       </v-icon>
     </v-sheet>
@@ -45,10 +49,6 @@ import Vue, { PropType } from 'vue';
 import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
-
-export type Data = {
-  noArtworkIconSize: number
-}
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
@@ -96,17 +96,22 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    borderRadius: {
+      type: Number,
+      default: 0,
+    },
   },
 
-  data(): Data {
-    const baseSize = this.size ?? this.minSize;
-    const noArtworkIconSize = baseSize != null
-      ? baseSize * 0.4
-      : 60;
-
-    return {
-      noArtworkIconSize,
-    };
+  computed: {
+    defaultIconSize(): number {
+      const baseSize = this.size ?? this.minSize;
+      return baseSize != null
+        ? baseSize * 0.4
+        : 60;
+    },
+    cssProps(): Record<string, string> | undefined {
+      return { '--border-radius': `${this.borderRadius}px` };
+    },
   },
 
   methods: {
@@ -122,7 +127,10 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseArtwork {
-  &__noArtwork {
+  // 上だけ丸みをもたせる
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+
+  &--empty {
     display: flex;
     justify-content: center;
     align-items: center;

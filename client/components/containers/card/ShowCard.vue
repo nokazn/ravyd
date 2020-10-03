@@ -8,6 +8,7 @@
     <template #image>
       <ReleaseArtwork
         overlay
+        :border-radius="2"
         :src="artworkSrc"
         :alt="name"
         :size="width"
