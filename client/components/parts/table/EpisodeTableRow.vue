@@ -5,7 +5,6 @@
     :publisher="publisher"
     :is-episode-set="isEpisodeSet"
     :is-playing-episode="isPlayingEpisode"
-    :is-active="isActive"
     :added-at="addedAt"
     :episode-path="episodePath"
     :title-color="titleColor"
@@ -18,7 +17,6 @@
     :publisher="publisher"
     :is-episode-set="isEpisodeSet"
     :is-playing-episode="isPlayingEpisode"
-    :is-active="isActive"
     :added-at="addedAt"
     :episode-path="episodePath"
     :title-color="titleColor"
@@ -65,10 +63,6 @@ export default Vue.extend({
       required: true,
     },
     isPlayingEpisode: {
-      type: Boolean,
-      required: true,
-    },
-    isActive: {
       type: Boolean,
       required: true,
     },
