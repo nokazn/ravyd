@@ -9,8 +9,8 @@
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
-          :height="32"
           fab
+          :height="32"
           :is-playing="isArtistSet && isPlaying "
           @on-clicked="onContextMediaButtonClicked"
         />
@@ -22,11 +22,11 @@
           @input="toggleFollowingState"
         />
         <ArtistMenu
+          left
+          outlined
+          :size="32"
           :artist="artistInfo"
           :is-following="isFollowing"
-          :size="32"
-          outlined
-          left
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -37,18 +37,18 @@
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
+        shadow
         type="artist"
         :src="avatarSrc"
         :size="$window.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
-        shadow
       />
 
       <div :class="$style.Info">
         <HashTags
-          :tag-list="artistInfo.genreList"
           outlined
+          :tag-list="artistInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -60,9 +60,9 @@
             アーティスト
           </span>
           <v-icon
-            :size="14"
             color="light-blue"
             title="認証済アーティスト"
+            :size="14"
             :class="$style.Info__verifiedArtistIcon"
           >
             mdi-check-decagram
@@ -96,14 +96,14 @@
           />
           <FollowButton
             v-else-if="$window.isMultiColumn"
-            :is-following="isFollowing"
-            @on-clicked="toggleFollowingState"
+            :value="isFollowing"
+            @input="toggleFollowingState"
           />
 
           <ArtistMenu
+            outlined
             :artist="artistInfo"
             :is-following="isFollowing"
-            outlined
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>
@@ -310,7 +310,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleFollowingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['input'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollow['input'] | OnFavorite['input'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく

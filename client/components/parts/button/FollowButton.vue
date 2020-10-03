@@ -4,7 +4,7 @@
       rounded
       :width="172"
       :color="color"
-      :outlined="!isFollowing"
+      :outlined="!value"
       :height="height"
       @click="onClicked"
     >
@@ -26,15 +26,15 @@ export type FollowIcon = 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-h
 
 export type FollowText = 'フォロー' | 'フォローしない' | 'フォロー中'
 
-const ON_CLICKED = 'on-clicked';
+const INPUT = 'input';
 
 export type On = {
-  [ON_CLICKED]: boolean
+  [INPUT]: boolean
 }
 
 export default Vue.extend({
   props: {
-    isFollowing: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -46,15 +46,13 @@ export default Vue.extend({
 
   computed: {
     color(): string | undefined {
-      return this.isFollowing
+      return this.value
         ? 'grey darken-3'
         : undefined;
     },
     followIcon(): (hover: boolean) => FollowIcon {
       return (hover: boolean) => {
-        if (!this.isFollowing) {
-          return 'mdi-heart-plus-outline';
-        }
+        if (!this.value) return 'mdi-heart-plus-outline';
         return hover
           ? 'mdi-heart-outline'
           : 'mdi-heart';
@@ -62,7 +60,7 @@ export default Vue.extend({
     },
     followText(): (hover: boolean) => FollowText {
       return (hover: boolean) => {
-        if (!this.isFollowing) return 'フォロー';
+        if (!this.value) return 'フォロー';
         return hover
           ? 'フォローしない'
           : 'フォロー中';
@@ -71,7 +69,7 @@ export default Vue.extend({
   },
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED, !this.isFollowing);
+      this.$emit(INPUT, !this.value);
     },
   },
 });
