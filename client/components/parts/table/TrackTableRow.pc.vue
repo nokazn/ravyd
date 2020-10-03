@@ -10,7 +10,7 @@
     >
       <td class="text-center">
         <TrackListMediaButton
-          :is-hovered="isRowHovered"
+          :hover="isRowHovered"
           :is-playing-track="isPlayingTrack"
           :track-number="trackNumber"
           :disabled="!item.isPlayable"

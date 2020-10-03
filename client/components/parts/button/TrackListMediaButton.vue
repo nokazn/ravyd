@@ -2,7 +2,7 @@
   <span :class="$style.TrackListMediaButton">
     <template v-if="!disabled">
       <v-btn
-        v-show="isHovered"
+        v-show="hover"
         outlined
         small
         icon
@@ -14,7 +14,7 @@
       </v-btn>
 
       <v-icon
-        v-show="!isHovered && isPlayingTrack"
+        v-show="!hover && isPlayingTrack"
         title="再生中"
       >
         mdi-volume-high
@@ -23,7 +23,7 @@
 
     <template v-if="trackNumber != null">
       <span
-        v-show="disabled || (!isHovered && !isPlayingTrack)"
+        v-show="disabled || (!hover && !isPlayingTrack)"
         :title="disabledTitle"
         :class="{ 'inactive--text': disabled }"
       >
@@ -47,7 +47,7 @@ export type Data = {
 
 export default Vue.extend({
   props: {
-    isHovered: {
+    hover: {
       type: Boolean,
       required: true,
     },

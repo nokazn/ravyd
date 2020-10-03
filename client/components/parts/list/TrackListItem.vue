@@ -21,7 +21,7 @@
         <div :class="$style.Content">
           <template v-if="$window.isMultiColumn">
             <TrackListMediaButton
-              :is-hovered="hover"
+              :hover="hover"
               :is-playing-track="isPlayingTrack"
               :track-number="item.index + 1"
               @on-clicked="onMediaButtonClicked"
