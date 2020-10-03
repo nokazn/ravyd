@@ -90,11 +90,12 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-import { App } from '~~/types';
-
-const ON_ROW_CLICKED = 'on-row-clicked';
-const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+import {
+  ON_ROW_CLICKED,
+  ON_MEDIA_BUTTON_CLICKED,
+  ON_FAVORITE_BUTTON_CLICKED,
+} from '~/components/parts/table/EpisodeTableRow.vue';
+import type { App } from '~~/types';
 
 export type On = {
   [ON_ROW_CLICKED]: App.PlaylistTrackDetail

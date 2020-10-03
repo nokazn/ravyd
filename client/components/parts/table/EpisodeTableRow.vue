@@ -8,6 +8,9 @@
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
     :release-date="releaseDate"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <EpisodeTableRowPc
     v-else-if="$window.isMultiColumn"
@@ -19,26 +22,25 @@
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
     :release-date="releaseDate"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import EpisodeTableRowMobile from '~/components/parts/table/EpisodeTableRow.mobile.vue';
-import EpisodeTableRowPc from '~/components/parts/table/EpisodeTableRow.pc.vue';
+import EpisodeTableRowMobile, { On as OnMobile } from '~/components/parts/table/EpisodeTableRow.mobile.vue';
+import EpisodeTableRowPc, { On as OnPc } from '~/components/parts/table/EpisodeTableRow.pc.vue';
 import { convertReleaseDate } from '~/utils/converter';
 import type { App } from '~~/types';
 
-const ON_ROW_CLICKED = 'on-row-clicked';
-const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+export const ON_ROW_CLICKED = 'on-row-clicked';
+export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
-}
+export type On = OnMobile | OnPc;
 
 export default Vue.extend({
   components: {
@@ -95,14 +97,14 @@ export default Vue.extend({
   },
 
   methods: {
-    onRowClicked() {
-      this.$emit(ON_ROW_CLICKED, this.item);
+    onRowClicked(row: On['on-row-clicked']) {
+      this.$emit(ON_ROW_CLICKED, row);
     },
-    onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
     },
-    onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
+    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
