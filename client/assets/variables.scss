@@ -294,3 +294,14 @@ $__layer-map: (
     margin-right: 12px;
   }
 }
+
+// scss module では .v-row-group__header が効かない
+@mixin v-data-table-height($height: 44px) {
+  table {
+    tr:not(.v-row-group__header) {
+      td {
+        height: $height !important;
+      }
+    }
+  }
+}

@@ -190,38 +190,12 @@ export default Vue.extend({
 
 <style lang="scss">
 .track-table {
-  // 表の背景を透過にし、全体の背景と同じ色にする
-  background-color: rgba(0, 0, 0, 0) !important;
-
-  table {
-    // 表と列の幅を最初の行のセルの幅に固定して設定
-    table-layout: fixed;
-
-    tr {
-      td {
-        padding: 0 6px !important;
-        height: 64px !important;
-
-        @include smaller-than-md {
-          // 列の幅をデフォルトの 48px から少し広める
-          height: 56px !important;
-        }
-
-        @include larger-than-md {
-          // 列の幅をデフォルトの 48px から少し狭める
-          height: 44px !important;
-        }
-      }
-
-      th {
-        padding: 0 6px !important;
-      }
-    }
+  @include smaller-than-md {
+    @include v-data-table-height(56px);
   }
 
-  .v-row-group__header {
-    // 表全体の背景と同じ色にする
-    background: inherit !important;
+  @include larger-than-md {
+    @include v-data-table-height(44px);
   }
 }
 </style>

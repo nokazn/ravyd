@@ -246,29 +246,6 @@ export default Vue.extend({
 
 <style lang="scss">
 .episode-table {
-  // 表の背景を透過にし、全体の背景と同じ色にする
-  background-color: rgba(0, 0, 0, 0) !important;
-
-  table {
-    // 表と列の幅を最初の行のセルの幅に固定して設定
-    table-layout: fixed;
-
-    tr {
-      td {
-        padding: 0 6px !important;
-        height: 64px !important;
-      }
-
-      // .v-aplication .active を無効化する
-      th {
-        padding: 0 6px !important;
-
-        &.active {
-          background-color: inherit !important;
-          border-color: inherit !important;
-        }
-      }
-    }
-  }
+  @include v-data-table-height(64px);
 }
 </style>

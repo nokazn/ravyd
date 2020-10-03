@@ -52,6 +52,45 @@ html {
   border-radius: 4px;
 }
 
+/*
+ * テーブルのスタイルを上書き
+ */
+.v-data-table {
+  // 表の背景を透過にし、全体の背景と同じ色にする
+  background-color: rgba(0, 0, 0, 0) !important;
+
+  table {
+    // 表と列の幅を最初の行のセルの幅に固定して設定
+    table-layout: fixed;
+
+    tr {
+      td,
+      th {
+        padding: 0 4px !important;
+      }
+
+      &.v-row-group__header {
+        // 表全体の背景と同じ色にする
+        background: inherit !important;
+
+        td {
+          height: 44px !important;
+        }
+      }
+
+      th {
+        height: 44px !important;
+
+        // .v-aplication .active を無効化する
+        &.active {
+          background-color: inherit !important;
+          border-color: inherit !important;
+        }
+      }
+    }
+  }
+}
+
 /**
  * デフォルトのリンクのスタイル
  */
