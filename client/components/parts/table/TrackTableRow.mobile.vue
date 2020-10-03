@@ -4,7 +4,7 @@
       [$style.TrackTableRow]: true,
       'inactive--text': !item.isPlayable
     }"
-    :data-is-active="isActive"
+    :data-is-active="active"
     @click="onRowClicked"
   >
     <td
@@ -81,15 +81,15 @@ export default Vue.extend({
       type: Object as PropType<App.TrackDetail>,
       required: true,
     },
+    active: {
+      type: Boolean,
+      required: true,
+    },
     isTrackSet: {
       type: Boolean,
       required: true,
     },
     isPlayingTrack: {
-      type: Boolean,
-      required: true,
-    },
-    isActive: {
       type: Boolean,
       required: true,
     },

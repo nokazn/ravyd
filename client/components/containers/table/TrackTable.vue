@@ -31,7 +31,7 @@
     <template #item="{ item }">
       <TrackTableRow
         :item="item"
-        :is-active="item.id === activeRowId"
+        :active="item.id === activeRowId"
         :is-track-set="isTrackSet(item.id)"
         :is-playing-track="isPlayingTrack(item.id)"
         :button-size="buttonSize"

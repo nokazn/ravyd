@@ -2,9 +2,9 @@
   <TrackTableRowMobile
     v-if="$window.isSingleColumn"
     :item="item"
+    :active="active"
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
-    :is-active="isActive"
     :button-size="buttonSize"
     :title-color="titleColor"
     :subtext-color="subtextColor"
@@ -15,9 +15,9 @@
   <TrackTableRowPc
     v-else-if="$window.isMultiColumn"
     :item="item"
+    :active="active"
     :is-track-set="isTrackSet"
     :is-playing-track="isPlayingTrack"
-    :is-active="isActive"
     :button-size="buttonSize"
     :title-color="titleColor"
     :subtext-color="subtextColor"
@@ -51,15 +51,15 @@ export default Vue.extend({
       type: Object as PropType<App.TrackDetail>,
       required: true,
     },
+    active: {
+      type: Boolean,
+      required: true,
+    },
     isTrackSet: {
       type: Boolean,
       required: true,
     },
     isPlayingTrack: {
-      type: Boolean,
-      required: true,
-    },
-    isActive: {
       type: Boolean,
       required: true,
     },
