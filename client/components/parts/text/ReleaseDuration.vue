@@ -36,7 +36,7 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
-    isFull: {
+    hasMore: {
       type: Boolean,
       default: true,
     },
@@ -64,9 +64,9 @@ export default Vue.extend({
   computed: {
     duration(): { text: string, title: string } {
       const elapsedTime = elapsedTimeInJapanese(this.durationMs);
-      const text = this.isFull
-        ? elapsedTime
-        : `${elapsedTime} + α`;
+      const text = this.hasMore
+        ? `${elapsedTime} + α`
+        : elapsedTime;
 
       return {
         text,

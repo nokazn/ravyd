@@ -24,7 +24,7 @@
       <ReleaseDuration
         hide-icon
         :duration-ms="release.durationMs"
-        :is-full="release.isFullTrackList"
+        :has-more="!release.isFullTrackList"
       />
     </div>
   </div>
@@ -41,7 +41,7 @@
     />
     <ReleaseDuration
       :duration-ms="release.durationMs"
-      :is-full="release.isFullTrackList"
+      :has-more="!release.isFullTrackList"
     />
     <ReleaseLabel
       :label="release.label"
