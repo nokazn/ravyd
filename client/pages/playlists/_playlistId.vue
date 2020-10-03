@@ -34,11 +34,11 @@
         />
 
         <PlaylistMenu
+          left
+          outlined
+          :size="32"
           :playlist="playlistInfo"
           :is-following="isFollowing"
-          :size="32"
-          outlined
-          left
           @on-edit-menu-clicked="toggleEditPlaylistModal"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -50,11 +50,11 @@
       :class="$style.PlaylistIdPage__header"
     >
       <ReleaseArtwork
+        shadow
         :src="artworkSrc"
         :size="$window.artworkSize"
         :alt="playlistInfo.name"
         :title="playlistInfo.name"
-        shadow
       />
 
       <div :class="$style.Info">
@@ -91,9 +91,9 @@
 
             <CircleButton
               v-if="playlistInfo.isOwnPlaylist"
-              :size="36"
               outlined
               title="編集する"
+              :size="36"
               @on-clicked="toggleEditPlaylistModal(true)"
             >
               mdi-pencil
@@ -106,9 +106,9 @@
             />
 
             <PlaylistMenu
+              outlined
               :playlist="playlistInfo"
               :is-following="isFollowing"
-              outlined
               @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
             />
@@ -195,25 +195,25 @@ const HEADER_REF = 'HEADER_REF';
 const REMOVE_PLAYLIST_MODAL = 'REMOVE_PLAYLIST_MODAL';
 
 type Modal = {
-  value: boolean
-  loading: boolean
-  type: string,
-  color: ToastType | undefined,
-  text: string,
-  description: string,
+  value: boolean;
+  loading: boolean;
+  type: string;
+  color: ToastType | undefined;
+  text: string;
+  description: string;
 }
 
 interface AsyncData {
-  playlistInfo: App.PlaylistInfo | undefined
-  isFollowing: boolean
-  playlistTrackInfo: App.PlaylistTrackInfo | undefined
+  playlistInfo: App.PlaylistInfo | undefined;
+  isFollowing: boolean;
+  playlistTrackInfo: App.PlaylistTrackInfo | undefined;
 }
 
 interface Data {
-  editPlaylistModal: boolean
-  confirmModalParams: Modal
-  mutationUnsubscribe: (() => void) | undefined
-  HEADER_REF: string
+  editPlaylistModal: boolean;
+  confirmModalParams: Modal;
+  mutationUnsubscribe: (() => void) | undefined;
+  HEADER_REF: string;
 }
 
 @Component({

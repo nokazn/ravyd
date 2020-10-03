@@ -38,7 +38,7 @@ export default Vue.extend({
     },
     hasMore: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     size: {
       type: Number,
