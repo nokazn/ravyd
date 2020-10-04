@@ -90,7 +90,6 @@
             v-if="$window.isSingleColumn"
             outlined
             text="フォロー"
-            :size="32"
             :value="isFollowing"
             @input="toggleFollowingState"
           />
