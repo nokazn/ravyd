@@ -45,6 +45,13 @@
     <Toasts />
 
     <portal-target
+      v-if="$window.isSingleColumn"
+      v-show="$header.isAdditionalContentShown"
+      :name="$header.PORTAL_NAME"
+      :class="$style.Fab"
+    />
+
+    <portal-target
       :name="SEARCH_FORM_PORTAL_NAME"
       role="menu"
     />
@@ -162,6 +169,14 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
+.ProgressCircular {
+  bottom: $g-footer-height;
+  z-index: z-index-of(loading);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .Default {
   background-color: $g-background-color !important;
 }
@@ -175,12 +190,10 @@ export default Vue.extend({
   top: $g-header-height;
 }
 
-.ProgressCircular {
-  bottom: $g-footer-height;
-  z-index: z-index-of(loading);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.Fab {
+  position: fixed;
+  top: calc(#{$g-header-height} + 2%);
+  left: 2%;
 }
 </style>
 

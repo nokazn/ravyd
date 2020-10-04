@@ -227,10 +227,23 @@ $__layer-map: (
  */
 @mixin additional-header-content() {
   display: flex;
-  flex-wrap: nowrap;
 
-  & > *:not(:last-child) {
-    margin-right: max(0.5vw, 6px);
+  $margin: max(0.5vw, 6px);
+
+  @include smaller-than-md() {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: $margin;
+    }
+  }
+
+  @include larger-than-md() {
+    flex-wrap: nowrap;
+
+    & > *:not(:last-child) {
+      margin-right: $margin;
+    }
   }
 }
 

@@ -42,6 +42,7 @@
         <template v-if="$header.hasAdditionalContent">
           <transition name="fade">
             <portal-target
+              v-if="$window.isMultiColumn"
               v-show="$header.isAdditionalContentShown"
               :name="$header.PORTAL_NAME"
               :class="$style.Header__additional"

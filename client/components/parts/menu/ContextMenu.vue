@@ -11,10 +11,12 @@
   >
     <template #activator="{ on }">
       <v-btn
-        icon
         :height="size"
         :width="size"
         :loading="loading"
+        :color="fab ? color : undefined"
+        :fab="fab"
+        :icon="!fab"
         :outlined="outlined"
         :disabled="disabled"
         title="メニュー"
@@ -100,6 +102,15 @@ export default Vue.extend({
       default: 36,
     },
     loading: {
+      type: Boolean,
+      default: false,
+    },
+    // fab の時のみ有効s
+    color: {
+      type: String,
+      default: 'grey darken-3',
+    },
+    fab: {
       type: Boolean,
       default: false,
     },

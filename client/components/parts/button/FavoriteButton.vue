@@ -1,8 +1,10 @@
 <template>
   <v-btn
-    icon
     :width="size"
     :height="size"
+    :color="fab ? color : undefined"
+    :fab="fab"
+    :icon="!fab"
     :outlined="outlined"
     :disabled="disabled"
     :title="title"
@@ -38,6 +40,15 @@ export default Vue.extend({
     text: {
       type: String,
       default: '保存',
+    },
+    // fab の時のみ有効
+    color: {
+      type: String,
+      default: 'grey darken-3',
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,
