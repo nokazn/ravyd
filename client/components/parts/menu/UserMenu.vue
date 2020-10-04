@@ -1,10 +1,11 @@
 <template>
   <ContextMenu
+    bottom
+    offset-y
+    :fab="fab"
     :item-lists="menuItemLists"
     :size="size"
     :outlined="outlined"
-    offset-y
-    bottom
     :left="left"
     :right="right"
   />
@@ -15,7 +16,7 @@ import Vue, { PropType } from 'vue';
 
 import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 
@@ -40,6 +41,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 36,
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,

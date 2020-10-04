@@ -15,16 +15,18 @@
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          outlined
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :value="releaseInfo.isSaved"
           @input="toggleSavedState"
         />
         <ReleaseMenu
-          :release="releaseInfo"
-          :size="32"
-          outlined
           left
+          :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :release="releaseInfo"
           @on-favorite-menu-clicked="toggleSavedState"
         />
       </div>
@@ -44,10 +46,10 @@
 
       <div :class="$style.Info">
         <HashTags
-          :tag-list="releaseInfo.genreList"
+          outlined
           color="subtext"
           text-color="white"
-          outlined
+          :tag-list="releaseInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -77,8 +79,10 @@
               @input="toggleSavedState"
             />
             <ReleaseMenu
-              :release="releaseInfo"
               outlined
+              :release="releaseInfo"
+              :left="$window.isSingleColumn"
+              :right="$window.isMultiColumn"
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>

@@ -15,16 +15,18 @@
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          outlined
           text="フォロー"
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <ArtistMenu
           left
-          outlined
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :artist="artistInfo"
           :is-following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"

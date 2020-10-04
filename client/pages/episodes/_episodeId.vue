@@ -16,10 +16,11 @@
           @on-clicked="onContextMediaButtonClicked"
         />
         <EpisodeMenu
-          outlined
           left
           offset-y
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :episode="episodeInfo"
           :publisher="episodeInfo.showName"
         />

@@ -1,10 +1,11 @@
 <template>
   <ContextMenu
+    bottom
+    offset-y
     :item-lists="menuItemLists"
     :size="size"
+    :fab="fab"
     :outlined="outlined"
-    offset-y
-    bottom
     :left="left"
     :right="right"
   />
@@ -38,6 +39,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 36,
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,

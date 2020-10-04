@@ -1,8 +1,10 @@
 <template>
   <v-btn
-    icon
     :width="size"
     :height="size"
+    :color="fab ? color : undefined"
+    :fab="fab"
+    :icon="!fab"
     :outlined="outlined"
     :disabled="disabled"
     @click="onClicked"
@@ -19,7 +21,7 @@ import Vue, { PropType } from 'vue';
 const ON_CLICKED = 'on-clicked';
 
 export type On = {
-  [ON_CLICKED]: void
+  [ON_CLICKED]: void;
 }
 
 export default Vue.extend({
@@ -31,6 +33,14 @@ export default Vue.extend({
     iconSize: {
       type: Number as PropType<number | undefined>,
       default: undefined,
+    },
+    color: {
+      type: String,
+      default: 'grey darken-3',
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,

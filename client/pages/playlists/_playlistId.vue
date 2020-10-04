@@ -19,24 +19,27 @@
         <CircleButton
           v-if="playlistInfo.isOwnPlaylist"
           :size="32"
-          outlined
           title="編集する"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           @on-clicked="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
         <FavoriteButton
           v-else
-          outlined
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
 
         <PlaylistMenu
           left
-          outlined
           :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :playlist="playlistInfo"
           :is-following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
@@ -437,23 +440,18 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/SET_ACTUAL_IS_SAVED':
           subscribeFollowedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/EDIT_PLAYLIST':
           subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/INCREMENT_UNUPDATED_TRACKS_MAP':
           subscribeAddedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/SET_ACTUALLY_DELETED_TRACK':
           subscribeRemovedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }

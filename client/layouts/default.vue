@@ -193,7 +193,7 @@ export default Vue.extend({
 .Fab {
   position: fixed;
   top: calc(#{$g-header-height} + 2%);
-  left: 2%;
+  right: 2%;
 }
 </style>
 
