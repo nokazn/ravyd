@@ -93,7 +93,7 @@
               outlined
               title="編集する"
               :size="36"
-              @on-clicked="toggleEditPlaylistModal(true)"
+              @click="toggleEditPlaylistModal(true)"
             >
               mdi-pencil
             </CircleButton>

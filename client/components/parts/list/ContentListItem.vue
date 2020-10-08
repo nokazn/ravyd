@@ -1,6 +1,7 @@
 <template>
   <v-list-item
     dense
+    :color="color"
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
     :title="name"
@@ -110,6 +111,10 @@ export default Vue.extend({
     selected: {
       type: Boolean,
       default: false,
+    },
+    color: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
   },
 
