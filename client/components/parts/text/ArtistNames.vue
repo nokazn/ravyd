@@ -1,7 +1,10 @@
 <template>
   <div
-    :class="{ [$style.inline]: inline }"
     :title="artistNames"
+    :class="{
+      [$style.inline]: inline,
+      'g-ellipsis-text': ellipsis,
+    }"
   >
     <template v-if="text">
       <span :title="name">
@@ -88,6 +91,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    ellipsis: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -130,9 +137,6 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .Artist {
-  display: inline-flex;
-  flex-wrap: nowrap;
-
   &__avatar {
     margin-right: 0.25rem;
   }

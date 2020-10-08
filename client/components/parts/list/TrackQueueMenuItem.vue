@@ -31,15 +31,14 @@
           isSet ? 'active--text' : 'subtext--text'
         ]"
       >
-        <div class="g-ellipsis-text">
-          <nuxt-link
-            :to="releasePath"
-            :title="releaseName"
-            @click.native.stop="onLinkClicked"
-          >
-            {{ releaseName }}
-          </nuxt-link>
-        </div>
+        <nuxt-link
+          :to="releasePath"
+          :title="releaseName"
+          class="g-ellipsis-text"
+          @click.native.stop="onLinkClicked"
+        >
+          {{ releaseName }}
+        </nuxt-link>
       </v-list-item-subtitle>
 
       <v-list-item-subtitle
@@ -49,8 +48,8 @@
         ]"
       >
         <ArtistNames
+          ellipsis
           :artists="artists"
-          class="g-ellipsis-text"
           @on-clicked="onLinkClicked"
         />
       </v-list-item-subtitle>

@@ -39,8 +39,8 @@
         >
           <ArtistNames
             v-if="item.type === 'track'"
+            ellipsis
             :artists="item.artists"
-            class="g-ellipsis-text"
           />
           <nuxt-link
             v-else-if="item.type === 'episode'"

@@ -43,8 +43,8 @@
 
       <v-list-item-subtitle v-if="isTwoLine">
         <ArtistNames
+          ellipsis
           :artists="artists"
-          class="g-ellipsis-text"
         />
       </v-list-item-subtitle>
     </v-list-item-content>

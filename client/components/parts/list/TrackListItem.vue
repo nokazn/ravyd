@@ -55,8 +55,8 @@
             <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
               <span :class="subtextColor">-</span>
               <ArtistNames
-                :artists="item.featuredArtists"
                 inline
+                :artists="item.featuredArtists"
                 :class="subtextColor"
               />
             </template>

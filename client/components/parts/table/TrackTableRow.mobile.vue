@@ -22,9 +22,10 @@
       </div>
 
       <ArtistNames
+        ellipsis
         :artists="[...item.artists, ...item.featuredArtists]"
         :class="subtextColor"
-        class="g-small-text g-ellipsis-text"
+        class="g-small-text"
       />
     </td>
 

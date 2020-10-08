@@ -42,7 +42,6 @@
           {{ releaseYear }}
         </time>
       </template>
-
       <template v-else>
         <ArtistNames
           :artists="artists"

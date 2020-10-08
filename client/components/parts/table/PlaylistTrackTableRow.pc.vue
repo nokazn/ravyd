@@ -58,6 +58,7 @@
             <template v-if="item.type === 'track'">
               <ArtistNames
                 inline
+                ellipsis
                 :artists="item.artists"
               />
               <span :class="$style['Content__subtitle--divider']">-</span>
