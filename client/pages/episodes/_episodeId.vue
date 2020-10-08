@@ -10,7 +10,6 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isEpisodeSet && isPlaying"
           :disabled="!episodeInfo.isPlayable"
           @on-clicked="onContextMediaButtonClicked"
@@ -18,7 +17,6 @@
         <EpisodeMenu
           left
           offset-y
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :episode="episodeInfo"

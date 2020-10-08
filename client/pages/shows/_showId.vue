@@ -10,21 +10,18 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isShowSet && isPlaying"
           :disabled="!hasEpisodes"
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :value="isSaved"
           @input="toggleSavedState"
         />
         <ShowMenu
-          right
-          :size="32"
+          left
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :is-saved="isSaved"

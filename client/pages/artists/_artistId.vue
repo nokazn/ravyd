@@ -10,13 +10,11 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isArtistSet && isPlaying "
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
           text="フォロー"
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :value="isFollowing"
@@ -24,7 +22,6 @@
         />
         <ArtistMenu
           left
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :artist="artistInfo"

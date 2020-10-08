@@ -10,12 +10,10 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isReleaseSet && isPlaying"
           @on-clicked="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :value="releaseInfo.isSaved"
@@ -23,7 +21,6 @@
         />
         <ReleaseMenu
           left
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :release="releaseInfo"

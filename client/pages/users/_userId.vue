@@ -11,7 +11,6 @@
         <FavoriteButton
           v-if="isFollowing != null"
           text="フォロー"
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :value="isFollowing"
@@ -19,7 +18,6 @@
         />
         <UserMenu
           left
-          :size="32"
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :user="userInfo"
