@@ -207,7 +207,10 @@ export default Vue.extend({
 .Left {
   display: flex;
   align-items: center;
-  flex: 1 1;
+  flex: 0 1 auto;
+  // flex item の場合は min-width のデフォルト値が auto になる
+  // 親要素をはみ出す大きさのときは .Left が縮むようにする
+  min-width: 0;
 
   & > *:not(:last-child) {
     margin-right: 0.5em;
@@ -236,7 +239,7 @@ export default Vue.extend({
   align-items: center;
   padding: 0 2%;
   // 伸縮しない
-  flex: 0 0;
+  flex: 0 0 200px;
 
   & > *:not(:last-child) {
     margin-right: min(4vw, 12px);
