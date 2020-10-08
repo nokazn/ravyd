@@ -14,14 +14,162 @@ $g-card-background-color: #2e3032;
 $g-menu-background-color: #383a3a;
 
 /**
+ * page layout
+ */
+$g-sm-breakpoint: 480px;
+$g-md-breakpoint: 768px;
+$g-lg-breakpoint: 992px;
+$g-xl-breakpoint: 1200px;
+$g-xxl-breakpoint: 1900px;
+
+$__breakpoints: (
+  sm: $g-sm-breakpoint,
+  md: $g-md-breakpoint,
+  lg: $g-lg-breakpoint,
+  xl: $g-xl-breakpoint,
+  xxl: $g-xxl-breakpoint,
+);
+
+$g-page-side-margin: min(2vw, 24px);
+
+@mixin smaller-than($key) {
+  @media screen and (max-width: map-get($__breakpoints, $key)) {
+    @content;
+  }
+}
+
+@mixin larger-than($key) {
+  @media screen and (min-width: calc(#{map-get($__breakpoints, $key)} + 1px)) {
+    @content;
+  }
+}
+
+// x <= 480
+@mixin smaller-than-sm {
+  @include smaller-than(sm) {
+    @content;
+  }
+}
+// x <= 768
+@mixin smaller-than-md {
+  @include smaller-than(md) {
+    @content;
+  }
+}
+// x <= 992
+@mixin smaller-than-lg {
+  @include smaller-than(lg) {
+    @content;
+  }
+}
+// x <= 1200
+@mixin smaller-than-xl {
+  @include smaller-than(xl) {
+    @content;
+  }
+}
+// x <= 1900
+@mixin smaller-than-xxl {
+  @include smaller-than(xxl) {
+    @content;
+  }
+}
+
+// x >= 480
+@mixin larger-than-sm {
+  @include larger-than(sm) {
+    @content;
+  }
+}
+// x >= 768
+@mixin larger-than-md {
+  @include larger-than(md) {
+    @content;
+  }
+}
+// x >= 992
+@mixin larger-than-lg {
+  @include larger-than(lg) {
+    @content;
+  }
+}
+// x >= 1200
+@mixin larger-than-xl {
+  @include larger-than(xl) {
+    @content;
+  }
+}
+// x >= 1900
+@mixin larger-than-xxl {
+  @include larger-than(xxl) {
+    @content;
+  }
+}
+
+// 基本的に全ページに適用
+@mixin page-margin($additional: 0, $side-ratio: 1) {
+  @if ($additional == 0) {
+    margin: 16px calc((#{$g-page-side-margin}) * #{$side-ratio}) 0;
+  }
+
+  @else {
+    margin: 16px calc((#{$g-page-side-margin} * #{$side-ratio}) + #{$additional}) 0;
+  }
+}
+
+@mixin __side-padding($padding) {
+  padding-left: $padding;
+  padding-right: $padding;
+}
+
+// ディスプレイサイズを大きくすると横の余白も大きくする
+@mixin page-padding {
+  @include smaller-than-sm {
+    @include __side-padding(0);
+  }
+
+  @include larger-than-md {
+    @include __side-padding(min(0.5vw, 8px));
+  }
+
+  @include larger-than-lg {
+    @include __side-padding(1.5vw);
+  }
+
+  @include larger-than-xl {
+    @include __side-padding(4vw);
+  }
+
+  @include larger-than-xxl {
+    @include __side-padding(6vw);
+  }
+}
+
+/*
  * size
  */
 $g-header-height: 52px;
 $g-footer-height: 80px;
+$g-footer-height-mobile: $g-footer-height * 0.9;
 $g-device-bar-height: 24px;
 $g-navigation-drawer-width: 200px;
 $g-flex-card-min-width: 160px;
 $g-flex-card-max-width: 240px;
+$g-fixed-card-base-width: 200px;
+$g-artwork-base-size: 220px;
+$g-slider-height: 4px;
+// グラデーション自体の横幅
+$g-gradation-width: min(1.5vw, 16px);
+
+/**
+ * ScrollableCardWrapper コンポーネントの横のマージン
+ */
+@mixin scrollable-card-wrapper-side-margin($ratio: 1) {
+  margin: {
+    right: calc(#{$g-gradation-width} * #{$ratio});
+    left: calc(#{$g-gradation-width} * #{$ratio});
+  }
+}
 
 /**
  * z-index
@@ -71,6 +219,103 @@ $__layer-map: (
 
     to {
       transform: translateX(-100%);
+    }
+  }
+}
+
+/*
+ * ヘッダーの portal に表示させるボタン
+ */
+@mixin additional-header-content() {
+  display: flex;
+
+  $margin: max(0.5vw, 6px);
+
+  @include smaller-than-md() {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: $margin;
+    }
+  }
+
+  @include larger-than-md() {
+    flex-wrap: nowrap;
+
+    & > *:not(:last-child) {
+      margin-right: $margin;
+    }
+  }
+}
+
+@mixin page-title() {
+  line-height: 1.2em;
+  margin: 0.3em 0;
+
+  @include smaller-than-md {
+    font-size: 1.75em;
+    text-align: center;
+  }
+
+  @include larger-than-md {
+    font-size: 2em;
+  }
+}
+
+@mixin page-header($artwork-size: $g-artwork-base-size) {
+  @include smaller-than-md {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @include larger-than-md {
+    display: grid;
+    grid-template-columns: $artwork-size auto;
+    column-gap: 24px;
+  }
+}
+
+@mixin page-info() {
+  display: flex;
+  flex-direction: column;
+
+  @include smaller-than-md {
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  @include larger-than-md {
+    justify-content: flex-end;
+  }
+}
+
+@mixin page-header-buttons($has-next-content: false) {
+  display: flex;
+  flex-wrap: nowrap;
+
+  @include smaller-than-md {
+    justify-content: center;
+  }
+
+  @if ($has-next-content) {
+    @include larger-than-md {
+      margin-right: 24px;
+    }
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 12px;
+  }
+}
+
+// scss module では .v-row-group__header が効かない
+@mixin v-data-table-height($height: 44px) {
+  table {
+    tr:not(.v-row-group__header) {
+      td {
+        height: $height !important;
+      }
     }
   }
 }

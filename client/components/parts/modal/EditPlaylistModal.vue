@@ -1,20 +1,18 @@
 <template>
   <PlaylistModal
-    :is-shown="isShown"
+    v-model="modal"
     :handler="handler"
     detail-text="編集"
     result-text="更新"
     :form="form"
-    @on-changed="onChanged"
   />
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-
 import PlaylistModal, {
   On as OnModal,
-  ON_CHANGED,
+  INPUT,
   Form,
   Handler,
 } from '~/components/containers/modal/PaylistModal.vue';
@@ -26,7 +24,7 @@ export type Data = {
 }
 
 export type On = {
-  [ON_CHANGED]: OnModal['on-changed']
+  [INPUT]: OnModal['input']
 }
 
 export default Vue.extend({
@@ -35,7 +33,7 @@ export default Vue.extend({
   },
 
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -60,9 +58,14 @@ export default Vue.extend({
     };
   },
 
-  methods: {
-    onChanged(isShown: OnModal['on-changed']) {
-      this.$emit(ON_CHANGED, isShown);
+  computed: {
+    modal: {
+      get(): boolean {
+        return this.value;
+      },
+      set(modal: OnModal['input']) {
+        this.$emit(INPUT, modal);
+      },
     },
   },
 });

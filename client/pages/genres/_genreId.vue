@@ -7,19 +7,26 @@
       {{ categoryInfo.name }}
     </h1>
 
-    <CardsWrapper v-if="playlists.length > 0">
+    <CardsWrapper
+      v-if="playlists.length > 0"
+      :min-wdith="$window.cardWidthMinMax[0]"
+      :max-wdith="$window.cardWidthMinMax[1]"
+    >
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
+    <p v-else>
+      プレイリストが見つかりません。
+    </p>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullPlaylists"
-      @on-appeared="appendCategoryPlaylist"
+      :loading="!isFullPlaylists"
+      @appear="appendCategoryPlaylist"
     />
   </div>
 
@@ -38,7 +45,6 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
 import { convertPlaylistForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {
@@ -46,11 +52,7 @@ interface AsyncData {
   playlists: App.PlaylistCardInfo[]
   isFullPlaylists: boolean
 }
-
-interface Data {
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
-}
+interface Data {}
 
 const LIMIT_OF_PLAYLISTS = 30;
 
@@ -84,9 +86,6 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
   categoryInfo: App.CategoryInfo | undefined = undefined;
   playlists: App.PlaylistCardInfo[] = [];
   isFullPlaylists = false;
-
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');

@@ -1,11 +1,12 @@
 <template>
   <span
     :title="duration.title"
-    class="subtext--text"
+    :class="{ ['subtext--text']: subtext }"
   >
     <v-icon
-      :size="size"
-      color="subtext"
+      v-if="!hideIcon"
+      :size="size * 1.25"
+      :color="subtext ? 'subtext' : undefined"
     >
       mdi-clock-outline
     </v-icon>
@@ -35,19 +36,26 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
-    isFull: {
+    hasMore: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     size: {
       type: Number,
-      default: 16,
+      default: 14,
+    },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
+    subtext: {
+      type: Boolean,
+      default: false,
     },
   },
 
   data(): Data {
-    const textStyles = { fontSize: `${this.size * 0.8}px` };
-
+    const textStyles = { fontSize: `${this.size}px` };
     return {
       textStyles,
     };
@@ -56,9 +64,9 @@ export default Vue.extend({
   computed: {
     duration(): { text: string, title: string } {
       const elapsedTime = elapsedTimeInJapanese(this.durationMs);
-      const text = this.isFull
-        ? elapsedTime
-        : `${elapsedTime} + α`;
+      const text = this.hasMore
+        ? `${elapsedTime} + α`
+        : elapsedTime;
 
       return {
         text,

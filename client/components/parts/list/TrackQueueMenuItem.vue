@@ -31,15 +31,14 @@
           isSet ? 'active--text' : 'subtext--text'
         ]"
       >
-        <div class="g-ellipsis-text">
-          <nuxt-link
-            :to="releasePath"
-            :title="releaseName"
-            @click.native.stop="onLinkClicked"
-          >
-            {{ releaseName }}
-          </nuxt-link>
-        </div>
+        <nuxt-link
+          :to="releasePath"
+          :title="releaseName"
+          class="g-ellipsis-text"
+          @click.native.stop="onLinkClicked"
+        >
+          {{ releaseName }}
+        </nuxt-link>
       </v-list-item-subtitle>
 
       <v-list-item-subtitle
@@ -49,8 +48,8 @@
         ]"
       >
         <ArtistNames
+          ellipsis
           :artists="artists"
-          class="g-ellipsis-text"
           @on-clicked="onLinkClicked"
         />
       </v-list-item-subtitle>
@@ -81,7 +80,6 @@ import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/utils/image';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App, SpotifyAPI } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
@@ -151,7 +149,7 @@ export default Vue.extend({
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
     },
     releasePath(): string {
       return `/releases/${this.releaseId}`;

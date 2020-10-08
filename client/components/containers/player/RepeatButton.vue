@@ -1,19 +1,19 @@
 <template>
-  <v-btn
-    icon
-    :color="repeatButton.color"
-    :title="repeatButton.title"
+  <CircleButton
     :disabled="disabled"
+    :size="size"
+    :icon-size-ratio="0.5"
+    :icon-color="repeatButton.color"
+    :title="repeatButton.title"
     @click="onClicked"
   >
-    <v-icon :size="size">
-      {{ repeatButton.icon }}
-    </v-icon>
-  </v-btn>
+    {{ repeatButton.icon }}
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type RepeatButton = {
   icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once'
@@ -22,10 +22,14 @@ export type RepeatButton = {
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     size: {
       type: Number,
-      default: 20,
+      default: 32,
     },
   },
 

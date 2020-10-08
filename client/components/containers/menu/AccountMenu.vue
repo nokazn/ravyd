@@ -11,18 +11,21 @@
         v-on="on"
       >
         <UserAvatar
+          type="user"
           :src="userAvatarSrc"
           :alt="userDisplayName"
           :size="AVATAR_SIZE"
         />
 
-        <span :class="$style.UserMenuButton__name">
-          @{{ userDisplayName }}
-        </span>
+        <template v-if="!hideText">
+          <span :class="$style.UserMenuButton__name">
+            @{{ userDisplayName }}
+          </span>
 
-        <v-icon x-small>
-          mdi-chevron-down
-        </v-icon>
+          <v-icon x-small>
+            mdi-chevron-down
+          </v-icon>
+        </template>
       </div>
     </template>
 
@@ -73,6 +76,13 @@ export default Vue.extend({
   components: {
     OptionMenu,
     UserAvatar,
+  },
+
+  props: {
+    hideText: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data(): Data {

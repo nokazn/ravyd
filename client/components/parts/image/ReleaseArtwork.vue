@@ -11,18 +11,20 @@
       :max-width="maxSize || size"
       :max-height="maxSize || size"
       :aspect-ratio="1"
-      :class="{ 'g-box-shadow': shadow }"
+      :class="{
+        'g-box-shadow': shadow,
+        [$style.ReleaseArtwork]: true,
+      }"
+      :style="cssProps"
       @load="onLoaded"
     >
-      <template v-if="isOverlayed">
-        <AvatarOverlay
-          v-show="hover"
-          :hover="hover"
-          :size="size"
-          :icon="icon"
-          @on-clicked="onClicked"
-        />
-      </template>
+      <ImageOverlay
+        v-if="overlay"
+        :hover="hover"
+        :size="size"
+        :icon="icon"
+        @on-clicked="onClicked"
+      />
     </v-img>
 
     <v-sheet
@@ -33,9 +35,9 @@
       :height="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
-      :class="$style.ReleaseArtwork__noArtwork"
+      :class="$style['ReleaseArtwork--empty']"
     >
-      <v-icon :size="noArtworkIconSize">
+      <v-icon :size="defaultIconSize">
         mdi-music
       </v-icon>
     </v-sheet>
@@ -44,13 +46,9 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import AvatarOverlay from '~/components/parts/image/AvatarOverlay.vue';
+import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
-
-export type Data = {
-  noArtworkIconSize: number
-}
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
@@ -62,7 +60,7 @@ export type On = {
 
 export default Vue.extend({
   components: {
-    AvatarOverlay,
+    ImageOverlay,
   },
 
   props: {
@@ -90,7 +88,7 @@ export default Vue.extend({
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
-    isOverlayed: {
+    overlay: {
       type: Boolean,
       default: false,
     },
@@ -98,17 +96,22 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    borderRadius: {
+      type: Number,
+      default: 0,
+    },
   },
 
-  data(): Data {
-    const baseSize = this.size ?? this.minSize;
-    const noArtworkIconSize = baseSize != null
-      ? baseSize * 0.4
-      : 60;
-
-    return {
-      noArtworkIconSize,
-    };
+  computed: {
+    defaultIconSize(): number {
+      const baseSize = this.size ?? this.minSize;
+      return baseSize != null
+        ? baseSize * 0.4
+        : 60;
+    },
+    cssProps(): Record<string, string> | undefined {
+      return { '--border-radius': `${this.borderRadius}px` };
+    },
   },
 
   methods: {
@@ -124,7 +127,10 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseArtwork {
-  &__noArtwork {
+  // 上だけ丸みをもたせる
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+
+  &--empty {
     display: flex;
     justify-content: center;
     align-items: center;

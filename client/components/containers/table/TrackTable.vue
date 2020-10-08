@@ -1,46 +1,46 @@
 <template>
-  <client-only>
-    <v-data-table
-      :headers="headers"
-      :items="trackList"
-      group-by="discNumber"
-      disable-pagination
-      disable-sort
-      hide-default-footer
-      no-data-text="トラックがありません。"
-      class="TrackTable"
-    >
-      <template #header.duration>
-        <v-icon
-          :size="16"
-          color="subtext"
-          title="再生時間"
-        >
-          mdi-clock-outline
-        </v-icon>
-      </template>
+  <v-data-table
+    disable-pagination
+    disable-sort
+    hide-default-footer
+    :headers="headers"
+    :items="trackList"
+    :mobile-breakpoint="0"
+    group-by="discNumber"
+    no-data-text="トラックがありません。"
+    class="track-table"
+  >
+    <template #header.duration>
+      <v-icon
+        :size="16"
+        color="subtext"
+        title="再生時間"
+      >
+        mdi-clock-outline
+      </v-icon>
+    </template>
 
-      <template #group.header="{ group }">
-        <TrackTableGroupHeader
-          v-if="hasMultipleDiscs"
-          :disc-number="group"
-          :colspan="headers.length"
-        />
-      </template>
+    <template #group.header="{ group }">
+      <TrackTableGroupHeader
+        v-if="hasMultipleDiscs"
+        :disc-number="group"
+        :colspan="headers.length"
+      />
+    </template>
 
-      <template #item="{ item }">
-        <TrackTableRow
-          :item="item"
-          :is-active="item.id === activeRowId"
-          :is-track-set="isTrackSet(item.id)"
-          :is-playing-track="isPlayingTrack(item.id)"
-          @on-row-clicked="onRowClicked"
-          @on-media-button-clicked="onMediaButtonClicked"
-          @on-favorite-button-clicked="onFavoriteButtonClicked"
-        />
-      </template>
-    </v-data-table>
-  </client-only>
+    <template #item="{ item }">
+      <TrackTableRow
+        :item="item"
+        :active="item.id === activeRowId"
+        :set="isTrackSet(item.id)"
+        :playing="isPlayingTrack(item.id)"
+        :button-size="buttonSize"
+        @on-row-clicked="onRowClicked"
+        @on-media-button-clicked="onMediaButtonClicked"
+        @on-favorite-button-clicked="onFavoriteButtonClicked"
+      />
+    </template>
+  </v-data-table>
 </template>
 
 <script lang="ts">
@@ -53,7 +53,6 @@ import { getQuery } from '~/utils/text';
 import { App } from '~~/types';
 
 type Data = {
-  headers: DataTableHeader[]
   activeRowId: string | undefined
 };
 
@@ -81,43 +80,12 @@ export default Vue.extend({
   },
 
   data(): Data {
-    // 左右の padding: 8px を含めた幅
-    const indexColumn = {
-      text: '#',
-      value: 'index',
-      width: 44,
-      align: 'center' as const,
-    };
-    const isSavedColumn = {
-      text: '',
-      value: 'isSaved',
-      width: 52,
-      align: 'center' as const,
-    };
-    const nameColumn = {
-      text: 'タイトル',
-      value: 'name',
-    };
-    const durationColumn = {
-      text: '',
-      value: 'duration',
-      width: 72,
-      align: 'center' as const,
-    };
-    const menuColumn = {
-      text: '',
-      value: 'menu',
-      width: 60,
-      align: 'center' as const,
-    };
-    const headers = [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     const trackId = getQuery(this.$route.query, 'track');
     const activeRowId = trackId != null
       ? this.trackList.find((item) => item.id === trackId)?.id
       : undefined;
 
     return {
-      headers,
       activeRowId,
     };
   },
@@ -129,6 +97,51 @@ export default Vue.extend({
     isPlayingTrack(): (trackId: string) => boolean {
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
+    },
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 32;
+    },
+    headers(): DataTableHeader[] {
+      const totalSidePadding = 12;
+      // width は 左右の padding を含めた幅
+      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const indexColumn = {
+        text: '#',
+        value: 'index',
+        width: 48,
+        align: 'center' as const,
+      };
+      const isSavedColumn = {
+        text: '',
+        value: 'isSaved',
+        width: buttonColumnWidth,
+        align: 'center' as const,
+        sortable: false,
+        filterable: false,
+      };
+      const nameColumn = {
+        text: 'タイトル',
+        value: 'name',
+      };
+      const durationColumn = {
+        text: '',
+        value: 'duration',
+        width: 72,
+        align: 'center' as const,
+      };
+      const menuColumn = {
+        text: '',
+        value: 'menu',
+        width: buttonColumnWidth,
+        align: 'center' as const,
+        sortable: false,
+        filterable: false,
+      };
+      return this.$window.isMultiColumn
+        ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
+        : [nameColumn, menuColumn, isSavedColumn];
     },
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
@@ -162,39 +175,26 @@ export default Vue.extend({
         offset,
       });
     },
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnRow['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
-    onRowClicked({ id }: OnRow['on-row-clicked']) {
-      this.activeRowId = id;
+    onRowClicked(row: OnRow['on-row-clicked']) {
+      if (this.$window.isSingleColumn) {
+        this.onMediaButtonClicked(row);
+      }
     },
   },
 });
 </script>
 
 <style lang="scss">
-.TrackTable {
-  // 表の背景を透過にし、全体の背景と同じ色にする
-  background-color: rgba(0, 0, 0, 0) !important;
-
-  table {
-    // 表と列の幅を最初の行のセルの幅に固定して設定
-    table-layout: fixed;
-
-    tr {
-      td,
-      th {
-        padding: 0 8px !important;
-        // 列の幅をデフォルトの 48px から少し狭める
-        height: 44px !important;
-      }
-    }
+.track-table {
+  @include smaller-than-md {
+    @include v-data-table-height(56px);
   }
 
-  .v-row-group__header {
-    // 表全体の背景と同じ色にする
-    background: inherit !important;
+  @include larger-than-md {
+    @include v-data-table-height(44px);
   }
 }
 </style>

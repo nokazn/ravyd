@@ -1,7 +1,7 @@
 <template>
   <v-list
     dense
-    :color="BACKGROUND_COLOR"
+    :color="$constant.BACKGROUND_COLOR"
   >
     <template v-for="track in trackList">
       <v-divider
@@ -12,8 +12,8 @@
         v-show="length == null || track.index < length"
         :key="track.id"
         :item="track"
-        :is-playing-track="isPlayingTrack(track.id)"
-        :is-track-set="isTrackSet(track.id)"
+        :set="isTrackSet(track.id)"
+        :playing="isPlayingTrack(track.id)"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />
@@ -25,18 +25,16 @@
 import Vue, { PropType } from 'vue';
 
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
-import { BACKGROUND_COLOR } from '~/constants';
 import { App } from '~~/types';
-
-export type Data = {
-  trackUriList: string[]
-  BACKGROUND_COLOR: typeof BACKGROUND_COLOR
-}
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked']
+}
+
+type Data = {
+  trackUriList: string[]
 }
 
 export default Vue.extend({
@@ -64,7 +62,6 @@ export default Vue.extend({
     const trackUriList = this.trackList.map((track) => track.uri);
     return {
       trackUriList,
-      BACKGROUND_COLOR,
     };
   },
 
@@ -96,8 +93,7 @@ export default Vue.extend({
       }
     },
 
-    // row をコピーしたものを参照する
-    onFavoriteButtonClicked({ ...row }: OnListItem['on-favorite-button-clicked']) {
+    onFavoriteButtonClicked(row: OnListItem['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },

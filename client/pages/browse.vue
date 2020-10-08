@@ -6,20 +6,21 @@
 
     <CardsWrapper
       v-if="categoryList != null"
-      :max-width="FLEX_CARD_MAX_WIDTH"
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
     >
       <CategoryCard
         v-for="category in categoryList"
         :key="category.id"
         v-bind="category"
-        :min-size="FLEX_CARD_MIN_WIDTH"
-        :max-size="FLEX_CARD_MAX_WIDTH"
+        :min-size="$window.cardWidthMinMax[0]"
+        :max-size="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFullCategoryList"
-      @on-appeared="onLoadingCircleAppeared"
+      :loading="!isFullCategoryList"
+      @appear="onLoadingCircleAppeared"
     />
   </div>
 </template>
@@ -32,7 +33,6 @@ import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 import { getCategoryList } from '~/plugins/local/browse';
-import { FLEX_CARD_MIN_WIDTH } from '~/constants';
 import { App } from '~~/types';
 
 interface AsyncData {
@@ -42,10 +42,9 @@ interface AsyncData {
 
 interface Data {
   title: string
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
 }
 
+// $constant の値は使わない
 const FLEX_CARD_MAX_WIDTH = 220;
 const LIMIT_OF_CATEGORIES = 30;
 
@@ -72,7 +71,6 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
   categoryList: App.CategoryInfo[] | undefined = undefined;
 
   title = '見つける';
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
   FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   head() {

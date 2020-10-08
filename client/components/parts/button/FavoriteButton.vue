@@ -1,12 +1,14 @@
 <template>
   <v-btn
-    icon
     :width="size"
     :height="size"
+    :color="fab ? color : undefined"
+    :fab="fab"
+    :icon="!fab"
     :outlined="outlined"
     :disabled="disabled"
     :title="title"
-    @click="onClicked"
+    @click.stop="onClicked"
   >
     <v-icon :size="iconSize">
       {{ favoriteIcon }}
@@ -19,15 +21,15 @@ import Vue from 'vue';
 
 export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
 
-const ON_CLICKED = 'on-clicked';
+const INPUT = 'input';
 
 export type On = {
-  [ON_CLICKED]: boolean
+  [INPUT]: boolean;
 }
 
 export default Vue.extend({
   props: {
-    isFavorited: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -38,6 +40,15 @@ export default Vue.extend({
     text: {
       type: String,
       default: '保存',
+    },
+    // fab の時のみ有効
+    color: {
+      type: String,
+      default: 'grey darken-3',
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,
@@ -51,12 +62,12 @@ export default Vue.extend({
 
   computed: {
     favoriteIcon(): FavoriteIcon {
-      return this.isFavorited
+      return this.value
         ? 'mdi-heart'
         : 'mdi-heart-outline';
     },
     title(): string {
-      return this.isFavorited
+      return this.value
         ? `${this.text}しない`
         : `${this.text}する`;
     },
@@ -67,7 +78,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED, !this.isFavorited);
+      this.$emit(INPUT, !this.value);
     },
   },
 });

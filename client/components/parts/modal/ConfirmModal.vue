@@ -37,18 +37,13 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import Modal, { On as OnModal } from '~/components/parts/modal/Modal.vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 
-export const ON_CHANGED = 'on-changed';
+export const INPUT = 'input';
 export const ON_CONFIRMED = 'on-confirmed';
 
 export type On = {
-  [ON_CHANGED]: boolean
+  [INPUT]: boolean
   [ON_CONFIRMED]: string
-}
-
-type Data = {
-  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -57,7 +52,7 @@ export default Vue.extend({
   },
 
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -83,19 +78,13 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      CARD_BACKGROUND_COLOR,
-    };
-  },
-
   computed: {
     modal: {
       get(): boolean {
-        return this.isShown;
+        return this.value;
       },
-      set(isShown: OnModal['input']) {
-        this.$emit(ON_CHANGED, isShown);
+      set(modal: OnModal['input']) {
+        this.$emit(INPUT, modal);
       },
     },
   },

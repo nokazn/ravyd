@@ -1,18 +1,21 @@
 <template>
   <div :class="$style.LibraryReleasesPage">
-    <CardsWrapper>
+    <CardsWrapper
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <ReleaseCard
         v-for="release in releaseList"
         :key="release.id"
         v-bind="release"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFull"
-      @on-appeared="onLoadingCircleAppeared"
+      :loading="!isFull"
+      @appear="onLoadingCircleAppeared"
     />
   </div>
 </template>
@@ -24,12 +27,8 @@ import { RootState, RootGetters } from 'typed-vuex';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
-interface Data {
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
-}
+interface Data {}
 
 const LIMIT_OF_RELEASES = 30;
 
@@ -57,18 +56,11 @@ const LIMIT_OF_RELEASES = 30;
   },
 })
 export default class LibraryReleasesPage extends Vue implements Data {
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
-
   get releaseList(): RootState['library']['releases']['releaseList'] {
     return this.$state().library.releases.releaseList;
   }
   get isFull(): RootGetters['library/releases/isFull'] {
     return this.$getters()['library/releases/isFull'];
-  }
-
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
   }
 
   onLoadingCircleAppeared() {

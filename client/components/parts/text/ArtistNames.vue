@@ -1,10 +1,10 @@
 <template>
   <div
+    :title="artistNames"
     :class="{
       [$style.inline]: inline,
-      [$style.ArtistNames]: true,
+      'g-ellipsis-text': ellipsis,
     }"
-    :title="artistNames"
   >
     <template v-if="text">
       <span :title="name">
@@ -13,39 +13,39 @@
     </template>
 
     <template v-else>
-      <template v-for="({ images, name, id }, index) in artists">
-        <UserAvatar
-          v-if="avatar && hasImages(images)"
-          :key="`${id}-image`"
-          :src="getImageSrc(images, SIZE_OF_AVATAR)"
-          :alt="name"
-          :title="name"
-          :size="SIZE_OF_AVATAR"
-          :class="$style.ArtistNames__avatar"
-        />
-
-        <v-icon
-          v-else-if="avatar && hasMultipleArtists"
-          :key="`${id}-icon`"
-          :size="SIZE_OF_AVATAR"
-          :class="$style.ArtistNames__avatar"
-        >
-          mdi-account-circle-outline
-        </v-icon>
+      <span
+        v-for="(artist, index) in artists"
+        :key="artist.id"
+        :class="$style.Artist"
+      >
+        <template v-if="avatar">
+          <UserAvatar
+            v-if="hasImages(artist)"
+            type="artist"
+            :size="avatarSize"
+            :src="getImageSrc(artist, avatarSize)"
+            :alt="artist.name"
+            :title="artist.name"
+            :class="$style.Artist__avatar"
+          />
+          <v-icon
+            v-else-if="hasMultipleArtists"
+            :size="avatarSize"
+            :class="$style.Artist__avatar"
+          >
+            mdi-account-circle-outline
+          </v-icon>
+        </template>
 
         <nuxt-link
-          :key="id"
-          :to="artistPath(id)"
-          :title="name"
+          :to="artistPath(artist.id)"
+          :title="artist.name"
           @click.native.stop="onClicked"
         >
-          {{ name }}
+          {{ artist.name }}
         </nuxt-link>
-        <span
-          v-if="index !== artists.length - 1 && !avatar"
-          :key="`${id}-comma`"
-        >, </span>
-      </template>
+        <span v-if="!avatar && index !== artists.length - 1">,&nbsp;</span>
+      </span>
     </template>
   </div>
 </template>
@@ -55,21 +55,15 @@ import Vue, { PropType } from 'vue';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
-import { App, SpotifyAPI } from '~~/types';
+import type { App, SpotifyAPI } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';
-const SIZE_OF_AVATAR = 28;
-
-type Data = {
-  getImageSrc: typeof getImageSrc
-  artistPath: (id: string) => string
-  hasImages: (images: SpotifyAPI.Image[] | undefined) => boolean
-  SIZE_OF_AVATAR: number
-}
 
 export type On = {
   [ON_CLICKED]: void
 }
+
+type Artist = App.SimpleArtistInfo | SpotifyAPI.Artist;
 
 export default Vue.extend({
   components: {
@@ -78,7 +72,7 @@ export default Vue.extend({
 
   props: {
     artists: {
-      type: Array as PropType<(App.SimpleArtistInfo | SpotifyAPI.Artist)[]>,
+      type: Array as PropType<Artist[]>,
       required: true,
     },
     text: {
@@ -89,21 +83,18 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    avatarSize: {
+      type: Number,
+      default: 28,
+    },
     inline: {
       type: Boolean,
       default: false,
     },
-  },
-
-  data() {
-    const artistPath = (id: string) => `/artists/${id}`;
-    const hasImages = (images: SpotifyAPI.Image[] | undefined) => (images?.length ?? 0) > 0;
-    return {
-      getImageSrc,
-      hasImages,
-      artistPath,
-      SIZE_OF_AVATAR,
-    };
+    ellipsis: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -111,6 +102,25 @@ export default Vue.extend({
       return this.artists
         .map((artist) => artist.name)
         .join(', ');
+    },
+    hasImages(): (artist: Artist) => boolean {
+      return (artist: Artist) => {
+        if ('images' in artist) {
+          return (artist.images?.length ?? 0) > 0;
+        }
+        return false;
+      };
+    },
+    getImageSrc(): (artist: Artist) => string | undefined {
+      return (artist: Artist) => {
+        if ('images' in artist) {
+          return getImageSrc(artist.images, this.avatarSize);
+        }
+        return undefined;
+      };
+    },
+    artistPath(): (id: string) => string {
+      return (id: string) => `/artists/${id}`;
     },
     hasMultipleArtists(): boolean {
       return this.artists.length > 1;
@@ -126,11 +136,14 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ArtistNames {
+.Artist {
   &__avatar {
-    margin-right: 0.1rem;
+    margin-right: 0.25rem;
+  }
 
-    &:not(:first-child) {
+  &:not(:first-child) {
+    // avatar を表示するときはアーティスト間に空白を入れる
+    .Artist__avatar {
       margin-left: 1rem;
     }
   }

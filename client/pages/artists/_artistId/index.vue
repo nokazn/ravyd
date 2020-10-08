@@ -4,16 +4,16 @@
     :class="$style.ArtistIdTopPage"
   >
     <div
-      :class="[
-        relatedArtistList.length > 0 ? $style.TwoColumns : undefined
-      ]"
+      :class="{
+        [$style.TopContent]: true,
+        [$style['TopContent--twoColumns']]: relatedArtistList.length > 0,
+      }"
     >
       <TrackListSection
-        v-if="artistInfo != null && topTrackList.length > 0"
+        v-if="topTrackList.length > 0"
         title="人気の曲"
-        :is-abbreviated="isFirstSectionAbbreviated"
-        :class="$style.TrackListSection"
-        @on-clicked="toggleAbbreviatedTrackList"
+        :value="isFirstSectionAbbreviated"
+        @input="toggleAbbreviatedTrackList"
       >
         <TrackList
           :track-list="topTrackList"
@@ -36,10 +36,10 @@
         v-if="releaseInfo.items.length > 0"
         :key="type"
         :title="releaseInfo.title"
-        :is-abbreviated="releaseInfo.isAbbreviated"
-        :is-full="releaseInfo.isFull"
+        :full="releaseInfo.isFull"
+        :value="releaseInfo.isAbbreviated"
         :class="$style.DiscographySection"
-        @on-button-clicked="onShowAllButtonClicked(type)"
+        @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
         @on-loading-appeared="appendReleaseList(type)"
       >
@@ -48,8 +48,8 @@
           v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
           v-bind="item"
-          :min-width="FLEX_CARD_MIN_WIDTH"
-          :max-width="FLEX_CARD_MAX_WIDTH"
+          :min-width="$constant.FLEX_CARD_MIN_WIDTH"
+          :max-width="$constant.FLEX_CARD_MAX_WIDTH"
           discograpy
           :class="$style.CardSection__card"
         />
@@ -71,15 +71,14 @@ import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plugins/local/_artistId';
-import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
-import { App } from '~~/types';
+import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
+import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const FULL_TOP_TRACK_LENGTH = 10;
-const ABBREVIATED_RELATED_ARTIST_LENGTH = 9;
+const ABBREVIATED_RELATED_ARTIST_LENGTH = 10;
 const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
@@ -97,8 +96,6 @@ interface AsyncData {
 interface Data {
   isTrackListAbbreviated: boolean | undefined
   mutationUnsubscribe: (() => void) | undefined
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
 }
 
 @Component({
@@ -143,8 +140,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
   isTrackListAbbreviated = true;
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   get isFirstSectionAbbreviated(): boolean | undefined {
     return this.topTrackList.length > ABBREVIATED_TOP_TRACK_LENGTH
@@ -192,8 +187,18 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['on-clicked']) {
+  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['input']) {
     this.isTrackListAbbreviated = nextIsAbbreviated;
+    // TrackListItem の高さに影響
+    const itemHeight = 52;
+    const aditionalListItems = FULL_TOP_TRACK_LENGTH - ABBREVIATED_TOP_TRACK_LENGTH;
+    // DOMを更新した後に表示し多分スクロールする
+    this.$nextTick().then(() => {
+      window.scrollBy({
+        top: itemHeight * aditionalListItems * (nextIsAbbreviated ? -1 : 1),
+        behavior: 'smooth',
+      });
+    });
   }
 
   onFavoriteTrackButtonClicked({ index, id, isSaved }: OnList['on-favorite-button-clicked']) {
@@ -274,28 +279,38 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .ArtistIdTopPage {
-  margin-top: 24px;
+  $margin-bottom: 24px;
 
-  .TwoColumns {
-    $related-artist-width: 300px;
-    $column-gap: 32px;
-    $top-track-list-width: calc(100% - #{$related-artist-width} - #{$column-gap});
+  .TopContent {
+    margin-top: $margin-bottom;
 
-    display: grid;
-    grid-template-columns: $top-track-list-width $related-artist-width;
-    column-gap: $column-gap;
-    width: 100%;
-    margin-bottom: 12px;
-  }
+    & > * {
+      margin-bottom: $margin-bottom;
+    }
 
-  .TrackListSection {
-    margin-bottom: 12px;
+    &--twoColumns {
+      $column-gap: max(4%, 20px);
+
+      @include larger-than-md {
+        $related-artists-width: 220px;
+        $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
+
+        display: grid;
+        grid-template-columns: $top-tracks-width $related-artists-width;
+        column-gap: $column-gap;
+      }
+
+      @include larger-than-xl {
+        $related-artists-width: 300px;
+        $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
+
+        grid-template-columns: $top-tracks-width $related-artists-width;
+      }
+    }
   }
 
   .DiscographySection {
-    &:not(:last-child) {
-      margin-bottom: 16px;
-    }
+    margin-bottom: $margin-bottom;
   }
 }
 </style>

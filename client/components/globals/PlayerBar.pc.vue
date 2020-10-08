@@ -2,16 +2,16 @@
   <v-footer
     app
     padless
-    :elevation="8"
-    :height="height"
-    :color="FOOTER_BACKGROUND_COLOR"
-    :class="$style.Footer"
+    :elevation="12"
+    :height="$constant.FOOTER_HEIGHT"
+    :color="$constant.FOOTER_BACKGROUND_COLOR"
+    :class="$style.PlayerBar"
   >
-    <div :class="$style.Footer__container">
+    <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
-          :src="artWorkSrc(64)"
-          :size="64"
+          :src="artWorkSrc(60)"
+          :size="60"
           :alt="trackName"
           :title="trackName"
           :class="$style.Left__artWork"
@@ -25,51 +25,40 @@
             :name="trackName"
             :type="trackType"
           />
-
           <MarqueeArtistNames
             v-if="isTrack && hasTrack"
             :artists="artists"
           />
         </div>
 
-        <div :class="$style.Left__favoriteButton">
-          <FavoriteButton
-            v-if="isTrack && hasTrack"
-            :is-favorited="isSavedTrack"
-            :size="36"
-            @on-clicked="onFavoriteButtonClicked"
-          />
-        </div>
+        <FavoriteButton
+          v-if="isTrack && hasTrack"
+          v-model="isSavedTrack"
+          :size="36"
+          :class="$style.Left__favoriteButton"
+        />
       </div>
 
       <div :class="$style.Center">
-        <seek-bar
-          :class="$style.Center__seekBar"
-        />
-
+        <SeekBar :class="$style.Center__seekBar" />
         <MediaControllersWrapper :type="trackType" />
       </div>
 
       <div :class="$style.Right">
         <div :class="$style.Right__buttons">
           <TrackQueueMenu />
-
           <DeviceSelectMenu />
-
           <PlaybackMenu />
         </div>
-
         <VolumeSlider />
       </div>
     </div>
 
-    <DeviceBar v-if="isAnotherDevicePlaying" />
-
     <v-overlay
-      v-if="!isLoaded"
+      v-if="!loaded"
       absolute
-      :z-index="Z_INDEX"
-      :color="FOOTER_BACKGROUND_COLOR"
+      :z-index="$constant.Z_INDEX_OF.loading"
+      :color="$constant.FOOTER_BACKGROUND_COLOR"
       :opacity="1"
       :class="$style.Overlay"
     />
@@ -90,21 +79,9 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import DeviceBar from '~/components/globals/DeviceBar.vue';
-
-import {
-  FOOTER_BACKGROUND_COLOR,
-  FOOTER_HEIGHT,
-  DEVICE_BAR_HEIGHT,
-  Z_INDEX_OF,
-} from '~/constants';
 
 type Data = {
-  isLoaded: boolean
-  deviceSelectMenu: boolean
-  mutationUnsubscribe: (() => void) | undefined
-  FOOTER_BACKGROUND_COLOR: typeof FOOTER_BACKGROUND_COLOR
-  Z_INDEX: number
+  deviceSelectMenu: boolean;
 }
 
 export default Vue.extend({
@@ -119,16 +96,18 @@ export default Vue.extend({
     DeviceSelectMenu,
     PlaybackMenu,
     VolumeSlider,
-    DeviceBar,
+  },
+
+  props: {
+    loaded: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data(): Data {
     return {
-      isLoaded: false,
       deviceSelectMenu: false,
-      mutationUnsubscribe: undefined,
-      FOOTER_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.loading,
     };
   },
 
@@ -136,22 +115,16 @@ export default Vue.extend({
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
-    // 他のデバイスで再生中の場合高さが変わる
-    height(): number {
-      return this.isAnotherDevicePlaying
-        ? FOOTER_HEIGHT + DEVICE_BAR_HEIGHT
-        : FOOTER_HEIGHT;
-    },
     hasTrack(): RootGetters['playback/hasTrack'] {
       return this.$getters()['playback/hasTrack'];
     },
     isTrack(): boolean {
       return this.trackType === 'track';
     },
+
     artWorkSrc(): (size: number) => string | undefined {
       return (size: number) => this.$getters()['playback/artworkSrc'](size);
     },
-    // alt 属性に渡す
     trackName(): string {
       return this.$state().playback.trackName || '不明のトラック';
     },
@@ -167,43 +140,21 @@ export default Vue.extend({
     artists(): RootState['playback']['artists'] {
       return this.$state().playback.artists;
     },
-    isSavedTrack(): RootState['playback']['isSavedTrack'] {
-      return this.$state().playback.isSavedTrack;
-    },
-  },
+    isSavedTrack: {
+      get(): RootState['playback']['isSavedTrack'] {
+        return this.$state().playback.isSavedTrack;
+      },
+      set(isSaved: OnFavorite['input']) {
+        if (this.trackId == null) return;
 
-  mounted() {
-    this.$dispatch('player/initPlayer');
-
-    this.mutationUnsubscribe = this.$subscribe((mutation) => {
-      const { type } = mutation;
-      switch (type) {
-        case 'player/SET_PLAYBACK_PLAYER':
-          setTimeout(() => {
-            this.isLoaded = true;
-          }, 500);
-          break;
-        default:
-          break;
-      }
-    });
-  },
-
-  beforeDestroy() {
-    this.mutationUnsubscribe = undefined;
-  },
-
-  methods: {
-    onFavoriteButtonClicked(isSaved: OnFavorite['on-clicked']) {
-      if (this.trackId == null) return;
-
-      // API との通信の結果を待たずに先に表示を変更させておく
-      this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
-      if (isSaved) {
-        this.$dispatch('library/tracks/saveTracks', [this.trackId]);
-      } else {
-        this.$dispatch('library/tracks/removeTracks', [this.trackId]);
-      }
+        // API との通信の結果を待たずに先に表示を変更させておく
+        this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
+        if (isSaved) {
+          this.$dispatch('library/tracks/saveTracks', [this.trackId]);
+        } else {
+          this.$dispatch('library/tracks/removeTracks', [this.trackId]);
+        }
+      },
     },
   },
 });
@@ -212,7 +163,7 @@ export default Vue.extend({
 <style lang="scss" module>
 $side-margin: 1vw;
 
-.Footer {
+.PlayerBar {
   z-index: z-index-of(footer) !important;
 
   &__container {
@@ -243,14 +194,11 @@ $side-margin: 1vw;
     overflow-x: hidden;
 
     & > *:not(:last-child) {
-      margin-bottom: 0.5em;
+      margin-bottom: 0.375em;
     }
   }
 
   &__favoriteButton {
-    display: flex;
-    align-items: center;
-    height: 100%;
     margin-right: 0.1em;
   }
 }

@@ -1,13 +1,14 @@
 <template>
   <v-dialog
     v-model="modal"
+    :fullscreen="fullscreen"
     :max-width="600"
     :class="$style.Modal"
   >
     <v-card
       rounded="lg"
       :elevation="12"
-      :color="CARD_BACKGROUND_COLOR"
+      :color="$constant.CARD_BACKGROUND_COLOR"
       :class="$style.Card"
     >
       <div :class="$style.Card__header">
@@ -39,16 +40,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 
 const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
-
-type Data = {
-  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -57,12 +53,10 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      CARD_BACKGROUND_COLOR,
-    };
+    fullscreen: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {

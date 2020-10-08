@@ -4,7 +4,7 @@ import { LibraryShowsState } from './state';
 import { LibraryShowsGetters } from './getters';
 import { LibraryShowsMutations } from './mutations';
 import { convertShowForCard } from '~/utils/converter';
-import { emptyPaging } from '~/constants';
+import { EMPTY_PAGING } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type LibraryShowsActions = {
@@ -113,7 +113,7 @@ const actions: Actions<
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, emptyPaging as LibraryOfShows));
+      }, EMPTY_PAGING as LibraryOfShows));
 
     if (shows == null) {
       this.$toast.push({

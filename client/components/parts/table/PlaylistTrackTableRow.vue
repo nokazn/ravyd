@@ -1,177 +1,66 @@
 <template>
-  <tr
-    :class="{
-      [$style.PlaylistTrackTableRow]: true,
-      'inactive--text': disabled
-    }"
-    :data-is-active="isActive"
-    @click="onRowClicked"
-  >
-    <td
-      v-if="image"
-      :title="item.name"
-    >
-      <ReleaseArtwork
-        :src="artworkSrc"
-        :alt="item.name"
-        :size="SIZE_OF_ARTWORK"
-      />
-    </td>
-
-    <td>
-      <div
-        :class="$style.PlaylistTrackTableRow__buttons"
-        class="text-center"
-      >
-        <PlaylistMediaButton
-          :is-playing-track="isPlayingTrack"
-          :disabled="disabled"
-          @on-clicked="onMediaButtonClicked"
-        />
-
-        <FavoriteButton
-          v-if="item.type !== 'episode'"
-          :is-favorited="item.isSaved"
-          @on-clicked="onFavoriteButtonClicked"
-        />
-      </div>
-    </td>
-
-    <td>
-      <div :class="$style.Content">
-        <div class="g-ellipsis-text">
-          <div
-            :class="titleColor"
-            class="g-ellipsis-text"
-            :title="item.name"
-          >
-            <nuxt-link :to="trackPath">
-              {{ item.name }}
-            </nuxt-link>
-          </div>
-
-          <div
-            :class="[$style.Content__subtitle, subtitleColor]"
-            class="g-ellipsis-text"
-          >
-            <template v-if="item.type === 'track'">
-              <ArtistNames
-                inline
-                :artists="item.artists"
-              />
-              <span :class="$style['Content__subtitle--divider']">-</span>
-            </template>
-
-            <nuxt-link
-              :to="releasePath"
-              :title="item.releaseName"
-            >
-              {{ item.releaseName }}
-            </nuxt-link>
-          </div>
-        </div>
-
-        <div>
-          <ExplicitChip v-if="item.explicit" />
-        </div>
-      </div>
-    </td>
-
-    <td
-      v-if="collaborative"
-      :class="$style.PlaylistTrackTableRow__smallText"
-      class="g-ellipsis-text"
-    >
-      <nuxt-link
-        v-if="userPath != null"
-        :to="userPath"
-      >
-        {{ item.addedBy.display_name || item.addedBy.id }}
-      </nuxt-link>
-    </td>
-
-    <td
-      v-if="!hideAddedAt && item.addedAt != null"
-      :title="item.addedAt.title"
-      :class="$style.PlaylistTrackTableRow__smallText"
-    >
-      <time
-        v-if="item.addedAt.text"
-        :datetime="item.addedAt.text"
-      >
-        {{ item.addedAt.text }}
-      </time>
-    </td>
-
-    <td
-      :class="$style.PlaylistTrackTableRow__smallText"
-      class="text-center"
-    >
-      <TrackTime :time-ms="item.durationMs" />
-    </td>
-
-    <td>
-      <EpisodeMenu
-        v-if="item.type === 'episode'"
-        offset-x
-        left
-        :episode="item"
-        :playlist-id="playlistId"
-        :publisher="publisher"
-      />
-      <TrackMenu
-        v-else
-        offset-x
-        left
-        :track="item"
-        :playlist-id="playlistId"
-        @on-favorite-menu-clicked="onFavoriteButtonClicked"
-      />
-    </td>
-  </tr>
+  <PlaylistTrackTableRowMobile
+    v-if="$window.isSingleColumn"
+    :item="item"
+    :playlist-id="playlistId"
+    :hide-image="hideImage"
+    :collaborative="collaborative"
+    :hide-added-at="hideAddedAt"
+    :button-size="buttonSize"
+    :disabled="disabled"
+    :artwork-src="artworkSrc"
+    :track-path="trackPath"
+    :release-path="releasePath"
+    :user-path="userPath"
+    :publisher="publisher"
+    :title-color="titleColor"
+    :subtitle-color="subtitleColor"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
+  />
+  <PlaylistTrackTableRowPc
+    v-else-if="$window.isMultiColumn"
+    :item="item"
+    :playlist-id="playlistId"
+    :hide-image="hideImage"
+    :collaborative="collaborative"
+    :hide-added-at="hideAddedAt"
+    :playing="playing"
+    :button-size="buttonSize"
+    :disabled="disabled"
+    :artwork-src="artworkSrc"
+    :track-path="trackPath"
+    :release-path="releasePath"
+    :user-path="userPath"
+    :publisher="publisher"
+    :title-color="titleColor"
+    :subtitle-color="subtitleColor"
+    @on-row-clicked="onRowClicked"
+    @on-media-button-clicked="onMediaButtonClicked"
+    @on-favorite-button-clicked="onFavoriteButtonClicked"
+  />
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { RawLocation } from 'vue-router';
+import type { RawLocation } from 'vue-router';
 
-import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
-import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
-import TrackTime from '~/components/parts/text/TrackTime.vue';
-import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
-import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-
+import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
+import PlaylistTrackTableRowPc, { On as OnPc } from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { getImageSrc } from '~/utils/image';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
-export const SIZE_OF_ARTWORK = 48;
-const ON_ROW_CLICKED = 'on-row-clicked';
-const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+export const ON_ROW_CLICKED = 'on-row-clicked';
+export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
+export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-type Data = {
-  SIZE_OF_ARTWORK: number
-}
-
-export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
-}
+export type On = OnMobile | OnPc;
 
 export default Vue.extend({
   components: {
-    ReleaseArtwork,
-    PlaylistMediaButton,
-    FavoriteButton,
-    ArtistNames,
-    ExplicitChip,
-    TrackTime,
-    TrackMenu,
-    EpisodeMenu,
+    PlaylistTrackTableRowMobile,
+    PlaylistTrackTableRowPc,
   },
 
   props: {
@@ -183,19 +72,15 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    isTrackSet: {
+    set: {
       type: Boolean,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
-    isActive: {
-      type: Boolean,
-      required: true,
-    },
-    image: {
+    hideImage: {
       type: Boolean,
       default: false,
     },
@@ -207,12 +92,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-  },
-
-  data(): Data {
-    return {
-      SIZE_OF_ARTWORK,
-    };
+    buttonSize: {
+      type: Number,
+      default: 36,
+    },
   },
 
   computed: {
@@ -224,7 +107,7 @@ export default Vue.extend({
       return this.item.type !== 'episode' && this.item.isPlayable === false;
     },
     artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, SIZE_OF_ARTWORK);
+      return getImageSrc(this.item.images, this.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE);
     },
     trackPath(): RawLocation {
       return this.item.type === 'track'
@@ -252,72 +135,31 @@ export default Vue.extend({
     },
     titleColor(): string | undefined {
       if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtitleColor(): string {
       if (this.disabled) return 'inactive--text';
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
     },
   },
 
   methods: {
-    onRowClicked() {
-      this.$emit(ON_ROW_CLICKED, this.item);
+    onRowClicked(row: On['on-row-clicked']) {
+      // row をコピーしたものを参照する
+      this.$emit(ON_ROW_CLICKED, row);
     },
-    onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
+    onMediaButtonClicked(row: On['on-media-button-clicked']) {
+      // row をコピーしたものを参照する
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
     },
-    onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
+    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
+      // row をコピーしたものを参照する
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
   },
 });
 </script>
-
-<style lang="scss" module>
-.PlaylistTrackTableRow {
-  cursor: pointer;
-
-  &[data-is-active=true] {
-    background-color: lighten($g-background-color, 16%);
-  }
-
-  &__buttons {
-    display: flex;
-
-    & > *:not(:last-child) {
-      margin-right: 4px;
-    }
-  }
-
-  &__smallText {
-    font-size: 0.75em !important;
-    white-space: nowrap;
-    padding: 0 0.25em !important;
-  }
-
-  .Content {
-    padding: 0.75em 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    & > *:not(:last-child) {
-      margin-right: 1em;
-    }
-
-    &__subtitle {
-      margin-top: 0.3em;
-      font-size: 0.9em;
-
-      &--divider {
-        margin: 0 0.3em;
-      }
-    }
-  }
-}
-</style>

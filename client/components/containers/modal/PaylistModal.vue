@@ -1,6 +1,7 @@
 <template>
   <Modal
     v-model="modal"
+    :fullscreen="$window.isSingleColumn"
     :class="$style.PlaylistModal"
   >
     <template #header>
@@ -81,7 +82,6 @@ import Vue, { PropType } from 'vue';
 import { ExtendedMutationPayload } from 'typed-vuex';
 
 import Modal from '~/components/parts/modal/Modal.vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI } from '~~/types';
 
 const FORM_REF = 'FORM_REF';
@@ -97,7 +97,6 @@ type Data = {
   isLoading: boolean
   mutationUnsubscribe: (() => void) | undefined
   FORM_REF: string;
-  CARD_BACKGROUND_COLOR: string;
 }
 
 // 編集するとき
@@ -125,10 +124,10 @@ export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' 
     isCollaborative: boolean
   }) => Promise<void>
 
-export const ON_CHANGED = 'on-changed';
+export const INPUT = 'input';
 
 export type On = {
-  [ON_CHANGED]: boolean
+  [INPUT]: boolean
 }
 
 export default Vue.extend({
@@ -137,7 +136,7 @@ export default Vue.extend({
   },
 
   props: {
-    isShown: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -179,22 +178,21 @@ export default Vue.extend({
       isLoading: false,
       mutationUnsubscribe: undefined,
       FORM_REF,
-      CARD_BACKGROUND_COLOR,
     };
   },
 
   computed: {
     modal: {
       get(): boolean {
-        return this.isShown;
+        return this.value;
       },
-      set(isShown: boolean) {
+      set(value: boolean) {
         const ref = this.$refs[FORM_REF];
-        if (!isShown && ref != null) {
+        if (!value && ref != null) {
           // モーダルを閉じたときにバリデーションをリセット
           (ref as Vue & { resetValidation(): void }).resetValidation();
         }
-        this.$emit(ON_CHANGED, isShown);
+        this.$emit(INPUT, value);
       },
     },
   },
@@ -277,7 +275,7 @@ export default Vue.extend({
 
   methods: {
     onCloseButtonClicked() {
-      this.$emit(ON_CHANGED, false);
+      this.modal = false;
     },
     createPlaylist() {
       const userId = this.$getters()['auth/userId'];

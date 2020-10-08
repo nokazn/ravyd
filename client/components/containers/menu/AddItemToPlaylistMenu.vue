@@ -5,8 +5,6 @@
     :right="right"
     :nudge-left="1"
     open-on-hover
-    open-on-click
-    :close-delay="100"
   >
     <template #activator="{ on }">
       <ChildOptionMenuActivator :on="on">

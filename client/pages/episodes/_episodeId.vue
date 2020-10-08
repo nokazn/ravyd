@@ -10,17 +10,15 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isEpisodeSet && isPlaying"
           :disabled="!episodeInfo.isPlayable"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <EpisodeMenu
-          outlined
           left
           offset-y
-          :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :episode="episodeInfo"
           :publisher="episodeInfo.showName"
         />
@@ -33,8 +31,8 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
+        :size="$window.artworkSize"
         :alt="episodeInfo.name"
-        :size="ARTWORK_SIZE"
         :title="episodeInfo.name"
         shadow
       />
@@ -65,7 +63,6 @@
               :disabled="!episodeInfo.isPlayable"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <EpisodeMenu
               offset-y
               outlined
@@ -74,17 +71,10 @@
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseDate
-              :release-date="episodeInfo.releaseDate"
-              :release-date-precision="episodeInfo.releaseDatePrecision"
-            />
-
-            <ReleaseDuration
-              :duration-ms="episodeInfo.durationMs"
-              :is-full="true"
-            />
-          </div>
+          <EpisodeDetailWrapper
+            :episode="episodeInfo"
+            :class="$style.Info__detail"
+          />
         </div>
       </div>
     </div>
@@ -105,6 +95,7 @@
       :resume-point="episodeInfo.resumePoint"
       :duration-ms="episodeInfo.durationMs"
       :max-width="300"
+      :class="$style.EpisodeIdPage__progress"
     />
   </div>
 
@@ -120,8 +111,7 @@ import { RootState } from 'typed-vuex';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
-import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
+import EpisodeDetailWrapper from '~/components/parts/wrapper/EpisodeDetailWrapper.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -151,8 +141,7 @@ interface Data {
     ExplicitChip,
     ContextMediaButton,
     EpisodeMenu,
-    ReleaseDate,
-    ReleaseDuration,
+    EpisodeDetailWrapper,
     EpisodeProgressBar,
     IntersectionLoadingCircle,
     Copyrights,
@@ -243,75 +232,66 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
-
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
-  }
+  @include additional-header-content();
 }
 
 .EpisodeIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  $margin-bottom: 32px;
+
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom;
+
+    @include page-header;
   }
 
   &__description {
-    margin-bottom: 32px;
+    margin-bottom: $margin-bottom;
 
     & > *:not(:last-child) {
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
   }
 
-  &__table {
-    margin-bottom: 32px;
+  &__progress {
+    margin-bottom: $margin-bottom;
+  }
+}
+
+.Info {
+  @include page-info;
+
+  &__explicitIcon {
+    margin-bottom: 0.1rem;
   }
 
-  .Info {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  &__title {
+    @include page-title;
+  }
 
-    &__explicitIcon {
-      margin-bottom: 0.1rem;
+  &__footer {
+    margin-top: 16px;
+    display: flex;
+
+    @include smaller-than-md {
+      flex-direction: column;
     }
 
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__footer {
-      display: flex;
+    @include larger-than-md {
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 16px;
     }
+  }
 
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
+  &__buttons {
+    @include page-header-buttons(true);
+  }
 
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
-
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
-    }
+  &__detail {
+    // 2行になったとき
+    margin-top: 12px;
   }
 }
 </style>

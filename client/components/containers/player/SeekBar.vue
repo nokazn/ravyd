@@ -1,23 +1,26 @@
 <template>
   <div :class="$style.SeekBar">
     <v-slider
-      :value="value"
       dense
       hide-details
-      :disabled="disabled"
-      thumb-color="white"
       :color="seekbarColor"
+      :thumb-color="thumbColor"
+      :disabled="disabled"
       :max="durationMs"
+      :value="value"
       :class="$style.SeekBar__slider"
+      :style="cssProps"
       @mousedown="onMouseDown"
       @change="onChange"
     />
 
-    <div :class="$style.SeekBar__mss">
+    <div
+      v-if="!hideText"
+      :class="$style.SeekBar__mss"
+    >
       <span :class="$style['SeekBar__mss--left']">
         {{ positionMinutes }}:{{ positionSeconds }}
       </span>
-
       <span
         :title="durationMsTitle"
         :class="$style['SeekBar__mss--right']"
@@ -33,7 +36,6 @@ import Vue from 'vue';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import { elapsedTime } from '~~/utils/elapsedTime';
-import { DEFAULT_DURATION_MS } from '~/constants';
 
 type Data = {
   value: number
@@ -42,8 +44,19 @@ type Data = {
 }
 
 export default Vue.extend({
+  props: {
+    hideText: {
+      type: Boolean,
+      default: false,
+    },
+    thumbColor: {
+      type: String,
+      default: 'white',
+    },
+  },
+
   data(): Data {
-    const value = 0;
+    const value = this.$state().playback.positionMs;
 
     return {
       value,
@@ -68,28 +81,34 @@ export default Vue.extend({
     durationMss(): string {
       return elapsedTime(this.durationMs);
     },
-
-    disabled(): boolean {
-      // durationMs が不適な値の場合もシークバーを操作できないようにするs
-      return this.$getters()['playback/isDisallowed']('seeking')
-        || this.durationMs === DEFAULT_DURATION_MS;
-    },
-    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
-      return this.$state().playback.disabledPlayingFromBegining;
+    durationMsTitle(): string | undefined {
+      return this.durationMs === this.$constant.DEFAULT_DURATION_MS
+        ? '再生時間が取得できません'
+        : undefined;
     },
 
     isPlaying(): RootState['playback']['isPlaying'] {
       return this.$state().playback.isPlaying;
     },
+    disabled(): boolean {
+      // durationMs が不適な値の場合もシークバーを操作できないようにするs
+      return this.$getters()['playback/isDisallowed']('seeking')
+        || this.durationMs === this.$constant.DEFAULT_DURATION_MS;
+    },
+    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
+      return this.$state().playback.disabledPlayingFromBegining;
+    },
     seekbarColor(): string {
       return this.isPlaying
         ? 'active-icon'
-        : 'inactive';
+        : 'grey lighten-2';
     },
-    durationMsTitle(): string | undefined {
-      return this.durationMs === DEFAULT_DURATION_MS
-        ? '再生時間が取得できません'
-        : undefined;
+    cssProps(): Record<string, string> {
+      return {
+        '--margin-side': this.thumbColor === 'transparent'
+          ? '0'
+          : '8px',
+      };
     },
   },
 
@@ -188,6 +207,15 @@ export default Vue.extend({
     &--right {
       right: 0;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.v-slider {
+  &--horizontal {
+    margin-left: var(--margin-side) !important;
+    margin-right: var(--margin-side) !important;
   }
 }
 </style>

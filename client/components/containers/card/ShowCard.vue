@@ -7,14 +7,15 @@
   >
     <template #image>
       <ReleaseArtwork
-        is-overlayed
+        overlay
+        :border-radius="2"
         :src="artworkSrc"
         :alt="name"
-        :title="name"
         :size="width"
         :min-size="minWidth || width"
         :max-size="maxWidth || width"
         :icon="mediaIcon"
+        :title="name"
         @on-media-button-clicked="onMediaButtonClicked"
       />
     </template>

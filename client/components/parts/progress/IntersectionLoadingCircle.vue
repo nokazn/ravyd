@@ -4,7 +4,7 @@
     :class="$style.LoadingCircle"
   >
     <v-progress-circular
-      v-if="isLoading"
+      v-if="loading"
       indeterminate
     />
   </div>
@@ -20,15 +20,15 @@ export type Data = {
   LOADING_REF: string
 }
 
-const ON_APPEARED = 'on-appeared';
+const APPEAR = 'appear';
 
 export type On = {
-  [ON_APPEARED]: void
+  [APPEAR]: void
 }
 
 export default Vue.extend({
   props: {
-    isLoading: {
+    loading: {
       type: Boolean,
       required: true,
     },
@@ -48,7 +48,7 @@ export default Vue.extend({
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          this.$emit(ON_APPEARED);
+          this.$emit(APPEAR);
         }
       });
     }, {

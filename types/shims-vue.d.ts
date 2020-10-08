@@ -1,17 +1,20 @@
-import {
+import type {
   RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
   ExtendedSubscribe,
 } from 'typed-vuex';
-import dayjs from 'dayjs';
-import { $Toast } from '~/plugins/toast';
-import { Overlay } from '~/plugins/overlay';
-import { Header } from '~/plugins/observable/header';
+import type dayjs from 'dayjs';
 
-import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+import type { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { Constant } from '~/plugins/constant';
+import type { $Header } from '~/plugins/observable/header';
+import type { $Overlay } from '~/plugins/observable/overlay';
+import type { $Toast } from '~/plugins/observable/toast';
+import type { $Window } from '~/plugins/observable/window';
+
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -29,8 +32,12 @@ declare module 'vue/types/vue' {
     $dayjs: typeof dayjs
     $spotify: SpotifyEndpoints
     $server: ServerEndpoints
+    $constant: Constant
+
+    // obserable
+    $header: $Header
+    $overlay: $Overlay
     $toast: $Toast
-    $overlay: Overlay
-    $header: Header
+    $window: $Window
   }
 }

@@ -2,7 +2,7 @@
   <v-list
     rounded="lg"
     :elevation="12"
-    :color="CARD_BACKGROUND_COLOR"
+    :color="$constant.CARD_BACKGROUND_COLOR"
     :class="$style.TwoColumnsList"
   >
     <template
@@ -35,15 +35,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { CARD_BACKGROUND_COLOR } from '~/constants';
 
 export type Item = {
   title: string
   value: string | null
-}
-
-type Data = {
-  CARD_BACKGROUND_COLOR: string;
 }
 
 export default Vue.extend({
@@ -52,12 +47,6 @@ export default Vue.extend({
       type: Array as PropType<Item[]>,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      CARD_BACKGROUND_COLOR,
-    };
   },
 });
 </script>

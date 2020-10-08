@@ -1,6 +1,9 @@
 <template>
-  <div
-    class="primary"
+  <v-bottom-navigation
+    app
+    padless
+    :height="$constant.DEVICE_BAR_HEIGHT"
+    background-color="primary"
     :class="$style.DeviceBar"
   >
     <v-icon
@@ -12,7 +15,7 @@
     <div>
       {{ name }} で再生中
     </div>
-  </div>
+  </v-bottom-navigation>
 </template>
 
 <script lang="ts">
@@ -29,13 +32,13 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .DeviceBar {
-  height: $g-device-bar-height;
-  width: 100vw;
-  padding: 0 1vw;
+  padding: 0 max(1vw, 16px);
   font-size: 12px;
   line-height: 24px;
   display: flex;
-  justify-content: flex-end;
-  align-content: center;
+  // center なのを上書き
+  justify-content: flex-end !important;
+  align-items: center;
+  z-index: z-index-of(footer) !important;
 }
 </style>

@@ -2,35 +2,33 @@
   <v-app-bar
     app
     :elevation="headerElevation"
-    :height="HEADER_HEIGHT"
+    :height="$constant.HEADER_HEIGHT"
     :style="styles"
     :class="$style.Header"
   >
     <div :class="$style.Header__container">
       <div :class="$style.Header__left">
-        <v-btn
-          :width="36"
-          :height="36"
-          icon
-          title="戻る"
-          @click="onBackButtonClicked"
+        <div
+          v-if="$window.isMultiColumn"
+          :class="$style.Header__buttons"
         >
-          <v-icon :size="32">
+          <CircleButton
+            :size="36"
+            :icon-size="32"
+            title="戻る"
+            @on-clicked="onBackButtonClicked"
+          >
             mdi-chevron-left
-          </v-icon>
-        </v-btn>
-
-        <v-btn
-          :width="36"
-          :height="36"
-          icon
-          title="進む"
-          @click="onForwardButtonClicked"
-        >
-          <v-icon :size="32">
+          </CircleButton>
+          <CircleButton
+            :size="36"
+            :icon-size="32"
+            title="進む"
+            @on-clicked="onForwardButtonClicked"
+          >
             mdi-chevron-right
-          </v-icon>
-        </v-btn>
+          </CircleButton>
+        </div>
 
         <div :class="$style.Header__searchForm">
           <SearchField />
@@ -39,15 +37,12 @@
       </div>
 
       <div :class="$style.Header__right">
-        <template v-if="$header.hasAdditionalContent">
-          <transition name="fade">
-            <portal-target
-              v-show="$header.isAdditionalContentShown"
-              :name="$header.PORTAL_NAME"
-              :class="$style.Header__additional"
-            />
-          </transition>
-        </template>
+        <portal-target
+          v-if="$header.hasAdditionalContent && $window.isMultiColumn"
+          v-show="$header.isAdditionalContentShown"
+          :name="$header.PORTAL_NAME"
+          :class="$style.Header__additional"
+        />
       </div>
     </div>
   </v-app-bar>
@@ -56,13 +51,9 @@
 <script lang="ts">
 import Vue from 'vue';
 
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
-import { HEADER_HEIGHT, BACKGROUND_COLOR } from '~/constants';
-
-type Data = {
-  HEADER_HEIGHT: number
-}
 
 type HeaderStyles = {
   backgroundColor: string
@@ -71,6 +62,7 @@ type HeaderStyles = {
 
 export default Vue.extend({
   components: {
+    CircleButton,
     SearchField,
     SearchResultList,
   },
@@ -80,12 +72,6 @@ export default Vue.extend({
       type: Number,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      HEADER_HEIGHT,
-    };
   },
 
   computed: {
@@ -101,7 +87,7 @@ export default Vue.extend({
 
       const dominantColor = this.$state().dominantBackgroundColor;
       return {
-        backgroundColor: dominantColor?.hex ?? BACKGROUND_COLOR,
+        backgroundColor: dominantColor?.hex ?? this.$constant.BACKGROUND_COLOR,
       };
     },
     // backdrop-filter が有効のときはヘッダーの下に sticky なコンテンツがないので elavation を有効にする
@@ -141,8 +127,10 @@ export default Vue.extend({
     align-items: center;
   }
 
-  &__searchForm {
-    margin-left: 20px;
+  &__left {
+    & > *:not(:last-child) {
+      margin-right: 16px;
+    }
   }
 }
 </style>

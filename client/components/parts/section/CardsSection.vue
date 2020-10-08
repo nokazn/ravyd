@@ -6,10 +6,9 @@
       </h2>
 
       <ShowAllButton
-        v-if="isAbbreviated != null"
+        v-if="value != null"
+        v-model="abbreviated"
         small
-        :is-abbreviated="isAbbreviated"
-        @on-clicked="onButtonClicked"
         @mouseover.native="onButtonHovered"
       />
     </div>
@@ -25,19 +24,18 @@
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      v-if="isAbbreviated === false"
-      :is-loading="!isFull"
+      v-if="value === false"
+      :loading="!full"
       :class="$style.CardSection__loadingCircle"
-      @on-appeared="onLoadingAppeared"
+      @appear="onLoadingAppeared"
     />
 
     <div
-      v-if="isAbbreviated != null"
+      v-if="value != null"
       :class="$style.CardSection__footer"
     >
       <ShowAllButton
-        :is-abbreviated="isAbbreviated"
-        @on-clicked="onButtonClicked"
+        v-model="abbreviated"
         @mouseover.native="onButtonHovered"
       />
     </div>
@@ -49,16 +47,15 @@ import Vue, { PropType } from 'vue';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
+import ShowAllButton, { On as OnShowAll, INPUT } from '~/components/parts/button/ShowAllButton.vue';
 
-const ON_BUTTON_CLICKED = 'on-button-clicked';
 const ON_BUTTON_HOVERED = 'on-button-hovered';
 const ON_LOADING_APPEARED = 'on-loading-appeared';
 
 export type On = {
-  [ON_BUTTON_CLICKED]: boolean
-  [ON_BUTTON_HOVERED]: void
-  [ON_LOADING_APPEARED]: void
+  [INPUT]: OnShowAll['input'];
+  [ON_BUTTON_HOVERED]: void;
+  [ON_LOADING_APPEARED]: void;
 }
 
 export default Vue.extend({
@@ -73,11 +70,11 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    isAbbreviated: {
+    value: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
-    isFull: {
+    full: {
       type: Boolean,
       required: true,
     },
@@ -95,14 +92,21 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onButtonClicked() {
-      const nextIsAbbreviated = !this.isAbbreviated;
-      this.$emit(ON_BUTTON_CLICKED, nextIsAbbreviated);
+  computed: {
+    abbreviated: {
+      get(): boolean | undefined {
+        return this.value;
+      },
+      set(abbreviated: OnShowAll['input']) {
+        this.$emit(INPUT, abbreviated);
+      },
     },
+  },
+
+  methods: {
     onButtonHovered() {
       // 省略表示されているときにホバーした場合のみ emit
-      if (this.isAbbreviated) {
+      if (this.value) {
         this.$emit(ON_BUTTON_HOVERED);
       }
     },
@@ -121,7 +125,7 @@ export default Vue.extend({
   }
 
   &__divider {
-    margin: 6px 0 16px;
+    margin: 4px 0 16px;
   }
 
   &__loadingCircle {

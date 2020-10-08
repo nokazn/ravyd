@@ -10,7 +10,6 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isPlaylistSet && isPlaying"
           :disabled="!hasTracks"
           @on-clicked="onContextMediaButtonClicked"
@@ -18,27 +17,27 @@
 
         <CircleButton
           v-if="playlistInfo.isOwnPlaylist"
-          :size="32"
-          outlined
           title="編集する"
-          @on-clicked="editPlaylistModal = true"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          @click="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
         <FavoriteButton
           v-else
-          :size="32"
-          outlined
-          :is-favorited="isFollowing"
-          @on-clicked="toggleFollowingState"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :value="isFollowing"
+          @input="toggleFollowingState"
         />
 
         <PlaylistMenu
+          left
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :playlist="playlistInfo"
           :is-following="isFollowing"
-          :size="32"
-          outlined
-          left
           @on-edit-menu-clicked="toggleEditPlaylistModal"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -50,11 +49,11 @@
       :class="$style.PlaylistIdPage__header"
     >
       <ReleaseArtwork
-        :src="artworkSrc"
-        :alt="playlistInfo.name"
-        :size="ARTWORK_SIZE"
-        :title="playlistInfo.name"
         shadow
+        :src="artworkSrc"
+        :size="$window.artworkSize"
+        :alt="playlistInfo.name"
+        :title="playlistInfo.name"
       />
 
       <div :class="$style.Info">
@@ -91,68 +90,57 @@
 
             <CircleButton
               v-if="playlistInfo.isOwnPlaylist"
-              :size="36"
               outlined
               title="編集する"
-              @on-clicked="editPlaylistModal = true"
+              :size="36"
+              @on-clicked="toggleEditPlaylistModal(true)"
             >
               mdi-pencil
             </CircleButton>
             <FavoriteButton
               v-else
-              :is-favorited="isFollowing"
               outlined
-              @on-clicked="toggleFollowingState"
+              :value="isFollowing"
+              @input="toggleFollowingState"
             />
 
             <PlaylistMenu
+              outlined
               :playlist="playlistInfo"
               :is-following="isFollowing"
-              outlined
-              @on-edit-menu-clicked="toggleEditPlaylistModal"
+              @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseTotalTracks
-              :total="playlistInfo.totalTracks"
-            />
-
-            <ReleaseDuration
-              :duration-ms="playlistInfo.durationMs"
-            />
-
-            <Followers
-              v-if="playlistInfo.followersText != null"
-              :text="playlistInfo.followersText"
-            />
-          </div>
+          <PlaylistDetailWrapper
+            :playlist="playlistInfo"
+            :class="$style.Info__detail"
+          />
         </div>
       </div>
     </div>
 
     <EditPlaylistModal
-      :is-shown="editPlaylistModal"
+      v-model="editPlaylistModal"
       :form="editPlaylistForm"
-      @on-changed="toggleEditPlaylistModal"
     />
 
     <ConfirmModal
-      :is-shown="confirmModal.isShown"
-      :loading="confirmModal.isLoading"
-      :type="confirmModal.type"
-      :color="confirmModal.color"
-      :text="confirmModal.text"
-      @on-changed="toggleConfirmModal"
+      v-model="confirmModal"
+      :loading="confirmModalParams.loading"
+      :type="confirmModalParams.type"
+      :color="confirmModalParams.color"
+      :text="confirmModalParams.text"
       @on-confirmed="onConformed"
     >
-      {{ confirmModal.description }}
+      {{ confirmModalParams.description }}
     </ConfirmModal>
 
     <p
       v-if="playlistInfo.description"
       class="subtext--text"
+      :class="$style.PlaylistIdPage__description"
       v-html="playlistInfo.description"
     />
 
@@ -166,9 +154,8 @@
       />
 
       <IntersectionLoadingCircle
-        v-if="!playlistTrackInfo.isFullTrackList"
-        :is-loading="!playlistTrackInfo.isFullTrackList"
-        @on-appeared="appendTrackList"
+        :loading="!playlistTrackInfo.isFullTrackList"
+        @appear="appendTrackList"
       />
     </template>
   </div>
@@ -189,9 +176,7 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
-import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import Followers from '~/components/parts/text/Followers.vue';
+import PlaylistDetailWrapper from '~/components/parts/wrapper/PlaylistDetailWrapper.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
 import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -201,37 +186,33 @@ import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import { emptyPaging } from '~/constants';
+import type { ToastType } from '~/plugins/observable/toast';
+import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 
-import type { ToastType } from '~/plugins/toast';
-import { App, OneToFifty, SpotifyAPI } from '~~/types';
-
-const ARTWORK_SIZE = 220;
 const LIMIT_OF_TRACKS = 30;
 const HEADER_REF = 'HEADER_REF';
 const REMOVE_PLAYLIST_MODAL = 'REMOVE_PLAYLIST_MODAL';
 
 type Modal = {
-  isShown: boolean
-  isLoading: boolean
-  type: string,
-  color: ToastType | undefined,
-  text: string,
-  description: string,
+  value: boolean;
+  loading: boolean;
+  type: string;
+  color: ToastType | undefined;
+  text: string;
+  description: string;
 }
 
 interface AsyncData {
-  playlistInfo: App.PlaylistInfo | undefined
-  isFollowing: boolean
-  playlistTrackInfo: App.PlaylistTrackInfo | undefined
+  playlistInfo: App.PlaylistInfo | undefined;
+  isFollowing: boolean;
+  playlistTrackInfo: App.PlaylistTrackInfo | undefined;
 }
 
 interface Data {
-  editPlaylistModal: boolean
-  confirmModal: Modal
-  mutationUnsubscribe: (() => void) | undefined
-  ARTWORK_SIZE: number
-  HEADER_REF: string
+  editPlaylistModal: boolean;
+  confirmModalParams: Modal;
+  mutationUnsubscribe: (() => void) | undefined;
+  HEADER_REF: string;
 }
 
 @Component({
@@ -243,9 +224,7 @@ interface Data {
     CircleButton,
     FavoriteButton,
     PlaylistMenu,
-    ReleaseTotalTracks,
-    ReleaseDuration,
-    Followers,
+    PlaylistDetailWrapper,
     EditPlaylistModal,
     ConfirmModal,
     IntersectionLoadingCircle,
@@ -280,16 +259,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
 
   editPlaylistModal = false;
-  confirmModal: Modal = {
-    isShown: false,
-    isLoading: false,
+  confirmModalParams: Modal = {
+    value: false,
+    loading: false,
     type: '',
     color: undefined,
     text: '',
     description: '',
   };
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -298,8 +276,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
+  get confirmModal(): boolean {
+    return this.confirmModalParams.value;
+  }
+  set confirmModal(value: boolean) {
+    this.toggleConfirmModal(true);
+  }
+
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.playlistInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.playlistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
@@ -451,23 +436,18 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/SET_ACTUAL_IS_SAVED':
           subscribeFollowedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/EDIT_PLAYLIST':
           subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/INCREMENT_UNUPDATED_TRACKS_MAP':
           subscribeAddedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'playlists/SET_ACTUALLY_DELETED_TRACK':
           subscribeRemovedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }
@@ -517,7 +497,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
           ...curr,
           items: [...prev.items, ...curr.items],
         };
-      }, emptyPaging as PagingTracks));
+      }, this.$constant.EMPTY_PAGING as PagingTracks));
 
     if (tracks == null) {
       this.playlistTrackInfo.isFullTrackList = true;
@@ -562,23 +542,23 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleEditPlaylistModal(modal: OnEditModal['on-changed'] | OnMenu['on-edit-menu-clicked']) {
+  toggleEditPlaylistModal(modal: OnEditModal['input'] | OnMenu['on-edit-menu-clicked']) {
     this.editPlaylistModal = modal;
   }
 
-  toggleConfirmModal(isShown: OnModal['on-changed'], params?: Partial<Omit<Modal, 'isShown'>>) {
-    const { confirmModal } = this;
-    this.confirmModal = params != null
-      ? { ...confirmModal, isShown, ...params }
-      : { ...confirmModal, isShown };
+  toggleConfirmModal(value: OnModal['input'], params?: Partial<Omit<Modal, 'value'>>) {
+    const { confirmModalParams } = this;
+    this.confirmModalParams = params != null
+      ? { ...confirmModalParams, value, ...params }
+      : { ...confirmModalParams, value };
   }
 
-  toggleConfirmModalLoading(isLoading: boolean) {
-    const { confirmModal } = this;
-    this.confirmModal = { ...confirmModal, isLoading };
+  toggleConfirmModalLoading(loading: boolean) {
+    const { confirmModalParams } = this;
+    this.confirmModalParams = { ...confirmModalParams, loading };
   }
 
-  toggleFollowingState(nextFollowingState: OnFavoriteButton['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFavoriteButton['input'] | OnMenu['on-follow-menu-clicked']) {
     if (this.playlistInfo == null) return;
 
     const { isOwnPlaylist } = this.playlistInfo;
@@ -655,59 +635,60 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
-
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
-  }
+  @include additional-header-content();
 }
 
 .PlaylistIdPage {
-  padding: 16px 6% 48px;
+  $margin-bottom: 32px;
+
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    @include page-header;
+
+    margin-bottom: $margin-bottom * 0.75;
   }
 
-  .Info {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  &__description {
+    @include smaller-than-md {
+      text-align: center;
+    }
+  }
 
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
+  &__table {
+    margin-bottom: $margin-bottom;
+  }
+}
+
+.Info {
+  @include page-info;
+
+  &__title {
+    @include page-title;
+  }
+
+  &__footer {
+    margin-top: 16px;
+    display: flex;
+
+    @include smaller-than-md {
+      flex-direction: column;
     }
 
-    &__footer {
-      display: flex;
+    @include larger-than-md {
       flex-wrap: wrap;
       align-items: flex-end;
-      margin-top: 16px;
     }
+  }
 
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
+  &__buttons {
+    @include page-header-buttons(true);
+  }
 
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
-
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
-    }
+  &__detail {
+    // 2行になったとき
+    margin-top: 12px;
   }
 }
 </style>

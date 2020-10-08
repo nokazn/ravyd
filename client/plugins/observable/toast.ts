@@ -1,10 +1,10 @@
-import { Plugin } from '@nuxt/types';
+import type { Plugin } from '@nuxt/types';
 import { $toast } from '~/observable/toast';
 
 export type { ToastType, $Toast } from '~/observable/toast';
 
-const injectToast: Plugin = (_, inject) => {
+const injector: Plugin = (_, inject) => {
   inject('toast', $toast);
 };
 
-export default (injectToast);
+export default (injector);

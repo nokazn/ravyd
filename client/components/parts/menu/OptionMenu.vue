@@ -11,10 +11,12 @@
     :nudge-right="nudgeRight"
     :offset-x="offsetX"
     :offset-y="offsetY"
-    :z-index="Z_INDEX"
-    :open-on-hover="openOnHover"
+    :z-index="$constant.Z_INDEX_OF.menu"
+    :open-on-hover="openOnHover && !$window.isTouchScreen"
     :open-on-click="openOnClick"
     :close-delay="closeDelay"
+    close-on-content-click
+    close-on-click
   >
     <template #activator="{ on }">
       <slot
@@ -26,7 +28,7 @@
     <v-list
       dense
       :elevation="12"
-      :color="MENU_BACKGROUND_COLOR"
+      :color="$constant.MENU_BACKGROUND_COLOR"
     >
       <slot />
     </v-list>
@@ -35,7 +37,6 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { MENU_BACKGROUND_COLOR, Z_INDEX_OF } from '~/constants';
 
 const INPUT = 'input';
 
@@ -45,8 +46,6 @@ export type On = {
 
 type Data = {
   isShown: boolean;
-  MENU_BACKGROUND_COLOR: typeof MENU_BACKGROUND_COLOR;
-  Z_INDEX: number;
 }
 
 export default Vue.extend({
@@ -116,8 +115,6 @@ export default Vue.extend({
   data(): Data {
     return {
       isShown: false,
-      MENU_BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.menu,
     };
   },
 

@@ -2,6 +2,7 @@
   <ContextMenu
     :item-lists="menuItemLists"
     :size="size"
+    :fab="fab"
     :outlined="outlined"
     :offset-x="offsetX"
     :offset-y="offsetY"
@@ -39,6 +40,10 @@ export default Vue.extend({
     size: {
       type: Number,
       default: 36,
+    },
+    fab: {
+      type: Boolean,
+      default: false,
     },
     outlined: {
       type: Boolean,
@@ -92,7 +97,8 @@ export default Vue.extend({
           name: this.episode.name,
           uriList: [this.episode.uri],
           artists: this.publisher,
-          left: true,
+          left: this.left,
+          right: this.right,
         };
 
         return {
@@ -125,7 +131,8 @@ export default Vue.extend({
           typeName: 'エピソード',
           artists: this.publisher,
           externalUrls: this.episode.externalUrls,
-          left: true,
+          left: this.left,
+          right: this.right,
         };
         return {
           component: ShareMenu,

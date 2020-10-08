@@ -9,7 +9,7 @@
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release"
-          :width="CARD_WIDTH"
+          :width="$window.cardWidth"
         />
       </template>
     </ScrollableCardsSection>
@@ -22,7 +22,7 @@
         v-for="release in topTrackList"
         :key="release.id"
         v-bind="release"
-        :width="CARD_WIDTH"
+        :width="$window.cardWidth"
       />
     </ScrollableCardsSection>
 
@@ -34,7 +34,7 @@
         v-for="artist in topArtistList"
         :key="artist.id"
         v-bind="artist"
-        :width="CARD_WIDTH"
+        :width="$window.cardWidth"
       />
     </ScrollableCardsSection>
   </div>
@@ -53,13 +53,10 @@ import {
 } from '~/utils/converter';
 import { App } from '~~/types';
 
-const CARD_WIDTH = 200;
-
 export type AsyncData = {
   topArtistList: App.ArtistCardInfo[] | undefined
   topTrackList: App.ReleaseCardInfo[] | undefined
   newReleaseList: App.ReleaseCardInfo[] | undefined
-  CARD_WIDTH: number
 }
 
 export default Vue.extend({
@@ -86,7 +83,6 @@ export default Vue.extend({
       topArtistList,
       topTrackList,
       newReleaseList,
-      CARD_WIDTH,
     };
   },
 
@@ -104,10 +100,10 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .RootPage {
-  padding: 16px 0 48px;
+  @include page-margin($g-gradation-width, 0.5);
 
-  &__section:not(:last-child) {
-    margin-bottom: 40px;
+  &__section {
+    margin-bottom: 32px;
   }
 }
 </style>

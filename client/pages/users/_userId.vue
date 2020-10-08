@@ -10,17 +10,16 @@
       >
         <FavoriteButton
           v-if="isFollowing != null"
-          outlined
-          :size="32"
-          :is-favorited="isFollowing"
           text="フォロー"
-          @on-clicked="toggleFollowingState"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :value="isFollowing"
+          @input="toggleFollowingState"
         />
-
         <UserMenu
-          outlined
           left
-          :size="32"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :user="userInfo"
           :is-following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
@@ -33,11 +32,11 @@
       :class="$style.UserIdPage__header"
     >
       <UserAvatar
+        type="user"
         :src="avatarSrc"
-        :size="AVATAR_SIZE"
+        :size="Math.min($window.artworkSize, 200)"
         :alt="userName"
         :title="userName"
-        default-user-icon="mdi-account"
         shadow
       />
 
@@ -57,10 +56,9 @@
         <div :class="$style.Info__buttons">
           <FollowButton
             v-if="isFollowing != null"
-            :is-following="isFollowing"
-            @on-clicked="toggleFollowingState"
+            :value="isFollowing"
+            @input="toggleFollowingState"
           />
-
           <UserMenu
             outlined
             right
@@ -78,19 +76,26 @@
 
     <v-divider :class="$style.Divider" />
 
-    <CardsWrapper v-if="userPlaylistInfo.playlists.length > 0">
+    <CardsWrapper
+      v-if="userPlaylistInfo.playlists.length > 0"
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <PlaylistCard
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
+    <p v-else>
+      プレイリストがありません。
+    </p>
 
     <IntersectionLoadingCircle
-      :is-loading="userPlaylistInfo.hasNext"
-      @on-appeared="appendPlaylists"
+      :loading="userPlaylistInfo.hasNext"
+      @appear="appendPlaylists"
     />
   </div>
   <Fallback v-else>
@@ -113,10 +118,8 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
 import { getImageSrc } from '~/utils/image';
 import { convertPlaylistForCard } from '~/utils/converter';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 import { App, OneToFifty } from '~~/types';
 
-const AVATAR_SIZE = 180;
 const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';
 
@@ -127,9 +130,6 @@ interface AsyncData {
 }
 
 interface Data {
-  AVATAR_SIZE: number
-  FLEX_CARD_MIN_WIDTH: number
-  FLEX_CARD_MAX_WIDTH: number
   HEADER_REF: string
 }
 
@@ -172,9 +172,6 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     total: 0,
   };
 
-  AVATAR_SIZE = AVATAR_SIZE;
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -241,7 +238,7 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  toggleFollowingState(nextFollowingState: OnFollowButton['on-clicked'] | OnFavoriteButton['on-clicked']| OnUserMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollowButton['input'] | OnFavoriteButton['input']| OnUserMenu['on-follow-menu-clicked']) {
     const handler = (params: {
       type: 'artist' | 'user',
       idList: string[],
@@ -269,43 +266,35 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
+.AdditionalHeaderContent {
+  @include additional-header-content();
+}
+
 .UserIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 180px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+
+    // 200px と少し小さめにする
+    @include page-header(200px);
+  }
+}
+
+.Divider {
+  margin: 4px 0 16px;
+}
+
+.Info {
+  @include page-info;
+
+  &__title {
+    @include page-title;
   }
 
-  .Tabs {
-    margin-bottom: 32px;
-  }
-
-  .Divider {
-    margin: 6px 0 16px;
-  }
-
-  .Info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
+  &__buttons {
+    @include page-header-buttons;
   }
 }
 </style>

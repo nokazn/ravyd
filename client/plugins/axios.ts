@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 import https from 'https';
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Plugin } from '@nuxt/types';
+import type { NuxtAxiosInstance } from '@nuxtjs/axios';
+import type { Plugin } from '@nuxt/types';
 
 import { SPOTIFY_API_URL } from '~/constants';
 
-const plugin: Plugin = ({ $axios, app }, inject) => {
+const injector: Plugin = ({ $axios, app }, inject) => {
   /**
    * Spotify API と通信する axios インスタンス
    */
@@ -64,4 +64,4 @@ const plugin: Plugin = ({ $axios, app }, inject) => {
   inject('serverApi', serverApi);
 };
 
-export default plugin;
+export default injector;

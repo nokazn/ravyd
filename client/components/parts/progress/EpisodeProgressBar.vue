@@ -2,7 +2,11 @@
   <div :class="$style.EpisodeProgressBar">
     <span
       v-if="text && remainingTime != null"
-      class="subtext--text"
+      :class="{
+        ['subtext--text']: subtext,
+        [$style.EpisodeProgressBar__text]: true,
+      }"
+      class="g-small-text"
     >
       {{ remainingTime }}
     </span>
@@ -12,6 +16,7 @@
       :value="value"
       :title="title"
       :style="styles"
+      :class="$style.EpisodeProgressBar__progress"
     />
   </div>
 </template>
@@ -39,6 +44,10 @@ export default Vue.extend({
     maxWidth: {
       type: Number as PropType<number | undefined>,
       default: undefined,
+    },
+    subtext: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -77,7 +86,16 @@ export default Vue.extend({
   align-items: center;
 
   & > *:not(:last-child) {
-    margin-right: 8px;
+    margin-right: 12px;
+  }
+
+  &__text {
+    flex-shrink: 0;
+  }
+
+  &__progress {
+    // progress bar の方を縮ませる
+    flex-shrink: 1;
   }
 }
 </style>

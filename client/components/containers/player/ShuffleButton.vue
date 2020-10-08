@@ -1,19 +1,19 @@
 <template>
-  <v-btn
-    icon
-    :color="shuffleButton.color"
+  <CircleButton
     :disabled="disabled"
+    :size="size"
+    :icon-size-ratio="0.5"
+    :icon-color="shuffleButton.color"
     :title="shuffleButton.title"
     @click="onClicked"
   >
-    <v-icon :size="size">
-      mdi-shuffle-variant
-    </v-icon>
-  </v-btn>
+    mdi-shuffle-variant
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type ShuffleButton = {
   color: 'active-icon' | 'inactive',
@@ -21,10 +21,14 @@ export type ShuffleButton = {
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     size: {
       type: Number,
-      default: 20,
+      default: 32,
     },
   },
 

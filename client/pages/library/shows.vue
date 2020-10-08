@@ -1,18 +1,21 @@
 <template>
   <div :class="$style.LibraryShowsPage">
-    <CardsWrapper>
+    <CardsWrapper
+      :min-width="$window.cardWidthMinMax[0]"
+      :max-width="$window.cardWidthMinMax[1]"
+    >
       <ShowCard
         v-for="(show, index) in showList"
         :key="`${show.id}-${index}`"
         v-bind="show"
-        :min-width="FLEX_CARD_MIN_WIDTH"
-        :max-width="FLEX_CARD_MAX_WIDTH"
+        :min-width="$window.cardWidthMinMax[0]"
+        :max-width="$window.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      :is-loading="!isFull"
-      @on-appeared="onLoadingCircleAppeared"
+      :loading="!isFull"
+      @appear="onLoadingCircleAppeared"
     />
   </div>
 </template>
@@ -24,7 +27,6 @@ import { RootState, RootGetters } from 'typed-vuex';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ShowCard from '~/components/containers/card/ShowCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
 interface Data {}
 
@@ -54,18 +56,11 @@ const LIMIT_OF_SHOWS = 30;
   },
 })
 export default class LibraryShowsPage extends Vue implements Data {
-  FLEX_CARD_MIN_WIDTH = FLEX_CARD_MIN_WIDTH;
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
-
   get showList(): RootState['library']['shows']['showList'] {
     return this.$state().library.shows.showList;
   }
   get isFull(): RootGetters['library/shows/isFull'] {
     return this.$getters()['library/shows/isFull'];
-  }
-
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
   }
 
   onLoadingCircleAppeared() {

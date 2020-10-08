@@ -9,16 +9,16 @@
     <template #image>
       <div :class="$style.ArtistCard__avatar">
         <UserAvatar
+          small-icon
+          overlay
+          type="artist"
           :src="avatarSrc"
           :alt="name"
           :size="avatarSize"
           :min-size="minWidth"
           :max-size="avatarMaxSize"
           :icon="mediaIcon"
-          default-user-icon="mdi-account-music"
-          small-icon
           :title="name"
-          is-overlayed
           @on-media-button-clicked="onMediaButtonClicked"
         />
       </div>
@@ -109,13 +109,13 @@ export default Vue.extend({
     avatarSize(): number | undefined {
       const { width } = this;
       return width != null
-        ? width * 0.95
+        ? width * 0.98
         : undefined;
     },
     avatarMaxSize(): number | undefined {
       const { maxWidth } = this;
       return maxWidth != null
-        ? maxWidth * 0.97
+        ? maxWidth * 0.98
         : undefined;
     },
   },
@@ -142,7 +142,7 @@ export default Vue.extend({
   &__avatar {
     display: flex;
     justify-content: center;
-    margin-top: 0.5em;
+    margin-top: 2%;
   }
 
   &__title {

@@ -2,7 +2,6 @@
   <div :class="$style.LibraryHistoryPage">
     <PlaylistTrackTable
       v-if="trackList != null"
-      image
       hide-added-at
       :track-list="trackList"
       :class="$style.LibraryHistoryPage__table"
@@ -41,8 +40,6 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
   }
 
   mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
         case 'library/tracks/INCREMENT_UNUPDATED_COUNTS':
@@ -74,11 +71,7 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
 <style lang="scss" module>
 .LibraryHistoryPage {
   & > * {
-    margin-bottom: 8px;
-  }
-
-  &__table {
-    width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
+    margin-bottom: 24px;
   }
 }
 </style>

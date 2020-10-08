@@ -2,14 +2,16 @@
   <v-hover #default="{ hover }">
     <v-list-item
       dense
+      :ripple="false"
       :disabled="!item.isPlayable"
       :class="$style.TrackListItem"
-      class="TrackListItem"
+      class="track-list-item"
+      @click="onItemClicked"
     >
       <v-list-item-avatar tile>
         <ReleaseArtwork
           :src="artworkSrc"
-          :size="TRACK_LIST_ARTWORK_SIZE"
+          :size="$constant.TRACK_LIST_ARTWORK_SIZE"
           :alt="item.name"
           :title="item.name"
         />
@@ -17,40 +19,47 @@
 
       <v-list-item-content>
         <div :class="$style.Content">
-          <div :class="$style.Content__left">
+          <template v-if="$window.isMultiColumn">
             <TrackListMediaButton
-              :is-hovered="hover"
-              :is-playing-track="isPlayingTrack"
+              :hover="hover"
+              :playing="playing"
               :track-number="item.index + 1"
               @on-clicked="onMediaButtonClicked"
             />
-
             <FavoriteButton
-              :is-favorited="item.isSaved"
-              @on-clicked="onFavoriteButtonClicked"
+              v-if="$window.isMultiColumn"
+              :value="item.isSaved"
+              @input="onFavoriteButtonClicked"
             />
+          </template>
+          <span
+            v-else-if="$window.isSingleColumn"
+            :class="$style.Content__index"
+          >
+            {{ item.index + 1 }}.
+          </span>
 
-            <div
-              :class="$style.Content__title"
-              class="g-ellipsis-text"
+          <div
+            :class="$style.Content__title"
+            class="g-ellipsis-text"
+          >
+            <nuxt-link
+              :to="releasePath"
+              :title="item.name"
+              :class="textColor"
+              @click.native.stop
             >
-              <nuxt-link
-                :to="releasePath"
-                :title="item.name"
-                :class="textColor"
-              >
-                {{ item.name }}
-              </nuxt-link>
+              {{ item.name }}
+            </nuxt-link>
 
-              <template v-if="item.featuredArtists.length > 0">
-                <span :class="subtextColor">-</span>
-                <ArtistNames
-                  :artists="item.featuredArtists"
-                  inline
-                  :class="subtextColor"
-                />
-              </template>
-            </div>
+            <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
+              <span :class="subtextColor">-</span>
+              <ArtistNames
+                inline
+                :artists="item.featuredArtists"
+                :class="subtextColor"
+              />
+            </template>
           </div>
         </div>
       </v-list-item-content>
@@ -58,13 +67,21 @@
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="item.explicit" />
-
-          <TrackTime :time-ms="item.durationMs" />
-
+          <TrackTime
+            v-if="$window.isMultiColumn"
+            :time-ms="item.durationMs"
+          />
+          <FavoriteButton
+            v-else-if="$window.isSingleColumn"
+            :size="buttonSize"
+            :value="item.isSaved"
+            @input="onFavoriteButtonClicked"
+          />
           <TrackMenu
             offset-x
             left
             :track="item"
+            :size="buttonSize"
             @on-favorite-menu-clicked="onFavoriteButtonClicked"
           />
         </div>
@@ -85,12 +102,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { getImageSrc } from '~/utils/image';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { App } from '~~/types';
-
-export type Data = {
-  TRACK_LIST_ARTWORK_SIZE: number
-}
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -116,25 +128,19 @@ export default Vue.extend({
       type: Object as PropType<App.TrackDetail>,
       required: true,
     },
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
-    isTrackSet: {
+    set: {
       type: Boolean,
       required: true,
     },
-  },
-
-  data(): Data {
-    return {
-      TRACK_LIST_ARTWORK_SIZE,
-    };
   },
 
   computed: {
     artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.item.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
     },
     releasePath(): RawLocation {
       return {
@@ -143,23 +149,35 @@ export default Vue.extend({
       };
     },
     textColor(): string | undefined {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : undefined;
     },
     subtextColor(): string | undefined {
-      return this.isTrackSet
+      return this.set
         ? 'active--text'
         : 'subtext--text';
+    },
+    buttonSize(): number {
+      return this.$window.isMultiColumn
+        ? 36
+        : 32;
     },
   },
 
   methods: {
     onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
+      // row をコピーしたものを参照する
+      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
     },
     onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
+      // row をコピーしたものを参照する
+      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
+    },
+    onItemClicked() {
+      if (this.$window.isSingleColumn) {
+        this.onMediaButtonClicked();
+      }
     },
   },
 });
@@ -167,7 +185,8 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .TrackListItem {
-  padding: 0.3em 0;
+  // pages/artiss/artistId/index でスクロールさせるときの高さに影響
+  padding: 6px 4px;
 
   &__action {
     display: flex;
@@ -175,30 +194,29 @@ export default Vue.extend({
     align-items: center;
 
     & > *:not(:last-child) {
-      margin-right: 1.2em;
+      margin-right: 0.75em;
     }
   }
 
   .Content {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     overflow-x: hidden;
 
-    &__left {
-      display: flex;
-      align-items: center;
-      overflow-x: hidden;
+    & > *:not(:last-child) {
+      margin-right: 0.75em;
+    }
 
-      & > * {
-        margin-right: 0.8em;
-      }
+    &__index {
+      font-size: 0.825em;
     }
 
     &__title {
       font-size: 0.9em;
+      line-height: 1.4em;
 
-      & > *:not(:last-child) {
-        margin-right: 0.3em;
+      & > *:not(:first-child) {
+        margin-left: 0.25em;
       }
     }
   }
@@ -206,7 +224,7 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-.TrackListItem .v-list-item {
+.track-list-item .v-list-item {
   &__avatar {
     margin-top: 0 !important;
     margin-bottom: 0 !important;

@@ -17,7 +17,6 @@
 
     <PlaylistTrackTable
       v-if="trackList != null"
-      image
       custom
       :track-list="trackList"
       :uri="uri"
@@ -26,8 +25,8 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!isFull"
-      @on-appeared="onLoadingCircleAppear"
+      :loading="!isFull"
+      @appear="onLoadingCircleAppear"
     />
   </div>
 </template>
@@ -40,7 +39,6 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateCollectionContextUri } from '~/utils/text';
-import { HEADER_HEIGHT } from '~/constants';
 
 interface Data {
   uri: string
@@ -100,9 +98,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   mounted() {
     const element = this.$refs[MEDIA_BUTTON_REF] as Vue;
     const TAB_HEIGHT = 80;
-    this.$header.observe(element.$el, HEADER_HEIGHT + TAB_HEIGHT);
-
-    this.$dispatch('resetDominantBackgroundColor');
+    this.$header.observe(element.$el, this.$constant.HEADER_HEIGHT + TAB_HEIGHT);
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
@@ -170,7 +166,7 @@ export default class LibraryTracksPage extends Vue implements Data {
   }
 
   &__table {
-    width: calc((100vw - #{$g-navigation-drawer-width}) * 0.94);
+    margin-bottom: 24px;
   }
 }
 </style>

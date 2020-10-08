@@ -1,43 +1,57 @@
 <template>
-  <v-btn
-    icon
-    large
+  <CircleButton
+    :size="size"
+    :icon-size="iconSize"
     :title="mediaButton.title"
     @click="onClicked"
   >
-    <v-icon :size="size">
-      {{ mediaButton.icon }}
-    </v-icon>
-  </v-btn>
+    {{ mediaButton.icon }}
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type MediaButton = {
-  icon: 'mdi-play-circle' | 'mdi-pause-circle'
-  title: '再生' | '停止'
+  icon: 'mdi-play-circle' | 'mdi-pause-circle' | 'mdi-play' | 'mdi-pause';
+  title: '再生' | '停止';
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     size: {
       type: Number,
-      default: 40,
+      default: 36,
+    },
+    circle: {
+      type: Boolean,
+      default: false,
     },
   },
 
   computed: {
     mediaButton(): MediaButton {
-      return this.$state().playback.isPlaying
-        ? {
-          icon: 'mdi-pause-circle',
+      const { circle } = this;
+      if (this.$state().playback.isPlaying) {
+        return {
+          icon: circle ? 'mdi-pause-circle' : 'mdi-pause',
           title: '停止',
-        }
-        : {
-          icon: 'mdi-play-circle',
-          title: '再生',
         };
+      }
+      return {
+        icon: circle ? 'mdi-play-circle' : 'mdi-play',
+        title: '再生',
+      };
+    },
+    iconSize(): number {
+      return this.circle
+        ? this.size
+        : this.size * 0.75;
     },
   },
 

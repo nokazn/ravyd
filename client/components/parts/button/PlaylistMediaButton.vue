@@ -27,7 +27,7 @@ export type On = {
 
 export default Vue.extend({
   props: {
-    isPlayingTrack: {
+    playing: {
       type: Boolean,
       required: true,
     },
@@ -46,7 +46,7 @@ export default Vue.extend({
         };
       }
 
-      if (!this.isPlayingTrack) {
+      if (!this.playing) {
         return {
           icon: 'mdi-play',
           title: '再生',

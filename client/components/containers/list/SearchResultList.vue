@@ -12,7 +12,7 @@
           dense
           nav
           subheader
-          :color="MENU_BACKGROUND_COLOR"
+          :color="$constant.MENU_BACKGROUND_COLOR"
         >
           <div
             v-show="isSearching"
@@ -53,7 +53,7 @@
                     v-for="item in items"
                     :key="item.id"
                     v-bind="item"
-                    :is-selected="selectedItem != null ? item.id === selectedItem.id : false"
+                    :selected="selectedItem != null ? item.id === selectedItem.id : false"
                     @on-clicked="onItemClicked"
                   />
                 </v-list-item-group>
@@ -94,7 +94,6 @@ import { RawLocation } from 'vue-router';
 
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
-import { MENU_BACKGROUND_COLOR } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
@@ -102,7 +101,6 @@ const LIMIT_OF_SEARCH_ITEM = 4;
 type Data = {
   selectedItemIndex: number | undefined
   keyEventListener: ((e: KeyboardEvent) => void) | undefined
-  MENU_BACKGROUND_COLOR: string
   LIMIT_OF_SEARCH_ITEM: number
   SEARCH_FORM_PORTAL_NAME: string
 }
@@ -121,7 +119,6 @@ export default Vue.extend({
     return {
       selectedItemIndex: undefined,
       keyEventListener: undefined,
-      MENU_BACKGROUND_COLOR,
       LIMIT_OF_SEARCH_ITEM,
       SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
@@ -144,7 +141,6 @@ export default Vue.extend({
     },
     styles() {
       const { top, left } = $searchForm.position;
-
       return {
         position: 'fixed',
         top: `${top}px`,

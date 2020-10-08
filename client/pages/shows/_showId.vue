@@ -10,25 +10,22 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isShowSet && isPlaying"
           :disabled="!hasEpisodes"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
-          :size="32"
-          outlined
-          :is-favorited="isSaved"
-          @on-clicked="toggleSavedState"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :value="isSaved"
+          @input="toggleSavedState"
         />
-
         <ShowMenu
-          :show="showInfo"
-          :is-saved="isSaved"
-          :size="32"
-          outlined
           left
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :is-saved="isSaved"
+          :show="showInfo"
           @on-save-menu-clicked="toggleSavedState"
         />
       </div>
@@ -62,7 +59,7 @@
         </h1>
 
         <p>
-          {{ showInfo.publisher }}
+          {{ showInfo.publisher }}・{{ showInfo.totalEpisodes }}個のエピソード
         </p>
 
         <div :class="$style.Info__footer">
@@ -72,25 +69,16 @@
               :disabled="!hasEpisodes"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <FavoriteButton
-              :is-favorited="isSaved"
               outlined
-              @on-clicked="toggleSavedState"
+              :value="isSaved"
+              @input="toggleSavedState"
             />
-
             <ShowMenu
+              outlined
               :show="showInfo"
               :is-saved="isSaved"
-              outlined
               @on-save-menu-clicked="toggleSavedState"
-            />
-          </div>
-
-          <div :class="$style.Info__detail">
-            <ReleaseTotalTracks
-              :total="showInfo.totalEpisodes"
-              unit="個のエピソード"
             />
           </div>
         </div>
@@ -100,6 +88,7 @@
     <p
       v-if="showInfo.description"
       class="subtext--text"
+      :class="$style.ShowIdPage__description"
       v-html="showInfo.description"
     />
 
@@ -111,8 +100,8 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!showInfo.isFullEpisodeList"
-      @on-appeared="appendEpisodeList"
+      :loading="!showInfo.isFullEpisodeList"
+      @appear="appendEpisodeList"
     />
 
     <Copyrights :copyright-list="showInfo.copyrightList" />
@@ -319,7 +308,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleSavedState(nextSavedState: OnFavoriteButton['on-clicked'] | OnMenu['on-save-menu-clicked']) {
+  toggleSavedState(nextSavedState: OnFavoriteButton['input'] | OnMenu['on-save-menu-clicked']) {
     if (this.showInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
@@ -336,66 +325,47 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
+  @include additional-header-content();
+}
 
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
+$margin-bottom: 32px;
+
+.ShowIdPage {
+  @include page-margin;
+  @include page-padding;
+
+  &__header {
+    @include page-header;
+
+    margin-bottom: $margin-bottom;
+  }
+
+  &__description,
+  &__table {
+    // v-application p のデフォルトのスタイルを上書き
+    margin-bottom: $margin-bottom !important;
   }
 }
 
-.ShowIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+.Info {
+  @include page-info;
 
-  &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+  &__explicitIcon {
+    margin-bottom: 0.1rem;
   }
 
-  .Info {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    &__explicitIcon {
-      margin-bottom: 0.1rem;
-    }
-
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-    }
-
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
-
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
-    }
+  &__title {
+    @include page-title;
   }
 
-  &__table {
-    margin-bottom: 32px;
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  &__buttons {
+    @include page-header-buttons;
   }
 }
 </style>

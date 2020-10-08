@@ -1,10 +1,10 @@
 <template>
   <v-navigation-drawer
+    v-if="$window.isPc"
     app
     permanent
-    :color="NAVIGATION_DRAWER_BACKGROUND_COLOR"
-    :mobile-breakpoint="768"
-    :width="NAVIGATION_DRAWER_WIDTH"
+    :color="$constant.NAVIGATION_DRAWER_BACKGROUND_COLOR"
+    :width="$constant.NAVIGATION_DRAWER_WIDTH"
     :class="$style.NavigationDrawer"
     class="NavigationDrawer"
   >
@@ -35,10 +35,7 @@
         />
       </template>
 
-      <NavigationListItemGroup
-        v-bind="playlistGroup"
-        @on-loaded="onPlaylistGroupLoaded"
-      />
+      <NavigationListItemGroup v-bind="playlistGroup" />
 
       <v-divider :class="$style.List__divider" />
 
@@ -62,26 +59,17 @@
       </v-list-item-group>
     </v-list>
 
-    <CreatePlaylistModal
-      :is-shown="createPlaylistModal"
-      @on-changed="onCreatePlaylistModalChanged"
-    />
+    <CreatePlaylistModal v-model="createPlaylistModal" />
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootState } from 'typed-vuex';
+import type { RootState } from 'typed-vuex';
 
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
-import CreatePlaylistModal, { On } from '~/components/parts/modal/CreatePlaylistModal.vue';
-import {
-  NAVIGATION_DRAWER_BACKGROUND_COLOR,
-  NAVIGATION_DRAWER_WIDTH,
-  FOOTER_HEIGHT,
-  DEVICE_BAR_HEIGHT,
-} from '~/constants';
+import CreatePlaylistModal from '~/components/parts/modal/CreatePlaylistModal.vue';
 
 type NavigationGroup = {
   items: Item[]
@@ -93,8 +81,6 @@ type NavigationGroup = {
 type Data = {
   navigationGroupList: NavigationGroup[]
   createPlaylistModal: boolean
-  NAVIGATION_DRAWER_BACKGROUND_COLOR: typeof NAVIGATION_DRAWER_BACKGROUND_COLOR
-  NAVIGATION_DRAWER_WIDTH: number
 }
 
 export default Vue.extend({
@@ -153,8 +139,6 @@ export default Vue.extend({
     return {
       navigationGroupList,
       createPlaylistModal: false,
-      NAVIGATION_DRAWER_BACKGROUND_COLOR,
-      NAVIGATION_DRAWER_WIDTH,
     };
   },
 
@@ -198,25 +182,31 @@ export default Vue.extend({
     },
     // 他のデバイスで再生中の場合高さが変わる
     listStyles(): { height: string } {
-      const height = this.$getters()['playback/isAnotherDevicePlaying']
-        ? `calc(100vh - ${FOOTER_HEIGHT}px - ${DEVICE_BAR_HEIGHT}px)`
-        : `calc(100vh - ${FOOTER_HEIGHT}px)`;
+      const { isPc } = this.$window;
+      const isAnotherDevicePlaying = this.$getters()['playback/isAnotherDevicePlaying'];
+      let footerHeight = this.$constant.FOOTER_HEIGHT;
+      // ナビゲーションバーが表示されているとき
+      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
+      // 他のデバイスで再生中のとき
+      if (isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
+      const height = `calc(100vh - ${footerHeight}px)`;
 
       return { height };
     },
   },
 
+  mounted() {
+    this.getAllPlaylists();
+  },
+
   methods: {
-    onPlaylistGroupLoaded() {
+    getAllPlaylists() {
       if (this.$state().playlists.playlists == null) {
         this.$dispatch('playlists/getAllPlaylists');
       }
     },
     onPlaylistButtonClicked() {
       this.createPlaylistModal = true;
-    },
-    onCreatePlaylistModalChanged(isShown: On['on-changed']) {
-      this.createPlaylistModal = isShown;
     },
   },
 });

@@ -9,26 +9,23 @@
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
-          :height="32"
           fab
           :is-playing="isArtistSet && isPlaying "
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
-          outlined
-          :size="32"
-          :is-favorited="isFollowing"
           text="フォロー"
-          @on-clicked="toggleFollowingState"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :value="isFollowing"
+          @input="toggleFollowingState"
         />
-
         <ArtistMenu
+          left
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
           :artist="artistInfo"
           :is-following="isFollowing"
-          :size="32"
-          outlined
-          left
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -39,18 +36,18 @@
       :class="$style.ArtistIdPage__header"
     >
       <UserAvatar
+        shadow
+        type="artist"
         :src="avatarSrc"
-        :size="AVATAR_SIZE"
+        :size="$window.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
-        default-user-icon="mdi-account-music"
-        shadow
       />
 
       <div :class="$style.Info">
         <HashTags
-          :tag-list="artistInfo.genreList"
           outlined
+          :tag-list="artistInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -62,9 +59,9 @@
             アーティスト
           </span>
           <v-icon
-            :size="14"
             color="light-blue"
             title="認証済アーティスト"
+            :size="14"
             :class="$style.Info__verifiedArtistIcon"
           >
             mdi-check-decagram
@@ -75,39 +72,48 @@
           {{ artistInfo.name }}
         </h1>
 
-        <div :class="$style.Info__footer">
-          <p class="subtext--text">
-            {{ artistInfo.followersText }}
-          </p>
+        <p
+          class="subtext--text"
+          :class="$style.Info__followers"
+        >
+          {{ artistInfo.followersText }}
+        </p>
 
-          <div :class="$style.Info__buttons">
-            <ContextMediaButton
-              :is-playing="isArtistSet && isPlaying "
-              @on-clicked="onContextMediaButtonClicked"
-            />
+        <div :class="$style.Info__buttons">
+          <ContextMediaButton
+            :is-playing="isArtistSet && isPlaying "
+            @on-clicked="onContextMediaButtonClicked"
+          />
 
-            <FollowButton
-              :is-following="isFollowing"
-              @on-clicked="toggleFollowingState"
-            />
+          <FavoriteButton
+            v-if="$window.isSingleColumn"
+            outlined
+            text="フォロー"
+            :value="isFollowing"
+            @input="toggleFollowingState"
+          />
+          <FollowButton
+            v-else-if="$window.isMultiColumn"
+            :value="isFollowing"
+            @input="toggleFollowingState"
+          />
 
-            <ArtistMenu
-              :artist="artistInfo"
-              :is-following="isFollowing"
-              outlined
-              @on-follow-menu-clicked="toggleFollowingState"
-            />
-          </div>
+          <ArtistMenu
+            outlined
+            :artist="artistInfo"
+            :is-following="isFollowing"
+            @on-follow-menu-clicked="toggleFollowingState"
+          />
         </div>
       </div>
     </div>
 
     <v-tabs
       v-model="tab"
-      :height="32"
-      show-arrows="mobile"
       color="active"
       background-color="transparent"
+      :height="32"
+      :show-arrows="false"
     >
       <v-tab
         v-for="item in tabItemList"
@@ -156,7 +162,6 @@ import {
 import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
-const AVATAR_SIZE = 220;
 const HEADER_REF = 'HEADER_REF';
 
 type TabItem = {
@@ -174,7 +179,6 @@ interface Data {
   tab: number | null;
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string
-  AVATAR_SIZE: number
 }
 
 @Component({
@@ -219,7 +223,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   tab: number | null = null;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
-  AVATAR_SIZE = AVATAR_SIZE;
 
   head() {
     return {
@@ -228,7 +231,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   get avatarSrc(): string | undefined {
-    return getImageSrc(this.artistInfo?.images, AVATAR_SIZE);
+    return getImageSrc(this.artistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isArtistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.artistInfo?.uri);
@@ -305,7 +308,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleFollowingState(nextFollowingState: OnFollow['on-clicked'] | OnFavorite['on-clicked'] | OnMenu['on-follow-menu-clicked']) {
+  toggleFollowingState(nextFollowingState: OnFollow['input'] | OnFavorite['input'] | OnMenu['on-follow-menu-clicked']) {
     if (this.artistInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
@@ -323,57 +326,54 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
-
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
-  }
+  @include additional-header-content();
 }
 
 .ArtistIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  @include page-margin();
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
+    @include page-header;
+
+    margin-bottom: 16px;
   }
+}
 
-  .Info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+.Info {
+  @include page-info;
 
-    &__hashTags {
+  &__hashTags {
+    margin-bottom: 12px;
+
+    @include smaller-than-md {
+      // 1個だけはみ出て2列になったりするとちょっと不格好なのであまり横に広がりすぎないようにする
+      padding: 0 4vw;
+      justify-content: center;
+    }
+
+    @include larger-than-md {
       // border-radius の分だけ右にあるように見えてしまうので調整
       margin-left: -8px;
-      margin-bottom: 12px;
-    }
-
-    &__verifiedArtistIcon {
-      margin-bottom: 0.15rem;
-    }
-
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
     }
   }
 
-  .Tabs {
-    margin-bottom: 24px;
+  &__verifiedArtistIcon {
+    margin-bottom: 0.15rem;
+  }
+
+  &__title {
+    @include page-title;
+  }
+
+  &__followers {
+    @include smaller-than-md {
+      text-align: center;
+    }
+  }
+
+  &__buttons {
+    @include page-header-buttons;
   }
 }
 </style>

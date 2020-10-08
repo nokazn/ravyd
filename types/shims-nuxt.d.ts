@@ -1,18 +1,18 @@
-import {
+import type {
   RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
   ExtendedSubscribe,
 } from 'typed-vuex';
-import dayjs from 'dayjs';
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { $Toast } from '~/plugins/toast';
-import { Overlay } from '~/plugins/overlay';
+import type dayjs from 'dayjs';
+import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 
-import { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import { ServerEndpoints } from '~/plugins/server/endpoints';
-import { Header } from '~/plugins/observable/header';
+import type { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
+import type { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { $Header } from '~/plugins/observable/header';
+import type { $Overlay } from '~/plugins/observable/overlay';
+import type { $Toast } from '~/plugins/observable/toast';
 
 declare module '@nuxt/types/app' {
 
@@ -30,9 +30,11 @@ declare module '@nuxt/types/app' {
     $spotify: SpotifyEndpoints
     $serverApi: NuxtAxiosInstance
     $server: ServerEndpoints
+
+    // obserable
+    $header: $Header
+    $overlay: $Overlay
     $toast: $Toast
-    $overlay: Overlay
-    $header: Header
   }
 }
 

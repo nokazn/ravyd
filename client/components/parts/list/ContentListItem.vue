@@ -4,7 +4,7 @@
     :nuxt="!isTwoLine"
     :to="isTwoLine ? undefined : to"
     :title="name"
-    :data-is-selected="isSelected"
+    :data-is-selected="selected"
     :class="$style.ContentListItem"
     @click.native="onClicked"
   >
@@ -14,6 +14,7 @@
     >
       <UserAvatar
         v-if="type === 'artist'"
+        type="artist"
         :src="artworkSrc"
         :alt="name"
         :title="name"
@@ -42,8 +43,8 @@
 
       <v-list-item-subtitle v-if="isTwoLine">
         <ArtistNames
+          ellipsis
           :artists="artists"
-          class="g-ellipsis-text"
         />
       </v-list-item-subtitle>
     </v-list-item-content>
@@ -58,7 +59,6 @@ import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
-import { TRACK_LIST_ARTWORK_SIZE } from '~/constants';
 import { SpotifyAPI, App } from '~~/types';
 
 const ON_CLICKED = 'on-clicked';
@@ -107,7 +107,7 @@ export default Vue.extend({
       type: [String, Object] as PropType<string | RawLocation>,
       required: true,
     },
-    isSelected: {
+    selected: {
       type: Boolean,
       default: false,
     },
@@ -118,7 +118,7 @@ export default Vue.extend({
       return this.artists != null;
     },
     artworkSrc(): string | undefined {
-      return getImageSrc(this.images, TRACK_LIST_ARTWORK_SIZE);
+      return getImageSrc(this.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
     },
   },
 

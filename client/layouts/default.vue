@@ -5,8 +5,8 @@
   >
     <v-overlay
       v-if="!isLoaded"
-      :z-index="Z_INDEX"
-      :color="BACKGROUND_COLOR"
+      :z-index="$constant.Z_INDEX_OF.loading"
+      :color="$constant.BACKGROUND_COLOR"
       :opacity="1"
       :class="$style.ProgressCircular"
     >
@@ -23,7 +23,7 @@
     />
     <NavigationDrawer v-if="isLoggedin" />
 
-    <main :style="contentContainerStyles">
+    <v-main :style="contentContainerStyles">
       <div
         :ref="SPACER_REF"
         :class="$style.Spacer"
@@ -32,13 +32,24 @@
       <Overlay
         v-bind="$overlay"
         :style="contentOverlayStyles"
-        @on-changed="onOverlayChanged"
+        :class="$style.ContentOverlay"
+        @input="onOverlayChanged"
       />
-    </main>
+    </v-main>
 
-    <Footer v-if="isLoggedin" />
+    <PlayerBar v-if="isLoggedin" />
+    <v-divider inset />
+    <NavigationBar v-if="$window.isMobile" />
+    <DeviceBar v-if="isAnotherDevicePlaying && $window.isPc" />
 
     <Toasts />
+
+    <portal-target
+      v-if="$window.isSingleColumn"
+      v-show="$header.isAdditionalContentShown"
+      :name="$header.PORTAL_NAME"
+      :class="$style.Fab"
+    />
 
     <portal-target
       :name="SEARCH_FORM_PORTAL_NAME"
@@ -53,18 +64,12 @@ import { RootGetters } from 'typed-vuex';
 
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
-import Footer from '~/components/globals/Footer.vue';
+import PlayerBar from '~/components/globals/PlayerBar.vue';
+import NavigationBar from '~/components/globals/NavigationBar.mobile.vue';
+import DeviceBar from '~/components/globals/DeviceBar.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import { $searchForm } from '~/observable/searchForm';
-import {
-  BACKGROUND_COLOR,
-  Z_INDEX_OF,
-  HEADER_HEIGHT,
-  FOOTER_HEIGHT,
-  DEVICE_BAR_HEIGHT,
-  NAVIGATION_DRAWER_WIDTH,
-} from '~/constants';
 
 const SPACER_REF = 'SPACER_REF';
 
@@ -72,8 +77,6 @@ type Data = {
   isLoaded: boolean
   elevation: number
   observer: IntersectionObserver | undefined
-  BACKGROUND_COLOR: string
-  Z_INDEX: number
   SPACER_REF: string
   SEARCH_FORM_PORTAL_NAME: string
 }
@@ -82,7 +85,9 @@ export default Vue.extend({
   components: {
     Header,
     NavigationDrawer,
-    Footer,
+    PlayerBar,
+    NavigationBar,
+    DeviceBar,
     Overlay,
     Toasts,
   },
@@ -92,8 +97,6 @@ export default Vue.extend({
       isLoaded: false,
       elevation: 0,
       observer: undefined,
-      BACKGROUND_COLOR,
-      Z_INDEX: Z_INDEX_OF.loading,
       SPACER_REF,
       SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
@@ -106,31 +109,33 @@ export default Vue.extend({
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
-    // 他のデバイスで再生中の場合高さが変わる
     contentContainerStyles(): { [k in string]?: string } {
-      const backgroundStyle = this.$getters().backgroundStyles(320);
-      const padding = this.isAnotherDevicePlaying
-        ? `0 0 calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT}px) ${NAVIGATION_DRAWER_WIDTH}px`
-        : `0 0 ${FOOTER_HEIGHT}px ${NAVIGATION_DRAWER_WIDTH}px`;
-
-      return {
-        ...backgroundStyle,
-        padding,
-      };
+      const gradationHeight = 320;
+      const backgroundStyle = this.$getters().backgroundStyles(gradationHeight);
+      return backgroundStyle;
     },
-    // 他のデバイスで再生中の場合高さが変わる
+    // top は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
-      const top = `${HEADER_HEIGHT}px`;
-      const left = `${NAVIGATION_DRAWER_WIDTH}px`;
-      const bottom = this.isAnotherDevicePlaying
-        ? `calc(${FOOTER_HEIGHT}px + ${DEVICE_BAR_HEIGHT})px`
-        : `${FOOTER_HEIGHT}px`;
+      const { isPc } = this.$window;
+      // ナビゲーションバーが表示されてるかで変わる
+      const left = isPc
+        ? `${this.$constant.NAVIGATION_DRAWER_WIDTH}px`
+        : '0';
 
-      return { top, bottom, left };
+      let footerHeight = this.$constant.FOOTER_HEIGHT;
+      // ナビゲーションバーが表示されているとき
+      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
+      // 他のデバイスで再生中のとき
+      if (this.isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
+      const bottom = `${footerHeight}px`;
+
+      return { left, bottom };
     },
   },
 
   mounted() {
+    this.$window.observe();
+
     this.isLoaded = true;
     // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
     this.$dispatch('player/initPlayer');
@@ -142,50 +147,53 @@ export default Vue.extend({
         this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
       });
     }, {
-      threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      rootMargin: `-${this.$constant.HEADER_HEIGHT}px 0px`,
     });
     this.observer.observe(element);
   },
 
   beforeDestroy() {
+    this.$window.disconnectObserver();
+
     if (this.observer != null) {
       this.observer.disconnect();
     }
   },
 
   methods: {
-    onOverlayChanged(isShown: OnOverlay['on-changed']) {
-      this.$overlay.change(isShown);
+    onOverlayChanged(value: OnOverlay['input']) {
+      this.$overlay.change(value);
     },
   },
 });
 </script>
 
 <style lang="scss" module>
-.Default {
-  background-color: $g-background-color !important;
-}
-
-/* .ContentContainer {
-  padding: 0 0 $g-footer-height $g-navigation-drawer-width;
-} */
-
-.Spacer {
-  height: $g-header-height;
-}
-
-/* .ContentOverlay {
-  top: $g-header-height;
-  bottom: $g-footer-height;
-  left: $g-navigation-drawer-width;
-} */
-
 .ProgressCircular {
   bottom: $g-footer-height;
   z-index: z-index-of(loading);
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.Default {
+  background-color: $g-background-color !important;
+}
+
+.Spacer {
+  height: 0;
+}
+
+// left, bottom は動的に設定
+.ContentOverlay {
+  top: $g-header-height;
+}
+
+.Fab {
+  position: fixed;
+  top: calc(#{$g-header-height} + 2%);
+  right: 2%;
 }
 </style>
 

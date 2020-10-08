@@ -10,7 +10,7 @@
           v-model="tab"
           show-arrows="mobile"
           color="active"
-          :background-color="BACKGROUND_COLOR"
+          :background-color="$constant.BACKGROUND_COLOR"
         >
           <v-tab
             v-for="item in tabItemList"
@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { BACKGROUND_COLOR } from '~/constants';
 
 type TabItem = {
   title: string
@@ -42,7 +41,6 @@ type TabItem = {
 type Data = {
   tab: number | null;
   tabItemList: TabItem[]
-  BACKGROUND_COLOR: string
 }
 
 @Component({
@@ -76,9 +74,9 @@ export default class LibraryPage extends Vue implements Data {
       to: '/library/history',
     },
   ];
-  BACKGROUND_COLOR = BACKGROUND_COLOR;
 
   mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
     this.$header.toggleBackdropFilter(false);
   }
 
@@ -90,7 +88,7 @@ export default class LibraryPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryPage {
-  padding: 16px max(12px, 2vw) 48px;
+  @include page-margin;
 
   &__title {
     margin-bottom: 8px;
@@ -101,7 +99,7 @@ export default class LibraryPage extends Vue implements Data {
     position: sticky;
     top: $g-header-height;
     z-index: z-index-of(tab);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 }
 </style>

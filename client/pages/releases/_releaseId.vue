@@ -10,23 +10,20 @@
       >
         <ContextMediaButton
           fab
-          :height="32"
           :is-playing="isReleaseSet && isPlaying"
           @on-clicked="onContextMediaButtonClicked"
         />
-
         <FavoriteButton
-          :size="32"
-          outlined
-          :is-favorited="releaseInfo.isSaved"
-          @on-clicked="toggleSavedState"
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :value="releaseInfo.isSaved"
+          @input="toggleSavedState"
         />
-
         <ReleaseMenu
-          :release="releaseInfo"
-          :size="32"
-          outlined
           left
+          :fab="$window.isSingleColumn"
+          :outlined="$window.isMultiColumn"
+          :release="releaseInfo"
           @on-favorite-menu-clicked="toggleSavedState"
         />
       </div>
@@ -38,18 +35,18 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
+        :size="$window.artworkSize"
         :alt="releaseInfo.name"
-        :size="ARTWORK_SIZE"
         :title="releaseInfo.name"
         shadow
       />
 
       <div :class="$style.Info">
         <HashTags
-          :tag-list="releaseInfo.genreList"
+          outlined
           color="subtext"
           text-color="white"
-          outlined
+          :tag-list="releaseInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -64,6 +61,7 @@
         <ArtistNames
           avatar
           :artists="releaseInfo.artists"
+          :class="$style.Info__artists"
         />
 
         <div :class="$style.Info__footer">
@@ -72,39 +70,25 @@
               :is-playing="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
-
             <FavoriteButton
-              :is-favorited="releaseInfo.isSaved"
               outlined
-              @on-clicked="toggleSavedState"
+              :value="releaseInfo.isSaved"
+              @input="toggleSavedState"
             />
-
             <ReleaseMenu
-              :release="releaseInfo"
               outlined
+              :release="releaseInfo"
+              :left="$window.isSingleColumn"
+              :right="$window.isMultiColumn"
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>
 
-          <div :class="$style.Info__detail">
-            <ReleaseDate
-              :release-date="releaseInfo.releaseDate"
-              :release-date-precision="releaseInfo.releaseDatePrecision"
-            />
-
-            <ReleaseTotalTracks
-              :total="releaseInfo.totalTracks"
-            />
-
-            <ReleaseDuration
-              :duration-ms="releaseInfo.durationMs"
-              :is-full="releaseInfo.isFullTrackList"
-            />
-
-            <ReleaseLabel
-              :label="releaseInfo.label"
-            />
-          </div>
+          <ReleaseDetailWrapper
+            v-if="$window.isMultiColumn"
+            :release="releaseInfo"
+            :class="$style.Detail"
+          />
         </div>
       </div>
     </div>
@@ -117,11 +101,20 @@
     />
 
     <IntersectionLoadingCircle
-      :is-loading="!releaseInfo.isFullTrackList"
-      @on-appeared="appendTrackList"
+      :loading="!releaseInfo.isFullTrackList"
+      @appear="appendTrackList"
     />
 
-    <Copyrights :copyright-list="releaseInfo.copyrightList" />
+    <Copyrights
+      :copyright-list="releaseInfo.copyrightList"
+      :class="$style.ReleaseIdPage__copyrights"
+    />
+
+    <ReleaseDetailWrapper
+      v-if="$window.isSingleColumn"
+      :release="releaseInfo"
+      :class="$style.Detail"
+    />
 
     <template v-for="artist in releaseInfo.artistReleaseList">
       <ScrollableCardsSection
@@ -134,7 +127,7 @@
           v-for="release in artist.items"
           :key="release.id"
           v-bind="release"
-          :width="CARD_WIDTH"
+          :width="$window.cardWidth"
           discograpy
         />
       </ScrollableCardsSection>
@@ -157,10 +150,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ReleaseMenu, { On as OnMenu } from '~/components/parts/menu/ReleaseMenu.vue';
-import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
-import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
-import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
+import ReleaseDetailWrapper from '~/components/parts/wrapper/ReleaseDetailWrapper.vue';
 import TrackTable, { On as OnTable } from '~/components/containers/table/TrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
@@ -174,8 +164,6 @@ import { getImageSrc } from '~/utils/image';
 import { convertTrackDetail } from '~/utils/converter';
 import { SpotifyAPI, App, OneToFifty } from '~~/types';
 
-const ARTWORK_SIZE = 220;
-const CARD_WIDTH = 200;
 const HEADER_REF = 'HEADER_REF';
 const LIMIT_OF_TRACKS = 30;
 
@@ -185,8 +173,6 @@ interface AsyncData {
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
-  ARTWORK_SIZE: number
-  CARD_WIDTH: number
   HEADER_REF: string
 }
 
@@ -198,10 +184,7 @@ interface Data {
     ContextMediaButton,
     FavoriteButton,
     ReleaseMenu,
-    ReleaseDate,
-    ReleaseTotalTracks,
-    ReleaseDuration,
-    ReleaseLabel,
+    ReleaseDetailWrapper,
     TrackTable,
     IntersectionLoadingCircle,
     Copyrights,
@@ -226,8 +209,6 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   releaseInfo: App.ReleaseInfo | undefined = undefined;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
-  ARTWORK_SIZE = ARTWORK_SIZE;
-  CARD_WIDTH = CARD_WIDTH;
   HEADER_REF = HEADER_REF;
 
   head() {
@@ -237,7 +218,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.releaseInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.releaseInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isReleaseSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
@@ -358,7 +339,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnFavorite['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnFavorite['input']) {
     if (this.releaseInfo == null) return;
 
     if (nextPlayingState) {
@@ -407,73 +388,78 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .AdditionalHeaderContent {
-  display: flex;
-  flex-wrap: nowrap;
-
-  & > *:not(:last-child) {
-    margin-right: 0.5vw;
-  }
+  @include additional-header-content();
 }
 
+$margin-bottom: 32px;
+
 .ReleaseIdPage {
-  padding: 16px max(12px, 4vw) 48px;
+  @include page-margin;
+  @include page-padding;
 
   &__header {
-    display: grid;
-    grid-template-columns: 220px auto;
-    column-gap: 24px;
-    margin-bottom: 32px;
-  }
+    @include page-header;
 
-  .Info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    &__hashTags {
-      // border-radius の分だけ右にあるように見えてしまうので調整
-      margin-left: -8px;
-      margin-bottom: 12px;
-    }
-
-    &__title {
-      font-size: 2em;
-      margin: 0.3em 0;
-      line-height: 1.2em;
-    }
-
-    &__footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      margin-top: 16px;
-    }
-
-    &__buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      margin-right: 24px;
-
-      & > *:not(:last-child) {
-        margin-right: 12px;
-      }
-    }
-
-    &__detail {
-      margin-top: 12px;
-
-      & > *:not(:last-child) {
-        margin-right: 8px;
-      }
-    }
+    margin-bottom: $margin-bottom / 2;
   }
 
   &__table {
-    margin-bottom: 16px;
+    margin-bottom: $margin-bottom / 2;
   }
 
+  &__copyrights,
   &__section {
-    margin: 40px -32px 0;
+    margin-bottom: $margin-bottom;
+  }
+}
+
+.Info {
+  @include page-info;
+
+  &__hashTags {
+    // border-radius の分だけ右にあるように見えてしまうので調整
+    margin-left: -8px;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    @include page-title;
+  }
+
+  &__artists {
+    display: flex;
+    flex-wrap: wrap;
+
+    @include smaller-than-md {
+      // 複数行になってもセンタリングさせる
+      justify-content: center;
+    }
+  }
+
+  &__footer {
+    margin-top: 16px;
+
+    @include larger-than-md {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+  }
+
+  &__buttons {
+    @include page-header-buttons(true);
+  }
+}
+
+.Detail {
+  @include smaller-than-md {
+    margin-top: $margin-bottom / -2;
+    margin-bottom: $margin-bottom;
+  }
+
+  @include larger-than-md {
+    // 2行になったとき
+    margin-top: 12px;
   }
 }
 </style>
