@@ -62,7 +62,7 @@ export default Vue.extend({
   justify-content: center;
 
   & > *:not(:last-child) {
-    margin-right: 8px;
+    margin-right: 12px;
   }
 }
 </style>
