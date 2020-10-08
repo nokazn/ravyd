@@ -9,7 +9,10 @@
     :disabled="disabled"
     @click="onClicked"
   >
-    <v-icon :size="iconSize || ((size * 0.8) / Math.SQRT2)">
+    <v-icon
+      :size="adjustedIconSize"
+      :color="iconColor"
+    >
       <slot />
     </v-icon>
   </v-btn>
@@ -18,10 +21,10 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-const ON_CLICKED = 'on-clicked';
+const CLICK = 'click';
 
 export type On = {
-  [ON_CLICKED]: void;
+  [CLICK]: void;
 }
 
 export default Vue.extend({
@@ -34,9 +37,18 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
+    iconSizeRatio: {
+      type: Number as PropType<number | undefined>,
+      default: undefined,
+
+    },
     color: {
       type: String,
       default: 'grey darken-3',
+    },
+    iconColor: {
+      type: String,
+      default: undefined,
     },
     fab: {
       type: Boolean,
@@ -52,9 +64,16 @@ export default Vue.extend({
     },
   },
 
+  computed: {
+    adjustedIconSize(): number {
+      const ratio = this.iconSizeRatio ?? this.outlined ? 0.8 : 1;
+      return this.iconSize ?? Math.floor((this.size * ratio) / Math.SQRT2);
+    },
+  },
+
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED);
+      this.$emit(CLICK);
     },
   },
 });

@@ -3,20 +3,19 @@
     app
     padless
     :elevation="12"
-    :height="$constant.FOOTER_HEIGHT"
+    :height="$constant.FOOTER_HEIGHT_MOBILE"
     :color="$constant.FOOTER_BACKGROUND_COLOR"
     :class="$style.PlayerBar"
   >
     <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
-          :src="artWorkSrc(60)"
-          :size="60"
+          :src="artWorkSrc(52)"
+          :size="52"
           :alt="trackName"
           :title="trackName"
           :class="$style.Left__artWork"
         />
-
         <div :class="$style.Left__trackInfo">
           <MarqueeTrackName
             v-if="hasTrack"
@@ -30,29 +29,36 @@
             :artists="artists"
           />
         </div>
-
         <FavoriteButton
-          v-if="isTrack && hasTrack"
+          v-if="isTrack && hasTrack && !smallerThanSm"
           v-model="isSavedTrack"
-          :size="44"
           :class="$style.Left__favoriteButton"
         />
       </div>
 
       <div :class="$style.Right">
-        <ShuffleButton v-if="isTrack" />
-        <SkipButton
-          v-else
-          :seconds="-15"
-        />
-        <PreviousButton />
-        <MediaButton />
-        <NextButton />
-        <RepeatButton v-if="isTrack" />
-        <SkipButton
-          v-else
-          :seconds="15"
-        />
+        <template v-if="smallerThanSm">
+          <FavoriteButton
+            v-if="isTrack && hasTrack"
+            v-model="isSavedTrack"
+          />
+          <MediaButton />
+        </template>
+        <template v-else>
+          <ShuffleButton v-if="isTrack" />
+          <SkipButton
+            v-else
+            :seconds="-15"
+          />
+          <PreviousButton />
+          <MediaButton circle />
+          <NextButton />
+          <RepeatButton v-if="isTrack" />
+          <SkipButton
+            v-else
+            :seconds="15"
+          />
+        </template>
       </div>
     </div>
 
@@ -123,6 +129,10 @@ export default Vue.extend({
   },
 
   computed: {
+    smallerThanSm(): boolean {
+      return this.$window.smallerThan('sm');
+    },
+
     isAnotherDevicePlaying(): boolean {
       return this.$getters()['playback/isAnotherDevicePlaying'];
     },
@@ -176,15 +186,13 @@ export default Vue.extend({
   z-index: z-index-of(footer) !important;
 
   &__container {
-    display: grid;
+    display: flex;
     justify-content: space-between;
-    align-content: center;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 2vw;
+    align-items: center;
     // .Top の position: absolute を利かせるため
     position: relative;
     width: 100vw;
-    height: $g-footer-height - $g-slider-height;
+    height: calc(100% - #{$g-slider-height});
     margin: $g-slider-height 1.5vw 0;
   }
 }
@@ -192,13 +200,14 @@ export default Vue.extend({
 .Top {
   position: absolute;
   width: 100vw;
-  // フッターの高さの半分分上にして、上部にあるシークバーの幅ぶん下げる
-  transform: translateY(calc((#{$g-footer-height} / -2) + (#{$g-slider-height} / 2)));
+  // フッターの高さの半分分上にして、上部にあるシークバーの幅分下げる
+  transform: translateY(calc((#{$g-footer-height-mobile} / -2) + (#{$g-slider-height} / 2)));
 }
 
 .Left {
   display: flex;
   align-items: center;
+  flex: 1 1;
 
   & > *:not(:last-child) {
     margin-right: 0.5em;
@@ -211,7 +220,7 @@ export default Vue.extend({
     overflow-x: hidden;
 
     & > *:not(:last-child) {
-      margin-bottom: 0.375em;
+      margin-bottom: 0.2em;
     }
   }
 
@@ -222,9 +231,16 @@ export default Vue.extend({
 
 .Right {
   display: flex;
-  justify-content: space-around;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
   align-items: center;
-  padding: 0 4%;
+  padding: 0 2%;
+  // 伸縮しない
+  flex: 0 0;
+
+  & > *:not(:last-child) {
+    margin-right: min(4vw, 12px);
+  }
 }
 
 .Overlay {

@@ -5,13 +5,12 @@
       :seconds="-15"
     />
     <ShuffleButton v-else />
-
     <PreviousButton />
-
-    <MediaButton />
-
+    <MediaButton
+      circle
+      :size="40"
+    />
     <NextButton />
-
     <SkipButton
       v-if="isEpisode"
       :seconds="15"

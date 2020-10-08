@@ -150,6 +150,7 @@ $g-page-side-margin: min(2vw, 24px);
  */
 $g-header-height: 52px;
 $g-footer-height: 80px;
+$g-footer-height-mobile: $g-footer-height * 0.9;
 $g-device-bar-height: 24px;
 $g-navigation-drawer-width: 200px;
 $g-flex-card-min-width: 160px;

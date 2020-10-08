@@ -1,25 +1,27 @@
 <template>
-  <v-btn
-    icon
-    large
-    :disabled="disabled"
+  <CircleButton
     title="次の曲"
+    :size="size"
+    :disabled="disabled"
     @click="onClicked"
   >
-    <v-icon :size="size">
-      mdi-skip-next
-    </v-icon>
-  </v-btn>
+    mdi-skip-next
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     size: {
       type: Number,
-      default: 28,
+      default: 36,
     },
   },
 

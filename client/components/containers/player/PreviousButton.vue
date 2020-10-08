@@ -1,20 +1,18 @@
 <template>
-  <v-btn
-    icon
-    large
-    :disabled="disabledPlayingFromBegining && disabledSkippingPrev"
+  <CircleButton
     title="前の曲"
+    :size="size"
+    :disabled="disabledPlayingFromBegining && disabledSkippingPrev"
     @click="onPreivousClicked"
   >
-    <v-icon :size="size">
-      mdi-skip-previous
-    </v-icon>
-  </v-btn>
+    mdi-skip-previous
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { RootState } from 'typed-vuex';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 type Data = {
   firstClicked: boolean
@@ -22,10 +20,14 @@ type Data = {
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     size: {
       type: Number,
-      default: 28,
+      default: 36,
     },
   },
 

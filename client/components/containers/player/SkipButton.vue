@@ -1,18 +1,17 @@
 <template>
-  <v-btn
-    icon
+  <CircleButton
+    :size="size"
     :disabled="disabled"
     :title="skipButton.title"
     @click="onClicked"
   >
-    <v-icon :size="size">
-      {{ skipButton.icon }}
-    </v-icon>
-  </v-btn>
+    {{ skipButton.icon }}
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 type SkipButton = {
   title: string
@@ -20,6 +19,10 @@ type SkipButton = {
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     seconds: {
       type: Number,
@@ -27,7 +30,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 20,
+      default: 32,
     },
   },
 
@@ -65,9 +68,7 @@ export default Vue.extend({
 
       if (positionMs < this.$state().playback.durationMs) {
         // 進む
-        this.$dispatch('playback/seek', {
-          positionMs,
-        });
+        this.$dispatch('playback/seek', { positionMs });
       } else {
         // 次の曲
         this.$dispatch('playback/next');
