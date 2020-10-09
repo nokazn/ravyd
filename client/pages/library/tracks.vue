@@ -18,7 +18,7 @@
     <PlaylistTrackTable
       v-if="trackList != null"
       custom
-      :track-list="trackList"
+      :tracks="trackList"
       :uri="uri"
       :class="$style.LibraryTracksPage__table"
       @on-favorite-button-clicked="onFavoriteButtonClicked"

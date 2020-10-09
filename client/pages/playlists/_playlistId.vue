@@ -146,7 +146,7 @@
 
     <template v-if="playlistTrackInfo != null">
       <PlaylistTrackTable
-        :track-list="playlistTrackInfo.trackList"
+        :tracks="playlistTrackInfo.trackList"
         :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
         :uri="playlistInfo.uri"
         :class="$style.PlaylistIdPage__table"

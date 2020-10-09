@@ -94,7 +94,7 @@
     </div>
 
     <TrackTable
-      :track-list="releaseInfo.trackList"
+      :tracks="releaseInfo.trackList"
       :uri="releaseInfo.uri"
       :class="$style.ReleaseIdPage__table"
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"

@@ -3,7 +3,7 @@
     disable-pagination
     hide-default-footer
     :headers="headers"
-    :items="trackList"
+    :items="tracks"
     :mobile-breakpoint="0"
     :no-data-text="noDataText"
     class="playlist-track-table"
@@ -75,7 +75,7 @@ export default Vue.extend({
   },
 
   props: {
-    trackList: {
+    tracks: {
       type: Array as PropType<App.PlaylistTrackDetail[]>,
       required: true,
     },
@@ -228,7 +228,7 @@ export default Vue.extend({
       }
 
       // trackUriList は更新されうる
-      const trackUriList = this.trackList.map((track) => track.uri);
+      const trackUriList = this.tracks.map((track) => track.uri);
       /**
        * プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
        * ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定

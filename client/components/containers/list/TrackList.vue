@@ -3,7 +3,7 @@
     dense
     :color="$constant.BACKGROUND_COLOR"
   >
-    <template v-for="track in trackList">
+    <template v-for="track in tracks">
       <v-divider
         v-show="length == null || track.index < length"
         :key="`${track.id}-divider`"
@@ -43,7 +43,7 @@ export default Vue.extend({
   },
 
   props: {
-    trackList: {
+    tracks: {
       type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
@@ -59,7 +59,7 @@ export default Vue.extend({
 
   data(): Data {
     // trackUriList は更新されることがない
-    const trackUriList = this.trackList.map((track) => track.uri);
+    const trackUriList = this.tracks.map((track) => track.uri);
     return {
       trackUriList,
     };

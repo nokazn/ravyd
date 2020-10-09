@@ -16,7 +16,7 @@
         @input="toggleAbbreviatedTrackList"
       >
         <TrackList
-          :track-list="topTrackList"
+          :tracks="topTrackList"
           :length="abbreviatedTopTrackLength"
           :uri="artistInfo.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"

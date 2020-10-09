@@ -4,7 +4,7 @@
     disable-sort
     hide-default-footer
     :headers="headers"
-    :items="trackList"
+    :items="tracks"
     :mobile-breakpoint="0"
     group-by="discNumber"
     no-data-text="トラックがありません。"
@@ -69,7 +69,7 @@ export default Vue.extend({
   },
 
   props: {
-    trackList: {
+    tracks: {
       type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
@@ -82,7 +82,7 @@ export default Vue.extend({
   data(): Data {
     const trackId = getQuery(this.$route.query, 'track');
     const activeRowId = trackId != null
-      ? this.trackList.find((item) => item.id === trackId)?.id
+      ? this.tracks.find((item) => item.id === trackId)?.id
       : undefined;
 
     return {
@@ -145,9 +145,9 @@ export default Vue.extend({
     },
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
-      const { trackList } = this;
-      const relinkedTrack = trackList.find((track) => track.linkedFrom != null);
-      const discNumberList = Array.from(new Set(trackList
+      const { tracks } = this;
+      const relinkedTrack = tracks.find((track) => track.linkedFrom != null);
+      const discNumberList = Array.from(new Set(tracks
         .map((track) => track.discNumber)));
 
       return relinkedTrack != null

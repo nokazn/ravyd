@@ -11,7 +11,7 @@
       disable-pagination
       hide-default-footer
       :headers="headers"
-      :items="episodeList"
+      :items="episodes"
       :mobile-breakpoint="0"
       :search="searchText"
       :custom-filter="customFilter"
@@ -78,7 +78,7 @@ export default Vue.extend({
   },
 
   props: {
-    episodeList: {
+    episodes: {
       type: Array as PropType<App.EpisodeDetail[]>,
       required: true,
     },

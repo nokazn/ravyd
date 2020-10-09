@@ -93,7 +93,7 @@
     />
 
     <EpisodeTable
-      :episode-list="showInfo.episodeList"
+      :episodes="showInfo.episodeList"
       :uri="showInfo.uri"
       :publisher="showInfo.publisher"
       :class="$style.ShowIdPage__table"
