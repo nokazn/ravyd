@@ -46,7 +46,7 @@
 
     <portal-target
       v-if="$window.isSingleColumn"
-      v-show="$header.isAdditionalContentShown"
+      v-show="$header.isFabShown"
       :name="$header.PORTAL_NAME"
       :class="$style.Fab"
     />

@@ -38,8 +38,8 @@
 
       <div :class="$style.Header__right">
         <portal-target
-          v-if="$header.hasAdditionalContent && $window.isMultiColumn"
-          v-show="$header.isAdditionalContentShown"
+          v-if="$window.isMultiColumn"
+          v-show="$header.isFabShown"
           :name="$header.PORTAL_NAME"
           :class="$style.Header__additional"
         />
