@@ -7,7 +7,8 @@ export const convertPlaylistForCard = (
     id: playlist.id,
     name: playlist.name,
     uri: playlist.uri,
-    description: playlist.description,
+    description: playlist.description ?? undefined,
+    owner: playlist.owner,
     externalUrls: playlist.external_urls,
     images: playlist.images,
   };

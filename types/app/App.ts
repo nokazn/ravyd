@@ -136,7 +136,8 @@ export namespace App {
     id: string
     name: string
     uri: string
-    description: string | null
+    description: string | undefined
+    owner: SpotifyAPI.UserData
     images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }

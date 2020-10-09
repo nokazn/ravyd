@@ -31,11 +31,18 @@
     </template>
 
     <template #subtitle>
-      <span
-        :title="description"
-        :class="$style.PlaylistCard__text"
-        v-html="description"
-      />
+      <span :class="$style.PlaylistCard__text">
+        <span
+          v-if="description"
+          :title="description"
+          v-html="description"
+        />
+        <span v-else-if="owner.display_name != null">
+          by {{ owner.display_name }}
+        </span>
+        <br>
+        <br>
+      </span>
     </template>
   </Card>
 </template>
@@ -66,12 +73,16 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    description: {
+    uri: {
       type: String,
       required: true,
     },
-    uri: {
-      type: String,
+    description: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
+    },
+    owner: {
+      type: Object as PropType<SpotifyAPI.UserData>,
       required: true,
     },
     images: {
