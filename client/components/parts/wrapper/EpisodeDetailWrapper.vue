@@ -51,7 +51,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseDetailWrapper {
-  @include larger-than-md {
+  @include larger-than-md() {
     & > *:not(:last-child) {
       margin-right: 8px;
     }

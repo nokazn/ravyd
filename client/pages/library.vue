@@ -88,7 +88,7 @@ export default class LibraryPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryPage {
-  @include page-margin;
+  @include page-margin();
 
   &__title {
     margin-bottom: 8px;

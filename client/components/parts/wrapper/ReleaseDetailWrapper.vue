@@ -76,12 +76,12 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseDetailWrapper {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     display: flex;
     flex-direction: column;
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     & > *:not(:last-child) {
       margin-right: 8px;
     }

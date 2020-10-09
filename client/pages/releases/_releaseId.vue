@@ -394,11 +394,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 $margin-bottom: 32px;
 
 .ReleaseIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom / 2;
   }
@@ -414,7 +414,7 @@ $margin-bottom: 32px;
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__hashTags {
     // border-radius の分だけ右にあるように見えてしまうので調整
@@ -423,14 +423,14 @@ $margin-bottom: 32px;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__artists {
     display: flex;
     flex-wrap: wrap;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       // 複数行になってもセンタリングさせる
       justify-content: center;
     }
@@ -439,7 +439,7 @@ $margin-bottom: 32px;
   &__footer {
     margin-top: 16px;
 
-    @include larger-than-md {
+    @include larger-than-md() {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
@@ -452,12 +452,12 @@ $margin-bottom: 32px;
 }
 
 .Detail {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     margin-top: $margin-bottom / -2;
     margin-bottom: $margin-bottom;
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     // 2行になったとき
     margin-top: 12px;
   }

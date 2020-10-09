@@ -160,5 +160,5 @@ export default Vue.extend({
 </style>
 
 <style lang="scss">
-@include marquee-animation;
+@include marquee-animation();
 </style>

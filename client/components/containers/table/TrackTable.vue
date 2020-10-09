@@ -189,11 +189,11 @@ export default Vue.extend({
 
 <style lang="scss">
 .track-table {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     @include v-data-table-height(56px);
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     @include v-data-table-height(44px);
   }
 }

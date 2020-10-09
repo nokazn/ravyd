@@ -238,13 +238,13 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 .EpisodeIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
     margin-bottom: $margin-bottom;
 
-    @include page-header;
+    @include page-header();
   }
 
   &__description {
@@ -261,25 +261,25 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__explicitIcon {
     margin-bottom: 0.1rem;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
     margin-top: 16px;
     display: flex;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       flex-direction: column;
     }
 
-    @include larger-than-md {
+    @include larger-than-md() {
       flex-wrap: wrap;
       align-items: flex-end;
     }

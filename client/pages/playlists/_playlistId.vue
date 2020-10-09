@@ -641,17 +641,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 .PlaylistIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom * 0.75;
   }
 
   &__description {
-    @include smaller-than-md {
+    @include smaller-than-md() {
       text-align: center;
     }
   }
@@ -662,21 +662,21 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
     margin-top: 16px;
     display: flex;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       flex-direction: column;
     }
 
-    @include larger-than-md {
+    @include larger-than-md() {
       flex-wrap: wrap;
       align-items: flex-end;
     }

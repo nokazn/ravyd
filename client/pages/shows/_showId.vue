@@ -331,11 +331,11 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 $margin-bottom: 32px;
 
 .ShowIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom;
   }
@@ -348,14 +348,14 @@ $margin-bottom: 32px;
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__explicitIcon {
     margin-bottom: 0.1rem;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
@@ -365,7 +365,7 @@ $margin-bottom: 32px;
   }
 
   &__buttons {
-    @include page-header-buttons;
+    @include page-header-buttons();
   }
 }
 </style>

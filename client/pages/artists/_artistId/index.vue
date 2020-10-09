@@ -291,7 +291,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     &--twoColumns {
       $column-gap: max(4%, 20px);
 
-      @include larger-than-md {
+      @include larger-than-md() {
         $related-artists-width: 220px;
         $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
 
@@ -300,7 +300,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
         column-gap: $column-gap;
       }
 
-      @include larger-than-xl {
+      @include larger-than-xl() {
         $related-artists-width: 300px;
         $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
 

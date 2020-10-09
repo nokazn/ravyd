@@ -271,8 +271,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 }
 
 .UserIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
     margin-bottom: 24px;
@@ -287,14 +287,14 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__buttons {
-    @include page-header-buttons;
+    @include page-header-buttons();
   }
 }
 </style>
