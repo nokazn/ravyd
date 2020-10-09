@@ -47,7 +47,7 @@
       <div :class="$style.Info">
         <HashTags
           outlined
-          :tag-list="artistInfo.genreList"
+          :tags="artistInfo.genreList"
           :class="$style.Info__hashTags"
         />
 

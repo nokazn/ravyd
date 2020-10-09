@@ -46,7 +46,7 @@
           outlined
           color="subtext"
           text-color="white"
-          :tag-list="releaseInfo.genreList"
+          :tags="releaseInfo.genreList"
           :class="$style.Info__hashTags"
         />
 

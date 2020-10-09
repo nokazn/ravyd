@@ -1,9 +1,9 @@
 <template>
   <div
-    v-if="tagList.length > 0"
+    v-if="tags.length > 0"
     :class="$style.HashTags"
   >
-    <template v-for="tag in tagList">
+    <template v-for="tag in tags">
       <v-chip
         v-if="tag"
         :key="tag"
@@ -24,7 +24,7 @@ import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
   props: {
-    tagList: {
+    tags: {
       type: Array as PropType<string[]>,
       required: true,
     },
