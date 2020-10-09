@@ -21,10 +21,10 @@
         <div :class="$style.Content">
           <template v-if="$window.isMultiColumn">
             <TrackListMediaButton
+              :value="playing"
               :hover="hover"
-              :playing="playing"
               :track-number="item.index + 1"
-              @on-clicked="onMediaButtonClicked"
+              @input="onMediaButtonClicked"
             />
             <FavoriteButton
               v-if="$window.isMultiColumn"
