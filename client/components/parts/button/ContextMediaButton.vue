@@ -1,26 +1,21 @@
 <template>
   <v-btn
-    v-if="fab"
-    fab
     color="success"
-    :width="height"
+    :fab="fab"
+    :rounded="!fab"
+    :width="fab ? height : undefined"
     :height="height"
+    :disabled="disabled"
     :title="text"
     @click="onClicked"
   >
-    <v-icon>
+    <v-icon v-if="fab">
       {{ icon }}
     </v-icon>
-  </v-btn>
-  <v-btn
-    v-else
-    color="success"
-    rounded
-    :height="height"
-    :disabled="disabled"
-    @click="onClicked"
-  >
-    <div :class="$style.Container">
+    <div
+      v-else
+      :class="$style.Container"
+    >
       <v-icon left>
         {{ icon }}
       </v-icon>
@@ -34,15 +29,15 @@
 <script lang="ts">
 import Vue from 'vue';
 
-const ON_CLICKED = 'on-clicked';
+const INPUT = 'input';
 
 export type On = {
-  [ON_CLICKED]: boolean
+  [INPUT]: boolean
 }
 
 export default Vue.extend({
   props: {
-    isPlaying: {
+    value: {
       type: Boolean,
       required: true,
     },
@@ -62,12 +57,12 @@ export default Vue.extend({
 
   computed: {
     icon(): 'mdi-play' | 'mdi-pause' {
-      return this.isPlaying
+      return this.value
         ? 'mdi-pause'
         : 'mdi-play';
     },
     text(): '再生' | '停止' {
-      return this.isPlaying
+      return this.value
         ? '停止'
         : '再生';
     },
@@ -75,7 +70,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED, !this.isPlaying);
+      this.$emit(INPUT, !this.value);
     },
   },
 });

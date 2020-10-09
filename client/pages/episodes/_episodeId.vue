@@ -10,9 +10,9 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isEpisodeSet && isPlaying"
           :disabled="!episodeInfo.isPlayable"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isEpisodeSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <EpisodeMenu
           left
@@ -59,9 +59,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isEpisodeSet && isPlaying"
               :disabled="!episodeInfo.isPlayable"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isEpisodeSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
             <EpisodeMenu
               offset-y
@@ -216,7 +216,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
     this.$header.disconnectObserver();
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.episodeInfo == null) return;
 
     if (nextPlayingState) {

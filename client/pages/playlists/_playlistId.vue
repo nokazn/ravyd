@@ -10,9 +10,9 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isPlaylistSet && isPlaying"
           :disabled="!hasTracks"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isPlaylistSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
 
         <CircleButton
@@ -83,9 +83,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isPlaylistSet && isPlaying"
               :disabled="!hasTracks"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isPlaylistSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
 
             <CircleButton
@@ -530,7 +530,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.playlistInfo == null) return;
 
     if (nextPlayingState) {

@@ -10,9 +10,9 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isShowSet && isPlaying"
           :disabled="!hasEpisodes"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isShowSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
           :fab="$window.isSingleColumn"
@@ -65,9 +65,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isShowSet && isPlaying"
               :disabled="!hasEpisodes"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isShowSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
             <FavoriteButton
               outlined
@@ -296,7 +296,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.showInfo == null) return;
 
     if (nextPlayingState) {

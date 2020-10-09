@@ -10,8 +10,8 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isArtistSet && isPlaying "
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isArtistSet && isPlaying "
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
           text="フォロー"
@@ -81,8 +81,8 @@
 
         <div :class="$style.Info__buttons">
           <ContextMediaButton
-            :is-playing="isArtistSet && isPlaying "
-            @on-clicked="onContextMediaButtonClicked"
+            :value="isArtistSet && isPlaying "
+            @input="onContextMediaButtonClicked"
           />
 
           <FavoriteButton
@@ -296,7 +296,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.artistInfo == null) return;
 
     if (nextPlayingState) {

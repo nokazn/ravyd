@@ -10,8 +10,8 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isReleaseSet && isPlaying"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isReleaseSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
           :fab="$window.isSingleColumn"
@@ -67,7 +67,7 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isReleaseSet && isPlaying"
+              :value="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
             <FavoriteButton
@@ -352,7 +352,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleSavedState(nextSavedState: OnMediaButton['on-clicked'] | OnMenu['on-favorite-menu-clicked']) {
+  toggleSavedState(nextSavedState: OnMediaButton['input'] | OnMenu['on-favorite-menu-clicked']) {
     if (this.releaseInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
