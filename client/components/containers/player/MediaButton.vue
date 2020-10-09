@@ -2,6 +2,7 @@
   <CircleButton
     :size="size"
     :icon-size="iconSize"
+    :disabled="disabled"
     :title="mediaButton.title"
     @click="onClicked"
   >
@@ -29,6 +30,10 @@ export default Vue.extend({
       default: 36,
     },
     circle: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },

@@ -11,9 +11,9 @@
       class="text-center"
     >
       <PlaylistMediaButton
-        :playing="playing"
         :disabled="!item.isPlayable"
-        @on-clicked="onMediaButtonClicked"
+        :value="playing"
+        @input="onMediaButtonClicked"
       />
     </td>
 

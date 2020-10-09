@@ -20,9 +20,9 @@
     <td class="text-center">
       <PlaylistMediaButton
         :size="buttonSize"
-        :playing="playing"
         :disabled="disabled"
-        @on-clicked="onMediaButtonClicked"
+        :value="playing"
+        @input="onMediaButtonClicked"
       />
     </td>
 
