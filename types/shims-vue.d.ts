@@ -7,8 +7,8 @@ import type {
 } from 'typed-vuex';
 import type dayjs from 'dayjs';
 
-import type { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import type { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { SpotifyServices } from '~/services/spotify';
+import type { ServerServices } from '~/services/server';
 import type { Constant } from '~/plugins/constant';
 import type { $Header } from '~/plugins/observable/header';
 import type { $Overlay } from '~/plugins/observable/overlay';
@@ -30,8 +30,8 @@ declare module 'vue/types/vue' {
 
     // plugin
     $dayjs: typeof dayjs;
-    $spotify: SpotifyEndpoints;
-    $server: ServerEndpoints;
+    $spotify: SpotifyServices;
+    $server: ServerServices;
     $constant: Constant;
 
     // obserable

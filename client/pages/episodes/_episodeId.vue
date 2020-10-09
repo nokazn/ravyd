@@ -118,7 +118,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getEpisodeInfo } from '~/plugins/local/_episodeId';
+import { getEpisodeInfo } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/utils/image';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { App } from '~~/types';

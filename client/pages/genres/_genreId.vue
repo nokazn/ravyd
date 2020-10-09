@@ -43,7 +43,7 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
+import { getCategory, getCategoryPlaylist } from '~/services/local/_genreId';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 

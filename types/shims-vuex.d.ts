@@ -9,8 +9,8 @@ import type dayjs from 'dayjs';
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 import type { $Toast } from '~/plugins/observable/toast';
-import type { SpotifyEndpoints } from '~/plugins/spotify/endpoints';
-import type { ServerEndpoints } from '~/plugins/server/endpoints';
+import type { SpotifyServices } from '~/services/spotify';
+import type { ServerServices } from '~/services/server';
 
 declare module 'vuex/types/index' {
   interface Store<S> {
@@ -24,9 +24,9 @@ declare module 'vuex/types/index' {
     // plugin
     $dayjs: typeof dayjs;
     $spotifyApi: NuxtAxiosInstance;
-    $spotify: SpotifyEndpoints;
+    $spotify: SpotifyServices;
     $serverApi: NuxtAxiosInstance;
-    $server: ServerEndpoints;
+    $server: ServerServices;
 
     // obserable
     $toast: $Toast;

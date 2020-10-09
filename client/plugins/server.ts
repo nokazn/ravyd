@@ -1,9 +1,9 @@
 import type { Plugin } from '@nuxt/types';
 
-import { endpoints } from './endpoints';
+import { server } from '~/services/server';
 
 const injector: Plugin = (context, inject) => {
-  inject('server', endpoints(context));
+  inject('server', server(context));
 };
 
 export default injector;

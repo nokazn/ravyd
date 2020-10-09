@@ -115,7 +115,7 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
+import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/services/local/_userId';
 import { getImageSrc } from '~/utils/image';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';

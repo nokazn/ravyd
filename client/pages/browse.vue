@@ -32,7 +32,7 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getCategoryList } from '~/plugins/local/browse';
+import { getCategoryList } from '~/services/local/browse';
 import { App } from '~~/types';
 
 interface AsyncData {

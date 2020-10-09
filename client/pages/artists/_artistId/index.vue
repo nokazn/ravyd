@@ -70,10 +70,10 @@ import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plugins/local/_artistId';
+import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/utils/converter';
-import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
+import type { ArtistReleaseInfo, ReleaseType } from '~/services/local/_artistId';
 import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;

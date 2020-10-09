@@ -158,7 +158,7 @@ import {
   getArtistInfo,
   getIsFollowing,
   getRelatedArtistList,
-} from '~/plugins/local/_artistId';
+} from '~/services/local/_artistId';
 import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 

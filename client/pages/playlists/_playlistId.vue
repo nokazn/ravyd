@@ -182,7 +182,7 @@ import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmMod
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
+import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/services/local/_playlistId';
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
