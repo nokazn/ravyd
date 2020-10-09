@@ -22,7 +22,7 @@
         title="メニュー"
         v-on="on"
       >
-        <v-icon>
+        <v-icon :size="iconSize">
           mdi-dots-horizontal
         </v-icon>
       </v-btn>
@@ -150,6 +150,12 @@ export default Vue.extend({
     groups: {
       type: Array as PropType<MenuItem[][]>,
       required: true,
+    },
+  },
+
+  computed: {
+    iconSize(): number {
+      return Math.floor(this.size * 0.7);
     },
   },
 });

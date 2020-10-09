@@ -4,41 +4,35 @@
     :style="cssProps"
   >
     <transition name="fade">
-      <v-btn
+      <CircleButton
         v-show="!isScrollOnLeftEdge"
-        icon
         absolute
-        :width="40"
-        :height="40"
+        :size="36"
+        :icon-size="36"
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--left']
         ]"
         @click="onLeftButtonClicked"
       >
-        <v-icon :size="40">
-          mdi-chevron-left
-        </v-icon>
-      </v-btn>
+        mdi-chevron-left
+      </CircleButton>
     </transition>
 
     <transition name="fade">
-      <v-btn
+      <CircleButton
         v-show="!isScrollOnRightEdge"
-        icon
         absolute
-        :width="40"
-        :height="40"
+        :size="36"
+        :icon-size="36"
         :class="[
           $style.CardsWrapper__icon,
           $style['CardsWrapper__icon--right']
         ]"
         @click="onRightButtonClicked"
       >
-        <v-icon :size="40">
-          mdi-chevron-right
-        </v-icon>
-      </v-btn>
+        mdi-chevron-right
+      </CircleButton>
     </transition>
 
     <div
@@ -56,6 +50,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { debounce } from 'lodash';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 const CONTAINER_REF = 'CONTAINER_REF';
 
@@ -80,6 +75,10 @@ type Data = {
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
     margin: {
       type: Number as PropType<number | undefined>,
