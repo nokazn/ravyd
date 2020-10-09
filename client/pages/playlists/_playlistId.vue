@@ -606,7 +606,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       case REMOVE_PLAYLIST_MODAL:
         removePlaylist();
         break;
-
       default:
         break;
     }

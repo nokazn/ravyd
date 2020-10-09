@@ -176,7 +176,6 @@ export default Vue.extend({
 
       const releasePage = () => {
         const { releaseId } = this.track;
-
         return {
           name: 'アルバムページに移動',
           to: `/releases/${releaseId}`,
@@ -199,7 +198,6 @@ export default Vue.extend({
           artists: this.track.artists,
           left: true,
         };
-
         return {
           component: AddItemToPlaylistMenu,
           props,
@@ -210,7 +208,6 @@ export default Vue.extend({
         name: 'このプレイリストから削除',
         handler: () => {
           if (this.playlistId == null) return;
-
           this.toggleConfirmModal(true, {
             loading: false,
             type: REMOVE_ITEM_MODAL,

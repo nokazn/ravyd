@@ -24,7 +24,10 @@ export const removePlaylistItems = (context: Context) => {
     const limit = 100;
     const handler = (index: number): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
       const partialTracks = tracks.slice(limit * index, limit);
-      return app.$spotifyApi.$delete(`/playlists/${playlistId}/tracks`, {
+      // @todo https://github.com/axios/axios/issues/3220#issuecomment-688566578
+      return app.$spotifyApi.$request({
+        method: 'DELETE',
+        url: `/playlists/${playlistId}/tracks`,
         data: {
           tracks: partialTracks,
           snapshot_id: snapshotId,
