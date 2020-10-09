@@ -26,8 +26,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run stylelint",
-      "pre-push": "npm run lint && npm run stylelint && npm run test"
+      "pre-commit": "npm run lint && npm run tsc && npm run stylelint",
+      "pre-push": "npm run test"
     }
   },
   "dependencies": {
