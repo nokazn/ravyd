@@ -359,7 +359,6 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         color: 'error',
         message: `${name}をこのプレイリストから削除できませんでした。`,
       });
-
       return;
     }
 
