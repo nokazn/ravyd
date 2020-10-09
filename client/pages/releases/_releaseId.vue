@@ -106,7 +106,7 @@
     />
 
     <Copyrights
-      :copyright-list="releaseInfo.copyrightList"
+      :copyrights="releaseInfo.copyrightList"
       :class="$style.ReleaseIdPage__copyrights"
     />
 

@@ -21,7 +21,7 @@ export type ParsedCopyrightMap = {
 
 export default Vue.extend({
   props: {
-    copyrightList: {
+    copyrights: {
       type: Array as PropType<SpotifyAPI.Copyright[]>,
       required: true,
     },
@@ -29,7 +29,7 @@ export default Vue.extend({
 
   computed: {
     parsedCopyrightList(): string[] {
-      const parsedCopyrightList = this.copyrightList.map((copyright) => {
+      const parsedCopyrightList = this.copyrights.map((copyright) => {
         // 文頭の C/P マーク
         const typeReg = copyright.type === 'C'
           ? /^(Ⓒ|🄫|©|ⓒ|⒞|\(C\))\s?/

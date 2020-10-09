@@ -104,7 +104,7 @@
       @appear="appendEpisodeList"
     />
 
-    <Copyrights :copyright-list="showInfo.copyrightList" />
+    <Copyrights :copyrights="showInfo.copyrightList" />
   </div>
 
   <Fallback v-else>
