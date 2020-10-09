@@ -8,7 +8,7 @@
     />
     <TwoColumnsListCard
       v-else
-      :item-list="itemList"
+      :items="itemList"
     />
 
     <v-btn
