@@ -1,6 +1,6 @@
 <template>
   <v-overlay
-    v-if="!$window.isTouchScreen"
+    v-if="!$screen.isTouchScreen"
     v-show="hover"
     absolute
     :opacity="0.7"

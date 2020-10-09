@@ -67,13 +67,13 @@ const linearCardAdjustor = (type: DeviceType, width: number) => {
 export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 type ResizeObserver = ((e?: UIEvent) => void)
 
-type WindowState = {
+type ScreenState = {
   width: number;
   isTouchScreen: boolean;
   observer: ResizeObserver | undefined;
 }
 
-export type $Window = {
+export type $Screen = {
   readonly width: number;
   readonly isTouchScreen: boolean;
   readonly type: DeviceType;
@@ -90,13 +90,13 @@ export type $Window = {
   disconnectObserver: () => void;
 }
 
-const state = Vue.observable<WindowState>({
+const state = Vue.observable<ScreenState>({
   width: 0,
   isTouchScreen: false,
   observer: undefined,
 });
 
-export const $window: $Window = {
+export const $screen: $Screen = {
   get width() {
     return state.width;
   },

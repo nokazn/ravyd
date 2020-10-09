@@ -1,10 +1,10 @@
 import type { Plugin } from '@nuxt/types';
-import { $window } from '~/observable/window';
+import { $screen } from '~/observable/window';
 
-export type { $Window, DeviceType } from '~/observable/window';
+export type { $Screen, DeviceType } from '~/observable/window';
 
 const injector: Plugin = (_, inject) => {
-  inject('window', $window);
+  inject('screen', $screen);
 };
 
 export default injector;

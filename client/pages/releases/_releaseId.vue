@@ -14,15 +14,15 @@
           @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="releaseInfo.isSaved"
           @input="toggleSavedState"
         />
         <ReleaseMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :release="releaseInfo"
           @on-favorite-menu-clicked="toggleSavedState"
         />
@@ -35,7 +35,7 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="releaseInfo.name"
         :title="releaseInfo.name"
         shadow
@@ -78,14 +78,14 @@
             <ReleaseMenu
               outlined
               :release="releaseInfo"
-              :left="$window.isSingleColumn"
-              :right="$window.isMultiColumn"
+              :left="$screen.isSingleColumn"
+              :right="$screen.isMultiColumn"
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>
 
           <ReleaseDetailWrapper
-            v-if="$window.isMultiColumn"
+            v-if="$screen.isMultiColumn"
             :release="releaseInfo"
             :class="$style.Detail"
           />
@@ -111,7 +111,7 @@
     />
 
     <ReleaseDetailWrapper
-      v-if="$window.isSingleColumn"
+      v-if="$screen.isSingleColumn"
       :release="releaseInfo"
       :class="$style.Detail"
     />
@@ -127,7 +127,7 @@
           v-for="release in artist.items"
           :key="release.id"
           v-bind="release"
-          :width="$window.cardWidth"
+          :width="$screen.cardWidth"
           discograpy
         />
       </ScrollableCardsSection>

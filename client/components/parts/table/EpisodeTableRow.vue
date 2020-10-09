@@ -1,6 +1,6 @@
 <template>
   <EpisodeTableRowMobile
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :item="item"
     :publisher="publisher"
     :added-at="addedAt"
@@ -13,7 +13,7 @@
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <EpisodeTableRowPc
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :item="item"
     :publisher="publisher"
     :playing="playing"

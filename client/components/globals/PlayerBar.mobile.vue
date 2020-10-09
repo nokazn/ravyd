@@ -130,7 +130,7 @@ export default Vue.extend({
 
   computed: {
     smallerThanSm(): boolean {
-      return this.$window.smallerThan('sm');
+      return this.$screen.smallerThan('sm');
     },
 
     isAnotherDevicePlaying(): boolean {

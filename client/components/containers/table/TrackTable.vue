@@ -99,7 +99,7 @@ export default Vue.extend({
         && this.$state().playback.isPlaying;
     },
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
@@ -139,7 +139,7 @@ export default Vue.extend({
         sortable: false,
         filterable: false,
       };
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
         : [nameColumn, menuColumn, isSavedColumn];
     },
@@ -179,7 +179,7 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },

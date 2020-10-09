@@ -112,11 +112,11 @@ export default Vue.extend({
 
   computed: {
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
-    // マウント後に変化するのは $window だけで、他の prop はキャッシュする必要なし
+    // マウント後に変化するのは $screen だけで、他の prop はキャッシュする必要なし
     headers(): DataTableHeader[] {
       // 左右の padding: 8px を含めた幅
       const totalSidePadding = 12;
@@ -172,7 +172,7 @@ export default Vue.extend({
       };
 
       let headers: (DataTableHeader | undefined)[];
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         headers = [
           // hideImage が指定されれば非表示
           this.hideImage ? undefined : imageColumn,
@@ -249,7 +249,7 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },

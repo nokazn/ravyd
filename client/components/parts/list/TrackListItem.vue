@@ -19,7 +19,7 @@
 
       <v-list-item-content>
         <div :class="$style.Content">
-          <template v-if="$window.isMultiColumn">
+          <template v-if="$screen.isMultiColumn">
             <TrackListMediaButton
               :value="playing"
               :hover="hover"
@@ -27,13 +27,13 @@
               @input="onMediaButtonClicked"
             />
             <FavoriteButton
-              v-if="$window.isMultiColumn"
+              v-if="$screen.isMultiColumn"
               :value="item.isSaved"
               @input="onFavoriteButtonClicked"
             />
           </template>
           <span
-            v-else-if="$window.isSingleColumn"
+            v-else-if="$screen.isSingleColumn"
             :class="$style.Content__index"
           >
             {{ item.index + 1 }}.
@@ -52,7 +52,7 @@
               {{ item.name }}
             </nuxt-link>
 
-            <template v-if="item.featuredArtists.length > 0 && $window.isMultiColumn">
+            <template v-if="item.featuredArtists.length > 0 && $screen.isMultiColumn">
               <span :class="subtextColor">-</span>
               <ArtistNames
                 inline
@@ -68,11 +68,11 @@
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="item.explicit" />
           <TrackTime
-            v-if="$window.isMultiColumn"
+            v-if="$screen.isMultiColumn"
             :time-ms="item.durationMs"
           />
           <FavoriteButton
-            v-else-if="$window.isSingleColumn"
+            v-else-if="$screen.isSingleColumn"
             :size="buttonSize"
             :value="item.isSaved"
             @input="onFavoriteButtonClicked"
@@ -159,7 +159,7 @@ export default Vue.extend({
         : 'subtext--text';
     },
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
@@ -175,7 +175,7 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
     },
     onItemClicked() {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked();
       }
     },

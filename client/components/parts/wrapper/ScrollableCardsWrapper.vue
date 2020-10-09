@@ -98,7 +98,7 @@ export default Vue.extend({
 
   computed: {
     cssProps(): { [k: string]: string } {
-      const margin = this.margin ?? Math.floor(this.$window.cardWidth / 12);
+      const margin = this.margin ?? Math.floor(this.$screen.cardWidth / 12);
       return {
         '--margin-right': `${margin}px`,
       };
@@ -153,7 +153,7 @@ export default Vue.extend({
       const containerRef = this.$refs[CONTAINER_REF] as HTMLDivElement | null;
       if (containerRef == null) return;
 
-      const sidePadding = gradationWidth(this.$window.width);
+      const sidePadding = gradationWidth(this.$screen.width);
       // ラッパーの右端の right - 余白
       const rightSideEdgeRight = containerRef
         .getBoundingClientRect().right - sidePadding;
@@ -173,7 +173,7 @@ export default Vue.extend({
       const containerRef = this.$refs[CONTAINER_REF] as HTMLDivElement | null;
       if (containerRef == null) return;
 
-      const sidePadding = gradationWidth(this.$window.width);
+      const sidePadding = gradationWidth(this.$screen.width);
       // ラッパーの左端の left ⁺ 余白
       const leftSideEdgeLeft = containerRef
         .getBoundingClientRect().left + sidePadding;

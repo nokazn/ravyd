@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <div>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <ReleaseTotalTracks

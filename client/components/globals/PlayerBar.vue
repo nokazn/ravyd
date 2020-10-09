@@ -1,10 +1,10 @@
 <template>
   <PlayerBarMobile
-    v-if="$window.isMobile"
+    v-if="$screen.isMobile"
     :loaded="loaded"
   />
   <PlayerBarPc
-    v-else-if="$window.isPc"
+    v-else-if="$screen.isPc"
     :loaded="loaded"
   />
 </template>

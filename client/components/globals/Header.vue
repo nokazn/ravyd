@@ -9,7 +9,7 @@
     <div :class="$style.Header__container">
       <div :class="$style.Header__left">
         <div
-          v-if="$window.isMultiColumn"
+          v-if="$screen.isMultiColumn"
           :class="$style.Header__buttons"
         >
           <CircleButton
@@ -38,7 +38,7 @@
 
       <div :class="$style.Header__right">
         <portal-target
-          v-if="$window.isMultiColumn"
+          v-if="$screen.isMultiColumn"
           v-show="$header.isFabShown"
           :name="$header.PORTAL_NAME"
           :class="$style.Header__additional"

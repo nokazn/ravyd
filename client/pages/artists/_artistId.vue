@@ -15,15 +15,15 @@
         />
         <FavoriteButton
           text="フォロー"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <ArtistMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :artist="artistInfo"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
@@ -39,7 +39,7 @@
         shadow
         type="artist"
         :src="avatarSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
       />
@@ -86,14 +86,14 @@
           />
 
           <FavoriteButton
-            v-if="$window.isSingleColumn"
+            v-if="$screen.isSingleColumn"
             outlined
             text="フォロー"
             :value="isFollowing"
             @input="toggleFollowingState"
           />
           <FollowButton
-            v-else-if="$window.isMultiColumn"
+            v-else-if="$screen.isMultiColumn"
             :value="isFollowing"
             @input="toggleFollowingState"
           />

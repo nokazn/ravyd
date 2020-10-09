@@ -1,6 +1,6 @@
 <template>
   <PlaylistTrackTableRowMobile
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :item="item"
     :playlist-id="playlistId"
     :hide-image="hideImage"
@@ -20,7 +20,7 @@
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <PlaylistTrackTableRowPc
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :item="item"
     :playlist-id="playlistId"
     :hide-image="hideImage"

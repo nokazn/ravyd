@@ -11,15 +11,15 @@
         <FavoriteButton
           v-if="isFollowing != null"
           text="フォロー"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <UserMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :user="userInfo"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
@@ -34,7 +34,7 @@
       <UserAvatar
         type="user"
         :src="avatarSrc"
-        :size="Math.min($window.artworkSize, 200)"
+        :size="Math.min($screen.artworkSize, 200)"
         :alt="userName"
         :title="userName"
         shadow
@@ -78,15 +78,15 @@
 
     <CardsWrapper
       v-if="userPlaylistInfo.playlists.length > 0"
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
     <p v-else>

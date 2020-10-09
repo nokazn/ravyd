@@ -1,6 +1,6 @@
 <template>
   <TrackTableRowMobile
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :item="item"
     :active="active"
     :button-size="buttonSize"
@@ -11,7 +11,7 @@
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <TrackTableRowPc
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :item="item"
     :active="active"
     :playing="playing"

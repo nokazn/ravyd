@@ -17,8 +17,8 @@
         <EpisodeMenu
           left
           offset-y
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :episode="episodeInfo"
           :publisher="episodeInfo.showName"
         />
@@ -31,7 +31,7 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="episodeInfo.name"
         :title="episodeInfo.name"
         shadow

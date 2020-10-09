@@ -18,24 +18,24 @@
         <CircleButton
           v-if="playlistInfo.isOwnPlaylist"
           title="編集する"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           @click="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
         <FavoriteButton
           v-else
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
 
         <PlaylistMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :playlist="playlistInfo"
           :following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
@@ -51,7 +51,7 @@
       <ReleaseArtwork
         shadow
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="playlistInfo.name"
         :title="playlistInfo.name"
       />

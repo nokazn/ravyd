@@ -144,7 +144,7 @@ export default Vue.extend({
 
   computed: {
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
@@ -189,7 +189,7 @@ export default Vue.extend({
       };
 
       // addedAt が有効かどうか
-      const headers: (DataTableHeader | undefined)[] = this.$window.isSingleColumn
+      const headers: (DataTableHeader | undefined)[] = this.$screen.isSingleColumn
         ? [
           titleColumn,
           progressColumn,
@@ -226,7 +226,7 @@ export default Vue.extend({
       }
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },

@@ -15,15 +15,15 @@
           @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isSaved"
           @input="toggleSavedState"
         />
         <ShowMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :saved="isSaved"
           :show="showInfo"
           @on-save-menu-clicked="toggleSavedState"

@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-if="$window.isPc"
+    v-if="$screen.isPc"
     app
     permanent
     :color="$constant.NAVIGATION_DRAWER_BACKGROUND_COLOR"
@@ -182,7 +182,7 @@ export default Vue.extend({
     },
     // 他のデバイスで再生中の場合高さが変わる
     listStyles(): { height: string } {
-      const { isPc } = this.$window;
+      const { isPc } = this.$screen;
       const isAnotherDevicePlaying = this.$getters()['playback/isAnotherDevicePlaying'];
       let footerHeight = this.$constant.FOOTER_HEIGHT;
       // ナビゲーションバーが表示されているとき

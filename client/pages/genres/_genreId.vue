@@ -9,15 +9,15 @@
 
     <CardsWrapper
       v-if="playlists.length > 0"
-      :min-wdith="$window.cardWidthMinMax[0]"
-      :max-wdith="$window.cardWidthMinMax[1]"
+      :min-wdith="$screen.cardWidthMinMax[0]"
+      :max-wdith="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
     <p v-else>
