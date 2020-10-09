@@ -130,7 +130,7 @@ export default Vue.extend({
 
   computed: {
     smallerThanSm(): boolean {
-      return this.$window.smallerThan('sm');
+      return this.$screen.smallerThan('sm');
     },
 
     isAnotherDevicePlaying(): boolean {
@@ -240,13 +240,13 @@ export default Vue.extend({
   align-items: center;
   padding: 0 2%;
 
-  @include smaller-than-md {
+  @include smaller-than-md() {
     // 伸縮させない
     // 36px * 2 + 12px
     flex: 0 0 84px;
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     // 伸縮させない
     // 36px * 5 + 12px
     flex: 0 0 192px;

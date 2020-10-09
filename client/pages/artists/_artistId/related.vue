@@ -3,15 +3,15 @@
     <v-divider :class="$style.ArtistIdRelatedArtistPage__divider" />
 
     <CardsWrapper
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <ArtistCard
         v-for="artist in relatedArtistList"
         :key="artist.id"
         v-bind="artist"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
   </div>

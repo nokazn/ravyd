@@ -39,14 +39,14 @@
 
     <PlayerBar v-if="isLoggedin" />
     <v-divider inset />
-    <NavigationBar v-if="$window.isMobile" />
-    <DeviceBar v-if="isAnotherDevicePlaying && $window.isPc" />
+    <NavigationBar v-if="$screen.isMobile" />
+    <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
 
     <Toasts />
 
     <portal-target
-      v-if="$window.isSingleColumn"
-      v-show="$header.isAdditionalContentShown"
+      v-if="$screen.isSingleColumn"
+      v-show="$header.isFabShown"
       :name="$header.PORTAL_NAME"
       :class="$style.Fab"
     />
@@ -116,7 +116,7 @@ export default Vue.extend({
     },
     // top は style で設定
     contentOverlayStyles(): { [k in string]?: string } {
-      const { isPc } = this.$window;
+      const { isPc } = this.$screen;
       // ナビゲーションバーが表示されてるかで変わる
       const left = isPc
         ? `${this.$constant.NAVIGATION_DRAWER_WIDTH}px`
@@ -134,7 +134,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.$window.observe();
+    this.$screen.observe();
 
     this.isLoaded = true;
     // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
@@ -153,7 +153,7 @@ export default Vue.extend({
   },
 
   beforeDestroy() {
-    this.$window.disconnectObserver();
+    this.$screen.disconnectObserver();
 
     if (this.observer != null) {
       this.observer.disconnect();

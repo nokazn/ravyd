@@ -10,22 +10,22 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isArtistSet && isPlaying "
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isArtistSet && isPlaying "
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
           text="フォロー"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <ArtistMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :artist="artistInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -39,7 +39,7 @@
         shadow
         type="artist"
         :src="avatarSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="artistInfo.name"
         :title="artistInfo.name"
       />
@@ -47,7 +47,7 @@
       <div :class="$style.Info">
         <HashTags
           outlined
-          :tag-list="artistInfo.genreList"
+          :tags="artistInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -81,19 +81,19 @@
 
         <div :class="$style.Info__buttons">
           <ContextMediaButton
-            :is-playing="isArtistSet && isPlaying "
-            @on-clicked="onContextMediaButtonClicked"
+            :value="isArtistSet && isPlaying "
+            @input="onContextMediaButtonClicked"
           />
 
           <FavoriteButton
-            v-if="$window.isSingleColumn"
+            v-if="$screen.isSingleColumn"
             outlined
             text="フォロー"
             :value="isFollowing"
             @input="toggleFollowingState"
           />
           <FollowButton
-            v-else-if="$window.isMultiColumn"
+            v-else-if="$screen.isMultiColumn"
             :value="isFollowing"
             @input="toggleFollowingState"
           />
@@ -101,7 +101,7 @@
           <ArtistMenu
             outlined
             :artist="artistInfo"
-            :is-following="isFollowing"
+            :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>
@@ -158,7 +158,7 @@ import {
   getArtistInfo,
   getIsFollowing,
   getRelatedArtistList,
-} from '~/plugins/local/_artistId';
+} from '~/services/local/_artistId';
 import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
@@ -296,7 +296,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.artistInfo == null) return;
 
     if (nextPlayingState) {
@@ -331,28 +331,28 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
 .ArtistIdPage {
   @include page-margin();
-  @include page-padding;
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: 16px;
   }
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__hashTags {
     margin-bottom: 12px;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       // 1個だけはみ出て2列になったりするとちょっと不格好なのであまり横に広がりすぎないようにする
       padding: 0 4vw;
       justify-content: center;
     }
 
-    @include larger-than-md {
+    @include larger-than-md() {
       // border-radius の分だけ右にあるように見えてしまうので調整
       margin-left: -8px;
     }
@@ -363,17 +363,17 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__followers {
-    @include smaller-than-md {
+    @include smaller-than-md() {
       text-align: center;
     }
   }
 
   &__buttons {
-    @include page-header-buttons;
+    @include page-header-buttons();
   }
 }
 </style>

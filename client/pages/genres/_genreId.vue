@@ -9,15 +9,15 @@
 
     <CardsWrapper
       v-if="playlists.length > 0"
-      :min-wdith="$window.cardWidthMinMax[0]"
-      :max-wdith="$window.cardWidthMinMax[1]"
+      :min-wdith="$screen.cardWidthMinMax[0]"
+      :max-wdith="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
     <p v-else>
@@ -43,7 +43,7 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getCategory, getCategoryPlaylist } from '~/plugins/local/_genreId';
+import { getCategory, getCategoryPlaylist } from '~/services/local/_genreId';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 

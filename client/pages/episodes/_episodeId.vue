@@ -10,15 +10,15 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isEpisodeSet && isPlaying"
           :disabled="!episodeInfo.isPlayable"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isEpisodeSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <EpisodeMenu
           left
           offset-y
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :episode="episodeInfo"
           :publisher="episodeInfo.showName"
         />
@@ -31,7 +31,7 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="episodeInfo.name"
         :title="episodeInfo.name"
         shadow
@@ -59,9 +59,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isEpisodeSet && isPlaying"
               :disabled="!episodeInfo.isPlayable"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isEpisodeSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
             <EpisodeMenu
               offset-y
@@ -118,7 +118,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getEpisodeInfo } from '~/plugins/local/_episodeId';
+import { getEpisodeInfo } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/utils/image';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { App } from '~~/types';
@@ -216,7 +216,7 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
     this.$header.disconnectObserver();
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.episodeInfo == null) return;
 
     if (nextPlayingState) {
@@ -238,13 +238,13 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 .EpisodeIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
     margin-bottom: $margin-bottom;
 
-    @include page-header;
+    @include page-header();
   }
 
   &__description {
@@ -261,25 +261,25 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__explicitIcon {
     margin-bottom: 0.1rem;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
     margin-top: 16px;
     display: flex;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       flex-direction: column;
     }
 
-    @include larger-than-md {
+    @include larger-than-md() {
       flex-wrap: wrap;
       align-items: flex-end;
     }

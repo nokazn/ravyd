@@ -14,7 +14,7 @@ import { top } from './top';
 import { tracks } from './tracks';
 import { users } from './users';
 
-export const endpoints = (context: Context) => ({
+export const spotify = (context: Context) => ({
   albums: albums(context),
   artists: artists(context),
   browse: browse(context),
@@ -30,5 +30,5 @@ export const endpoints = (context: Context) => ({
   users: users(context),
 });
 
-const spotifyEndpoints = (context: Context) => endpoints(context);
-export type SpotifyEndpoints = ReturnType<typeof spotifyEndpoints>
+const endpoints = (context: Context) => spotify(context);
+export type SpotifyServices = ReturnType<typeof endpoints>

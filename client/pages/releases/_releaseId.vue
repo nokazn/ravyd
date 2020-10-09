@@ -10,19 +10,19 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isReleaseSet && isPlaying"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isReleaseSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="releaseInfo.isSaved"
           @input="toggleSavedState"
         />
         <ReleaseMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :release="releaseInfo"
           @on-favorite-menu-clicked="toggleSavedState"
         />
@@ -35,7 +35,7 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="releaseInfo.name"
         :title="releaseInfo.name"
         shadow
@@ -46,7 +46,7 @@
           outlined
           color="subtext"
           text-color="white"
-          :tag-list="releaseInfo.genreList"
+          :tags="releaseInfo.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -67,7 +67,7 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isReleaseSet && isPlaying"
+              :value="isReleaseSet && isPlaying"
               @on-clicked="onContextMediaButtonClicked"
             />
             <FavoriteButton
@@ -78,14 +78,14 @@
             <ReleaseMenu
               outlined
               :release="releaseInfo"
-              :left="$window.isSingleColumn"
-              :right="$window.isMultiColumn"
+              :left="$screen.isSingleColumn"
+              :right="$screen.isMultiColumn"
               @on-favorite-menu-clicked="toggleSavedState"
             />
           </div>
 
           <ReleaseDetailWrapper
-            v-if="$window.isMultiColumn"
+            v-if="$screen.isMultiColumn"
             :release="releaseInfo"
             :class="$style.Detail"
           />
@@ -94,7 +94,7 @@
     </div>
 
     <TrackTable
-      :track-list="releaseInfo.trackList"
+      :tracks="releaseInfo.trackList"
       :uri="releaseInfo.uri"
       :class="$style.ReleaseIdPage__table"
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
@@ -106,12 +106,12 @@
     />
 
     <Copyrights
-      :copyright-list="releaseInfo.copyrightList"
+      :copyrights="releaseInfo.copyrightList"
       :class="$style.ReleaseIdPage__copyrights"
     />
 
     <ReleaseDetailWrapper
-      v-if="$window.isSingleColumn"
+      v-if="$screen.isSingleColumn"
       :release="releaseInfo"
       :class="$style.Detail"
     />
@@ -127,7 +127,7 @@
           v-for="release in artist.items"
           :key="release.id"
           v-bind="release"
-          :width="$window.cardWidth"
+          :width="$screen.cardWidth"
           discograpy
         />
       </ScrollableCardsSection>
@@ -158,7 +158,7 @@ import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSe
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getReleaseInfo } from '~/plugins/local/_releaseId';
+import { getReleaseInfo } from '~/services/local/_releaseId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { getImageSrc } from '~/utils/image';
 import { convertTrackDetail } from '~/utils/converter';
@@ -352,7 +352,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleSavedState(nextSavedState: OnMediaButton['on-clicked'] | OnMenu['on-favorite-menu-clicked']) {
+  toggleSavedState(nextSavedState: OnMediaButton['input'] | OnMenu['on-favorite-menu-clicked']) {
     if (this.releaseInfo == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
@@ -394,11 +394,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 $margin-bottom: 32px;
 
 .ReleaseIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom / 2;
   }
@@ -414,7 +414,7 @@ $margin-bottom: 32px;
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__hashTags {
     // border-radius の分だけ右にあるように見えてしまうので調整
@@ -423,14 +423,14 @@ $margin-bottom: 32px;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__artists {
     display: flex;
     flex-wrap: wrap;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       // 複数行になってもセンタリングさせる
       justify-content: center;
     }
@@ -439,7 +439,7 @@ $margin-bottom: 32px;
   &__footer {
     margin-top: 16px;
 
-    @include larger-than-md {
+    @include larger-than-md() {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
@@ -452,12 +452,12 @@ $margin-bottom: 32px;
 }
 
 .Detail {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     margin-top: $margin-bottom / -2;
     margin-bottom: $margin-bottom;
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     // 2行になったとき
     margin-top: 12px;
   }

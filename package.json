@@ -13,8 +13,11 @@
     "build": "nuxt-ts build",
     "dev": "nuxt-ts",
     "generate": "nuxt-ts generate",
-    "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . && tsc --noEmit",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore .",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore . --fix",
+    "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
+    "stylelint:fix": "stylelint --ignore-path .stylelintignore **/*.{css,scss,vue} --fix",
+    "tsc": "tsc --noEmit",
     "start": "nuxt-ts start",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|)' | xargs wc -l",
@@ -23,7 +26,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint && npm run test"
+      "pre-commit": "npm run lint && npm run tsc && npm run stylelint",
+      "pre-push": "npm run test"
     }
   },
   "dependencies": {

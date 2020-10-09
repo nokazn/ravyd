@@ -1,35 +1,47 @@
 <template>
-  <v-btn
-    icon
+  <CircleButton
+    :size="size"
+    :outlined="outlined"
     :disabled="disabled"
     :title="mediaButton.title"
     @click="onClick"
   >
-    <v-icon>
-      {{ mediaButton.icon }}
-    </v-icon>
-  </v-btn>
+    {{ mediaButton.icon }}
+  </CircleButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type MediaButton = {
   icon: 'mdi-play' | 'mdi-pause' | 'mdi-volume-high'
   title: '再生' | '停止' | '再生中' | '再生できない項目'
 }
 
-const ON_CLICKED = 'on-clicked';
+const INPUT = 'input';
 
 export type On = {
-  [ON_CLICKED]: void
+  [INPUT]: void;
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
-    playing: {
+    value: {
       type: Boolean,
       required: true,
+    },
+    size: {
+      type: Number,
+      default: 36,
+    },
+    outlined: {
+      type: Boolean,
+      default: false,
     },
     disabled: {
       type: Boolean,
@@ -45,14 +57,12 @@ export default Vue.extend({
           title: '再生できない項目',
         };
       }
-
-      if (!this.playing) {
+      if (!this.value) {
         return {
           icon: 'mdi-play',
           title: '再生',
         };
       }
-
       return {
         icon: 'mdi-pause',
         title: '停止',
@@ -62,7 +72,7 @@ export default Vue.extend({
 
   methods: {
     onClick() {
-      this.$emit(ON_CLICKED);
+      this.$emit(INPUT);
     },
   },
 });

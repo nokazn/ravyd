@@ -6,6 +6,7 @@
     :fab="fab"
     :icon="!fab"
     :outlined="outlined"
+    :absolute="absolute"
     :disabled="disabled"
     @click="onClicked"
   >
@@ -55,6 +56,10 @@ export default Vue.extend({
       default: false,
     },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    absolute: {
       type: Boolean,
       default: false,
     },

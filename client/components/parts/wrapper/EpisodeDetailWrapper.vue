@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <ReleaseDate
@@ -15,7 +15,7 @@
     />
   </div>
   <div
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <ReleaseDate
@@ -51,7 +51,7 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseDetailWrapper {
-  @include larger-than-md {
+  @include larger-than-md() {
     & > *:not(:last-child) {
       margin-right: 8px;
     }

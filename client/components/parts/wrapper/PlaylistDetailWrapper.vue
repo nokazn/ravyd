@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$window.isSingleColumn"
+    v-if="$screen.isSingleColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <div>
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div
-    v-else-if="$window.isMultiColumn"
+    v-else-if="$screen.isMultiColumn"
     :class="$style.ReleaseDetailWrapper"
   >
     <ReleaseTotalTracks
@@ -63,12 +63,12 @@ export default Vue.extend({
 
 <style lang="scss" module>
 .ReleaseDetailWrapper {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     display: flex;
     justify-content: center;
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     & > *:not(:last-child) {
       margin-right: 8px;
     }

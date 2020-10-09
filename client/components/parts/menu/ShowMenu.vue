@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :item-lists="menuItemLists"
+    :groups="menuItemLists"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
@@ -34,7 +34,7 @@ export default Vue.extend({
       type: Object as PropType<App.ShowInfo>,
       required: true,
     },
-    isSaved: {
+    saved: {
       type: Boolean,
       required: true,
     },
@@ -61,9 +61,9 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const saveShow = () => {
-        const nextSavedState = !this.isSaved;
+        const nextSavedState = !this.saved;
         const handler = () => {
           this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
         };

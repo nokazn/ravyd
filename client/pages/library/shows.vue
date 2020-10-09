@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.LibraryShowsPage">
     <CardsWrapper
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <ShowCard
         v-for="(show, index) in showList"
         :key="`${show.id}-${index}`"
         v-bind="show"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 

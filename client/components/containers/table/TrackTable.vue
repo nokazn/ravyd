@@ -4,7 +4,7 @@
     disable-sort
     hide-default-footer
     :headers="headers"
-    :items="trackList"
+    :items="tracks"
     :mobile-breakpoint="0"
     group-by="discNumber"
     no-data-text="トラックがありません。"
@@ -69,7 +69,7 @@ export default Vue.extend({
   },
 
   props: {
-    trackList: {
+    tracks: {
       type: Array as PropType<App.TrackDetail[]>,
       required: true,
     },
@@ -82,7 +82,7 @@ export default Vue.extend({
   data(): Data {
     const trackId = getQuery(this.$route.query, 'track');
     const activeRowId = trackId != null
-      ? this.trackList.find((item) => item.id === trackId)?.id
+      ? this.tracks.find((item) => item.id === trackId)?.id
       : undefined;
 
     return {
@@ -99,7 +99,7 @@ export default Vue.extend({
         && this.$state().playback.isPlaying;
     },
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
@@ -139,15 +139,15 @@ export default Vue.extend({
         sortable: false,
         filterable: false,
       };
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
         : [nameColumn, menuColumn, isSavedColumn];
     },
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
-      const { trackList } = this;
-      const relinkedTrack = trackList.find((track) => track.linkedFrom != null);
-      const discNumberList = Array.from(new Set(trackList
+      const { tracks } = this;
+      const relinkedTrack = tracks.find((track) => track.linkedFrom != null);
+      const discNumberList = Array.from(new Set(tracks
         .map((track) => track.discNumber)));
 
       return relinkedTrack != null
@@ -179,7 +179,7 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },
@@ -189,11 +189,11 @@ export default Vue.extend({
 
 <style lang="scss">
 .track-table {
-  @include smaller-than-md {
+  @include smaller-than-md() {
     @include v-data-table-height(56px);
   }
 
-  @include larger-than-md {
+  @include larger-than-md() {
     @include v-data-table-height(44px);
   }
 }

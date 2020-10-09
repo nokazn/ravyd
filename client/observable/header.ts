@@ -4,35 +4,29 @@ import { HEADER_HEIGHT } from '~/constants';
 const PORTAL_NAME = 'CONTENT_HEADER';
 
 type HeaderState = {
-  hasAdditionalContent: boolean
-  isAdditionalContentShown: boolean
-  intersectionObserver: IntersectionObserver | undefined
-  backdropFiltered: boolean
+  isFabShown: boolean;
+  intersectionObserver: IntersectionObserver | undefined;
+  backdropFiltered: boolean;
 }
 
 export type $Header = {
-  readonly isAdditionalContentShown: boolean
-  readonly hasAdditionalContent: boolean
-  readonly PORTAL_NAME: typeof PORTAL_NAME
-  readonly backdropFiltered: boolean
-  observe: (element: Element | null, margin?: number) => void
-  disconnectObserver: () => void
-  toggleBackdropFilter:(isEnabled: boolean) => void
+  readonly isFabShown: boolean;
+  readonly PORTAL_NAME: typeof PORTAL_NAME;
+  readonly backdropFiltered: boolean;
+  observe: (element: Element | null, margin?: number) => void;
+  disconnectObserver: () => void;
+  toggleBackdropFilter:(isEnabled: boolean) => void;
 }
 
 const state = Vue.observable<HeaderState>({
-  hasAdditionalContent: false,
-  isAdditionalContentShown: false,
+  isFabShown: false,
   intersectionObserver: undefined,
   backdropFiltered: true,
 });
 
 export const $header: $Header = {
-  get isAdditionalContentShown() {
-    return state.isAdditionalContentShown;
-  },
-  get hasAdditionalContent() {
-    return state.hasAdditionalContent;
+  get isFabShown() {
+    return state.isFabShown;
   },
   get PORTAL_NAME(): typeof PORTAL_NAME {
     return PORTAL_NAME;
@@ -51,14 +45,12 @@ export const $header: $Header = {
       state.intersectionObserver.disconnect();
     }
 
-    state.hasAdditionalContent = true;
-
     // ヘッダーの分のマージン
     const rootMargin = `-${margin ?? HEADER_HEIGHT}px 0px`;
     state.intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         // element がヘッダーに隠れて見えなくなったら additional contents を表示
-        state.isAdditionalContentShown = !entry.isIntersecting;
+        state.isFabShown = !entry.isIntersecting;
       });
     }, { rootMargin });
     state.intersectionObserver.observe(element);
@@ -70,8 +62,7 @@ export const $header: $Header = {
       state.intersectionObserver = undefined;
     }
 
-    state.isAdditionalContentShown = false;
-    state.hasAdditionalContent = false;
+    state.isFabShown = false;
   },
 
   toggleBackdropFilter(isEnabled: boolean) {

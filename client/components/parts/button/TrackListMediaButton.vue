@@ -1,57 +1,61 @@
 <template>
   <span :class="$style.TrackListMediaButton">
     <template v-if="!disabled">
-      <v-btn
+      <CircleButton
         v-show="hover"
         outlined
-        small
-        icon
+        :size="size"
+        :icon-size="iconSize"
+        :title="mediaButton.title"
         @click="onClick"
       >
-        <v-icon :title="mediaButton.title">
-          {{ mediaButton.icon }}
-        </v-icon>
-      </v-btn>
-
+        {{ mediaButton.icon }}
+      </CircleButton>
       <v-icon
-        v-show="!hover && playing"
+        v-show="!hover && value"
+        :size="iconSize"
         title="再生中"
       >
         mdi-volume-high
       </v-icon>
     </template>
 
-    <template v-if="trackNumber != null">
-      <span
-        v-show="disabled || (!hover && !playing)"
-        :title="disabledTitle"
-        :class="{ 'inactive--text': disabled }"
-      >
-        {{ trackNumber }}
-      </span>
-    </template>
+    <span
+      v-show="disabled || (!hover && !value)"
+      :title="disabled ? '再生できない項目' : undefined"
+      :class="{ 'inactive--text': disabled }"
+    >
+      {{ trackNumber }}
+    </span>
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type MediaButton = {
   icon: 'mdi-play' | 'mdi-pause'
   title: '再生' | '停止'
 }
 
-export type Data = {
-  disabledTitle: string | undefined
+const INPUT = 'input';
+
+export type On = {
+  [INPUT]: boolean;
 }
 
 export default Vue.extend({
+  components: {
+    CircleButton,
+  },
+
   props: {
-    hover: {
+    value: {
       type: Boolean,
       required: true,
     },
-    playing: {
+    hover: {
       type: Boolean,
       required: true,
     },
@@ -59,21 +63,19 @@ export default Vue.extend({
       type: Number,
       default: undefined,
     },
+    size: {
+      type: Number,
+      default: 28,
+    },
     disabled: {
       type: Boolean,
       default: false,
     },
   },
 
-  data(): Data {
-    return {
-      disabledTitle: this.disabled ? '再生できない項目' : undefined,
-    };
-  },
-
   computed: {
     mediaButton(): MediaButton {
-      return this.playing
+      return this.value
         ? {
           icon: 'mdi-pause',
           title: '停止',
@@ -83,11 +85,14 @@ export default Vue.extend({
           title: '再生',
         };
     },
+    iconSize(): number {
+      return Math.floor(this.size * 0.9);
+    },
   },
 
   methods: {
     onClick() {
-      this.$emit('on-clicked');
+      this.$emit(INPUT, !this.value);
     },
   },
 });

@@ -10,21 +10,21 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isShowSet && isPlaying"
           :disabled="!hasEpisodes"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isShowSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isSaved"
           @input="toggleSavedState"
         />
         <ShowMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
-          :is-saved="isSaved"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
+          :saved="isSaved"
           :show="showInfo"
           @on-save-menu-clicked="toggleSavedState"
         />
@@ -65,9 +65,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isShowSet && isPlaying"
               :disabled="!hasEpisodes"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isShowSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
             <FavoriteButton
               outlined
@@ -77,7 +77,7 @@
             <ShowMenu
               outlined
               :show="showInfo"
-              :is-saved="isSaved"
+              :saved="isSaved"
               @on-save-menu-clicked="toggleSavedState"
             />
           </div>
@@ -93,7 +93,7 @@
     />
 
     <EpisodeTable
-      :episode-list="showInfo.episodeList"
+      :episodes="showInfo.episodeList"
       :uri="showInfo.uri"
       :publisher="showInfo.publisher"
       :class="$style.ShowIdPage__table"
@@ -104,7 +104,7 @@
       @appear="appendEpisodeList"
     />
 
-    <Copyrights :copyright-list="showInfo.copyrightList" />
+    <Copyrights :copyrights="showInfo.copyrightList" />
   </div>
 
   <Fallback v-else>
@@ -127,7 +127,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getShowInfo, getIsSaved } from '~/plugins/local/_showId';
+import { getShowInfo, getIsSaved } from '~/services/local/_showId';
 import { getImageSrc } from '~/utils/image';
 import { convertEpisodeDetail } from '~/utils/converter';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
@@ -296,7 +296,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.showInfo == null) return;
 
     if (nextPlayingState) {
@@ -331,11 +331,11 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 $margin-bottom: 32px;
 
 .ShowIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom;
   }
@@ -348,14 +348,14 @@ $margin-bottom: 32px;
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__explicitIcon {
     margin-bottom: 0.1rem;
   }
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
@@ -365,7 +365,7 @@ $margin-bottom: 32px;
   }
 
   &__buttons {
-    @include page-header-buttons;
+    @include page-header-buttons();
   }
 }
 </style>

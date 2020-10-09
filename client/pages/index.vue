@@ -9,7 +9,7 @@
           v-for="release in newReleaseList"
           :key="release.id"
           v-bind="release"
-          :width="$window.cardWidth"
+          :width="$screen.cardWidth"
         />
       </template>
     </ScrollableCardsSection>
@@ -22,7 +22,7 @@
         v-for="release in topTrackList"
         :key="release.id"
         v-bind="release"
-        :width="$window.cardWidth"
+        :width="$screen.cardWidth"
       />
     </ScrollableCardsSection>
 
@@ -34,7 +34,7 @@
         v-for="artist in topArtistList"
         :key="artist.id"
         v-bind="artist"
-        :width="$window.cardWidth"
+        :width="$screen.cardWidth"
       />
     </ScrollableCardsSection>
   </div>

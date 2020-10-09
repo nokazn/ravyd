@@ -3,7 +3,7 @@
     disable-pagination
     hide-default-footer
     :headers="headers"
-    :items="trackList"
+    :items="tracks"
     :mobile-breakpoint="0"
     :no-data-text="noDataText"
     class="playlist-track-table"
@@ -75,7 +75,7 @@ export default Vue.extend({
   },
 
   props: {
-    trackList: {
+    tracks: {
       type: Array as PropType<App.PlaylistTrackDetail[]>,
       required: true,
     },
@@ -112,11 +112,11 @@ export default Vue.extend({
 
   computed: {
     buttonSize(): number {
-      return this.$window.isMultiColumn
+      return this.$screen.isMultiColumn
         ? 36
         : 32;
     },
-    // マウント後に変化するのは $window だけで、他の prop はキャッシュする必要なし
+    // マウント後に変化するのは $screen だけで、他の prop はキャッシュする必要なし
     headers(): DataTableHeader[] {
       // 左右の padding: 8px を含めた幅
       const totalSidePadding = 12;
@@ -172,7 +172,7 @@ export default Vue.extend({
       };
 
       let headers: (DataTableHeader | undefined)[];
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         headers = [
           // hideImage が指定されれば非表示
           this.hideImage ? undefined : imageColumn,
@@ -228,7 +228,7 @@ export default Vue.extend({
       }
 
       // trackUriList は更新されうる
-      const trackUriList = this.trackList.map((track) => track.uri);
+      const trackUriList = this.tracks.map((track) => track.uri);
       /**
        * プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
        * ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
@@ -249,7 +249,7 @@ export default Vue.extend({
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
     },
     onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$window.isSingleColumn) {
+      if (this.$screen.isSingleColumn) {
         this.onMediaButtonClicked(row);
       }
     },

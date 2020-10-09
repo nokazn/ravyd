@@ -3,7 +3,7 @@
     <PlaylistTrackTable
       v-if="trackList != null"
       hide-added-at
-      :track-list="trackList"
+      :tracks="trackList"
       :class="$style.LibraryHistoryPage__table"
       @on-favorite-button-clicked="onFavoriteButtonClicked"
     />

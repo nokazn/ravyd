@@ -3,7 +3,7 @@
     bottom
     offset-y
     :fab="fab"
-    :item-lists="menuItemLists"
+    :groups="menuItemLists"
     :size="size"
     :outlined="outlined"
     :left="left"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import type { App } from '~~/types';
 
@@ -34,7 +34,7 @@ export default Vue.extend({
       type: Object as PropType<App.UserInfo>,
       required: true,
     },
-    isFollowing: {
+    following: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
@@ -61,14 +61,14 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const followArtist = () => ({
-        name: this.isFollowing ? 'フォローしない' : 'フォローする',
+        name: this.following ? 'フォローしない' : 'フォローする',
         handler: () => {
-          const nextFollowingState = !this.isFollowing;
+          const nextFollowingState = !this.following;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         },
-        disabled: this.isFollowing == null,
+        disabled: this.following == null,
       });
 
       const share = () => {
@@ -87,7 +87,7 @@ export default Vue.extend({
         };
       };
 
-      return this.isFollowing != null
+      return this.following != null
         ? [
           [followArtist()],
           [share()],

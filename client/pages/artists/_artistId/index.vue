@@ -16,7 +16,7 @@
         @input="toggleAbbreviatedTrackList"
       >
         <TrackList
-          :track-list="topTrackList"
+          :tracks="topTrackList"
           :length="abbreviatedTopTrackLength"
           :uri="artistInfo.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
@@ -70,10 +70,10 @@ import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/plugins/local/_artistId';
+import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/utils/converter';
-import type { ArtistReleaseInfo, ReleaseType } from '~/plugins/local/_artistId';
+import type { ArtistReleaseInfo, ReleaseType } from '~/services/local/_artistId';
 import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
@@ -291,7 +291,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     &--twoColumns {
       $column-gap: max(4%, 20px);
 
-      @include larger-than-md {
+      @include larger-than-md() {
         $related-artists-width: 220px;
         $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
 
@@ -300,7 +300,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
         column-gap: $column-gap;
       }
 
-      @include larger-than-xl {
+      @include larger-than-xl() {
         $related-artists-width: 300px;
         $top-tracks-width: calc(100% - #{$related-artists-width} - #{$column-gap});
 

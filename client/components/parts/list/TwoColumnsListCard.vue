@@ -6,7 +6,7 @@
     :class="$style.TwoColumnsList"
   >
     <template
-      v-for="(item, index) in itemList"
+      v-for="(item, index) in items"
     >
       <v-list-item
         :key="item.title"
@@ -26,7 +26,7 @@
       </v-list-item>
 
       <v-divider
-        v-show="itemList.length !== index + 1"
+        v-show="items.length !== index + 1"
         :key="index"
       />
     </template>
@@ -37,13 +37,13 @@
 import Vue, { PropType } from 'vue';
 
 export type Item = {
-  title: string
-  value: string | null
+  title: string;
+  value: string | null;
 }
 
 export default Vue.extend({
   props: {
-    itemList: {
+    items: {
       type: Array as PropType<Item[]>,
       required: true,
     },

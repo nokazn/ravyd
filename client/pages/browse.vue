@@ -6,15 +6,15 @@
 
     <CardsWrapper
       v-if="categoryList != null"
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <CategoryCard
         v-for="category in categoryList"
         :key="category.id"
         v-bind="category"
-        :min-size="$window.cardWidthMinMax[0]"
-        :max-size="$window.cardWidthMinMax[1]"
+        :min-size="$screen.cardWidthMinMax[0]"
+        :max-size="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
 
@@ -32,7 +32,7 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getCategoryList } from '~/plugins/local/browse';
+import { getCategoryList } from '~/services/local/browse';
 import { App } from '~~/types';
 
 interface AsyncData {

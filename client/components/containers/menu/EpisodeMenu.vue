@@ -1,6 +1,6 @@
 <template>
   <ContextMenu
-    :item-lists="menuItemLists"
+    :groups="menuItemLists"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const addItemToQueue = () => {
         const trackName = this.episode.name;
         return {

@@ -11,17 +11,17 @@
         <FavoriteButton
           v-if="isFollowing != null"
           text="フォロー"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <UserMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :user="userInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -34,7 +34,7 @@
       <UserAvatar
         type="user"
         :src="avatarSrc"
-        :size="Math.min($window.artworkSize, 200)"
+        :size="Math.min($screen.artworkSize, 200)"
         :alt="userName"
         :title="userName"
         shadow
@@ -63,7 +63,7 @@
             outlined
             right
             :user="userInfo"
-            :is-following="isFollowing"
+            :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>
@@ -78,15 +78,15 @@
 
     <CardsWrapper
       v-if="userPlaylistInfo.playlists.length > 0"
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
         v-for="playlist in userPlaylistInfo.playlists"
         :key="playlist.id"
         v-bind="playlist"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
     <p v-else>
@@ -115,7 +115,7 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/plugins/local/_userId';
+import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/services/local/_userId';
 import { getImageSrc } from '~/utils/image';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
@@ -271,8 +271,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 }
 
 .UserIdPage {
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
     margin-bottom: 24px;
@@ -287,14 +287,14 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__buttons {
-    @include page-header-buttons;
+    @include page-header-buttons();
   }
 }
 </style>

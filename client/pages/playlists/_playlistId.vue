@@ -10,34 +10,34 @@
       >
         <ContextMediaButton
           fab
-          :is-playing="isPlaylistSet && isPlaying"
           :disabled="!hasTracks"
-          @on-clicked="onContextMediaButtonClicked"
+          :value="isPlaylistSet && isPlaying"
+          @input="onContextMediaButtonClicked"
         />
 
         <CircleButton
           v-if="playlistInfo.isOwnPlaylist"
           title="編集する"
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           @click="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
         <FavoriteButton
           v-else
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
 
         <PlaylistMenu
           left
-          :fab="$window.isSingleColumn"
-          :outlined="$window.isMultiColumn"
+          :fab="$screen.isSingleColumn"
+          :outlined="$screen.isMultiColumn"
           :playlist="playlistInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -51,7 +51,7 @@
       <ReleaseArtwork
         shadow
         :src="artworkSrc"
-        :size="$window.artworkSize"
+        :size="$screen.artworkSize"
         :alt="playlistInfo.name"
         :title="playlistInfo.name"
       />
@@ -83,9 +83,9 @@
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :is-playing="isPlaylistSet && isPlaying"
               :disabled="!hasTracks"
-              @on-clicked="onContextMediaButtonClicked"
+              :value="isPlaylistSet && isPlaying"
+              @input="onContextMediaButtonClicked"
             />
 
             <CircleButton
@@ -107,7 +107,7 @@
             <PlaylistMenu
               outlined
               :playlist="playlistInfo"
-              :is-following="isFollowing"
+              :following="isFollowing"
               @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
             />
@@ -146,7 +146,7 @@
 
     <template v-if="playlistTrackInfo != null">
       <PlaylistTrackTable
-        :track-list="playlistTrackInfo.trackList"
+        :tracks="playlistTrackInfo.trackList"
         :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
         :uri="playlistInfo.uri"
         :class="$style.PlaylistIdPage__table"
@@ -182,7 +182,7 @@ import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmMod
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/plugins/local/_playlistId';
+import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/services/local/_playlistId';
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
@@ -530,7 +530,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.playlistInfo == null) return;
 
     if (nextPlayingState) {
@@ -641,17 +641,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 .PlaylistIdPage {
   $margin-bottom: 32px;
 
-  @include page-margin;
-  @include page-padding;
+  @include page-margin();
+  @include page-padding();
 
   &__header {
-    @include page-header;
+    @include page-header();
 
     margin-bottom: $margin-bottom * 0.75;
   }
 
   &__description {
-    @include smaller-than-md {
+    @include smaller-than-md() {
       text-align: center;
     }
   }
@@ -662,21 +662,21 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 }
 
 .Info {
-  @include page-info;
+  @include page-info();
 
   &__title {
-    @include page-title;
+    @include page-title();
   }
 
   &__footer {
     margin-top: 16px;
     display: flex;
 
-    @include smaller-than-md {
+    @include smaller-than-md() {
       flex-direction: column;
     }
 
-    @include larger-than-md {
+    @include larger-than-md() {
       flex-wrap: wrap;
       align-items: flex-end;
     }

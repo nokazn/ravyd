@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.LibraryPlaylistsPage">
     <CardsWrapper
-      :min-width="$window.cardWidthMinMax[0]"
-      :max-width="$window.cardWidthMinMax[1]"
+      :min-width="$screen.cardWidthMinMax[0]"
+      :max-width="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
         v-for="(playlist, index) in playlists"
         :key="`${playlist.id}-${index}`"
         v-bind="convertPlaylistForCard(playlist)"
-        :min-width="$window.cardWidthMinMax[0]"
-        :max-width="$window.cardWidthMinMax[1]"
+        :min-width="$screen.cardWidthMinMax[0]"
+        :max-width="$screen.cardWidthMinMax[1]"
       />
     </CardsWrapper>
   </div>

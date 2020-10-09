@@ -10,11 +10,11 @@
     >
       <td class="text-center">
         <TrackListMediaButton
+          :value="playing"
           :hover="isRowHovered"
-          :playing="playing"
           :track-number="trackNumber"
           :disabled="!item.isPlayable"
-          @on-clicked="onMediaButtonClicked"
+          @input="onMediaButtonClicked"
         />
       </td>
 

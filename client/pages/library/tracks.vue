@@ -4,21 +4,21 @@
       <ContextMediaButton
         fab
         :height="32"
-        :is-playing="isPlaylistSet && isPlaying"
-        @on-clicked="onContextMediaButtonClicked"
+        :value="isPlaylistSet && isPlaying"
+        @input="onContextMediaButtonClicked"
       />
     </portal>
 
     <ContextMediaButton
       :ref="MEDIA_BUTTON_REF"
-      :is-playing="isPlaylistSet && isPlaying"
-      @on-clicked="onContextMediaButtonClicked"
+      :value="isPlaylistSet && isPlaying"
+      @input="onContextMediaButtonClicked"
     />
 
     <PlaylistTrackTable
       v-if="trackList != null"
       custom
-      :track-list="trackList"
+      :tracks="trackList"
       :uri="uri"
       :class="$style.LibraryTracksPage__table"
       @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -121,7 +121,7 @@ export default class LibraryTracksPage extends Vue implements Data {
     }
   }
 
-  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['on-clicked']) {
+  onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     // 停止
     if (!nextPlayingState) {
       this.$dispatch('playback/pause');

@@ -12,9 +12,9 @@
         :size="18"
         left
       >
-        {{ followIcon(hover) }}
+        {{ followButton(hover).icon }}
       </v-icon>
-      {{ followText(hover) }}
+      {{ followButton(hover).text }}
     </v-btn>
   </v-hover>
 </template>
@@ -22,9 +22,10 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export type FollowIcon = 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-heart';
-
-export type FollowText = 'フォロー' | 'フォローしない' | 'フォロー中'
+type FollowButton = {
+  icon: 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-heart';
+  text: 'フォロー' | 'フォローしない' | 'フォロー中';
+}
 
 const INPUT = 'input';
 
@@ -50,20 +51,23 @@ export default Vue.extend({
         ? 'grey darken-3'
         : undefined;
     },
-    followIcon(): (hover: boolean) => FollowIcon {
+    followButton(): (hover: boolean) => FollowButton {
       return (hover: boolean) => {
-        if (!this.value) return 'mdi-heart-plus-outline';
+        if (!this.value) {
+          return {
+            icon: 'mdi-heart-plus-outline',
+            text: 'フォロー',
+          };
+        }
         return hover
-          ? 'mdi-heart-outline'
-          : 'mdi-heart';
-      };
-    },
-    followText(): (hover: boolean) => FollowText {
-      return (hover: boolean) => {
-        if (!this.value) return 'フォロー';
-        return hover
-          ? 'フォローしない'
-          : 'フォロー中';
+          ? {
+            icon: 'mdi-heart-outline',
+            text: 'フォローしない',
+          }
+          : {
+            icon: 'mdi-heart',
+            text: 'フォロー中',
+          };
       };
     },
   },

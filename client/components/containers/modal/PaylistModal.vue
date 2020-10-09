@@ -1,7 +1,7 @@
 <template>
   <Modal
     v-model="modal"
-    :fullscreen="$window.isSingleColumn"
+    :fullscreen="$screen.isSingleColumn"
     :class="$style.PlaylistModal"
   >
     <template #header>

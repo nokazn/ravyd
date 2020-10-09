@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :item-lists="menuItemLists"
+    :groups="menuItemLists"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
 import { App } from '~~/types';
@@ -37,7 +37,7 @@ export default Vue.extend({
       type: Object as PropType<App.PlaylistInfo>,
       required: true,
     },
-    isFollowing: {
+    following: {
       type: Boolean,
       required: true,
     },
@@ -64,7 +64,7 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const toggleIsCollaborative = () => {
         const isCollaborative = !this.playlist.isCollaborative;
         const name = isCollaborative
@@ -140,11 +140,11 @@ export default Vue.extend({
       const followPlaylist = () => {
         const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
         const handler = () => {
-          const nextFollowingState = !this.isFollowing;
+          const nextFollowingState = !this.following;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         };
 
-        return this.isFollowing
+        return this.following
           ? {
             name: isOwnPlaylist ? '削除する' : 'フォローしない',
             handler,
