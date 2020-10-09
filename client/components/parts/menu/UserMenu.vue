@@ -34,7 +34,7 @@ export default Vue.extend({
       type: Object as PropType<App.UserInfo>,
       required: true,
     },
-    isFollowing: {
+    following: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
@@ -63,12 +63,12 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const followArtist = () => ({
-        name: this.isFollowing ? 'フォローしない' : 'フォローする',
+        name: this.following ? 'フォローしない' : 'フォローする',
         handler: () => {
-          const nextFollowingState = !this.isFollowing;
+          const nextFollowingState = !this.following;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         },
-        disabled: this.isFollowing == null,
+        disabled: this.following == null,
       });
 
       const share = () => {
@@ -87,7 +87,7 @@ export default Vue.extend({
         };
       };
 
-      return this.isFollowing != null
+      return this.following != null
         ? [
           [followArtist()],
           [share()],

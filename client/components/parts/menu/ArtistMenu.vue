@@ -34,7 +34,7 @@ export default Vue.extend({
       type: Object as PropType<App.ArtistInfo>,
       required: true,
     },
-    isFollowing: {
+    following: {
       type: Boolean,
       required: true,
     },
@@ -63,9 +63,9 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const followArtist = () => ({
-        name: this.isFollowing ? 'フォローしない' : 'フォローする',
+        name: this.following ? 'フォローしない' : 'フォローする',
         handler: () => {
-          const nextFollowingState = !this.isFollowing;
+          const nextFollowingState = !this.following;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         },
       });

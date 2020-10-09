@@ -34,7 +34,7 @@ export default Vue.extend({
       type: Object as PropType<App.ShowInfo>,
       required: true,
     },
-    isSaved: {
+    saved: {
       type: Boolean,
       required: true,
     },
@@ -63,7 +63,7 @@ export default Vue.extend({
   computed: {
     menuItemLists(): MenuItem[][] {
       const saveShow = () => {
-        const nextSavedState = !this.isSaved;
+        const nextSavedState = !this.saved;
         const handler = () => {
           this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
         };

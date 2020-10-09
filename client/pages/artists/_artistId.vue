@@ -25,7 +25,7 @@
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :artist="artistInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -101,7 +101,7 @@
           <ArtistMenu
             outlined
             :artist="artistInfo"
-            :is-following="isFollowing"
+            :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>

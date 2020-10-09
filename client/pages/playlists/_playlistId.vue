@@ -37,7 +37,7 @@
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :playlist="playlistInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -107,7 +107,7 @@
             <PlaylistMenu
               outlined
               :playlist="playlistInfo"
-              :is-following="isFollowing"
+              :following="isFollowing"
               @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
             />

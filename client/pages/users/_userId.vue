@@ -21,7 +21,7 @@
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
           :user="userInfo"
-          :is-following="isFollowing"
+          :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
       </div>
@@ -63,7 +63,7 @@
             outlined
             right
             :user="userInfo"
-            :is-following="isFollowing"
+            :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>

@@ -24,7 +24,7 @@
           left
           :fab="$window.isSingleColumn"
           :outlined="$window.isMultiColumn"
-          :is-saved="isSaved"
+          :saved="isSaved"
           :show="showInfo"
           @on-save-menu-clicked="toggleSavedState"
         />
@@ -77,7 +77,7 @@
             <ShowMenu
               outlined
               :show="showInfo"
-              :is-saved="isSaved"
+              :saved="isSaved"
               @on-save-menu-clicked="toggleSavedState"
             />
           </div>
