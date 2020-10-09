@@ -33,7 +33,7 @@
       :color="$constant.MENU_BACKGROUND_COLOR"
       :elevation="12"
     >
-      <template v-for="(group, index) in itemLists">
+      <template v-for="(group, index) in groups">
         <v-divider
           v-show="index !== 0"
           :key="`${index}-devider`"
@@ -82,7 +82,7 @@
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
 
-export type MenuItem = {
+type MenuItem = {
   name: string
   disabled?: boolean
   to: string
@@ -94,6 +94,7 @@ export type MenuItem = {
   component: VueConstructor
   props: { [k in string]: unknown }
 }
+export type Group = MenuItem[];
 
 export default Vue.extend({
   props: {
@@ -146,7 +147,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    itemLists: {
+    groups: {
       type: Array as PropType<MenuItem[][]>,
       required: true,
     },

@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :item-lists="menuItemLists"
+    :groups="menuItemLists"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
 import { App } from '~~/types';
@@ -64,7 +64,7 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const toggleIsCollaborative = () => {
         const isCollaborative = !this.playlist.isCollaborative;
         const name = isCollaborative

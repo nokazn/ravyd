@@ -1,7 +1,7 @@
 <template>
   <div>
     <ContextMenu
-      :item-lists="menuItemLists"
+      :groups="menuItemLists"
       :size="size"
       :outlined="outlined"
       :offset-x="offsetX"
@@ -27,7 +27,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
@@ -119,7 +119,7 @@ export default Vue.extend({
         this.toggleConfirmModal(modal);
       },
     },
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const addItemToQueue = () => {
         const trackName = this.track.name;
         return {

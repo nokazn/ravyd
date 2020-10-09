@@ -1,11 +1,11 @@
 <template>
   <ContextMenu
-    :item-lists="menuItemLists"
-    :loading="isLoading"
-    offset-x
-    offset-y
     top
     left
+    offset-x
+    offset-y
+    :groups="menuItemLists"
+    :loading="isLoading"
   />
 </template>
 
@@ -13,7 +13,7 @@
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
-import ContextMenu, { MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
@@ -43,7 +43,7 @@ export default Vue.extend({
     track(): RootGetters['playback/currentTrack'] {
       return this.$getters()['playback/currentTrack'];
     },
-    menuItemLists(): MenuItem[][] {
+    menuItemLists(): Group[] {
       const addItemToQueue = () => {
         const name = '次に再生に追加';
         const trackName = this.track?.name;
