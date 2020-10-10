@@ -61,7 +61,7 @@ import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 
 const AVATAR_SIZE = 32;
 
-type Item = {
+type MenuItem = {
   title: string
   to: string | undefined
   disabled?: boolean
@@ -93,7 +93,7 @@ export default Vue.extend({
   },
 
   computed: {
-    itemLists(): Item[][] {
+    itemLists(): MenuItem[][] {
       const userId = this.$getters()['auth/userId'];
       const profilePath = userId != null
         ? `/users/${userId}`

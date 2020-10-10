@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
 import { App } from '~~/types';
@@ -64,151 +64,143 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): Group[] {
-      const toggleIsCollaborative = () => {
-        const isCollaborative = !this.playlist.isCollaborative;
-        const name = isCollaborative
-          ? 'コラボプレイリストにする'
-          : 'コラボプレイリストにしない';
-
-        return {
-          name,
-          handler: () => {
-            this.$dispatch('playlists/editPlaylist', {
-              playlistId: this.playlist.id,
-              isCollaborative,
-            }).then(() => {
-              this.$toast.push({
-                color: 'primary',
-                message: isCollaborative
-                  ? 'コラボプレイリストにしました。'
-                  : 'コラボプレイリストを解除しました。',
-              });
-            }).catch((err: Error) => {
-              console.error({ err });
-              this.$toast.push({
-                color: 'error',
-                message: isCollaborative
-                  ? 'コラボプレイリストにできませんでした。'
-                  : 'コラボプレイリストを解除できませんでした。',
-              });
-            });
-          },
-        };
-      };
-
-      const toggleIsPublic = () => {
-        const isPublic = !this.playlist.isPublic;
-        const name = isPublic
-          ? '公開する'
-          : '非公開にする';
-
-        return {
-          name,
-          handler: () => {
-            this.$dispatch('playlists/editPlaylist', {
-              playlistId: this.playlist.id,
-              isPublic: !this.playlist.isPublic,
-            }).then(() => {
-              this.$toast.push({
-                color: 'primary',
-                message: isPublic
-                  ? 'プレイリストを公開しました。'
-                  : 'プレイリストを非公開にしました。',
-              });
-            }).catch((err: Error) => {
-              console.error({ err });
-              this.$toast.push({
-                color: 'error',
-                message: isPublic
-                  ? 'プレイリストの公開に失敗しました。'
-                  : 'プレイリストを非公開にできませんでした。',
-              });
-            });
-          },
-          disabled: this.playlist.isCollaborative,
-        };
-      };
-
-      const editPlaylist = () => ({
-        name: '詳細の編集',
+    toggleIsCollaborative(): MenuItem {
+      const isCollaborative = !this.playlist.isCollaborative;
+      const name = isCollaborative
+        ? 'コラボプレイリストにする'
+        : 'コラボプレイリストにしない';
+      return {
+        name,
         handler: () => {
-          this.$emit(ON_EDIT_MENU_CLICKED, true);
-        },
-      });
-
-      const followPlaylist = () => {
-        const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
-        const handler = () => {
-          const nextFollowingState = !this.following;
-          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
-        };
-
-        return this.following
-          ? {
-            name: isOwnPlaylist ? '削除する' : 'フォローしない',
-            handler,
-          }
-          : {
-            name: 'フォローする',
-            handler,
-          };
-      };
-
-      const copyPlaylist = () => {
-        const handler = () => {
-          const name = generateCopiedName(this.playlist.name);
-          this.$dispatch('playlists/createPlaylist', {
-            name,
-            uriList: this.playlist.trackUriList,
+          this.$dispatch('playlists/editPlaylist', {
+            playlistId: this.playlist.id,
+            isCollaborative,
           }).then(() => {
             this.$toast.push({
               color: 'primary',
-              message: `"${name}" を作成しました。`,
+              message: isCollaborative
+                ? 'コラボプレイリストにしました。'
+                : 'コラボプレイリストを解除しました。',
             });
           }).catch((err: Error) => {
             console.error({ err });
             this.$toast.push({
               color: 'error',
-              message: err.message,
+              message: isCollaborative
+                ? 'コラボプレイリストにできませんでした。'
+                : 'コラボプレイリストを解除できませんでした。',
             });
           });
-        };
-
-        return {
-          name: '同様のプレイリストを作成',
+        },
+      };
+    },
+    toggleIsPublic(): MenuItem {
+      const isPublic = !this.playlist.isPublic;
+      const name = isPublic
+        ? '公開する'
+        : '非公開にする';
+      return {
+        name,
+        handler: () => {
+          this.$dispatch('playlists/editPlaylist', {
+            playlistId: this.playlist.id,
+            isPublic: !this.playlist.isPublic,
+          }).then(() => {
+            this.$toast.push({
+              color: 'primary',
+              message: isPublic
+                ? 'プレイリストを公開しました。'
+                : 'プレイリストを非公開にしました。',
+            });
+          }).catch((err: Error) => {
+            console.error({ err });
+            this.$toast.push({
+              color: 'error',
+              message: isPublic
+                ? 'プレイリストの公開に失敗しました。'
+                : 'プレイリストを非公開にできませんでした。',
+            });
+          });
+        },
+        disabled: this.playlist.isCollaborative,
+      };
+    },
+    editPlaylist(): MenuItem {
+      return {
+        name: '詳細の編集',
+        handler: () => {
+          this.$emit(ON_EDIT_MENU_CLICKED, true);
+        },
+      };
+    },
+    followPlaylist(): MenuItem {
+      const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
+      const handler = () => {
+        const nextFollowingState = !this.following;
+        this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
+      };
+      return this.following
+        ? {
+          name: isOwnPlaylist ? '削除する' : 'フォローしない',
+          handler,
+        }
+        : {
+          name: 'フォローする',
           handler,
         };
+    },
+    copyPlaylist(): MenuItem {
+      const handler = () => {
+        const name = generateCopiedName(this.playlist.name);
+        this.$dispatch('playlists/createPlaylist', {
+          name,
+          uriList: this.playlist.trackUriList,
+        }).then(() => {
+          this.$toast.push({
+            color: 'primary',
+            message: `"${name}" を作成しました。`,
+          });
+        }).catch((err: Error) => {
+          console.error({ err });
+          this.$toast.push({
+            color: 'error',
+            message: err.message,
+          });
+        });
       };
-
-      const share = () => {
-        const props: ShareMenuProps = {
-          name: this.playlist.name,
-          uri: this.playlist.uri,
-          typeName: 'プレイリスト',
-          artists: undefined,
-          externalUrls: this.playlist.externalUrls,
-          left: this.left,
-          right: this.right,
-        };
-        return {
-          component: ShareMenu,
-          props,
-        };
+      return {
+        name: '同様のプレイリストを作成',
+        handler,
       };
-
+    },
+    share(): MenuItem {
+      const props: ShareMenuProps = {
+        name: this.playlist.name,
+        uri: this.playlist.uri,
+        typeName: 'プレイリスト',
+        artists: undefined,
+        externalUrls: this.playlist.externalUrls,
+        left: this.left,
+        right: this.right,
+      };
+      return {
+        component: ShareMenu,
+        props,
+      };
+    },
+    menuItemLists(): Group[] {
       // 自分のプレイリストの場合は編集するメニューを表示
       return this.playlist.isOwnPlaylist
         ? [
-          [toggleIsCollaborative(), toggleIsPublic()],
-          [editPlaylist(), followPlaylist()],
-          [copyPlaylist()],
-          [share()],
+          [this.toggleIsCollaborative, this.toggleIsPublic],
+          [this.editPlaylist, this.followPlaylist],
+          [this.copyPlaylist],
+          [this.share],
         ]
         : [
-          [followPlaylist()],
-          [copyPlaylist()],
-          [share()],
+          [this.followPlaylist],
+          [this.copyPlaylist],
+          [this.share],
         ];
     },
   },

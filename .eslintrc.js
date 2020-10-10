@@ -70,6 +70,7 @@ module.exports = {
     'no-multiple-empty-lines': [2, { max: 2 }],
     camelcase: 0,
     'lines-between-class-members': 0,
+    'arrow-body-style': 0,
 
     /**
      * eslint-plugin-import

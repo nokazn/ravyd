@@ -10,6 +10,7 @@ import type dayjs from 'dayjs';
 import type { SpotifyServices } from '~/services/spotify';
 import type { ServerServices } from '~/services/server';
 import type { Constant } from '~/plugins/constant';
+import type { $Confirm } from '~/plugins/observable/confirm';
 import type { $Header } from '~/plugins/observable/header';
 import type { $Overlay } from '~/plugins/observable/overlay';
 import type { $Toast } from '~/plugins/observable/toast';
@@ -35,6 +36,7 @@ declare module 'vue/types/vue' {
     $constant: Constant;
 
     // obserable
+    $confirm: $Confirm;
     $header: $Header;
     $overlay: $Overlay;
     $toast: $Toast;

@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
@@ -61,38 +61,36 @@ export default Vue.extend({
   },
 
   computed: {
+    saveShow(): MenuItem {
+      const nextSavedState = !this.saved;
+      const handler = () => {
+        this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
+      };
+
+      return {
+        name: nextSavedState ? '保存する' : '保存しない',
+        handler,
+      };
+    },
+    share(): MenuItem {
+      const props: ShareMenuProps = {
+        name: this.show.name,
+        uri: this.show.uri,
+        typeName: 'ポッドキャスト',
+        artists: this.show.publisher,
+        externalUrls: this.show.externalUrls,
+        left: this.left,
+        right: this.right,
+      };
+      return {
+        component: ShareMenu,
+        props,
+      };
+    },
     menuItemLists(): Group[] {
-      const saveShow = () => {
-        const nextSavedState = !this.saved;
-        const handler = () => {
-          this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
-        };
-
-        return {
-          name: nextSavedState ? '保存する' : '保存しない',
-          handler,
-        };
-      };
-
-      const share = () => {
-        const props: ShareMenuProps = {
-          name: this.show.name,
-          uri: this.show.uri,
-          typeName: 'ポッドキャスト',
-          artists: this.show.publisher,
-          externalUrls: this.show.externalUrls,
-          left: this.left,
-          right: this.right,
-        };
-        return {
-          component: ShareMenu,
-          props,
-        };
-      };
-
       return [
-        [saveShow()],
-        [share()],
+        [this.saveShow],
+        [this.share],
       ];
     },
   },
