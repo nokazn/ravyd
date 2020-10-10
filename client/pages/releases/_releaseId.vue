@@ -68,7 +68,7 @@
           <div :class="$style.Info__buttons">
             <ContextMediaButton
               :value="isReleaseSet && isPlaying"
-              @on-clicked="onContextMediaButtonClicked"
+              @input="onContextMediaButtonClicked"
             />
             <FavoriteButton
               outlined
