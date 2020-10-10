@@ -16,7 +16,6 @@
       >
         キャンセル
       </v-btn>
-
       <v-btn
         rounded
         :min-width="90"
@@ -42,8 +41,8 @@ export const INPUT = 'input';
 export const ON_CONFIRMED = 'on-confirmed';
 
 export type On = {
-  [INPUT]: boolean
-  [ON_CONFIRMED]: string
+  [INPUT]: boolean;
+  [ON_CONFIRMED]: string | undefined;
 }
 
 export default Vue.extend({
@@ -58,7 +57,7 @@ export default Vue.extend({
     },
     type: {
       type: String as PropType<string | undefined>,
-      required: true,
+      default: undefined,
     },
     color: {
       type: String,

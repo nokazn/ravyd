@@ -43,6 +43,7 @@
     <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
 
     <Toasts />
+    <ConfirmModal />
 
     <portal-target
       v-if="$screen.isSingleColumn"
@@ -50,7 +51,6 @@
       :name="$header.PORTAL_NAME"
       :class="$style.Fab"
     />
-
     <portal-target
       :name="SEARCH_FORM_PORTAL_NAME"
       role="menu"
@@ -67,8 +67,9 @@ import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
 import PlayerBar from '~/components/globals/PlayerBar.vue';
 import NavigationBar from '~/components/globals/NavigationBar.mobile.vue';
 import DeviceBar from '~/components/globals/DeviceBar.vue';
-import Toasts from '~/components/globals/Toasts.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
+import Toasts from '~/components/globals/Toasts.vue';
+import ConfirmModal from '~/components/globals/ConfirmModal.vue';
 import { $searchForm } from '~/observable/searchForm';
 
 const SPACER_REF = 'SPACER_REF';
@@ -90,6 +91,7 @@ export default Vue.extend({
     DeviceBar,
     Overlay,
     Toasts,
+    ConfirmModal,
   },
 
   data(): Data {

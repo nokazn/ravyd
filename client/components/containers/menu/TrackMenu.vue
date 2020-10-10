@@ -1,34 +1,19 @@
 <template>
-  <div>
-    <ContextMenu
-      :groups="menuItemLists"
-      :size="size"
-      :outlined="outlined"
-      :offset-x="offsetX"
-      :offset-y="offsetY"
-      :left="left"
-      :right="right"
-    />
-
-    <ConfirmModal
-      v-if="playlistId != null"
-      v-model="modal"
-      :loading="confirmModalParams.loading"
-      :type="confirmModalParams.type"
-      :color="confirmModalParams.color"
-      :text="confirmModalParams.text"
-      @on-confirmed="onConfirmed"
-    >
-      {{ confirmModalParams.description }}
-    </ConfirmModal>
-  </div>
+  <ContextMenu
+    :groups="menuItemLists"
+    :size="size"
+    :outlined="outlined"
+    :offset-x="offsetX"
+    :offset-y="offsetY"
+    :left="left"
+    :right="right"
+  />
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
 import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
-import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
@@ -37,7 +22,6 @@ import type { ToastType } from '~/plugins/observable/toast';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
-const REMOVE_ITEM_MODAL = 'REMOVE_ITEM_MODAL';
 
 type Modal = {
   value: boolean;
@@ -48,10 +32,6 @@ type Modal = {
   description: string;
 }
 
-type Data = {
-  confirmModalParams: Modal;
-}
-
 export type On = {
   [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
 }
@@ -59,7 +39,6 @@ export type On = {
 export default Vue.extend({
   components: {
     ContextMenu,
-    ConfirmModal,
   },
 
   props: {
@@ -97,28 +76,7 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      confirmModalParams: {
-        value: false,
-        loading: false,
-        type: '',
-        color: undefined,
-        text: '',
-        description: '',
-      },
-    };
-  },
-
   computed: {
-    modal: {
-      get(): boolean {
-        return this.confirmModalParams.value;
-      },
-      set(modal: boolean) {
-        this.toggleConfirmModal(modal);
-      },
-    },
     menuItemLists(): Group[] {
       const addItemToQueue = () => {
         const trackName = this.track.name;
@@ -204,20 +162,33 @@ export default Vue.extend({
         };
       };
 
-      const removePlaylistItem = () => ({
-        name: 'このプレイリストから削除',
-        handler: () => {
-          if (this.playlistId == null) return;
-          this.toggleConfirmModal(true, {
-            loading: false,
-            type: REMOVE_ITEM_MODAL,
-            color: 'error',
-            text: '削除',
-            description: `"${this.track.name}" をプレイリストから削除しますか？`,
-          });
-        },
-        disabled: this.playlistId == null,
-      });
+      const removePlaylistItem = () => {
+        const { playlistId } = this;
+        return {
+          name: 'このプレイリストから削除',
+          handler: () => {
+            if (playlistId == null) return;
+            const { name, uri, index } = this.track;
+            this.$confirm.open({
+              color: 'error',
+              text: '削除',
+              description: `"${name}" をプレイリストから削除しますか？`,
+              onConfirm: async () => {
+                if (playlistId == null) return;
+                await this.$dispatch('playlists/removePlaylistItem', {
+                  playlistId,
+                  track: {
+                    uri,
+                    positions: [index],
+                  },
+                  name,
+                });
+              },
+            });
+          },
+          disabled: playlistId == null,
+        };
+      };
 
       const share = () => {
         const props: ShareMenuProps = {
@@ -248,48 +219,6 @@ export default Vue.extend({
           [saveTrack(), addItemToPlaylist()],
           [share()],
         ];
-    },
-  },
-
-  methods: {
-    toggleConfirmModal(value: OnModal['input'], params?: Partial<Omit<Modal, 'value'>>) {
-      const { confirmModalParams } = this;
-      this.confirmModalParams = params != null
-        ? { ...confirmModalParams, value, ...params }
-        : { ...confirmModalParams, value };
-    },
-    toggleConfirmModalLoading(loading: boolean) {
-      const { confirmModalParams } = this;
-      this.confirmModalParams = { ...confirmModalParams, loading };
-    },
-    onConfirmed(type: OnModal['on-confirmed']) {
-      const removePlaylistItem = () => {
-        const { playlistId } = this;
-        if (playlistId == null) return;
-
-        this.toggleConfirmModalLoading(true);
-        this.$dispatch('playlists/removePlaylistItem', {
-          playlistId,
-          track: {
-            uri: this.track.uri,
-            positions: [this.track.index],
-          },
-          name: this.track.name,
-        }).then(() => {
-          this.toggleConfirmModal(false);
-        }).finally(() => {
-          this.toggleConfirmModalLoading(false);
-        });
-      };
-
-      switch (type) {
-        case REMOVE_ITEM_MODAL:
-          removePlaylistItem();
-          break;
-
-        default:
-          break;
-      }
     },
   },
 });
