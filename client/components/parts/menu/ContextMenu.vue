@@ -82,7 +82,7 @@
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
 
-type MenuItem = {
+export type MenuItem = {
   name: string
   disabled?: boolean
   to: string

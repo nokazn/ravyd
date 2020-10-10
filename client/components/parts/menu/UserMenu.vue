@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import type { App } from '~~/types';
 
@@ -61,39 +61,39 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): Group[] {
-      const followArtist = () => ({
+    followArtist(): MenuItem {
+      return {
         name: this.following ? 'フォローしない' : 'フォローする',
         handler: () => {
           const nextFollowingState = !this.following;
           this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
         },
         disabled: this.following == null,
-      });
-
-      const share = () => {
-        const props: ShareMenuProps = {
-          name: this.user.displayName ?? this.user.id,
-          uri: this.user.uri,
-          typeName: 'ユーザー',
-          artists: undefined,
-          externalUrls: this.user.externalUrls,
-          left: this.left,
-          right: this.right,
-        };
-        return {
-          component: ShareMenu,
-          props,
-        };
       };
-
+    },
+    share(): MenuItem {
+      const props: ShareMenuProps = {
+        name: this.user.displayName ?? this.user.id,
+        uri: this.user.uri,
+        typeName: 'ユーザー',
+        artists: undefined,
+        externalUrls: this.user.externalUrls,
+        left: this.left,
+        right: this.right,
+      };
+      return {
+        component: ShareMenu,
+        props,
+      };
+    },
+    menuItemLists(): Group[] {
       return this.following != null
         ? [
-          [followArtist()],
-          [share()],
+          [this.followArtist],
+          [this.share],
         ]
         : [
-          [share()],
+          [this.share],
         ];
     },
   },

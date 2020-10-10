@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { Group } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
@@ -68,52 +68,49 @@ export default Vue.extend({
   },
 
   computed: {
-    menuItemLists(): Group[] {
-      const addItemToQueue = () => {
-        const trackName = this.episode.name;
-        return {
-          name: '次に再生に追加',
-          handler: () => {
-            this.$spotify.player.addItemToQueue({
-              uri: this.episode.uri,
-            }).then(() => {
-              this.$toast.push({
-                color: 'primary',
-                message: `"${trackName}" を次に再生に追加しました。`,
-              });
-            }).catch((err: Error) => {
-              console.error({ err });
-              this.$toast.push({
-                color: 'error',
-                message: `"${trackName}" を次に再生に追加できませんでした。`,
-              });
+    addItemToQueue(): MenuItem {
+      const trackName = this.episode.name;
+      return {
+        name: '次に再生に追加',
+        handler: () => {
+          this.$spotify.player.addItemToQueue({
+            uri: this.episode.uri,
+          }).then(() => {
+            this.$toast.push({
+              color: 'primary',
+              message: `"${trackName}" を次に再生に追加しました。`,
             });
-          },
-        };
+          }).catch((err: Error) => {
+            console.error({ err });
+            this.$toast.push({
+              color: 'error',
+              message: `"${trackName}" を次に再生に追加できませんでした。`,
+            });
+          });
+        },
       };
-
-      const addItemToPlaylist = () => {
-        const props: AddItemToPlaylistMenuProps = {
-          name: this.episode.name,
-          uriList: [this.episode.uri],
-          artists: this.publisher,
-          left: this.left,
-          right: this.right,
-        };
-
-        return {
-          component: AddItemToPlaylistMenu,
-          props,
-        };
+    },
+    addItemToPlaylist(): MenuItem {
+      const props: AddItemToPlaylistMenuProps = {
+        name: this.episode.name,
+        uriList: [this.episode.uri],
+        artists: this.publisher,
+        left: this.left,
+        right: this.right,
       };
-
-      const removePlaylistItem = () => ({
+      return {
+        component: AddItemToPlaylistMenu,
+        props,
+      };
+    },
+    removePlaylistItem(): MenuItem {
+      const { playlistId } = this;
+      return {
         name: 'このプレイリストから削除',
         handler: () => {
-          if (this.playlistId == null) return;
-
+          if (playlistId == null) return;
           this.$dispatch('playlists/removePlaylistItem', {
-            playlistId: this.playlistId,
+            playlistId,
             track: {
               uri: this.episode.uri,
               positions: [this.episode.index],
@@ -121,36 +118,36 @@ export default Vue.extend({
             name: this.episode.name,
           });
         },
-        disabled: this.playlistId == null,
-      });
-
-      const share = () => {
-        const props: ShareMenuProps = {
-          name: this.episode.name,
-          uri: this.episode.uri,
-          typeName: 'エピソード',
-          artists: this.publisher,
-          externalUrls: this.episode.externalUrls,
-          left: this.left,
-          right: this.right,
-        };
-        return {
-          component: ShareMenu,
-          props,
-        };
+        disabled: playlistId == null,
       };
-
+    },
+    share(): MenuItem {
+      const props: ShareMenuProps = {
+        name: this.episode.name,
+        uri: this.episode.uri,
+        typeName: 'エピソード',
+        artists: this.publisher,
+        externalUrls: this.episode.externalUrls,
+        left: this.left,
+        right: this.right,
+      };
+      return {
+        component: ShareMenu,
+        props,
+      };
+    },
+    menuItemLists(): Group[] {
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
       return this.playlistId != null
         ? [
-          [addItemToQueue()],
-          [addItemToPlaylist(), removePlaylistItem()],
-          [share()],
+          [this.addItemToQueue],
+          [this.addItemToPlaylist, this.removePlaylistItem],
+          [this.share],
         ]
         : [
-          [addItemToQueue()],
-          [addItemToPlaylist()],
-          [share()],
+          [this.addItemToQueue],
+          [this.addItemToPlaylist],
+          [this.share],
         ];
     },
   },
