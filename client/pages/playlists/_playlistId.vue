@@ -132,7 +132,7 @@
       :type="confirmModalParams.type"
       :color="confirmModalParams.color"
       :text="confirmModalParams.text"
-      @on-confirmed="onConformed"
+      @on-confirmed="onConfirmed"
     >
       {{ confirmModalParams.description }}
     </ConfirmModal>
@@ -178,7 +178,7 @@ import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/butto
 import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
 import PlaylistDetailWrapper from '~/components/parts/wrapper/PlaylistDetailWrapper.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
-import ConfirmModal, { On as OnModal } from '~/components/parts/modal/ConfirmModal.vue';
+import ConfirmModal, { On as OnConfirmModal } from '~/components/parts/modal/ConfirmModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
@@ -279,8 +279,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   get confirmModal(): boolean {
     return this.confirmModalParams.value;
   }
-  set confirmModal(value: boolean) {
-    this.toggleConfirmModal(true);
+  set confirmModal(value: OnConfirmModal['input']) {
+    this.toggleConfirmModal(value);
   }
 
   get artworkSrc(): string | undefined {
@@ -546,7 +546,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     this.editPlaylistModal = modal;
   }
 
-  toggleConfirmModal(value: OnModal['input'], params?: Partial<Omit<Modal, 'value'>>) {
+  toggleConfirmModal(value: OnConfirmModal['input'], params?: Partial<Omit<Modal, 'value'>>) {
     const { confirmModalParams } = this;
     this.confirmModalParams = params != null
       ? { ...confirmModalParams, value, ...params }
@@ -586,7 +586,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     }
   }
 
-  onConformed(type: OnModal['on-confirmed']) {
+  onConfirmed(type: OnConfirmModal['on-confirmed']) {
     const removePlaylist = () => {
       const playlistId = this.playlistInfo?.id;
       if (this.playlistInfo == null || playlistId == null) return;

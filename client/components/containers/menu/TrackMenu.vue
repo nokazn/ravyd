@@ -17,7 +17,7 @@
       :type="confirmModalParams.type"
       :color="confirmModalParams.color"
       :text="confirmModalParams.text"
-      @on-confirmed="onConformed"
+      @on-confirmed="onConfirmed"
     >
       {{ confirmModalParams.description }}
     </ConfirmModal>
@@ -262,7 +262,7 @@ export default Vue.extend({
       const { confirmModalParams } = this;
       this.confirmModalParams = { ...confirmModalParams, loading };
     },
-    onConformed(type: OnModal['on-confirmed']) {
+    onConfirmed(type: OnModal['on-confirmed']) {
       const removePlaylistItem = () => {
         const { playlistId } = this;
         if (playlistId == null) return;
