@@ -47,6 +47,7 @@
     "nuxt": "^2.14.6",
     "nuxt-property-decorator": "^2.8.8",
     "portal-vue": "^2.1.7",
+    "spinkit": "^2.0.1",
     "v-snackbars": "^3.0.1",
     "vue": "^2.6.12",
     "vuex-persist": "^2.2.0"
