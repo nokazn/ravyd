@@ -62,10 +62,10 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI, App } from '~~/types';
 
-const ON_CLICKED = 'on-clicked';
+const CLICK = 'click';
 
 export type On = {
-  [ON_CLICKED]: void
+  [CLICK]: void
 }
 
 export default Vue.extend({
@@ -133,7 +133,7 @@ export default Vue.extend({
         this.$router.push(this.to);
       }
 
-      this.$emit(ON_CLICKED);
+      this.$emit(CLICK);
     },
   },
 });

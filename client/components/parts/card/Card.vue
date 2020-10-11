@@ -20,7 +20,7 @@
       :min-width="width"
       :max-width="maxWidth || width"
       :class="$style.Card"
-      @click="onClick"
+      @click="onClicked"
     >
       <div :class="$style.Card__container">
         <slot name="image" />
@@ -89,7 +89,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onClick() {
+    onClicked() {
       this.$emit(CLICK);
     },
   },

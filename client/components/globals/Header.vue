@@ -16,7 +16,7 @@
             :size="36"
             :icon-size="32"
             title="戻る"
-            @on-clicked="onBackButtonClicked"
+            @click="onBackButtonClicked"
           >
             mdi-chevron-left
           </CircleButton>
@@ -24,7 +24,7 @@
             :size="36"
             :icon-size="32"
             title="進む"
-            @on-clicked="onForwardButtonClicked"
+            @click="onForwardButtonClicked"
           >
             mdi-chevron-right
           </CircleButton>

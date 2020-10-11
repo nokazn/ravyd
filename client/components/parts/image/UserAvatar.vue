@@ -26,7 +26,7 @@
           :hover="hover"
           :size="size"
           :icon="icon"
-          @on-clicked="onClicked"
+          @click="onClicked"
         />
       </v-img>
     </v-avatar>

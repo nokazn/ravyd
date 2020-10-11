@@ -51,7 +51,7 @@
         v-for="(device, index) in deviceItemList"
         :key="`${device.id}-${index}`"
         v-bind="device"
-        @on-clicked="onItemClicked"
+        @click="onItemClicked"
       />
     </v-list-item-group>
   </CustomMenu>
@@ -105,7 +105,7 @@ export default Vue.extend({
       await this.$dispatch('playback/getActiveDeviceList');
       this.isRefreshingDeviceList = false;
     },
-    onItemClicked(deviceId: OnItem['on-clicked']) {
+    onItemClicked(deviceId: OnItem['click']) {
       if (deviceId != null) {
         this.$dispatch('playback/transferPlayback', { deviceId });
       } else {

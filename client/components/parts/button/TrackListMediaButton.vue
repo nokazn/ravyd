@@ -7,7 +7,7 @@
         :size="size"
         :icon-size="iconSize"
         :title="mediaButton.title"
-        @click="onClick"
+        @click="onClicked"
       >
         {{ mediaButton.icon }}
       </CircleButton>
@@ -91,7 +91,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onClick() {
+    onClicked() {
       this.$emit(INPUT, !this.value);
     },
   },

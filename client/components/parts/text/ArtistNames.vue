@@ -57,10 +57,10 @@ import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
 import type { App, SpotifyAPI } from '~~/types';
 
-const ON_CLICKED = 'on-clicked';
+const CLICK = 'click';
 
 export type On = {
-  [ON_CLICKED]: void
+  [CLICK]: void;
 }
 
 type Artist = App.SimpleArtistInfo | SpotifyAPI.Artist;
@@ -129,7 +129,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit(ON_CLICKED);
+      this.$emit(CLICK);
     },
   },
 });

@@ -50,7 +50,7 @@
         <ArtistNames
           ellipsis
           :artists="artists"
-          @on-clicked="onLinkClicked"
+          @click="onLinkClicked"
         />
       </v-list-item-subtitle>
     </v-list-item-content>

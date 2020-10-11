@@ -57,10 +57,10 @@ type Data = {
   icon: string
 }
 
-const ON_CLICKED = 'on-clicked';
+const CLICK = 'click';
 
 export type On = {
-  [ON_CLICKED]: App.DeviceInfo['id']
+  [CLICK]: App.DeviceInfo['id']
 }
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
@@ -128,7 +128,7 @@ export default Vue.extend({
 
   methods: {
     onItemClicked() {
-      this.$emit(ON_CLICKED, this.id);
+      this.$emit(CLICK, this.id);
     },
   },
 });
