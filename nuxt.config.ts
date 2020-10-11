@@ -138,6 +138,7 @@ const nuxtConfig: NuxtConfig = {
   },
   css: [
     './assets/global.scss',
+    'spinkit/spinkit.min.css',
   ],
   loading: { color: '#fff' },
   axios: {

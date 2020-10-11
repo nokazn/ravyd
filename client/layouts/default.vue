@@ -3,19 +3,7 @@
     dark
     :class="$style.Default"
   >
-    <v-overlay
-      v-if="!isLoaded"
-      :z-index="$constant.Z_INDEX_OF.loading"
-      :color="$constant.BACKGROUND_COLOR"
-      :opacity="1"
-      :class="$style.ProgressCircular"
-    >
-      <transition name="fade">
-        <v-progress-circular
-          indeterminate
-        />
-      </transition>
-    </v-overlay>
+    <WaveLoader v-if="!isLoaded" />
 
     <Header
       v-if="isLoggedin"
@@ -38,13 +26,11 @@
     </v-main>
 
     <PlayerBar v-if="isLoggedin" />
-    <v-divider inset />
     <NavigationBar v-if="$screen.isMobile" />
     <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
 
     <Toasts />
     <ConfirmModal />
-
     <portal-target
       v-if="$screen.isSingleColumn"
       v-show="$header.isFabShown"
@@ -62,6 +48,7 @@
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
+import WaveLoader from '~/components/globals/WaveLoader.vue';
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
 import PlayerBar from '~/components/globals/PlayerBar.vue';
@@ -84,6 +71,7 @@ type Data = {
 
 export default Vue.extend({
   components: {
+    WaveLoader,
     Header,
     NavigationDrawer,
     PlayerBar,
@@ -171,14 +159,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.ProgressCircular {
-  bottom: $g-footer-height;
-  z-index: z-index-of(loading);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .Default {
   background-color: $g-background-color !important;
 }
