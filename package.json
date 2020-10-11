@@ -95,6 +95,6 @@
     "worker-loader": "^2.0.0"
   },
   "engines": {
-    "node": "12.18.0"
+    "node": "12"
   }
 }
