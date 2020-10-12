@@ -176,6 +176,7 @@ export default Vue.extend({
   position: fixed;
   top: calc(#{$g-header-height} + 2%);
   right: 2%;
+  z-index: z-index-of(fab);
 }
 </style>
 

@@ -1,14 +1,5 @@
 <template>
   <div :class="$style.LibraryTracksPage">
-    <portal :to="$header.PORTAL_NAME">
-      <ContextMediaButton
-        fab
-        :height="32"
-        :value="isPlaylistSet && isPlaying"
-        @input="onContextMediaButtonClicked"
-      />
-    </portal>
-
     <ContextMediaButton
       :ref="MEDIA_BUTTON_REF"
       :value="isPlaylistSet && isPlaying"
