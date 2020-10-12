@@ -85,7 +85,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-nuxt": ">=0.4.2",
-    "husky": "^4.2.5",
+    "husky": "^4.3.0",
     "jest": "^25.5.4",
     "lodash-webpack-plugin": "^0.11.5",
     "stylelint": "^13.6.1",
