@@ -10,14 +10,17 @@
     :title="title"
     @click.stop="onClicked"
   >
-    <v-icon :size="iconSize">
+    <v-icon
+      :size="iconSize"
+      :color="value && !outlined ? iconColor : undefined"
+    >
       {{ favoriteIcon }}
     </v-icon>
   </v-btn>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 
 export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
 
@@ -45,6 +48,10 @@ export default Vue.extend({
     color: {
       type: String,
       default: 'grey darken-3',
+    },
+    iconColor: {
+      type: String as PropType<string | undefined>,
+      default: undefined,
     },
     fab: {
       type: Boolean,
