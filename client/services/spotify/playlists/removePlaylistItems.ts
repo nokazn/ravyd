@@ -1,5 +1,7 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+
+import { multipleRequests } from '~/utils/request/multipleRequests';
+import type { SpotifyAPI } from '~~/types';
 
 export const removePlaylistItems = (context: Context) => {
   const { app } = context;
@@ -15,32 +17,31 @@ export const removePlaylistItems = (context: Context) => {
       positions?: number[];
     }[]
     snapshotId?: string;
-  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>[]> => {
+  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>['snapshot_id'][]> => {
     const { length } = tracks;
     if (length === 0) {
-      return Promise.resolve([{}]);
+      return Promise.resolve([]);
     }
 
     const limit = 100;
-    const handler = (index: number): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
-      const partialTracks = tracks.slice(limit * index, limit);
+    const handler = (index: number): Promise<Partial<SpotifyAPI.PlaylistSnapshot>['snapshot_id']> => {
+      const partialTracks = tracks.slice(limit * index, limit * (index + 1));
       // @todo https://github.com/axios/axios/issues/3220#issuecomment-688566578
-      return app.$spotifyApi.$request({
+      return app.$spotifyApi.$request<SpotifyAPI.PlaylistSnapshot>({
         method: 'DELETE',
         url: `/playlists/${playlistId}/tracks`,
         data: {
           tracks: partialTracks,
           snapshot_id: snapshotId,
         },
-      }).catch((err: Error) => {
-        console.error({ err });
-        return {};
-      });
+      })
+        .then(({ snapshot_id }) => snapshot_id)
+        .catch((err: Error) => {
+          console.error({ err });
+          return undefined;
+        });
     };
-    const handlerCounts = Math.ceil(length / limit);
 
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)));
+    return multipleRequests(handler, length, limit);
   };
 };
