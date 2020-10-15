@@ -10,18 +10,16 @@ export const uploadPlaylistArtwork = (context: Context) => {
     playlistId,
     artwork,
   }: {
-    playlistId: string,
-    artwork: string
+    playlistId: string;
+    artwork: string;
   }): Promise<void> => {
-    const request = app.$spotifyApi.$put(`playlists/${playlistId}/images`, artwork, {
+    return app.$spotifyApi.$put<void>(`playlists/${playlistId}/images`, artwork, {
       headers: {
         'Content-Type': 'image/jpeg',
       },
     }).catch((err: Error) => {
       console.error({ err });
-      throw new Error(err.message);
+      throw err;
     });
-
-    return request;
   };
 };

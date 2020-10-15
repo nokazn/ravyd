@@ -1,15 +1,17 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
+type SimpleShows = { shows: (SpotifyAPI.SimpleShow | null)[] };
+
 export const getShows = (context: Context) => {
   const { app } = context;
 
   return ({ showIdList, market }: {
-    showIdList: string[]
-    market?: SpotifyAPI.Country
-  }): Promise<{ shows?: (SpotifyAPI.SimpleShow | null)[] }> => {
+    showIdList: string[];
+    market?: SpotifyAPI.Country;
+  }): Promise<Partial<SimpleShows>> => {
     const ids = showIdList.join(',');
-    const request = app.$spotifyApi.$get('/shows/', {
+    return app.$spotifyApi.$get<SimpleShows>('/shows/', {
       params: {
         ids,
         market,
@@ -18,7 +20,5 @@ export const getShows = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

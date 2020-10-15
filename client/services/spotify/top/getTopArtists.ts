@@ -9,11 +9,11 @@ export const getTopArtists = (context: Context) => {
     offset = 0,
     timeRange = 'medium_term',
   }: {
-    limit?: OneToFifty
-    offset?: number
-    timeRange?: 'long_term' | 'medium_term' | 'short_term'
+    limit?: OneToFifty;
+    offset?: number;
+    timeRange?: 'long_term' | 'medium_term' | 'short_term';
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined> => {
-    const request = app.$spotifyApi.$get('/me/top/artists', {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.Artist>>('/me/top/artists', {
       params: {
         limit,
         offset,
@@ -23,7 +23,5 @@ export const getTopArtists = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

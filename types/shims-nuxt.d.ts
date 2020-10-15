@@ -6,7 +6,7 @@ import type {
   ExtendedSubscribe,
 } from 'typed-vuex';
 import type dayjs from 'dayjs';
-import type { NuxtAxiosInstance } from '@nuxtjs/axios';
+import type { TypedNuxtAxiosInstance } from 'typed-axios';
 
 import type { SpotifyServices } from '~/services/spotify';
 import type { ServerServices } from '~/services/server';
@@ -26,9 +26,9 @@ declare module '@nuxt/types/app' {
 
     // plugin
     $dayjs: typeof dayjs;
-    $spotifyApi: NuxtAxiosInstance;
+    $spotifyApi: TypedNuxtAxiosInstance;
     $spotify: SpotifyServices;
-    $serverApi: NuxtAxiosInstance;
+    $serverApi: TypedNuxtAxiosInstance;
     $server: ServerServices;
 
     // obserable
