@@ -11,13 +11,13 @@ export const reorderPlaylistItems = (context: Context) => {
     insertBefore,
     snapshotId,
   }: {
-    playlistId: string
-    rangeStart: number
-    rangeLength?: number
-    insertBefore: number
-    snapshotId?: string,
+    playlistId: string;
+    rangeStart: number;
+    rangeLength?: number;
+    insertBefore: number;
+    snapshotId?: string;
   }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
-    const request = app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
+    return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
       rangeStart,
       rangeLength,
       insertBefore,
@@ -26,7 +26,5 @@ export const reorderPlaylistItems = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

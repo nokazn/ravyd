@@ -9,11 +9,11 @@ export const getNewReleases = (context: Context) => {
     limit = 20,
     offset = 0,
   }: {
-    country?: SpotifyAPI.Country
-    limit?: OneToFifty
-    offset?: number
+    country?: SpotifyAPI.Country;
+    limit?: OneToFifty;
+    offset?: number;
   }): Promise<{ albums: SpotifyAPI.Browse.NewReleases | undefined }> => {
-    const request = app.$spotifyApi.$get('/browse/new-releases', {
+    return app.$spotifyApi.$get('/browse/new-releases', {
       params: {
         country,
         limit,
@@ -23,7 +23,5 @@ export const getNewReleases = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

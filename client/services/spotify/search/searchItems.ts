@@ -12,20 +12,18 @@ export const searchItems = (context: Context) => {
     offset = 0,
     includeExternal,
   }: {
-    query: string
-    typeList: T
-    market?: SpotifyAPI.Country
-    limit?: OneToFifty
-    offset?: number
-    includeExternal?: 'audio'
-  }): Promise<
-    SpotifyAPI.SearchResult<T extends [SpotifyAPI.SearchType] ? T[0] : T[number]>
-  > => {
+    query: string;
+    typeList: T;
+    market?: SpotifyAPI.Country;
+    limit?: OneToFifty;
+    offset?: number;
+    includeExternal?: 'audio';
+  }): Promise<SpotifyAPI.SearchResult<T extends [SpotifyAPI.SearchType] ? T[0] : T[number]>> => {
     if (query === '') return Promise.resolve({});
 
     // スペースをエンコード
     const q = query.replace(/\s/g, '%20');
-    const request = app.$spotifyApi.$get('/search', {
+    return app.$spotifyApi.$get('/search', {
       params: {
         q,
         type: typeList.join(','),
@@ -38,7 +36,5 @@ export const searchItems = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

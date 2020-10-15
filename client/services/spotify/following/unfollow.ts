@@ -4,8 +4,8 @@ export const unfollow = (context: Context) => {
   const { app } = context;
 
   return ({ type, idList }: {
-    type: 'artist' | 'user'
-    idList: string[]
+    type: 'artist' | 'user';
+    idList: string[];
   }): Promise<void> => {
     const { length } = idList;
     if (length === 0) {
@@ -31,7 +31,7 @@ export const unfollow = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw new Error(err.message);
+        throw err;
       });
   };
 };

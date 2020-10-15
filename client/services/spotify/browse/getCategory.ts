@@ -9,11 +9,11 @@ export const getCategory = (context: Context) => {
     country,
     locale,
   }: {
-    categoryId: string
-    country?: SpotifyAPI.Country
-    locale?: string
+    categoryId: string;
+    country?: SpotifyAPI.Country;
+    locale?: string;
   }): Promise<SpotifyAPI.Category | undefined> => {
-    const request = app.$spotifyApi.$get(`/browse/categories/${categoryId}`, {
+    return app.$spotifyApi.$get(`/browse/categories/${categoryId}`, {
       params: {
         country,
         locale,
@@ -22,7 +22,5 @@ export const getCategory = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

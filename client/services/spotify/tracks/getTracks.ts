@@ -9,11 +9,11 @@ export const getTracks = (context: Context) => {
     market,
     trackIdList,
   }: {
-    market?: SpotifyAPI.Country
-    trackIdList: string[]
+    market?: SpotifyAPI.Country;
+    trackIdList: string[];
   }): Promise<{ tracks: (SpotifyAPI.Track | null)[]}> => {
     const ids = trackIdList.join(',');
-    const request = app.$spotifyApi.$get('/tracks', {
+    return app.$spotifyApi.$get('/tracks', {
       params: {
         market,
         ids,
@@ -22,7 +22,5 @@ export const getTracks = (context: Context) => {
       console.error({ err });
       return { tracks: [] };
     });
-
-    return request;
   };
 };

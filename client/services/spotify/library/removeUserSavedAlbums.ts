@@ -14,12 +14,7 @@ export const removeUserSavedAlbums = (context: Context) => {
       // limit ごとに分割
       const ids = albumIdList.slice(limit * index, limit).join(',');
       return app.$spotifyApi.$delete('/me/albums', {
-        params: {
-          ids,
-        },
-      }).catch((err: Error) => {
-        console.error({ err });
-        throw new Error(err.message);
+        params: { ids },
       });
     };
     const handlerCounts = Math.ceil(length / limit);
@@ -30,7 +25,7 @@ export const removeUserSavedAlbums = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw new Error(err.message);
+        throw err;
       });
   };
 };

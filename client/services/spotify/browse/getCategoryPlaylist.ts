@@ -10,12 +10,12 @@ export const getCategoryPlaylist = (context: Context) => {
     limit = 20,
     offset = 0,
   }: {
-    categoryId: string
-    country?: SpotifyAPI.Country
-    limit?: OneToFifty
-    offset?: number
+    categoryId: string;
+    country?: SpotifyAPI.Country;
+    limit?: OneToFifty;
+    offset?: number;
   }): Promise<{ playlists: SpotifyAPI.Paging<SpotifyAPI.SimplePlaylist> | undefined }> => {
-    const request = app.$spotifyApi.$get(`/browse/categories/${categoryId}/playlists`, {
+    return app.$spotifyApi.$get(`/browse/categories/${categoryId}/playlists`, {
       params: {
         country,
         limit,
@@ -25,7 +25,5 @@ export const getCategoryPlaylist = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

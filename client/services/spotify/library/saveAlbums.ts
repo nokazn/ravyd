@@ -16,9 +16,6 @@ export const saveAlbums = (context: Context) => {
         params: {
           ids,
         },
-      }).catch((err: Error) => {
-        console.error({ err });
-        throw new Error(err.message);
       });
     };
     const handlerCounts = Math.ceil(length / limit);
@@ -29,7 +26,7 @@ export const saveAlbums = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw new Error(err.message);
+        throw err;
       });
   };
 };

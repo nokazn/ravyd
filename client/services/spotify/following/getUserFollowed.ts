@@ -9,11 +9,11 @@ export const getUserFollowed = (context: Context) => {
     limit,
     after,
   }: {
-    type: 'artist'
-    limit?: OneToFifty
-    after?: string
+    type: 'artist';
+    limit?: OneToFifty;
+    after?: string;
   }): Promise<{ artists: SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined}> => {
-    const request = app.$spotifyApi.$get('/me/following', {
+    return app.$spotifyApi.$get('/me/following', {
       params: {
         type,
         limit,
@@ -23,7 +23,5 @@ export const getUserFollowed = (context: Context) => {
       console.error({ err });
       return {};
     });
-
-    return request;
   };
 };

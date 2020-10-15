@@ -31,7 +31,7 @@ export const follow = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw new Error(err.message);
+        throw err;
       });
   };
 };

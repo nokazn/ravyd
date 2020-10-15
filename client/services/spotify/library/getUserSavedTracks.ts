@@ -12,11 +12,11 @@ export const getUserSavedTracks = (context: Context) => {
     offset = 0,
     market,
   }: {
-    limit?: OneToFifty
-    offset?: number
-    market?: SpotifyAPI.Country
+    limit?: OneToFifty;
+    offset?: number;
+    market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.LibraryOf<'track'> | undefined> => {
-    const request = app.$spotifyApi.$get('/me/tracks', {
+    return app.$spotifyApi.$get('/me/tracks', {
       params: {
         limit,
         offset,
@@ -26,7 +26,5 @@ export const getUserSavedTracks = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

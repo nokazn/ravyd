@@ -13,12 +13,12 @@ export const getPlaylist = (context: Context) => {
     market,
     additionalTypeList,
   }: {
-    playlistId: string
-    fields?: string
-    market?: string
-    additionalTypeList?: Array<'track' | 'episode'>
+    playlistId: string;
+    fields?: string;
+    market?: string;
+    additionalTypeList?: Array<'track' | 'episode'>;
   }): Promise<SpotifyAPI.Playlist | undefined> => {
-    const request = app.$spotifyApi.$get(`/playlists/${playlistId}`, {
+    return app.$spotifyApi.$get(`/playlists/${playlistId}`, {
       params: {
         fields,
         market,
@@ -28,7 +28,5 @@ export const getPlaylist = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

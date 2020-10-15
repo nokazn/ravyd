@@ -7,8 +7,8 @@ export const checkUserFollowedPlaylist = (context: Context) => {
     playlistId,
     userIdList,
   }: {
-    playlistId: string
-    userIdList: string[]
+    playlistId: string;
+    userIdList: string[];
   }): Promise<boolean[]> => {
     const { length } = userIdList;
     const limit = 5;

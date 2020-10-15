@@ -10,7 +10,7 @@ export const callback = (context: Context) => {
     state: string;
   }): Promise<ServerAPI.Auth.Token> => {
     // @todo path
-    const request = app.$serverApi.$get('/auth/login/callback', {
+    return app.$serverApi.$get('/auth/login/callback', {
       params: {
         code,
         state,
@@ -19,7 +19,5 @@ export const callback = (context: Context) => {
       console.error({ err });
       return err.response?.data ?? {};
     });
-
-    return request;
   };
 };

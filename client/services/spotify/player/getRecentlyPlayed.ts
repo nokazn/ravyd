@@ -8,9 +8,9 @@ export const getRecentlyPlayed = (context: Context) => {
    * after と before はどちらか一方をミリ秒で指定する
    */
   return (params?: {
-    limit?: OneToFifty
-    after?: number
-    before?: number
+    limit?: OneToFifty;
+    after?: number;
+    before?: number;
   }): Promise<SpotifyAPI.Player.RecentlyPlayed | undefined> => {
     const limit = params?.limit;
     if (limit != null && (limit < 1 || limit > 50)) {

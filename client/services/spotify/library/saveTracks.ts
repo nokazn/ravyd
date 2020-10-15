@@ -16,9 +16,6 @@ export const saveTracks = (context: Context) => {
         params: {
           ids,
         },
-      }).catch((err: Error) => {
-        console.error({ err });
-        throw new Error(err.message);
       });
     };
 
@@ -30,7 +27,7 @@ export const saveTracks = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw new Error(err.message);
+        throw err;
       });
   };
 };

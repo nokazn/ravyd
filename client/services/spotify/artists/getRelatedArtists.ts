@@ -5,14 +5,12 @@ export const getRelatedArtists = (context: Context) => {
   const { app } = context;
 
   return ({ artistId }: {
-    artistId: string
+    artistId: string;
   }): Promise<{ artists: SpotifyAPI.Artist[] | undefined }> => {
-    const request = app.$spotifyApi.$get(`/artists/${artistId}/related-artists`)
+    return app.$spotifyApi.$get(`/artists/${artistId}/related-artists`)
       .catch((err: Error) => {
         console.error({ err });
         return {};
       });
-
-    return request;
   };
 };

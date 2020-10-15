@@ -9,12 +9,12 @@ export const removePlaylistItems = (context: Context) => {
     tracks,
     snapshotId,
   }: {
-    playlistId: string
+    playlistId: string;
     tracks: {
-      uri: string
-      positions?: number[]
+      uri: string;
+      positions?: number[];
     }[]
-    snapshotId?: string,
+    snapshotId?: string;
   }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>[]> => {
     const { length } = tracks;
     if (length === 0) {
