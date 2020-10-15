@@ -5,13 +5,15 @@ export const pause = (context: Context) => {
 
   return (params?: { deviceId?: string | undefined } | undefined): Promise<void> => {
     const device_id = params?.deviceId;
-    return app.$spotifyApi.$put<void>('/me/player/pause', undefined, {
+    const request = app.$spotifyApi.$put('/me/player/pause', undefined, {
       params: {
         device_id,
       },
     }).catch((err: Error) => {
       console.error({ err });
-      throw err;
+      throw new Error(err.message);
     });
+
+    return request;
   };
 };

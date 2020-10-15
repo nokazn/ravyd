@@ -13,7 +13,7 @@ export const getUserSavedAlbums = (context: Context) => {
     offset?: number
     market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.LibraryOf<'album'> | undefined> => {
-    return app.$spotifyApi.$get<SpotifyAPI.LibraryOf<'album'>>('/me/albums', {
+    const request = app.$spotifyApi.$get('/me/albums', {
       params: {
         limit,
         offset,
@@ -23,5 +23,7 @@ export const getUserSavedAlbums = (context: Context) => {
       console.error({ err });
       return undefined;
     });
+
+    return request;
   };
 };

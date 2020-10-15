@@ -15,7 +15,7 @@ export namespace ServerAPI {
       accessToken?: undefined
       expireIn?: undefined
       message?: undefined
-      url: string | undefined
+      url: string
     }
   }
 }

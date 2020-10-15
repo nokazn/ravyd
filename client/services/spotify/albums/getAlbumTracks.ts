@@ -10,12 +10,12 @@ export const getAlbumTracks = (context: Context) => {
     offset = 0,
     market,
   }: {
-    albumId: string;
-    limit?: OneToFifty;
-    offset?: number;
-    market?: SpotifyAPI.Country;
+    albumId: string
+    limit?: OneToFifty
+    offset?: number
+    market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleTrack> | undefined> => {
-    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.SimpleTrack>>(`/albums/${albumId}/tracks`, {
+    const request = app.$spotifyApi.$get(`/albums/${albumId}/tracks`, {
       params: {
         limit,
         offset,
@@ -25,5 +25,7 @@ export const getAlbumTracks = (context: Context) => {
       console.error({ err });
       return undefined;
     });
+
+    return request;
   };
 };

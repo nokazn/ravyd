@@ -5,12 +5,14 @@ export const getUserProfile = (context: Context) => {
   const { app } = context;
 
   return ({ userId }: {
-    userId: string;
+    userId: string
   }): Promise<SpotifyAPI.UserData | undefined> => {
-    return app.$spotifyApi.$get<SpotifyAPI.UserData>(`/users/${userId}`)
+    const request = app.$spotifyApi.$get(`/users/${userId}`)
       .catch((err: Error) => {
         console.error({ err });
         return undefined;
       });
+
+    return request;
   };
 };

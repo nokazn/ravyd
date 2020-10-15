@@ -4,10 +4,12 @@ export const unfollowPlaylist = (context: Context) => {
   const { app } = context;
 
   return ({ playlistId }: { playlistId: string }): Promise<void> => {
-    return app.$spotifyApi.$delete<void>(`/playlists/${playlistId}/followers`)
+    const request = app.$spotifyApi.$delete(`/playlists/${playlistId}/followers`)
       .catch((err: Error) => {
         console.error({ err });
-        throw err;
+        throw new Error(err.message);
       });
+
+    return request;
   };
 };

@@ -1,9 +1,6 @@
 import { Context } from '@nuxt/types';
 import { OneToHundred, SpotifyAPI } from '~~/types';
 
-type BrowseAttributes = SpotifyAPI.Browse.MinTrackAttributes
-  | SpotifyAPI.Browse.MaxTrackAttributes
-  | SpotifyAPI.Browse.TargetTrackAttributes;
 
 export const getRecommendations = (context: Context) => {
   const { app } = context;
@@ -16,18 +13,22 @@ export const getRecommendations = (context: Context) => {
     trackIdList,
     ...seedParams
   }: {
-    limit?: OneToHundred;
-    market?: SpotifyAPI.Country;
-    artistIdList?: string[];
-    genreList?: string[];
-    trackIdList?: string[];
+    limit?: OneToHundred
+    market?: SpotifyAPI.Country
+    artistIdList?: string[]
+    genreList?: string[]
+    trackIdList?: string[]
   } & {
-    [k in BrowseAttributes]?: number;
+    [k in SpotifyAPI.Browse.MinTrackAttributes]?: number
+  } & {
+    [k in SpotifyAPI.Browse.MaxTrackAttributes]?: number
+  } & {
+    [k in SpotifyAPI.Browse.TargetTrackAttributes]?: number
   }): Promise<Partial<SpotifyAPI.Browse.Recommendations>> => {
     const seed_artists = artistIdList?.join(',');
     const seed_genres = genreList?.join(',');
     const seed_tracks = trackIdList?.join(',');
-    return app.$spotifyApi.$get<SpotifyAPI.Browse.Recommendations>('/recommendations', {
+    const request = app.$spotifyApi.$get('/recommendations', {
       params: {
         limit,
         market,
@@ -40,5 +41,7 @@ export const getRecommendations = (context: Context) => {
       console.error({ err });
       return {};
     });
+
+    return request;
   };
 };

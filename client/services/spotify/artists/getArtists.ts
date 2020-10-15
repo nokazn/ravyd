@@ -1,27 +1,34 @@
-import type { Context } from '@nuxt/types';
-
-import { multipleRequestsWithId } from '~/utils/request';
-import type { SpotifyAPI } from '~~/types';
-
-type Artists = { artists: (SpotifyAPI.Artist | null)[] };
+import { Context } from '@nuxt/types';
+import { SpotifyAPI } from '~~/types';
 
 export const getArtists = (context: Context) => {
   const { app } = context;
 
   return ({ artistIdList }: {
-    artistIdList: string[];
-  }): Promise<Artists['artists']> => {
-    const request = async (ids: string, l: number) => {
-      return app.$spotifyApi.$get<Artists>('/artists', {
-        params: { ids },
-      })
-        .then(({ artists }) => artists)
-        .catch((err: Error) => {
-          console.error({ err });
-          const artists: Artists['artists'] = new Array(l).fill(null);
-          return artists;
-        });
+    artistIdList: string[]
+  }): Promise<{ artists: (SpotifyAPI.Artist | null)[] }> => {
+    const limit = 50;
+    const handler = async (index: number) => {
+      // limit ごとに分割
+      const ids = artistIdList.slice(limit * index, limit).join(',');
+      const { artists }: { artists: (SpotifyAPI.Artist | null)[] } = await app.$spotifyApi.$get('/artists', {
+        params: {
+          ids,
+        },
+      }).catch((err: Error) => {
+        console.error({ err });
+        return { artists: new Array(ids.length).fill(null) };
+      });
+
+      return artists;
     };
-    return multipleRequestsWithId(request, artistIdList, 50, (lists) => lists.flat());
+    const handlerCounts = Math.ceil(artistIdList.length / limit);
+
+    const artists = Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((artistLists) => ({ artists: artistLists.flat() }));
+
+    return artists;
   };
 };

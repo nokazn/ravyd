@@ -60,7 +60,7 @@ export const getReleaseInfo = async (
   const [
     [isSaved],
     isTrackSavedList,
-    artists,
+    { artists },
     artistReleaseList,
   ] = await Promise.all([
     app.$spotify.library.checkUserSavedAlbums({ albumIdList: [id] }),

@@ -210,6 +210,7 @@ export default Vue.extend({
       const { id: playlistId } = mutationPayload.payload;
       const fileReader = new FileReader();
       const onLoad = () => {
+        console.log(fileReader);
         this.$spotify.playlists.uploadPlaylistArtwork({
           playlistId,
           artwork: fileReader.result as string,
