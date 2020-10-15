@@ -109,13 +109,18 @@ export default Vue.extend({
         name: 'このプレイリストから削除',
         handler: () => {
           if (playlistId == null) return;
-          this.$dispatch('playlists/removePlaylistItem', {
-            playlistId,
-            track: {
-              uri: this.episode.uri,
-              positions: [this.episode.index],
+          const { name, uri, index } = this.episode;
+          this.$confirm.open({
+            color: 'error',
+            text: '削除',
+            description: `"${name}" をプレイリストから削除しますか？`,
+            onConfirm: async () => {
+              await this.$dispatch('playlists/removePlaylistItem', {
+                playlistId,
+                track: { uri, positions: [index] },
+                name,
+              });
             },
-            name: this.episode.name,
           });
         },
         disabled: playlistId == null,

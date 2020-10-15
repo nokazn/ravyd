@@ -173,10 +173,7 @@ export default Vue.extend({
               if (playlistId == null) return;
               await this.$dispatch('playlists/removePlaylistItem', {
                 playlistId,
-                track: {
-                  uri,
-                  positions: [index],
-                },
+                track: { uri, positions: [index] },
                 name,
               });
             },
