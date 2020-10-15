@@ -27,20 +27,25 @@
       />
     </v-img>
 
-    <v-sheet
+    <div
       v-else
-      :min-width="minSize || size"
-      :min-height="minSize || size"
-      :width="size"
-      :height="size"
-      :max-width="maxSize || size"
-      :max-height="maxSize || size"
-      :class="$style['ReleaseArtwork--empty']"
+      :class="$style.Ratio"
     >
-      <v-icon :size="defaultIconSize">
-        mdi-music
-      </v-icon>
-    </v-sheet>
+      <svg viewBox="0 0 1 1" />
+      <v-sheet
+        :min-width="minSize || size"
+        :min-height="minSize || size"
+        :width="size"
+        :height="size"
+        :max-width="maxSize || size"
+        :max-height="maxSize || size"
+        :class="$style['ReleaseArtwork--empty']"
+      >
+        <v-icon :size="defaultIconSize">
+          mdi-music
+        </v-icon>
+      </v-sheet>
+    </div>
   </v-hover>
 </template>
 
@@ -134,6 +139,15 @@ export default Vue.extend({
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+// viewBox 0 0 1 1 の svg 要素と同じ位置に v-sheet を配置する
+.Ratio {
+  display: grid;
+
+  & > * {
+    grid-area: 1 / 1 / -1 / -1;
   }
 }
 </style>
