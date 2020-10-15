@@ -1,4 +1,5 @@
 import { Context } from '@nuxt/types';
+import { multipleRequestsWithId } from '~/utils/request';
 
 export const unfollow = (context: Context) => {
   const { app } = context;
@@ -12,26 +13,14 @@ export const unfollow = (context: Context) => {
       return Promise.resolve();
     }
 
-    const limit = 50;
-    const handler = (index: number): Promise<void> => {
-      // limit ごとに分割
-      const ids = idList.slice(limit * index, limit).join(',');
-      return app.$spotifyApi.$delete('/me/following', {
+    const request = (ids: string) => {
+      return app.$spotifyApi.$delete<void>('/me/following', {
         params: {
           type,
           ids,
         },
       });
     };
-    const handlerCounts = Math.ceil(length / limit);
-
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then(() => {})
-      .catch((err: Error) => {
-        console.error({ err });
-        throw err;
-      });
+    return multipleRequestsWithId(request, idList, 50);
   };
 };

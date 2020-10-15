@@ -1,4 +1,5 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
+import { multipleRequestsWithId } from '~/utils/request';
 
 export const removeUserSavedShows = (context: Context) => {
   const { app } = context;
@@ -9,25 +10,11 @@ export const removeUserSavedShows = (context: Context) => {
       return Promise.resolve();
     }
 
-    const limit = 20;
-    const handler = (index: number) => {
-      // limit ごとに分割
-      const ids = showIdList.slice(limit * index, limit).join(',');
+    const request = (ids: string) => {
       return app.$spotifyApi.$delete('/me/shows', {
-        params: {
-          ids,
-        },
+        params: { ids },
       });
     };
-    const handlerCounts = Math.ceil(length / limit);
-
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then(() => {})
-      .catch((err: Error) => {
-        console.error({ err });
-        throw err;
-      });
+    return multipleRequestsWithId(request, showIdList, 20);
   };
 };

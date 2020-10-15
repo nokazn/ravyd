@@ -1,6 +1,8 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
+type Artists = { artists: SpotifyAPI.Paging<SpotifyAPI.Artist> };
+
 export const getUserFollowed = (context: Context) => {
   const { app } = context;
 
@@ -12,8 +14,8 @@ export const getUserFollowed = (context: Context) => {
     type: 'artist';
     limit?: OneToFifty;
     after?: string;
-  }): Promise<{ artists: SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined}> => {
-    return app.$spotifyApi.$get('/me/following', {
+  }): Promise<Partial<Artists>> => {
+    return app.$spotifyApi.$get<Artists>('/me/following', {
       params: {
         type,
         limit,
