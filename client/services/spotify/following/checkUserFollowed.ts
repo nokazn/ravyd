@@ -1,5 +1,4 @@
 import { Context } from '@nuxt/types';
-import { multipleRequestsWithId } from '~/utils/request';
 
 export const checkUserFollowed = (context: Context) => {
   const { app } = context;
@@ -8,26 +7,33 @@ export const checkUserFollowed = (context: Context) => {
     type,
     idList,
   }: {
-    type: 'artist' | 'user';
-    idList: string[];
+    type: 'artist' | 'user'
+    idList: string[]
   }): Promise<boolean[]> => {
     const { length } = idList;
     if (length === 0) {
       return Promise.resolve([]);
     }
 
-    const request = (ids: string, l: number) => {
-      return app.$spotifyApi.$get<boolean[]>('/me/following/contains', {
+    const limit = 50;
+    const handler = (index: number): Promise<boolean[]> => {
+      // limit ごとに分割
+      const ids = idList.slice(limit * index, limit).join(',');
+      return app.$spotifyApi.$get('/me/following/contains', {
         params: {
           type,
           ids,
         },
       }).catch((err: Error) => {
         console.error({ err });
-        const isFollowed: boolean[] = new Array(l).fill(false);
-        return isFollowed;
+        return new Array(length).fill(false);
       });
     };
-    return multipleRequestsWithId(request, idList, 50, (lists) => lists.flat());
+    const handlerCounts = Math.ceil(length / limit);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then((isFollowedLists) => isFollowedLists.flat());
   };
 };

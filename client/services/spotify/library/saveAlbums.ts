@@ -1,5 +1,4 @@
-import type { Context } from '@nuxt/types';
-import { multipleRequestsWithId } from '~/utils/request';
+import { Context } from '@nuxt/types';
 
 export const saveAlbums = (context: Context) => {
   const { app } = context;
@@ -10,11 +9,27 @@ export const saveAlbums = (context: Context) => {
       return Promise.resolve();
     }
 
-    const request = (ids: string) => {
-      return app.$spotifyApi.$put<void>('/me/albums', null, {
-        params: { ids },
+    const limit = 20;
+    const handler = (index: number) => {
+      const ids = albumIdList.slice(limit * index, limit).join(',');
+      return app.$spotifyApi.$put('/me/albums', null, {
+        params: {
+          ids,
+        },
+      }).catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
       });
     };
-    return multipleRequestsWithId(request, albumIdList, 20);
+    const handlerCounts = Math.ceil(length / limit);
+
+    return Promise.all(new Array(handlerCounts)
+      .fill(undefined)
+      .map((_, i) => handler(i)))
+      .then(() => {})
+      .catch((err: Error) => {
+        console.error({ err });
+        throw new Error(err.message);
+      });
   };
 };

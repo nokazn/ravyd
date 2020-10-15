@@ -4,10 +4,12 @@ export const logout = (context: Context) => {
   const { app } = context;
 
   return (): Promise<void> => {
-    return app.$serverApi.$post<void>('/auth/logout')
+    const request = app.$serverApi.$post('/auth/logout')
       .catch((err: Error) => {
         console.error({ err });
-        throw err;
+        throw new Error(err.message);
       });
+
+    return request;
   };
 };

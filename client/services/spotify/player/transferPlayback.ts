@@ -7,15 +7,17 @@ export const transferPlayback = (context: Context) => {
    * play === false の場合は現在の再生状態を維持
    */
   return ({ deviceId, play }: {
-    deviceId: string;
-    play: boolean;
+    deviceId: string
+    play: boolean
   }): Promise<void> => {
-    return app.$spotifyApi.$put<void>('/me/player', {
+    const request = app.$spotifyApi.$put('/me/player', {
       device_ids: [deviceId],
       play,
     }).catch((err: Error) => {
       console.error({ err });
-      throw err;
+      throw new Error(err.message);
     });
+
+    return request;
   };
 };

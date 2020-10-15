@@ -1,10 +1,6 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
-type SearchResults<T extends SpotifyAPI.SearchType[]> = SpotifyAPI.SearchResult<
-  T extends [SpotifyAPI.SearchType] ? T[0] : T[number]
->;
-
 export const searchItems = (context: Context) => {
   const { app } = context;
 
@@ -16,18 +12,20 @@ export const searchItems = (context: Context) => {
     offset = 0,
     includeExternal,
   }: {
-    query: string;
-    typeList: T;
-    market?: SpotifyAPI.Country;
-    limit?: OneToFifty;
-    offset?: number;
-    includeExternal?: 'audio';
-  }): Promise<SearchResults<T>> => {
+    query: string
+    typeList: T
+    market?: SpotifyAPI.Country
+    limit?: OneToFifty
+    offset?: number
+    includeExternal?: 'audio'
+  }): Promise<
+    SpotifyAPI.SearchResult<T extends [SpotifyAPI.SearchType] ? T[0] : T[number]>
+  > => {
     if (query === '') return Promise.resolve({});
 
     // スペースをエンコード
     const q = query.replace(/\s/g, '%20');
-    return app.$spotifyApi.$get<SearchResults<T>>('/search', {
+    const request = app.$spotifyApi.$get('/search', {
       params: {
         q,
         type: typeList.join(','),
@@ -40,5 +38,7 @@ export const searchItems = (context: Context) => {
       console.error({ err });
       return {};
     });
+
+    return request;
   };
 };

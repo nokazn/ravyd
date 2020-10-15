@@ -22,8 +22,14 @@ export const replacePlaylistItems = (context: Context) => {
       const uris = uriList?.slice(limit * (index ?? 0), limit);
       // 1周目のリクエストでは replace する
       if (index == null || index === 0) {
-        return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, { uris });
+        return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
+          uris,
+        }).catch((err: Error) => {
+          console.error({ err });
+          throw new Error(err.message);
+        });
       }
+
       return addItemToPlaylist(context)({
         playlistId,
         uriList: uris,
@@ -39,7 +45,7 @@ export const replacePlaylistItems = (context: Context) => {
       .then(() => {})
       .catch((err: Error) => {
         console.error({ err });
-        throw err;
+        throw new Error(err.message);
       });
   };
 };

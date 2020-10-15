@@ -1,11 +1,9 @@
-import type { AxiosError } from 'axios';
 import { Actions } from 'typed-vuex';
 
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { APP_NAME } from '~/constants';
-import { ServerAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -53,31 +51,30 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
       commit('auth/SET_IS_REFRESHING', true, { root: true });
 
-      return this.$server.auth.refresh(currentAccessToken)
-        .then((token) => {
-          commit('auth/SET_ACCESS_TOKEN', token.accessToken, { root: true });
-          commit('auth/SET_EXPIRATION_MS', token.expireIn, { root: true });
-          return token.accessToken;
-        })
-        .catch(async (err: AxiosError<ServerAPI.Auth.Token>) => {
-          console.error({ err });
-          if (err.response?.data == null) {
-            commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
-            commit('auth/SET_IS_REFRESHING', false, { root: true });
-            return undefined;
-          }
-          if (err.response?.status === 409) {
-            // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
-            await dispatch('auth/getAccessToken', undefined, { root: true });
-            // 一度リセットした expirationMs を元に戻す
-            commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
-            return this.$state().auth.accessToken;
-          }
-          return err.response.data.accessToken;
-        })
-        .finally(() => {
-          commit('auth/SET_IS_REFRESHING', false, { root: true });
-        });
+      const res = await this.$server.auth.refresh(currentAccessToken);
+
+      if (res?.data.accessToken == null) {
+        commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
+        return undefined;
+      }
+
+      const { accessToken, expireIn } = res.data;
+      // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
+      if (res.status !== 409) {
+        commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
+        commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
+        commit('auth/SET_IS_REFRESHING', false, { root: true });
+        return accessToken;
+      }
+
+      // 一度リセットした expirationMs を元に戻す
+      commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
+      commit('auth/SET_IS_REFRESHING', false, { root: true });
+      // アクセストークンを再取得
+      await dispatch('auth/getAccessToken', undefined, { root: true });
+
+      return this.$state().auth.accessToken;
     };
 
     window.onSpotifyWebPlaybackSDKReady = async () => {

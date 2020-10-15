@@ -10,12 +10,12 @@ export const getShowEpisodes = (context: Context) => {
     limit = 20,
     offset = 0,
   }: {
-    showId: string;
-    limit?: OneToFifty;
-    offset?: number;
-    market?: SpotifyAPI.Country;
+    showId: string
+    limit?: OneToFifty
+    offset?: number
+    market?: SpotifyAPI.Country
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleEpisode> | undefined> => {
-    return app.$spotifyApi.$get(`/shows/${showId}/episodes`, {
+    const request = app.$spotifyApi.$get(`/shows/${showId}/episodes`, {
       params: {
         limit,
         offset,
@@ -25,5 +25,7 @@ export const getShowEpisodes = (context: Context) => {
       console.error({ err });
       return undefined;
     });
+
+    return request;
   };
 };

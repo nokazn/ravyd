@@ -8,17 +8,19 @@ export const volume = (context: Context) => {
     deviceId,
     volumePercent,
   }: {
-    deviceId?: string | undefined;
-    volumePercent: ZeroToHundred;
+    deviceId?: string | undefined
+    volumePercent: ZeroToHundred
   }): Promise<void> => {
-    return app.$spotifyApi.$put<void>('/me/player/volume', undefined, {
+    const request = app.$spotifyApi.$put('/me/player/volume', undefined, {
       params: {
         device_id: deviceId,
         volume_percent: volumePercent,
       },
     }).catch((err: Error) => {
       console.error({ err });
-      throw err;
+      throw new Error(err.message);
     });
+
+    return request;
   };
 };

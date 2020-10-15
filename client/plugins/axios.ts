@@ -39,7 +39,8 @@ const injector: Plugin = ({ $axios, app }, inject) => {
         timeout: 1000 * 30,
       });
     }
-    throw err;
+
+    throw new Error(err.message);
   });
 
   inject('spotifyApi', spotifyApi);
