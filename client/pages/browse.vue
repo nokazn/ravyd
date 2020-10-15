@@ -44,8 +44,6 @@ interface Data {
   title: string
 }
 
-// $constant の値は使わない
-const FLEX_CARD_MAX_WIDTH = 220;
 const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
@@ -71,7 +69,6 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
   categoryList: App.CategoryInfo[] | undefined = undefined;
 
   title = '見つける';
-  FLEX_CARD_MAX_WIDTH = FLEX_CARD_MAX_WIDTH;
 
   head() {
     return {
@@ -121,7 +118,7 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .BrowsePage {
-  padding: 16px max(12px, 2vw) 48px;
+  @include page-margin();
 
   &__title {
     margin-left: 3%;
