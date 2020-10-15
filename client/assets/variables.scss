@@ -175,9 +175,10 @@ $g-gradation-width: min(1.5vw, 16px);
  * z-index
  */
 $__layer-map: (
+  // overlay (z-index: 201) 上の modal (z-index: 202) より上にする
+  toast: 203,
   loading: 13,
   fab: 12,
-  toast: 12,
   modal: 12,
   front-menu: 11,
   overlay: 10,
