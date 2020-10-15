@@ -1,4 +1,5 @@
 import { Context } from '@nuxt/types';
+import { multipleRequestsWithId } from '~/utils/request';
 
 export const checkUserFollowedPlaylist = (context: Context) => {
   const { app } = context;
@@ -7,32 +8,24 @@ export const checkUserFollowedPlaylist = (context: Context) => {
     playlistId,
     userIdList,
   }: {
-    playlistId: string
-    userIdList: string[]
+    playlistId: string;
+    userIdList: string[];
   }): Promise<boolean[]> => {
     const { length } = userIdList;
-    const limit = 5;
     if (length === 0) {
       return Promise.resolve([]);
     }
 
-    const handler = (index: number): Promise<boolean[]> => {
+    const request = (ids: string, l: number) => {
       // limit ごとに分割
-      const ids = userIdList.slice(limit * index, limit).join(',');
-      return app.$spotifyApi.$get(`/playlists/${playlistId}/followers/contains`, {
-        params: {
-          ids,
-        },
+      return app.$spotifyApi.$get<boolean[]>(`/playlists/${playlistId}/followers/contains`, {
+        params: { ids },
       }).catch((err: Error) => {
         console.error({ err });
-        return new Array(length).fill(false);
+        const isFollowed: boolean[] = new Array(l).fill(false);
+        return isFollowed;
       });
     };
-    const handlerCounts = Math.ceil(length / limit);
-
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((isFollowedLists) => isFollowedLists.flat());
+    return multipleRequestsWithId(request, userIdList, 5, (lists) => lists.flat());
   };
 };

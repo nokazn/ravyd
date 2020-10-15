@@ -17,14 +17,14 @@ export const getPlaylistItems = (context: Context) => {
     market,
     additionalTypeList,
   }: {
-    playlistId: string
-    fields?: string
-    limit?: OneToFifty
-    offset?: number
-    market?: string
-    additionalTypeList?: Array<'track' | 'episode'>
+    playlistId: string;
+    fields?: string;
+    limit?: OneToFifty;
+    offset?: number;
+    market?: string;
+    additionalTypeList?: Array<'track' | 'episode'>;
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack> | undefined> => {
-    const request = app.$spotifyApi.$get(`/playlists/${playlistId}/tracks`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>>(`/playlists/${playlistId}/tracks`, {
       params: {
         fields,
         limit,
@@ -36,7 +36,5 @@ export const getPlaylistItems = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

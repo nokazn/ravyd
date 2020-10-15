@@ -9,11 +9,11 @@ export const getTopTracks = (context: Context) => {
     offset = 0,
     timeRange = 'medium_term',
   }: {
-    limit?: OneToFifty
-    offset?: number
-    timeRange?: 'long_term' | 'medium_term' | 'short_term'
+    limit?: OneToFifty;
+    offset?: number;
+    timeRange?: 'long_term' | 'medium_term' | 'short_term';
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Track> | undefined> => {
-    const request = app.$spotifyApi.$get('/me/top/tracks', {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.Track>>('/me/top/tracks', {
       params: {
         limit,
         offset,
@@ -23,7 +23,5 @@ export const getTopTracks = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

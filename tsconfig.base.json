@@ -49,6 +49,9 @@
       ],
       "typed-vuex": [
         "./types/typed-vuex/index.d.ts"
+      ],
+      "typed-axios": [
+        "./types/typed-axios.d.ts"
       ]
     },
     // "rootDirs": [],
