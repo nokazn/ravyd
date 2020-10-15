@@ -1,5 +1,9 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+
+import { multipleRequestsWithId } from '~/utils/request';
+import type { SpotifyAPI } from '~~/types';
+
+type Episodes = { episodes: (SpotifyAPI.Episode | null)[] };
 
 export const getEpisodes = (context: Context) => {
   const { app } = context;
@@ -7,16 +11,22 @@ export const getEpisodes = (context: Context) => {
   return ({ episodeIdList, market }: {
     episodeIdList: string[];
     market?: SpotifyAPI.Country;
-  }): Promise<{ episodes?: (SpotifyAPI.Episode | null)[] }> => {
-    const ids = episodeIdList.join(',');
-    return app.$spotifyApi.$get('/episodes/', {
-      params: {
-        ids,
-        market,
-      },
-    }).catch((err: Error) => {
-      console.error({ err });
-      return {};
-    });
+  }): Promise<Episodes['episodes']> => {
+    const request = (ids: string, l: number) => {
+      return app.$spotifyApi.$get<Episodes>('/episodes/', {
+        params: {
+          ids,
+          market,
+        },
+      })
+        .then(({ episodes }) => episodes)
+        .catch((err: Error) => {
+          console.error({ err });
+          const episodeList: Episodes['episodes'] = new Array(l).fill(null);
+          return episodeList;
+        });
+    };
+
+    return multipleRequestsWithId(request, episodeIdList, 50, (lists) => lists.flat());
   };
 };

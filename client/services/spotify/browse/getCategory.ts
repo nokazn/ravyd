@@ -13,7 +13,7 @@ export const getCategory = (context: Context) => {
     country?: SpotifyAPI.Country;
     locale?: string;
   }): Promise<SpotifyAPI.Category | undefined> => {
-    return app.$spotifyApi.$get(`/browse/categories/${categoryId}`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Category>(`/browse/categories/${categoryId}`, {
       params: {
         country,
         locale,

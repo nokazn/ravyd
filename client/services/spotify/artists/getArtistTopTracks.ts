@@ -1,14 +1,16 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI } from '~~/types';
 
+type Tracks = { tracks: SpotifyAPI.Track[] };
+
 export const getArtistTopTracks = (context: Context) => {
   const { app } = context;
 
   return ({ artistId, country }: {
     artistId: string;
     country: SpotifyAPI.Country;
-  }): Promise<{ tracks: SpotifyAPI.Track[] | undefined }> => {
-    return app.$spotifyApi.$get(`/artists/${artistId}/top-tracks`, {
+  }): Promise<Partial<Tracks>> => {
+    return app.$spotifyApi.$get<Tracks>(`/artists/${artistId}/top-tracks`, {
       params: {
         country,
       },

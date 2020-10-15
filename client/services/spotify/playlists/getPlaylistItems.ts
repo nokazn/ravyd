@@ -24,7 +24,7 @@ export const getPlaylistItems = (context: Context) => {
     market?: string;
     additionalTypeList?: Array<'track' | 'episode'>;
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack> | undefined> => {
-    return app.$spotifyApi.$get(`/playlists/${playlistId}/tracks`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>>(`/playlists/${playlistId}/tracks`, {
       params: {
         fields,
         limit,

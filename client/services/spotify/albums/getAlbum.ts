@@ -8,7 +8,7 @@ export const getAlbum = (context: Context) => {
     albumId: string;
     market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.Album | undefined> => {
-    return app.$spotifyApi.$get(`/albums/${albumId}`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Album>(`/albums/${albumId}`, {
       params: { market },
     })
       .catch((err: Error) => {

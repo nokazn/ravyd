@@ -8,7 +8,7 @@ export const getCurrentPlayback = (context: Context) => {
     market?: SpotifyAPI.Country;
     additionalTypeList?: Array<'track' | 'episode'>;
   }): Promise<SpotifyAPI.Player.CurrentPlayback | undefined> => {
-    return app.$spotifyApi.$get('/me/player', {
+    return app.$spotifyApi.$get<SpotifyAPI.Player.CurrentPlayback>('/me/player', {
       params: {
         market,
         additional_types: additionalTypeList?.join(','),

@@ -27,7 +27,7 @@ export const getRecommendations = (context: Context) => {
     const seed_artists = artistIdList?.join(',');
     const seed_genres = genreList?.join(',');
     const seed_tracks = trackIdList?.join(',');
-    return app.$spotifyApi.$get('/recommendations', {
+    return app.$spotifyApi.$get<SpotifyAPI.Browse.Recommendations>('/recommendations', {
       params: {
         limit,
         market,

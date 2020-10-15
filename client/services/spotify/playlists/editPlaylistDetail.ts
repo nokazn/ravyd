@@ -16,7 +16,7 @@ export const editPlaylistDetail = (context: Context) => {
     isCollaborative?: boolean;
     description?: string;
   }): Promise<void> => {
-    return app.$spotifyApi.$put(`/playlists/${playlistId}`, {
+    return app.$spotifyApi.$put<void>(`/playlists/${playlistId}`, {
       name,
       public: isPublic,
       collaborative: isCollaborative,

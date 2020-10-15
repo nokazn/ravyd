@@ -5,7 +5,7 @@ export const pause = (context: Context) => {
 
   return (params?: { deviceId?: string | undefined } | undefined): Promise<void> => {
     const device_id = params?.deviceId;
-    return app.$spotifyApi.$put('/me/player/pause', undefined, {
+    return app.$spotifyApi.$put<void>('/me/player/pause', undefined, {
       params: {
         device_id,
       },

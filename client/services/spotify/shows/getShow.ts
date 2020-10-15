@@ -8,7 +8,7 @@ export const getShow = (context: Context) => {
     showId: string;
     market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.Show | undefined> => {
-    return app.$spotifyApi.$get(`/shows/${showId}`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Show>(`/shows/${showId}`, {
       params: {
         market,
       },

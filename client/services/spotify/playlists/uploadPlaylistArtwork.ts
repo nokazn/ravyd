@@ -13,7 +13,7 @@ export const uploadPlaylistArtwork = (context: Context) => {
     playlistId: string;
     artwork: string;
   }): Promise<void> => {
-    return app.$spotifyApi.$put(`playlists/${playlistId}/images`, artwork, {
+    return app.$spotifyApi.$put<void>(`playlists/${playlistId}/images`, artwork, {
       headers: {
         'Content-Type': 'image/jpeg',
       },

@@ -6,8 +6,11 @@ export const addItemToQueue = (context: Context) => {
   /**
    * uri は track か episode
    */
-  return ({ uri, deviceId }: { uri: string, deviceId?: string }): Promise<void> => {
-    return app.$spotifyApi.$post('/me/player/queue', undefined, {
+  return ({ uri, deviceId }: {
+    uri: string;
+    deviceId?: string;
+  }): Promise<void> => {
+    return app.$spotifyApi.$post<void>('/me/player/queue', undefined, {
       params: {
         uri,
         device_id: deviceId,

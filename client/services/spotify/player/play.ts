@@ -20,7 +20,7 @@ export const play = (context: Context) => {
     offset?: { uri: string } | { position: number };
     positionMs?: number;
   }): Promise<void> => {
-    return app.$spotifyApi.$put('/me/player/play', {
+    return app.$spotifyApi.$put<void>('/me/player/play', {
       context_uri: contextUri,
       uris: trackUriList,
       offset,

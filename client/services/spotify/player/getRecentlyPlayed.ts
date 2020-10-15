@@ -17,7 +17,7 @@ export const getRecentlyPlayed = (context: Context) => {
       throw new Error(`limit は1 ~ 50までしか指定できませんが、${limit}と指定されました。`);
     }
 
-    return app.$spotifyApi.$get('/me/player/recently-played', {
+    return app.$spotifyApi.$get<SpotifyAPI.Player.RecentlyPlayed>('/me/player/recently-played', {
       params: {
         limit: 20,
         ...params,

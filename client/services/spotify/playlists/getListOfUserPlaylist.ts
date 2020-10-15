@@ -17,7 +17,7 @@ export const getListOfUserPlaylist = (context: Context) => {
     limit?: OneToFifty;
     offset?: number;
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimplePlaylist> | undefined> => {
-    return app.$spotifyApi.$get(`/users/${userId}/playlists`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.SimplePlaylist>>(`/users/${userId}/playlists`, {
       params: {
         limit,
         offset,

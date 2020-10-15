@@ -1,6 +1,8 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
+type Albums = { albums: SpotifyAPI.Browse.NewReleases };
+
 export const getNewReleases = (context: Context) => {
   const { app } = context;
 
@@ -12,8 +14,8 @@ export const getNewReleases = (context: Context) => {
     country?: SpotifyAPI.Country;
     limit?: OneToFifty;
     offset?: number;
-  }): Promise<{ albums: SpotifyAPI.Browse.NewReleases | undefined }> => {
-    return app.$spotifyApi.$get('/browse/new-releases', {
+  }): Promise<Partial<Albums>> => {
+    return app.$spotifyApi.$get<Albums>('/browse/new-releases', {
       params: {
         country,
         limit,

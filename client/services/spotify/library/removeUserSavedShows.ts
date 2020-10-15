@@ -11,7 +11,7 @@ export const removeUserSavedShows = (context: Context) => {
     }
 
     const request = (ids: string) => {
-      return app.$spotifyApi.$delete('/me/shows', {
+      return app.$spotifyApi.$delete<void>('/me/shows', {
         params: { ids },
       });
     };

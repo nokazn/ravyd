@@ -13,7 +13,7 @@ export const getTopTracks = (context: Context) => {
     offset?: number;
     timeRange?: 'long_term' | 'medium_term' | 'short_term';
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Track> | undefined> => {
-    return app.$spotifyApi.$get('/me/top/tracks', {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.Track>>('/me/top/tracks', {
       params: {
         limit,
         offset,

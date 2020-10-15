@@ -16,7 +16,7 @@ export const addItemToPlaylist = (context: Context) => {
     uriList?: string[];
     position?: number;
   }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
-    return app.$spotifyApi.$post(`/playlists/${playlistId}/tracks`, {
+    return app.$spotifyApi.$post<SpotifyAPI.PlaylistSnapshot>(`/playlists/${playlistId}/tracks`, {
       uris: uriList,
       position,
     }).catch((err: Error) => {

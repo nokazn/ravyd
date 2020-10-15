@@ -17,7 +17,7 @@ export const reorderPlaylistItems = (context: Context) => {
     insertBefore: number;
     snapshotId?: string;
   }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>> => {
-    return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, {
+    return app.$spotifyApi.$put<SpotifyAPI.PlaylistSnapshot>(`/playlists/${playlistId}/tracks`, {
       rangeStart,
       rangeLength,
       insertBefore,

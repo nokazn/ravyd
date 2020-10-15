@@ -1,6 +1,8 @@
 import { Context } from '@nuxt/types';
 import { SpotifyAPI, OneToFifty } from '~~/types';
 
+type Categories = { categories: SpotifyAPI.Paging<SpotifyAPI.Category> };
+
 export const getCategoryList = (context: Context) => {
   const { app } = context;
 
@@ -14,8 +16,8 @@ export const getCategoryList = (context: Context) => {
     locale?: string;
     limit?: OneToFifty;
     offset?: number;
-  }): Promise<{ categories: SpotifyAPI.Paging<SpotifyAPI.Category> | undefined }> => {
-    return app.$spotifyApi.$get('/browse/categories', {
+  }): Promise<Partial<Categories>> => {
+    return app.$spotifyApi.$get<Categories>('/browse/categories', {
       params: {
         country,
         locale,

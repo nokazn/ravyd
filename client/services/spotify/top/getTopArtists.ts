@@ -13,7 +13,7 @@ export const getTopArtists = (context: Context) => {
     offset?: number;
     timeRange?: 'long_term' | 'medium_term' | 'short_term';
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined> => {
-    return app.$spotifyApi.$get('/me/top/artists', {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.Artist>>('/me/top/artists', {
       params: {
         limit,
         offset,

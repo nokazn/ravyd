@@ -17,7 +17,7 @@ export const createPlaylist = (context: Context) => {
     isCollaborative?: boolean;
     description?: string;
   }): Promise<SpotifyAPI.Playlist | undefined> => {
-    return app.$spotifyApi.$post(`/users/${userId}/playlists`, {
+    return app.$spotifyApi.$post<SpotifyAPI.Playlist>(`/users/${userId}/playlists`, {
       name,
       public: isPublic,
       collaborative: isCollaborative,
