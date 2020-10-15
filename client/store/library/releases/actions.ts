@@ -6,6 +6,7 @@ import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';
 import { EMPTY_PAGING } from '~/constants';
 import { SpotifyAPI, OneToFifty } from '~~/types';
+import { multipleRequests } from '~/utils/request/multipleRequests';
 
 export type LibraryReleasesActions = {
   getSavedReleaseList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
@@ -106,19 +107,19 @@ const actions: Actions<
         market,
       });
     };
-    const handlerCounts = Math.ceil(unupdatedCounts / maxLimit);
 
-    const releases: LibraryOfReleases | undefined = await Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((pagings) => pagings.reduce((prev, curr) => {
-        // 1つでもリクエストが失敗したらすべて無効にする
-        if (prev == null || curr == null) return undefined;
-        return {
-          ...curr,
-          items: [...prev.items, ...curr.items],
-        };
-      }, EMPTY_PAGING as LibraryOfReleases));
+    const releases: LibraryOfReleases | undefined = await multipleRequests(
+      handler,
+      unupdatedCounts,
+      maxLimit,
+    ).then((pagings) => pagings.reduce((prev, curr) => {
+      // 1つでもリクエストが失敗したらすべて無効にする
+      if (prev == null || curr == null) return undefined;
+      return {
+        ...curr,
+        items: [...prev.items, ...curr.items],
+      };
+    }, EMPTY_PAGING as LibraryOfReleases));
 
     if (releases == null) {
       this.$toast.push({

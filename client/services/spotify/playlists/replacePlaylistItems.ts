@@ -1,4 +1,6 @@
 import { Context } from '@nuxt/types';
+import { multipleRequests } from '~/utils/request/multipleRequests';
+import { SpotifyAPI } from '~~/types';
 import { addItemToPlaylist } from './addItemToPlaylist';
 
 export const replacePlaylistItems = (context: Context) => {
@@ -14,32 +16,23 @@ export const replacePlaylistItems = (context: Context) => {
   }: {
     playlistId: string
     uriList?: string[]
-  }): Promise<void> => {
+  }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>[]> => {
     const length = uriList?.length;
     const limit = 100;
-
-    const handler = (index?: number) => {
-      const uris = uriList?.slice(limit * (index ?? 0), limit);
-      // 1周目のリクエストでは replace する
-      if (index == null || index === 0) {
-        return app.$spotifyApi.$put(`/playlists/${playlistId}/tracks`, { uris });
+    const handler = (index: number) => {
+      const uris = uriList?.slice(limit * index, limit * (index + 1));
+      // @todo 1周目のリクエストでは replace する
+      if (index === 0) {
+        return app.$spotifyApi.$put<SpotifyAPI.PlaylistSnapshot>(`/playlists/${playlistId}/tracks`, { uris });
       }
       return addItemToPlaylist(context)({
         playlistId,
         uriList: uris,
       });
     };
-    if (length == null) return handler();
 
-    const handlerCounts = Math.ceil(length / limit);
-
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then(() => {})
-      .catch((err: Error) => {
-        console.error({ err });
-        throw err;
-      });
+    return length == null
+      ? handler(0).then((snapshotId) => [snapshotId])
+      : multipleRequests(handler, length, limit);
   };
 };

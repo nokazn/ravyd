@@ -6,6 +6,7 @@ import { LibraryTracksGetters } from './getters';
 import { LibraryTracksMutations } from './mutations';
 import { EMPTY_PAGING } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
+import { multipleRequests } from '~/utils/request/multipleRequests';
 
 export type LibraryTracksActions = {
   getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
@@ -110,19 +111,18 @@ const actions: Actions<
         market,
       });
     };
-    const handlerCounts = Math.ceil(unupdatedCounts / maxLimit);
-
-    const tracks: LibraryOfTracks | undefined = await Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((pagings) => pagings.reduce((prev, curr) => {
-        // 1つでもリクエストが失敗したらすべて無効にする
-        if (prev == null || curr == null) return undefined;
-        return {
-          ...curr,
-          items: [...prev.items, ...curr.items],
-        };
-      }, EMPTY_PAGING as LibraryOfTracks));
+    const tracks: LibraryOfTracks | undefined = await multipleRequests(
+      handler,
+      unupdatedCounts,
+      maxLimit,
+    ).then((pagings) => pagings.reduce((prev, curr) => {
+      // 1つでもリクエストが失敗したらすべて無効にする
+      if (prev == null || curr == null) return undefined;
+      return {
+        ...curr,
+        items: [...prev.items, ...curr.items],
+      };
+    }, EMPTY_PAGING as LibraryOfTracks));
 
     if (tracks == null) {
       this.$toast.push({

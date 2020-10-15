@@ -3,6 +3,7 @@ import { PlaylistsState } from './state';
 import { PlaylistsGetters } from './getters';
 import { PlaylistsMutations } from './mutations';
 import { OneToFifty } from '~~/types';
+import { multipleRequests } from '~/utils/request/multipleRequests';
 
 export type PlaylistsActions = {
   getPlaylists: (payload?: { offset?: number, limit?: OneToFifty }) => Promise<void>
@@ -118,12 +119,8 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       return playlists.items;
     };
     const unacquiredCounts = firstListOfPlaylists.total - limit;
-    const handlerCounts = Math.ceil(unacquiredCounts / limit);
-
-    const listOfPlaylists = await Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((listsOfPlaylists) => listsOfPlaylists.flat());
+    const listOfPlaylists = await multipleRequests(handler, unacquiredCounts, limit)
+      .then((playlists) => playlists.flat());
 
     commit('SET_PLAYLISTS', [
       ...firstListOfPlaylists.items,
@@ -351,12 +348,12 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
-    const [{ snapshot_id }] = await this.$spotify.playlists.removePlaylistItems({
+    const [snapshotId] = await this.$spotify.playlists.removePlaylistItems({
       playlistId,
       tracks: [track],
     });
 
-    if (snapshot_id == null) {
+    if (snapshotId == null) {
       this.$toast.push({
         color: 'error',
         message: `${name}をこのプレイリストから削除できませんでした。`,

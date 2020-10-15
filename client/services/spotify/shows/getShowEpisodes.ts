@@ -15,7 +15,7 @@ export const getShowEpisodes = (context: Context) => {
     offset?: number;
     market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.SimpleEpisode> | undefined> => {
-    return app.$spotifyApi.$get(`/shows/${showId}/episodes`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.SimpleEpisode>>(`/shows/${showId}/episodes`, {
       params: {
         limit,
         offset,
