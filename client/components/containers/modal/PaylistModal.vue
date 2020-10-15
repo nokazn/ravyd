@@ -17,7 +17,6 @@
       >
         キャンセル
       </v-btn>
-
       <v-btn
         rounded
         :min-width="90"
@@ -43,31 +42,28 @@
         clearable
         required
         :rules="playlistNameRules"
+
         @keydown.enter.prevent
       />
-
       <v-textarea
         v-model="playlistDescription"
         label="説明"
         clearable
         :rows="3"
       />
-
       <v-file-input
         v-model="playlistArtwork"
+        clearable
+        show-size
         label="画像を選択"
         accept="image/*"
         prepend-icon="mdi-camera"
-        clearable
-        show-size
       />
-
       <v-checkbox
         v-model="isPrivatePlaylist"
         label="プレイリストを非公開にする"
         :disabled="isCollaborativePlaylist"
       />
-
       <v-checkbox
         v-model="isCollaborativePlaylist"
         label="コラボプレイリストにする"
@@ -209,15 +205,12 @@ export default Vue.extend({
   mounted() {
     // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
     const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
-      if (this.playlistArtwork == null) {
-        this.modal = false;
-        this.isLoading = false;
-        return;
-      }
+      if (this.playlistArtwork == null) return;
 
       const { id: playlistId } = mutationPayload.payload;
       const fileReader = new FileReader();
-      fileReader.addEventListener('load', () => {
+      const onLoad = () => {
+        console.log(fileReader);
         this.$spotify.playlists.uploadPlaylistArtwork({
           playlistId,
           artwork: fileReader.result as string,
@@ -227,7 +220,6 @@ export default Vue.extend({
             color: 'primary',
             message: `プレイリストを${this.resultText || this.detailText}しました。`,
           });
-
           this.resetForm();
         }).catch(() => {
           this.$toast.push({
@@ -236,18 +228,22 @@ export default Vue.extend({
           });
         }).finally(() => {
           this.isLoading = false;
+          fileReader.removeEventListener('load', onLoad);
         });
-      });
+      };
+      fileReader.addEventListener('load', onLoad);
 
       // @todo
-      fileReader.addEventListener('error', (err) => {
+      const onError = (err: ProgressEvent<FileReader>) => {
         console.warn(err);
         this.isLoading = false;
         this.$toast.push({
           color: 'error',
           message: '画像の読み込みに失敗しました。',
         });
-      });
+        fileReader.removeEventListener('error', onError);
+      };
+      fileReader.addEventListener('error', onError);
 
       fileReader.readAsDataURL(this.playlistArtwork);
     };
@@ -259,7 +255,6 @@ export default Vue.extend({
         case 'playlists/EDIT_PLAYLIST':
           subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }
@@ -282,7 +277,6 @@ export default Vue.extend({
       if (userId == null) return;
 
       this.isLoading = true;
-
       this.handler({
         playlistId: this.form?.playlistId,
         name: this.playlistName,
@@ -296,7 +290,6 @@ export default Vue.extend({
             color: 'primary',
             message: `プレイリストを${this.resultText || this.detailText}しました。`,
           });
-
           this.resetForm();
         }
       }).finally(() => {

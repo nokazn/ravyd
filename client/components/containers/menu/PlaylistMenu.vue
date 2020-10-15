@@ -128,6 +128,8 @@ export default Vue.extend({
     editPlaylist(): MenuItem {
       return {
         name: '詳細の編集',
+        // 自分のプレイリストで削除済の場合
+        disabled: this.playlist.isOwnPlaylist && !this.following,
         handler: () => {
           this.$emit(ON_EDIT_MENU_CLICKED, true);
         },

@@ -59,6 +59,9 @@
       <div :class="$style.Info">
         <div class="g-small-text">
           プレイリスト
+          <span v-if="playlistInfo.isOwnPlaylist && !isFollowing">
+            (削除済み)
+          </span>
           <v-icon
             v-if="!playlistInfo.isPublic && playlistInfo.isOwnPlaylist"
             small
@@ -93,6 +96,7 @@
               outlined
               title="編集する"
               :size="36"
+              :disabled="!isFollowing"
               @click="toggleEditPlaylistModal(true)"
             >
               mdi-pencil
@@ -141,7 +145,6 @@
         :class="$style.PlaylistIdPage__table"
         @on-favorite-button-clicked="toggleTrackFavoritState"
       />
-
       <IntersectionLoadingCircle
         :loading="!playlistTrackInfo.isFullTrackList"
         @appear="appendTrackList"
@@ -264,7 +267,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const {
       name, description, images, isPublic, isCollaborative,
     } = this.playlistInfo;
-
     return {
       playlistId: this.$route.params.playlistId,
       name,
