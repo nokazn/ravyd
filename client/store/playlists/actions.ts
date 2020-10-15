@@ -172,13 +172,15 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         return prev;
       }, baseLists);
 
-      const request = (uriList: string[]) => this.$spotify.playlists.addItemToPlaylist({
-        playlistId: playlist.id,
-        uriList,
-      }).catch((err: Error) => {
-        console.error({ err });
-        throw new Error(err.message);
-      });
+      const request = (uriList: string[]) => {
+        return this.$spotify.playlists.addItemToPlaylist({
+          playlistId: playlist.id,
+          uriList,
+        }).catch((err: Error) => {
+          console.error({ err });
+          throw err;
+        });
+      };
 
       await Promise.all(uriLists.map((uriList) => request(uriList)))
         .catch((err: Error) => {

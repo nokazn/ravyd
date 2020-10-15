@@ -5,10 +5,10 @@ export const getShow = (context: Context) => {
   const { app } = context;
 
   return ({ showId, market }: {
-    showId: string
-    market?: SpotifyAPI.Country
+    showId: string;
+    market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.Show | undefined> => {
-    const request = app.$spotifyApi.$get(`/shows/${showId}`, {
+    return app.$spotifyApi.$get<SpotifyAPI.Show>(`/shows/${showId}`, {
       params: {
         market,
       },
@@ -16,7 +16,5 @@ export const getShow = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

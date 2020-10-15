@@ -1,4 +1,5 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
+import { multipleRequestsWithId } from '~/utils/request';
 
 export const checkUserSavedTracks = (context: Context) => {
   const { app } = context;
@@ -9,24 +10,15 @@ export const checkUserSavedTracks = (context: Context) => {
       return Promise.resolve([]);
     }
 
-    const limit = 50;
-    const handler = (index: number): Promise<boolean[]> => {
-      // limit ごとに分割
-      const ids = trackIdList.slice(limit * index, limit).join(',');
-      return app.$spotifyApi.$get('/me/tracks/contains', {
-        params: {
-          ids,
-        },
+    const request = (ids: string, l: number) => {
+      return app.$spotifyApi.$get<boolean[]>('/me/tracks/contains', {
+        params: { ids },
       }).catch((err: Error) => {
         console.error({ err });
-        return new Array(length).fill(false);
+        const isSaved: boolean[] = new Array(l).fill(false);
+        return isSaved;
       });
     };
-    const handlerCounts = Math.ceil(length / limit);
-
-    return Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((isSavedLists) => isSavedLists.flat());
+    return multipleRequestsWithId(request, trackIdList, 50, (lists) => lists.flat());
   };
 };

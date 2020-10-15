@@ -1,7 +1,10 @@
+import type { AxiosError } from 'axios';
 import { Actions } from 'typed-vuex';
+
 import { AuthState } from './state';
 import { AuthGetters } from './getters';
 import { AuthMutations } from './mutations';
+import { ServerAPI } from '~~/types';
 
 export type AuthActions = {
   login: () => Promise<void>
@@ -93,37 +96,32 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_EXPIRATION_MS', undefined);
     commit('SET_IS_REFRESHING', true);
 
-    const res = await this.$server.auth.refresh(state.accessToken);
-
-    // アクセストークンが取得できなかった場合はログアウト
-    if (res?.data.accessToken == null) {
-      commit('SET_ACCESS_TOKEN', undefined);
-      commit('SET_EXPIRATION_MS', undefined);
-      commit('SET_IS_REFRESHING', false);
-
-      await dispatch('logout');
-      this.$router.push('/login');
-      this.$toast.push({
-        color: 'error',
-        message: 'トークンを取得できなかったためログアウトしました。',
+    await this.$server.auth.refresh(state.accessToken)
+      .then((token) => {
+        commit('SET_ACCESS_TOKEN', token.accessToken);
+        commit('SET_EXPIRATION_MS', token.expireIn);
+      })
+      .catch(async (err: AxiosError<ServerAPI.Auth.Token>) => {
+        console.error({ err });
+        if (err.response?.data == null) {
+          commit('SET_ACCESS_TOKEN', undefined);
+          commit('SET_EXPIRATION_MS', undefined);
+          await dispatch('logout');
+          this.$router.push('/login');
+          this.$toast.push({
+            color: 'error',
+            message: 'トークンを取得できなかったためログアウトしました。',
+          });
+        } else if (err.response?.status === 409) {
+          // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
+          await dispatch('getAccessToken');
+          // 一度リセットした expirationMs を元に戻す
+          commit('SET_EXPIRATION_MS', currentExpirationMs);
+        }
+      })
+      .finally(() => {
+        commit('SET_IS_REFRESHING', false);
       });
-
-      return;
-    }
-
-    const { accessToken, expireIn } = res.data;
-    // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
-    if (res.status !== 409) {
-      commit('SET_ACCESS_TOKEN', accessToken);
-      commit('SET_EXPIRATION_MS', expireIn);
-      commit('SET_IS_REFRESHING', false);
-    } else {
-      // 一度リセットした expirationMs を元に戻す
-      commit('SET_EXPIRATION_MS', currentExpirationMs);
-      commit('SET_IS_REFRESHING', false);
-      // アクセストークンを再取得
-      await dispatch('getAccessToken');
-    }
   },
 
   async logout({ commit, dispatch }) {

@@ -1,5 +1,10 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+
+import { multipleRequestsWithId } from '~/utils/request';
+import type { SpotifyAPI } from '~~/types';
+
+
+type Albums = { albums: (SpotifyAPI.Album | null)[]};
 
 export const getAlbums = (context: Context) => {
   const { app } = context;
@@ -8,32 +13,23 @@ export const getAlbums = (context: Context) => {
    * albumIdList はの長さは最大 20
    */
   return ({ albumIdList, market }: {
-    albumIdList: string[]
-    market?: SpotifyAPI.Country
-  }): Promise<{ albums: (SpotifyAPI.Album | null)[] }> => {
-    const limit = 20;
-    const handler = async (index: number) => {
-      // limit ごとに分割
-      const ids = albumIdList.slice(limit * index, limit).join(',');
-      const { albums }: { albums: (SpotifyAPI.Album | null)[]} = await app.$spotifyApi.$get('/albums', {
+    albumIdList: string[];
+    market?: SpotifyAPI.Country;
+  }): Promise<Albums['albums']> => {
+    const request = (ids: string, l: number) => {
+      return app.$spotifyApi.$get<Albums>('/albums', {
         params: {
           ids,
           market,
         },
-      }).catch((err: Error) => {
-        console.error({ err });
-        return { albums: new Array(ids.length).fill(null) };
-      });
-
-      return albums;
+      })
+        .then(({ albums }) => albums)
+        .catch((err: Error) => {
+          console.error({ err });
+          const albums: Albums['albums'] = new Array(l).fill(null);
+          return albums;
+        });
     };
-    const handlerCounts = Math.ceil(albumIdList.length / limit);
-
-    const albums = Promise.all(new Array(handlerCounts)
-      .fill(undefined)
-      .map((_, i) => handler(i)))
-      .then((albumLists) => ({ albums: albumLists.flat() }));
-
-    return albums;
+    return multipleRequestsWithId(request, albumIdList, 20, (lists) => lists.flat());
   };
 };

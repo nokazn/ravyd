@@ -11,13 +11,13 @@ export const createPlaylist = (context: Context) => {
     isCollaborative = false,
     description,
   }: {
-    userId: string
-    name: string
-    isPublic?: boolean
-    isCollaborative?: boolean
-    description?: string
+    userId: string;
+    name: string;
+    isPublic?: boolean;
+    isCollaborative?: boolean;
+    description?: string;
   }): Promise<SpotifyAPI.Playlist | undefined> => {
-    const request = app.$spotifyApi.$post(`/users/${userId}/playlists`, {
+    return app.$spotifyApi.$post<SpotifyAPI.Playlist>(`/users/${userId}/playlists`, {
       name,
       public: isPublic,
       collaborative: isCollaborative,
@@ -26,7 +26,5 @@ export const createPlaylist = (context: Context) => {
       console.error({ err });
       return undefined;
     });
-
-    return request;
   };
 };

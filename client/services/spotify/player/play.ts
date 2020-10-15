@@ -14,13 +14,13 @@ export const play = (context: Context) => {
     offset,
     positionMs,
   }: {
-    deviceId?: string | undefined
-    contextUri?: string
-    trackUriList?: string[]
-    offset?: { uri: string } | { position: number }
-    positionMs?: number
+    deviceId?: string | undefined;
+    contextUri?: string;
+    trackUriList?: string[];
+    offset?: { uri: string } | { position: number };
+    positionMs?: number;
   }): Promise<void> => {
-    const request = app.$spotifyApi.$put('/me/player/play', {
+    return app.$spotifyApi.$put<void>('/me/player/play', {
       context_uri: contextUri,
       uris: trackUriList,
       offset,
@@ -31,9 +31,7 @@ export const play = (context: Context) => {
       },
     }).catch((err: Error) => {
       console.error({ err });
-      throw new Error(err.message);
+      throw err;
     });
-
-    return request;
   };
 };
