@@ -10,12 +10,12 @@ export const checkUserSavedTracks = (context: Context) => {
       return Promise.resolve([]);
     }
 
-    const request = (ids: string) => {
+    const request = (ids: string, l: number) => {
       return app.$spotifyApi.$get<boolean[]>('/me/tracks/contains', {
         params: { ids },
       }).catch((err: Error) => {
         console.error({ err });
-        const isSaved: boolean[] = new Array(length).fill(false);
+        const isSaved: boolean[] = new Array(l).fill(false);
         return isSaved;
       });
     };

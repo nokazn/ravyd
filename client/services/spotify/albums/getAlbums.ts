@@ -16,7 +16,7 @@ export const getAlbums = (context: Context) => {
     albumIdList: string[];
     market?: SpotifyAPI.Country;
   }): Promise<Albums['albums']> => {
-    const request = async (ids: string) => {
+    const request = (ids: string, l: number) => {
       return app.$spotifyApi.$get<Albums>('/albums', {
         params: {
           ids,
@@ -26,7 +26,7 @@ export const getAlbums = (context: Context) => {
         .then(({ albums }) => albums)
         .catch((err: Error) => {
           console.error({ err });
-          const albums: Albums['albums'] = new Array(ids.length).fill(null);
+          const albums: Albums['albums'] = new Array(l).fill(null);
           return albums;
         });
     };

@@ -16,13 +16,13 @@ export const checkUserFollowedPlaylist = (context: Context) => {
       return Promise.resolve([]);
     }
 
-    const request = (ids: string) => {
+    const request = (ids: string, l: number) => {
       // limit ごとに分割
       return app.$spotifyApi.$get<boolean[]>(`/playlists/${playlistId}/followers/contains`, {
         params: { ids },
       }).catch((err: Error) => {
         console.error({ err });
-        const isFollowed: boolean[] = new Array(length).fill(false);
+        const isFollowed: boolean[] = new Array(l).fill(false);
         return isFollowed;
       });
     };

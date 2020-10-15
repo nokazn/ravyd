@@ -16,7 +16,7 @@ export const checkUserFollowed = (context: Context) => {
       return Promise.resolve([]);
     }
 
-    const request = (ids: string) => {
+    const request = (ids: string, l: number) => {
       return app.$spotifyApi.$get<boolean[]>('/me/following/contains', {
         params: {
           type,
@@ -24,7 +24,7 @@ export const checkUserFollowed = (context: Context) => {
         },
       }).catch((err: Error) => {
         console.error({ err });
-        const isFollowed: boolean[] = new Array(length).fill(false);
+        const isFollowed: boolean[] = new Array(l).fill(false);
         return isFollowed;
       });
     };

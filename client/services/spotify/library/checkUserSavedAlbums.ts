@@ -10,12 +10,12 @@ export const checkUserSavedAlbums = (context: Context) => {
       return Promise.resolve([]);
     }
 
-    const request = (ids: string) => {
+    const request = (ids: string, l: number) => {
       return app.$spotifyApi.$get<boolean[]>('/me/albums/contains', {
         params: { ids },
       }).catch((err: Error) => {
         console.error({ err });
-        const isSaved: boolean[] = new Array(length).fill(false);
+        const isSaved: boolean[] = new Array(l).fill(false);
         return isSaved;
       });
     };

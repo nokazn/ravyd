@@ -11,14 +11,14 @@ export const getArtists = (context: Context) => {
   return ({ artistIdList }: {
     artistIdList: string[];
   }): Promise<Artists['artists']> => {
-    const request = async (ids: string) => {
+    const request = async (ids: string, l: number) => {
       return app.$spotifyApi.$get<Artists>('/artists', {
         params: { ids },
       })
         .then(({ artists }) => artists)
         .catch((err: Error) => {
           console.error({ err });
-          const artists: Artists['artists'] = new Array(ids.length).fill(null);
+          const artists: Artists['artists'] = new Array(l).fill(null);
           return artists;
         });
     };
