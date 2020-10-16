@@ -11,8 +11,7 @@ describe('FavoriteButton', () => {
         value: true,
       },
     });
-    // @todo a が含まれる？
-    expect(wrapper.get('.v-icon').classes()).toContain('amdi-heart');
+    expect(wrapper.get('.v-icon').classes()).toContain('mdi-heart');
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
   });
@@ -23,8 +22,7 @@ describe('FavoriteButton', () => {
         value: false,
       },
     });
-    // @todo a が含まれる？
-    expect(wrapper.find('.v-icon').classes()).toContain('amdi-heart-outline');
+    expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart-outline');
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([true]);
   });
