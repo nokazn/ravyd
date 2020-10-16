@@ -15,14 +15,14 @@ import Vue from 'vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type MediaButton = {
-  icon: 'mdi-play' | 'mdi-pause' | 'mdi-volume-high'
-  title: '再生' | '停止' | '再生中' | '再生できない項目'
+  icon: 'mdi-play' | 'mdi-pause';
+  title: '再生' | '停止' | '再生できない項目';
 }
 
 const INPUT = 'input';
 
 export type On = {
-  [INPUT]: void;
+  [INPUT]: boolean;
 }
 
 export default Vue.extend({
@@ -72,7 +72,7 @@ export default Vue.extend({
 
   methods: {
     onClicked() {
-      this.$emit(INPUT);
+      this.$emit(INPUT, !this.value);
     },
   },
 });
