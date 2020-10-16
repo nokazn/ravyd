@@ -18,6 +18,7 @@
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
     "stylelint:fix": "npm run lint -- --fix",
     "tsc": "tsc --noEmit",
+    "test": "npm run test:client & npm run test:server",
     "test:client": "jest ./client/**",
     "test:server": "jest ./server/** --passWithNoTests",
     "start": "nuxt-ts start",
