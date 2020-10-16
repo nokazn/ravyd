@@ -58,7 +58,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from 'lodash';
-import type { Cancelable } from 'lodash';
 
 import { $searchForm } from '~/observable/searchForm';
 import { SpotifyAPI, App } from '~~/types';
@@ -67,16 +66,16 @@ const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const LIMIT_OF_SEARCH_ITEM = 4;
 
 type ItemInfo = {
-  title: string
-  items: App.ContentItemInfo<SpotifyAPI.SearchType>[]
+  title: string;
+  items: App.ContentItemInfo<SpotifyAPI.SearchType>[];
 }
 
 type Data = {
-  isFocused: boolean
-  isHovered: boolean
-  debouncedDispatcher: ((query: string) => void) & Cancelable
-  keyEventListener: ((e: KeyboardEvent) => void) | undefined
-  SEARCH_FIELD_REF: string
+  isFocused: boolean;
+  isHovered: boolean;
+  debouncedDispatcher: ((query: string) => void) & ReturnType<typeof debounce>;
+  keyEventListener: ((e: KeyboardEvent) => void) | undefined;
+  SEARCH_FIELD_REF: string;
 }
 
 export default Vue.extend({
@@ -140,11 +139,9 @@ export default Vue.extend({
         case '/':
           ref.focus();
           break;
-
         case 'Escape':
           ref.blur();
           break;
-
         default:
           break;
       }
