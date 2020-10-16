@@ -10,13 +10,13 @@ export const TITLE_MAP = {
 export type ReleaseType = keyof typeof TITLE_MAP
 export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T]
 export type ReleaseInfo<T extends ReleaseType> = {
-  title: ReleaseTitle<T>
-  items: App.ReleaseCardInfo[]
-  total: number
-  isFull: boolean
+  title: ReleaseTitle<T>;
+  items: App.ReleaseCardInfo[];
+  total: number;
+  isFull: boolean;
   // undefined の時は最初からすべて表示
-  isAbbreviated: boolean | undefined
-  isAppended: boolean
+  isAllShown: boolean | undefined;
+  isAppended: boolean;
 }
 
 export * from './getArtistInfo';

@@ -12,12 +12,12 @@
       <TrackListSection
         v-if="topTrackList.length > 0"
         title="人気の曲"
-        :value="!isFirstSectionAbbreviated"
-        @input="toggleAbbreviatedTrackList"
+        :value="isTopSectionExtended"
+        @input="toggleFoldedTrackList"
       >
         <TrackList
           :tracks="topTrackList"
-          :length="abbreviatedTopTrackLength"
+          :length="topTrackLength"
           :uri="artistInfo.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
         />
@@ -27,7 +27,7 @@
         v-if="relatedArtistList.length > 0"
         title="関連アーティスト"
         :items="relatedArtistList"
-        :length="abbreviatedRelatedArtistLength"
+        :length="relatedArtistLength"
       />
     </div>
 
@@ -37,7 +37,7 @@
         :key="type"
         :title="releaseInfo.title"
         :full="releaseInfo.isFull"
-        :value="!releaseInfo.isAbbreviated"
+        :value="releaseInfo.isAllShown"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
@@ -45,7 +45,7 @@
       >
         <ReleaseCard
           v-for="(item, index) in releaseInfo.items"
-          v-show="!releaseInfo.isAbbreviated || index < ABBREVIATED_RELEASE_LENGTH"
+          v-show="releaseInfo.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
           v-bind="item"
           :min-width="$constant.FLEX_CARD_MIN_WIDTH"
@@ -78,7 +78,8 @@ import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const FULL_TOP_TRACK_LENGTH = 10;
-const ABBREVIATED_RELATED_ARTIST_LENGTH = 10;
+const ABBREVIATED_RELATED_ARTIST_LENGTH = 5;
+const FULL_RELATED_ARTIST_LENGTH = 10;
 const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
@@ -94,7 +95,7 @@ interface AsyncData {
 }
 
 interface Data {
-  isTrackListAbbreviated: boolean | undefined
+  isAllTracksShown: boolean | undefined
   mutationUnsubscribe: (() => void) | undefined
 }
 
@@ -138,22 +139,24 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
-  isTrackListAbbreviated = true;
+  isAllTracksShown = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
 
-  get isFirstSectionAbbreviated(): boolean | undefined {
+  get isTopSectionExtended(): boolean | undefined {
+    // そもそも折りたたむときの個数以下の場合はボタンを表示しない
     return this.topTrackList.length > ABBREVIATED_TOP_TRACK_LENGTH
-      ? this.isTrackListAbbreviated
+      ? this.isAllTracksShown
       : undefined;
   }
-  get abbreviatedTopTrackLength(): number | undefined {
-    return this.isFirstSectionAbbreviated == null || this.isFirstSectionAbbreviated
-      ? ABBREVIATED_TOP_TRACK_LENGTH
-      : FULL_TOP_TRACK_LENGTH;
+  get topTrackLength(): number | undefined {
+    return this.isTopSectionExtended
+      ? FULL_TOP_TRACK_LENGTH
+      : ABBREVIATED_TOP_TRACK_LENGTH;
   }
-  get abbreviatedRelatedArtistLength(): number | undefined {
-    return this.isFirstSectionAbbreviated == null || this.isFirstSectionAbbreviated
-      ? ABBREVIATED_TOP_TRACK_LENGTH
+  get relatedArtistLength(): number | undefined {
+    if (this.$screen.isSingleColumn) return ABBREVIATED_RELATED_ARTIST_LENGTH;
+    return this.isTopSectionExtended
+      ? FULL_RELATED_ARTIST_LENGTH
       : ABBREVIATED_RELATED_ARTIST_LENGTH;
   }
 
@@ -187,15 +190,15 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     }
   }
 
-  toggleAbbreviatedTrackList(nextIsAbbreviated: OnListSection['input']) {
-    this.isTrackListAbbreviated = nextIsAbbreviated;
+  toggleFoldedTrackList(all: OnListSection['input']) {
+    this.isAllTracksShown = all;
     // TrackListItem の高さに影響
     const itemHeight = 52;
     const aditionalListItems = FULL_TOP_TRACK_LENGTH - ABBREVIATED_TOP_TRACK_LENGTH;
     // DOMを更新した後に表示し多分スクロールする
     this.$nextTick().then(() => {
       window.scrollBy({
-        top: itemHeight * aditionalListItems * (nextIsAbbreviated ? -1 : 1),
+        top: itemHeight * aditionalListItems * (all ? 1 : -1),
         behavior: 'smooth',
       });
     });
@@ -248,7 +251,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     if (currentReleaseList == null
       || currentReleaseList.isFull
       || currentReleaseList.isAppended) return;
-
     this.appendReleaseList(type);
   }
 
@@ -256,21 +258,12 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     const currentReleaseList = this.releaseListMap.get(type);
     if (currentReleaseList == null) return;
 
-    // 折りたたむとき
-    if (!currentReleaseList.isAbbreviated) {
-      this.releaseListMap = new Map(this.releaseListMap.set(type, {
-        ...currentReleaseList,
-        isAbbreviated: true,
-      }).entries());
-      return;
-    }
-
     this.releaseListMap = new Map(this.releaseListMap.set(type, {
       ...currentReleaseList,
-      isAbbreviated: false,
+      isAllShown: !currentReleaseList.isAllShown,
     }).entries());
-    // 初回の追加読み込みがなされていない場合
-    if (!currentReleaseList.isAppended) {
+    // すべて表示し、初回の追加読み込みがなされていない場合
+    if (!currentReleaseList.isAllShown && !currentReleaseList.isAppended) {
       this.appendReleaseList(type);
     }
   }

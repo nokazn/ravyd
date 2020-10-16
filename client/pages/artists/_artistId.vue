@@ -165,20 +165,20 @@ import { App } from '~~/types';
 const HEADER_REF = 'HEADER_REF';
 
 type TabItem = {
-  title: string
-  to: string
+  title: string;
+  to: string;
 }
 
 interface AsyncData {
-  artistInfo: App.ArtistInfo | undefined
-  isFollowing: boolean
-  relatedArtistList: App.ContentItemInfo<'artist'>[]
+  artistInfo: App.ArtistInfo | undefined;
+  isFollowing: boolean;
+  relatedArtistList: App.ContentItemInfo<'artist'>[];
 }
 
 interface Data {
   tab: number | null;
   mutationUnsubscribe: (() => void) | undefined
-  HEADER_REF: string
+  HEADER_REF: string;
 }
 
 @Component({

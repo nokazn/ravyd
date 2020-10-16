@@ -3,9 +3,7 @@
     <h2>
       {{ title }}
     </h2>
-
     <slot />
-
     <div
       v-if="value != null"
       :class="$style.TrackListSection__footer"

@@ -5,12 +5,13 @@
         {{ title }}
       </h2>
 
-      <ShowAllButton
-        v-if="value != null"
-        v-model="all"
-        small
-        @mouseover.native="onButtonHovered"
-      />
+      <div @mouseover="onButtonHovered">
+        <ShowAllButton
+          v-if="value != null"
+          v-model="all"
+          small
+        />
+      </div>
     </div>
 
     <v-divider :class="$style.CardSection__divider" />
@@ -24,7 +25,7 @@
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      v-if="value === false"
+      v-if="value"
       :loading="!full"
       :class="$style.CardSection__loadingCircle"
       @appear="onLoadingAppeared"
@@ -33,11 +34,9 @@
     <div
       v-if="value != null"
       :class="$style.CardSection__footer"
+      @mouseover="onButtonHovered"
     >
-      <ShowAllButton
-        v-model="all"
-        @mouseover.native="onButtonHovered"
-      />
+      <ShowAllButton v-model="all" />
     </div>
   </section>
 </template>
@@ -106,7 +105,7 @@ export default Vue.extend({
   methods: {
     onButtonHovered() {
       // 省略表示されているときにホバーした場合のみ emit
-      if (this.value) {
+      if (!this.value) {
         this.$emit(ON_BUTTON_HOVERED);
       }
     },

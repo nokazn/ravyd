@@ -19,7 +19,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: undefined,
+      isAllShown: undefined,
       isAppended: false,
     },
   ],
@@ -30,7 +30,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: undefined,
+      isAllShown: undefined,
       isAppended: false,
     },
   ],
@@ -41,7 +41,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: undefined,
+      isAllShown: undefined,
       isAppended: false,
     },
   ],
@@ -52,7 +52,7 @@ export const initalReleaseListMap: ArtistReleaseInfo = new Map([
       items: [],
       total: 0,
       isFull: false,
-      isAbbreviated: undefined,
+      isAllShown: undefined,
       isAppended: false,
     },
   ],
@@ -82,8 +82,8 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   const total = releases?.total ?? 0;
   const isFull = releases?.next == null;
   // 未取得のアイテムがある場合に「すべて表示」ボタンを表示するためのフラグ
-  const isAbbreviated = total > limit
-    ? true
+  const isAllShown = total > limit
+    ? false
     : undefined;
 
   return [
@@ -93,7 +93,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
       items,
       total,
       isFull,
-      isAbbreviated,
+      isAllShown,
       isAppended: false,
     },
   ];

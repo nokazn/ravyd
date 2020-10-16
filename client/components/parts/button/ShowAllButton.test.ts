@@ -18,7 +18,7 @@ describe('ShowAllButton', () => {
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
   });
 
-  it('not showning all', async () => {
+  it('folded', async () => {
     const wrapper = mount(ShowAllButton, {
       propsData: {
         value: false,

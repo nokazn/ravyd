@@ -16,11 +16,11 @@ import Vue from 'vue';
 const LOADING_REF = 'LOADING_REF';
 
 export type Data = {
-  observer: IntersectionObserver | undefined
-  LOADING_REF: string
+  observer: IntersectionObserver | undefined;
+  LOADING_REF: string;
 }
 
-const APPEAR = 'appear';
+export const APPEAR = 'appear';
 
 export type On = {
   [APPEAR]: void
