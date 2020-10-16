@@ -18,12 +18,15 @@
       >
         mdi-volume-high
       </v-icon>
+      <span v-show="!hover && !value">
+        {{ trackNumber }}
+      </span>
     </template>
 
     <span
-      v-show="disabled || (!hover && !value)"
-      :title="disabled ? '再生できない項目' : undefined"
-      :class="{ 'inactive--text': disabled }"
+      v-else
+      title="再生できない項目"
+      class="inactive--text"
     >
       {{ trackNumber }}
     </span>
@@ -35,8 +38,8 @@ import Vue from 'vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export type MediaButton = {
-  icon: 'mdi-play' | 'mdi-pause'
-  title: '再生' | '停止'
+  icon: 'mdi-play' | 'mdi-pause';
+  title: '再生' | '停止';
 }
 
 const INPUT = 'input';

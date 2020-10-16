@@ -12,6 +12,7 @@ module.exports = {
     es6: true,
     node: true,
     browser: true,
+    'jest/globals': true,
   },
   globals: {
     // Spotify WEB Playback SDK で読み込まれる
@@ -27,25 +28,20 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
-     // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張している
-     // #129 .eslintignore に .nuxt/, dist/, static/, node_modules/ を記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
+    // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張している
+    // #129 .eslintignore に .nuxt/, dist/, static/, node_modules/ を記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
     '@nuxtjs/eslint-config-typescript',
     // eslint-plugin-vue を拡張している
     'plugin:nuxt/recommended',
     'airbnb-base',
   ],
+  plugins: ['jest'],
   settings: {
     // @todo import/no-unresolved を off にしてるので不要？
     // import/no-unresolved の False Positive 検知対策
     'import/resolver': {
       node: {
-        extensions: [
-          '.ts',
-          '.tsx',
-          '.js',
-          '.jsx',
-          '.vue',
-        ],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
       },
       alias: {
         map: [
@@ -60,12 +56,8 @@ module.exports = {
     },
   },
   rules: {
-    'no-console': isProduction
-      ? [2, { allow: ['info', 'warn', 'error'] }]
-      : [1, { allow: ['info', 'warn', 'error'] }],
-    'no-debugger': isProduction
-      ? 2
-      : 1,
+    'no-console': isProduction ? [2, { allow: ['info', 'warn', 'error'] }] : [1, { allow: ['info', 'warn', 'error'] }],
+    'no-debugger': isProduction ? 2 : 1,
     // 空白行は2行まで
     'no-multiple-empty-lines': [2, { max: 2 }],
     camelcase: 0,
@@ -76,15 +68,18 @@ module.exports = {
      * eslint-plugin-import
      */
     // import するときの拡張子の有無
-    'import/extensions': [2, {
-      js: 'never',
-      ts: 'never',
-      json: 'never',
-      scss: 'never',
-      // *.vue ファイルを ts として読み込むために拡張子必須
-      vue: 'always',
-      worker: 'always',
-    }],
+    'import/extensions': [
+      2,
+      {
+        js: 'never',
+        ts: 'never',
+        json: 'never',
+        scss: 'never',
+        // *.vue ファイルを ts として読み込むために拡張子必須
+        vue: 'always',
+        worker: 'always',
+      },
+    ],
     // path は ts でチェックする
     'import/no-unresolved': 0,
     // dependencies, devDependencies にないパッケージからの import を許容

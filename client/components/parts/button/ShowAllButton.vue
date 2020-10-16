@@ -4,6 +4,7 @@
     text
     :width="width"
     :small="small"
+    :title="showAllButton.text"
     :class="$style.ShowAllButton"
     @click="onClicked"
   >
@@ -25,9 +26,9 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-export type ShowALlButton = {
-  icon: 'mdi-chevron-down' | 'mdi-chevron-up'
-  text: string
+type ShowAllButton = {
+  icon: 'mdi-chevron-down' | 'mdi-chevron-up';
+  text: string;
 }
 
 export const INPUT = 'input';
@@ -57,15 +58,15 @@ export default Vue.extend({
   },
 
   computed: {
-    showAllButton(): ShowALlButton {
+    showAllButton(): ShowAllButton {
       return this.value
         ? {
-          text: 'すべて表示',
-          icon: 'mdi-chevron-down',
-        }
-        : {
           text: '折りたたむ',
           icon: 'mdi-chevron-up',
+        }
+        : {
+          text: 'すべて表示',
+          icon: 'mdi-chevron-down',
         };
     },
   },

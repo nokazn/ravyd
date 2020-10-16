@@ -12,7 +12,7 @@
       <TrackListSection
         v-if="topTrackList.length > 0"
         title="人気の曲"
-        :value="isFirstSectionAbbreviated"
+        :value="!isFirstSectionAbbreviated"
         @input="toggleAbbreviatedTrackList"
       >
         <TrackList
@@ -37,7 +37,7 @@
         :key="type"
         :title="releaseInfo.title"
         :full="releaseInfo.isFull"
-        :value="releaseInfo.isAbbreviated"
+        :value="!releaseInfo.isAbbreviated"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"

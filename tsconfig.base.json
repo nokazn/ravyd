@@ -59,12 +59,21 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/axios",
-      "vuetify",
+      "@types/spotify-web-playback-sdk",
+      "@types/connect-redis",
+      "@types/cookie-parser",
+      "@types/express",
+      "@types/express-session",
+      "@types/ioredis",
+      "@types/jest",
+      "@types/lodash",
+      "@types/lodash-webpack-plugin",
+      "@types/node",
+      "@types/resize-observer-browser",
       "@types/spotify-web-playback-sdk",
       "@types/wicg-mediasession",
-      "@types/resize-observer-browser",
-    ],
+      "vuetify",
+  ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     // "preserveSymlinks": true,
@@ -80,6 +89,10 @@
 
     // "forceConsistentCasingInFileNames": true,
   },
+  "include": [
+    "**/*.ts",
+    "**/*.vue",
+  ],
   "exclude": [
     "node_modules"
   ],

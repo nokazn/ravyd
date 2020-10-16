@@ -11,7 +11,7 @@
       :class="$style.TrackListSection__footer"
     >
       <ShowAllButton
-        v-model="abbreviated"
+        v-model="all"
         small
       />
     </div>
@@ -43,12 +43,12 @@ export default Vue.extend({
   },
 
   computed: {
-    abbreviated: {
+    all: {
       get(): boolean | undefined {
         return this.value;
       },
-      set(abbreviated: OnShowAll['input']) {
-        this.$emit(INPUT, abbreviated);
+      set(all: OnShowAll['input']) {
+        this.$emit(INPUT, all);
       },
     },
   },
