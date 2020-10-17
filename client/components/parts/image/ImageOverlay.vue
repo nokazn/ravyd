@@ -8,11 +8,11 @@
     <v-hover #default="{ hover: buttonHoverd }">
       <v-btn
         icon
-        @click.stop.prevent="onClicked"
+        @click.stop.prevent="onClick"
       >
         <v-icon
           :size="mediaButtonSize(buttonHoverd)"
-          :class="$style.AvatarOverlay__icon"
+          :class="$style.ImageOverlay__icon"
         >
           {{ icon }}
         </v-icon>
@@ -27,7 +27,7 @@ import Vue, { PropType } from 'vue';
 const CLICK = 'click';
 
 export type On = {
-  [CLICK]: void
+  [CLICK]: void;
 }
 
 export default Vue.extend({
@@ -61,7 +61,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onClicked() {
+    onClick() {
       this.$emit(CLICK);
     },
   },
@@ -69,7 +69,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.AvatarOverlay {
+.ImageOverlay {
   &__icon {
     cursor: pointer;
   }

@@ -23,7 +23,7 @@
         :hover="hover"
         :size="size"
         :icon="icon"
-        @click="onClicked"
+        @click="onClick"
       />
     </v-img>
 
@@ -59,8 +59,8 @@ const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
 
 export type On = {
-  [ON_MEDIA_BUTTON_CLICKED]: void
-  [ON_LOADED]: void
+  [ON_MEDIA_BUTTON_CLICKED]: void;
+  [ON_LOADED]: void;
 }
 
 export default Vue.extend({
@@ -120,7 +120,7 @@ export default Vue.extend({
   },
 
   methods: {
-    onClicked() {
+    onClick() {
       this.$emit(ON_MEDIA_BUTTON_CLICKED);
     },
     onLoaded() {
