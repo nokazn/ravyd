@@ -77,9 +77,10 @@ export default Vue.extend({
   },
 
   computed: {
-    addItemToQueue(): MenuItem {
+    addItemToQueue(): MenuItem<'custom'> {
       const trackName = this.track.name;
       return {
+        type: 'custom',
         name: '次に再生に追加',
         handler: () => {
           this.$spotify.player.addItemToQueue({
@@ -105,6 +106,7 @@ export default Vue.extend({
       const name = 'アーティストページに移動';
       if (length === 0) {
         return {
+          type: 'custom',
           name,
           handler: () => {},
           disabled: true,
@@ -117,6 +119,7 @@ export default Vue.extend({
           left: true,
         };
         return {
+          type: 'component',
           component: ArtistLinkMenu,
           props,
         };
@@ -124,21 +127,24 @@ export default Vue.extend({
       // アーティストが一組の時
       const artistId = artists[0].id;
       return {
+        type: 'to',
         name,
         to: `/artists/${artistId}`,
         disabled: this.$route.params.artistId === artistId,
       };
     },
-    releasePage(): MenuItem {
+    releasePage(): MenuItem<'to'> {
       const { releaseId } = this.track;
       return {
+        type: 'to',
         name: 'アルバムページに移動',
         to: `/releases/${releaseId}`,
         disabled: this.$route.params.releaseId === releaseId,
       };
     },
-    saveTrack(): MenuItem {
+    saveTrack(): MenuItem<'custom'> {
       return {
+        type: 'custom',
         name: this.track.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
         handler: () => {
           const nextSavedState = !this.track.isSaved;
@@ -146,7 +152,7 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem {
+    addItemToPlaylist(): MenuItem<'component'> {
       const props: AddItemToPlaylistMenuProps = {
         name: this.track.name,
         uriList: [this.track.uri],
@@ -154,13 +160,15 @@ export default Vue.extend({
         left: true,
       };
       return {
+        type: 'component',
         component: AddItemToPlaylistMenu,
         props,
       };
     },
-    removePlaylistItem(): MenuItem {
+    removePlaylistItem(): MenuItem<'custom'> {
       const { playlistId } = this;
       return {
+        type: 'custom',
         name: 'このプレイリストから削除',
         handler: () => {
           if (playlistId == null) return;
@@ -182,7 +190,7 @@ export default Vue.extend({
         disabled: playlistId == null,
       };
     },
-    share() {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.track.name,
         uri: this.track.uri,
@@ -192,6 +200,7 @@ export default Vue.extend({
         left: true,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

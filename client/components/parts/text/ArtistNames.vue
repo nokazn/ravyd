@@ -6,11 +6,12 @@
       'g-ellipsis-text': ellipsis,
     }"
   >
-    <template v-if="text">
-      <span :title="name">
-        {{ artistNames }}
-      </span>
-    </template>
+    <span
+      v-if="text"
+      :title="artistNames"
+    >
+      {{ artistNames }}
+    </span>
 
     <template v-else>
       <span
@@ -23,7 +24,7 @@
             v-if="hasImages(artist)"
             type="artist"
             :size="avatarSize"
-            :src="getImageSrc(artist, avatarSize)"
+            :src="getImageSrc(artist)"
             :alt="artist.name"
             :title="artist.name"
             :class="$style.Artist__avatar"

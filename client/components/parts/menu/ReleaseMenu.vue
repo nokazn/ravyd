@@ -65,6 +65,7 @@ export default Vue.extend({
       const name = 'アーティストページに移動';
       if (length === 0) {
         return {
+          type: 'custom',
           name,
           handler: () => {},
           disabled: true,
@@ -78,6 +79,7 @@ export default Vue.extend({
           right: this.right,
         };
         return {
+          type: 'component',
           component: ArtistLinkMenu,
           props,
         };
@@ -85,13 +87,15 @@ export default Vue.extend({
       // アーティストが一組の時
       const artistId = artists[0].id;
       return {
+        type: 'to',
         name: 'アーティストページに移動',
         to: `/artists/${artistId}`,
         disabled: this.$route.params.artistId === artistId,
       };
     },
-    saveRelease(): MenuItem {
+    saveRelease(): MenuItem<'custom'> {
       return {
+        type: 'custom',
         name: this.release.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
         handler: () => {
           const nextSavedState = !this.release.isSaved;
@@ -99,7 +103,7 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem {
+    addItemToPlaylist(): MenuItem<'component'> {
       const uriList = this.release.trackList.map((track) => track.uri);
       const props: AddItemToPlaylistMenuProps = {
         name: this.release.name,
@@ -109,11 +113,12 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: AddItemToPlaylistMenu,
         props,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.release.name,
         uri: this.release.uri,
@@ -124,6 +129,7 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

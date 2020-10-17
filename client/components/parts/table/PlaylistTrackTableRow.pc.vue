@@ -84,7 +84,7 @@
       class="g-small-text g-ellipsis-text"
     >
       <nuxt-link
-        v-if="userPath != null"
+        v-if="userPath != null && item.addedBy != null"
         :to="userPath"
       >
         {{ item.addedBy.display_name || item.addedBy.id }}

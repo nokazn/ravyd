@@ -40,16 +40,9 @@
         />
 
         <v-list-item-group :key="index">
-          <template v-for="item in group">
-            <component
-              :is="item.component"
-              v-if="item.component != null"
-              :key="item.name"
-              v-bind="item.props"
-            />
-
+          <template v-for="(item, i) in group">
             <v-list-item
-              v-else-if="item.to != null"
+              v-if="item.type === 'to'"
               :key="item.name"
               nuxt
               :to="item.to"
@@ -62,7 +55,7 @@
             </v-list-item>
 
             <v-list-item
-              v-else
+              v-else-if="item.type === 'custom'"
               :key="item.name"
               :disabled="item.disabled"
               :inactive="item.disabled"
@@ -72,6 +65,13 @@
                 {{ item.name }}
               </v-list-item-title>
             </v-list-item>
+
+            <component
+              :is="item.component"
+              v-else
+              :key="i"
+              v-bind="item.props"
+            />
           </template>
         </v-list-item-group>
       </template>
@@ -82,18 +82,26 @@
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
 
-export type MenuItem = {
-  name: string
-  disabled?: boolean
-  to: string
-} | {
-  name: string
-  disabled?: boolean
-  handler: () => void
-} | {
-  component: VueConstructor
-  props: { [k in string]: unknown }
-}
+type MenuType = 'to' | 'custom' | 'component';
+export type MenuItem<T extends MenuType = MenuType> = T extends 'to'
+  ? {
+    type: T,
+    name: string;
+    disabled?: boolean;
+    to: string;
+  }
+  : T extends 'custom'
+  ? {
+    type: T,
+    name: string;
+    disabled?: boolean;
+    handler: () => void;
+  }
+  : {
+    type: T,
+    component: VueConstructor;
+    props: { [k in string]: unknown }
+  };
 export type Group = MenuItem[];
 
 export default Vue.extend({

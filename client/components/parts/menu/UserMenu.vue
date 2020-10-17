@@ -21,7 +21,7 @@ import type { App } from '~~/types';
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 
 export type On = {
-  [ON_FOLLOW_MENU_CLICKED]: boolean
+  [ON_FOLLOW_MENU_CLICKED]: boolean;
 }
 
 export default Vue.extend({
@@ -61,8 +61,9 @@ export default Vue.extend({
   },
 
   computed: {
-    followArtist(): MenuItem {
+    followArtist(): MenuItem<'custom'> {
       return {
+        type: 'custom',
         name: this.following ? 'フォローしない' : 'フォローする',
         handler: () => {
           const nextFollowingState = !this.following;
@@ -71,7 +72,7 @@ export default Vue.extend({
         disabled: this.following == null,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.user.displayName ?? this.user.id,
         uri: this.user.uri,
@@ -82,6 +83,7 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

@@ -68,9 +68,10 @@ export default Vue.extend({
   },
 
   computed: {
-    addItemToQueue(): MenuItem {
+    addItemToQueue(): MenuItem<'custom'> {
       const trackName = this.episode.name;
       return {
+        type: 'custom',
         name: '次に再生に追加',
         handler: () => {
           this.$spotify.player.addItemToQueue({
@@ -90,7 +91,7 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem {
+    addItemToPlaylist(): MenuItem<'component'> {
       const props: AddItemToPlaylistMenuProps = {
         name: this.episode.name,
         uriList: [this.episode.uri],
@@ -99,13 +100,15 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: AddItemToPlaylistMenu,
         props,
       };
     },
-    removePlaylistItem(): MenuItem {
+    removePlaylistItem(): MenuItem<'custom'> {
       const { playlistId } = this;
       return {
+        type: 'custom',
         name: 'このプレイリストから削除',
         handler: () => {
           if (playlistId == null) return;
@@ -126,7 +129,7 @@ export default Vue.extend({
         disabled: playlistId == null,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.episode.name,
         uri: this.episode.uri,
@@ -137,6 +140,7 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

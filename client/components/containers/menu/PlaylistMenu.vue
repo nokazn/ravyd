@@ -64,12 +64,13 @@ export default Vue.extend({
   },
 
   computed: {
-    toggleIsCollaborative(): MenuItem {
+    toggleIsCollaborative(): MenuItem<'custom'> {
       const isCollaborative = !this.playlist.isCollaborative;
       const name = isCollaborative
         ? 'コラボプレイリストにする'
         : 'コラボプレイリストにしない';
       return {
+        type: 'custom',
         name,
         handler: () => {
           this.$dispatch('playlists/editPlaylist', {
@@ -94,12 +95,13 @@ export default Vue.extend({
         },
       };
     },
-    toggleIsPublic(): MenuItem {
+    toggleIsPublic(): MenuItem<'custom'> {
       const isPublic = !this.playlist.isPublic;
       const name = isPublic
         ? '公開する'
         : '非公開にする';
       return {
+        type: 'custom',
         name,
         handler: () => {
           this.$dispatch('playlists/editPlaylist', {
@@ -125,8 +127,9 @@ export default Vue.extend({
         disabled: this.playlist.isCollaborative,
       };
     },
-    editPlaylist(): MenuItem {
+    editPlaylist(): MenuItem<'custom'> {
       return {
+        type: 'custom',
         name: '詳細の編集',
         // 自分のプレイリストで削除済の場合
         disabled: this.playlist.isOwnPlaylist && !this.following,
@@ -135,7 +138,8 @@ export default Vue.extend({
         },
       };
     },
-    followPlaylist(): MenuItem {
+    followPlaylist(): MenuItem<'custom'> {
+      const type = 'custom';
       const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
       const handler = () => {
         const nextFollowingState = !this.following;
@@ -143,15 +147,17 @@ export default Vue.extend({
       };
       return this.following
         ? {
+          type,
           name: isOwnPlaylist ? '削除する' : 'フォローしない',
           handler,
         }
         : {
+          type,
           name: 'フォローする',
           handler,
         };
     },
-    copyPlaylist(): MenuItem {
+    copyPlaylist(): MenuItem<'custom'> {
       const handler = () => {
         const name = generateCopiedName(this.playlist.name);
         this.$dispatch('playlists/createPlaylist', {
@@ -171,11 +177,12 @@ export default Vue.extend({
         });
       };
       return {
+        type: 'custom',
         name: '同様のプレイリストを作成',
         handler,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.playlist.name,
         uri: this.playlist.uri,
@@ -186,6 +193,7 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

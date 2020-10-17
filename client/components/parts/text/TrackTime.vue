@@ -25,10 +25,10 @@ export default Vue.extend({
   },
 
   computed: {
-    time() {
+    time(): string {
       return elapsedTime(this.timeMs);
     },
-    title() {
+    title(): string {
       return elapsedTimeInJapanese(this.timeMs);
     },
   },

@@ -18,6 +18,7 @@
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
     "stylelint:fix": "npm run lint -- --fix",
     "tsc": "tsc --noEmit",
+    "vtc": "vtc --workspace ./ --srcDir ./client/",
     "test": "npm run test:client && npm run test:server",
     "test:client": "jest ./client/**",
     "test:server": "jest ./server/** --passWithNoTests",
@@ -101,6 +102,7 @@
     "ts-jest": "^26.4.1",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.12",
+    "vue-type-check": "^1.0.0",
     "worker-loader": "^2.0.0"
   },
   "engines": {

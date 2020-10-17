@@ -61,18 +61,18 @@ export default Vue.extend({
   },
 
   computed: {
-    saveShow(): MenuItem {
+    saveShow(): MenuItem<'custom'> {
       const nextSavedState = !this.saved;
       const handler = () => {
         this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
       };
-
       return {
+        type: 'custom',
         name: nextSavedState ? '保存する' : '保存しない',
         handler,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.show.name,
         uri: this.show.uri,
@@ -83,6 +83,7 @@ export default Vue.extend({
         right: this.right,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };

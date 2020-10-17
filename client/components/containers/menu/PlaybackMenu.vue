@@ -43,18 +43,21 @@ export default Vue.extend({
     track(): RootGetters['playback/currentTrack'] {
       return this.$getters()['playback/currentTrack'];
     },
-    addItemToQueue(): MenuItem {
+    addItemToQueue(): MenuItem<'custom'> {
+      const type = 'custom';
       const name = '次に再生に追加';
       const trackName = this.track?.name;
       const uri = this.track?.uri;
       if (trackName == null || uri == null) {
         return {
+          type,
           name,
           handler: () => {},
           disabled: true,
         };
       }
       return {
+        type,
         name,
         handler: () => {
           this.$spotify.player.addItemToQueue({ uri })
@@ -79,6 +82,7 @@ export default Vue.extend({
       const artists = this.track?.artists;
       if (artists == null || artists.length === 0) {
         return {
+          type: 'custom',
           name,
           handler: () => {},
           disabled: true,
@@ -91,6 +95,7 @@ export default Vue.extend({
           left: true,
         };
         return {
+          type: 'component',
           component: ArtistLinkMenu,
           props,
         };
@@ -98,37 +103,42 @@ export default Vue.extend({
       // アーティストが一組の時
       const artistId = artists[0].id;
       return {
+        type: 'to',
         name,
         to: `/artists/${artistId}`,
         disabled: this.$route.params.artistId === artistId,
       };
     },
-    releasePage(): MenuItem {
+    releasePage(): MenuItem<'custom' | 'to'> {
       const name = 'アルバムページに移動';
       const releaseId = this.track?.releaseId;
       if (releaseId == null) {
         return {
+          type: 'custom',
           name,
           handler: () => {},
           disabled: true,
         };
       }
       return {
+        type: 'to',
         name,
         to: `/releases/${releaseId}`,
         disabled: this.$route.params.releaseId === releaseId,
       };
     },
-    saveTrack(): MenuItem {
+    saveTrack(): MenuItem<'custom'> {
       const isSaved = this.track?.isSaved;
       if (isSaved == null) {
         return {
+          type: 'custom',
           name: 'お気に入りに追加',
           handler: () => {},
           disabled: true,
         };
       }
       return {
+        type: 'custom',
         name: isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
         handler: () => {
           const nextSavedState = !isSaved;
@@ -136,10 +146,11 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem {
+    addItemToPlaylist(): MenuItem<'custom' | 'component'> {
       const { track } = this;
       if (track == null) {
         return {
+          type: 'custom',
           name: 'プレイリストに追加',
           handler: () => {},
           disabled: true,
@@ -152,14 +163,16 @@ export default Vue.extend({
         left: true,
       };
       return {
+        type: 'component',
         component: AddItemToPlaylistMenu,
         props,
       };
     },
-    share(): MenuItem {
+    share(): MenuItem<'custom' | 'component'> {
       const { track } = this;
       if (track == null) {
         return {
+          type: 'custom',
           name: 'シェア',
           handler: () => {},
           disabled: true,
@@ -175,12 +188,14 @@ export default Vue.extend({
         left: true,
       };
       return {
+        type: 'component',
         component: ShareMenu,
         props,
       };
     },
-    updatePlayback(): MenuItem {
+    updatePlayback(): MenuItem<'custom'> {
       return {
+        type: 'custom',
         name: 'プレイヤーの情報を更新',
         handler: () => {
           this.isLoading = true;
