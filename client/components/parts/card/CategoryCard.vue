@@ -32,7 +32,7 @@
         :max-height="maxSize || size"
         :aspect-ratio="1"
       >
-        <div :class="$style.CategoryImage__link">
+        <div :class="$style.CategoryCard__link">
           <span
             class="g-ellipsis-text"
             :title="name"
@@ -42,25 +42,30 @@
         </div>
       </v-img>
 
-      <v-sheet
+      <div
         v-else
-        :title="name"
-        :min-width="minSize || size"
-        :min-height="minSize || size"
-        :width="size"
-        :height="size"
-        :max-width="maxSize || size"
-        :max-height="maxSize || size"
+        :class="$style.Ratio"
       >
-        <div :class="$style.CategoryImage__link">
-          <span
-            class="g-ellipsis-text"
-            :title="name"
-          >
-            {{ name }}
-          </span>
-        </div>
-      </v-sheet>
+        <svg viewBox="0 0 1 1" />
+        <v-sheet
+          :title="name"
+          :min-width="minSize || size"
+          :min-height="minSize || size"
+          :width="size"
+          :height="size"
+          :max-width="maxSize || size"
+          :max-height="maxSize || size"
+        >
+          <div :class="$style.CategoryCard__link">
+            <span
+              class="g-ellipsis-text"
+              :title="name"
+            >
+              {{ name }}
+            </span>
+          </div>
+        </v-sheet>
+      </div>
     </v-card>
   </div>
 </template>
@@ -125,12 +130,20 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-.CategoryImage {
+.CategoryCard {
   &__link {
     display: flex;
     justify-content: center;
     align-items: flex-end;
     height: 80%;
+  }
+}
+
+.Ratio {
+  display: grid;
+
+  & > * {
+    grid-area: 1 / 1 / -1 / -1;
   }
 }
 </style>
