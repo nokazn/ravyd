@@ -9,7 +9,7 @@ export const getCategoryPlaylist = async (
 ): Promise<App.PlaylistCardInfo[]> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { playlists } = await app.$spotify.browse.getCategoryPlaylist({
-    categoryId: params.genreId,
+    categoryId: params.categoryId,
     country,
     limit,
   });

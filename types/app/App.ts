@@ -215,7 +215,7 @@ export namespace App {
     track: SpotifyAPI.Track
   }
 
-  // /genres/:genreId page
+  // /categories/:categoryId page
   export type CategoryInfo = {
     id: string
     name: string

@@ -6,7 +6,7 @@ export const getCategory = async (
 ): Promise<App.CategoryInfo | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
   const categoryInfo = await app.$spotify.browse.getCategory({
-    categoryId: params.genreId,
+    categoryId: params.categoryId,
     country,
   });
   if (categoryInfo == null) return undefined;

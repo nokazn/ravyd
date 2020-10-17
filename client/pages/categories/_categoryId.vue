@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="categoryInfo != null"
-    :class="$style.GenreIdPage"
+    :class="$style.CategoryIdPage"
   >
-    <h1 :class="$style.GenreIdPage__title">
+    <h1 :class="$style.CategoryIdPage__title">
       {{ categoryInfo.name }}
     </h1>
 
@@ -43,14 +43,14 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getCategory, getCategoryPlaylist } from '~/services/local/_genreId';
+import { getCategory, getCategoryPlaylist } from '~/services/local/_categoryId';
 import { convertPlaylistForCard } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 
 interface AsyncData {
-  categoryInfo: App.CategoryInfo | undefined
-  playlists: App.PlaylistCardInfo[]
-  isFullPlaylists: boolean
+  categoryInfo: App.CategoryInfo | undefined;
+  playlists: App.PlaylistCardInfo[];
+  isFullPlaylists: boolean;
 }
 interface Data {}
 
@@ -65,7 +65,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 
   validate({ params }) {
-    return params.genreId != null && params.genreId !== '';
+    return params.categoryId != null && params.categoryId !== '';
   },
 
   async asyncData(context): Promise<AsyncData> {
@@ -82,7 +82,7 @@ const LIMIT_OF_PLAYLISTS = 30;
     };
   },
 })
-export default class GenreIdPage extends Vue implements AsyncData, Data {
+export default class CategoryIdPage extends Vue implements AsyncData, Data {
   categoryInfo: App.CategoryInfo | undefined = undefined;
   playlists: App.PlaylistCardInfo[] = [];
   isFullPlaylists = false;
@@ -98,7 +98,7 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
     if (this.isFullPlaylists) return;
 
     const { playlists: currentPlaylists } = this;
-    const { genreId: categoryId } = this.$route.params;
+    const { categoryId } = this.$route.params;
     const country = this.$getters()['auth/userCountryCode'];
     const offset = this.playlists.length;
     const { playlists } = await this.$spotify.browse.getCategoryPlaylist({
@@ -125,8 +125,8 @@ export default class GenreIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
-.GenreIdPage {
-  padding: 16px max(12px, 2vw) 48px;
+.CategoryIdPage {
+  @include page-margin();
 
   &__title {
     padding-left: 3%;
