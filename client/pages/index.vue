@@ -1,20 +1,23 @@
 <template>
-  <div :class="$style.RootPage">
+  <div
+    v-if="hasContent"
+    :class="$style.RootPage"
+  >
     <ScrollableCardsSection
+      v-if="newReleaseList.length > 0"
       title="今週の新譜"
       :class="$style.RootPage__section"
     >
-      <template v-if="newReleaseList != null">
-        <ReleaseCard
-          v-for="release in newReleaseList"
-          :key="release.id"
-          v-bind="release"
-          :width="$screen.cardWidth"
-        />
-      </template>
+      <ReleaseCard
+        v-for="release in newReleaseList"
+        :key="release.id"
+        v-bind="release"
+        :width="$screen.cardWidth"
+      />
     </ScrollableCardsSection>
 
     <ScrollableCardsSection
+      v-if="topTrackList.length > 0"
       title="お気に入りのトラック"
       :class="$style.RootPage__section"
     >
@@ -27,6 +30,7 @@
     </ScrollableCardsSection>
 
     <ScrollableCardsSection
+      v-if="topArtistList.length > 0"
       title="お気に入りのアーティスト"
       :class="$style.RootPage__section"
     >
@@ -38,14 +42,19 @@
       />
     </ScrollableCardsSection>
   </div>
+
+  <Fallback v-else>
+    トップページを読み込めませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Component, Vue } from 'nuxt-property-decorator';
 
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 import {
   convertTrackForCard,
   convertArtistForCard,
@@ -54,16 +63,17 @@ import {
 import { App } from '~~/types';
 
 export type AsyncData = {
-  topArtistList: App.ArtistCardInfo[] | undefined
-  topTrackList: App.ReleaseCardInfo[] | undefined
-  newReleaseList: App.ReleaseCardInfo[] | undefined
+  topArtistList: App.ArtistCardInfo[];
+  topTrackList: App.ReleaseCardInfo[];
+  newReleaseList: App.ReleaseCardInfo[];
 }
 
-export default Vue.extend({
+@Component({
   components: {
     ScrollableCardsSection,
     ReleaseCard,
     ArtistCard,
+    Fallback,
   },
 
   async asyncData({ app }): Promise<AsyncData> {
@@ -73,10 +83,9 @@ export default Vue.extend({
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ] as const);
-    const topArtistList = topArtists?.items.map(convertArtistForCard);
-    const topTrackList = topTracks?.items.map(convertTrackForCard);
-    const newReleaseList = newReleases?.albums?.items.map(convertReleaseForCard);
-
+    const topArtistList = topArtists?.items.map(convertArtistForCard) ?? [];
+    const topTrackList = topTracks?.items.map(convertTrackForCard) ?? [];
+    const newReleaseList = newReleases.albums?.items.map(convertReleaseForCard) ?? [];
     app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
 
     return {
@@ -86,16 +95,27 @@ export default Vue.extend({
     };
   },
 
-  mounted() {
-    this.$dispatch('resetDominantBackgroundColor');
-  },
-
   head() {
     return {
       title: 'ホーム',
     };
   },
-});
+})
+export default class RootPage extends Vue implements AsyncData {
+  topArtistList: App.ArtistCardInfo[] = [];
+  topTrackList: App.ReleaseCardInfo[] = [];
+  newReleaseList: App.ReleaseCardInfo[] = [];
+
+  get hasContent(): boolean {
+    return this.topArtistList.length > 0
+      && this.topTrackList.length > 0
+      && this.newReleaseList.length > 0;
+  }
+
+  mounted() {
+    this.$dispatch('resetDominantBackgroundColor');
+  }
+}
 </script>
 
 <style lang="scss" module>
