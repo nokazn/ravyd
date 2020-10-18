@@ -20,7 +20,7 @@
       :min-width="width"
       :max-width="maxWidth || width"
       :class="$style.Card"
-      @click="onClicked"
+      @click="onClick"
     >
       <div :class="$style.Card__container">
         <slot name="image" />
@@ -41,7 +41,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  PropType,
+} from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
 
 const CLICK = 'click';
@@ -54,7 +59,7 @@ type Data = {
   isLoaded: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     to: {
       type: [String, Object] as PropType<RawLocation | undefined>,
@@ -78,20 +83,19 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  emits: {
+    [CLICK]: null,
+  },
+
+  setup(_, { emit }) {
+    const isLoaded = ref(false);
+    const onClick = () => { emit(CLICK); };
+    onMounted(() => { isLoaded.value = true; });
+
     return {
-      isLoaded: false,
+      isLoaded,
+      onClick,
     };
-  },
-
-  mounted() {
-    this.isLoaded = true;
-  },
-
-  methods: {
-    onClicked() {
-      this.$emit(CLICK);
-    },
   },
 });
 </script>
@@ -113,7 +117,7 @@ export default Vue.extend({
     font-size: 0.825em;
     line-height: 1.3em;
     margin-top: -8% !important;
-    padding: 6% 6% 12px !important;    /* margin-top: -8px !important; */
+    padding: 6% 6% 12px !important;
   }
 }
 </style>

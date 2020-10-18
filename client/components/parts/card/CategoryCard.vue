@@ -71,7 +71,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent,
+  ref,
+  computed,
+  onMounted,
+  PropType,
+} from '@vue/composition-api';
 
 import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI } from '~~/types';
@@ -80,7 +86,7 @@ type Data = {
   isLoaded: boolean
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     id: {
       type: String,
@@ -108,23 +114,20 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  setup(props) {
+    const isLoaded = ref(false);
+    const artworkSrc = computed(() => getImageSrc(
+      props.images,
+      props.maxSize ?? props.size,
+    ));
+    const categoryPath = computed(() => `/categories/${props.id}`);
+    onMounted(() => { isLoaded.value = true; });
+
     return {
-      isLoaded: false,
+      isLoaded,
+      artworkSrc,
+      categoryPath,
     };
-  },
-
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.maxSize ?? this.size);
-    },
-    categoryPath(): string {
-      return `/categories/${this.id}`;
-    },
-  },
-
-  mounted() {
-    this.isLoaded = true;
   },
 });
 </script>
