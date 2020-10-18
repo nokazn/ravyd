@@ -125,6 +125,7 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/spotify' },
     { src: '~/plugins/server' },
     { src: '~/plugins/vuetify' },
+    { src: '~/plugins/compositionApi' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/constant' },
     { src: '~/plugins/observable/confirm' },

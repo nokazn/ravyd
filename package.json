@@ -39,6 +39,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.2.2",
     "@nuxtjs/style-resources": "^1.0.0",
+    "@vue/composition-api": "^1.0.0-beta.17",
     "connect-redis": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "dayjs": "^1.8.36",

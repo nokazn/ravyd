@@ -26,7 +26,7 @@
           :hover="hover"
           :size="size"
           :icon="icon"
-          @click="onClicked"
+          @click="onClick"
         />
       </v-img>
     </v-avatar>
@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -68,7 +68,7 @@ export type On = {
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle';
 type AvatarType = 'user' | 'artist';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ImageOverlay,
   },
@@ -116,28 +116,33 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    defaultIcon(): string {
-      return this.type === 'user'
-        ? 'mdi-account'
-        : 'mdi-account-music';
-    },
-    defaultIconSize(): number {
-      const baseSize = this.size ?? this.minSize;
-      if (baseSize == null) return 60;
-      return this.smallIcon
-        ? baseSize * 0.4
-        : baseSize;
-    },
+  emits: {
+    [ON_MEDIA_BUTTON_CLICKED]: null,
+    [ON_LOADED]: null,
   },
 
-  methods: {
-    onClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED);
-    },
-    onLoaded() {
-      this.$emit(ON_LOADED);
-    },
+  setup(props, { emit }) {
+    const defaultIcon = computed(() => {
+      return props.type === 'user'
+        ? 'mdi-account'
+        : 'mdi-account-music';
+    });
+    const defaultIconSize = computed(() => {
+      const baseSize = props.size ?? props.minSize;
+      if (baseSize == null) return 60;
+      return props.smallIcon
+        ? baseSize * 0.4
+        : baseSize;
+    });
+    const onClick = () => { emit(ON_MEDIA_BUTTON_CLICKED); };
+    const onLoaded = () => { emit(ON_LOADED); };
+
+    return {
+      defaultIcon,
+      defaultIconSize,
+      onClick,
+      onLoaded,
+    };
   },
 });
 </script>

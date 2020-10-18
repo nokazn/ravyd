@@ -6,36 +6,41 @@
     :width="fab ? height : undefined"
     :height="height"
     :disabled="disabled"
-    :title="text"
-    @click="onClicked"
+    :title="button.text"
+    @click="onClick"
   >
     <v-icon v-if="fab">
-      {{ icon }}
+      {{ button.icon }}
     </v-icon>
     <div
       v-else
       :class="$style.Container"
     >
       <v-icon left>
-        {{ icon }}
+        {{ button.icon }}
       </v-icon>
       <span>
-        {{ text }}
+        {{ button.text }}
       </span>
     </div>
   </v-btn>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
 const INPUT = 'input';
 
 export type On = {
-  [INPUT]: boolean
+  [INPUT]: boolean;
 }
 
-export default Vue.extend({
+type Button = {
+  icon: 'mdi-play' | 'mdi-pause';
+  text: '再生' | '停止';
+}
+
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -55,23 +60,28 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    icon(): 'mdi-play' | 'mdi-pause' {
-      return this.value
-        ? 'mdi-pause'
-        : 'mdi-play';
-    },
-    text(): '再生' | '停止' {
-      return this.value
-        ? '停止'
-        : '再生';
-    },
+  emits: {
+    [INPUT]: (_value: boolean) => true,
   },
 
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+  setup(props, { emit }) {
+    const button = computed((): Button => {
+      return props.value
+        ? {
+          icon: 'mdi-pause',
+          text: '停止',
+        }
+        : {
+          icon: 'mdi-play',
+          text: '再生',
+        };
+    });
+    const onClick = () => { emit(INPUT, !props.value); };
+
+    return {
+      button,
+      onClick,
+    };
   },
 });
 </script>

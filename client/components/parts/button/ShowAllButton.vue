@@ -4,29 +4,29 @@
     text
     :width="width"
     :small="small"
-    :title="showAllButton.text"
+    :title="button.text"
     :class="$style.ShowAllButton"
-    @click="onClicked"
+    @click="onClick"
   >
     <div :class="$style.ShowAllButton__wrapper">
       <v-icon
         :left="!icon"
         :small="small"
       >
-        {{ showAllButton.icon }}
+        {{ button.icon }}
       </v-icon>
 
       <span v-if="!icon">
-        {{ showAllButton.text }}
+        {{ button.text }}
       </span>
     </div>
   </v-btn>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
-type ShowAllButton = {
+type Button = {
   icon: 'mdi-chevron-down' | 'mdi-chevron-up';
   text: string;
 }
@@ -37,7 +37,7 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -57,9 +57,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    showAllButton(): ShowAllButton {
-      return this.value
+  emits: {
+    [INPUT]: (_value: boolean) => true,
+  },
+
+  setup(props, { emit }) {
+    const button = computed((): Button => {
+      return props.value
         ? {
           text: '折りたたむ',
           icon: 'mdi-chevron-up',
@@ -68,13 +72,13 @@ export default Vue.extend({
           text: 'すべて表示',
           icon: 'mdi-chevron-down',
         };
-    },
-  },
+    });
+    const onClick = () => { emit(INPUT, !props.value); };
 
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+    return {
+      button,
+      onClick,
+    };
   },
 });
 </script>

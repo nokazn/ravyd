@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
@@ -63,7 +63,7 @@ export type On = {
   [ON_LOADED]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ImageOverlay,
   },
@@ -107,25 +107,23 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    defaultIconSize(): number {
-      const baseSize = this.size ?? this.minSize;
+  setup(props, { emit }) {
+    const defaultIconSize = computed(() => {
+      const baseSize = props.size ?? props.minSize;
       return baseSize != null
         ? baseSize * 0.4
         : 60;
-    },
-    cssProps(): Record<string, string> | undefined {
-      return { '--border-radius': `${this.borderRadius}px` };
-    },
-  },
+    });
+    const cssProps = computed(() => ({ '--border-radius': `${props.borderRadius}px` }));
+    const onClick = () => { emit(ON_MEDIA_BUTTON_CLICKED); };
+    const onLoaded = () => { emit(ON_LOADED); };
 
-  methods: {
-    onClick() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED);
-    },
-    onLoaded() {
-      this.$emit(ON_LOADED);
-    },
+    return {
+      defaultIconSize,
+      cssProps,
+      onClick,
+      onLoaded,
+    };
   },
 });
 </script>

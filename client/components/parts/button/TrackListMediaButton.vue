@@ -6,10 +6,10 @@
         outlined
         :size="size"
         :icon-size="iconSize"
-        :title="mediaButton.title"
-        @click="onClicked"
+        :title="button.title"
+        @click="onClick"
       >
-        {{ mediaButton.icon }}
+        {{ button.icon }}
       </CircleButton>
       <v-icon
         v-show="!hover && value"
@@ -34,10 +34,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export type MediaButton = {
+type Button = {
   icon: 'mdi-play' | 'mdi-pause';
   title: '再生' | '停止';
 }
@@ -48,7 +48,7 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -63,7 +63,7 @@ export default Vue.extend({
       required: true,
     },
     trackNumber: {
-      type: Number,
+      type: Number as PropType<number | undefined>,
       default: undefined,
     },
     size: {
@@ -76,9 +76,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    mediaButton(): MediaButton {
-      return this.value
+  emits: {
+    [INPUT]: (_value: boolean) => true,
+  },
+
+  setup(props, { emit }) {
+    const button = computed((): Button => {
+      return props.value
         ? {
           icon: 'mdi-pause',
           title: '停止',
@@ -87,16 +91,15 @@ export default Vue.extend({
           icon: 'mdi-play',
           title: '再生',
         };
-    },
-    iconSize(): number {
-      return Math.floor(this.size * 0.9);
-    },
-  },
+    });
+    const iconSize = computed(() => Math.floor(props.size * 0.9));
+    const onClick = () => { emit(INPUT, !props.value); };
 
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+    return {
+      button,
+      iconSize,
+      onClick,
+    };
   },
 });
 </script>

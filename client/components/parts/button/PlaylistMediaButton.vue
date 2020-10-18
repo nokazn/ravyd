@@ -3,18 +3,18 @@
     :size="size"
     :outlined="outlined"
     :disabled="disabled"
-    :title="mediaButton.title"
-    @click="onClicked"
+    :title="button.title"
+    @click="onClick"
   >
-    {{ mediaButton.icon }}
+    {{ button.icon }}
   </CircleButton>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export type MediaButton = {
+type Button = {
   icon: 'mdi-play' | 'mdi-pause';
   title: '再生' | '停止' | '再生できない項目';
 }
@@ -25,7 +25,7 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -49,15 +49,19 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    mediaButton(): MediaButton {
-      if (this.disabled) {
+  emits: {
+    [INPUT]: (_value: boolean) => true,
+  },
+
+  setup(props, { emit }) {
+    const button = computed((): Button => {
+      if (props.disabled) {
         return {
           icon: 'mdi-play',
           title: '再生できない項目',
         };
       }
-      if (!this.value) {
+      if (!props.value) {
         return {
           icon: 'mdi-play',
           title: '再生',
@@ -67,13 +71,13 @@ export default Vue.extend({
         icon: 'mdi-pause',
         title: '停止',
       };
-    },
-  },
+    });
+    const onClick = () => { emit(INPUT, !props.value); };
 
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+    return {
+      button,
+      onClick,
+    };
   },
 });
 </script>

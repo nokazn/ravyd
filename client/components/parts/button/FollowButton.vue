@@ -6,23 +6,23 @@
       :color="color"
       :outlined="!value"
       :height="height"
-      @click="onClicked"
+      @click="onClick"
     >
       <v-icon
         :size="18"
         left
       >
-        {{ followButton(hover).icon }}
+        {{ button(hover).icon }}
       </v-icon>
-      {{ followButton(hover).text }}
+      {{ button(hover).text }}
     </v-btn>
   </v-hover>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
-type FollowButton = {
+type Button = {
   icon: 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-heart';
   text: 'フォロー' | 'フォローしない' | 'フォロー中';
 }
@@ -33,7 +33,7 @@ export type On = {
   [INPUT]: boolean
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -45,36 +45,40 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    color(): string | undefined {
-      return this.value
+  emits: {
+    [INPUT]: (_value: boolean) => true,
+  },
+
+  setup(props, { emit }) {
+    const color = computed((): string | undefined => {
+      return props.value
         ? 'grey darken-3'
         : undefined;
-    },
-    followButton(): (hover: boolean) => FollowButton {
-      return (hover: boolean) => {
-        if (!this.value) {
-          return {
-            icon: 'mdi-heart-plus-outline',
-            text: 'フォロー',
-          };
+    });
+    const button = (hover: boolean): Button => {
+      if (!props.value) {
+        return {
+          icon: 'mdi-heart-plus-outline',
+          text: 'フォロー',
+        };
+      }
+      return hover
+        ? {
+          icon: 'mdi-heart-outline',
+          text: 'フォローしない',
         }
-        return hover
-          ? {
-            icon: 'mdi-heart-outline',
-            text: 'フォローしない',
-          }
-          : {
-            icon: 'mdi-heart',
-            text: 'フォロー中',
-          };
-      };
-    },
-  },
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+        : {
+          icon: 'mdi-heart',
+          text: 'フォロー中',
+        };
+    };
+    const onClick = () => { emit(INPUT, !props.value); };
+
+    return {
+      color,
+      button,
+      onClick,
+    };
   },
 });
 </script>

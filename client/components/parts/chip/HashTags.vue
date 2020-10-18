@@ -11,18 +11,18 @@
         :color="color"
         :text-color="textColor"
         :outlined="outlined"
-        :title="`# ${tag.toUpperCase()}`"
+        :title="toUpperCase(tag)"
       >
-        # {{ tag.toUpperCase() }}
+        {{ toUpperCase(tag) }}
       </v-chip>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     tags: {
       type: Array as PropType<string[]>,
@@ -40,6 +40,13 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+  },
+
+  setup() {
+    const toUpperCase = (tag: string) => `# ${tag.toUpperCase()}`;
+    return {
+      toUpperCase,
+    };
   },
 });
 </script>

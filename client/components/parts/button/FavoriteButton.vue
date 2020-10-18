@@ -7,22 +7,25 @@
     :icon="!fab"
     :outlined="outlined"
     :disabled="disabled"
-    :title="title"
-    @click.stop="onClicked"
+    :title="button.title"
+    @click.stop="onClick"
   >
     <v-icon
       :size="iconSize"
       :color="value && !outlined ? iconColor : undefined"
     >
-      {{ favoriteIcon }}
+      {{ button.icon }}
     </v-icon>
   </v-btn>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
-export type FavoriteIcon = 'mdi-heart' | 'mdi-heart-outline';
+type Button = {
+  icon: 'mdi-heart' | 'mdi-heart-outline';
+  title: string;
+};
 
 const INPUT = 'input';
 
@@ -30,7 +33,7 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -67,26 +70,30 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    favoriteIcon(): FavoriteIcon {
-      return this.value
-        ? 'mdi-heart'
-        : 'mdi-heart-outline';
-    },
-    title(): string {
-      return this.value
-        ? `${this.text}しない`
-        : `${this.text}する`;
-    },
-    iconSize(): number {
-      return (this.size * 0.8) / Math.SQRT2;
-    },
+  emits: {
+    [INPUT]: (_value: boolean) => true,
   },
 
-  methods: {
-    onClicked() {
-      this.$emit(INPUT, !this.value);
-    },
+  setup(props, { emit }) {
+    const button = computed((): Button => {
+      return props.value
+        ? {
+          icon: 'mdi-heart',
+          title: `${props.text}しない`,
+        }
+        : {
+          icon: 'mdi-heart-outline',
+          title: `${props.text}する`,
+        };
+    });
+    const iconSize = computed((): number => (props.size * 0.8) / Math.SQRT2);
+    const onClick = () => { emit(INPUT, !props.value); };
+
+    return {
+      button,
+      iconSize,
+      onClick,
+    };
   },
 });
 </script>

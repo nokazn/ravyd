@@ -8,7 +8,7 @@
     :outlined="outlined"
     :absolute="absolute"
     :disabled="disabled"
-    @click="onClicked"
+    @click="onClick"
   >
     <v-icon
       :size="adjustedIconSize"
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 const CLICK = 'click';
 
@@ -28,7 +28,7 @@ export type On = {
   [CLICK]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     size: {
       type: Number,
@@ -41,7 +41,6 @@ export default Vue.extend({
     iconSizeRatio: {
       type: Number as PropType<number | undefined>,
       default: undefined,
-
     },
     color: {
       type: String,
@@ -69,17 +68,21 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    adjustedIconSize(): number {
-      const ratio = this.iconSizeRatio ?? this.outlined ? 0.8 : 1;
-      return this.iconSize ?? Math.floor((this.size * ratio) / Math.SQRT2);
-    },
+  emits: {
+    [CLICK]: null,
   },
 
-  methods: {
-    onClicked() {
-      this.$emit(CLICK);
-    },
+  setup(props, { emit }) {
+    const adjustedIconSize = computed((): number => {
+      const ratio = props.iconSizeRatio ?? props.outlined ? 0.8 : 1;
+      return props.iconSize ?? Math.floor((props.size * ratio) / Math.SQRT2);
+    });
+    const onClick = () => { emit(CLICK); };
+
+    return {
+      adjustedIconSize,
+      onClick,
+    };
   },
 });
 </script>

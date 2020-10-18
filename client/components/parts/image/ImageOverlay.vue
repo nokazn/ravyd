@@ -11,7 +11,7 @@
         @click.stop.prevent="onClick"
       >
         <v-icon
-          :size="mediaButtonSize(buttonHoverd)"
+          :size="iconSize(buttonHoverd)"
           :class="$style.ImageOverlay__icon"
         >
           {{ icon }}
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 
 const CLICK = 'click';
 
@@ -30,7 +30,7 @@ export type On = {
   [CLICK]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     hover: {
       type: Boolean,
@@ -45,25 +45,28 @@ export default Vue.extend({
       required: true,
     },
   },
-  computed: {
-    mediaButtonSize(): (hover: boolean) => number {
-      return (hover: boolean) => {
-        const ratio = hover
-          ? 0.375
-          : 0.3;
-        const maxSize = 180;
 
-        return this.size == null || this.size < maxSize
-          ? maxSize * ratio
-          : this.size * ratio;
-      };
-    },
+  emits: {
+    [CLICK]: null,
   },
 
-  methods: {
-    onClick() {
-      this.$emit(CLICK);
-    },
+  setup(props, { emit }) {
+    const iconSize = (hover: boolean): number => {
+      const ratio = hover
+        ? 0.375
+        : 0.3;
+      const maxSize = 180;
+
+      return props.size == null || props.size < maxSize
+        ? maxSize * ratio
+        : props.size * ratio;
+    };
+    const onClick = () => { emit(CLICK); };
+
+    return {
+      iconSize,
+      onClick,
+    };
   },
 });
 </script>
