@@ -78,8 +78,8 @@
             @input="onFavoriteButtonClicked"
           />
           <TrackMenu
-            offset-x
             left
+            offset-x
             :track="item"
             :size="buttonSize"
             @on-favorite-menu-clicked="onFavoriteButtonClicked"
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
@@ -101,6 +101,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
+import { useButtonSize } from '~/services/use/style';
 import { getImageSrc } from '~/utils/image';
 import { App } from '~~/types';
 
@@ -112,7 +113,7 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseArtwork,
     ArtistNames,
@@ -138,47 +139,39 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
-    },
-    releasePath(): RawLocation {
-      return {
-        path: `/releases/${this.item.releaseId}`,
-        query: { track: this.item.id },
-      };
-    },
-    textColor(): string | undefined {
-      return this.set
-        ? 'active--text'
-        : undefined;
-    },
-    subtextColor(): string | undefined {
-      return this.set
-        ? 'active--text'
-        : 'subtext--text';
-    },
-    buttonSize(): number {
-      return this.$screen.isMultiColumn
-        ? 36
-        : 32;
-    },
-  },
+  setup(props, { root, emit }) {
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      root.$constant.TRACK_LIST_ARTWORK_SIZE,
+    ));
+    const releasePath = computed<RawLocation>(() => ({
+      path: `/releases/${props.item.releaseId}`,
+      query: { track: props.item.id },
+    }));
+    const textColor = computed(() => (props.set ? 'active--text' : undefined));
+    const subtextColor = computed(() => (props.set ? 'active--text' : 'subtext--text'));
+    const buttonSize = useButtonSize(root);
 
-  methods: {
-    onMediaButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
-    },
-    onFavoriteButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
-    },
-    onItemClicked() {
-      if (this.$screen.isSingleColumn) {
-        this.onMediaButtonClicked();
+    // row をコピーしたものを参照する
+    const onMediaButtonClicked = () => { emit(ON_MEDIA_BUTTON_CLICKED, { ...props.item }); };
+    const onItemClicked = () => {
+      if (root.$screen.isSingleColumn) {
+        emit(ON_MEDIA_BUTTON_CLICKED, { ...props.item });
       }
-    },
+    };
+    // row をコピーしたものを参照する
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, { ...props.item }); };
+
+    return {
+      artworkSrc,
+      releasePath,
+      textColor,
+      subtextColor,
+      buttonSize,
+      onMediaButtonClicked,
+      onItemClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>
@@ -194,7 +187,7 @@ export default Vue.extend({
     align-items: center;
 
     & > *:not(:last-child) {
-      margin-right: 0.75em;
+      margin-right: 1em;
     }
   }
 

@@ -75,7 +75,7 @@ export namespace App {
 
   export type DeviceInfo = {
     id: string | undefined
-    type: string
+    type: SpotifyAPI.Device['type']
     isActive: boolean
     disabled: boolean
     title: string
