@@ -2,14 +2,14 @@
   <v-list-item
     dense
     two-line
-    :disabled="disabled"
-    :inactive="disabled"
-    @click="onItemClicked"
+    :disabled="item.disabled"
+    :inactive="item.disabled"
+    @click="onClick"
   >
     <v-list-item-avatar>
       <v-icon
         :size="32"
-        :color="disabled ? 'inactive' : isActive ? 'active' : undefined"
+        :color="iconColor"
       >
         {{ icon }}
       </v-icon>
@@ -18,29 +18,29 @@
     <v-list-item-content>
       <v-list-item-title
         :class="{
-          'active--text': isActive,
-          'inactive--text': disabled,
+          'active--text': item.isActive,
+          'inactive--text': item.disabled,
         }"
       >
-        {{ title }}
+        {{ item.title }}
       </v-list-item-title>
 
       <v-list-item-subtitle
         :class="{
-          'active--text': isActive,
-          'inactive--text': disabled,
+          'active--text': item.isActive,
+          'inactive--text': item.disabled,
         }"
       >
         <v-icon
-          v-show="isActive"
-          :color="disabled ? 'inactive' : isActive ? 'active' : undefined"
+          v-show="item.isActive"
+          :color="iconColor"
           :size="16"
         >
           mdi-volume-high
         </v-icon>
 
         <span>
-          {{ subtitle }}
+          {{ item.subtitle }}
         </span>
       </v-list-item-subtitle>
     </v-list-item-content>
@@ -48,20 +48,15 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { App, SpotifyAPI } from '~~/types';
-
-export type DeviceInfo = App.DeviceInfo;
-
-type Data = {
-  icon: string
-}
 
 const CLICK = 'click';
 
 export type On = {
-  [CLICK]: App.DeviceInfo['id']
+  [CLICK]: App.DeviceInfo['id'];
 }
+export type DeviceInfo = App.DeviceInfo;
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
   switch (type) {
@@ -92,44 +87,31 @@ const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
   }
 };
 
-export default Vue.extend({
+export default defineComponent({
   props: {
-    id: {
-      type: String,
-      default: undefined,
-    },
-    type: {
-      type: String as PropType<SpotifyAPI.Device['type']>,
-      required: true,
-    },
-    isActive: {
-      type: Boolean,
-      required: true,
-    },
-    disabled: {
-      type: Boolean,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    subtitle: {
-      type: String,
+    item: {
+      type: Object as PropType<App.DeviceInfo>,
       required: true,
     },
   },
 
-  data(): Data {
+  emits: {
+    [CLICK]: (_id: string) => true,
+  },
+
+  setup(props, { emit }) {
+    const icon = computed(() => deviceIcon(props.item.type));
+    const iconColor = computed(() => {
+      if (props.item.disabled) return 'inactive';
+      return props.item.isActive ? 'active' : undefined;
+    });
+    const onClick = () => { emit(CLICK, props.item.id); };
+
     return {
-      icon: deviceIcon(this.type),
+      icon,
+      iconColor,
+      onClick,
     };
-  },
-
-  methods: {
-    onItemClicked() {
-      this.$emit(CLICK, this.id);
-    },
   },
 });
 </script>

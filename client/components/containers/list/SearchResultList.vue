@@ -52,7 +52,7 @@
                   <ContentListItem
                     v-for="item in items"
                     :key="item.id"
-                    v-bind="item"
+                    :item="item"
                     :selected="selectedItem != null ? item.id === selectedItem.id : false"
                     @click="onItemClicked"
                   />

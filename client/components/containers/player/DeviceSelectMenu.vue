@@ -50,7 +50,7 @@
       <DeviceSelectMenuItem
         v-for="(device, index) in deviceItemList"
         :key="`${device.id}-${index}`"
-        v-bind="device"
+        :item="device"
         @click="onItemClicked"
       />
     </v-list-item-group>

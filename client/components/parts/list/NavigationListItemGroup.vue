@@ -13,7 +13,7 @@
 
     <div
       v-if="scroll"
-      :ref="VIRTUAL_SCROLLER_WRAPPER_REF"
+      ref="VIRTUAL_SCROLLER_WRAPPER_REF"
       :class="$style['NavigationDrawerListItemGroup__wrapper--scroll']"
     >
       <v-virtual-scroll
@@ -26,8 +26,8 @@
       >
         <template #default="{ item }">
           <NavigationListItem
-            v-bind="item"
             dense
+            :item="item"
           />
         </template>
       </v-virtual-scroll>
@@ -37,27 +37,20 @@
       <NavigationListItem
         v-for="item in items"
         :key="item.to"
-        v-bind="item"
+        :item="item"
       />
     </div>
   </v-list-item-group>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, ref, PropType } from '@vue/composition-api';
 import NavigationListItem, { Item } from '~/components/parts/list/NavigationListItem.vue';
+import { useResizableVirtualScroll } from '~/services/use/observer';
 
 export type { Item } from '~/components/parts/list/NavigationListItem.vue';
 
-const VIRTUAL_SCROLLER_WRAPPER_REF = 'VIRTUAL_SCROLLER_WRAPPER_REF';
-
-type Data = {
-  VIRTUAL_SCROLLER_WRAPPER_REF: string
-  virtualScrollerHeight: number
-  resizeObserver: ResizeObserver | undefined
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     NavigationListItem,
   },
@@ -77,43 +70,14 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  setup(_, { root }) {
+    const VIRTUAL_SCROLLER_WRAPPER_REF = ref<HTMLDivElement>();
+    const { virtualScrollerHeight } = useResizableVirtualScroll(root, VIRTUAL_SCROLLER_WRAPPER_REF);
+
     return {
       VIRTUAL_SCROLLER_WRAPPER_REF,
-      virtualScrollerHeight: 0,
-      resizeObserver: undefined,
+      virtualScrollerHeight,
     };
-  },
-
-  mounted() {
-    if (this.scroll) {
-      const element = this.$refs[VIRTUAL_SCROLLER_WRAPPER_REF] as HTMLDivElement;
-      this.calculateVirtualScrollerHeight(element.clientHeight);
-
-      if (typeof ResizeObserver !== 'undefined') {
-        this.resizeObserver = new ResizeObserver((entries) => {
-          entries.forEach((entry) => {
-            this.calculateVirtualScrollerHeight(entry.contentRect.height);
-          });
-        });
-        this.resizeObserver.observe(element);
-      }
-    }
-  },
-
-  beforeDestroy() {
-    if (this.resizeObserver != null) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = undefined;
-    }
-  },
-
-  methods: {
-    calculateVirtualScrollerHeight(height: number) {
-      this.$nextTick().then(() => {
-        this.virtualScrollerHeight = Math.max(Math.floor(height), 0);
-      });
-    },
   },
 });
 </script>
