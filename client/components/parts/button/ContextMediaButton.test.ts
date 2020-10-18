@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import ContextMediaButton from './ContextMediaButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('ContextMediaButton', () => {
   it('in playling', async () => {
     const wrapper = mount(ContextMediaButton, {
+      ...options,
       propsData: {
         value: true,
         fab: false,
@@ -19,6 +21,7 @@ describe('ContextMediaButton', () => {
 
   it('in paused', async () => {
     const wrapper = mount(ContextMediaButton, {
+      ...options,
       propsData: {
         value: false,
         fab: false,

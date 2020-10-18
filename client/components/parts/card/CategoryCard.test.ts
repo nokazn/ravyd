@@ -1,7 +1,9 @@
-import { mount, RouterLinkStub } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import CategoryCard from './CategoryCard.vue';
 
 const factory = (isLoaded: boolean) => mount(CategoryCard, {
+  ...options,
   propsData: {
     id: 'foo',
     name: 'foo',
@@ -9,9 +11,6 @@ const factory = (isLoaded: boolean) => mount(CategoryCard, {
   },
   data() {
     return { isLoaded };
-  },
-  stubs: {
-    NuxtLink: RouterLinkStub,
   },
 });
 

@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import ImageOverlay from './ImageOverlay.vue';
 
 const CLICK = 'click';
@@ -6,6 +7,7 @@ const CLICK = 'click';
 describe('ImageOverlay', () => {
   it('emit on clicked', async () => {
     const wrapper = mount(ImageOverlay, {
+      ...options,
       propsData: {
         hover: true,
         icon: 'mdi-play-circle',
@@ -20,6 +22,7 @@ describe('ImageOverlay', () => {
 
   it('invisible at a touch screen device', async () => {
     const wrapper = mount(ImageOverlay, {
+      ...options,
       propsData: {
         hover: false,
         icon: 'mdi-play-circle',

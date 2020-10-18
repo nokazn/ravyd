@@ -1,16 +1,14 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import Card from './Card.vue';
 
 const CLICK = 'click';
-const $constant = {
-  CARD_BACKGROUND_COLOR: '#2e3032',
-};
 
 const factory = (isLoaded: boolean) => mount(Card, {
+  ...options,
   data() {
     return { isLoaded };
   },
-  mocks: { $constant },
 });
 
 describe('Card', () => {

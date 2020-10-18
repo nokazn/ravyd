@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import FavoriteButton from './FavoriteButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('FavoriteButton', () => {
   it('favorited', async () => {
     const wrapper = mount(FavoriteButton, {
+      ...options,
       propsData: {
         value: true,
       },
@@ -18,6 +20,7 @@ describe('FavoriteButton', () => {
 
   it('not favorited', async () => {
     const wrapper = mount(FavoriteButton, {
+      ...options,
       propsData: {
         value: false,
       },

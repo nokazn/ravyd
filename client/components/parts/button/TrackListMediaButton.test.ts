@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import TrackListMediaButton from './TrackListMediaButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('TrackListMediaButton', () => {
   it('playling', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: true,
         hover: false,
@@ -22,6 +24,7 @@ describe('TrackListMediaButton', () => {
 
   it('hover on playling', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: true,
         hover: true,
@@ -42,6 +45,7 @@ describe('TrackListMediaButton', () => {
 
   it('not playling', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: false,
@@ -56,6 +60,7 @@ describe('TrackListMediaButton', () => {
 
   it('hover on not playling', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: true,
@@ -76,6 +81,7 @@ describe('TrackListMediaButton', () => {
 
   it('disabled', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: false,
@@ -90,6 +96,7 @@ describe('TrackListMediaButton', () => {
 
   it('hover with disabled', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: true,

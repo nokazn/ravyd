@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils';
 import TrackListSection from './TrackListSection.vue';
+import { options } from '~/tests/mocks/mount';
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
 
 const CLICK = 'click';
@@ -8,6 +9,7 @@ const INPUT = 'input';
 describe('TrackListSection', () => {
   it('showing all', async () => {
     const wrapper = mount(TrackListSection, {
+      ...options,
       propsData: {
         value: true,
         title: 'title',
@@ -19,6 +21,7 @@ describe('TrackListSection', () => {
 
   it('folded', async () => {
     const wrapper = mount(TrackListSection, {
+      ...options,
       propsData: {
         value: false,
         title: 'title',
@@ -30,6 +33,7 @@ describe('TrackListSection', () => {
 
   it('hidden shown-all button', async () => {
     const wrapper = mount(TrackListSection, {
+      ...options,
       propsData: {
         title: 'title',
       },

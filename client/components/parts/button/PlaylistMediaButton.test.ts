@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import PlaylistMediaButton from './PlaylistMediaButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('PlaylistMediaButton', () => {
   it('playling', async () => {
     const wrapper = mount(PlaylistMediaButton, {
+      ...options,
       propsData: {
         value: true,
         disabled: false,
@@ -20,6 +22,7 @@ describe('PlaylistMediaButton', () => {
 
   it('not playling', async () => {
     const wrapper = mount(PlaylistMediaButton, {
+      ...options,
       propsData: {
         value: false,
         disabled: false,
@@ -33,6 +36,7 @@ describe('PlaylistMediaButton', () => {
 
   it('disabled with playing', async () => {
     const wrapper = mount(PlaylistMediaButton, {
+      ...options,
       propsData: {
         value: true,
         disabled: true,
@@ -44,6 +48,7 @@ describe('PlaylistMediaButton', () => {
 
   it('disabled with not playling', async () => {
     const wrapper = mount(PlaylistMediaButton, {
+      ...options,
       propsData: {
         value: false,
         disabled: true,

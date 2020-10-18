@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import UserAvatar from './UserAvatar.vue';
 import ImageOverlay from './ImageOverlay.vue';
 
@@ -9,6 +10,7 @@ const ON_LOADED = 'on-loaded';
 
 const factory = (overlay: boolean) => {
   return mount(UserAvatar, {
+    ...options,
     propsData: {
       src: 'src/of/image',
       alt: 'image',
