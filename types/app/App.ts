@@ -62,6 +62,7 @@ export namespace App {
     isSet: boolean
     isPlaying: boolean
     index: number
+    type: Spotify.Track['type']
     id: string | undefined
     name: string
     uri: string

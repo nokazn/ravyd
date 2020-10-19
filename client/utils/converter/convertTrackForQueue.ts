@@ -19,6 +19,7 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
     isSet,
     isPlaying,
     index: i + offset,
+    type: track.type,
     id: track.id ?? undefined,
     name: track.name,
     uri: track.uri,
