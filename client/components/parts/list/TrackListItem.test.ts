@@ -6,7 +6,6 @@ import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import type { App } from '~~/types';
 
 const CLICK = 'click';
-const INPUT = 'click';
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -76,7 +75,7 @@ describe('TrackListItem', () => {
     // play a track
     await wrapper.setProps({
       set: true,
-      playling: true,
+      playing: true,
     });
     expect(nuxtLink.classes()).toContain('active--text');
     expect(span.classes()).toContain('active--text');
@@ -93,7 +92,7 @@ describe('TrackListItem', () => {
     // play a track
     await wrapper.setProps({
       set: true,
-      playling: true,
+      playing: true,
     });
     expect(nuxtLink.classes()).toContain('active--text');
   });
@@ -108,7 +107,7 @@ describe('TrackListItem', () => {
     // play a track
     await wrapper.setProps({
       set: true,
-      playling: true,
+      playing: true,
     });
     expect(nuxtLink.classes()).toContain('active--text');
   });
@@ -132,13 +131,13 @@ describe('TrackListItem', () => {
 
   it('click favorite button in pc', async () => {
     const wrapper = factory(false, false, true, [artistMock]);
-    await wrapper.findComponent(FavoriteButton).trigger(INPUT);
+    await wrapper.findComponent(FavoriteButton).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });
 
   it('click favorite button in mobile', async () => {
     const wrapper = factory(false, false, false, [artistMock]);
-    await wrapper.findComponent(FavoriteButton).trigger(INPUT);
+    await wrapper.findComponent(FavoriteButton).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });
 

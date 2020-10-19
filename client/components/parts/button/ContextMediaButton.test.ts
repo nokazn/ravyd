@@ -6,7 +6,7 @@ const CLICK = 'click';
 const INPUT = 'input';
 
 describe('ContextMediaButton', () => {
-  it('in playling', async () => {
+  it('in playing', async () => {
     const wrapper = mount(ContextMediaButton, {
       ...options,
       propsData: {

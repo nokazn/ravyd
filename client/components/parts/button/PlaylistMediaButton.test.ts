@@ -6,7 +6,7 @@ const CLICK = 'click';
 const INPUT = 'input';
 
 describe('PlaylistMediaButton', () => {
-  it('playling', async () => {
+  it('playing', async () => {
     const wrapper = mount(PlaylistMediaButton, {
       ...options,
       propsData: {
@@ -20,7 +20,7 @@ describe('PlaylistMediaButton', () => {
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
   });
 
-  it('not playling', async () => {
+  it('not playing', async () => {
     const wrapper = mount(PlaylistMediaButton, {
       ...options,
       propsData: {
@@ -46,7 +46,7 @@ describe('PlaylistMediaButton', () => {
     expect(wrapper.attributes('title')).toBe('再生できない項目');
   });
 
-  it('disabled with not playling', async () => {
+  it('disabled with not playing', async () => {
     const wrapper = mount(PlaylistMediaButton, {
       ...options,
       propsData: {

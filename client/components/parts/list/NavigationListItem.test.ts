@@ -24,12 +24,14 @@ describe('NavigationListItem', () => {
     expect(title.classes()).not.toContain('active--text');
     expect(title.find('.v-icon').exists()).toBe(false);
   });
+
   it('set item', () => {
     const wrapper = factory(true, false);
     const title = wrapper.find('.v-list-item__title');
     expect(title.classes()).toContain('active--text');
     expect(title.find('.v-icon').exists()).toBe(false);
   });
+
   it('playing item', () => {
     const wrapper = factory(true, true);
     const title = wrapper.find('.v-list-item__title');
