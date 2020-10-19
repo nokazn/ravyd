@@ -5,9 +5,7 @@
       :color="$constant.CARD_BACKGROUND_COLOR"
       :class="$style.TwoColumnsList"
     >
-      <template
-        v-for="(item, index) in items"
-      >
+      <template v-for="(item, index) in items">
         <v-list-item
           :key="item.title"
           :class="$style.TwoColumnsList__item"
@@ -17,7 +15,6 @@
               <div class="subtext--text">
                 {{ item.title }}
               </div>
-
               <div>
                 {{ item.value }}
               </div>
@@ -35,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 
 export type Item = {
   title: string;
   value: string | null;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     items: {
       type: Array as PropType<Item[]>,
