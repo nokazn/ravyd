@@ -12,8 +12,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
@@ -24,7 +23,7 @@ export type On = {
   [ON_FOLLOW_MENU_CLICKED]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContextMenu,
   },
@@ -60,39 +59,33 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    followArtist(): MenuItem<'custom'> {
-      return {
+  setup(props, { emit }) {
+    const menuItemLists = computed<Group[]>(() => {
+      const followArtist: MenuItem<'custom'> = {
         type: 'custom',
-        name: this.following ? 'フォローしない' : 'フォローする',
-        handler: () => {
-          const nextFollowingState = !this.following;
-          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
-        },
+        name: props.following ? 'フォローしない' : 'フォローする',
+        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
       };
-    },
-    share(): MenuItem<'component'> {
-      const props: ShareMenuProps = {
-        name: this.artist.name,
-        uri: this.artist.uri,
-        typeName: 'アーティスト',
-        artists: undefined,
-        externalUrls: this.artist.externalUrls,
-        left: this.left,
-        right: this.right,
-      };
-      return {
+      const share: MenuItem<'component', ShareMenuProps> = {
         type: 'component',
         component: ShareMenu,
-        props,
+        props: {
+          name: props.artist.name,
+          uri: props.artist.uri,
+          typeName: 'アーティスト',
+          artists: undefined,
+          externalUrls: props.artist.externalUrls,
+          left: props.left,
+          right: props.right,
+        },
       };
-    },
-    menuItemLists(): Group[] {
       return [
-        [this.followArtist],
-        [this.share],
+        [followArtist],
+        [share],
       ];
-    },
+    });
+
+    return { menuItemLists };
   },
 });
 </script>

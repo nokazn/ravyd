@@ -7,10 +7,7 @@
     open-on-hover
   >
     <template #activator="{ on }">
-      <ChildOptionMenuActivator
-        :on="on"
-        :left="left"
-      >
+      <ChildOptionMenuActivator :on="on">
         アーティストページに移動
       </ChildOptionMenuActivator>
     </template>
@@ -33,25 +30,24 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
 import { App } from '~~/types';
 
 type MenuItem = {
-  name: string
-  to: string
-  disabled: boolean
+  name: string;
+  to: string;
+  disabled: boolean;
 }
 
 export type Props = {
-  artists: App.SimpleArtistInfo[]
-  left?: boolean
-  right?: boolean
+  artists: App.SimpleArtistInfo[];
+  left?: boolean;
+  right?: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     OptionMenu,
     ChildOptionMenuActivator,
@@ -72,14 +68,16 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    menuItemList(): MenuItem[] {
-      return this.artists.map((artist) => ({
-        name: artist.name,
-        to: `/artists/${artist.id}`,
-        disabled: artist.id === this.$route.params.artistId,
-      }));
-    },
+  setup(props, { root }) {
+    // artistId is consistent during lifecycle
+    const { artistId } = root.$route.params;
+    const menuItemList = computed<MenuItem[]>(() => props.artists.map((artist) => ({
+      name: artist.name,
+      to: `/artists/${artist.id}`,
+      disabled: artist.id === artistId,
+    })));
+
+    return { menuItemList };
   },
 });
 </script>

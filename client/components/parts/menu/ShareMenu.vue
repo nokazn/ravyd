@@ -7,10 +7,7 @@
     open-on-hover
   >
     <template #activator="{ on }">
-      <ChildOptionMenuActivator
-        :on="on"
-        :left="left"
-      >
+      <ChildOptionMenuActivator :on="on">
         シェア
       </ChildOptionMenuActivator>
     </template>
@@ -20,9 +17,9 @@
         <a
           v-if="item.type === 'to'"
           :key="item.name"
-          :href="item.to"
           target="_blank"
           rel="nofollow noopener noreferrer"
+          :href="item.to"
         >
           <v-list-item>
             <v-list-item-icon>
@@ -64,15 +61,15 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
+import { useCopyText } from '~/services/use/util';
 import { createUrl } from '~~/utils/createUrl';
-import type { $Toast } from '~/plugins/observable/toast';
 import type { App, SpotifyAPI } from '~~/types';
 
-type MenuType = 'to' | 'custom'
+type MenuType = 'to' | 'custom';
 type MenuItem<T extends MenuType = MenuType> = T extends 'to'
   ? {
     type: T;
@@ -89,45 +86,17 @@ type MenuItem<T extends MenuType = MenuType> = T extends 'to'
   }
 
 export type Props = {
-  name: string
-  uri: string
-  url?: string
-  typeName: string
-  artists: App.SimpleArtistInfo[] | string | undefined
-  externalUrls: SpotifyAPI.ExternalUrls
-  left?: boolean
-  right?: boolean
+  name: string;
+  uri: string;
+  url?: string;
+  typeName: string;
+  artists: App.SimpleArtistInfo[] | string | undefined;
+  externalUrls: SpotifyAPI.ExternalUrls;
+  left?: boolean;
+  right?: boolean;
 }
 
-type Data = {
-  text: string;
-}
-
-const copyText = (text: string, name: string, $toast: $Toast): void => {
-  const copyEventListener = (e: ClipboardEvent) => {
-    if (e.clipboardData == null) {
-      $toast.push({
-        color: 'error',
-        message: `${name}をコピーできませんでした。`,
-      });
-      return;
-    }
-
-    e.preventDefault();
-    e.clipboardData.setData('text/plain', text);
-    document.removeEventListener('copy', copyEventListener);
-
-    $toast.push({
-      color: 'primary',
-      message: `${name}をコピーしました。`,
-    });
-  };
-
-  document.addEventListener('copy', copyEventListener);
-  document.execCommand('copy');
-};
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     OptionMenu,
     ChildOptionMenuActivator,
@@ -168,30 +137,23 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const { artists } = this;
-    const artistNames: string | undefined = Array.isArray(artists)
-      ? artists.map((artist) => artist.name).join(', ')
-      : artists;
-    const text = artistNames != null
-      ? `${artistNames} の ${this.name}`
-      : this.name;
+  setup(props, { root }) {
+    const menuItemList = computed<MenuItem[]>(() => {
+      const artistNames: string | undefined = Array.isArray(props.artists)
+        ? props.artists.map((artist) => artist.name).join(', ')
+        : props.artists;
+      const text = artistNames != null
+        ? `${artistNames} の ${props.name}`
+        : props.name;
 
-    return {
-      text,
-    };
-  },
-
-  computed: {
-    menuItemList(): MenuItem[] {
-      const path = this.url ?? this.$route.path;
+      const path = props.url ?? root.$route.path;
       const url = `${process.env.BASE_URL}${path}`;
 
       const twitter: MenuItem<'to'> = {
         type: 'to',
         name: 'Twitter',
         to: createUrl('https://twitter.com/share', {
-          text: this.text,
+          text,
           url,
         }),
         iconSrc: '/icon/twitter.png',
@@ -206,31 +168,28 @@ export default Vue.extend({
         iconSrc: '/icon/facebook.png',
       };
 
-      const text = `${this.text} ${url}`;
       const line: MenuItem<'to'> = {
         type: 'to',
         name: 'LINE',
-        to: `https://line.me/R/msg/text/?${encodeURIComponent(text)}`,
+        to: `https://line.me/R/msg/text/?${encodeURIComponent(`${text} ${url}`)}`,
         iconSrc: '/icon/line.png',
       };
 
       const copyTrackUrl: MenuItem<'custom'> = {
         type: 'custom',
-        name: `${this.typeName}のリンクをコピー`,
+        name: `${props.typeName}のリンクをコピー`,
         handler: () => {
-          if (this.externalUrls.spotify != null) {
-            copyText(this.externalUrls.spotify, `${this.typeName}のリンク`, this.$toast);
+          if (props.externalUrls.spotify != null) {
+            useCopyText(root, props.externalUrls.spotify, `${props.typeName}のリンク`);
           }
         },
-        disabled: this.externalUrls.spotify == null,
+        disabled: props.externalUrls.spotify == null,
       };
 
       const copyUri: MenuItem<'custom'> = {
         type: 'custom',
         name: 'Spotify URI をコピー',
-        handler: () => {
-          copyText(this.uri, 'Spotify URI ', this.$toast);
-        },
+        handler: () => { useCopyText(root, props.uri, 'Spotify URI '); },
       };
 
       return [
@@ -240,7 +199,9 @@ export default Vue.extend({
         copyTrackUrl,
         copyUri,
       ];
-    },
+    });
+
+    return { menuItemList };
   },
 });
 </script>

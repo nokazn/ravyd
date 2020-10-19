@@ -80,31 +80,35 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType, VueConstructor } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { VueConstructor } from 'vue';
 
-type MenuType = 'to' | 'custom' | 'component';
-export type MenuItem<T extends MenuType = MenuType> = T extends 'to'
+export type MenuType = 'to' | 'custom' | 'component';
+export type MenuItem<
+  T extends MenuType = MenuType,
+  U extends { [k in string]: unknown } = {},
+> = T extends 'to'
   ? {
-    type: T,
+    type: T;
     name: string;
     disabled?: boolean;
     to: string;
   }
   : T extends 'custom'
   ? {
-    type: T,
+    type: T;
     name: string;
     disabled?: boolean;
     handler: () => void;
   }
   : {
-    type: T,
+    type: T;
     component: VueConstructor;
-    props: { [k in string]: unknown }
+    props: U;
   };
 export type Group = MenuItem[];
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     size: {
       type: Number,
@@ -161,10 +165,9 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    iconSize(): number {
-      return Math.floor(this.size * 0.7);
-    },
+  setup(props) {
+    const iconSize = computed(() => Math.floor(props.size * 0.7));
+    return { iconSize };
   },
 });
 </script>

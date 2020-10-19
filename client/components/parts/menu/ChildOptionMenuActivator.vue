@@ -10,14 +10,14 @@
 
     <v-list-item-action>
       <v-icon small>
-        {{ icon }}
+        mdi-chevron-right
       </v-icon>
     </v-list-item-action>
   </v-list-item>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api';
+import { defineComponent, PropType } from '@vue/composition-api';
 
 const CLICK = 'click';
 
@@ -35,15 +35,6 @@ export default defineComponent({
       type: Object as PropType<EventHandlers>,
       required: true,
     },
-    left: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  setup(props) {
-    const icon = computed(() => (props.left ? 'mdi-chevron-right' : 'mdi-chevron-left'));
-    return { icon };
   },
 });
 </script>

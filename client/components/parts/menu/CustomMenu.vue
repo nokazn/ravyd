@@ -26,20 +26,16 @@
       :class="$style.CustomMenu"
     >
       <slot name="header" />
-
       <v-divider />
-
       <slot />
-
       <v-divider v-if="$slots.footer != null" />
-
       <slot name="footer" />
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 const INPUT = 'input';
 
@@ -47,8 +43,12 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
+    value: {
+      type: Boolean,
+      required: true,
+    },
     top: {
       type: Boolean,
       default: false,
@@ -77,21 +77,15 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    value: {
-      type: Boolean,
-      required: true,
-    },
   },
 
-  computed: {
-    menu: {
-      get(): boolean {
-        return this.value;
-      },
-      set(menu: boolean) {
-        this.$emit(INPUT, menu);
-      },
-    },
+  setup(props, { emit }) {
+    const menu = computed<boolean>({
+      get() { return props.value; },
+      set(value) { emit(INPUT, value); },
+    });
+
+    return { menu };
   },
 });
 </script>

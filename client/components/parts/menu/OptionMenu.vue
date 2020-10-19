@@ -1,6 +1,8 @@
 <template>
   <v-menu
     v-model="menu"
+    close-on-click
+    close-on-content-click
     :top="top"
     :bottom="bottom"
     :left="left"
@@ -15,8 +17,6 @@
     :open-on-hover="openOnHover && !$screen.isTouchScreen"
     :open-on-click="openOnClick"
     :close-delay="closeDelay"
-    close-on-content-click
-    close-on-click
   >
     <template #activator="{ on }">
       <slot
@@ -36,7 +36,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent,
+  ref,
+  unref,
+  computed,
+  PropType,
+} from '@vue/composition-api';
 
 const INPUT = 'input';
 
@@ -44,12 +50,12 @@ export type On = {
   [INPUT]: boolean;
 }
 
-type Data = {
-  isShown: boolean;
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
+    value: {
+      type: Boolean as PropType<boolean | undefined>,
+      default: undefined,
+    },
     top: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
@@ -106,31 +112,22 @@ export default Vue.extend({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-    value: {
-      type: Boolean as PropType<boolean | undefined>,
-      default: undefined,
-    },
   },
 
-  data(): Data {
-    return {
-      isShown: false,
-    };
-  },
-
-  computed: {
-    menu: {
-      get(): boolean {
-        return this.value ?? this.isShown;
-      },
-      set(menu: boolean) {
-        if (this.value != null) {
-          this.$emit(INPUT, menu);
+  setup(props, { emit }) {
+    const isShown = ref(false);
+    const menu = computed<boolean>({
+      get() { return props.value ?? unref(isShown); },
+      set(value) {
+        if (props.value != null) {
+          emit(INPUT, menu);
         } else {
-          this.isShown = menu;
+          isShown.value = value;
         }
       },
-    },
+    });
+
+    return { menu };
   },
 });
 </script>
