@@ -19,7 +19,7 @@
           v-for="(item, index) in items"
           v-show="length == null || index < length"
           :key="item.id"
-          v-bind="item"
+          :item="item"
         />
       </v-list>
     </client-only>
@@ -37,9 +37,9 @@ const ON_BUTTON_HOVERED = 'on-button-hovered';
 const ON_LOADING_APPEARED = 'on-loading-appeared';
 
 export type On = {
-  [ON_BUTTON_CLICKED]: boolean
-  [ON_BUTTON_HOVERED]: void
-  [ON_LOADING_APPEARED]: void
+  [ON_BUTTON_CLICKED]: boolean;
+  [ON_BUTTON_HOVERED]: void;
+  [ON_LOADING_APPEARED]: void;
 }
 
 export default Vue.extend({

@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import CardsSection from './CardsSection.vue';
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -10,16 +11,10 @@ const INPUT = 'input';
 const ON_BUTTON_HOVERED = 'on-button-hovered';
 const ON_LOADING_APPEARED = 'on-loading-appeared';
 
-// @ts-ignore
-window.IntersectionObserver = jest.fn(() => ({
-  observe: () => {},
-  unobserve: () => {},
-}));
-
-
 describe('CardsSection', () => {
   it('showing all & full items', async () => {
     const wrapper = mount(CardsSection, {
+      ...options,
       propsData: {
         value: true,
         full: true,
@@ -36,6 +31,7 @@ describe('CardsSection', () => {
 
   it('folded & full items', async () => {
     const wrapper = mount(CardsSection, {
+      ...options,
       propsData: {
         value: false,
         full: true,
@@ -53,6 +49,7 @@ describe('CardsSection', () => {
 
   it('showing all & not full items', async () => {
     const wrapper = mount(CardsSection, {
+      ...options,
       propsData: {
         value: true,
         full: false,
@@ -71,6 +68,7 @@ describe('CardsSection', () => {
 
   it('folded & not full items', async () => {
     const wrapper = mount(CardsSection, {
+      ...options,
       propsData: {
         value: false,
         full: false,

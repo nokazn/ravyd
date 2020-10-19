@@ -65,7 +65,7 @@
       <TrackQueueMenuItem
         v-for="(track, index) in trackQueue"
         :key="`${track.id}-${index}`"
-        v-bind="track"
+        :item="track"
         @on-item-clicked="onItemClicked"
         @on-link-clicked="toggleMenu"
       />

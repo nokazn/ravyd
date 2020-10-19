@@ -62,6 +62,7 @@ export namespace App {
     isSet: boolean
     isPlaying: boolean
     index: number
+    type: Spotify.Track['type']
     id: string | undefined
     name: string
     uri: string
@@ -75,7 +76,7 @@ export namespace App {
 
   export type DeviceInfo = {
     id: string | undefined
-    type: string
+    type: SpotifyAPI.Device['type']
     isActive: boolean
     disabled: boolean
     title: string

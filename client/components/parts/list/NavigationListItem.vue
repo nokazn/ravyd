@@ -2,8 +2,8 @@
   <v-list-item
     link
     nuxt
-    :to="to"
-    :title="name"
+    :to="item.to"
+    :title="item.name"
     dense
     :class="{
       [$style['NavigationListItem--dense']]: dense,
@@ -11,13 +11,13 @@
     }"
     class="g-no-text-decoration"
   >
-    <v-list-item-icon v-if="icon != null">
+    <v-list-item-icon v-if="item.icon != null">
       <v-icon
         color="subtext"
         :size="20"
-        title="name"
+        :title="item.name"
       >
-        {{ icon }}
+        {{ item.icon }}
       </v-icon>
     </v-list-item-icon>
 
@@ -25,16 +25,16 @@
       <v-list-item-title
         :class="{
           [$style.NavigationListItem__title]: true,
-          'active--text': isSet,
+          'active--text': item.isSet,
         }"
       >
         <span class="g-ellipsis-text">
-          {{ name }}
+          {{ item.name }}
         </span>
-
         <v-icon
-          v-if="isSet && isPlaying"
+          v-if="item.isSet && item.isPlaying"
           small
+          color="active"
         >
           mdi-volume-high
         </v-icon>
@@ -44,8 +44,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { Route } from 'vue-router';
+import { defineComponent, PropType } from '@vue/composition-api';
 
 export type Item = {
   name: string
@@ -55,27 +54,11 @@ export type Item = {
   isPlaying?: boolean
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
-    name: {
-      type: String,
+    item: {
+      type: Object as PropType<Item>,
       required: true,
-    },
-    to: {
-      type: [String, Object] as PropType<string | Route>,
-      required: true,
-    },
-    icon: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
-    },
-    isSet: {
-      type: Boolean,
-      default: false,
-    },
-    isPlaying: {
-      type: Boolean,
-      default: false,
     },
     dense: {
       type: Boolean,

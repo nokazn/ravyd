@@ -9,9 +9,9 @@ export type PlaybackState = {
   trackId: string | undefined
   trackName: string | undefined
   trackUri: string | undefined
-  trackType: SpotifyAPI.Player.PlayingType | undefined
+  trackType: Spotify.Track['type'] | undefined
   trackIndex: number | undefined
-  linkedFrom: SpotifyAPI.LinkedTrack | undefined,
+  linkedFrom: SpotifyAPI.LinkedTrack | undefined
   releaseName: string | undefined
   releaseUri: string | undefined
   images: SpotifyAPI.Image[] | undefined

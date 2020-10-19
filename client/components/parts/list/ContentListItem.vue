@@ -3,49 +3,49 @@
     dense
     :color="color"
     :nuxt="!isTwoLine"
-    :to="isTwoLine ? undefined : to"
-    :title="name"
+    :to="isTwoLine ? undefined : item.to"
+    :title="item.name"
     :data-is-selected="selected"
     :class="$style.ContentListItem"
-    @click.native="onClicked"
+    @click="onClick"
   >
     <v-list-item-avatar
       tile
       :class="$style.ContentListItem__avatar"
     >
       <UserAvatar
-        v-if="type === 'artist'"
-        type="artist"
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
-        :size="40"
-        default-user-icon="mdi-account-music"
+        v-if="item.type === 'artist'"
         small-icon
+        type="artist"
+        :size="40"
+        :src="artworkSrc"
+        :alt="item.name"
+        :title="item.name"
+        default-user-icon="mdi-account-music"
       />
       <ReleaseArtwork
         v-else
-        :src="artworkSrc"
-        :alt="name"
-        :title="name"
         :size="40"
+        :src="artworkSrc"
+        :alt="item.name"
+        :title="item.name"
       />
     </v-list-item-avatar>
 
     <v-list-item-content>
       <v-list-item-title class="g-ellipsis-text">
         <nuxt-link
-          :to="to"
+          :to="item.to"
           @click.native.stop
         >
-          {{ name }}
+          {{ item.name }}
         </nuxt-link>
       </v-list-item-title>
 
       <v-list-item-subtitle v-if="isTwoLine">
         <ArtistNames
           ellipsis
-          :artists="artists"
+          :artists="item.artists"
         />
       </v-list-item-subtitle>
     </v-list-item-content>
@@ -53,22 +53,21 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RawLocation } from 'vue-router';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
-import { SpotifyAPI, App } from '~~/types';
+import { App } from '~~/types';
 
 const CLICK = 'click';
 
 export type On = {
-  [CLICK]: void
+  [CLICK]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseArtwork,
     UserAvatar,
@@ -76,36 +75,8 @@ export default Vue.extend({
   },
 
   props: {
-    type: {
-      type: String as PropType<SpotifyAPI.SearchType>,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    releaseId: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      default: undefined,
-    },
-    artists: {
-      type: Array as PropType<App.SimpleArtistInfo[] | undefined>,
-      default: undefined,
-    },
-    to: {
-      type: [String, Object] as PropType<string | RawLocation>,
+    item: {
+      type: Object as PropType<App.ContentItemInfo>,
       required: true,
     },
     selected: {
@@ -118,23 +89,28 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    isTwoLine(): boolean {
-      return this.artists != null;
-    },
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
-    },
+  emits: {
+    [CLICK]: null,
   },
 
-  methods: {
-    onClicked() {
-      if (this.isTwoLine) {
-        this.$router.push(this.to);
+  setup(props, { emit, root }) {
+    const isTwoLine = computed(() => props.item.artists != null);
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      root.$constant.TRACK_LIST_ARTWORK_SIZE,
+    ));
+    const onClick = () => {
+      if (isTwoLine) {
+        root.$router.push(props.item.to);
       }
+      emit(CLICK);
+    };
 
-      this.$emit(CLICK);
-    },
+    return {
+      isTwoLine,
+      artworkSrc,
+      onClick,
+    };
   },
 });
 </script>
@@ -143,11 +119,6 @@ export default Vue.extend({
 .ContentListItem {
   &[data-is-selected=true] {
     background-color: lighten($g-menu-background-color, 16%);
-  }
-
-  &__avatar {
-    margin-top: 6px !important;
-    margin-bottom: 6px !important;
   }
 }
 </style>

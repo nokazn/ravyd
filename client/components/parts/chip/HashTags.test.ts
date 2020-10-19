@@ -1,9 +1,11 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import HashTags from './HashTags.vue';
 
 describe('HashTags', () => {
   it('capitalized tags', async () => {
     const wrapper = mount(HashTags, {
+      ...options,
       propsData: {
         tags: ['dream pop', 'art pop', 'indie pop', 'chillwave'],
       },

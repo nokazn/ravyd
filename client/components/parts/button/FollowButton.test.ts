@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import FollowButton from './FollowButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('FollowButton', () => {
   it('followed', async () => {
     const wrapper = mount(FollowButton, {
+      ...options,
       propsData: {
         value: true,
       },
@@ -20,6 +22,7 @@ describe('FollowButton', () => {
 
   it('not followed', async () => {
     const wrapper = mount(FollowButton, {
+      ...options,
       propsData: {
         value: false,
       },

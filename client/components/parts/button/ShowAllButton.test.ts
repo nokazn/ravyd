@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import ShowAllButton from './ShowAllButton.vue';
 
 const CLICK = 'click';
@@ -7,6 +8,7 @@ const INPUT = 'input';
 describe('ShowAllButton', () => {
   it('showing all', async () => {
     const wrapper = mount(ShowAllButton, {
+      ...options,
       propsData: {
         value: true,
       },
@@ -20,6 +22,7 @@ describe('ShowAllButton', () => {
 
   it('folded', async () => {
     const wrapper = mount(ShowAllButton, {
+      ...options,
       propsData: {
         value: false,
       },

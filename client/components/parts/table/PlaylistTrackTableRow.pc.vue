@@ -61,9 +61,8 @@
                 ellipsis
                 :artists="item.artists"
               />
-              <span :class="$style['Content__subtitle--divider']">-</span>
+              <span>-</span>
             </template>
-
             <nuxt-link
               :to="releasePath"
               :title="item.releaseName"
@@ -268,8 +267,8 @@ export default Vue.extend({
     }
 
     &__subtitle {
-      &--divider {
-        margin: 0 0.25rem;
+      & > *:not(:last-child) {
+        margin-right: 0.25rem;
       }
     }
   }

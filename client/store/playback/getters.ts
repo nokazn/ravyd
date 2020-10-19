@@ -131,11 +131,12 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   trackQueue(state, getters) {
     if (!getters.hasTrack) return [];
 
-    // hasTrack が true の場合 trackId, trackName, trackUri, releaseName, releaseUri, artists は存在
+    // hasTrack の場合 trackType, trackId, trackName, trackUri, releaseName, releaseUri, artists は存在
     const currentTrack = {
       isSet: true,
       isPlaying: state.isPlaying,
       index: 0,
+      type: state.trackType!,
       id: state.trackId,
       name: state.trackName!,
       uri: state.trackUri!,

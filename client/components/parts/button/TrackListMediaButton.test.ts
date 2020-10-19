@@ -1,12 +1,14 @@
 import { mount } from '@vue/test-utils';
+import { options } from '~/tests/mocks/mount';
 import TrackListMediaButton from './TrackListMediaButton.vue';
 
 const CLICK = 'click';
 const INPUT = 'input';
 
 describe('TrackListMediaButton', () => {
-  it('playling', async () => {
+  it('playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: true,
         hover: false,
@@ -20,8 +22,9 @@ describe('TrackListMediaButton', () => {
     expect(icon.classes()).toContain('mdi-volume-high');
   });
 
-  it('hover on playling', async () => {
+  it('hover on playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: true,
         hover: true,
@@ -40,8 +43,9 @@ describe('TrackListMediaButton', () => {
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
   });
 
-  it('not playling', async () => {
+  it('not playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: false,
@@ -54,8 +58,9 @@ describe('TrackListMediaButton', () => {
     expect(text.text()).toBe('3');
   });
 
-  it('hover on not playling', async () => {
+  it('hover on not playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: true,
@@ -76,6 +81,7 @@ describe('TrackListMediaButton', () => {
 
   it('disabled', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: false,
@@ -90,6 +96,7 @@ describe('TrackListMediaButton', () => {
 
   it('hover with disabled', async () => {
     const wrapper = mount(TrackListMediaButton, {
+      ...options,
       propsData: {
         value: false,
         hover: true,

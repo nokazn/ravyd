@@ -1,16 +1,16 @@
 <template>
   <v-list-item
     dense
-    three-line
-    :title="`${name} を再生`"
+    two-line
+    :title="`${item.name} を再生`"
     :class="$style.TrackQueueMenuItem"
     @click="onItemClicked"
   >
     <v-list-item-avatar tile>
       <ReleaseArtwork
         :src="artworkSrc"
-        :alt="name"
-        :title="name"
+        :alt="item.name"
+        :title="item.name"
         :size="40"
       />
     </v-list-item-avatar>
@@ -19,53 +19,50 @@
       <v-list-item-title
         :class="[
           $style.TrackQueueMenuItem__title,
-          isSet ? 'active--text' : undefined
+          item.isSet ? 'active--text' : undefined
         ]"
         class="g-ellipsis-text"
       >
-        {{ name }}
+        {{ item.name }}
       </v-list-item-title>
 
       <v-list-item-subtitle
         :class="[
-          isSet ? 'active--text' : 'subtext--text'
+          $style.TrackQueueMenuItem__subtitle,
+          item.isSet ? 'active--text' : 'subtext--text'
         ]"
       >
+        <template v-if="item.type === 'track'">
+          <ArtistNames
+            inline
+            ellipsis
+            :artists="item.artists"
+            @click="onLinkClicked"
+          />
+          <span>-</span>
+        </template>
         <nuxt-link
           :to="releasePath"
-          :title="releaseName"
+          :title="item.releaseName"
           class="g-ellipsis-text"
           @click.native.stop="onLinkClicked"
         >
-          {{ releaseName }}
+          {{ item.releaseName }}
         </nuxt-link>
-      </v-list-item-subtitle>
-
-      <v-list-item-subtitle
-        :class="[
-          $style.TrackQueueMenuItem__artistNames,
-          isSet ? 'active--text' : 'subtext--text'
-        ]"
-      >
-        <ArtistNames
-          ellipsis
-          :artists="artists"
-          @click="onLinkClicked"
-        />
       </v-list-item-subtitle>
     </v-list-item-content>
 
     <v-list-item-action :class="$style.TrackQueueMenuItem__action">
       <TrackTime
-        v-if="durationMs != null"
-        :time-ms="durationMs"
-        :class="isSet ? 'active--text' : 'subtext--text'"
+        v-if="item.durationMs != null"
+        :time-ms="item.durationMs"
+        :class="item.isSet ? 'active--text' : 'subtext--text'"
       />
       <v-icon
-        v-show="isPlaying"
-        :size="20"
+        v-show="item.isPlaying"
         color="active"
         title="再生中"
+        :size="16"
       >
         mdi-volume-high
       </v-icon>
@@ -74,26 +71,26 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/utils/image';
-import { App, SpotifyAPI } from '~~/types';
+import { App } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
 
 export type On = {
   [ON_ITEM_CLICKED]: {
-    index: number
-    uri: string
+    index: number;
+    uri: string;
   }
-  [ON_LINK_CLICKED]: void
+  [ON_LINK_CLICKED]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseArtwork,
     ArtistNames,
@@ -101,71 +98,32 @@ export default Vue.extend({
   },
 
   props: {
-    isSet: {
-      type: Boolean,
+    item: {
+      type: Object as PropType<App.TrackQueueInfo>,
       required: true,
-    },
-    isPlaying: {
-      type: Boolean,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    index: {
-      type: Number,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    releaseId: {
-      type: String,
-      required: true,
-    },
-    releaseName: {
-      type: String,
-      required: true,
-    },
-    artists: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      default: undefined,
-    },
-    durationMs: {
-      type: Number as PropType<number | undefined>,
-      default: undefined,
     },
   },
 
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.$constant.TRACK_LIST_ARTWORK_SIZE);
-    },
-    releasePath(): string {
-      return `/releases/${this.releaseId}`;
-    },
-  },
-
-  methods: {
-    onItemClicked() {
-      this.$emit(ON_ITEM_CLICKED, {
-        index: this.index,
-        uri: this.uri,
+  setup(props, { root, emit }) {
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      root.$constant.TRACK_LIST_ARTWORK_SIZE,
+    ));
+    const releasePath = computed(() => `/releases/${props.item.releaseId}`);
+    const onItemClicked = () => {
+      emit(ON_ITEM_CLICKED, {
+        index: props.item.index,
+        uri: props.item.uri,
       });
-    },
-    onLinkClicked() {
-      this.$emit(ON_LINK_CLICKED);
-    },
+    };
+    const onLinkClicked = () => { emit(ON_LINK_CLICKED); };
+
+    return {
+      artworkSrc,
+      releasePath,
+      onItemClicked,
+      onLinkClicked,
+    };
   },
 });
 </script>
@@ -176,14 +134,20 @@ export default Vue.extend({
     font-size: 0.85rem !important;
   }
 
-  &__artistNames {
-    margin-top: -2px;
+  &__subtitle {
+    font-size: 0.8rem !important;
+
+    & > *:not(:last-child) {
+      margin-right: 0.25rem;
+    }
   }
 
   &__action {
-    & > *:not(:last-child) {
-      margin-bottom: 0.4em;
-    }
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 8px 0;
   }
 }
 </style>
