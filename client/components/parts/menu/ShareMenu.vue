@@ -7,7 +7,10 @@
     open-on-hover
   >
     <template #activator="{ on }">
-      <ChildOptionMenuActivator :on="on">
+      <ChildOptionMenuActivator
+        :on="on"
+        :left="left"
+      >
         シェア
       </ChildOptionMenuActivator>
     </template>

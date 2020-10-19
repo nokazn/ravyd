@@ -7,7 +7,10 @@
     open-on-hover
   >
     <template #activator="{ on }">
-      <ChildOptionMenuActivator :on="on">
+      <ChildOptionMenuActivator
+        :on="on"
+        :left="left"
+      >
         プレイリストに追加
       </ChildOptionMenuActivator>
     </template>
