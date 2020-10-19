@@ -227,10 +227,5 @@ export default defineComponent({
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
-
-  &__action {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
 }
 </style>

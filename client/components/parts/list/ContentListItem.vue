@@ -120,10 +120,5 @@ export default defineComponent({
   &[data-is-selected=true] {
     background-color: lighten($g-menu-background-color, 16%);
   }
-
-  &__avatar {
-    margin-top: 6px !important;
-    margin-bottom: 6px !important;
-  }
 }
 </style>

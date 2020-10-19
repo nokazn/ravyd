@@ -62,7 +62,7 @@
         v-show="item.isPlaying"
         color="active"
         title="再生中"
-        :size="20"
+        :size="16"
       >
         mdi-volume-high
       </v-icon>
@@ -143,9 +143,11 @@ export default defineComponent({
   }
 
   &__action {
-    & > *:not(:last-child) {
-      margin-bottom: 0.4em;
-    }
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 8px 0;
   }
 }
 </style>
