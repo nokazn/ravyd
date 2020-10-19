@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 
 const CLICK = 'click';
 
@@ -29,7 +29,7 @@ type EventHandlers = {
   [k: string]: (e?: Event) => void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     on: {
       type: Object as PropType<EventHandlers>,

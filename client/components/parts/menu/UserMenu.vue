@@ -12,7 +12,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent,
+  computed,
+  unref,
+  PropType,
+} from '@vue/composition-api';
 
 import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
@@ -24,7 +29,7 @@ export type On = {
   [ON_FOLLOW_MENU_CLICKED]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContextMenu,
   },
@@ -60,44 +65,42 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    followArtist(): MenuItem<'custom'> {
+  setup(props, { emit }) {
+    const followArtist = computed<MenuItem<'custom'>>(() => {
       return {
         type: 'custom',
-        name: this.following ? 'フォローしない' : 'フォローする',
-        handler: () => {
-          const nextFollowingState = !this.following;
-          this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
-        },
-        disabled: this.following == null,
+        name: props.following ? 'フォローしない' : 'フォローする',
+        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
+        disabled: props.following == null,
       };
-    },
-    share(): MenuItem<'component'> {
-      const props: ShareMenuProps = {
-        name: this.user.displayName ?? this.user.id,
-        uri: this.user.uri,
+    });
+
+    const share = computed<MenuItem<'component', ShareMenuProps>>(() => ({
+      type: 'component',
+      component: ShareMenu,
+      props: {
+        name: props.user.displayName ?? props.user.id,
+        uri: props.user.uri,
         typeName: 'ユーザー',
         artists: undefined,
-        externalUrls: this.user.externalUrls,
-        left: this.left,
-        right: this.right,
-      };
-      return {
-        type: 'component',
-        component: ShareMenu,
-        props,
-      };
-    },
-    menuItemLists(): Group[] {
-      return this.following != null
+        externalUrls: props.user.externalUrls,
+        left: props.left,
+        right: props.right,
+      },
+    }));
+
+    const menuItemLists = computed<Group[]>(() => {
+      return props.following != null
         ? [
-          [this.followArtist],
-          [this.share],
+          [unref(followArtist)],
+          [unref(share)],
         ]
         : [
-          [this.share],
+          [unref(share)],
         ];
-    },
+    });
+
+    return { menuItemLists };
   },
 });
 </script>

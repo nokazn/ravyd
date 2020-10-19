@@ -12,7 +12,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent, computed, unref, PropType,
+} from '@vue/composition-api';
 
 import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
@@ -21,10 +23,10 @@ import { App } from '~~/types';
 const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 
 export type On = {
-  [ON_SAVE_MENU_CLICKED]: boolean
+  [ON_SAVE_MENU_CLICKED]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContextMenu,
   },
@@ -60,40 +62,33 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    saveShow(): MenuItem<'custom'> {
-      const nextSavedState = !this.saved;
-      const handler = () => {
-        this.$emit(ON_SAVE_MENU_CLICKED, nextSavedState);
-      };
-      return {
-        type: 'custom',
-        name: nextSavedState ? '保存する' : '保存しない',
-        handler,
-      };
-    },
-    share(): MenuItem<'component'> {
-      const props: ShareMenuProps = {
-        name: this.show.name,
-        uri: this.show.uri,
+  setup(props, { emit }) {
+    const saveShow = computed<MenuItem<'custom'>>(() => ({
+      type: 'custom',
+      name: props.saved ? '保存しない' : '保存する',
+      handler: () => { emit(ON_SAVE_MENU_CLICKED, !props.saved); },
+    }));
+
+    const share = computed<MenuItem<'component', ShareMenuProps>>(() => ({
+      type: 'component',
+      component: ShareMenu,
+      props: {
+        name: props.show.name,
+        uri: props.show.uri,
         typeName: 'ポッドキャスト',
-        artists: this.show.publisher,
-        externalUrls: this.show.externalUrls,
-        left: this.left,
-        right: this.right,
-      };
-      return {
-        type: 'component',
-        component: ShareMenu,
-        props,
-      };
-    },
-    menuItemLists(): Group[] {
-      return [
-        [this.saveShow],
-        [this.share],
-      ];
-    },
+        artists: props.show.publisher,
+        externalUrls: props.show.externalUrls,
+        left: props.left,
+        right: props.right,
+      },
+    }));
+
+    const menuItemLists = computed<Group[]>(() => [
+      [unref(saveShow)],
+      [unref(share)],
+    ]);
+
+    return { menuItemLists };
   },
 });
 </script>
