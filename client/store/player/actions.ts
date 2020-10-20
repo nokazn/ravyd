@@ -212,6 +212,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('playback/SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks, { root: true });
         commit('playback/SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks, { root: true });
         commit('playback/SET_DISALLOWS', playerState.disallows, { root: true });
+        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
 
         // 表示がちらつくので、初回以外は player/repeat 内で commit する
         if (currentRepeatMode == null) {

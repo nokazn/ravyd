@@ -9,6 +9,7 @@ import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 
 export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined
+  playbackDeviceId: string | undefined
   deviceList: App.DeviceInfo[]
   isThisAppPlaying: boolean
   isAnotherDevicePlaying: boolean
@@ -28,6 +29,7 @@ export type PlaybackGetters = {
 
 export type RootGetters = {
   'playback/activeDevice': PlaybackGetters['activeDevice']
+  'playback/playbackDeviceId': PlaybackGetters['playbackDeviceId']
   'playback/deviceList': PlaybackGetters['deviceList']
   'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
   'playback/isAnotherDevicePlaying': PlaybackGetters['isAnotherDevicePlaying']
@@ -49,6 +51,12 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   activeDevice(state) {
     const activeDevice = state.deviceList.find((device) => device.is_active);
     return activeDevice;
+  },
+
+  playbackDeviceId(state) {
+    return state.isPlaybackSleep
+      ? state.activeDeviceId
+      : undefined;
   },
 
   deviceList(state, getters) {

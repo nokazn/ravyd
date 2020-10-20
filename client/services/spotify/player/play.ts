@@ -14,7 +14,7 @@ export const play = (context: Context) => {
     offset,
     positionMs,
   }: {
-    deviceId?: string | undefined;
+    deviceId: string | undefined;
     contextUri?: string;
     trackUriList?: string[];
     offset?: { uri: string } | { position: number };

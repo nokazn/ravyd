@@ -8,7 +8,7 @@ export const volume = (context: Context) => {
     deviceId,
     volumePercent,
   }: {
-    deviceId?: string | undefined;
+    deviceId: string | undefined;
     volumePercent: ZeroToHundred;
   }): Promise<void> => {
     return app.$spotifyApi.$put<void>('/me/player/volume', undefined, {

@@ -7,7 +7,7 @@ export const shuffle = (context: Context) => {
     deviceId,
     state,
   }: {
-    deviceId?: string | undefined;
+    deviceId: string | undefined;
     state: boolean;
   }): Promise<void> => {
     return app.$spotifyApi.$put<void>('/me/player/shuffle', undefined, {

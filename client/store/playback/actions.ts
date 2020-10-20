@@ -21,7 +21,6 @@ export type PlaybackActions = {
     trackIndex?: number
   }) => void
   resetCustomContext: (uri: string | null) => void
-  awakePlayback: () => Promise<boolean>
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
   pollCurrentPlayback: (timeout?: number) => void
   play: (params?: (
@@ -178,23 +177,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (volumePercent != null) {
       commit('SET_VOLUME_PERCENT', { volumePercent });
     }
-  },
-
-  async awakePlayback({ state, dispatch }) {
-    const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
-    if (!isAuthorized) {
-      this.$toast.requirePremium();
-      return false;
-    }
-    if (!state.isPlaybackSleep) return true;
-
-    const deviceId = state.activeDeviceId ?? state.deviceId;
-    return dispatch('transferPlayback', {
-      deviceId,
-      update: true,
-    })
-      .then(() => true)
-      .catch(() => false);
   },
 
   /**
@@ -378,9 +360,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       return;
     }
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
     const {
       positionMs,
       trackUri: currentTrackUri,
@@ -400,11 +379,20 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       && offset?.position != null
       && currentTrackUri === trackUriList[offset.position]
     );
+    const deviceId = getters.playbackDeviceId;
 
     // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
     const params = isNotUriPassed || isRestartingTracks
-      ? { positionMs }
-      : { contextUri, trackUriList, offset };
+      ? {
+        positionMs,
+        deviceId,
+      }
+      : {
+        contextUri,
+        trackUriList,
+        offset,
+        deviceId,
+      };
     const request = () => {
       return this.$spotify.player.play(params)
         .then(() => {
@@ -418,8 +406,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       .catch(async (err: AxiosError) => {
         if (err.response?.status === 404) {
           // スリープならデバイスをアクティブにして再度リクエスト
-          const deviceId = state.activeDeviceId ?? state.deviceId;
-          await dispatch('transferPlayback', { deviceId });
+          await dispatch('transferPlayback', {
+            deviceId: state.activeDeviceId ?? state.deviceId,
+          });
           return request();
         }
         console.error({ err });
@@ -446,10 +435,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       return;
     }
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
-    await this.$spotify.player.pause()
+    await this.$spotify.player.pause({ deviceId: getters.playbackDeviceId })
       .then(() => {
         if (!getters.isThisAppPlaying) {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
@@ -479,13 +465,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('seeking')) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
     // Playback SDK からの通知が来ない場合が偶にあるので先に変更しておく
     commit('SET_POSITION_MS', positionMs);
     const positionMsOfCurrentState = state.positionMs;
 
-    await this.$spotify.player.seek({ positionMs })
+    await this.$spotify.player.seek({
+      positionMs,
+      deviceId: getters.playbackDeviceId,
+    })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.pushError('エラーが発生しました。');
@@ -508,10 +495,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('skipping_next')) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
-    await this.$spotify.player.next()
+    await this.$spotify.player.next({ deviceId: getters.playbackDeviceId })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.pushError('エラーが発生し、次の曲を再生できません。');
@@ -532,10 +516,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('skipping_prev')) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
-    await this.$spotify.player.previous()
+    await this.$spotify.player.previous({ deviceId: getters.playbackDeviceId })
       .catch((err: Error) => {
         console.error({ err });
         this.$toast.pushError('エラーが発生し、前の曲を再生できません。');
@@ -564,13 +545,13 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('toggling_shuffle')) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
 
-    await this.$spotify.player.shuffle({ state: nextIsShuffled })
+    await this.$spotify.player.shuffle({
+      state: nextIsShuffled,
+      deviceId: getters.playbackDeviceId,
+    })
       .then(() => {
         commit('SET_IS_SHUFFLED', nextIsShuffled);
       }).catch((err: Error) => {
@@ -604,12 +585,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       || getters.isDisallowed('toggling_repeat_context')
       || getters.isDisallowed('toggling_repeat_track')) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
 
-    await this.$spotify.player.repeat({ state: REPEAT_STATE_LIST[nextRepeatMode] })
+    await this.$spotify.player.repeat({
+      state: REPEAT_STATE_LIST[nextRepeatMode],
+      deviceId: getters.playbackDeviceId,
+    })
       .then(() => {
         commit('SET_REPEAT_MODE', nextRepeatMode);
       })
@@ -642,10 +623,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
-    await this.$spotify.player.volume({ volumePercent })
+    await this.$spotify.player.volume({
+      volumePercent,
+      deviceId: getters.playbackDeviceId,
+    })
       .then(() => {
         commit('SET_VOLUME_PERCENT', { volumePercent });
       })
@@ -682,11 +663,11 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const nextMuteState = !isMuted;
     if (currentVolumePercent === 0) return;
 
-    const isAwake = await dispatch('awakePlayback');
-    if (!isAwake) return;
-
     const volumePercent = nextMuteState ? 0 : currentVolumePercent;
-    await this.$spotify.player.volume({ volumePercent })
+    await this.$spotify.player.volume({
+      volumePercent,
+      deviceId: getters.playbackDeviceId,
+    })
       .then(() => {
         commit('SET_IS_MUTED', nextMuteState);
       })
@@ -722,7 +703,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
   modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
     if (state.trackId == null || state.trackId !== trackId) return;
-
     commit('SET_IS_SAVED_TRACK', isSaved);
   },
 

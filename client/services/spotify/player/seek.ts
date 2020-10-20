@@ -7,7 +7,7 @@ export const seek = (context: Context) => {
     deviceId,
     positionMs,
   }: {
-    deviceId?: string | undefined;
+    deviceId: string | undefined;
     positionMs: number;
   }): Promise<void> => {
     return app.$spotifyApi.$put<void>('/me/player/seek', undefined, {
