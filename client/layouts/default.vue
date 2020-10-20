@@ -13,7 +13,7 @@
 
     <v-main :style="contentContainerStyles">
       <div
-        :ref="SPACER_REF"
+        ref="SPACER_REF"
         :class="$style.Spacer"
       />
       <nuxt />
@@ -38,16 +38,20 @@
       :class="$style.Fab"
     />
     <portal-target
-      :name="SEARCH_FORM_PORTAL_NAME"
       role="menu"
+      :name="SEARCH_FORM_PORTAL_NAME"
     />
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
-
+import {
+  defineComponent,
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+} from '@vue/composition-api';
 import WaveLoader from '~/components/globals/WaveLoader.vue';
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
@@ -57,19 +61,10 @@ import DeviceBar from '~/components/globals/DeviceBar.vue';
 import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import ConfirmModal from '~/components/globals/ConfirmModal.vue';
+import { useIntersectionObserver } from '~/services/use/observer';
 import { $searchForm } from '~/observable/searchForm';
 
-const SPACER_REF = 'SPACER_REF';
-
-type Data = {
-  isLoaded: boolean
-  elevation: number
-  observer: IntersectionObserver | undefined
-  SPACER_REF: string
-  SEARCH_FORM_PORTAL_NAME: string
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     WaveLoader,
     Header,
@@ -82,78 +77,57 @@ export default Vue.extend({
     ConfirmModal,
   },
 
-  data(): Data {
-    return {
-      isLoaded: false,
-      elevation: 0,
-      observer: undefined,
-      SPACER_REF,
-      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
-    };
-  },
+  setup(_, { root }) {
+    const isLoaded = ref(false);
+    const elevation = ref(0);
+    const SPACER_REF = ref<HTMLDivElement>();
 
-  computed: {
-    isLoggedin(): RootGetters['auth/isLoggedin'] {
-      return this.$getters()['auth/isLoggedin'];
-    },
-    isAnotherDevicePlaying(): boolean {
-      return this.$getters()['playback/isAnotherDevicePlaying'];
-    },
-    contentContainerStyles(): { [k in string]?: string } {
-      const gradationHeight = 320;
-      const backgroundStyle = this.$getters().backgroundStyles(gradationHeight);
-      return backgroundStyle;
-    },
-    // top は style で設定
-    contentOverlayStyles(): { [k in string]?: string } {
-      const { isPc } = this.$screen;
+    useIntersectionObserver(SPACER_REF, (entry) => {
+      // intersectionRatio は 0 ~ 1
+      elevation.value = Math.ceil(8 * (1 - entry.intersectionRatio));
+    }, {
+      rootMargin: `-${root.$constant.HEADER_HEIGHT}px 0px`,
+    });
+    const isLoggedin = computed(() => root.$getters()['auth/isLoggedin']);
+    const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
+    const contentContainerStyles = computed(() => root.$getters().backgroundStyles(320));
+    const contentOverlayStyles = computed<{ [k in string]?: string }>(() => {
+      const { isPc } = root.$screen;
       // ナビゲーションバーが表示されてるかで変わる
       const left = isPc
-        ? `${this.$constant.NAVIGATION_DRAWER_WIDTH}px`
+        ? `${root.$constant.NAVIGATION_DRAWER_WIDTH}px`
         : '0';
-
-      let footerHeight = this.$constant.FOOTER_HEIGHT;
+      let footerHeight = root.$constant.FOOTER_HEIGHT;
       // ナビゲーションバーが表示されているとき
-      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
+      if (!isPc) footerHeight += root.$constant.NAVIGATION_BAR_HEIGHT;
       // 他のデバイスで再生中のとき
-      if (this.isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
+      if (isAnotherDevicePlaying.value) footerHeight += root.$constant.DEVICE_BAR_HEIGHT;
       const bottom = `${footerHeight}px`;
 
       return { left, bottom };
-    },
-  },
-
-  mounted() {
-    this.$screen.observe();
-
-    this.isLoaded = true;
-    // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
-    this.$dispatch('player/initPlayer');
-
-    const element = this.$refs[SPACER_REF] as HTMLDivElement;
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        // intersectionRatio は 0 ~ 1
-        this.elevation = Math.ceil(8 * (1 - entry.intersectionRatio));
-      });
-    }, {
-      rootMargin: `-${this.$constant.HEADER_HEIGHT}px 0px`,
     });
-    this.observer.observe(element);
-  },
 
-  beforeDestroy() {
-    this.$screen.disconnectObserver();
+    onMounted(() => {
+      isLoaded.value = true;
+      root.$screen.observe();
+      // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
+      root.$dispatch('player/initPlayer');
+    });
+    onBeforeUnmount(() => { root.$screen.disconnectObserver(); });
 
-    if (this.observer != null) {
-      this.observer.disconnect();
-    }
-  },
+    const onOverlayChanged = (value: OnOverlay['input']) => { root.$overlay.change(value); };
 
-  methods: {
-    onOverlayChanged(value: OnOverlay['input']) {
-      this.$overlay.change(value);
-    },
+    return {
+      isLoaded,
+      elevation,
+      SPACER_REF,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
+      isLoggedin,
+      isAnotherDevicePlaying,
+      contentContainerStyles,
+      contentOverlayStyles,
+      onOverlayChanged,
+    };
   },
 });
 </script>
