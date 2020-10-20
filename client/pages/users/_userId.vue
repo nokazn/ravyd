@@ -253,13 +253,9 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
       this.isFollowing = nextFollowingState;
     }).catch((err: Error) => {
       console.error({ err });
-      const message = nextFollowingState
+      this.$toast.pushError(nextFollowingState
         ? 'ユーザーをフォローすることができませんでした。'
-        : 'ユーザーのフォローを解除することができませんでした。';
-      this.$toast.push({
-        color: 'error',
-        message,
-      });
+        : 'ユーザーのフォローを解除することができませんでした。');
     });
   }
 }

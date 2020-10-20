@@ -115,16 +115,10 @@ export default Vue.extend({
         description: '',
         uriList: this.uriList,
       }).then(() => {
-        this.$toast.push({
-          color: 'primary',
-          message: `"${title}" を新規プレイリストに追加しました。`,
-        });
+        this.$toast.pushPrimary(`"${title}" を新規プレイリストに追加しました。`);
       }).catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: `"${title}" を新規プレイリストに追加できませんでした。`,
-        });
+        this.$toast.pushError(`"${title}" を新規プレイリストに追加できませんでした。`);
       });
     },
     onItemClicked(playlist: SpotifyAPI.SimplePlaylist) {

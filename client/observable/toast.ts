@@ -16,8 +16,9 @@ export type $Toast = {
   toasts: Toast[];
   push: (toast: Toast) => void;
   set: (toast: Toast) => void;
-  pushError: (message: string) => void;
-  requirePremium: () => void;
+  pushError: (message: string, timeout?: number) => void;
+  pushPrimary: (message: string, timeout?: number) => void;
+  requirePremium: (message?: string) => void;
 }
 
 const state = Vue.observable<ToastState>({
@@ -45,17 +46,26 @@ export const $toast: $Toast = {
     }
   },
 
-  pushError(message: string) {
+  pushError(message: string, timeout?: number) {
     state.toasts.push({
       color: 'error',
       message,
+      timeout,
     });
   },
 
-  requirePremium() {
+  pushPrimary(message: string, timeout?: number) {
+    state.toasts.push({
+      color: 'primary',
+      message,
+      timeout,
+    });
+  },
+
+  requirePremium(message?: string) {
     this.set({
       color: 'error',
-      message: 'この操作にはプレミアムアカウントが必要です。',
+      message: message ?? 'この操作にはプレミアムアカウントが必要です。',
     });
   },
 };

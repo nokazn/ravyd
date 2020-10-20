@@ -52,11 +52,7 @@ const actions: Actions<
       after,
     });
     if (artists == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'フォロー中のアーティストの一覧を取得できませんでした。',
-      });
-
+      this.$toast.pushError('フォロー中のアーティストの一覧を取得できませんでした。');
       return;
     }
 
@@ -88,10 +84,7 @@ const actions: Actions<
       limit: Math.min(unupdatedCounts, maxLimit) as TODO,
     });
     if (artists == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'フォロー中のアーティストの一覧を更新できませんでした。',
-      });
+      this.$toast.pushError('フォロー中のアーティストの一覧を更新できませんでした。');
 
       return;
     }
@@ -123,10 +116,7 @@ const actions: Actions<
       idList,
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.push({
-        color: 'error',
-        message: 'フォローに失敗しました。',
-      });
+      this.$toast.pushError('フォローに失敗しました。');
     });
 
     idList.forEach((artistId) => {
@@ -149,10 +139,7 @@ const actions: Actions<
       idList,
     }).catch((err: Error) => {
       console.error({ err });
-      this.$toast.push({
-        color: 'error',
-        message: 'フォローの解除に失敗しました。',
-      });
+      this.$toast.pushError('フォローの解除に失敗しました。');
     });
 
     idList.forEach((artistId) => {

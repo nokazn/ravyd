@@ -110,10 +110,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
             this.$router.push('/login');
-            this.$toast.push({
-              color: 'error',
-              message: 'トークンを取得できなかったためログアウトしました。',
-            });
+            this.$toast.pushError('トークンを取得できなかったためログアウトしました。');
             return;
           }
 

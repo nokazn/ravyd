@@ -266,10 +266,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (playbackState.device.id !== currentActiveDeviceId) {
       dispatch('getDeviceList')
         .then(() => {
-          this.$toast.push({
-            color: 'primary',
-            message: 'デバイスの変更を検知しました。',
-          });
+          this.$toast.pushPrimary('デバイスの変更を検知しました。');
         });
     }
     return playbackState;
@@ -340,10 +337,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (getters.isDisallowed('resuming') && payload == null) {
       // @todo resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
       // commit('SET_IS_PLAYING', true);
-      this.$toast.push({
-        color: 'error',
-        message: 'トラックを再生できません',
-      });
+      this.$toast.pushError('トラックを再生できません');
       return;
     }
 
@@ -394,23 +388,14 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           await dispatch('transferPlayback');
           return request();
         }
-
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、トラックを再生できません。',
-        });
-
+        this.$toast.pushError('エラーが発生し、トラックを再生できません。');
         dispatch('pollCurrentPlayback', 0);
         return undefined;
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、トラックを再生できません。',
-        });
-
+        this.$toast.pushError('エラーが発生し、トラックを再生できません。');
         dispatch('pollCurrentPlayback', 0);
       });
   },
@@ -435,10 +420,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生しました。',
-        });
+        this.$toast.pushError('エラーが発生しました。');
         dispatch('pollCurrentPlayback', 0);
       }).finally(() => {
         // エラーが発生しても表示は停止させる
@@ -467,10 +449,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     await this.$spotify.player.seek({ positionMs })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生しました。',
-        });
+        this.$toast.pushError('エラーが発生しました。');
         // 現在の position に戻す
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
       })
@@ -493,10 +472,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、次の曲を再生できません。',
-        });
+        this.$toast.pushError('エラーが発生し、次の曲を再生できません。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -517,10 +493,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     await this.$spotify.player.previous()
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、前の曲を再生できません。',
-        });
+        this.$toast.pushError('エラーが発生し、前の曲を再生できません。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -554,10 +527,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         commit('SET_IS_SHUFFLED', nextIsShuffled);
       }).catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、シャッフルのモードを変更できませんでした。',
-        });
+        this.$toast.pushError('エラーが発生し、シャッフルのモードを変更できませんでした。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -594,10 +564,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、リピートのモードを変更できませんでした。',
-        });
+        this.$toast.pushError('エラーが発生し、リピートのモードを変更できませんでした。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -630,10 +597,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、ボリュームが変更できませんでした。',
-        });
+        this.$toast.pushError('エラーが発生し、ボリュームが変更できませんでした。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {
@@ -671,10 +635,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エラーが発生し、ボリュームをミュートにできませんでした。',
-        });
+        this.$toast.pushError('エラーが発生し、ボリュームをミュートにできませんでした。');
       })
       .finally(() => {
         if (!getters.isThisAppPlaying) {

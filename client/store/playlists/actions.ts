@@ -69,11 +69,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       offset,
     });
     if (playlists == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'プレイリストの一覧を取得できませんでした。',
-      });
-
+      this.$toast.pushError('プレイリストの一覧を取得できませんでした。');
       return;
     }
 
@@ -93,10 +89,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (firstListOfPlaylists == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'プレイリストの一覧を取得できませんでした。',
-      });
+      this.$toast.pushError('プレイリストの一覧を取得できませんでした。');
 
       return;
     }
@@ -108,11 +101,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         limit,
       });
       if (playlists == null) {
-        this.$toast.push({
-          color: 'error',
-          message: 'プレイリストの一部が取得できませんでした。',
-        });
-
+        this.$toast.pushError('プレイリストの一部が取得できませんでした。');
         return [];
       }
 
@@ -259,10 +248,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'プレイリストのフォローに失敗しました。',
-        });
+        this.$toast.pushError('プレイリストのフォローに失敗しました。');
       });
   },
 
@@ -278,23 +264,16 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         commit('REMOVE_PLAYLIST', playlistId);
         commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
         if (isOwnPlaylist) {
-          this.$toast.push({
-            color: 'primary',
-            message: 'プレイリストを削除しました。',
-          });
-
+          this.$toast.pushPrimary('プレイリストを削除しました。');
           // @todo プレイリスト一覧に飛ばす
           this.$router.replace('/');
         }
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: isOwnPlaylist
-            ? 'プレイリストの削除に失敗しました。'
-            : 'プレイリストのフォローの解除に失敗しました。',
-        });
+        this.$toast.pushError(isOwnPlaylist
+          ? 'プレイリストの削除に失敗しました。'
+          : 'プレイリストのフォローの解除に失敗しました。');
       });
   },
 
@@ -316,11 +295,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (snapshot_id == null) {
-      this.$toast.push({
-        color: 'error',
-        message: `"${name}" を "${playlistName}" に追加できませんでした。`,
-      });
-
+      this.$toast.pushError(`"${name}" を "${playlistName}" に追加できませんでした。`);
       return;
     }
 
@@ -334,11 +309,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
 
     const currentUnupdatedCounts = state.unupdatedTrackCountsMap.get(playlistId) ?? 0;
     commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
-
-    this.$toast.push({
-      color: 'primary',
-      message: `"${name}" を "${playlistName}" に追加しました。`,
-    });
+    this.$toast.pushPrimary(`"${name}" を "${playlistName}" に追加しました。`);
   },
 
   /**
@@ -354,10 +325,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     });
 
     if (snapshotId == null) {
-      this.$toast.push({
-        color: 'error',
-        message: `${name}をこのプレイリストから削除できませんでした。`,
-      });
+      this.$toast.pushError(`${name}をこのプレイリストから削除できませんでした。`);
       return;
     }
 
@@ -371,10 +339,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
 
     commit('SET_ACTUALLY_DELETED_TRACK', [playlistId, track]);
 
-    this.$toast.push({
-      color: 'primary',
-      message: `${name}をこのプレイリストから削除しました。`,
-    });
+    this.$toast.pushPrimary(`${name}をこのプレイリストから削除しました。`);
   },
 };
 

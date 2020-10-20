@@ -46,12 +46,8 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       window.location.href = data.url;
       return;
     }
-
     console.error('トークン取得時にエラーが発生しました。');
-    this.$toast.push({
-      color: 'error',
-      message: 'トークン取得時にエラーが発生し、ログインできません。',
-    });
+    this.$toast.pushError('トークン取得時にエラーが発生し、ログインできません。');
   },
 
   async exchangeCodeToAccessToken({ commit }, { code, state }) {
@@ -108,10 +104,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
           commit('SET_EXPIRATION_MS', undefined);
           await dispatch('logout');
           this.$router.push('/login');
-          this.$toast.push({
-            color: 'error',
-            message: 'トークンを取得できなかったためログアウトしました。',
-          });
+          this.$toast.pushError('トークンを取得できなかったためログアウトしました。');
         } else if (err.response?.status === 409) {
           // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
           await dispatch('getAccessToken');
