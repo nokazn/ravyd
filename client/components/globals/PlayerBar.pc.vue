@@ -16,17 +16,18 @@
           :title="trackName"
           :class="$style.Left__artWork"
         />
-
-        <div :class="$style.Left__trackInfo">
+        <div
+          v-if="hasTrack"
+          :class="$style.Left__trackInfo"
+        >
           <MarqueeTrackName
-            v-if="hasTrack"
             :id="trackId"
             :release-id="releaseId"
             :name="trackName"
             :type="trackType"
           />
           <MarqueeArtistNames
-            v-if="isTrack && hasTrack"
+            v-if="isTrack"
             :artists="artists"
           />
         </div>
@@ -53,22 +54,11 @@
         <VolumeSlider />
       </div>
     </div>
-
-    <v-overlay
-      v-if="!loaded"
-      absolute
-      :z-index="$constant.Z_INDEX_OF.loading"
-      :color="$constant.FOOTER_BACKGROUND_COLOR"
-      :opacity="1"
-      :class="$style.Overlay"
-    />
   </v-footer>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootState, RootGetters } from 'typed-vuex';
-
+import { defineComponent, ref, computed } from '@vue/composition-api';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import MarqueeTrackName from '~/components/parts/text/MarqueeTrackName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
@@ -80,11 +70,7 @@ import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vu
 import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
-type Data = {
-  deviceSelectMenu: boolean;
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseArtwork,
     MarqueeTrackName,
@@ -98,64 +84,47 @@ export default Vue.extend({
     VolumeSlider,
   },
 
-  props: {
-    loaded: {
-      type: Boolean,
-      required: true,
-    },
-  },
+  setup(_, { root }) {
+    const deviceSelectMenu = ref(false);
 
-  data(): Data {
-    return {
-      deviceSelectMenu: false,
-    };
-  },
+    const artWorkSrc = (size: number) => root.$getters()['playback/artworkSrc'](size);
+    const trackName = computed(() => root.$state().playback.trackName || '不明のトラック');
+    const trackId = computed(() => root.$state().playback.trackId);
+    const trackType = computed(() => root.$state().playback.trackType);
+    const releaseId = computed(() => root.$getters()['playback/releaseId']);
+    const artists = computed(() => root.$state().playback.artists);
+    const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
+    const hasTrack = computed(() => root.$getters()['playback/hasTrack']);
+    const isTrack = computed(() => trackType.value === 'track');
 
-  computed: {
-    isAnotherDevicePlaying(): boolean {
-      return this.$getters()['playback/isAnotherDevicePlaying'];
-    },
-    hasTrack(): RootGetters['playback/hasTrack'] {
-      return this.$getters()['playback/hasTrack'];
-    },
-    isTrack(): boolean {
-      return this.trackType === 'track';
-    },
-
-    artWorkSrc(): (size: number) => string | undefined {
-      return (size: number) => this.$getters()['playback/artworkSrc'](size);
-    },
-    trackName(): string {
-      return this.$state().playback.trackName || '不明のトラック';
-    },
-    trackId(): RootState['playback']['trackId'] {
-      return this.$state().playback.trackId;
-    },
-    trackType(): RootState['playback']['trackType'] {
-      return this.$state().playback.trackType;
-    },
-    releaseId(): RootGetters['playback/releaseId'] {
-      return this.$getters()['playback/releaseId'];
-    },
-    artists(): RootState['playback']['artists'] {
-      return this.$state().playback.artists;
-    },
-    isSavedTrack: {
-      get(): RootState['playback']['isSavedTrack'] {
-        return this.$state().playback.isSavedTrack;
-      },
+    const isSavedTrack = computed<boolean>({
+      get() { return root.$state().playback.isSavedTrack; },
       set(isSaved: OnFavorite['input']) {
-        if (this.trackId == null) return;
-
+        const id = trackId.value;
+        if (id == null) return;
         // API との通信の結果を待たずに先に表示を変更させておく
-        this.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
+        root.$commit('playback/SET_IS_SAVED_TRACK', isSaved);
         if (isSaved) {
-          this.$dispatch('library/tracks/saveTracks', [this.trackId]);
+          root.$dispatch('library/tracks/saveTracks', [id]);
         } else {
-          this.$dispatch('library/tracks/removeTracks', [this.trackId]);
+          root.$dispatch('library/tracks/removeTracks', [id]);
         }
       },
-    },
+    });
+
+    return {
+      deviceSelectMenu,
+      isAnotherDevicePlaying,
+      hasTrack,
+      isTrack,
+      artWorkSrc,
+      trackName,
+      trackId,
+      trackType,
+      releaseId,
+      artists,
+      isSavedTrack,
+    };
   },
 });
 </script>
