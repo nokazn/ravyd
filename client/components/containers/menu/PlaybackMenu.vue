@@ -60,7 +60,10 @@ export default Vue.extend({
         type,
         name,
         handler: () => {
-          this.$spotify.player.addItemToQueue({ uri })
+          this.$spotify.player.addItemToQueue({
+            uri,
+            deviceId: this.$getters()['playback/playbackDeviceId'],
+          })
             .then(() => {
               this.$toast.pushPrimary(`"${trackName}" を次に再生に追加しました。`);
             })
