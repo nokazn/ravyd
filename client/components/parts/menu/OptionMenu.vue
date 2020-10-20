@@ -36,26 +36,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  unref,
-  computed,
-  PropType,
-} from '@vue/composition-api';
-
-const INPUT = 'input';
-
-export type On = {
-  [INPUT]: boolean;
-}
+import { defineComponent, ref, PropType } from '@vue/composition-api';
 
 export default defineComponent({
   props: {
-    value: {
-      type: Boolean as PropType<boolean | undefined>,
-      default: undefined,
-    },
     top: {
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
@@ -114,19 +98,8 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }) {
-    const isShown = ref(false);
-    const menu = computed<boolean>({
-      get() { return props.value ?? unref(isShown); },
-      set(value) {
-        if (props.value != null) {
-          emit(INPUT, menu);
-        } else {
-          isShown.value = value;
-        }
-      },
-    });
-
+  setup() {
+    const menu = ref(false);
     return { menu };
   },
 });

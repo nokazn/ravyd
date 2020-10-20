@@ -1,6 +1,5 @@
 <template>
   <OptionMenu
-    v-model="isOpened"
     offset-y
     :nudge-bottom="2"
   >
@@ -21,7 +20,6 @@
           <span :class="$style.UserMenuButton__name">
             @{{ userDisplayName }}
           </span>
-
           <v-icon x-small>
             mdi-chevron-down
           </v-icon>
@@ -53,8 +51,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
+import { defineComponent, computed } from '@vue/composition-api';
 
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
@@ -62,17 +59,12 @@ import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 const AVATAR_SIZE = 32;
 
 type MenuItem = {
-  title: string
-  to: string | undefined
-  disabled?: boolean
+  title: string;
+  to: string | undefined;
+  disabled?: boolean;
 }
 
-type Data = {
-  isOpened: boolean
-  AVATAR_SIZE: number
-};
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     OptionMenu,
     UserAvatar,
@@ -85,46 +77,31 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      isOpened: false,
-      AVATAR_SIZE,
-    };
-  },
-
-  computed: {
-    itemLists(): MenuItem[][] {
-      const userId = this.$getters()['auth/userId'];
+  setup(_, { root }) {
+    const itemLists = computed<MenuItem[][]>(() => {
+      const userId = root.$getters()['auth/userId'];
       const profilePath = userId != null
         ? `/users/${userId}`
         : undefined;
-
       return [
         [
-          {
-            title: 'アカウント',
-            to: '/account',
-          },
-          {
-            title: 'プロフィール',
-            to: profilePath,
-            disabled: profilePath == null,
-          },
+          { title: 'アカウント', to: '/account' },
+          { title: 'プロフィール', to: profilePath, disabled: profilePath == null },
         ],
         [
-          {
-            title: 'ログアウト',
-            to: '/logout',
-          },
+          { title: 'ログアウト', to: '/logout' },
         ],
       ];
-    },
-    userAvatarSrc(): string | undefined {
-      return this.$getters()['auth/userAvatarSrc'](AVATAR_SIZE);
-    },
-    userDisplayName(): RootGetters['auth/userDisplayName'] {
-      return this.$getters()['auth/userDisplayName'];
-    },
+    });
+    const userAvatarSrc = computed(() => root.$getters()['auth/userAvatarSrc'](AVATAR_SIZE));
+    const userDisplayName = computed(() => root.$getters()['auth/userDisplayName']);
+
+    return {
+      itemLists,
+      AVATAR_SIZE,
+      userAvatarSrc,
+      userDisplayName,
+    };
   },
 });
 </script>
