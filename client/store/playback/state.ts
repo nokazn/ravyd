@@ -5,6 +5,7 @@ export type PlaybackState = {
   deviceId: string | undefined
   activeDeviceId: string | undefined
   deviceList: SpotifyAPI.Device[]
+  isPlaybackSleep: boolean
   contextUri: string | undefined
   trackId: string | undefined
   trackName: string | undefined
@@ -37,6 +38,7 @@ const state = (): PlaybackState => ({
   deviceId: undefined,
   activeDeviceId: undefined,
   deviceList: [],
+  isPlaybackSleep: false,
   images: undefined,
   contextUri: undefined,
   trackId: undefined,

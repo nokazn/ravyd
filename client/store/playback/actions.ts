@@ -10,7 +10,7 @@ import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 export type PlaybackActions = {
   transferPlayback: (params?: {
     deviceId?: string
-    play?: boolean
+    play?: false
     update?: true
   }) => Promise<void>
   getDeviceList: () => Promise<void>
@@ -21,6 +21,7 @@ export type PlaybackActions = {
     trackIndex?: number
   }) => void
   resetCustomContext: (uri: string | null) => void
+  awakePlayback: () => Promise<boolean>
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
   pollCurrentPlayback: (timeout?: number) => void
   play: (params?: (
@@ -111,10 +112,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       })
       .catch((err: Error) => {
         console.error({ err });
-        if (deviceId === thisDeviceId) {
-          dispatch('player/disconnectPlayer', undefined, { root: true });
-          // dispatch('player/initPlayer', undefined, { root: true });
-        }
+        this.$toast.pushError('プレイヤーをアクティブにできませんでした。');
       });
   },
 
@@ -180,6 +178,23 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     if (volumePercent != null) {
       commit('SET_VOLUME_PERCENT', { volumePercent });
     }
+  },
+
+  async awakePlayback({ state, dispatch }) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
+    if (!isAuthorized) {
+      this.$toast.requirePremium();
+      return false;
+    }
+    if (!state.isPlaybackSleep) return true;
+
+    const deviceId = state.activeDeviceId ?? state.deviceId;
+    return dispatch('transferPlayback', {
+      deviceId,
+      update: true,
+    })
+      .then(() => true)
+      .catch(() => false);
   },
 
   /**
@@ -350,6 +365,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     commit,
     dispatch,
   }, payload?) {
+    const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
+    if (!isAuthorized) {
+      this.$toast.requirePremium();
+      return;
+    }
+
     if (getters.isDisallowed('resuming') && payload == null) {
       // @todo resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
       // commit('SET_IS_PLAYING', true);
@@ -357,11 +378,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       return;
     }
 
-    const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
-    if (!isAuthorized) {
-      this.$toast.requirePremium();
-      return;
-    }
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     const {
       positionMs,
@@ -396,12 +414,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           }
         });
     };
-
     await request()
-      .catch(async (err: Error) => {
-        if (err.message.includes('code 404')) {
-          // デバイスを変更して再度リクエスト
-          await dispatch('transferPlayback');
+      .catch(async (err: AxiosError) => {
+        if (err.response?.status === 404) {
+          // スリープならデバイスをアクティブにして再度リクエスト
+          const deviceId = state.activeDeviceId ?? state.deviceId;
+          await dispatch('transferPlayback', { deviceId });
           return request();
         }
         console.error({ err });
@@ -427,6 +445,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       commit('SET_IS_PLAYING', false);
       return;
     }
+
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     await this.$spotify.player.pause()
       .then(() => {
@@ -458,6 +479,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('seeking')) return;
 
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
     // Playback SDK からの通知が来ない場合が偶にあるので先に変更しておく
     commit('SET_POSITION_MS', positionMs);
     const positionMsOfCurrentState = state.positionMs;
@@ -485,6 +508,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     if (getters.isDisallowed('skipping_next')) return;
 
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
+
     await this.$spotify.player.next()
       .catch((err: Error) => {
         console.error({ err });
@@ -505,6 +531,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     }
 
     if (getters.isDisallowed('skipping_prev')) return;
+
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     await this.$spotify.player.previous()
       .catch((err: Error) => {
@@ -534,6 +563,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     }
 
     if (getters.isDisallowed('toggling_shuffle')) return;
+
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
@@ -572,6 +604,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       || getters.isDisallowed('toggling_repeat_context')
       || getters.isDisallowed('toggling_repeat_track')) return;
 
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
+
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
 
     await this.$spotify.player.repeat({ state: REPEAT_STATE_LIST[nextRepeatMode] })
@@ -606,6 +641,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
+
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     await this.$spotify.player.volume({ volumePercent })
       .then(() => {
@@ -643,6 +681,9 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     } = state;
     const nextMuteState = !isMuted;
     if (currentVolumePercent === 0) return;
+
+    const isAwake = await dispatch('awakePlayback');
+    if (!isAwake) return;
 
     const volumePercent = nextMuteState ? 0 : currentVolumePercent;
     await this.$spotify.player.volume({ volumePercent })
