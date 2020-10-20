@@ -108,8 +108,8 @@ export default class RootPage extends Vue implements AsyncData {
 
   get hasContent(): boolean {
     return this.topArtistList.length > 0
-      && this.topTrackList.length > 0
-      && this.newReleaseList.length > 0;
+      || this.topTrackList.length > 0
+      || this.newReleaseList.length > 0;
   }
 
   mounted() {
