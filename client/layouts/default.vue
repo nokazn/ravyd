@@ -25,9 +25,11 @@
       />
     </v-main>
 
-    <PlayerBar v-if="isLoggedin" />
-    <NavigationBar v-if="$screen.isMobile" />
-    <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
+    <template v-if="isLoggedin">
+      <PlayerBar />
+      <NavigationBar v-if="$screen.isMobile" />
+      <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
+    </template>
 
     <Toasts />
     <ConfirmModal />
@@ -103,7 +105,6 @@ export default defineComponent({
       // 他のデバイスで再生中のとき
       if (isAnotherDevicePlaying.value) footerHeight += root.$constant.DEVICE_BAR_HEIGHT;
       const bottom = `${footerHeight}px`;
-
       return { left, bottom };
     });
 

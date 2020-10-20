@@ -2,11 +2,10 @@
   <div :class="$style.LoginPage">
     <v-card
       v-show="!isLoggedin"
+      :color="$constant.CARD_BACKGROUND_COLOR"
       :class="$style.LoginCard"
     >
-      <v-icon
-        :size="150"
-      >
+      <v-icon :size="150">
         mdi-account-circle
       </v-icon>
 
