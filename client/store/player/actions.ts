@@ -24,17 +24,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     dispatch,
     rootGetters,
   }) {
-    if (!rootGetters['auth/isLoggedin']) {
+    if (!rootGetters['auth/isLoggedin'] || !rootGetters['auth/isPremium']) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
 
     const checkAccessToken = async (): Promise<string | undefined> => {
       const { accessToken, expireIn } = await this.$server.auth.root();
-
       commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
       commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
-
       return accessToken;
     };
 
@@ -116,7 +114,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
               color: 'error',
               message: 'トークンを取得できなかったためログアウトしました。',
             });
-
             return;
           }
 
@@ -127,9 +124,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // デバイスの接続が完了したとき
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
+        // プレミアムアカウントのときのみ
+        if (!this.$getters()['auth/isPremium']) return;
 
         await dispatch('playback/getDeviceList', undefined, { root: true });
-
         const currentActiveDevice = this.$getters()['playback/activeDevice'];
         if (currentActiveDevice == null) {
           // アクティブなデバイスがない場合はこのデバイスで再生
@@ -138,7 +136,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             play: false,
           }, { root: true });
         }
-
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
         const firstTimeout = this.$state().playback.activeDeviceId === device_id
           ? 30 * 1000
