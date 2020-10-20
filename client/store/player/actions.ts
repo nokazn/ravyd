@@ -138,8 +138,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
-
-        console.info('Ready with this device 🎉');
+        console.info('Ready with this device 🚀');
       });
 
       // デバイスがオフラインのとき
@@ -185,7 +184,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         // @todo
         console.info(playerState);
-
         const {
           trackId: currentTrackId,
           repeatMode: currentRepeatMode,
@@ -203,7 +201,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
 
         commit('playback/SET_IS_PLAYING', !playerState.paused, { root: true });
-        // 表示playback/のちらつきを防ぐためにトラック (duration_ms) をセットしてからセ, { root: true }ット
+        // 表示のちらつきを防ぐためにトラック (duration_ms) をセットしてからセット
         commit('playback/SET_DURATION_MS', playerState.duration, { root: true });
         commit('playback/SET_POSITION_MS', playerState.position, { root: true });
         commit('playback/SET_IS_SHUFFLED', playerState.shuffle, { root: true });
@@ -225,6 +223,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const isConnected = await player.connect();
       if (isConnected) {
         commit('SET_PLAYBACK_PLAYER', player);
+        console.info('Successfully connected this device 🎉');
       }
     };
 
