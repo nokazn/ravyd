@@ -1,4 +1,5 @@
 import { Actions } from 'typed-vuex';
+import type { AxiosError } from 'axios';
 
 import { PlaybackState } from './state';
 import { PlaybackGetters } from './getters';
@@ -13,7 +14,7 @@ export type PlaybackActions = {
     update?: true
   }) => Promise<void>
   getDeviceList: () => Promise<void>
-  updateDeviceList: (deviceId: string) => Promise<void>
+  updateDeviceList: (activeDevice: SpotifyAPI.Device) => Promise<void>
   setCustomContext: (params: {
     contextUri?: string
     trackUriList: string[]
@@ -88,6 +89,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     const deviceId = params?.deviceId ?? thisDeviceId;
     if (deviceId == null) return;
 
+    const device = state.deviceList.find((d) => d.id === deviceId);
     // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
     const play = params?.play ?? state.isPlaying;
     await this.$spotify.player.transferPlayback({ deviceId, play })
@@ -98,7 +100,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           await dispatch('getDeviceList');
           return;
         }
-        await dispatch('updateDeviceList', deviceId);
+
+        if (device != null) {
+          await dispatch('updateDeviceList', device);
+        }
         // 他のデバイスに変更した場合タイマーをセットしあ雄
         if (deviceId !== thisDeviceId) {
           dispatch('pollCurrentPlayback', 1000);
@@ -139,7 +144,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   /**
    * デバイス一覧を更新
    */
-  async updateDeviceList({ state, commit, dispatch }, deviceId) {
+  async updateDeviceList({ state, commit, dispatch }, activeDevice) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
       this.$toast.requirePremium();
@@ -148,10 +153,11 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
 
     // 変更するデバイスのボリュームを取得
     const getVolumePercent = async (
+      deviceId: string | null,
       deviceList: SpotifyAPI.Device[],
     ): Promise<ZeroToHundred | undefined> => {
       // 違うデバイスで再生する場合
-      if (deviceId !== state.deviceId) {
+      if (deviceId != null && deviceId !== state.deviceId) {
         return deviceList.find((device) => device.is_active)?.volume_percent;
       }
       // @todo 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
@@ -162,13 +168,15 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     };
 
     // 再生されているデバイスの isActive を true にする
-    const deviceList: SpotifyAPI.Device[] = state.deviceList.map((device) => ({
-      ...device,
-      is_active: device.id === deviceId,
-    }));
+    const deviceList: SpotifyAPI.Device[] = state.deviceList.map((device) => {
+      const is_active = device.id === activeDevice.id;
+      return is_active
+        ? { ...activeDevice, is_active }
+        : { ...device, is_active };
+    });
     commit('SET_DEVICE_LIST', deviceList);
 
-    const volumePercent = await getVolumePercent(deviceList);
+    const volumePercent = await getVolumePercent(activeDevice.id, deviceList);
     if (volumePercent != null) {
       commit('SET_VOLUME_PERCENT', { volumePercent });
     }
@@ -204,7 +212,13 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
    * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
    * Web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
    */
-  async getCurrentPlayback({ state, commit, dispatch }) {
+  async getCurrentPlayback({
+    state,
+    getters,
+    commit,
+    dispatch,
+    rootGetters,
+  }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
       this.$toast.requirePremium();
@@ -221,7 +235,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         ? { ...item, media_type: 'audio' }
         : undefined;
       // このデバイスで再生中でアイテムの内容が取得できなかった場合は Playback SDK の情報を信頼してパスする
-      if (track == null && this.$getters()['playback/isThisAppPlaying']) return;
+      if (track == null && getters.isThisAppPlaying) return;
 
       const trackId = track?.id;
       // trackId 変わったときだけチェック
@@ -243,7 +257,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       commit('SET_POSITION_MS', playbackState.progress_ms ?? 0);
       const deviceId = playbackState.device.id;
       // このデバイスで再生中の場合は Web Playback SDK から取得するのでパス
-      if (deviceId == null || deviceId !== this.$state().playback.deviceId) {
+      if (deviceId == null || deviceId !== state.deviceId) {
         commit('SET_NEXT_TRACK_LIST', []);
         commit('SET_PREVIOUS_TRACK_LIST', []);
       }
@@ -253,15 +267,17 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       activeDeviceId: currentActiveDeviceId,
       trackId: currentTrackId,
     } = state;
-    // const hasTrack = this.$getters()['playback/hasTrack'];
-    const market = this.$getters()['auth/userCountryCode'];
+    const market = rootGetters['auth/userCountryCode'];
     // @todo 複数タブ開いた場合はデバイスが消失する場合がある?
     const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
+    // デバイスがアクティブでなくなったとき空文字が返る
+    commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
     // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合
     if (!playbackState) return playbackState;
 
     setTrack(playbackState.item, currentTrackId);
     setPlayback(playbackState);
+    dispatch('updateDeviceList', playbackState.device);
     // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
     if (playbackState.device.id !== currentActiveDeviceId) {
       dispatch('getDeviceList')
