@@ -16,7 +16,7 @@ export type AuthActions = {
   getAccessToken: () => Promise<void>
   refreshAccessToken: () => Promise<void>
   logout: () => Promise<void>
-  confirmAuthState: () => Promise<boolean>
+  confirmAuthState: (params?: { checkPremium?: boolean } | undefined) => Promise<boolean>
 }
 
 export type RootActions = {
@@ -136,11 +136,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     dispatch('playback/resetPlayback', undefined, { root: true });
   },
 
-  async confirmAuthState({ getters, dispatch }) {
+  async confirmAuthState({ getters, dispatch }, params) {
     if (!getters.isLoggedin || getters.isTokenExpired()) {
       await dispatch('refreshAccessToken');
     }
-    return getters.isLoggedin;
+    return params?.checkPremium
+      ? getters.isLoggedin && getters.isPremium
+      : getters.isLoggedin;
   },
 };
 

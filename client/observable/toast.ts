@@ -3,19 +3,21 @@ import Vue from 'vue';
 export type ToastType = 'primary' | 'accent' | 'secondary' | 'info' | 'warning' | 'error' | 'success' | undefined
 
 type Toast = {
-  color?: ToastType
-  message: string
-  timeout?: number
+  color?: ToastType;
+  message: string;
+  timeout?: number;
 }
 
 type ToastState = {
-  toasts: Toast[]
+  toasts: Toast[];
 }
 
 export type $Toast = {
-  toasts: Toast[]
-  push: (toast: Toast) => void
-  set: (toast: Toast) => void
+  toasts: Toast[];
+  push: (toast: Toast) => void;
+  set: (toast: Toast) => void;
+  pushError: (message: string) => void;
+  requirePremium: () => void;
 }
 
 const state = Vue.observable<ToastState>({
@@ -41,5 +43,19 @@ export const $toast: $Toast = {
     if (includedToast == null) {
       state.toasts.push(toast);
     }
+  },
+
+  pushError(message: string) {
+    state.toasts.push({
+      color: 'error',
+      message,
+    });
+  },
+
+  requirePremium() {
+    this.set({
+      color: 'error',
+      message: 'この操作にはプレミアムアカウントが必要です。',
+    });
   },
 };

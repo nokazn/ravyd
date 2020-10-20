@@ -128,7 +128,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
 
-        await dispatch('playback/getActiveDeviceList', undefined, { root: true });
+        await dispatch('playback/getDeviceList', undefined, { root: true });
 
         const currentActiveDevice = this.$getters()['playback/activeDevice'];
         if (currentActiveDevice == null) {

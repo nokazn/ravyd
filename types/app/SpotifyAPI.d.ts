@@ -446,7 +446,7 @@ export namespace SpotifyAPI {
     href: string
     id: string
     images: Image[]
-    product: string
+    product: 'premium' | 'free' | 'open'
     type: 'user'
     uri: string
   }

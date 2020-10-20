@@ -102,7 +102,7 @@ export default Vue.extend({
     },
     async updateDeviceList() {
       this.isRefreshingDeviceList = true;
-      await this.$dispatch('playback/getActiveDeviceList');
+      await this.$dispatch('playback/getDeviceList');
       this.isRefreshingDeviceList = false;
     },
     onItemClicked(deviceId: OnItem['click']) {

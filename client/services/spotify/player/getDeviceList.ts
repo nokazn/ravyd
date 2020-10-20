@@ -3,7 +3,7 @@ import { SpotifyAPI } from '~~/types';
 
 type Devices = { devices: SpotifyAPI.Device[] };
 
-export const getActiveDeviceList = (context: Context) => {
+export const getDeviceList = (context: Context) => {
   const { app } = context;
 
   return (): Promise<Partial<Devices>> => {
