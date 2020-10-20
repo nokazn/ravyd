@@ -15,7 +15,6 @@
     >
       <UserAvatar
         v-if="item.type === 'artist'"
-        small-icon
         type="artist"
         :size="40"
         :src="artworkSrc"

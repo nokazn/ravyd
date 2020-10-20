@@ -9,7 +9,6 @@
     <template #image>
       <div :class="$style.ArtistCard__avatar">
         <UserAvatar
-          small-icon
           overlay
           type="artist"
           :src="avatarSrc"

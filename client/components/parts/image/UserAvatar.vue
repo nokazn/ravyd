@@ -2,9 +2,9 @@
   <v-hover #default="{ hover }">
     <v-avatar
       v-if="src != null"
+      :size="size"
       :min-width="minSize || size"
       :min-height="minSize || size"
-      :size="size"
       :max-width="maxSize || size"
       :max-height="maxSize || size"
       :class="{ 'g-box-shadow': shadow }"
@@ -12,10 +12,10 @@
       <v-img
         :src="src"
         :alt="type"
-        :min-width="minSize || size"
-        :min-height="minSize || size"
         :height="size"
         :width="size"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
         :max-height="maxSize || size"
         :max-width="maxSize || size"
         :aspect-ratio="1"
@@ -37,10 +37,10 @@
     >
       <svg viewBox="0 0 1 1" />
       <v-sheet
-        :min-width="minSize || size"
-        :min-height="minSize || size"
         :width="size"
         :height="size"
+        :min-width="minSize || size"
+        :min-height="minSize || size"
         :max-width="maxSize || size"
         :max-height="maxSize || size"
         :class="$style.UserAvatar__default"
@@ -106,10 +106,6 @@ export default defineComponent({
       type: String as PropType<MediaIcon>,
       default: 'mdi-play-circle',
     },
-    smallIcon: {
-      type: Boolean,
-      default: false,
-    },
     shadow: {
       type: Boolean,
       default: false,
@@ -128,11 +124,8 @@ export default defineComponent({
         : 'mdi-account-music';
     });
     const defaultIconSize = computed(() => {
-      const baseSize = props.size ?? props.minSize;
-      if (baseSize == null) return 60;
-      return props.smallIcon
-        ? baseSize * 0.4
-        : baseSize;
+      const baseSize = props.size ?? props.minSize ?? 60;
+      return baseSize * 0.875;
     });
     const onClick = () => { emit(ON_MEDIA_BUTTON_CLICKED); };
     const onLoaded = () => { emit(ON_LOADED); };
