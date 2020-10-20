@@ -56,7 +56,8 @@ const state = (): PlaybackState => ({
   isSavedTrack: false,
   positionMs: 0,
   disabledPlayingFromBegining: false,
-  durationMs: 0,
+  // if set to 0, Seekbar has 0 length
+  durationMs: 1,
   isShuffled: false,
   repeatMode: undefined,
   disallows: {},
