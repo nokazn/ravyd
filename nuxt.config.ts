@@ -131,8 +131,8 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/observable/confirm' },
     { src: '~/plugins/observable/header' },
     { src: '~/plugins/observable/overlay' },
+    { src: '~/plugins/observable/screen' },
     { src: '~/plugins/observable/toast' },
-    { src: '~/plugins/observable/window' },
   ],
   router: {
     middleware: 'auth',

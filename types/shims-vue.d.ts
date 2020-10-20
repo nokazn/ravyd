@@ -13,8 +13,8 @@ import type { Constant } from '~/plugins/constant';
 import type { $Confirm } from '~/plugins/observable/confirm';
 import type { $Header } from '~/plugins/observable/header';
 import type { $Overlay } from '~/plugins/observable/overlay';
+import type { $Screen } from '~/plugins/observable/screen';
 import type { $Toast } from '~/plugins/observable/toast';
-import type { $Screen } from '~/plugins/observable/window';
 
 
 declare module 'vue/types/vue' {
@@ -39,7 +39,7 @@ declare module 'vue/types/vue' {
     $confirm: $Confirm;
     $header: $Header;
     $overlay: $Overlay;
-    $toast: $Toast;
     $screen: $Screen;
+    $toast: $Toast;
   }
 }
