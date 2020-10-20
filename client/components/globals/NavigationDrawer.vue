@@ -6,13 +6,11 @@
     :color="$constant.NAVIGATION_DRAWER_BACKGROUND_COLOR"
     :width="$constant.NAVIGATION_DRAWER_WIDTH"
     :class="$style.NavigationDrawer"
-    class="NavigationDrawer"
   >
     <v-list
       nav
-      :class="$style.List"
       class="g-custom-scroll-bar"
-      :style="listStyles"
+      :class="$style.List"
     >
       <div :class="$style.List__header">
         <AccountMenu />
@@ -20,22 +18,24 @@
 
       <v-divider :class="$style.List__divider" />
 
-      <template
-        v-for="({ items, name, subtitle }) in navigationGroupList"
-      >
+      <template v-for="({ items, name, subtitle }) in navigationGroupList">
         <NavigationListItemGroup
           :key="name"
           :items="items"
           :subtitle="subtitle"
         />
-
         <v-divider
           :key="`${name}-divider`"
           :class="$style.List__divider"
         />
       </template>
 
-      <NavigationListItemGroup v-bind="playlistGroup" />
+      <NavigationListItemGroup
+        scroll
+        name="playlist"
+        :items="playlistItems"
+        :subtitle="playlistSubtitle"
+      />
 
       <v-divider :class="$style.List__divider" />
 
@@ -64,34 +64,33 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import type { RootState } from 'typed-vuex';
-
+import {
+  defineComponent,
+  ref,
+  computed,
+  unref,
+  onMounted,
+} from '@vue/composition-api';
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
 import CreatePlaylistModal from '~/components/parts/modal/CreatePlaylistModal.vue';
 
 type NavigationGroup = {
-  items: Item[]
-  name: string
-  subtitle?: string
-  scroll?: boolean
+  items: Item[];
+  name: string;
+  subtitle?: string;
+  scroll?: boolean;
 }
 
-type Data = {
-  navigationGroupList: NavigationGroup[]
-  createPlaylistModal: boolean
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     AccountMenu,
     NavigationListItemGroup,
     CreatePlaylistModal,
   },
 
-  data(): Data {
-    const mainGroup = {
+  setup(_, { root }) {
+    const mainGroup: Readonly<NavigationGroup> = {
       items: [
         {
           name: 'ホーム',
@@ -106,8 +105,7 @@ export default Vue.extend({
       ],
       name: 'main',
     };
-
-    const libraryGroup = {
+    const libraryGroup: Readonly<NavigationGroup> = {
       subtitle: 'ライブラリ',
       items: [
         {
@@ -133,81 +131,48 @@ export default Vue.extend({
       ],
       name: 'library',
     };
+    const navigationGroupList: Readonly<NavigationGroup[]> = [
+      mainGroup,
+      libraryGroup,
+    ];
+    const createPlaylistModal = ref(false);
 
-    const navigationGroupList = [mainGroup, libraryGroup];
-
-    return {
-      navigationGroupList,
-      createPlaylistModal: false,
-    };
-  },
-
-  computed: {
-    listOfPlaylists(): RootState['playlists']['playlists'] {
-      return this.$state().playlists.playlists;
-    },
-    isActiveContext(): (uri: string) => boolean {
-      return (uri: string) => (uri != null
-        ? this.$getters()['playback/contextUri'] === uri
-        : false);
-    },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
-    playlistGroup(): NavigationGroup {
-      const items = this.listOfPlaylists?.map((playlist) => {
-        const to = `/playlists/${playlist.id}`;
-        const isSet = this.isActiveContext(playlist.uri);
-
+    const playlistItems = computed<Item[]>(() => {
+      const listOfPlaylists = root.$state().playlists.playlists;
+      const isActiveContext = (uri: string) => root.$getters()['playback/contextUri'] === uri;
+      const { isPlaying } = root.$state().playback;
+      return listOfPlaylists?.map((playlist) => {
+        const isSet = isActiveContext(playlist.uri);
         return {
           id: playlist.id,
           name: playlist.name,
-          to,
+          to: `/playlists/${playlist.id}`,
           isSet,
-          isPlaying: isSet && this.isPlaying,
+          isPlaying: isSet && isPlaying,
         };
       }) ?? [];
-      const subtitle = items.length > 0
-        ? `プレイリスト (${items.length})`
+    });
+    const playlistSubtitle = computed(() => {
+      const { length } = unref(playlistItems);
+      return length > 0
+        ? `プレイリスト (${length})`
         : 'プレイリスト';
+    });
 
-      const playlists = {
-        items,
-        name: 'playlist',
-        subtitle,
-        scroll: true,
-      };
-
-      return playlists;
-    },
-    // 他のデバイスで再生中の場合高さが変わる
-    listStyles(): { height: string } {
-      const { isPc } = this.$screen;
-      const isAnotherDevicePlaying = this.$getters()['playback/isAnotherDevicePlaying'];
-      let footerHeight = this.$constant.FOOTER_HEIGHT;
-      // ナビゲーションバーが表示されているとき
-      if (!isPc) footerHeight += this.$constant.NAVIGATION_BAR_HEIGHT;
-      // 他のデバイスで再生中のとき
-      if (isAnotherDevicePlaying) footerHeight += this.$constant.DEVICE_BAR_HEIGHT;
-      const height = `calc(100vh - ${footerHeight}px)`;
-
-      return { height };
-    },
-  },
-
-  mounted() {
-    this.getAllPlaylists();
-  },
-
-  methods: {
-    getAllPlaylists() {
-      if (this.$state().playlists.playlists == null) {
-        this.$dispatch('playlists/getAllPlaylists');
+    onMounted(() => {
+      if (root.$state().playlists.playlists == null) {
+        root.$dispatch('playlists/getAllPlaylists');
       }
-    },
-    onPlaylistButtonClicked() {
-      this.createPlaylistModal = true;
-    },
+    });
+    const onPlaylistButtonClicked = () => { createPlaylistModal.value = true; };
+
+    return {
+      navigationGroupList,
+      createPlaylistModal,
+      playlistItems,
+      playlistSubtitle,
+      onPlaylistButtonClicked,
+    };
   },
 });
 </script>
@@ -220,6 +185,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    height: 100%;
 
     &__header {
       padding: 4px 12px;

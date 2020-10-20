@@ -19,16 +19,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 
-export default Vue.extend();
+export default defineComponent({});
 </script>
 
 <style lang="scss" module>
 .WaveLoader {
   position: fixed;
   top: 0;
-  bottom: $g-footer-height-mobile;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: z-index-of(loading);

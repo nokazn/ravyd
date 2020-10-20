@@ -10,48 +10,51 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+} from '@vue/composition-api';
 import PlayerBarMobile from '~/components/globals/PlayerBar.mobile.vue';
 import PlayerBarPc from '~/components/globals/PlayerBar.pc.vue';
 
-type Data = {
-  loaded: boolean;
-  mutationUnsubscribe: (() => void) | undefined;
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     PlayerBarMobile,
     PlayerBarPc,
   },
 
-  data(): Data {
-    return {
-      loaded: false,
-      mutationUnsubscribe: undefined,
-    };
-  },
+  setup(_, { root }) {
+    const loaded = ref(false);
 
-  mounted() {
-    this.$dispatch('player/initPlayer');
-
-    // 再マウントされたときなどにすでにプレイヤーが初期化されていれば true
-    if (this.$state().player.playbackPlayer != null) {
-      this.loaded = true;
-    }
-
-    this.mutationUnsubscribe = this.$subscribe((mutation) => {
-      const { type } = mutation;
-      switch (type) {
-        case 'player/SET_PLAYBACK_PLAYER':
-          setTimeout(() => {
-            this.loaded = true;
-          }, 500);
-          break;
-        default:
-          break;
+    let mutationUnsubscribe: (() => void) | undefined;
+    onMounted(() => {
+      root.$dispatch('player/initPlayer');
+      // when a player has already been initialized in a mounted hook, set to true
+      if (root.$getters()['playback/hasTrack']) {
+        loaded.value = true;
+      }
+      mutationUnsubscribe = root.$subscribe((mutation) => {
+        switch (mutation.type) {
+          case 'playback/SET_CURRENT_TRACK':
+            loaded.value = true;
+            if (mutationUnsubscribe != null) {
+              mutationUnsubscribe();
+            }
+            break;
+          default:
+            break;
+        }
+      });
+    });
+    onBeforeUnmount(() => {
+      if (mutationUnsubscribe != null) {
+        mutationUnsubscribe();
       }
     });
+
+    return { loaded };
   },
 });
 </script>
