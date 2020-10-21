@@ -1,7 +1,9 @@
+import { OneToHundred } from '~~/types';
+
 export const multipleRequestsWithId = <T>(
   request: (ids: string, length: number) => Promise<T>,
   idList: string[],
-  limit: number,
+  limit: OneToHundred,
   callback?: (responseDataList: T[]) => T,
 ): Promise<T> => {
   const { length } = idList;

@@ -270,11 +270,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
       offset,
     });
     if (episodes == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'エピソードが取得できませんでした。',
-      });
-
+      this.$toast.pushError('エピソードが取得できませんでした。');
       this.showInfo = {
         ...showInfo,
         isFullEpisodeList: true,

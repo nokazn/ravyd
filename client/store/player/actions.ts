@@ -24,17 +24,15 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
     dispatch,
     rootGetters,
   }) {
-    if (!rootGetters['auth/isLoggedin']) {
+    if (!rootGetters['auth/isLoggedin'] || !rootGetters['auth/isPremium']) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }
 
     const checkAccessToken = async (): Promise<string | undefined> => {
       const { accessToken, expireIn } = await this.$server.auth.root();
-
       commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
       commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
-
       return accessToken;
     };
 
@@ -112,11 +110,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });
             this.$router.push('/login');
-            this.$toast.push({
-              color: 'error',
-              message: 'トークンを取得できなかったためログアウトしました。',
-            });
-
+            this.$toast.pushError('トークンを取得できなかったためログアウトしました。');
             return;
           }
 
@@ -127,9 +121,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       // デバイスの接続が完了したとき
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
+        // プレミアムアカウントのときのみ
+        if (!this.$getters()['auth/isPremium']) return;
 
-        await dispatch('playback/getActiveDeviceList', undefined, { root: true });
-
+        await dispatch('playback/getDeviceList', undefined, { root: true });
         const currentActiveDevice = this.$getters()['playback/activeDevice'];
         if (currentActiveDevice == null) {
           // アクティブなデバイスがない場合はこのデバイスで再生
@@ -138,14 +133,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             play: false,
           }, { root: true });
         }
-
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
         const firstTimeout = this.$state().playback.activeDeviceId === device_id
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
-
-        console.info('Ready with this device 🎉');
+        console.info('Ready with this device 🚀');
       });
 
       // デバイスがオフラインのとき
@@ -191,7 +184,6 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
         // @todo
         console.info(playerState);
-
         const {
           trackId: currentTrackId,
           repeatMode: currentRepeatMode,
@@ -209,7 +201,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         }
 
         commit('playback/SET_IS_PLAYING', !playerState.paused, { root: true });
-        // 表示playback/のちらつきを防ぐためにトラック (duration_ms) をセットしてからセ, { root: true }ット
+        // 表示のちらつきを防ぐためにトラック (duration_ms) をセットしてからセット
         commit('playback/SET_DURATION_MS', playerState.duration, { root: true });
         commit('playback/SET_POSITION_MS', playerState.position, { root: true });
         commit('playback/SET_IS_SHUFFLED', playerState.shuffle, { root: true });
@@ -218,6 +210,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('playback/SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks, { root: true });
         commit('playback/SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks, { root: true });
         commit('playback/SET_DISALLOWS', playerState.disallows, { root: true });
+        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
 
         // 表示がちらつくので、初回以外は player/repeat 内で commit する
         if (currentRepeatMode == null) {
@@ -230,6 +223,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const isConnected = await player.connect();
       if (isConnected) {
         commit('SET_PLAYBACK_PLAYER', player);
+        console.info('Successfully connected this device 🎉');
       }
     };
 

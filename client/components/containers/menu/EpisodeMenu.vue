@@ -76,17 +76,12 @@ export default Vue.extend({
         handler: () => {
           this.$spotify.player.addItemToQueue({
             uri: this.episode.uri,
+            deviceId: this.$getters()['playback/playbackDeviceId'],
           }).then(() => {
-            this.$toast.push({
-              color: 'primary',
-              message: `"${trackName}" を次に再生に追加しました。`,
-            });
+            this.$toast.pushPrimary(`"${trackName}" を次に再生に追加しました。`);
           }).catch((err: Error) => {
             console.error({ err });
-            this.$toast.push({
-              color: 'error',
-              message: `"${trackName}" を次に再生に追加できませんでした。`,
-            });
+            this.$toast.pushError(`"${trackName}" を次に再生に追加できませんでした。`);
           });
         },
       };

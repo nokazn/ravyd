@@ -5,6 +5,7 @@ export type PlaybackState = {
   deviceId: string | undefined
   activeDeviceId: string | undefined
   deviceList: SpotifyAPI.Device[]
+  isPlaybackSleep: boolean
   contextUri: string | undefined
   trackId: string | undefined
   trackName: string | undefined
@@ -37,6 +38,7 @@ const state = (): PlaybackState => ({
   deviceId: undefined,
   activeDeviceId: undefined,
   deviceList: [],
+  isPlaybackSleep: false,
   images: undefined,
   contextUri: undefined,
   trackId: undefined,
@@ -56,7 +58,8 @@ const state = (): PlaybackState => ({
   isSavedTrack: false,
   positionMs: 0,
   disabledPlayingFromBegining: false,
-  durationMs: 0,
+  // if set to 0, Seekbar has 0 length
+  durationMs: 1,
   isShuffled: false,
   repeatMode: undefined,
   disallows: {},

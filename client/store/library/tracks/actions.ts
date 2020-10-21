@@ -60,11 +60,7 @@ const actions: Actions<
       market,
     });
     if (tracks == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'お気に入りのトラックの一覧を取得できませんでした。',
-      });
-
+      this.$toast.pushError('お気に入りのトラックの一覧を取得できませんでした。');
       return;
     }
 
@@ -125,11 +121,7 @@ const actions: Actions<
     }, EMPTY_PAGING as LibraryOfTracks));
 
     if (tracks == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'お気に入りのトラックの一覧を更新できませんでした。',
-      });
-
+      this.$toast.pushError('お気に入りのトラックの一覧を更新できませんでした。');
       return;
     }
 
@@ -183,10 +175,7 @@ const actions: Actions<
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'ライブラリにトラックを保存できませんでした。',
-        });
+        this.$toast.pushError('ライブラリにトラックを保存できませんでした。');
       });
   },
 
@@ -208,10 +197,7 @@ const actions: Actions<
       })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'ライブラリからトラックを削除できませんでした。',
-        });
+        this.$toast.pushError('ライブラリからトラックを削除できませんでした。');
       });
   },
 

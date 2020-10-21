@@ -58,11 +58,7 @@ const actions: Actions<
       market,
     });
     if (shows == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'お気に入りのポッドキャストの一覧を取得できませんでした。',
-      });
-
+      this.$toast.pushError('お気に入りのポッドキャストの一覧を取得できませんでした。');
       return;
     }
 
@@ -117,11 +113,7 @@ const actions: Actions<
     }, EMPTY_PAGING as LibraryOfShows));
 
     if (shows == null) {
-      this.$toast.push({
-        color: 'error',
-        message: 'お気に入りのエピソードの一覧を取得できませんでした。',
-      });
-
+      this.$toast.pushError('お気に入りのエピソードの一覧を取得できませんでした。');
       return;
     }
 
@@ -148,10 +140,7 @@ const actions: Actions<
     await this.$spotify.library.saveShows({ showIdList })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エピソードをフォローできませんでした。',
-        });
+        this.$toast.pushError('エピソードをフォローできませんでした。');
       });
 
     showIdList.forEach((showId) => {
@@ -172,10 +161,7 @@ const actions: Actions<
     await this.$spotify.library.removeUserSavedShows({ showIdList })
       .catch((err: Error) => {
         console.error({ err });
-        this.$toast.push({
-          color: 'error',
-          message: 'エピソードのフォローを解除できませんでした。',
-        });
+        this.$toast.pushError('エピソードのフォローを解除できませんでした。');
       });
 
     showIdList.forEach((showId) => {

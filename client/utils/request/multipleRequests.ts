@@ -5,6 +5,10 @@ export const multipleRequests = <T extends Exclude<unknown, void>>(
   length: number,
   limit: number,
 ): Promise<T[]> => {
+  if (length <= 0 || limit <= 0) {
+    return Promise.resolve([]);
+  }
+
   const counts = Math.ceil(length / limit);
   return Promise.all([...new Array(counts)]
     .map((_, i) => handler(i)))

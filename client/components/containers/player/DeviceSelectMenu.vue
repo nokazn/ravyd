@@ -102,17 +102,14 @@ export default Vue.extend({
     },
     async updateDeviceList() {
       this.isRefreshingDeviceList = true;
-      await this.$dispatch('playback/getActiveDeviceList');
+      await this.$dispatch('playback/getDeviceList');
       this.isRefreshingDeviceList = false;
     },
     onItemClicked(deviceId: OnItem['click']) {
       if (deviceId != null) {
         this.$dispatch('playback/transferPlayback', { deviceId });
       } else {
-        this.$toast.push({
-          color: 'error',
-          message: 'デバイスを変更できません。',
-        });
+        this.$toast.pushError('デバイスを変更できません。');
       }
     },
   },

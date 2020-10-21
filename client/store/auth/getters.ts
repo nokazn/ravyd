@@ -6,6 +6,7 @@ import { SpotifyAPI } from '~~/types';
 
 export type AuthGetters = {
   isLoggedin: boolean
+  isPremium: boolean
   isTokenExpired: () => boolean
   finishedRefreshingToken: Promise<true>
   userId: string | undefined
@@ -16,6 +17,7 @@ export type AuthGetters = {
 
 export type RootGetters = {
   'auth/isLoggedin': AuthGetters['isLoggedin']
+  'auth/isPremium': AuthGetters['isPremium']
   'auth/isTokenExpired': AuthGetters['isTokenExpired']
   'auth/finishedRefreshingToken': AuthGetters['finishedRefreshingToken']
   'auth/userId': AuthGetters['userId']
@@ -27,6 +29,10 @@ export type RootGetters = {
 const getters: Getters<AuthState, AuthGetters> = {
   isLoggedin(state) {
     return state.accessToken != null && state.userData != null;
+  },
+
+  isPremium(state) {
+    return state.userData?.product === 'premium';
   },
 
   // 関数実行時に Date.now() が評価されるようにする

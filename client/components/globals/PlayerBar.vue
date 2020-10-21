@@ -1,57 +1,21 @@
 <template>
-  <PlayerBarMobile
-    v-if="$screen.isMobile"
-    :loaded="loaded"
-  />
-  <PlayerBarPc
-    v-else-if="$screen.isPc"
-    :loaded="loaded"
-  />
+  <PlayerBarMobile v-if="$screen.isMobile" />
+  <PlayerBarPc v-else-if="$screen.isPc" />
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, onMounted } from '@vue/composition-api';
 import PlayerBarMobile from '~/components/globals/PlayerBar.mobile.vue';
 import PlayerBarPc from '~/components/globals/PlayerBar.pc.vue';
 
-type Data = {
-  loaded: boolean;
-  mutationUnsubscribe: (() => void) | undefined;
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     PlayerBarMobile,
     PlayerBarPc,
   },
 
-  data(): Data {
-    return {
-      loaded: false,
-      mutationUnsubscribe: undefined,
-    };
-  },
-
-  mounted() {
-    this.$dispatch('player/initPlayer');
-
-    // 再マウントされたときなどにすでにプレイヤーが初期化されていれば true
-    if (this.$state().player.playbackPlayer != null) {
-      this.loaded = true;
-    }
-
-    this.mutationUnsubscribe = this.$subscribe((mutation) => {
-      const { type } = mutation;
-      switch (type) {
-        case 'player/SET_PLAYBACK_PLAYER':
-          setTimeout(() => {
-            this.loaded = true;
-          }, 500);
-          break;
-        default:
-          break;
-      }
-    });
+  setup(_, { root }) {
+    onMounted(() => { root.$dispatch('player/initPlayer'); });
   },
 });
 </script>

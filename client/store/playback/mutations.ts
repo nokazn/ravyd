@@ -15,6 +15,7 @@ export type PlaybackMutations = {
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_ID: string | undefined
   SET_DEVICE_LIST: SpotifyAPI.Device[]
+  SET_IS_PLAYBACK_SLEEP: boolean
   SET_CUSTOM_CONTEXT_URI: string | undefined
   SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
   SET_TRACK_INDEX: number | undefined
@@ -39,6 +40,7 @@ export type RootMutations = {
   'playback/SET_DEVICE_ID': PlaybackMutations['SET_DEVICE_ID']
   'playback/SET_ACTIVE_DEVICE_ID': PlaybackMutations['SET_ACTIVE_DEVICE_ID']
   'playback/SET_DEVICE_LIST': PlaybackMutations['SET_DEVICE_LIST']
+  'playback/SET_IS_PLAYBACK_SLEEP': PlaybackMutations['SET_IS_PLAYBACK_SLEEP']
   'playback/SET_CUSTOM_CONTEXT_URI': PlaybackMutations['SET_CUSTOM_CONTEXT_URI']
   'playback/SET_CUSTOM_TRACK_URI_LIST': PlaybackMutations['SET_CUSTOM_TRACK_URI_LIST']
   'playback/SET_TRACK_INDEX': PlaybackMutations['SET_TRACK_INDEX']
@@ -82,6 +84,10 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
 
   SET_DEVICE_LIST(state, deviceList) {
     state.deviceList = deviceList;
+  },
+
+  SET_IS_PLAYBACK_SLEEP(state, isPlaybackSleep) {
+    state.isPlaybackSleep = isPlaybackSleep;
   },
 
   SET_CUSTOM_CONTEXT_URI(state, contextUri) {
