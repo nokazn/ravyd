@@ -160,6 +160,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('authentication_error', async (err) => {
         console.error({ err });
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
+        await dispatch('player/disconnectPlayer', undefined, { root: true });
+        await dispatch('player/initPlayer', undefined, { root: true });
       });
 
       // プレミアムアカウントのユーザーでない場合
