@@ -84,7 +84,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     if (state.accessToken == null) return;
 
     // トークン更新中であれば待機して、期限切れのときのみ更新
-    await getters.finishedRefreshingToken;
+    await getters.finishedRefreshingToken();
     if (!getters.isTokenExpired()) return;
 
     // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする

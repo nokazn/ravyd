@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.BrowsePage">
+  <div
+    v-if="categoryList != null"
+    :class="$style.BrowsePage"
+  >
     <h1 :class="$style.BrowsePage__title">
       {{ title }}
     </h1>
@@ -23,6 +26,10 @@
       @appear="onLoadingCircleAppeared"
     />
   </div>
+
+  <Fallback v-else>
+    カテゴリーの情報が取得できませんでした。
+  </Fallback>
 </template>
 
 <script lang="ts">
@@ -31,6 +38,7 @@ import { Vue, Component } from 'nuxt-property-decorator';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getCategoryList } from '~/services/local/browse';
 import { App } from '~~/types';
@@ -40,10 +48,6 @@ interface AsyncData {
   categoryList: App.CategoryInfo[] | undefined
 }
 
-interface Data {
-  title: string
-}
-
 const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
@@ -51,6 +55,7 @@ const LIMIT_OF_CATEGORIES = 30;
     CardsWrapper,
     CategoryCard,
     IntersectionLoadingCircle,
+    Fallback,
   },
 
   async asyncData(context): Promise<AsyncData> {
@@ -63,18 +68,16 @@ const LIMIT_OF_CATEGORIES = 30;
       categoryList,
     };
   },
-})
-export default class BrowsePage extends Vue implements AsyncData, Data {
-  isFullCategoryList = false;
-  categoryList: App.CategoryInfo[] | undefined = undefined;
-
-  title = '見つける';
 
   head() {
     return {
-      title: this.title,
+      title: '見つける',
     };
-  }
+  },
+})
+export default class BrowsePage extends Vue implements AsyncData {
+  isFullCategoryList = false;
+  categoryList: App.CategoryInfo[] | undefined = undefined;
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');

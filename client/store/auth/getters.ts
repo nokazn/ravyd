@@ -8,7 +8,7 @@ export type AuthGetters = {
   isLoggedin: boolean
   isPremium: boolean
   isTokenExpired: () => boolean
-  finishedRefreshingToken: Promise<true>
+  finishedRefreshingToken: () => Promise<true>
   userId: string | undefined
   userDisplayName: string | undefined
   userAvatarSrc: (avatarSize?: number) => string| undefined
@@ -42,10 +42,14 @@ const getters: Getters<AuthState, AuthGetters> = {
       : false);
   },
 
+  // 30秒経ったら強制的に解決させる
   finishedRefreshingToken(state) {
-    return state.isRefreshing
-      ? new Promise(() => {})
-      : Promise.resolve(true);
+    return () => {
+      const timeout = 30 * 1000;
+      return state.isRefreshing
+        ? new Promise((resolve) => setTimeout(() => resolve(true), timeout))
+        : Promise.resolve(true);
+    };
   },
 
   userId(state) {

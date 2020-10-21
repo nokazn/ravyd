@@ -41,9 +41,8 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       currentExpirationMs: number | undefined,
     ): Promise<string | undefined> => {
       // トークン更新中であれば待機して、期限切れのときのみ更新
-      await this.$getters()['auth/finishedRefreshingToken'];
-      const isExpired = this.$getters()['auth/isTokenExpired']();
-      if (!isExpired) {
+      await this.$getters()['auth/finishedRefreshingToken']();
+      if (!this.$getters()['auth/isTokenExpired']()) {
         return this.$state().auth.accessToken;
       }
 
