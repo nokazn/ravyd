@@ -22,21 +22,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 
-export default Vue.extend({
-  methods: {
-    reload() {
-      this.$router.go(0);
-    },
+export default defineComponent({
+  setup(_, { root }) {
+    const reload = () => { root.$router.go(0); };
+    return { reload };
   },
 });
 </script>
 
 <style lang="scss" module>
 .Fallback {
-  // 他のデバイスで再生中の場合に合わせておく
-  height: calc(100vh - #{$g-header-height} - #{$g-footer-height} - #{$g-device-bar-height});
+  height: 100%;
   padding: 1em 2em;
 
   &__wrapper {
