@@ -13,11 +13,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 import ScrollableCardsWrapper from '~/components/parts/wrapper/ScrollableCardsWrapper.vue';
 
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     ScrollableCardsWrapper,
   },

@@ -1,6 +1,6 @@
 <template>
   <div
-    :ref="LOADING_REF"
+    ref="LOADING_REF"
     :class="$style.LoadingCircle"
   >
     <v-progress-circular
@@ -11,22 +11,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
-const LOADING_REF = 'LOADING_REF';
-
-export type Data = {
-  observer: IntersectionObserver | undefined;
-  LOADING_REF: string;
-}
+import { defineComponent, ref } from '@vue/composition-api';
+import { useIntersectionObserver } from '~/services/use/observer';
 
 export const APPEAR = 'appear';
 
 export type On = {
-  [APPEAR]: void
+  [APPEAR]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     loading: {
       type: Boolean,
@@ -34,34 +28,20 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  setup(_, { emit }) {
+    const LOADING_REF = ref<HTMLDivElement>();
+    useIntersectionObserver(LOADING_REF, (entry) => {
+      if (entry.isIntersecting) {
+        emit(APPEAR);
+      }
+    }, {
+      rootMargin: '400px 0px',
+    });
+
     return {
       observer: undefined,
       LOADING_REF,
     };
-  },
-
-  mounted() {
-    const loading = this.$refs[LOADING_REF] as HTMLDivElement;
-
-    // loading が表示されたら親コンポーネントに通知
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          this.$emit(APPEAR);
-        }
-      });
-    }, {
-      rootMargin: '400px 0px',
-    });
-    this.observer.observe(loading);
-  },
-
-  beforeDestroy() {
-    if (this.observer != null) {
-      this.observer.disconnect();
-      this.observer = undefined;
-    }
   },
 });
 </script>

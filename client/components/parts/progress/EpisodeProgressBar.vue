@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { elapsedTime } from '~~/utils/elapsedTime';
 import { SpotifyAPI } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     resumePoint: {
       type: Object as PropType<SpotifyAPI.ResumePoint>,
@@ -51,30 +51,39 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    remainingTime(): string {
-      const positionMs = this.resumePoint.resume_position_ms;
-      const remainingMs = this.durationMs - positionMs;
+  setup(props) {
+    const remainingTime = computed(() => {
+      if (props.resumePoint.fully_played) {
+        return '再生済み';
+      }
+      const positionMs = props.resumePoint.resume_position_ms;
+      const remainingMs = props.durationMs - positionMs;
       return positionMs > 0
         ? `残り${elapsedTimeInJapanese(remainingMs)}`
         : '未再生';
-    },
-    title(): string {
-      const position = this.resumePoint.resume_position_ms;
+    });
+    const title = computed(() => {
+      if (props.resumePoint.fully_played) {
+        return '再生済み';
+      }
+      const position = props.resumePoint.resume_position_ms;
       return position !== 0
         ? `${elapsedTime(position)}まで再生`
         : '未再生';
-    },
-    value(): number {
-      return (this.resumePoint.resume_position_ms / this.durationMs) * 100;
-    },
-    styles(): { maxWidth: string | undefined } {
-      return {
-        maxWidth: this.maxWidth != null
-          ? `${this.maxWidth}px`
-          : undefined,
-      };
-    },
+    });
+    const value = computed(() => (props.resumePoint.resume_position_ms / props.durationMs) * 100);
+    const styles = computed(() => ({
+      maxWidth: props.maxWidth != null
+        ? `${props.maxWidth}px`
+        : undefined,
+    }));
+
+    return {
+      remainingTime,
+      title,
+      value,
+      styles,
+    };
   },
 });
 </script>

@@ -101,7 +101,7 @@ export namespace App {
     uri: string
     externalUrls: SpotifyAPI.ExternalUrls
     images: SpotifyAPI.Image[]
-    to: string | RawLocation
+    to: RawLocation
     artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
     linkedFrom?: SpotifyAPI.LinkedTrack | undefined
   }
