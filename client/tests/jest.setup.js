@@ -7,4 +7,5 @@ Vue.use(Vuetify);
 window.IntersectionObserver = jest.fn(() => ({
   observe: () => {},
   unobserve: () => {},
+  disconnect: () => {},
 }));
