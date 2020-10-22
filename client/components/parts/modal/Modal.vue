@@ -15,7 +15,6 @@
         <v-card-title>
           <slot name="header" />
         </v-card-title>
-
         <v-btn
           icon
           title="閉じる"
@@ -39,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
 const INPUT = 'input';
 
@@ -47,7 +46,7 @@ export type On = {
   [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -59,21 +58,17 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    modal: {
-      get(): boolean {
-        return this.value;
-      },
-      set(modal: boolean) {
-        this.$emit(INPUT, modal);
-      },
-    },
-  },
+  setup(props, { emit }) {
+    const modal = computed<boolean>({
+      get() { return props.value; },
+      set(value) { emit(INPUT, value); },
+    });
+    const onCloseButtonClicked = () => { modal.value = false; };
 
-  methods: {
-    onCloseButtonClicked() {
-      this.modal = false;
-    },
+    return {
+      modal,
+      onCloseButtonClicked,
+    };
   },
 });
 </script>

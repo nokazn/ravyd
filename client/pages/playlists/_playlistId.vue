@@ -169,7 +169,7 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/PlaylistMenu.vue';
 import PlaylistDetailWrapper from '~/components/parts/wrapper/PlaylistDetailWrapper.vue';
-import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/parts/modal/EditPlaylistModal.vue';
+import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/containers/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 

@@ -21,7 +21,7 @@
         :min-width="90"
         :color="color"
         :loading="loading"
-        @click.stop="onCOnfirmButtonClicked"
+        @click.stop="onConfirmButtonClicked"
       >
         {{ text }}
       </v-btn>
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Modal, { On as OnModal } from '~/components/parts/modal/Modal.vue';
 
 export const INPUT = 'input';
@@ -45,7 +45,7 @@ export type On = {
   [ON_CONFIRMED]: string | undefined;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Modal,
   },
@@ -77,24 +77,19 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    modal: {
-      get(): boolean {
-        return this.value;
-      },
-      set(modal: OnModal['input']) {
-        this.$emit(INPUT, modal);
-      },
-    },
-  },
+  setup(props, { emit }) {
+    const modal = computed<boolean>({
+      get() { return props.value; },
+      set(value: OnModal['input']) { emit(INPUT, value); },
+    });
+    const onCloseButtonClicked = () => { modal.value = false; };
+    const onConfirmButtonClicked = () => { emit(ON_CONFIRMED, props.type); };
 
-  methods: {
-    onCloseButtonClicked() {
-      this.modal = false;
-    },
-    onCOnfirmButtonClicked() {
-      this.$emit(ON_CONFIRMED, this.type);
-    },
+    return {
+      modal,
+      onCloseButtonClicked,
+      onConfirmButtonClicked,
+    };
   },
 });
 </script>

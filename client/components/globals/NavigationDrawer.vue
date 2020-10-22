@@ -73,7 +73,7 @@ import {
 } from '@vue/composition-api';
 import AccountMenu from '~/components/containers/menu/AccountMenu.vue';
 import NavigationListItemGroup, { Item } from '~/components/parts/list/NavigationListItemGroup.vue';
-import CreatePlaylistModal from '~/components/parts/modal/CreatePlaylistModal.vue';
+import CreatePlaylistModal from '~/components/containers/modal/CreatePlaylistModal.vue';
 
 type NavigationGroup = {
   items: Item[];

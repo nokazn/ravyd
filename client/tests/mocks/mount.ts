@@ -1,7 +1,7 @@
 import { createLocalVue, RouterLinkStub } from '@vue/test-utils';
 import Router from 'vue-router';
 import CompositionApi from '@vue/composition-api';
-// import Vuetify from 'vuetify';
+import Vuetify from 'vuetify';
 import * as $constant from '~/constants';
 
 const localVue = createLocalVue();
@@ -23,6 +23,7 @@ const options = {
   router,
   mocks,
   stubs,
+  vuetify: new Vuetify({}),
 };
 
 export {
