@@ -13,7 +13,7 @@ if (host == null) {
     port,
     password: password ? 'Password is set' : 'Password is not set.',
   });
-  throw new Error('An envirionment variable "REDIS_URL" is not set.');
+  throw new Error('An environment variable "REDIS_URL" is not set.');
 }
 
 const client = new Redis(host, {
