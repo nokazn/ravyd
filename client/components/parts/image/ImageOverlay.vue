@@ -5,7 +5,7 @@
     absolute
     :opacity="0.7"
   >
-    <v-hover #default="{ hover: buttonHoverd }">
+    <v-hover v-slot="{ hover: buttonHoverd }">
       <v-btn
         icon
         @click.stop.prevent="onClick"

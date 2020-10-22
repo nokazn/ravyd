@@ -1,5 +1,5 @@
 <template>
-  <v-hover #default="{ hover }">
+  <v-hover v-slot="{ hover }">
     <v-img
       v-if="src != null"
       :src="src"

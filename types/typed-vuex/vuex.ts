@@ -1,7 +1,7 @@
+/* eslint-disable no-undef */
 import { Store, SubscribeOptions } from 'vuex';
 import { Context } from '@nuxt/types';
-
-import { ActionMethodMap } from '~~/types';
+import type { ActionMethodMap } from '~~/types';
 
 /**
  * 公式の型定義の拡張

@@ -58,17 +58,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from 'lodash';
-
 import { $searchForm } from '~/observable/searchForm';
-import { SpotifyAPI, App } from '~~/types';
 
 const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const LIMIT_OF_SEARCH_ITEM = 4;
-
-type ItemInfo = {
-  title: string;
-  items: App.ContentItemInfo<SpotifyAPI.SearchType>[];
-}
 
 type Data = {
   isFocused: boolean;

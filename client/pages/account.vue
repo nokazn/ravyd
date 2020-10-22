@@ -41,6 +41,12 @@ export default Vue.extend({
     TwoColumnsListCard,
   },
 
+  head() {
+    return {
+      title: 'アカウント',
+    };
+  },
+
   computed: {
     itemList(): Item[] | undefined {
       const { userData } = this.$state().auth;
@@ -69,12 +75,6 @@ export default Vue.extend({
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
-  },
-
-  head() {
-    return {
-      title: 'アカウント',
-    };
   },
 });
 </script>

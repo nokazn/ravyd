@@ -1,5 +1,3 @@
-type A = Exclude<'1' | 2, 2>
-
 export const multipleRequests = <T extends Exclude<unknown, void>>(
   handler: (index: number) => Promise<T>,
   length: number,

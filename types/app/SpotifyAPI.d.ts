@@ -2,7 +2,7 @@ import { Merge, ZeroToHundred } from '~~/types/utility-types';
 
 export namespace SpotifyAPI {
   export namespace Auth {
-    type Token = {
+    export type Token = {
       access_token: string
       token_type: string
       scope: string
@@ -11,7 +11,7 @@ export namespace SpotifyAPI {
     }
 
     export namespace GetToken {
-      type Params = {
+      export type Params = {
         grant_type: 'authorization_code'
         code: string
         redirect_uri: string
@@ -21,14 +21,14 @@ export namespace SpotifyAPI {
     }
 
     export namespace RefreshToken {
-      type Params = {
+      export type Params = {
         grant_type: 'refresh_token'
         refresh_token: string
       }
     }
   }
 
-  type SimpleAlbum = {
+  export type SimpleAlbum = {
     // artist の album を取得すると├に含まれる値
     album_group?: 'album' | 'single' | 'compilation' | 'appears_on'
     album_type: 'album' | 'single' | 'compilation'
@@ -46,7 +46,7 @@ export namespace SpotifyAPI {
     type: 'album'
     uri: string
   }
-  type Album = {
+  export type Album = {
     external_ids: ExternalId
     genres: string[]
     label: string
@@ -55,7 +55,7 @@ export namespace SpotifyAPI {
     total_tracks: number
   } & Omit<SimpleAlbum, 'album_group'>
 
-  type SimpleArtist = {
+  export type SimpleArtist = {
     external_urls: ExternalUrls
     href: string
     id: string
@@ -63,7 +63,7 @@ export namespace SpotifyAPI {
     type: 'artist'
     uri: string
   }
-  type Artist = {
+  export type Artist = {
     followers: Followers
     genres: string[]
     images: Image[]
@@ -71,11 +71,11 @@ export namespace SpotifyAPI {
   } & SimpleArtist
 
   export namespace Browse {
-    type NewReleases = Paging<Album>
-    type TopArtists = Paging<Artist>
-    type TopTracks = Paging<Track>
+    export type NewReleases = Paging<Album>
+    export type TopArtists = Paging<Artist>
+    export type TopTracks = Paging<Track>
 
-    type TrackAttributes = 'acousticness' // 0.0 ~ 1.0
+    export type TrackAttributes = 'acousticness' // 0.0 ~ 1.0
       | 'danceability' // 0.0 ~ 1.0
       | 'duration_ms' // milliseconds
       | 'energy' // 0.0 ~ 1.0
@@ -90,7 +90,7 @@ export namespace SpotifyAPI {
       | 'time_signature' // 拍子
       | 'valence' // 0.0 ~ 1.0
     // min_TrackAttributes
-    type MinTrackAttributes = 'min_acousticness'
+    export type MinTrackAttributes = 'min_acousticness'
       | 'min_danceability'
       | 'min_duration_ms'
       | 'min_energy'
@@ -105,7 +105,7 @@ export namespace SpotifyAPI {
       | 'min_time_signature'
       | 'min_valence'
     // max_TrackAttributes
-    type MaxTrackAttributes = 'max_acousticness'
+    export type MaxTrackAttributes = 'max_acousticness'
       | 'max_danceability'
       | 'max_duration_ms'
       | 'max_energy'
@@ -120,7 +120,7 @@ export namespace SpotifyAPI {
       | 'max_time_signature'
       | 'max_valence'
     // target_TrackAttributes
-    type TargetTrackAttributes = 'target_acousticness'
+    export type TargetTrackAttributes = 'target_acousticness'
       | 'target_danceability'
       | 'target_duration_ms'
       | 'target_energy'
@@ -134,7 +134,7 @@ export namespace SpotifyAPI {
       | 'target_tempo'
       | 'target_time_signature'
       | 'target_valence'
-    type RecommendationSeed = {
+      export type RecommendationSeed = {
       afterFilteringSize: number
       afterRelinkingSize: number
       href: string | string
@@ -142,13 +142,13 @@ export namespace SpotifyAPI {
       initialPoolSize: number
       type: 'artist' | 'track' | 'genre'
     }
-    type Recommendations = {
+    export type Recommendations = {
       seeds: RecommendationSeed[]
       tracks: SimpleTrack[]
     }
   }
 
-  type Category = {
+  export type Category = {
     href: string
     icons: Image[]
     id: string
@@ -163,7 +163,7 @@ export namespace SpotifyAPI {
     uri: string
   }
 
-  type Copyright = {
+  export type Copyright = {
     text: string
     type: 'C' | 'P'
   }
@@ -242,7 +242,7 @@ export namespace SpotifyAPI {
     width?: number | null
   }
 
-  type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
+  export type LibraryOf<T extends 'album' | 'show' | 'track'> = Paging<{
     added_at: string // timestamp
   } & {
     [k in T]: T extends 'album'
@@ -260,9 +260,9 @@ export namespace SpotifyAPI {
     uri: string
   }
 
-  type Country = 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
+  export type Country = 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
 
-  type Paging<I> = {
+  export type Paging<I> = {
     href: string
     items: I[]
     limit: number
@@ -292,11 +292,11 @@ export namespace SpotifyAPI {
       played_at: string // timestamp
       track: Track
     }
-    type RecentlyPlayed = CursorPaging<History>
+    export type RecentlyPlayed = CursorPaging<History>
 
     type PlayingType = 'track' | 'episode' | 'ad' | 'unknown'
     // アクティブなデバイスが存在しない場合は空文字が返ってくる
-    type CurrentPlayback<T extends PlayingType = PlayingType> = '' | {
+    export type CurrentPlayback<T extends PlayingType = PlayingType> = '' | {
       actions: {
         disallows: Disallows
       }
@@ -316,7 +316,7 @@ export namespace SpotifyAPI {
     }
   }
 
-  type SimplePlaylist = {
+  export type SimplePlaylist = {
     collaborative: boolean
     description: string | null
     external_urls: ExternalUrls
@@ -334,23 +334,23 @@ export namespace SpotifyAPI {
     type: 'playlist'
     uri: string
   }
-  type Playlist = SimplePlaylist & {
+  export type Playlist = SimplePlaylist & {
     followers: Followers
     tracks: Paging<PlaylistTrack>
   }
-  type PlaylistTrack = {
+  export type PlaylistTrack = {
     added_at: string // timestamp
     // @todo display_name など取得できないフィールドがある
     added_by: UserData
     is_local: boolean
     track: Track | null
   }
-  type PlaylistSnapshot = {
+  export type PlaylistSnapshot = {
     snapshot_id: string
   }
 
   // @todo
-  type SearchTypes = {
+  export type SearchTypes = {
     album: 'albums',
     artist: 'artists',
     track: 'tracks',
@@ -366,9 +366,9 @@ export namespace SpotifyAPI {
     shows?: Paging<SimpleShow>
     episodes?: Paging<SimpleEpisode | null>
   }
-  type SearchType = keyof SearchTypes
+  export type SearchType = keyof SearchTypes
   // キーが T のものを抜き出す
-  type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
+  export type SearchResult<T extends SearchType = SearchType> = Partial<Pick<
     SearchResultBase, SearchTypes[T]
   >>
 
@@ -379,12 +379,12 @@ export namespace SpotifyAPI {
     [k: string]: string
   }
 
-  type ResumePoint = {
+  export type ResumePoint = {
     fully_played: boolean
     resume_position_ms: number
   }
 
-  type SimpleShow = {
+  export type SimpleShow = {
     available_markets: string[]
     copyrights: Copyright[]
     description: string
@@ -402,11 +402,11 @@ export namespace SpotifyAPI {
     total_episodes: number
     uri: string
   }
-  type Show = SimpleShow & {
+  export type Show = SimpleShow & {
     episodes: Paging<SimpleEpisode>
   }
 
-  type SimpleTrack = {
+  export type SimpleTrack = {
     artists: SimpleArtist[]
     available_markets: Country[]
     disc_number: number
@@ -425,13 +425,13 @@ export namespace SpotifyAPI {
     uri: string
     is_local: boolean
   }
-  type Track = SimpleTrack & {
+  export type Track = SimpleTrack & {
     album: SimpleAlbum
     external_ids: ExternalId
     popularity: string
   }
 
-  type UserData = {
+  export type UserData = {
     country: Country
     display_name: string | null
     email: string

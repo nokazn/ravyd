@@ -13,6 +13,7 @@ import type { SpotifyServices } from '~/services/spotify';
 import type { ServerServices } from '~/services/server';
 
 declare module 'vuex/types/index' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
     // typed-vuex
     $state: () => RootState;

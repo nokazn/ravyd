@@ -24,13 +24,16 @@ module.exports = {
     // .vue ファイルの script と .ts ファイルのパーサー
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
-    souceType: 'module',
+    sourceType: 'module',
   },
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張している
-    // #129 .eslintignore に .nuxt/, dist/, static/, node_modules/ を記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
+    // #129 .eslintignore に
+    // .nuxt/, dist/, static/, node_modules/
+    // を記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
     '@nuxtjs/eslint-config-typescript',
+    'plugin:vue/recommended',
     // eslint-plugin-vue を拡張している
     'plugin:nuxt/recommended',
     'airbnb-base',
@@ -97,5 +100,7 @@ module.exports = {
     // typescript-eslint の no-unuserd-vars を有効にする
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': 2,
+
+    'vue/valid-v-slot': [2, { allowModifiers: true }],
   },
 };

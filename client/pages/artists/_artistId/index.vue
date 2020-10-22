@@ -83,11 +83,6 @@ const FULL_RELATED_ARTIST_LENGTH = 10;
 const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
-type TabItem = {
-  title: string
-  to: string
-}
-
 interface AsyncData {
   topTrackList: App.TrackDetail[]
   releaseListMap: ArtistReleaseInfo

@@ -82,10 +82,6 @@ import {
 import { getImageSrc } from '~/utils/image';
 import { SpotifyAPI } from '~~/types';
 
-type Data = {
-  isLoaded: boolean
-}
-
 export default defineComponent({
   props: {
     id: {

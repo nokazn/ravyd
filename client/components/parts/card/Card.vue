@@ -55,10 +55,6 @@ export type On = {
   [CLICK]: void;
 }
 
-type Data = {
-  isLoaded: boolean;
-}
-
 export default defineComponent({
   props: {
     to: {

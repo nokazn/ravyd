@@ -1,6 +1,7 @@
 import { mount, Wrapper } from '@vue/test-utils';
-import { options } from '~/tests/mocks/mount';
+import Vue from 'vue';
 
+import { options } from '~/tests/mocks/mount';
 import ContentListSection from './ContentListSection.vue';
 import type { App } from '~~/types';
 

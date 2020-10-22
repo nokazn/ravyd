@@ -17,20 +17,9 @@ import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMen
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-
-import type { ToastType } from '~/plugins/observable/toast';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
-
-type Modal = {
-  value: boolean;
-  loading: boolean;
-  type: string;
-  color: ToastType | undefined;
-  text: string;
-  description: string;
-}
 
 export type On = {
   [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';

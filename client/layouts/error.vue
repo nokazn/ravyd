@@ -37,6 +37,10 @@ export default Vue.extend({
     };
   },
 
+  head(): { title: string } {
+    return { title: this.errorMessage };
+  },
+
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
 
@@ -44,10 +48,6 @@ export default Vue.extend({
     if (error.statusCode !== 404) {
       console.error(error);
     }
-  },
-
-  head(): { title: string } {
-    return { title: this.errorMessage };
   },
 });
 </script>

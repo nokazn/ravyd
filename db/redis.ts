@@ -24,7 +24,7 @@ const client = new Redis(host, {
 });
 
 client.on('connect', () => {
-  console.log('Redis client has connected. 🎉\n');
+  console.info('Redis client has connected. 🎉\n');
 });
 
 client.on('error', (err: Error) => {

@@ -1,5 +1,5 @@
 <template>
-  <v-hover #default="{ hover }">
+  <v-hover v-slot="{ hover }">
     <v-avatar
       v-if="src != null"
       :size="size"

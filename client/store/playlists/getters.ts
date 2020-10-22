@@ -14,8 +14,8 @@ export type RootGetters = {
 }
 
 const getters: Getters<PlaylistsState, PlaylistsGetters> = {
-  ownPlaylists(state, _g, _s, RootGetters) {
-    const userId = RootGetters['auth/userId'];
+  ownPlaylists(state, _g, _s, rootGetters) {
+    const userId = rootGetters['auth/userId'];
 
     return state.playlists
       ?.filter((playlist) => playlist.owner.id === userId || playlist.collaborative) ?? [];

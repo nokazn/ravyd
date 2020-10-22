@@ -1,5 +1,5 @@
 <template>
-  <v-hover #default="{ hover: isRowHovered }">
+  <v-hover v-slot="{ hover: isRowHovered }">
     <tr
       :class="{
         [$style.TrackTableRow]: true,

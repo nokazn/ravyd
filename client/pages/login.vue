@@ -36,6 +36,12 @@ import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
 
 export default Vue.extend({
+  head() {
+    return {
+      title: 'ログイン',
+    };
+  },
+
   computed: {
     isLoggedin(): RootGetters['auth/isLoggedin'] {
       return this.$getters()['auth/isLoggedin'];
@@ -50,12 +56,6 @@ export default Vue.extend({
     onAuthButtonClicked() {
       this.$dispatch('auth/login');
     },
-  },
-
-  head() {
-    return {
-      title: 'ログイン',
-    };
   },
 });
 </script>

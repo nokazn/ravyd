@@ -52,7 +52,7 @@ export default Vue.extend({
     },
   },
 
-  data() {
+  data(): Data {
     return {
       SIZE_OF_AVATAR,
     };

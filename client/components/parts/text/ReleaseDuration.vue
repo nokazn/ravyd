@@ -62,7 +62,7 @@ export default Vue.extend({
   },
 
   computed: {
-    duration(): { text: string, title: string } {
+    duration(): Duration {
       const elapsedTime = elapsedTimeInJapanese(this.durationMs);
       const text = this.hasMore
         ? `${elapsedTime} + α`

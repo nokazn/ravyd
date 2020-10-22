@@ -256,7 +256,6 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendEpisodeList(limit: OneToFifty = LIMIT_OF_EPISODES) {
-    type PagingTracks = SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>;
     if (this.showInfo == null
       || this.showInfo.isFullEpisodeList) return;
 
