@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -57,7 +57,7 @@ export type On = {
   [ON_LOADING_APPEARED]: void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CardsWrapper,
     IntersectionLoadingCircle,
@@ -91,27 +91,25 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    all: {
-      get(): boolean | undefined {
-        return this.value;
-      },
-      set(all: OnShowAll['input']) {
-        this.$emit(INPUT, all);
-      },
-    },
-  },
-
-  methods: {
-    onButtonHovered() {
+  setup(props, { emit }) {
+    const all = computed<boolean | undefined>({
+      get() { return props.value; },
+      // @todo undefined は除外できる
+      set(value) { emit(INPUT, value); },
+    });
+    const onButtonHovered = () => {
       // 省略表示されているときにホバーした場合のみ emit
-      if (!this.value) {
-        this.$emit(ON_BUTTON_HOVERED);
+      if (props.value === false) {
+        emit(ON_BUTTON_HOVERED);
       }
-    },
-    onLoadingAppeared() {
-      this.$emit(ON_LOADING_APPEARED);
-    },
+    };
+    const onLoadingAppeared = () => { emit(ON_LOADING_APPEARED); };
+
+    return {
+      all,
+      onButtonHovered,
+      onLoadingAppeared,
+    };
   },
 });
 </script>

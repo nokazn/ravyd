@@ -17,14 +17,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ShowAllButton, { On as OnShowAll, INPUT } from '~/components/parts/button/ShowAllButton.vue';
 
 export type On = {
   [INPUT]: OnShowAll['input'];
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ShowAllButton,
   },
@@ -40,15 +40,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    all: {
-      get(): boolean | undefined {
-        return this.value;
-      },
-      set(all: OnShowAll['input']) {
-        this.$emit(INPUT, all);
-      },
-    },
+  setup(props, { emit }) {
+    const all = computed<boolean | undefined>({
+      get() { return props.value; },
+      // @todo undefined は除外できる
+      set(value) { emit(INPUT, value); },
+    });
+    return { all };
   },
 });
 </script>

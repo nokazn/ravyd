@@ -13,7 +13,6 @@
         dense
         nav
         color="transparent"
-        :class="$style.ContentListItem__list"
       >
         <ContentListItem
           v-for="(item, index) in items"
@@ -27,22 +26,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, PropType } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { App } from '~~/types';
 
-const ON_BUTTON_CLICKED = 'on-button-clicked';
-const ON_BUTTON_HOVERED = 'on-button-hovered';
-const ON_LOADING_APPEARED = 'on-loading-appeared';
-
-export type On = {
-  [ON_BUTTON_CLICKED]: boolean;
-  [ON_BUTTON_HOVERED]: void;
-  [ON_LOADING_APPEARED]: void;
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContentListItem,
   },

@@ -16,6 +16,7 @@ const mocks = {
 };
 const stubs = {
   NuxtLink: RouterLinkStub,
+  ClientOnly: true,
 };
 const vuetify = new Vuetify({});
 
