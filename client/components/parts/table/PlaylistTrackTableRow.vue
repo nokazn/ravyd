@@ -16,7 +16,6 @@
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
     @on-row-clicked="onRowClicked"
-    @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <PlaylistTrackTableRowPc
@@ -43,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import type { RawLocation } from 'vue-router';
 
 import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
@@ -58,7 +57,7 @@ export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = OnMobile | OnPc;
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     PlaylistTrackTableRowMobile,
     PlaylistTrackTableRowPc,
@@ -99,62 +98,55 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    /**
-     * @todo
-     * エピソードは isPlayable が false でも再生できるようにしている
-     */
-    disabled(): boolean {
-      return this.item.type !== 'episode' && this.item.isPlayable === false;
-    },
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.item.images, this.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE);
-    },
-    trackPath(): RawLocation {
-      return this.item.type === 'track'
+  setup(props, { emit, root }) {
+    // @todo エピソードは isPlayable が false でも再生できるようにしている
+    const disabled = computed(() => props.item.type !== 'episode' && props.item.isPlayable === false);
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      root.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE,
+    ));
+    const trackPath = computed<RawLocation>(() => {
+      return props.item.type === 'track'
         ? {
-          path: `/releases/${this.item.releaseId}`,
-          query: { track: this.item.id },
+          path: `/releases/${props.item.releaseId}`,
+          query: { track: props.item.id },
         }
-        : `/episodes/${this.item.id}`;
-    },
-    releasePath(): RawLocation {
-      return this.item.type === 'track'
-        ? `/releases/${this.item.releaseId}`
-        : `/shows/${this.item.releaseId}`;
-    },
-    userPath(): RawLocation | undefined {
-      const addedBy = this.item;
-      return this.collaborative && addedBy != null
+        : `/episodes/${props.item.id}`;
+    });
+    const releasePath = computed<RawLocation>(() => {
+      return props.item.type === 'track'
+        ? `/releases/${props.item.releaseId}`
+        : `/shows/${props.item.releaseId}`;
+    });
+    const userPath = computed<RawLocation | undefined>(() => {
+      const addedBy = props.item;
+      return props.collaborative && addedBy != null
         ? `/users/${addedBy.id}`
         : undefined;
-    },
-    publisher(): string {
-      return this.item.artists
-        .map((artist) => artist.name)
-        .join(', ');
-    },
-    titleColor(): string | undefined {
-      return textColorClass(this.set, this.disabled);
-    },
-    subtitleColor(): string {
-      return subtextColorClass(this.set, this.disabled);
-    },
-  },
+    });
+    const publisher = computed(() => props.item.artists
+      .map((artist) => artist.name)
+      .join(', '));
+    const titleColor = computed(() => textColorClass(props.set, disabled.value));
+    const subtitleColor = computed(() => subtextColorClass(props.set, disabled.value));
 
-  methods: {
-    onRowClicked(row: On['on-row-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, row);
-    },
-    onMediaButtonClicked(row: On['on-media-button-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
-    },
-    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
-    },
+    const onRowClicked = (row: On['on-row-clicked']) => { emit(ON_ROW_CLICKED, row); };
+    const onMediaButtonClicked = (row: On['on-media-button-clicked']) => { emit(ON_MEDIA_BUTTON_CLICKED, row); };
+    const onFavoriteButtonClicked = (row: On['on-favorite-button-clicked']) => { emit(ON_FAVORITE_BUTTON_CLICKED, row); };
+
+    return {
+      disabled,
+      artworkSrc,
+      trackPath,
+      releasePath,
+      userPath,
+      publisher,
+      titleColor,
+      subtitleColor,
+      onRowClicked,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>
