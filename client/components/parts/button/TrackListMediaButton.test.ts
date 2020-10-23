@@ -5,6 +5,8 @@ import TrackListMediaButton from './TrackListMediaButton.vue';
 const CLICK = 'click';
 const INPUT = 'input';
 
+const inactiveClass = 'inactive--text';
+
 describe('TrackListMediaButton', () => {
   it('playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
@@ -90,7 +92,7 @@ describe('TrackListMediaButton', () => {
       },
     });
     const text = wrapper.find('span > span');
-    expect(text.classes()).toContain('inactive--text');
+    expect(text.classes()).toContain(inactiveClass);
     expect(text.attributes('title')).toBe('再生できない項目');
   });
 
@@ -105,7 +107,7 @@ describe('TrackListMediaButton', () => {
       },
     });
     const text = wrapper.find('span > span');
-    expect(text.classes()).toContain('inactive--text');
+    expect(text.classes()).toContain(inactiveClass);
     expect(text.attributes('title')).toBe('再生できない項目');
   });
 });

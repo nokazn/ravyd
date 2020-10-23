@@ -23,8 +23,9 @@
 
       <ArtistNames
         ellipsis
-        :artists="[...item.artists, ...item.featuredArtists]"
-        :class="subtextColor"
+        :artistsa="[...item.artists, ...item.featuredArtists]"
+        :artists="[]"
+        :class="subtitleColor"
         class="g-small-text"
       />
     </td>
@@ -50,8 +51,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, PropType } from '@vue/composition-api';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
@@ -64,12 +64,12 @@ import {
 import type { App } from '~~/types';
 
 export type On = {
-  [ON_ROW_CLICKED]: App.TrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
+  [ON_ROW_CLICKED]: App.TrackDetail;
+  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail;
+  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     FavoriteButton,
     ArtistNames,
@@ -94,25 +94,20 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    subtextColor: {
+    subtitleColor: {
       type: String,
       required: true,
     },
   },
 
-  methods: {
-    onRowClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
-    },
-    onMediaButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
-    },
-    onFavoriteButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
-    },
+  setup(props, { emit }) {
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, props.item); };
+
+    return {
+      onRowClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>

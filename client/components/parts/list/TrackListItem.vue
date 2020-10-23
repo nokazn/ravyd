@@ -4,6 +4,7 @@
       dense
       :ripple="false"
       :disabled="!item.isPlayable"
+      :inactive="!item.isPlayable"
       :class="$style.TrackListItem"
       class="track-list-item"
       @click="onItemClicked"
@@ -23,6 +24,7 @@
             <TrackListMediaButton
               :value="playing"
               :hover="hover"
+              :disabled="!item.isPlayable"
               :track-number="item.index + 1"
               @input="onMediaButtonClicked"
             />
@@ -103,6 +105,7 @@ import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { useButtonSize } from '~/services/use/style';
 import { getImageSrc } from '~/utils/image';
+import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
@@ -148,8 +151,8 @@ export default defineComponent({
       path: `/releases/${props.item.releaseId}`,
       query: { track: props.item.id },
     }));
-    const textColor = computed(() => (props.set ? 'active--text' : undefined));
-    const subtextColor = computed(() => (props.set ? 'active--text' : 'subtext--text'));
+    const textColor = computed(() => textColorClass(props.set, !props.item.isPlayable));
+    const subtextColor = computed(() => (subtextColorClass(props.set, !props.item.isPlayable)));
     const buttonSize = useButtonSize(root);
 
     // row をコピーしたものを参照する

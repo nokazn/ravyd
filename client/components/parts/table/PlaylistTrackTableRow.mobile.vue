@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 import type { RawLocation } from 'vue-router';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
@@ -110,7 +110,7 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseArtwork,
     FavoriteButton,
@@ -179,19 +179,14 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onRowClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
-    },
-    onMediaButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
-    },
-    onFavoriteButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
-    },
+  setup(props, { emit }) {
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, props.item); };
+
+    return {
+      onRowClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>

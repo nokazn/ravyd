@@ -121,9 +121,7 @@
         nuxt
         :to="item.to"
       >
-        <span
-          :class="[$route.fullPath === item.to ? 'active--text' : 'subtext--text']"
-        >
+        <span :class="subtextColor(item)">
           {{ item.title }}
         </span>
       </v-tab>
@@ -154,6 +152,7 @@ import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/Favo
 import ArtistMenu, { On as OnMenu } from '~/components/parts/menu/ArtistMenu.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
+import { subtextColorClass } from '~/utils/text';
 import {
   getArtistInfo,
   getIsFollowing,
@@ -253,6 +252,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     return length > 0
       ? [top, relatedArtist]
       : [top];
+  }
+  get subtextColor() {
+    return (item: TabItem) => subtextColorClass(this.$route.fullPath === item.to);
   }
 
   mounted() {

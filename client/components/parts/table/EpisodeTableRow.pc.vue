@@ -83,8 +83,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, PropType } from '@vue/composition-api';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
@@ -103,7 +102,7 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     PlaylistMediaButton,
     ExplicitChip,
@@ -147,16 +146,16 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onRowClicked() {
-      this.$emit(ON_ROW_CLICKED, this.item);
-    },
-    onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
-    },
-    onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
-    },
+  setup(props, { emit }) {
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    const onMediaButtonClicked = () => { emit(ON_MEDIA_BUTTON_CLICKED, props.item); };
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, props.item); };
+
+    return {
+      onRowClicked,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>

@@ -232,19 +232,16 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onRowClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
-    },
-    onMediaButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
-    },
-    onFavoriteButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
-    },
+  setup(props, { emit }) {
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    const onMediaButtonClicked = () => { emit(ON_MEDIA_BUTTON_CLICKED, props.item); };
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, props.item); };
+
+    return {
+      onRowClicked,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>

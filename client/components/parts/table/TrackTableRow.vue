@@ -5,9 +5,8 @@
     :active="active"
     :button-size="buttonSize"
     :title-color="titleColor"
-    :subtext-color="subtextColor"
+    :subtitle-color="subtextColor"
     @on-row-clicked="onRowClicked"
-    @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
   <TrackTableRowPc
@@ -17,7 +16,7 @@
     :playing="playing"
     :button-size="buttonSize"
     :title-color="titleColor"
-    :subtext-color="subtextColor"
+    :subtitle-color="subtextColor"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -25,10 +24,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import TrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
 import TrackTableRowPc, { On as OnPc } from '~/components/parts/table/TrackTableRow.pc.vue';
+import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
@@ -37,7 +36,7 @@ export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = OnMobile | OnPc;
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     TrackTableRowMobile,
     TrackTableRowPc,
@@ -66,32 +65,20 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    titleColor(): string | undefined {
-      return this.set
-        ? 'active--text'
-        : undefined;
-    },
-    subtextColor(): string {
-      return this.set
-        ? 'active--text'
-        : 'subtext--text';
-    },
-  },
+  setup(props, { emit }) {
+    const titleColor = computed(() => textColorClass(props.set, !props.item.isPlayable));
+    const subtextColor = computed(() => subtextColorClass(props.set, !props.item.isPlayable));
+    const onRowClicked = (row: On['on-row-clicked']) => { emit(ON_ROW_CLICKED, row); };
+    const onMediaButtonClicked = (row: On['on-media-button-clicked']) => { emit(ON_MEDIA_BUTTON_CLICKED, row); };
+    const onFavoriteButtonClicked = (row: On['on-favorite-button-clicked']) => { emit(ON_FAVORITE_BUTTON_CLICKED, row); };
 
-  methods: {
-    onRowClicked(row: On['on-row-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, row);
-    },
-    onMediaButtonClicked(row: On['on-media-button-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, row);
-    },
-    onFavoriteButtonClicked(row: On['on-favorite-button-clicked']) {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
-    },
+    return {
+      titleColor,
+      subtextColor,
+      onRowClicked,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>
