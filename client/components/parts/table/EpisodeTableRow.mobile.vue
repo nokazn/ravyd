@@ -23,7 +23,7 @@
         </div>
 
         <div
-          :class="[$style.Content__subtitle, subtitleColor]"
+          :class="subtitleColor"
           class="g-ellipsis-text g-small-text"
           :title="item.description"
         >
@@ -52,25 +52,18 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, PropType } from '@vue/composition-api';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-import {
-  ON_ROW_CLICKED,
-  ON_MEDIA_BUTTON_CLICKED,
-  ON_FAVORITE_BUTTON_CLICKED,
-} from '~/components/parts/table/EpisodeTableRow.vue';
+import { ON_ROW_CLICKED } from '~/components/parts/table/EpisodeTableRow.vue';
 import type { App } from '~~/types';
 
 export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
+  [ON_ROW_CLICKED]: App.PlaylistTrackDetail;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ExplicitChip,
     EpisodeProgressBar,
@@ -108,16 +101,9 @@ export default Vue.extend({
     },
   },
 
-  methods: {
-    onRowClicked() {
-      this.$emit(ON_ROW_CLICKED, this.item);
-    },
-    onMediaButtonClicked() {
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, this.item);
-    },
-    onFavoriteButtonClicked() {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, this.item);
-    },
+  setup(props, { emit }) {
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    return { onRowClicked };
   },
 });
 </script>
