@@ -11,16 +11,16 @@ const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-const artist = {
-  id: 'id',
+const artist = (i: number) => ({
+  id: `id${i}`,
   name: 'name',
   uri: 'uri',
-};
+});
 const item: App.TrackDetail = {
   id: 'id',
   name: 'name',
   uri: 'uri',
-  artists: [artist],
+  artists: [artist(1)],
   durationMs: 100000,
   externalUrls: {
     spotify: 'path/to/spotify',
@@ -33,7 +33,7 @@ const item: App.TrackDetail = {
   index: 1,
   trackNumber: 1,
   discNumber: 1,
-  featuredArtists: [artist],
+  featuredArtists: [artist(2)],
   explicit: false,
   isPlayable: true,
   previewUrl: 'path/to/preview',

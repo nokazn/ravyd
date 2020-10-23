@@ -23,8 +23,7 @@
 
       <ArtistNames
         ellipsis
-        :artistsa="[...item.artists, ...item.featuredArtists]"
-        :artists="[]"
+        :artists="[...item.artists, ...item.featuredArtists]"
         :class="subtitleColor"
         class="g-small-text"
       />
