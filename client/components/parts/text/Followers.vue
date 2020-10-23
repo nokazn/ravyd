@@ -5,12 +5,11 @@
   >
     <v-icon
       v-if="!hideIcon"
-      :size="size * 1.25"
+      :size="iconSize"
       :color="subtext ? 'subtext' : undefined"
     >
       mdi-account-multiple
     </v-icon>
-
     <span :style="textStyles">
       {{ text }}
     </span>
@@ -18,13 +17,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 
-type Data = {
-  textStyles: { fontSize: string }
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     text: {
       type: String,
@@ -32,7 +27,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 14,
+      default: 13,
     },
     hideIcon: {
       type: Boolean,
@@ -44,11 +39,13 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const textStyles = { fontSize: `${this.size}px` };
+  setup(props) {
+    const textStyles = { fontSize: `${props.size}px` };
+    const iconSize = Math.floor(props.size * 1.25);
 
     return {
       textStyles,
+      iconSize,
     };
   },
 });
