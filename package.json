@@ -42,7 +42,7 @@
     "@vue/composition-api": "^1.0.0-beta.17",
     "connect-redis": "^5.0.0",
     "cookie-parser": "^1.4.5",
-    "dayjs": "^1.8.36",
+    "dayjs": "^1.9.4",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "ioredis": "^4.16.0",
