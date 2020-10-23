@@ -6,14 +6,16 @@
     >
       mdi-album
     </v-icon>
-    <span class="subtext--text">{{ discNumber }}</span>
+    <span class="subtext--text">
+      {{ discNumber }}
+    </span>
   </td>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     discNumber: {
       type: Number,

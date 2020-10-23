@@ -16,16 +16,16 @@ const activeClass = 'active--text';
 const inactiveClass = 'inactive--text';
 const subtextClass = 'subtext--text';
 
-const artist = {
-  id: 'id',
+const artist = (i: number) => ({
+  id: `id${i}`,
   name: 'name',
   uri: 'uri',
-};
+});
 const item = (isPlayable: boolean, type: 'track' | 'episode'): App.PlaylistTrackDetail => ({
   id: 'id',
   name: 'name',
   uri: 'uri',
-  artists: [artist],
+  artists: [artist(1)],
   durationMs: 100000,
   externalUrls: {
     spotify: 'path/to/spotify',
@@ -38,7 +38,7 @@ const item = (isPlayable: boolean, type: 'track' | 'episode'): App.PlaylistTrack
   index: 1,
   trackNumber: 1,
   discNumber: 1,
-  featuredArtists: [],
+  featuredArtists: [artist(2)],
   explicit: false,
   isPlayable,
   previewUrl: 'path/to/preview',

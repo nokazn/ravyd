@@ -37,11 +37,11 @@
             </span>
 
             <template v-if="item.featuredArtists.length > 0">
-              <span :class="subtextColor">-</span>
+              <span :class="subtitleColor">-</span>
               <ArtistNames
                 inline
                 :artists="item.featuredArtists"
-                :class="subtextColor"
+                :class="subtitleColor"
               />
             </template>
           </span>
@@ -68,8 +68,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import TrackListMediaButton from '~/components/parts/button/TrackListMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -89,7 +88,7 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     TrackListMediaButton,
     FavoriteButton,
@@ -120,35 +119,29 @@ export default Vue.extend({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    subtextColor: {
+    subtitleColor: {
       type: String,
       required: true,
     },
   },
 
-  computed: {
+  setup(props, { emit }) {
     // relink されたトラックを含む場合はインデックスを表示
-    trackNumber(): number {
-      const { item } = this;
-      return item.linkedFrom != null
-        ? item.index + 1
-        : item.trackNumber;
-    },
-  },
+    const trackNumber = computed(() => {
+      return props.item.linkedFrom != null
+        ? props.item.index + 1
+        : props.item.trackNumber;
+    });
+    const onRowClicked = () => { emit(ON_ROW_CLICKED, props.item); };
+    const onMediaButtonClicked = () => { emit(ON_MEDIA_BUTTON_CLICKED, props.item); };
+    const onFavoriteButtonClicked = () => { emit(ON_FAVORITE_BUTTON_CLICKED, props.item); };
 
-  methods: {
-    onRowClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_ROW_CLICKED, { ...this.item });
-    },
-    onMediaButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_MEDIA_BUTTON_CLICKED, { ...this.item });
-    },
-    onFavoriteButtonClicked() {
-      // row をコピーしたものを参照する
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, { ...this.item });
-    },
+    return {
+      trackNumber,
+      onRowClicked,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>

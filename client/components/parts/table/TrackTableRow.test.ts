@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
-import EpisodeTableRow from './EpisodeTableRow.vue';
-import EpisodeTableRowMobile from '~/components/parts/table/EpisodeTableRow.mobile.vue';
-import EpisodeTableRowPc from '~/components/parts/table/EpisodeTableRow.pc.vue';
+import TrackTableRow from './TrackTableRow.vue';
+import TrackTableRowMobile from '~/components/parts/table/TrackTableRow.mobile.vue';
+import TrackTableRowPc from '~/components/parts/table/TrackTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
 import { App } from '~~/types';
 
@@ -11,35 +11,39 @@ const ON_ROW_CLICKED = 'on-row-clicked';
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-const item: App.EpisodeDetail = {
-  index: 1,
+const artist = {
   id: 'id',
   name: 'name',
   uri: 'uri',
-  description: 'description',
-  images: [],
-  isPlayable: true,
-  explicit: false,
-  releaseDate: '2020',
-  releaseDatePrecision: 'year',
+};
+const item: App.TrackDetail = {
+  id: 'id',
+  name: 'name',
+  uri: 'uri',
+  artists: [artist],
   durationMs: 100000,
-  resumePoint: {
-    fully_played: false,
-    resume_position_ms: 0,
-  },
   externalUrls: {
     spotify: 'path/to/spotify',
   },
+  isSaved: true,
+  releaseId: 'releaseId',
+  releaseName: 'releaseName',
+  images: [],
+  linkedFrom: undefined,
+  index: 1,
+  trackNumber: 1,
+  discNumber: 1,
+  featuredArtists: [artist],
+  explicit: false,
+  isPlayable: true,
   previewUrl: 'path/to/preview',
-  showId: 'showId',
-  showName: 'showName',
 };
 const factory = (columnType: 'single' | 'multi') => {
-  return mount(EpisodeTableRow, {
+  return mount(TrackTableRow, {
     ...options,
     propsData: {
       item,
-      publisher: 'publisher',
+      active: false,
       set: false,
       playing: false,
     },
@@ -53,40 +57,40 @@ const factory = (columnType: 'single' | 'multi') => {
   });
 };
 
-describe('EpisodeTableRow', () => {
+describe('TrackTableRow', () => {
   it('mobile', () => {
     const wrapper = factory('single');
-    expect(wrapper.findComponent(EpisodeTableRowMobile).exists()).toBe(true);
-    expect(wrapper.findComponent(EpisodeTableRowPc).exists()).toBe(false);
+    expect(wrapper.findComponent(TrackTableRowMobile).exists()).toBe(true);
+    expect(wrapper.findComponent(TrackTableRowPc).exists()).toBe(false);
   });
 
   it('pc', () => {
     const wrapper = factory('multi');
-    expect(wrapper.findComponent(EpisodeTableRowPc).exists()).toBe(true);
-    expect(wrapper.findComponent(EpisodeTableRowMobile).exists()).toBe(false);
+    expect(wrapper.findComponent(TrackTableRowPc).exists()).toBe(true);
+    expect(wrapper.findComponent(TrackTableRowMobile).exists()).toBe(false);
   });
 
   it('emit on click item in mobile', async () => {
     const wrapper = factory('single');
-    await wrapper.findComponent(EpisodeTableRowMobile).trigger(CLICK);
+    await wrapper.findComponent(TrackTableRowMobile).trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item);
   });
 
   it('emit on click item in pc', async () => {
     const wrapper = factory('multi');
-    await wrapper.findComponent(EpisodeTableRowPc).trigger(CLICK);
+    await wrapper.findComponent(TrackTableRowPc).trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item);
   });
 
   it('emit on media button item in pc', async () => {
     const wrapper = factory('multi');
-    await wrapper.findComponent(EpisodeTableRowPc).vm.$emit(ON_MEDIA_BUTTON_CLICKED, item);
+    await wrapper.findComponent(TrackTableRowPc).vm.$emit(ON_MEDIA_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)?.[0][0]).toEqual(item);
   });
 
   it('emit on favorite button item in pc', async () => {
     const wrapper = factory('multi');
-    await wrapper.findComponent(EpisodeTableRowPc).vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item);
+    await wrapper.findComponent(TrackTableRowPc).vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item);
   });
 });
