@@ -16,21 +16,11 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title
-        :class="{
-          'active--text': item.isActive,
-          'inactive--text': item.disabled,
-        }"
-      >
+      <v-list-item-title :class="textColor">
         {{ item.title }}
       </v-list-item-title>
 
-      <v-list-item-subtitle
-        :class="{
-          'active--text': item.isActive,
-          'inactive--text': item.disabled,
-        }"
-      >
+      <v-list-item-subtitle :class="subtextColor">
         <v-icon
           v-show="item.isActive"
           :color="iconColor"
@@ -49,6 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import { textColorClass, subtextColorClass, itemColor } from '~/utils/text';
 import { App, SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
@@ -101,15 +92,25 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const icon = computed(() => deviceIcon(props.item.type));
-    const iconColor = computed(() => {
-      if (props.item.disabled) return 'inactive';
-      return props.item.isActive ? 'active' : undefined;
-    });
+    const textColor = computed(() => textColorClass(
+      props.item.isActive,
+      props.item.disabled,
+    ));
+    const subtextColor = computed(() => subtextColorClass(
+      props.item.isActive,
+      props.item.disabled,
+    ));
+    const iconColor = computed(() => itemColor(
+      props.item.isActive,
+      props.item.disabled,
+    ));
     const onClick = () => { emit(CLICK, props.item.id); };
 
     return {
       icon,
       iconColor,
+      textColor,
+      subtextColor,
       onClick,
     };
   },

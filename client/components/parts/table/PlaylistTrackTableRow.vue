@@ -49,6 +49,7 @@ import type { RawLocation } from 'vue-router';
 import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
 import PlaylistTrackTableRowPc, { On as OnPc } from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { getImageSrc } from '~/utils/image';
+import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~~/types';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
@@ -134,16 +135,10 @@ export default Vue.extend({
         .join(', ');
     },
     titleColor(): string | undefined {
-      if (this.disabled) return 'inactive--text';
-      return this.set
-        ? 'active--text'
-        : undefined;
+      return textColorClass(this.set, this.disabled);
     },
     subtitleColor(): string {
-      if (this.disabled) return 'inactive--text';
-      return this.set
-        ? 'active--text'
-        : 'subtext--text';
+      return subtextColorClass(this.set, this.disabled);
     },
   },
 

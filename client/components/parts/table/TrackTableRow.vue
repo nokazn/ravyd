@@ -29,6 +29,7 @@ import Vue, { PropType } from 'vue';
 
 import TrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
 import TrackTableRowPc, { On as OnPc } from '~/components/parts/table/TrackTableRow.pc.vue';
+import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
@@ -68,14 +69,10 @@ export default Vue.extend({
 
   computed: {
     titleColor(): string | undefined {
-      return this.set
-        ? 'active--text'
-        : undefined;
+      return textColorClass(this.set);
     },
     subtextColor(): string {
-      return this.set
-        ? 'active--text'
-        : 'subtext--text';
+      return subtextColorClass(this.set);
     },
   },
 

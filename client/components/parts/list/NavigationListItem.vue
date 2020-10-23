@@ -7,7 +7,6 @@
     dense
     :class="{
       [$style['NavigationListItem--dense']]: dense,
-      'g-no-text-decoration': true,
     }"
     class="g-no-text-decoration"
   >
@@ -22,12 +21,7 @@
     </v-list-item-icon>
 
     <v-list-item-content>
-      <v-list-item-title
-        :class="{
-          [$style.NavigationListItem__title]: true,
-          'active--text': item.isSet,
-        }"
-      >
+      <v-list-item-title :class="[$style.NavigationListItem__title, titleColor]">
         <span class="g-ellipsis-text">
           {{ item.name }}
         </span>
@@ -44,7 +38,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import { textColorClass } from '~/utils/text';
 
 export type Item = {
   name: string
@@ -64,6 +59,11 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+
+  setup(props) {
+    const titleColor = computed(() => textColorClass(props.item.isSet));
+    return { titleColor };
   },
 });
 </script>

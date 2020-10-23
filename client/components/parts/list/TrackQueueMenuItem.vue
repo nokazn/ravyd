@@ -17,21 +17,13 @@
 
     <v-list-item-content>
       <v-list-item-title
-        :class="[
-          $style.TrackQueueMenuItem__title,
-          item.isSet ? 'active--text' : undefined
-        ]"
+        :class="[$style.TrackQueueMenuItem__title, titleColor]"
         class="g-ellipsis-text"
       >
         {{ item.name }}
       </v-list-item-title>
 
-      <v-list-item-subtitle
-        :class="[
-          $style.TrackQueueMenuItem__subtitle,
-          item.isSet ? 'active--text' : 'subtext--text'
-        ]"
-      >
+      <v-list-item-subtitle :class="[$style.TrackQueueMenuItem__subtitle, subtitleColor]">
         <template v-if="item.type === 'track'">
           <ArtistNames
             inline
@@ -56,7 +48,7 @@
       <TrackTime
         v-if="item.durationMs != null"
         :time-ms="item.durationMs"
-        :class="item.isSet ? 'active--text' : 'subtext--text'"
+        :class="subtitleColor"
       />
       <v-icon
         v-show="item.isPlaying"
@@ -72,12 +64,12 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/utils/image';
-import { App } from '~~/types';
+import { textColorClass, subtextColorClass } from '~/utils/text';
+import type { App } from '~~/types';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
@@ -110,6 +102,8 @@ export default defineComponent({
       root.$constant.TRACK_LIST_ARTWORK_SIZE,
     ));
     const releasePath = computed(() => `/releases/${props.item.releaseId}`);
+    const titleColor = computed(() => textColorClass(props.item.isSet));
+    const subtitleColor = computed(() => subtextColorClass(props.item.isSet));
     const onItemClicked = () => {
       emit(ON_ITEM_CLICKED, {
         index: props.item.index,
@@ -121,6 +115,8 @@ export default defineComponent({
     return {
       artworkSrc,
       releasePath,
+      titleColor,
+      subtitleColor,
       onItemClicked,
       onLinkClicked,
     };
