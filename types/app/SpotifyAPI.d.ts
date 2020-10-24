@@ -439,9 +439,7 @@ export namespace SpotifyAPI {
       filter_enabled: boolean
       filter_locked: boolean
     }
-    external_urls: {
-      [key: string]: string
-    }
+    external_urls: ExternalUrls
     followers: Followers
     href: string
     id: string
