@@ -44,8 +44,12 @@ import { getCategoryList } from '~/services/local/browse';
 import { App } from '~~/types';
 
 interface AsyncData {
-  isFullCategoryList: boolean
-  categoryList: App.CategoryInfo[] | undefined
+  isFullCategoryList: boolean;
+  categoryList: App.CategoryInfo[] | undefined;
+}
+
+interface Data {
+  title: string;
 }
 
 const LIMIT_OF_CATEGORIES = 30;
@@ -68,19 +72,21 @@ const LIMIT_OF_CATEGORIES = 30;
       categoryList,
     };
   },
-
-  head() {
-    return {
-      title: '見つける',
-    };
-  },
 })
-export default class BrowsePage extends Vue implements AsyncData {
+export default class BrowsePage extends Vue implements AsyncData, Data {
   isFullCategoryList = false;
   categoryList: App.CategoryInfo[] | undefined = undefined;
 
+  title = '見つける';
+
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
+  }
+
+  head() {
+    return {
+      title: this.title,
+    };
   }
 
   async getCategoryList() {
