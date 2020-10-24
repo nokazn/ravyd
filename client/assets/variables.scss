@@ -226,6 +226,25 @@ $__layer-map: (
 }
 
 /*
+ * 両端の影を疑似要素で表現
+ */
+@mixin edge-gradation($to-left-or-right) {
+  display: block;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: $g-gradation-width;
+  content: "";
+  background-image:
+    linear-gradient(
+      to #{$to-left-or-right},
+      rgba($g-background-color, 1),
+      rgba($g-background-color, 0),
+    );
+  z-index: z-index-of(text-gradation);
+}
+
+/*
  * ヘッダーの portal に表示させるボタン
  */
 @mixin additional-header-content() {

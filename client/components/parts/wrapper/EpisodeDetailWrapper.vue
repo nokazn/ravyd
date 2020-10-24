@@ -29,12 +29,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import type { App } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseDate,
     ReleaseDuration,
