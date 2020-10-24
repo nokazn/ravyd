@@ -135,40 +135,20 @@ export default defineComponent({
 
   // 左のグラデーション
   &::before {
-    display: block;
-    position: absolute;
-    top: 0;
+    // to right
+    @include edge-gradation(right);
+
     // @todo 少しはみでてしまうのを調整している
     left: -1px;
-    height: 100%;
-    width: $g-gradation-width;
-    content: "";
-    background-image:
-      linear-gradient(
-        to right,
-        rgba($g-background-color, 1),
-        rgba($g-background-color, 0),
-      );
-    z-index: z-index-of(text-gradation);
   }
 
   // 右のグラデーション
   &::after {
-    display: block;
-    position: absolute;
-    top: 0;
+    // to left
+    @include edge-gradation(left);
+
     // @todo 少しはみでてしまうのを調整している
     right: -1px;
-    height: 100%;
-    width: $g-gradation-width;
-    content: "";
-    background-image:
-      linear-gradient(
-        to left,
-        rgba($g-background-color, 1),
-        rgba($g-background-color, 0),
-      );
-    z-index: z-index-of(text-gradation);
   }
 }
 </style>
