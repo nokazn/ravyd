@@ -8,11 +8,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { elapsedTime } from '~~/utils/elapsedTime';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     timeMs: {
       type: Number,
@@ -24,13 +24,14 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    time(): string {
-      return elapsedTime(this.timeMs);
-    },
-    title(): string {
-      return elapsedTimeInJapanese(this.timeMs);
-    },
+  setup(props) {
+    const time = computed(() => elapsedTime(props.timeMs));
+    const title = computed(() => elapsedTimeInJapanese(props.timeMs));
+
+    return {
+      time,
+      title,
+    };
   },
 });
 </script>

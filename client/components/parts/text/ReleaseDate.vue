@@ -5,7 +5,7 @@
   >
     <v-icon
       v-if="!hideIcon"
-      :size="size * 1.25"
+      :size="iconSize"
       :color="subtext ? 'subtext' : undefined"
     >
       mdi-calendar
@@ -20,17 +20,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 import { convertReleaseDate } from '~/utils/converter';
 
-export type Data = {
-  date: string
-  datetime: string
-  title: string
-  textStyles: { fontSize: string }
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     releaseDate: {
       type: String,
@@ -39,13 +32,10 @@ export default Vue.extend({
     releaseDatePrecision: {
       type: String as PropType<'year' | 'month' | 'day'>,
       required: true,
-      validator(value) {
-        return ['year', 'month', 'day'].some((ele) => ele === value);
-      },
     },
     size: {
       type: Number,
-      default: 14,
+      default: 13,
     },
     subtext: {
       type: Boolean,
@@ -57,19 +47,21 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const { releaseDate, releaseDatePrecision } = this;
+  setup(props) {
     const date = convertReleaseDate({
-      releaseDate,
-      releaseDatePrecision,
+      releaseDate: props.releaseDate,
+      releaseDatePrecision: props.releaseDatePrecision,
     });
     const title = `${date}リリース`;
-    const textStyles = { fontSize: `${this.size}px` };
+    const textStyles = { fontSize: `${props.size}px` };
+    const iconSize = Math.floor(props.size * 1.25);
+
     return {
       date,
-      datetime: releaseDate,
       title,
+      datetime: props.releaseDate,
       textStyles,
+      iconSize,
     };
   },
 });

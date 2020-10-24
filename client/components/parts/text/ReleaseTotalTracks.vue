@@ -5,7 +5,7 @@
   >
     <v-icon
       v-if="!hideIcon"
-      :size="size * 1.25"
+      :size="iconSize"
       :color="subtext ? 'subtext' : undefined"
     >
       mdi-music-box-multiple-outline
@@ -17,13 +17,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
-export type Data = {
-  textStyles: { fontSize: string }
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     total: {
       type: Number,
@@ -35,7 +31,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 14,
+      default: 13,
     },
     subtext: {
       type: Boolean,
@@ -47,20 +43,18 @@ export default Vue.extend({
     },
   },
 
-  data() {
-    const textStyles = { fontSize: `${this.size}px` };
+  setup(props) {
+    const textStyles = { fontSize: `${props.size}px` };
+    const iconSize = Math.floor(props.size * 1.25);
+    const text = computed(() => `${props.total}${props.unit}`);
+    const title = computed(() => `全${text.value}`);
+
     return {
       textStyles,
+      iconSize,
+      text,
+      title,
     };
-  },
-
-  computed: {
-    text(): string {
-      return `${this.total}${this.unit}`;
-    },
-    title(): string {
-      return `全${this.text}`;
-    },
   },
 });
 </script>
