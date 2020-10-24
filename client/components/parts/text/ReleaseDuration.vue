@@ -5,12 +5,11 @@
   >
     <v-icon
       v-if="!hideIcon"
-      :size="size * 1.25"
+      :size="iconSize"
       :color="subtext ? 'subtext' : undefined"
     >
       mdi-clock-outline
     </v-icon>
-
     <span :style="textStyles">
       {{ duration.text }}
     </span>
@@ -18,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
 type Duration = {
@@ -26,11 +25,7 @@ type Duration = {
   title: string
 }
 
-export type Data = {
-  textStyles: { fontSize: string }
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     durationMs: {
       type: Number,
@@ -42,7 +37,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 14,
+      default: 13,
     },
     hideIcon: {
       type: Boolean,
@@ -54,25 +49,25 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const textStyles = { fontSize: `${this.size}px` };
-    return {
-      textStyles,
-    };
-  },
-
-  computed: {
-    duration(): Duration {
-      const elapsedTime = elapsedTimeInJapanese(this.durationMs);
-      const text = this.hasMore
+  setup(props) {
+    const textStyles = { fontSize: `${props.size}px` };
+    const iconSize = Math.floor(props.size * 1.25);
+    const duration = computed<Duration>(() => {
+      const elapsedTime = elapsedTimeInJapanese(props.durationMs);
+      const text = props.hasMore
         ? `${elapsedTime} + α`
         : elapsedTime;
-
       return {
         text,
         title: `全${text}`,
       };
-    },
+    });
+
+    return {
+      textStyles,
+      iconSize,
+      duration,
+    };
   },
 });
 </script>

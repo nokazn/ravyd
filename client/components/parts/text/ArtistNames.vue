@@ -24,7 +24,7 @@
             v-if="hasImages(artist)"
             type="artist"
             :size="avatarSize"
-            :src="getImageSrc(artist)"
+            :src="imageSrc(artist)"
             :alt="artist.name"
             :title="artist.name"
             :class="$style.Artist__avatar"
@@ -41,7 +41,7 @@
         <nuxt-link
           :to="artistPath(artist.id)"
           :title="artist.name"
-          @click.native.stop="onClicked"
+          @click.native.stop="onClick"
         >
           {{ artist.name }}
         </nuxt-link>
@@ -52,8 +52,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
 import type { App, SpotifyAPI } from '~~/types';
@@ -66,7 +65,7 @@ export type On = {
 
 type Artist = App.SimpleArtistInfo | SpotifyAPI.Artist;
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     UserAvatar,
   },
@@ -98,40 +97,32 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artistNames(): string {
-      return this.artists
-        .map((artist) => artist.name)
-        .join(', ');
-    },
-    hasImages(): (artist: Artist) => boolean {
-      return (artist: Artist) => {
-        if ('images' in artist) {
-          return (artist.images?.length ?? 0) > 0;
-        }
-        return false;
-      };
-    },
-    getImageSrc(): (artist: Artist) => string | undefined {
-      return (artist: Artist) => {
-        if ('images' in artist) {
-          return getImageSrc(artist.images, this.avatarSize);
-        }
-        return undefined;
-      };
-    },
-    artistPath(): (id: string) => string {
-      return (id: string) => `/artists/${id}`;
-    },
-    hasMultipleArtists(): boolean {
-      return this.artists.length > 1;
-    },
-  },
+  setup(props, { emit }) {
+    const artistNames = computed(() => props.artists
+      .map((artist) => artist.name)
+      .join(', '));
+    const hasImages = (artist: Artist) => {
+      return 'images' in artist
+        ? (artist.images?.length ?? 0) > 0
+        : false;
+    };
+    const imageSrc = (artist: Artist): string | undefined => {
+      return 'images' in artist
+        ? getImageSrc(artist.images, props.avatarSize)
+        : undefined;
+    };
+    const artistPath = (id: string) => `/artists/${id}`;
+    const hasMultipleArtists = computed(() => props.artists.length > 1);
+    const onClick = () => { emit(CLICK); };
 
-  methods: {
-    onClicked() {
-      this.$emit(CLICK);
-    },
+    return {
+      artistNames,
+      hasImages,
+      imageSrc,
+      artistPath,
+      hasMultipleArtists,
+      onClick,
+    };
   },
 });
 </script>

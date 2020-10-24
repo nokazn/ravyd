@@ -6,7 +6,7 @@
     }"
   >
     <UserAvatar
-      v-if="avatar && src != null"
+      v-if="avatar"
       type="user"
       :src="src"
       :size="SIZE_OF_AVATAR"
@@ -20,19 +20,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from '~~/types';
 
 const SIZE_OF_AVATAR = 28;
 
-type Data = {
-  SIZE_OF_AVATAR: number
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     UserAvatar,
   },
@@ -52,22 +47,17 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  setup(props) {
+    const src = computed(() => getImageSrc(props.user.images, SIZE_OF_AVATAR));
+    const userPath = computed(() => `/users/${props.user.id}`);
+    const userName = computed(() => props.user.display_name ?? props.user.id);
+
     return {
       SIZE_OF_AVATAR,
+      src,
+      userPath,
+      userName,
     };
-  },
-
-  computed: {
-    src(): string | undefined {
-      return getImageSrc(this.user.images, SIZE_OF_AVATAR);
-    },
-    userPath(): string {
-      return `/users/${this.user.id}`;
-    },
-    userName(): string {
-      return this.user.display_name ?? this.user.id;
-    },
   },
 });
 </script>

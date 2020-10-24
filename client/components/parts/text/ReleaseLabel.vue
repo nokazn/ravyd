@@ -5,7 +5,7 @@
   >
     <v-icon
       v-if="!hideIcon"
-      :size="size * 1.25"
+      :size="iconSize"
       :color="subtext ? 'subtext' : undefined"
     >
       mdi-album
@@ -17,14 +17,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 
-export type Data = {
-  title: string
-  textStyles: { fontSize: string }
-}
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     label: {
       type: String,
@@ -32,7 +27,7 @@ export default Vue.extend({
     },
     size: {
       type: Number,
-      default: 14,
+      default: 13,
     },
     subtext: {
       type: Boolean,
@@ -44,11 +39,14 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const title = `レーベル - ${this.label}`;
-    const textStyles = { fontSize: `${this.size}px` };
+  setup(props) {
+    const title = `レーベル - ${props.label}`;
+    const iconSize = Math.floor(props.size * 1.25);
+    const textStyles = { fontSize: `${props.size}px` };
+
     return {
       title,
+      iconSize,
       textStyles,
     };
   },
