@@ -21,10 +21,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     margin: {
       type: Number as PropType<number | undefined>,
@@ -42,15 +42,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    cssProps(): Record<string, string> {
-      const margin = this.margin ?? this.minWidth / 8;
-      return {
-        '--margin': `${margin}px`,
-        '--min-width': `${this.minWidth}px`,
-        '--max-width': `${this.maxWidth}px`,
-      };
-    },
+  setup(props) {
+    const cssProps = {
+      '--margin': `${(props.margin ?? props.minWidth) / 8}px`,
+      '--min-width': `${props.minWidth}px`,
+      '--max-width': `${props.maxWidth}px`,
+    };
+    return { cssProps };
   },
 });
 </script>

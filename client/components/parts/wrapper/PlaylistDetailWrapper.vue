@@ -39,13 +39,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from '@vue/composition-api';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import type { App } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ReleaseTotalTracks,
     ReleaseDuration,

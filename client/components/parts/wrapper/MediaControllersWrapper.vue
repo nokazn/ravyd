@@ -20,8 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import SkipButton from '~/components/containers/player/SkipButton.vue';
 import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
 import PreviousButton from '~/components/containers/player/PreviousButton.vue';
@@ -30,7 +29,7 @@ import NextButton from '~/components/containers/player/NextButton.vue';
 import RepeatButton from '~/components/containers/player/RepeatButton.vue';
 import { SpotifyAPI } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     SkipButton,
     ShuffleButton,
@@ -47,10 +46,9 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    isEpisode(): boolean {
-      return this.type === 'episode';
-    },
+  setup(props) {
+    const isEpisode = computed(() => props.type === 'episode');
+    return { isEpisode };
   },
 });
 </script>
