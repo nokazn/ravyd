@@ -1,11 +1,11 @@
 <template>
   <div
-    v-if="artistInfo != null"
+    v-if="artist != null"
     :class="$style.ArtistIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="artistInfo != null"
+        v-if="artist != null"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -24,7 +24,7 @@
           left
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :artist="artistInfo"
+          :artist="artist"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -40,14 +40,14 @@
         type="artist"
         :src="avatarSrc"
         :size="$screen.artworkSize"
-        :alt="artistInfo.name"
-        :title="artistInfo.name"
+        :alt="artist.name"
+        :title="artist.name"
       />
 
       <div :class="$style.Info">
         <HashTags
           outlined
-          :tags="artistInfo.genreList"
+          :tags="artist.genreList"
           :class="$style.Info__hashTags"
         />
 
@@ -69,14 +69,14 @@
         </div>
 
         <h1 :class="$style.Info__title">
-          {{ artistInfo.name }}
+          {{ artist.name }}
         </h1>
 
         <p
           class="subtext--text"
           :class="$style.Info__followers"
         >
-          {{ artistInfo.followersText }}
+          {{ artist.followersText }}
         </p>
 
         <div :class="$style.Info__buttons">
@@ -100,7 +100,7 @@
 
           <ArtistMenu
             outlined
-            :artist="artistInfo"
+            :artist="artist"
             :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
@@ -129,8 +129,8 @@
 
     <nuxt-child
       keep-alive
-      :artist-info="artistInfo"
-      :related-artist-list="relatedArtistList"
+      :artist="artist"
+      :related-artists="relatedArtistList"
     />
   </div>
 
@@ -154,7 +154,7 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { subtextColorClass } from '~/utils/text';
 import {
-  getArtistInfo,
+  getArtist,
   getIsFollowing,
   getRelatedArtistList,
 } from '~/services/local/_artistId';
@@ -169,7 +169,7 @@ type TabItem = {
 }
 
 interface AsyncData {
-  artistInfo: App.ArtistInfo | undefined;
+  artist: App.ArtistPage | undefined;
   isFollowing: boolean;
   relatedArtistList: App.ContentItemInfo<'artist'>[];
 }
@@ -197,16 +197,16 @@ interface Data {
 
   async asyncData(context): Promise<AsyncData> {
     const [
-      artistInfo,
+      artist,
       isFollowing,
       relatedArtistList,
     ] = await Promise.all([
-      getArtistInfo(context),
+      getArtist(context),
       getIsFollowing(context),
       getRelatedArtistList(context),
     ] as const);
     return {
-      artistInfo,
+      artist,
       isFollowing,
       relatedArtistList,
     };
@@ -215,7 +215,7 @@ interface Data {
   scrollToTop: true,
 })
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
-  artistInfo: App.ArtistInfo | undefined = undefined;
+  artist: App.ArtistPage | undefined = undefined;
   isFollowing = false;
   relatedArtistList: App.ContentItemInfo<'artist'>[] = [];
 
@@ -225,15 +225,15 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   head() {
     return {
-      title: this.artistInfo?.name ?? 'エラー',
+      title: this.artist?.name ?? 'エラー',
     };
   }
 
   get avatarSrc(): string | undefined {
-    return getImageSrc(this.artistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
+    return getImageSrc(this.artist?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isArtistSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.artistInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.artist?.uri);
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
@@ -259,7 +259,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
-    if (this.artistInfo != null) {
+    if (this.artist != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
@@ -268,10 +268,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
     // アーティストをフォロー/アンフォローした後呼ばれる
     const subscribeArtist = (mutationPayload: ExtendedMutationPayload<'library/artists/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.artistInfo == null) return;
-
+      if (this.artist == null) return;
       const [artistId, isFollowing] = mutationPayload.payload;
-      if (artistId === this.artistInfo.id) {
+      if (artistId === this.artist.id) {
         this.isFollowing = isFollowing;
         this.$commit('library/artists/DELETE_ACTUAL_IS_SAVED', artistId);
       }
@@ -299,24 +298,24 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
-    if (this.artistInfo == null) return;
+    if (this.artist == null) return;
 
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isArtistSet
         ? undefined
-        : { contextUri: this.artistInfo.uri });
+        : { contextUri: this.artist.uri });
     } else {
       this.$dispatch('playback/pause');
     }
   }
 
   toggleFollowingState(nextFollowingState: OnFollow['input'] | OnFavorite['input'] | OnMenu['on-follow-menu-clicked']) {
-    if (this.artistInfo == null) return;
+    if (this.artist == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.isFollowing = nextFollowingState;
 
-    const artistIdList = [this.artistInfo.id];
+    const artistIdList = [this.artist.id];
     if (nextFollowingState) {
       this.$dispatch('library/artists/followArtists', artistIdList);
     } else {

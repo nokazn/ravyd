@@ -9,7 +9,7 @@ export namespace App {
     rgb: Swatch['rgb']
   }
 
-  export type SimpleArtistInfo = {
+  export type MinimumArtist = {
     name: string
     id: string
     uri: string
@@ -30,7 +30,7 @@ export namespace App {
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     durationMs: number
     externalUrls: SpotifyAPI.ExternalUrls
     isSaved: boolean
@@ -43,7 +43,7 @@ export namespace App {
     index: number
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
-    featuredArtists: App.SimpleArtistInfo[]
+    featuredArtists: App.MinimumArtist[]
     explicit: boolean
     isPlayable: boolean
     externalIds?: SpotifyAPI.ExternalId
@@ -68,7 +68,7 @@ export namespace App {
     uri: string
     releaseId: string
     releaseName: string
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     images: SpotifyAPI.Image[]
     linkedFrom: SpotifyAPI.LinkedTrack | undefined
     durationMs: number | undefined
@@ -117,7 +117,7 @@ export namespace App {
     id: string // track または album の id
     name: string // track または album の name
     uri: string // track または album の name
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
@@ -132,34 +132,34 @@ export namespace App {
    // /releases/:releaseId page
   export type ReleasePage = {
     releaseType: 'アルバム' | 'シングル' | 'EP' | 'コンピレーション'
-    id: string
-    name: string
-    uri: string
-    artists: SpotifyAPI.Artist[]
-    releaseDate: string
-    releaseDatePrecision: string
-    totalTracks: number
-    durationMs: number
-    label: string
-    images: SpotifyAPI.Image[]
-    copyrightList: SpotifyAPI.Copyright[]
-    isSaved: boolean
-    trackList: App.TrackDetail[]
-    externalUrls: SpotifyAPI.ExternalUrls
-    genreList: string[]
-    isFullTrackList: boolean
-    artistReleaseList: (SimpleArtistInfo & { items: ReleaseCard<'album'>[] })[]
+    id: string;
+    name: string;
+    uri: string;
+    artists: SpotifyAPI.Artist[];
+    releaseDate: string;
+    releaseDatePrecision: string;
+    totalTracks: number;
+    durationMs: number;
+    label: string;
+    images: SpotifyAPI.Image[];
+    copyrightList: SpotifyAPI.Copyright[];
+    isSaved: boolean;
+    trackList: App.TrackDetail[];
+    externalUrls: SpotifyAPI.ExternalUrls;
+    genreList: string[];
+    isFullTrackList: boolean;
+    artistReleaseList: (MinimumArtist & { items: ReleaseCard<'album'>[] })[];
   }
 
   // /artists/:artistId page
-  export type ArtistInfo = {
-    name: string
-    id: string
-    uri: string
-    images: SpotifyAPI.Image[]
-    followersText: string | undefined
-    genreList: string[]
-    externalUrls: SpotifyAPI.ExternalUrls
+  export type ArtistPage = {
+    name: string;
+    id: string;
+    uri: string;
+    images: SpotifyAPI.Image[];
+    followersText: string | undefined;
+    genreList: string[];
+    externalUrls: SpotifyAPI.ExternalUrls;
   }
 
   // /playlists/:playlistId page

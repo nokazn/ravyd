@@ -2,12 +2,10 @@ import { Context } from '@nuxt/types';
 import { App } from '~~/types';
 import { getFollowersText } from '~/utils/converter';
 
-export const getArtistInfo = async (
+export const getArtist = async (
   { app, params }: Context,
-): Promise<App.ArtistInfo | undefined> => {
-  const artist = await app.$spotify.artists.getArtist({
-    artistId: params.artistId,
-  });
+): Promise<App.ArtistPage | undefined> => {
+  const artist = await app.$spotify.artists.getArtist({ artistId: params.artistId });
   if (artist == null) return undefined;
 
   const {

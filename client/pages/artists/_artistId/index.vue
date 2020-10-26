@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="artistInfo != null"
+    v-if="artist != null"
     :class="$style.ArtistIdTopPage"
   >
     <div
       :class="{
         [$style.TopContent]: true,
-        [$style['TopContent--twoColumns']]: relatedArtistList.length > 0,
+        [$style['TopContent--twoColumns']]: relatedArtists.length > 0,
       }"
     >
       <TrackListSection
@@ -18,15 +18,15 @@
         <TrackList
           :tracks="topTrackList"
           :length="topTrackLength"
-          :uri="artistInfo.uri"
+          :uri="artist.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
         />
       </TrackListSection>
 
       <ContentListSection
-        v-if="relatedArtistList.length > 0"
+        v-if="relatedArtists.length > 0"
         title="関連アーティスト"
-        :items="relatedArtistList"
+        :items="relatedArtists"
         :length="relatedArtistLength"
       />
     </div>
@@ -74,7 +74,7 @@ import {
   getReleaseListMap,
   getTopTrackList,
   initalReleaseListMap,
-  ArtistReleaseInfo,
+  ArtistRelease,
   ReleaseType,
 } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
@@ -90,7 +90,7 @@ const LIMIT_OF_RELEASES = 30;
 
 interface AsyncData {
   topTrackList: App.TrackDetail[]
-  releaseListMap: ArtistReleaseInfo
+  releaseListMap: ArtistRelease
   ABBREVIATED_RELEASE_LENGTH: number
 }
 
@@ -130,13 +130,13 @@ interface Data {
 })
 export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   @Prop([Object])
-  artistInfo!: App.ArtistInfo;
+  artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtistList!: App.ContentItemInfo<'artist'>[];
+  relatedArtists!: App.ContentItemInfo<'artist'>[];
 
   topTrackList: App.TrackDetail[] = [];
-  releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
+  releaseListMap: ArtistRelease = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   isAllTracksShown = false;

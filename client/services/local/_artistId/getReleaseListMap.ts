@@ -1,17 +1,28 @@
-import { Context } from '@nuxt/types';
-
+import type { Context } from '@nuxt/types';
 import { convertReleaseForCard } from '~/utils/converter';
-import {
-  TITLE_MAP,
-  ReleaseType,
-  ReleaseTitle,
-  ReleaseInfo,
-} from './index';
-import { OneToFifty } from '~~/types';
+import type { App, OneToFifty } from '~~/types';
 
-export type ArtistReleaseInfo<T extends ReleaseType = ReleaseType> = Map<T, ReleaseInfo<T>>
+export const TITLE_MAP = {
+  album: 'アルバム',
+  single: 'シングル・EP',
+  compilation: 'コンピレーション',
+  appears_on: '参加作品',
+} as const;
 
-export const initalReleaseListMap: ArtistReleaseInfo = new Map([
+export type ReleaseType = keyof typeof TITLE_MAP
+export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T]
+export type Release<T extends ReleaseType> = {
+  title: ReleaseTitle<T>;
+  items: App.ReleaseCard<'album'>[];
+  total: number;
+  isFull: boolean;
+  // undefined の時は最初からすべて表示
+  isAllShown: boolean | undefined;
+  isAppended: boolean;
+}
+export type ArtistRelease<T extends ReleaseType = ReleaseType> = Map<T, Release<T>>
+
+export const initalReleaseListMap: ArtistRelease = new Map([
   [
     'album',
     {
@@ -66,7 +77,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   releaseType: T
   limit: OneToFifty
   offset?: number
-}): Promise<[T, ReleaseInfo<T>]> => {
+}): Promise<[T, Release<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 
   const country = app.$getters()['auth/userCountryCode'];
@@ -102,7 +113,7 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
 export const getReleaseListMap = async (
   context: Context,
   limit: OneToFifty,
-): Promise<ArtistReleaseInfo<ReleaseType>> => {
+): Promise<ArtistRelease<ReleaseType>> => {
   const getReleaseList = getReleaseListHandler(context);
 
   const [album, single, compilation, appears_on] = await Promise.all([
@@ -124,7 +135,7 @@ export const getReleaseListMap = async (
     }),
   ] as const);
 
-  return new Map<ReleaseType, ReleaseInfo<ReleaseType>>([
+  return new Map<ReleaseType, Release<ReleaseType>>([
     album,
     single,
     compilation,

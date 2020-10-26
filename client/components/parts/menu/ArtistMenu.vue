@@ -30,7 +30,7 @@ export default defineComponent({
 
   props: {
     artist: {
-      type: Object as PropType<App.ArtistInfo>,
+      type: Object as PropType<App.ArtistPage>,
       required: true,
     },
     following: {

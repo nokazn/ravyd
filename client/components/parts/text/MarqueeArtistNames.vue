@@ -39,7 +39,7 @@ import { App } from '~~/types';
 export default defineComponent({
   props: {
     artists: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
+      type: Array as PropType<App.MinimumArtist[]>,
       required: true,
     },
   },
