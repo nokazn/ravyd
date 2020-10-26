@@ -171,8 +171,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
   isFollowing: boolean | undefined = undefined;
   userPlaylists: UserPlaylists = {
     items: [],
-    hasNext: true,
-    hasPrevious: true,
+    hasNext: false,
+    hasPrevious: false,
     total: 0,
   };
 

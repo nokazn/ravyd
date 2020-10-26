@@ -82,8 +82,8 @@ export default class CategoryIdPage extends Vue implements AsyncData, Data {
   category: SpotifyAPI.Category | undefined = undefined;
   playlists: CategoryPlaylists = {
     items: [],
-    hasNext: true,
-    hasPrevious: true,
+    hasNext: false,
+    hasPrevious: false,
   };
 
   mounted() {
