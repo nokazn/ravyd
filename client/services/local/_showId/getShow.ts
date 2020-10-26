@@ -2,9 +2,9 @@ import { Context } from '@nuxt/types';
 import { App } from '~~/types';
 import { convertEpisodeDetail } from '~/utils/converter';
 
-export const getShowInfo = async (
+export const getShow = async (
   { app, params }: Context,
-): Promise<App.ShowInfo | undefined> => {
+): Promise<App.ShowPage | undefined> => {
   const market = app.$getters()['auth/userCountryCode'];
   const show = await app.$spotify.shows.getShow({
     showId: params.showId,
@@ -31,8 +31,6 @@ export const getShowInfo = async (
     showName: name,
   }));
 
-  const isFullEpisodeList = episodes.next == null;
-
   return {
     id,
     name,
@@ -45,6 +43,7 @@ export const getShowInfo = async (
     description,
     episodeList,
     copyrightList,
-    isFullEpisodeList,
+    hasNextEpisode: episodes.next != null,
+    hasPreviousEpisode: episodes.previous != null,
   };
 };

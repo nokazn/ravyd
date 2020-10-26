@@ -1,2 +1,2 @@
 export * from './getIsSaved';
-export * from './getShowInfo';
+export * from './getShow';

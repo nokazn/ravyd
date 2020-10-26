@@ -74,6 +74,26 @@ export namespace App {
     durationMs: number | undefined
   }
 
+  // EpisodeTable component
+  export type EpisodeDetail = {
+    index: number
+    id: string
+    name: string
+    uri: string
+    description: string
+    images: SpotifyAPI.Image[]
+    isPlayable: boolean
+    explicit: boolean
+    releaseDate: string
+    releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
+    durationMs: number
+    resumePoint: SpotifyAPI.ResumePoint
+    externalUrls: SpotifyAPI.ExternalUrls
+    previewUrl: string | null
+    showId: string
+    showName: string
+  }
+
   export type DeviceInfo = {
     id: string | undefined
     type: SpotifyAPI.Device['type']
@@ -185,7 +205,7 @@ export namespace App {
   }
 
   // /shows/:showId page
-  export type ShowInfo = {
+  export type ShowPage = {
     id: string
     name: string
     uri: string
@@ -195,29 +215,10 @@ export namespace App {
     externalUrls: SpotifyAPI.ExternalUrls
     explicit: boolean
     description: string
-    episodeList: EpisodeDetail[]
     copyrightList: SpotifyAPI.Copyright[]
-    isFullEpisodeList: boolean
-  }
-
-  // /episodes/:episodeId page
-  export type EpisodeDetail = {
-    index: number
-    id: string
-    name: string
-    uri: string
-    description: string
-    images: SpotifyAPI.Image[]
-    isPlayable: boolean
-    explicit: boolean
-    releaseDate: string
-    releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
-    durationMs: number
-    resumePoint: SpotifyAPI.ResumePoint
-    externalUrls: SpotifyAPI.ExternalUrls
-    previewUrl: string | null
-    showId: string
-    showName: string
+    episodeList: EpisodeDetail[]
+    hasNextEpisode: boolean
+    hasPreviousEpisode: boolean
   }
 
   // /users/:userId page

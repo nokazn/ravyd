@@ -33,7 +33,7 @@ export default defineComponent({
 
   props: {
     show: {
-      type: Object as PropType<App.ShowInfo>,
+      type: Object as PropType<App.ShowPage>,
       required: true,
     },
     saved: {
