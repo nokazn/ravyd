@@ -1,10 +1,10 @@
 import { ExtendedMutationPayload, SFCCommit } from 'typed-vuex';
 import { App } from '~~/types';
 
-type TrackInfo = App.TrackDetail | App.PlaylistTrackDetail
+type Track = App.TrackDetail | App.PlaylistTrackDetail
 
 // library/tracks/SET_ACTUAL_IS_SAVED を subscribe
-export const checkTrackSavedState = <T extends TrackInfo>(
+export const checkTrackSavedState = <T extends Track>(
   mutation: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>,
   $commit: SFCCommit,
 ) => (currentTrackList: T[]): T[] => {

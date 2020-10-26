@@ -5,12 +5,12 @@ import { SearchState } from './state';
 import { App } from '~~/types';
 
 export type SearchGetters = {
-  tracks: App.ContentItemInfo<'track'>[]
-  artists: App.ContentItemInfo<'artist'>[]
-  albums: App.ContentItemInfo<'album'>[]
-  playlists: App.ContentItemInfo<'playlist'>[]
-  shows: App.ContentItemInfo<'show'>[]
-  episodes: App.ContentItemInfo<'episode'>[]
+  tracks: App.ContentItem<'track'>[]
+  artists: App.ContentItem<'artist'>[]
+  albums: App.ContentItem<'album'>[]
+  playlists: App.ContentItem<'playlist'>[]
+  shows: App.ContentItem<'show'>[]
+  episodes: App.ContentItem<'episode'>[]
 }
 
 export type RootGetters = {

@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="artistInfo != null"
+    v-if="artist != null"
     :class="$style.ArtistIdTopPage"
   >
     <div
       :class="{
         [$style.TopContent]: true,
-        [$style['TopContent--twoColumns']]: relatedArtistList.length > 0,
+        [$style['TopContent--twoColumns']]: relatedArtists.length > 0,
       }"
     >
       <TrackListSection
@@ -18,34 +18,34 @@
         <TrackList
           :tracks="topTrackList"
           :length="topTrackLength"
-          :uri="artistInfo.uri"
+          :uri="artist.uri"
           @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
         />
       </TrackListSection>
 
       <ContentListSection
-        v-if="relatedArtistList.length > 0"
+        v-if="relatedArtists.length > 0"
         title="関連アーティスト"
-        :items="relatedArtistList"
+        :items="relatedArtists"
         :length="relatedArtistLength"
       />
     </div>
 
-    <template v-for="[type, releaseInfo] in Array.from(releaseListMap.entries())">
+    <template v-for="[type, release] in Array.from(releaseListMap.entries())">
       <CardsSection
-        v-if="releaseInfo.items.length > 0"
+        v-if="release.items.length > 0"
         :key="type"
-        :title="releaseInfo.title"
-        :full="releaseInfo.isFull"
-        :value="releaseInfo.isAllShown"
+        :title="release.title"
+        :full="!release.hasNext && !release.hasPrevious"
+        :value="release.isAllShown"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
         @on-loading-appeared="appendReleaseList(type)"
       >
         <ReleaseCard
-          v-for="(item, index) in releaseInfo.items"
-          v-show="releaseInfo.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
+          v-for="(item, index) in release.items"
+          v-show="release.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
           :item="item"
           :min-width="$constant.FLEX_CARD_MIN_WIDTH"
@@ -74,7 +74,7 @@ import {
   getReleaseListMap,
   getTopTrackList,
   initalReleaseListMap,
-  ArtistReleaseInfo,
+  ArtistRelease,
   ReleaseType,
 } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
@@ -90,7 +90,7 @@ const LIMIT_OF_RELEASES = 30;
 
 interface AsyncData {
   topTrackList: App.TrackDetail[]
-  releaseListMap: ArtistReleaseInfo
+  releaseListMap: ArtistRelease
   ABBREVIATED_RELEASE_LENGTH: number
 }
 
@@ -130,13 +130,13 @@ interface Data {
 })
 export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   @Prop([Object])
-  artistInfo!: App.ArtistInfo;
+  artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtistList!: App.ContentItemInfo<'artist'>[];
+  relatedArtists!: App.ContentItem<'artist'>[];
 
   topTrackList: App.TrackDetail[] = [];
-  releaseListMap: ArtistReleaseInfo = initalReleaseListMap;
+  releaseListMap: ArtistRelease = initalReleaseListMap;
   ABBREVIATED_RELEASE_LENGTH = ABBREVIATED_RELEASE_LENGTH;
 
   isAllTracksShown = false;
@@ -219,7 +219,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   async appendReleaseList(type: ReleaseType) {
     const currentReleaseList = this.releaseListMap.get(type);
     // すべて読み込み済みの場合は何もしない
-    if (currentReleaseList == null || currentReleaseList.isFull) return;
+    if (currentReleaseList == null || !currentReleaseList.hasNext) return;
 
     this.releaseListMap = new Map(this.releaseListMap.set(type, {
       ...currentReleaseList,
@@ -234,12 +234,10 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
       offset,
     });
     const items = releases?.items.map(convertReleaseForCard) ?? [];
-    const isFull = releases?.next == null;
-
     this.releaseListMap = new Map(this.releaseListMap.set(type, {
       ...currentReleaseList,
       items: [...currentReleaseList.items, ...items],
-      isFull,
+      hasNext: releases?.next != null,
       // currentReleaseList ではまだ isAppended が反映されていないので再度指定する必要がある
       isAppended: true,
     }).entries());
@@ -249,7 +247,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     const currentReleaseList = this.releaseListMap.get(type);
     // すべて取得済みか初回の追加読み込みがなされている場合は何もしない
     if (currentReleaseList == null
-      || currentReleaseList.isFull
+      || (!currentReleaseList.hasNext && !currentReleaseList.hasPrevious)
       || currentReleaseList.isAppended) return;
     this.appendReleaseList(type);
   }

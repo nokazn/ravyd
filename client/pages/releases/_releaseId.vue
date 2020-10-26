@@ -1,11 +1,11 @@
 <template>
   <div
-    v-if="releaseInfo != null"
+    v-if="release != null"
     :class="$style.ReleaseIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="releaseInfo != null"
+        v-if="release != null"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -16,14 +16,14 @@
         <FavoriteButton
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :value="releaseInfo.isSaved"
+          :value="release.isSaved"
           @input="toggleSavedState"
         />
         <ReleaseMenu
           left
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :release="releaseInfo"
+          :release="release"
           @on-favorite-menu-clicked="toggleSavedState"
         />
       </div>
@@ -36,8 +36,8 @@
       <ReleaseArtwork
         :src="artworkSrc"
         :size="$screen.artworkSize"
-        :alt="releaseInfo.name"
-        :title="releaseInfo.name"
+        :alt="release.name"
+        :title="release.name"
         shadow
       />
 
@@ -46,21 +46,21 @@
           outlined
           color="subtext"
           text-color="white"
-          :tags="releaseInfo.genreList"
+          :tags="release.genreList"
           :class="$style.Info__hashTags"
         />
 
         <div class="g-small-text">
-          {{ releaseInfo.releaseType }}
+          {{ release.releaseType }}
         </div>
 
         <h1 :class="$style.Info__title">
-          {{ releaseInfo.name }}
+          {{ release.name }}
         </h1>
 
         <ArtistNames
           avatar
-          :artists="releaseInfo.artists"
+          :artists="release.artists"
           :class="$style.Info__artists"
         />
 
@@ -72,12 +72,12 @@
             />
             <FavoriteButton
               outlined
-              :value="releaseInfo.isSaved"
+              :value="release.isSaved"
               @input="toggleSavedState"
             />
             <ReleaseMenu
               outlined
-              :release="releaseInfo"
+              :release="release"
               :left="$screen.isSingleColumn"
               :right="$screen.isMultiColumn"
               @on-favorite-menu-clicked="toggleSavedState"
@@ -86,7 +86,7 @@
 
           <ReleaseDetailWrapper
             v-if="$screen.isMultiColumn"
-            :release="releaseInfo"
+            :release="release"
             :class="$style.Detail"
           />
         </div>
@@ -94,29 +94,29 @@
     </div>
 
     <TrackTable
-      :tracks="releaseInfo.trackList"
-      :uri="releaseInfo.uri"
+      :tracks="release.trackList"
+      :uri="release.uri"
       :class="$style.ReleaseIdPage__table"
       @on-favorite-button-clicked="onFavoriteTrackButtonClicked"
     />
 
     <IntersectionLoadingCircle
-      :loading="!releaseInfo.isFullTrackList"
+      :loading="release.hasNextTrack"
       @appear="appendTrackList"
     />
 
     <Copyrights
-      :copyrights="releaseInfo.copyrightList"
+      :copyrights="release.copyrightList"
       :class="$style.ReleaseIdPage__copyrights"
     />
 
     <ReleaseDetailWrapper
       v-if="$screen.isSingleColumn"
-      :release="releaseInfo"
+      :release="release"
       :class="$style.Detail"
     />
 
-    <template v-for="artist in releaseInfo.artistReleaseList">
+    <template v-for="artist in release.artistReleaseList">
       <ScrollableCardsSection
         v-if="artist.items.length > 0"
         :key="artist.id"
@@ -158,7 +158,7 @@ import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSe
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getReleaseInfo } from '~/services/local/_releaseId';
+import { getRelease } from '~/services/local/_releaseId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { getImageSrc } from '~/utils/image';
 import { convertTrackDetail } from '~/utils/converter';
@@ -168,12 +168,12 @@ const HEADER_REF = 'HEADER_REF';
 const LIMIT_OF_TRACKS = 30;
 
 interface AsyncData {
-  releaseInfo: App.ReleaseInfo | undefined
+  release: App.ReleasePage | undefined;
 }
 
 interface Data {
-  mutationUnsubscribe: (() => void) | undefined
-  HEADER_REF: string
+  mutationUnsubscribe: (() => void) | undefined;
+  HEADER_REF: string;
 }
 
 @Component({
@@ -198,29 +198,29 @@ interface Data {
   },
 
   async asyncData(context: Context): Promise<AsyncData> {
-    const releaseInfo = await getReleaseInfo(context);
+    const release = await getRelease(context);
     return {
-      releaseInfo,
+      release,
     };
   },
 })
 export default class ReleaseIdPage extends Vue implements AsyncData, Data {
-  releaseInfo: App.ReleaseInfo | undefined = undefined;
+  release: App.ReleasePage | undefined = undefined;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
 
   head() {
     return {
-      title: this.releaseInfo?.name ?? 'エラー',
+      title: this.release?.name ?? 'エラー',
     };
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.releaseInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
+    return getImageSrc(this.release?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isReleaseSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.releaseInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.release?.uri);
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
@@ -228,13 +228,13 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
-    if (this.releaseInfo != null) {
+    if (this.release != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.releaseInfo?.images, 40);
+    const artworkSrc = getImageSrc(this.release?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -242,26 +242,22 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     }
 
     const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.releaseInfo == null) return;
-
+      if (this.release == null) return;
       const trackList = checkTrackSavedState<App.TrackDetail>(
         mutationPayload,
         this.$commit,
-      )(this.releaseInfo.trackList);
-
-      this.releaseInfo = {
-        ...this.releaseInfo,
+      )(this.release.trackList);
+      this.release = {
+        ...this.release,
         trackList,
       };
     };
 
     const subscribeRelease = ({ payload: [releaseId, isSaved] }: ExtendedMutationPayload<'library/releases/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.releaseInfo == null) return;
-
-      if (releaseId === this.releaseInfo.id) {
-        this.releaseInfo.isSaved = isSaved;
+      if (this.release == null) return;
+      if (releaseId === this.release.id) {
+        this.release.isSaved = isSaved;
       }
-
       this.$commit('library/releases/DELETE_ACTUAL_IS_SAVED', releaseId);
     };
 
@@ -271,11 +267,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
         case 'library/tracks/SET_ACTUAL_IS_SAVED':
           subscribeTrack(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         case 'library/releases/SET_ACTUAL_IS_SAVED':
           subscribeRelease(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }
@@ -292,12 +286,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendTrackList(limit: OneToFifty = LIMIT_OF_TRACKS) {
-    if (this.releaseInfo == null
-      || this.releaseInfo.isFullTrackList) return;
+    if (this.release == null || !this.release.hasNextTrack) return;
 
-    const { releaseInfo } = this;
-    const releaseId = releaseInfo.id;
-    const offset = this.releaseInfo.trackList.length;
+    const currentRelease = this.release;
+    const releaseId = currentRelease.id;
+    const offset = this.release.trackList.length;
     const tracks = await this.$spotify.albums.getAlbumTracks({
       albumId: releaseId,
       market: this.$getters()['auth/userCountryCode'],
@@ -306,9 +299,9 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
     });
     if (tracks == null) {
       this.$toast.pushError('トラックが取得できませんでした。');
-      this.releaseInfo = {
-        ...releaseInfo,
-        isFullTrackList: true,
+      this.release = {
+        ...currentRelease,
+        hasNextTrack: false,
       };
       return;
     }
@@ -319,40 +312,38 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       isTrackSavedList,
       offset,
       releaseId,
-      releaseName: releaseInfo.name,
-      artistIdList: releaseInfo.artists.map((artist) => artist.id),
-      images: releaseInfo.images,
+      releaseName: currentRelease.name,
+      artistIdList: currentRelease.artists.map((artist) => artist.id),
+      images: currentRelease.images,
     }));
     const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);
-    const isFullTrackList = tracks.next == null;
-
-    this.releaseInfo = {
-      ...releaseInfo,
-      trackList: [...releaseInfo.trackList, ...trackList],
-      durationMs: releaseInfo.durationMs + durationMs,
-      isFullTrackList,
+    this.release = {
+      ...currentRelease,
+      trackList: [...currentRelease.trackList, ...trackList],
+      durationMs: currentRelease.durationMs + durationMs,
+      hasNextTrack: tracks.next != null,
     };
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnFavorite['input']) {
-    if (this.releaseInfo == null) return;
+    if (this.release == null) return;
 
     if (nextPlayingState) {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
       this.$dispatch('playback/play', this.isReleaseSet
         ? undefined
-        : { contextUri: this.releaseInfo.uri });
+        : { contextUri: this.release.uri });
     } else {
       this.$dispatch('playback/pause');
     }
   }
 
   toggleSavedState(nextSavedState: OnMediaButton['input'] | OnMenu['on-favorite-menu-clicked']) {
-    if (this.releaseInfo == null) return;
+    if (this.release == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
-    this.releaseInfo.isSaved = nextSavedState;
-    const releaseIdList = [this.releaseInfo.id];
+    this.release.isSaved = nextSavedState;
+    const releaseIdList = [this.release.id];
     if (nextSavedState) {
       this.$dispatch('library/releases/saveReleases', releaseIdList);
     } else {
@@ -361,14 +352,14 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   onFavoriteTrackButtonClicked({ index, id, isSaved }: OnTable['on-favorite-button-clicked']) {
-    if (this.releaseInfo == null) return;
+    if (this.release == null) return;
 
     const nextSavedState = !isSaved;
-    const { releaseInfo } = this;
-    const trackList = [...releaseInfo.trackList];
+    const currentRelease = this.release;
+    const trackList = [...currentRelease.trackList];
     trackList[index].isSaved = nextSavedState;
-    this.releaseInfo = {
-      ...releaseInfo,
+    this.release = {
+      ...currentRelease,
       trackList,
     };
 

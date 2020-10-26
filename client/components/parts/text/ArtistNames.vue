@@ -63,7 +63,7 @@ export type On = {
   [CLICK]: void;
 }
 
-type Artist = App.SimpleArtistInfo | SpotifyAPI.Artist;
+type Artist = App.MinimumArtist | SpotifyAPI.Artist;
 
 export default defineComponent({
   components: {

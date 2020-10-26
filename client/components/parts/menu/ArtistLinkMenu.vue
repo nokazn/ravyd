@@ -42,7 +42,7 @@ type MenuItem = {
 }
 
 export type Props = {
-  artists: App.SimpleArtistInfo[];
+  artists: App.MinimumArtist[];
   left?: boolean;
   right?: boolean;
 }
@@ -55,7 +55,7 @@ export default defineComponent({
 
   props: {
     artists: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
+      type: Array as PropType<App.MinimumArtist[]>,
       required: true,
     },
     left: {

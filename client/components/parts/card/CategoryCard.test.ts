@@ -5,9 +5,10 @@ import CategoryCard from './CategoryCard.vue';
 const factory = (isLoaded: boolean) => mount(CategoryCard, {
   ...options,
   propsData: {
-    id: 'foo',
-    name: 'foo',
-    images: [],
+    item: {
+      id: 'foo',
+      name: 'foo',
+    },
   },
   data() {
     return { isLoaded };

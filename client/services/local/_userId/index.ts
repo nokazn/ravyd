@@ -1,3 +1,3 @@
 export * from './getIsFollowing';
-export * from './getUserInfo';
+export * from './getUser';
 export * from './getUserPlaylists';

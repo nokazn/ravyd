@@ -75,7 +75,7 @@ export default defineComponent({
 
   props: {
     item: {
-      type: Object as PropType<App.ContentItemInfo>,
+      type: Object as PropType<App.ContentItem>,
       required: true,
     },
     selected: {

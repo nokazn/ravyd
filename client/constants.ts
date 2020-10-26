@@ -6,7 +6,7 @@ export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
  * colors
  */
 const rgb: [number, number, number] = [120, 122, 122];
-export const DEFAULT_DOMINANT_COLOR: App.DominantColorInfo = {
+export const DEFAULT_DOMINANT_COLOR: App.DominantColor = {
   hex: '#787a7a',
   rgb,
 } as const;

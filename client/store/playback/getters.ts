@@ -10,11 +10,11 @@ import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined
   playbackDeviceId: string | undefined
-  deviceList: App.DeviceInfo[]
+  deviceList: App.Device[]
   isThisAppPlaying: boolean
   isAnotherDevicePlaying: boolean
   currentTrack: App.SimpleTrackDetail | undefined
-  trackQueue: App.TrackQueueInfo[]
+  trackQueue: App.TrackQueue[]
   releaseId: string | undefined
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean

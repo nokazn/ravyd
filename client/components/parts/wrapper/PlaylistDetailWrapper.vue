@@ -54,7 +54,7 @@ export default defineComponent({
 
   props: {
     playlist: {
-      type: Object as PropType<App.PlaylistInfo>,
+      type: Object as PropType<App.PlaylistPage>,
       required: true,
     },
   },

@@ -1,11 +1,11 @@
 <template>
   <div
-    v-if="showInfo != null"
+    v-if="show != null"
     :class="$style.ShowIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="showInfo != null"
+        v-if="show != null"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -25,7 +25,7 @@
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
           :saved="isSaved"
-          :show="showInfo"
+          :show="show"
           @on-save-menu-clicked="toggleSavedState"
         />
       </div>
@@ -37,9 +37,9 @@
     >
       <ReleaseArtwork
         :src="artworkSrc"
-        :alt="showInfo.name"
+        :alt="show.name"
         :size="ARTWORK_SIZE"
-        :title="showInfo.name"
+        :title="show.name"
         shadow
       />
 
@@ -49,17 +49,17 @@
             ポッドキャスト
           </span>
           <ExplicitChip
-            v-if="showInfo.explicit"
+            v-if="show.explicit"
             :class="$style.Info__explicitIcon"
           />
         </div>
 
         <h1 :class="$style.Info__title">
-          {{ showInfo.name }}
+          {{ show.name }}
         </h1>
 
         <p>
-          {{ showInfo.publisher }}・{{ showInfo.totalEpisodes }}個のエピソード
+          {{ show.publisher }}・{{ show.totalEpisodes }}個のエピソード
         </p>
 
         <div :class="$style.Info__footer">
@@ -76,7 +76,7 @@
             />
             <ShowMenu
               outlined
-              :show="showInfo"
+              :show="show"
               :saved="isSaved"
               @on-save-menu-clicked="toggleSavedState"
             />
@@ -86,25 +86,25 @@
     </div>
 
     <p
-      v-if="showInfo.description"
+      v-if="show.description"
       class="subtext--text"
       :class="$style.ShowIdPage__description"
-      v-html="showInfo.description"
+      v-html="show.description"
     />
 
     <EpisodeTable
-      :episodes="showInfo.episodeList"
-      :uri="showInfo.uri"
-      :publisher="showInfo.publisher"
+      :episodes="show.episodeList"
+      :uri="show.uri"
+      :publisher="show.publisher"
       :class="$style.ShowIdPage__table"
     />
 
     <IntersectionLoadingCircle
-      :loading="!showInfo.isFullEpisodeList"
+      :loading="show.hasNextEpisode"
       @appear="appendEpisodeList"
     />
 
-    <Copyrights :copyrights="showInfo.copyrightList" />
+    <Copyrights :copyrights="show.copyrightList" />
   </div>
 
   <Fallback v-else>
@@ -127,7 +127,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getShowInfo, getIsSaved } from '~/services/local/_showId';
+import { getShow, getIsSaved } from '~/services/local/_showId';
 import { getImageSrc } from '~/utils/image';
 import { convertEpisodeDetail } from '~/utils/converter';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
@@ -137,14 +137,14 @@ const LIMIT_OF_EPISODES = 30;
 const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
-  showInfo: App.ShowInfo | undefined
-  isSaved: boolean
+  show: App.ShowPage | undefined;
+  isSaved: boolean;
 }
 
 interface Data {
-  mutationUnsubscribe: (() => void) | undefined
-  ARTWORK_SIZE: number
-  HEADER_REF: string
+  mutationUnsubscribe: (() => void) | undefined;
+  ARTWORK_SIZE: number;
+  HEADER_REF: string;
 }
 
 @Component({
@@ -167,21 +167,21 @@ interface Data {
 
   async asyncData(context): Promise<AsyncData> {
     const [
-      showInfo,
+      show,
       isSaved,
     ] = await Promise.all([
-      await getShowInfo(context),
+      await getShow(context),
       await getIsSaved(context),
     ] as const);
 
     return {
-      showInfo,
+      show,
       isSaved,
     };
   },
 })
 export default class ShowIdPage extends Vue implements AsyncData, Data {
-  showInfo: App.ShowInfo | undefined = undefined;
+  show: App.ShowPage | undefined = undefined;
   isSaved = false;
 
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -190,31 +190,31 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 
   head() {
     return {
-      title: this.showInfo?.name ?? 'エラー',
+      title: this.show?.name ?? 'エラー',
     };
   }
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.showInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.show?.images, ARTWORK_SIZE);
   }
   get isShowSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.showInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.show?.uri);
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
   }
   get hasEpisodes(): boolean {
-    return (this.showInfo?.episodeList.length ?? 0) > 0;
+    return (this.show?.episodeList.length ?? 0) > 0;
   }
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
-    if (this.showInfo != null) {
+    if (this.show != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.showInfo?.images, 40);
+    const artworkSrc = getImageSrc(this.show?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -223,13 +223,11 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 
     // エピソードをフォロー/アンフォローした後呼ばれる
     const subscribeSavedShow = (mutationPayload: ExtendedMutationPayload<'library/shows/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.showInfo == null) return;
-
+      if (this.show == null) return;
       const [showId, isSaved] = mutationPayload.payload;
-      if (showId === this.showInfo.id) {
+      if (showId === this.show.id) {
         this.isSaved = isSaved;
       }
-
       this.$commit('library/shows/DELETE_ACTUAL_IS_SAVED', showId);
     };
 
@@ -239,7 +237,6 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
         case 'library/shows/SET_ACTUAL_IS_SAVED':
           subscribeSavedShow(mutation as ExtendedMutationPayload<typeof type>);
           break;
-
         default:
           break;
       }
@@ -256,12 +253,11 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendEpisodeList(limit: OneToFifty = LIMIT_OF_EPISODES) {
-    if (this.showInfo == null
-      || this.showInfo.isFullEpisodeList) return;
+    if (this.show == null || this.show.hasNextEpisode) return;
 
-    const { showInfo } = this;
+    const currentShow = this.show;
     const { showId } = this.$route.params;
-    const offset = this.showInfo.episodeList.length;
+    const offset = this.show.episodeList.length;
     const episodes = await this.$spotify.shows.getShowEpisodes({
       showId,
       market: this.$getters()['auth/userCountryCode'],
@@ -270,9 +266,9 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     });
     if (episodes == null) {
       this.$toast.pushError('エピソードが取得できませんでした。');
-      this.showInfo = {
-        ...showInfo,
-        isFullEpisodeList: true,
+      this.show = {
+        ...currentShow,
+        hasNextEpisode: false,
       };
       return;
     }
@@ -280,35 +276,33 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     const episodeList = episodes.items.map(convertEpisodeDetail<SpotifyAPI.SimpleEpisode>({
       offset,
       showId,
-      showName: showInfo.name,
+      showName: currentShow.name,
     }));
-    const isFullEpisodeList = episodes.next == null;
-
-    this.showInfo = {
-      ...showInfo,
-      episodeList: [...showInfo.episodeList, ...episodeList],
-      isFullEpisodeList,
+    this.show = {
+      ...currentShow,
+      episodeList: [...currentShow.episodeList, ...episodeList],
+      hasNextEpisode: episodes.next != null,
     };
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
-    if (this.showInfo == null) return;
+    if (this.show == null) return;
 
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isShowSet
         ? undefined
-        : { contextUri: this.showInfo.uri });
+        : { contextUri: this.show.uri });
     } else {
       this.$dispatch('playback/pause');
     }
   }
 
   toggleSavedState(nextSavedState: OnFavoriteButton['input'] | OnMenu['on-save-menu-clicked']) {
-    if (this.showInfo == null) return;
+    if (this.show == null) return;
 
     // API との通信の結果を待たずに先に表示を変更させておく
     this.isSaved = nextSavedState;
-    const showIdList = [this.showInfo.id];
+    const showIdList = [this.show.id];
     if (nextSavedState) {
       this.$dispatch('library/shows/saveShows', showIdList);
     } else {

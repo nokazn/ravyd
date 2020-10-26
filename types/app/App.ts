@@ -4,18 +4,18 @@ import { RawLocation } from 'vue-router';
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
-  export type DominantColorInfo = {
+  export type DominantColor = {
     hex: Swatch['hex']
     rgb: Swatch['rgb']
   }
 
-  export type SimpleArtistInfo = {
+  export type MinimumArtist = {
     name: string
     id: string
     uri: string
   }
 
-  export type AddedAtInfo = {
+  export type AddedAt = {
     text: string | undefined
     title: string
     dateTime: string
@@ -30,7 +30,7 @@ export namespace App {
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     durationMs: number
     externalUrls: SpotifyAPI.ExternalUrls
     isSaved: boolean
@@ -43,7 +43,7 @@ export namespace App {
     index: number
     trackNumber: SpotifyAPI.SimpleTrack['track_number']
     discNumber: SpotifyAPI.SimpleTrack['disc_number']
-    featuredArtists: App.SimpleArtistInfo[]
+    featuredArtists: App.MinimumArtist[]
     explicit: boolean
     isPlayable: boolean
     externalIds?: SpotifyAPI.ExternalId
@@ -53,12 +53,12 @@ export namespace App {
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
-    addedAt?: AddedAtInfo
+    addedAt?: AddedAt
     addedBy?: SpotifyAPI.UserData
   }
 
-  // TracuQueueMenu component
-  export type TrackQueueInfo = {
+  // TrackQueueMenu component
+  export type TrackQueue = {
     isSet: boolean
     isPlaying: boolean
     index: number
@@ -68,13 +68,34 @@ export namespace App {
     uri: string
     releaseId: string
     releaseName: string
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     images: SpotifyAPI.Image[]
     linkedFrom: SpotifyAPI.LinkedTrack | undefined
     durationMs: number | undefined
   }
 
-  export type DeviceInfo = {
+  // EpisodeTable component
+  export type EpisodeDetail = {
+    index: number
+    id: string
+    name: string
+    uri: string
+    description: string
+    images: SpotifyAPI.Image[]
+    isPlayable: boolean
+    explicit: boolean
+    releaseDate: string
+    releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
+    durationMs: number
+    resumePoint: SpotifyAPI.ResumePoint
+    externalUrls: SpotifyAPI.ExternalUrls
+    previewUrl: string | null
+    showId: string
+    showName: string
+  }
+
+  // DeviceSelectMenu component
+  export type Device = {
     id: string | undefined
     type: SpotifyAPI.Device['type']
     isActive: boolean
@@ -84,7 +105,7 @@ export namespace App {
   }
 
   // ContentListItem component
-  export type ContentItems = {
+  export type ContentItemTypes = {
     track: SpotifyAPI.Track
     album: SpotifyAPI.SimpleAlbum
     artist: SpotifyAPI.Artist
@@ -92,8 +113,8 @@ export namespace App {
     show: SpotifyAPI.SimpleShow
     episode: SpotifyAPI.SimpleEpisode
   }
-  export type ContentItemType = keyof ContentItems
-  export type ContentItemInfo<T extends ContentItemType = ContentItemType> = {
+  export type ContentItemType = keyof ContentItemTypes
+  export type ContentItem<T extends ContentItemType = ContentItemType> = {
     type: T
     id: string
     releaseId: string
@@ -117,7 +138,7 @@ export namespace App {
     id: string // track または album の id
     name: string // track または album の name
     uri: string // track または album の name
-    artists: App.SimpleArtistInfo[]
+    artists: App.MinimumArtist[]
     images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
@@ -130,40 +151,41 @@ export namespace App {
    */
 
    // /releases/:releaseId page
-  export type ReleaseInfo = {
+  export type ReleasePage = {
     releaseType: 'アルバム' | 'シングル' | 'EP' | 'コンピレーション'
-    id: string
-    name: string
-    uri: string
-    artists: SpotifyAPI.Artist[]
-    releaseDate: string
-    releaseDatePrecision: string
-    totalTracks: number
-    durationMs: number
-    label: string
-    images: SpotifyAPI.Image[]
-    copyrightList: SpotifyAPI.Copyright[]
-    isSaved: boolean
-    trackList: App.TrackDetail[]
-    externalUrls: SpotifyAPI.ExternalUrls
-    genreList: string[]
-    isFullTrackList: boolean
-    artistReleaseList: (SimpleArtistInfo & { items: ReleaseCard<'album'>[] })[]
+    id: string;
+    name: string;
+    uri: string;
+    artists: SpotifyAPI.Artist[];
+    releaseDate: string;
+    releaseDatePrecision: string;
+    totalTracks: number;
+    durationMs: number;
+    label: string;
+    images: SpotifyAPI.Image[];
+    copyrightList: SpotifyAPI.Copyright[];
+    isSaved: boolean;
+    trackList: App.TrackDetail[];
+    externalUrls: SpotifyAPI.ExternalUrls;
+    genreList: string[];
+    hasNextTrack: boolean;
+    hasPreviousTrack: boolean;
+    artistReleaseList: (MinimumArtist & { items: ReleaseCard<'album'>[] })[];
   }
 
   // /artists/:artistId page
-  export type ArtistInfo = {
-    name: string
-    id: string
-    uri: string
-    images: SpotifyAPI.Image[]
-    followersText: string | undefined
-    genreList: string[]
-    externalUrls: SpotifyAPI.ExternalUrls
+  export type ArtistPage = {
+    name: string;
+    id: string;
+    uri: string;
+    images: SpotifyAPI.Image[];
+    followersText: string | undefined;
+    genreList: string[];
+    externalUrls: SpotifyAPI.ExternalUrls;
   }
 
   // /playlists/:playlistId page
-  export type PlaylistInfo = {
+  export type PlaylistPage = {
     id: string
     name: string
     uri: string
@@ -179,24 +201,13 @@ export namespace App {
     externalUrls: SpotifyAPI.ExternalUrls
     trackUriList: string[]
   }
-  export type PlaylistTrackInfo = {
-    trackList: PlaylistTrackDetail[]
-    isFullTrackList: boolean
-  }
   // track から null を排除
   export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {
     track: SpotifyAPI.Track
   }
 
-  // /categories/:categoryId page
-  export type CategoryInfo = {
-    id: string
-    name: string
-    images: SpotifyAPI.Image[]
-  }
-
   // /shows/:showId page
-  export type ShowInfo = {
+  export type ShowPage = {
     id: string
     name: string
     uri: string
@@ -206,33 +217,14 @@ export namespace App {
     externalUrls: SpotifyAPI.ExternalUrls
     explicit: boolean
     description: string
-    episodeList: EpisodeDetail[]
     copyrightList: SpotifyAPI.Copyright[]
-    isFullEpisodeList: boolean
-  }
-
-  // /episodes/:episodeId page
-  export type EpisodeDetail = {
-    index: number
-    id: string
-    name: string
-    uri: string
-    description: string
-    images: SpotifyAPI.Image[]
-    isPlayable: boolean
-    explicit: boolean
-    releaseDate: string
-    releaseDatePrecision: SpotifyAPI.Episode['release_date_precision']
-    durationMs: number
-    resumePoint: SpotifyAPI.ResumePoint
-    externalUrls: SpotifyAPI.ExternalUrls
-    previewUrl: string | null
-    showId: string
-    showName: string
+    episodeList: EpisodeDetail[]
+    hasNextEpisode: boolean
+    hasPreviousEpisode: boolean
   }
 
   // /users/:userId page
-  export type UserInfo = {
+  export type UserPage = {
     displayName: string | null
     externalUrls: SpotifyAPI.ExternalUrls
     followersText: string | undefined

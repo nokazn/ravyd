@@ -1,11 +1,11 @@
 <template>
   <div
-    v-if="userInfo != null"
+    v-if="user != null"
     :class="$style.UserIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="userInfo != null"
+        v-if="user != null"
         :class="$style.AdditionalHeaderContent"
       >
         <FavoriteButton
@@ -20,7 +20,7 @@
           left
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :user="userInfo"
+          :user="user"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"
         />
@@ -50,7 +50,7 @@
         </h1>
 
         <p class="subtext--text">
-          {{ playlistCountsText }}・{{ userInfo.followersText }}
+          {{ playlistCountsText }}・{{ user.followersText }}
         </p>
 
         <div :class="$style.Info__buttons">
@@ -62,7 +62,7 @@
           <UserMenu
             outlined
             right
-            :user="userInfo"
+            :user="user"
             :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"
           />
@@ -77,12 +77,12 @@
     <v-divider :class="$style.Divider" />
 
     <CardsWrapper
-      v-if="userPlaylistInfo.items.length > 0"
+      v-if="userPlaylists.items.length > 0"
       :min-width="$screen.cardWidthMinMax[0]"
       :max-width="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
-        v-for="playlist in userPlaylistInfo.items"
+        v-for="playlist in userPlaylists.items"
         :key="playlist.id"
         :item="playlist"
         :min-width="$screen.cardWidthMinMax[0]"
@@ -94,7 +94,7 @@
     </p>
 
     <IntersectionLoadingCircle
-      :loading="userPlaylistInfo.hasNext"
+      :loading="userPlaylists.hasNext"
       @appear="appendPlaylists"
     />
   </div>
@@ -115,7 +115,7 @@ import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 import {
-  getUserInfo,
+  getUser,
   getIsFollowing,
   getUserPlaylists,
   UserPlaylists,
@@ -127,9 +127,9 @@ const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
-  userInfo: App.UserInfo | undefined;
+  user: App.UserPage | undefined;
   isFollowing: boolean | undefined;
-  userPlaylistInfo: UserPlaylists;
+  userPlaylists: UserPlaylists;
 }
 
 interface Data {
@@ -153,26 +153,26 @@ interface Data {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const [userInfo, isFollowing, userPlaylistInfo] = await Promise.all([
-      getUserInfo(context),
+    const [user, isFollowing, userPlaylists] = await Promise.all([
+      getUser(context),
       getIsFollowing(context),
       getUserPlaylists(context, { limit: LIMIT_OF_PLAYLISTS }),
     ] as const);
 
     return {
-      userInfo,
+      user,
       isFollowing,
-      userPlaylistInfo,
+      userPlaylists,
     };
   },
 })
 export default class UserIdPage extends Vue implements AsyncData, Data {
-  userInfo: App.UserInfo | undefined = undefined;
+  user: App.UserPage | undefined = undefined;
   isFollowing: boolean | undefined = undefined;
-  userPlaylistInfo: UserPlaylists = {
+  userPlaylists: UserPlaylists = {
     items: [],
-    hasNext: false,
-    hasPrevious: false,
+    hasNext: true,
+    hasPrevious: true,
     total: 0,
   };
 
@@ -185,25 +185,25 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
   }
 
   get avatarSrc(): string | undefined {
-    return getImageSrc(this.userInfo?.images);
+    return getImageSrc(this.user?.images);
   }
   get userName(): string | undefined {
-    const { userInfo } = this;
-    return userInfo?.displayName ?? userInfo?.id;
+    const { user } = this;
+    return user?.displayName ?? user?.id;
   }
   get playlistCountsText(): string {
-    const { total } = this.userPlaylistInfo;
+    const { total } = this.userPlaylists;
     return `${total}個のプレイリスト`;
   }
 
   mounted() {
-    if (this.userInfo != null) {
+    if (this.user != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.userInfo?.images, 40);
+    const artworkSrc = getImageSrc(this.user?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -216,28 +216,28 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendPlaylists(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
-    if (!this.userPlaylistInfo.hasNext) return;
+    if (!this.userPlaylists.hasNext) return;
 
-    const { userPlaylistInfo } = this;
+    const currentPlaylists = this.userPlaylists;
     const { userId } = this.$route.params;
-    const offset = userPlaylistInfo.items.length;
+    const offset = currentPlaylists.items.length;
     const playlists = await this.$spotify.playlists.getListOfUserPlaylist({
       userId,
       limit,
       offset,
     });
     if (playlists == null) {
-      this.userPlaylistInfo = {
-        ...userPlaylistInfo,
+      this.userPlaylists = {
+        ...currentPlaylists,
         hasNext: false,
       };
       return;
     }
 
     const addedPlaylists = playlists.items;
-    this.userPlaylistInfo = {
-      ...userPlaylistInfo,
-      items: [...userPlaylistInfo.items, ...addedPlaylists],
+    this.userPlaylists = {
+      ...currentPlaylists,
+      items: [...currentPlaylists.items, ...addedPlaylists],
       hasNext: playlists.next != null,
     };
   }

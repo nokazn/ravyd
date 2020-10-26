@@ -36,7 +36,7 @@
             class="g-custom-scroll-bar"
             :class="$style.SearchResultList__content"
           >
-            <template v-for="{ title, items } in itemInfoList">
+            <template v-for="{ title, items } in itemMapList">
               <div
                 v-if="items.length > 0"
                 :key="title"
@@ -105,9 +105,9 @@ type Data = {
   SEARCH_FORM_PORTAL_NAME: string
 }
 
-export type ItemInfo = {
-  title: string
-  items: App.ContentItemInfo<SpotifyAPI.SearchType>[]
+export type ItemMap = {
+  title: string;
+  items: App.ContentItem<SpotifyAPI.SearchType>[];
 }
 
 export default Vue.extend({
@@ -165,8 +165,8 @@ export default Vue.extend({
     episodes(): RootGetters['search/episodes'] {
       return this.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM);
     },
-    itemInfoList(): ItemInfo[] {
-      const itemInfoList = [
+    itemMapList(): ItemMap[] {
+      const itemMapList = [
         {
           title: '曲',
           items: this.tracks,
@@ -193,15 +193,15 @@ export default Vue.extend({
         },
       ];
 
-      return itemInfoList;
+      return itemMapList;
     },
-    itemList(): App.ContentItemInfo<SpotifyAPI.SearchType>[] {
-      return this.itemInfoList.reduce(
+    itemList(): App.ContentItem<SpotifyAPI.SearchType>[] {
+      return this.itemMapList.reduce(
         (prev, curr) => [...prev, ...curr.items],
-        [] as App.ContentItemInfo<SpotifyAPI.SearchType>[],
+        [] as App.ContentItem<SpotifyAPI.SearchType>[],
       );
     },
-    selectedItem(): App.ContentItemInfo<SpotifyAPI.SearchType> | undefined {
+    selectedItem(): App.ContentItem<SpotifyAPI.SearchType> | undefined {
       return this.selectedItemIndex != null
         ? this.itemList[this.selectedItemIndex] ?? undefined
         : undefined;

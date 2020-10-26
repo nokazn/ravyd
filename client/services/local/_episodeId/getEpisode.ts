@@ -2,7 +2,7 @@ import { Context } from '@nuxt/types';
 import { App } from '~~/types';
 import { convertEpisodeDetail } from '~/utils/converter';
 
-export const getEpisodeInfo = async (
+export const getEpisode = async (
   { app, params }: Context,
 ): Promise<App.EpisodeDetail | undefined> => {
   const market = app.$getters()['auth/userCountryCode'];

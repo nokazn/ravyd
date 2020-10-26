@@ -17,7 +17,7 @@ const artistMock = {
 };
 const index = 1;
 const uri = 'uri';
-const partialItem: Omit<App.TrackQueueInfo, 'isPlaying' | 'isSet'> = {
+const partialItem: Omit<App.TrackQueue, 'isPlaying' | 'isSet'> = {
   index,
   type: 'track',
   id: 'id',

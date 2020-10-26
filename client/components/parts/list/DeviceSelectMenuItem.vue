@@ -45,9 +45,8 @@ import { App, SpotifyAPI } from '~~/types';
 const CLICK = 'click';
 
 export type On = {
-  [CLICK]: App.DeviceInfo['id'];
+  [CLICK]: App.Device['id'];
 }
-export type DeviceInfo = App.DeviceInfo;
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
   switch (type) {
@@ -81,7 +80,7 @@ const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<App.DeviceInfo>,
+      type: Object as PropType<App.Device>,
       required: true,
     },
   },

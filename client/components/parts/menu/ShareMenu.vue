@@ -90,7 +90,7 @@ export type Props = {
   uri: string;
   url?: string;
   typeName: string;
-  artists: App.SimpleArtistInfo[] | string | undefined;
+  artists: App.MinimumArtist[] | string | undefined;
   externalUrls: SpotifyAPI.ExternalUrls;
   left?: boolean;
   right?: boolean;
@@ -120,7 +120,7 @@ export default defineComponent({
       required: true,
     },
     artists: {
-      type: [Array, String] as PropType<App.SimpleArtistInfo[] | string | undefined>,
+      type: [Array, String] as PropType<App.MinimumArtist[] | string | undefined>,
       default: undefined,
     },
     externalUrls: {

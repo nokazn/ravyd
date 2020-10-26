@@ -16,7 +16,7 @@ export type PlaybackState = {
   releaseName: string | undefined
   releaseUri: string | undefined
   images: SpotifyAPI.Image[] | undefined
-  artists: App.SimpleArtistInfo[] | undefined
+  artists: App.MinimumArtist[] | undefined
   customContextUri: string | undefined
   customTrackUriList: string[] | undefined
   nextTrackList: Spotify.Track[]

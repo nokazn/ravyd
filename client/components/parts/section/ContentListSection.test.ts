@@ -5,7 +5,7 @@ import { options } from '~/tests/mocks/mount';
 import ContentListSection from './ContentListSection.vue';
 import type { App } from '~~/types';
 
-const item = (i: number): App.ContentItemInfo<'artist'> => ({
+const item = (i: number): App.ContentItem<'artist'> => ({
   type: 'artist',
   id: `id${i}`,
   releaseId: 'releaseId',

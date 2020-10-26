@@ -5,7 +5,7 @@ import { App } from '~~/types';
 
 dayjs.extend(relativeTime);
 
-export const convertAddedAt = (addedAt: string): App.AddedAtInfo => {
+export const convertAddedAt = (addedAt: string): App.AddedAt => {
   const moment = dayjs(addedAt);
   // 2週間前か否かで表示を分けるため
   const overTwoWeeksAgo = Date.now() - moment.valueOf() > 14 * 24 * 60 * 60 * 1000;

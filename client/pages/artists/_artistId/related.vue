@@ -34,10 +34,10 @@ interface Data {}
 })
 export default class RelatedArtistPage extends Vue implements Data {
   @Prop([Object])
-  artistInfo!: App.ArtistInfo;
+  artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtistList!: App.ContentItemInfo<'artist'>[];
+  relatedArtistList!: App.ContentItem<'artist'>[];
 }
 </script>
 

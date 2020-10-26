@@ -1,16 +1,16 @@
 <template>
   <div
-    v-if="episodeInfo != null"
+    v-if="episode != null"
     :class="$style.EpisodeIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="episodeInfo != null"
+        v-if="episode != null"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
           fab
-          :disabled="!episodeInfo.isPlayable"
+          :disabled="!episode.isPlayable"
           :value="isEpisodeSet && isPlaying"
           @input="onContextMediaButtonClicked"
         />
@@ -19,8 +19,8 @@
           offset-y
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :episode="episodeInfo"
-          :publisher="episodeInfo.showName"
+          :episode="episode"
+          :publisher="episode.showName"
         />
       </div>
     </portal>
@@ -32,8 +32,8 @@
       <ReleaseArtwork
         :src="artworkSrc"
         :size="$screen.artworkSize"
-        :alt="episodeInfo.name"
-        :title="episodeInfo.name"
+        :alt="episode.name"
+        :title="episode.name"
         shadow
       />
 
@@ -43,36 +43,36 @@
             ポッドキャストエピソード
           </span>
           <ExplicitChip
-            v-if="episodeInfo.explicit"
+            v-if="episode.explicit"
             :class="$style.Info__explicitIcon"
           />
         </div>
 
         <h1 :class="$style.Info__title">
-          {{ episodeInfo.name }}
+          {{ episode.name }}
         </h1>
 
         <nuxt-link :to="showPath">
-          {{ episodeInfo.showName }}
+          {{ episode.showName }}
         </nuxt-link>
 
         <div :class="$style.Info__footer">
           <div :class="$style.Info__buttons">
             <ContextMediaButton
-              :disabled="!episodeInfo.isPlayable"
+              :disabled="!episode.isPlayable"
               :value="isEpisodeSet && isPlaying"
               @input="onContextMediaButtonClicked"
             />
             <EpisodeMenu
               offset-y
               outlined
-              :episode="episodeInfo"
-              :publisher="episodeInfo.showName"
+              :episode="episode"
+              :publisher="episode.showName"
             />
           </div>
 
           <EpisodeDetailWrapper
-            :episode="episodeInfo"
+            :episode="episode"
             :class="$style.Info__detail"
           />
         </div>
@@ -84,16 +84,16 @@
         エピソードの内容
       </h2>
       <p
-        v-if="episodeInfo.description"
+        v-if="episode.description"
         class="subtext--text"
-        v-html="episodeInfo.description"
+        v-html="episode.description"
       />
     </div>
 
     <EpisodeProgressBar
       text
-      :resume-point="episodeInfo.resumePoint"
-      :duration-ms="episodeInfo.durationMs"
+      :resume-point="episode.resumePoint"
+      :duration-ms="episode.durationMs"
       :max-width="300"
       :class="$style.EpisodeIdPage__progress"
     />
@@ -118,7 +118,7 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getEpisodeInfo } from '~/services/local/_episodeId';
+import { getEpisode } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/utils/image';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import { App } from '~~/types';
@@ -127,7 +127,7 @@ const ARTWORK_SIZE = 220;
 const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
-  episodeInfo: App.EpisodeDetail | undefined
+  episode: App.EpisodeDetail | undefined
 }
 
 interface Data {
@@ -153,44 +153,41 @@ interface Data {
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const episodeInfo = await getEpisodeInfo(context);
-
-    return {
-      episodeInfo,
-    };
+    const episode = await getEpisode(context);
+    return { episode };
   },
 })
 export default class EpisodeIdPage extends Vue implements AsyncData, Data {
-  episodeInfo: App.EpisodeDetail | undefined = undefined;
+  episode: App.EpisodeDetail | undefined = undefined;
 
   ARTWORK_SIZE = ARTWORK_SIZE;
   HEADER_REF = HEADER_REF;
 
   head() {
     return {
-      title: this.episodeInfo?.name ?? 'エラー',
+      title: this.episode?.name ?? 'エラー',
     };
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.episodeInfo?.images, ARTWORK_SIZE);
+    return getImageSrc(this.episode?.images, ARTWORK_SIZE);
   }
   get showPath(): string | undefined {
-    return this.episodeInfo != null
-      ? `/shows/${this.episodeInfo?.showId}`
+    return this.episode != null
+      ? `/shows/${this.episode?.showId}`
       : undefined;
   }
   get isEpisodeSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.episodeInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.episode?.uri);
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
   }
   get remainingTime(): string | undefined {
-    if (this.episodeInfo == null) return undefined;
+    if (this.episode == null) return undefined;
 
-    const positionMs = this.episodeInfo.resumePoint.resume_position_ms;
-    const remainingMs = this.episodeInfo.durationMs - positionMs;
+    const positionMs = this.episode.resumePoint.resume_position_ms;
+    const remainingMs = this.episode.durationMs - positionMs;
     return positionMs > 0
       ? `残り${elapsedTimeInJapanese(remainingMs)}`
       : '未再生';
@@ -198,13 +195,13 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
-    if (this.episodeInfo != null) {
+    if (this.episode != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.episodeInfo?.images, 40);
+    const artworkSrc = getImageSrc(this.episode?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -217,12 +214,12 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
-    if (this.episodeInfo == null) return;
+    if (this.episode == null) return;
 
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isEpisodeSet
         ? undefined
-        : { contextUri: this.episodeInfo.uri });
+        : { contextUri: this.episode.uri });
     } else {
       this.$dispatch('playback/pause');
     }

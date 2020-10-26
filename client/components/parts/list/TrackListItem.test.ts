@@ -24,7 +24,7 @@ const factory = (
   playing: boolean,
   isPlayable: boolean,
   columnType: 'single' | 'multi',
-  featuredArtists: App.SimpleArtistInfo[],
+  featuredArtists: App.MinimumArtist[],
 ) => {
   return mount(TrackListItem, {
     ...options,

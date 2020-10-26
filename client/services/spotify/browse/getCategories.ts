@@ -3,7 +3,7 @@ import { SpotifyAPI, OneToFifty } from '~~/types';
 
 type Categories = { categories: SpotifyAPI.Paging<SpotifyAPI.Category> };
 
-export const getCategoryList = (context: Context) => {
+export const getCategories = (context: Context) => {
   const { app } = context;
 
   return ({

@@ -5,7 +5,7 @@ import { App } from '~~/types';
 import { RootState } from './state';
 
 export type RootMutations = {
-  SET_DOMINANT_BACKGROUND_COLOR: App.DominantColorInfo | undefined
+  SET_DOMINANT_BACKGROUND_COLOR: App.DominantColor | undefined;
 }
 
 const mutations: Mutations<RootState, RootMutations> = {

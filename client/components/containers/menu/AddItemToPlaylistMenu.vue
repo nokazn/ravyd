@@ -60,7 +60,7 @@ import { SpotifyAPI, App } from '~~/types';
 export type Props = {
   name: string
   uriList: string[]
-  artists: App.SimpleArtistInfo[] | string | undefined
+  artists: App.MinimumArtist[] | string | undefined
   left?: boolean
   right?: boolean
 }
@@ -81,7 +81,7 @@ export default Vue.extend({
       required: true,
     },
     artists: {
-      type: [Array, String] as PropType<App.SimpleArtistInfo[] | string | undefined>,
+      type: [Array, String] as PropType<App.MinimumArtist[] | string | undefined>,
       default: undefined,
     },
     left: {

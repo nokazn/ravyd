@@ -2,8 +2,8 @@ import { generateContentPath } from '~/utils/text';
 import { App, SpotifyAPI } from '~~/types';
 
 export const convertToContentListItem = <T extends App.ContentItemType>(type: T) => (
-  item: App.ContentItems[T],
-): App.ContentItemInfo<T> => {
+  item: App.ContentItemTypes[T],
+): App.ContentItem<T> => {
   const {
     id,
     name,
@@ -22,7 +22,7 @@ export const convertToContentListItem = <T extends App.ContentItemType>(type: T)
   });
 
   type CommonPropKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
-  const info: { [k in App.ContentItemType]: () => Omit<App.ContentItemInfo<k>, CommonPropKey> } = {
+  const info: { [k in App.ContentItemType]: () => Omit<App.ContentItem<k>, CommonPropKey> } = {
     track() {
       const track = item as SpotifyAPI.Track;
       const { album } = track;
