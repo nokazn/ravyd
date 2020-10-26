@@ -2,9 +2,9 @@ import { Context } from '@nuxt/types';
 import { App } from '~~/types';
 import { getFollowersText } from '~/utils/converter';
 
-export const getUserInfo = async (
+export const getUser = async (
   { app, params }: Context,
-): Promise<App.UserInfo | undefined> => {
+): Promise<App.UserPage | undefined> => {
   const user = await app.$spotify.users.getUserProfile({
     userId: params.userId,
   });

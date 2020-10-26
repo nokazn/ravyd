@@ -36,7 +36,7 @@ export default defineComponent({
 
   props: {
     user: {
-      type: Object as PropType<App.UserInfo>,
+      type: Object as PropType<App.UserPage>,
       required: true,
     },
     following: {

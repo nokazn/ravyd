@@ -222,7 +222,7 @@ export namespace App {
   }
 
   // /users/:userId page
-  export type UserInfo = {
+  export type UserPage = {
     displayName: string | null
     externalUrls: SpotifyAPI.ExternalUrls
     followersText: string | undefined
