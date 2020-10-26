@@ -1,10 +1,8 @@
-import { Actions } from 'typed-vuex';
-
-import { convertArtistForCard } from '~/utils/converter';
-import { LibraryArtistsState } from './state';
-import { LibraryArtistsGetters } from './getters';
-import { LibraryArtistsMutations } from './mutations';
-import { SpotifyAPI, OneToFifty, TODO } from '~~/types';
+import type { Actions } from 'typed-vuex';
+import type { LibraryArtistsState } from './state';
+import type { LibraryArtistsGetters } from './getters';
+import type { LibraryArtistsMutations } from './mutations';
+import type { OneToFifty, TODO } from '~~/types';
 
 export type LibraryArtistsActions = {
   getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
@@ -24,8 +22,6 @@ export type RootActions = {
   'library/artists/unfollowArtists': LibraryArtistsActions['unfollowArtists']
   'library/artists/modifyArtistSavedState': LibraryArtistsActions['modifyArtistSavedState']
 };
-
-const convertArtist = (artist: SpotifyAPI.Artist) => convertArtistForCard(artist);
 
 const actions: Actions<
   LibraryArtistsState,
@@ -56,8 +52,7 @@ const actions: Actions<
       return;
     }
 
-    const artistList = artists.items.map(convertArtist);
-
+    const artistList = artists.items;
     commit('ADD_TO_ARTIST_LIST', artistList);
     commit('SET_TOTAL', artists.total);
   },
@@ -96,8 +91,8 @@ const actions: Actions<
       .findIndex((artist) => artist.id === currentLatestArtistId);
 
     const addedArtistList = lastArtistIndex === -1
-      ? artists.items.map(convertArtist)
-      : artists.items.slice(0, lastArtistIndex).map(convertArtist);
+      ? artists.items
+      : artists.items.slice(0, lastArtistIndex);
 
     commit('UNSHIFT_TO_ARTIST_LIST', addedArtistList);
     commit('SET_TOTAL', artists.total);

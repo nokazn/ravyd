@@ -1,7 +1,7 @@
-import { App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type LibraryArtistsState = {
-  artistList: App.ArtistCardInfo[]
+  artistList: SpotifyAPI.Artist[]
   total: number | undefined
   unupdatedCounts: number
   actualIsSavedMap: Map<string, boolean>

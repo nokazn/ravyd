@@ -7,7 +7,7 @@
       <ArtistCard
         v-for="artist in artistList"
         :key="artist.id"
-        v-bind="artist"
+        :item="artist"
         :min-width="$screen.cardWidthMinMax[0]"
         :max-width="$screen.cardWidthMinMax[1]"
       />

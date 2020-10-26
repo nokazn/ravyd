@@ -1,5 +1,4 @@
 export * from './convertAddedAt';
-export * from './convertArtistForCard';
 export * from './convertEpisodeDetail';
 export * from './convertPlaylistForCard';
 export * from './convertPlaylistTrackDetail';
