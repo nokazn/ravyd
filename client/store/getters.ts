@@ -25,7 +25,7 @@ const getters: Getters<RootState, RootGetters> = {
   headerStyles(state) {
     const opacity = 0.6;
     const rgbList = state.dominantBackgroundColor?.rgb
-      ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColorInfo['rgb'] ?? BACKGROUND_COLOR_RGB;
+      ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColor['rgb'] ?? BACKGROUND_COLOR_RGB;
 
     return { backgroundColor: `rgba(${rgbList.join(',')},${opacity})` };
   },

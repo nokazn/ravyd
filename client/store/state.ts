@@ -1,7 +1,7 @@
 import { App } from '~~/types';
 
 export type RootState = {
-  dominantBackgroundColor: App.DominantColorInfo | undefined
+  dominantBackgroundColor: App.DominantColor | undefined;
 }
 
 const state = (): RootState => ({

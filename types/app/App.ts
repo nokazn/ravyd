@@ -4,7 +4,7 @@ import { RawLocation } from 'vue-router';
 import { SpotifyAPI } from '~~/types';
 
 export namespace App {
-  export type DominantColorInfo = {
+  export type DominantColor = {
     hex: Swatch['hex']
     rgb: Swatch['rgb']
   }
@@ -15,7 +15,7 @@ export namespace App {
     uri: string
   }
 
-  export type AddedAtInfo = {
+  export type AddedAt = {
     text: string | undefined
     title: string
     dateTime: string
@@ -53,7 +53,7 @@ export namespace App {
   // PlaylistTrackTable component
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
-    addedAt?: AddedAtInfo
+    addedAt?: AddedAt
     addedBy?: SpotifyAPI.UserData
   }
 
