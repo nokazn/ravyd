@@ -1,11 +1,11 @@
 <template>
   <div
-    v-if="playlistInfo != null"
+    v-if="playlist != null"
     :class="$style.PlaylistIdPage"
   >
     <portal :to="$header.PORTAL_NAME">
       <div
-        v-if="playlistInfo != null"
+        v-if="playlist != null"
         :class="$style.AdditionalHeaderContent"
       >
         <ContextMediaButton
@@ -16,7 +16,7 @@
         />
 
         <CircleButton
-          v-if="playlistInfo.isOwnPlaylist"
+          v-if="playlist.isOwnPlaylist"
           title="編集する"
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
@@ -36,7 +36,7 @@
           left
           :fab="$screen.isSingleColumn"
           :outlined="$screen.isMultiColumn"
-          :playlist="playlistInfo"
+          :playlist="playlist"
           :following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
           @on-follow-menu-clicked="toggleFollowingState"
@@ -52,18 +52,18 @@
         shadow
         :src="artworkSrc"
         :size="$screen.artworkSize"
-        :alt="playlistInfo.name"
-        :title="playlistInfo.name"
+        :alt="playlist.name"
+        :title="playlist.name"
       />
 
       <div :class="$style.Info">
         <div class="g-small-text">
           プレイリスト
-          <span v-if="playlistInfo.isOwnPlaylist && !isFollowing">
+          <span v-if="playlist.isOwnPlaylist && !isFollowing">
             (削除済み)
           </span>
           <v-icon
-            v-if="!playlistInfo.isPublic && playlistInfo.isOwnPlaylist"
+            v-if="!playlist.isPublic && playlist.isOwnPlaylist"
             small
             color="subtext"
             title="非公開のプレイリスト"
@@ -73,13 +73,13 @@
         </div>
 
         <h1 :class="$style.Info__title">
-          {{ playlistInfo.name }}
+          {{ playlist.name }}
         </h1>
 
         <div>
           <UserName
             avatar
-            :user="playlistInfo.owner"
+            :user="playlist.owner"
           />
         </div>
 
@@ -92,7 +92,7 @@
             />
 
             <CircleButton
-              v-if="playlistInfo.isOwnPlaylist"
+              v-if="playlist.isOwnPlaylist"
               outlined
               title="編集する"
               :size="36"
@@ -110,7 +110,7 @@
 
             <PlaylistMenu
               outlined
-              :playlist="playlistInfo"
+              :playlist="playlist"
               :following="isFollowing"
               @on-edit-menu-clicked="toggleEditPlaylistModal(true)"
               @on-follow-menu-clicked="toggleFollowingState"
@@ -118,7 +118,7 @@
           </div>
 
           <PlaylistDetailWrapper
-            :playlist="playlistInfo"
+            :playlist="playlist"
             :class="$style.Info__detail"
           />
         </div>
@@ -131,22 +131,22 @@
     />
 
     <p
-      v-if="playlistInfo.description"
+      v-if="playlist.description"
       class="subtext--text"
       :class="$style.PlaylistIdPage__description"
-      v-html="playlistInfo.description"
+      v-html="playlist.description"
     />
 
-    <template v-if="playlistTrackInfo != null">
+    <template v-if="playlistTracks != null">
       <PlaylistTrackTable
-        :tracks="playlistTrackInfo.trackList"
-        :playlist-id="playlistInfo.isOwnPlaylist ? playlistInfo.id : undefined"
-        :uri="playlistInfo.uri"
+        :tracks="playlistTracks.items"
+        :playlist-id="playlist.isOwnPlaylist ? playlist.id : undefined"
+        :uri="playlist.uri"
         :class="$style.PlaylistIdPage__table"
         @on-favorite-button-clicked="toggleTrackFavoritState"
       />
       <IntersectionLoadingCircle
-        :loading="!playlistTrackInfo.isFullTrackList"
+        :loading="playlistTracks.hasNext"
         @appear="appendTrackList"
       />
     </template>
@@ -173,7 +173,12 @@ import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/contain
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { getPlaylistInfo, getIsFollowing, getPlaylistTrackInfo } from '~/services/local/_playlistId';
+import {
+  getPlaylist,
+  getIsFollowing,
+  getPlaylistTracks,
+  PlaylistTracks,
+} from '~/services/local/_playlistId';
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { getImageSrc } from '~/utils/image';
 import { checkTrackSavedState } from '~/utils/subscriber';
@@ -182,11 +187,10 @@ import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 const LIMIT_OF_TRACKS = 30;
 const HEADER_REF = 'HEADER_REF';
 
-
 interface AsyncData {
-  playlistInfo: App.PlaylistInfo | undefined;
+  playlist: App.PlaylistPage | undefined;
   isFollowing: boolean;
-  playlistTrackInfo: App.PlaylistTrackInfo | undefined;
+  playlistTracks: PlaylistTracks | undefined;
 }
 
 interface Data {
@@ -216,26 +220,26 @@ interface Data {
 
   async asyncData(context): Promise<AsyncData> {
     const [
-      playlistInfo,
+      playlist,
       isFollowing,
-      playlistTrackInfo,
+      playlistTracks,
     ] = await Promise.all([
-      await getPlaylistInfo(context),
+      await getPlaylist(context),
       await getIsFollowing(context),
-      await getPlaylistTrackInfo(context, { limit: LIMIT_OF_TRACKS }),
+      await getPlaylistTracks(context, { limit: LIMIT_OF_TRACKS }),
     ] as const);
 
     return {
-      playlistInfo,
+      playlist,
       isFollowing,
-      playlistTrackInfo,
+      playlistTracks,
     };
   },
 })
 export default class PlaylistIdPage extends Vue implements AsyncData, Data {
-  playlistInfo: App.PlaylistInfo | undefined = undefined;
+  playlist: App.PlaylistPage | undefined = undefined;
   isFollowing = false;
-  playlistTrackInfo: App.PlaylistTrackInfo | undefined = undefined;
+  playlistTracks: PlaylistTracks | undefined = undefined;
 
   editPlaylistModal = false;
   mutationUnsubscribe: (() => void) | undefined = undefined;
@@ -243,30 +247,34 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   head() {
     return {
-      title: this.playlistInfo?.name ?? 'エラー',
+      title: this.playlist?.name ?? 'エラー',
     };
   }
 
   get artworkSrc(): string | undefined {
-    return getImageSrc(this.playlistInfo?.images, this.$constant.ARTWORK_BASE_SIZE);
+    return getImageSrc(this.playlist?.images, this.$constant.ARTWORK_BASE_SIZE);
   }
   get isPlaylistSet(): boolean {
-    return this.$getters()['playback/isContextSet'](this.playlistInfo?.uri);
+    return this.$getters()['playback/isContextSet'](this.playlist?.uri);
   }
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
   }
   get hasTracks(): boolean {
-    return this.playlistTrackInfo != null
-      ? this.playlistTrackInfo.trackList.length > 0
+    return this.playlistTracks != null
+      ? this.playlistTracks.items.length > 0
       : false;
   }
   get editPlaylistForm(): Form | undefined {
-    if (this.playlistInfo == null) return undefined;
+    if (this.playlist == null) return undefined;
 
     const {
-      name, description, images, isPublic, isCollaborative,
-    } = this.playlistInfo;
+      name,
+      description,
+      images,
+      isPublic,
+      isCollaborative,
+    } = this.playlist;
     return {
       playlistId: this.$route.params.playlistId,
       name,
@@ -281,13 +289,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
   mounted() {
     // ボタンが見えなくなったらヘッダーに表示
-    if (this.playlistInfo != null) {
+    if (this.playlist != null) {
       const ref = this.$refs[HEADER_REF] as HTMLDivElement;
       this.$header.observe(ref);
     }
 
     // 小さい画像から抽出
-    const artworkSrc = getImageSrc(this.playlistInfo?.images, 40);
+    const artworkSrc = getImageSrc(this.playlist?.images, 40);
     if (artworkSrc != null) {
       this.$dispatch('extractDominantBackgroundColor', artworkSrc);
     } else {
@@ -296,23 +304,22 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
     // トラックを保存/削除した後呼ばれる
     const subscribeTrack = (mutationPayload: ExtendedMutationPayload<'library/tracks/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.playlistTrackInfo == null) return;
-      const trackList = checkTrackSavedState<App.PlaylistTrackDetail>(
+      if (this.playlistTracks == null) return;
+      const items = checkTrackSavedState<App.PlaylistTrackDetail>(
         mutationPayload,
         this.$commit,
-      )(this.playlistTrackInfo.trackList);
-
-      this.playlistTrackInfo = {
-        ...this.playlistTrackInfo,
-        trackList,
+      )(this.playlistTracks.items);
+      this.playlistTracks = {
+        ...this.playlistTracks,
+        items,
       };
     };
 
     // プレイリストをフォロー/アンフォローした後呼ばれる
     const subscribeFollowedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUAL_IS_SAVED'>) => {
-      if (this.playlistInfo == null) return;
+      if (this.playlist == null) return;
       const [playlistId, isFollowing] = mutationPayload.payload;
-      if (playlistId === this.playlistInfo.id) {
+      if (playlistId === this.playlist.id) {
         this.isFollowing = isFollowing;
       }
       this.$commit('playlists/DELETE_ACTUAL_IS_SAVED', playlistId);
@@ -320,34 +327,34 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
     // プレイリストを編集した後呼ばれる
     const subscribeEditedPlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/EDIT_PLAYLIST'>) => {
-      if (this.playlistInfo == null) return;
+      if (this.playlist == null) return;
       const {
         id, name, description, isPublic, isCollaborative,
       } = mutationPayload.payload;
-      if (id === this.playlistInfo.id) {
-        this.playlistInfo = {
-          ...this.playlistInfo,
-          name: name ?? this.playlistInfo.name,
+      if (id === this.playlist.id) {
+        this.playlist = {
+          ...this.playlist,
+          name: name ?? this.playlist.name,
           // 空文字列の場合は null にする
-          description: (description ?? this.playlistInfo.description) || null,
-          isPublic: isPublic ?? this.playlistInfo.isPublic,
-          isCollaborative: isCollaborative ?? this.playlistInfo.isCollaborative,
+          description: (description ?? this.playlist.description) || null,
+          isPublic: isPublic ?? this.playlist.isPublic,
+          isCollaborative: isCollaborative ?? this.playlist.isCollaborative,
         };
       }
     };
 
     // アイテムを追加した後呼ばれる
     const subscribeAddedItem = async (mutationPayload: ExtendedMutationPayload<'playlists/INCREMENT_UNUPDATED_TRACKS_MAP'>) => {
-      if (this.playlistInfo == null || this.playlistTrackInfo == null) return;
+      if (this.playlist == null || this.playlistTracks == null) return;
       const [playlistId, limit] = mutationPayload.payload;
-      const { isFullTrackList } = this.playlistTrackInfo;
+      const { hasNext } = this.playlistTracks;
       // すべて読み込み済みの表示中のプレイリストにアイテムが追加された場合
-      if (playlistId === this.$route.params.playlistId && isFullTrackList) {
+      if (playlistId === this.$route.params.playlistId && !hasNext) {
         await this.appendTrackList(limit, { force: true });
-        const { playlistInfo } = this;
-        this.playlistInfo = {
-          ...playlistInfo,
-          totalTracks: playlistInfo.totalTracks + limit,
+        const { playlist } = this;
+        this.playlist = {
+          ...playlist,
+          totalTracks: playlist.totalTracks + limit,
         };
       }
       this.$commit('playlists/DELETE_UNUPDATED_TRACKS_MAP', playlistId);
@@ -355,35 +362,32 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
 
     // アイテムを削除した後呼ばれる
     const subscribeRemovedItem = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUALLY_DELETED_TRACK'>) => {
-      if (this.playlistInfo == null || this.playlistTrackInfo == null) return;
+      if (this.playlist == null || this.playlistTracks == null) return;
 
       const [playlistId, { uri, positions: [index] }] = mutationPayload.payload;
       if (playlistId === this.$route.params.playlistId) {
-        const currentTrackInfo = this.playlistTrackInfo;
-        const removedItem = currentTrackInfo
-          .trackList[index] as App.PlaylistTrackDetail | undefined;
+        const currentTracks = this.playlistTracks;
+        const removedItem = currentTracks.items[index] as App.PlaylistTrackDetail | undefined;
         if (removedItem == null || removedItem.uri !== uri) return;
 
-        const unmodifiedTrackList = currentTrackInfo.trackList.slice(0, index);
+        const unmodifiedTrackList = currentTracks.items.slice(0, index);
         // index 番目の要素を除き、残りの後ろの要素のインデックスを変更
-        const modifiedTrackList = currentTrackInfo.trackList
-          .slice(index + 1, currentTrackInfo.trackList.length)
+        const modifiedTrackList = currentTracks.items
+          .slice(index + 1, currentTracks.items.length)
           .map((track) => ({
             ...track,
             index: track.index - 1,
           }));
-        this.playlistTrackInfo = {
-          ...currentTrackInfo,
-          trackList: [...unmodifiedTrackList, ...modifiedTrackList],
+        this.playlistTracks = {
+          ...currentTracks,
+          items: [...unmodifiedTrackList, ...modifiedTrackList],
         };
-
-        const { playlistInfo } = this;
-        this.playlistInfo = {
-          ...playlistInfo,
-          totalTracks: playlistInfo.totalTracks - 1,
+        const currentPlaylist = this.playlist;
+        this.playlist = {
+          ...currentPlaylist,
+          totalTracks: currentPlaylist.totalTracks - 1,
         };
       }
-
       this.$commit('playlists/DELETE_ACTUALLY_DELETED_TRACK', playlistId);
     };
 
@@ -423,13 +427,13 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   async appendTrackList(counts: number = LIMIT_OF_TRACKS, payload?: { force: true } | undefined) {
     type PagingTracks = SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>;
     const force = payload?.force ?? false;
-    // 強制更新出ない場合、すでにトラックがすべて取得されていたら何もしない
-    if (this.playlistTrackInfo == null
-      || (!force && this.playlistTrackInfo.isFullTrackList)) return;
+    // 強制更新でない場合、すでにトラックがすべて取得されていたら何もしない
+    if (this.playlistTracks == null
+      || (!force && !this.playlistTracks.hasNext)) return;
 
     const { playlistId } = this.$route.params;
-    const currentPlaylistTrackInfo = this.playlistTrackInfo;
-    const { length } = currentPlaylistTrackInfo.trackList;
+    const currentTracks = this.playlistTracks;
+    const { length } = currentTracks.items;
     const maxLimit = 50;
     const limit = Math.min(counts, maxLimit) as OneToFifty;
     const market = this.$getters()['auth/userCountryCode'];
@@ -443,7 +447,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       });
     };
     const handlerCounts = Math.ceil(counts / maxLimit);
-
     const tracks: PagingTracks | undefined = await Promise.all(new Array(handlerCounts)
       .fill(undefined)
       .map((_, i) => handler(i)))
@@ -456,17 +459,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         };
       }, this.$constant.EMPTY_PAGING as PagingTracks));
 
-    if (tracks == null) {
-      this.playlistTrackInfo.isFullTrackList = true;
-      return;
-    }
-
-    const filteredTrackList = tracks.items
-      .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
-    if (filteredTrackList.length === 0) {
-      this.playlistTrackInfo = {
-        ...currentPlaylistTrackInfo,
-        isFullTrackList: true,
+    const filteredTrackList = (tracks?.items
+      .filter(({ track }) => track != null) ?? []) as App.FilteredPlaylistTrack[];
+    if (tracks == null || filteredTrackList.length === 0) {
+      this.playlistTracks = {
+        ...currentTracks,
+        hasNext: false,
       };
       return;
     }
@@ -478,21 +476,19 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       isTrackSavedList,
       offset: length,
     }));
-    const isFullTrackList = tracks.next == null;
-
-    this.playlistTrackInfo = {
-      ...currentPlaylistTrackInfo,
-      trackList: [...currentPlaylistTrackInfo.trackList, ...trackList],
-      isFullTrackList,
+    this.playlistTracks = {
+      ...currentTracks,
+      items: [...currentTracks.items, ...trackList],
+      hasNext: tracks.next != null,
     };
   }
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
-    if (this.playlistInfo == null) return;
+    if (this.playlist == null) return;
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isPlaylistSet
         ? undefined
-        : { contextUri: this.playlistInfo.uri });
+        : { contextUri: this.playlist.uri });
     } else {
       this.$dispatch('playback/pause');
     }
@@ -503,9 +499,9 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   toggleFollowingState(nextFollowingState: OnFavoriteButton['input'] | OnMenu['on-follow-menu-clicked']) {
-    if (this.playlistInfo == null) return;
-    const { isOwnPlaylist } = this.playlistInfo;
-    const playlistId = this.playlistInfo?.id;
+    if (this.playlist == null) return;
+    const { isOwnPlaylist } = this.playlist;
+    const playlistId = this.playlist?.id;
     if (!nextFollowingState && isOwnPlaylist) {
       // 自分のプレイリストを削除する場合はモーダルで確認
       this.$confirm.open({
@@ -513,16 +509,15 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         text: '削除',
         description: 'プレイリストを削除しますか？',
         onConfirm: async () => {
-          if (this.playlistInfo == null || playlistId == null) return;
+          if (this.playlist == null || playlistId == null) return;
           await this.$dispatch('playlists/unfollowPlaylist', {
             playlistId,
-            isOwnPlaylist: this.playlistInfo.isOwnPlaylist,
+            isOwnPlaylist: this.playlist.isOwnPlaylist,
           });
         },
       });
       return;
     }
-
     // API との通信の結果を待たずに先に表示を変更させておく
     this.isFollowing = nextFollowingState;
     if (nextFollowingState) {
@@ -536,17 +531,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
   }
 
   toggleTrackFavoritState({ index, id, isSaved }: OnTable['on-favorite-button-clicked']) {
-    if (this.playlistTrackInfo == null) return;
+    if (this.playlistTracks == null) return;
 
+    const currentTracks = this.playlistTracks;
     const nextSavedState = !isSaved;
     // トラックの一覧のお気に入りの状態を変更
-    const nextTrackList = [...this.playlistTrackInfo.trackList];
-    nextTrackList[index].isSaved = nextSavedState;
-    this.playlistTrackInfo = {
-      ...this.playlistTrackInfo,
-      trackList: nextTrackList,
+    const items = [...currentTracks.items];
+    items[index].isSaved = nextSavedState;
+    this.playlistTracks = {
+      ...currentTracks,
+      items,
     };
-
     if (nextSavedState) {
       this.$dispatch('library/tracks/saveTracks', [id]);
     } else {

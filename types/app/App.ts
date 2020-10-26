@@ -163,7 +163,7 @@ export namespace App {
   }
 
   // /playlists/:playlistId page
-  export type PlaylistInfo = {
+  export type PlaylistPage = {
     id: string
     name: string
     uri: string
@@ -178,10 +178,6 @@ export namespace App {
     followersText: string | undefined
     externalUrls: SpotifyAPI.ExternalUrls
     trackUriList: string[]
-  }
-  export type PlaylistTrackInfo = {
-    trackList: PlaylistTrackDetail[]
-    isFullTrackList: boolean
   }
   // track から null を排除
   export type FilteredPlaylistTrack = SpotifyAPI.PlaylistTrack & {

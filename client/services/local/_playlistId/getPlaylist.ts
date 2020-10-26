@@ -3,19 +3,19 @@ import { Context } from '@nuxt/types';
 import { getFollowersText } from '~/utils/converter';
 import { App } from '~~/types';
 
-export const getPlaylistInfo = async (
+export const getPlaylist = async (
   { app, params }: Context,
-): Promise<App.PlaylistInfo | undefined> => {
+): Promise<App.PlaylistPage | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
   const userId = app.$getters()['auth/userId'];
   if (market == null || userId == null) return undefined;
 
-  const playlistInfo = await app.$spotify.playlists.getPlaylist({
+  const playlist = await app.$spotify.playlists.getPlaylist({
     playlistId,
     market,
   });
-  if (playlistInfo == null) return undefined;
+  if (playlist == null) return undefined;
 
   const {
     id,
@@ -29,7 +29,7 @@ export const getPlaylistInfo = async (
     followers,
     public: isPublic,
     external_urls: externalUrls,
-  } = playlistInfo;
+  } = playlist;
 
   const filteredTrackList = tracks.items
     .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];

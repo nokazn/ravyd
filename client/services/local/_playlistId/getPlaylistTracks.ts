@@ -3,13 +3,19 @@ import { Context } from '@nuxt/types';
 import { convertPlaylistTrackDetail } from '~/utils/converter';
 import { App, OneToFifty } from '~~/types';
 
-/**
- * limit は 0 ~ 50
- */
-export const getPlaylistTrackInfo = async (
+export type PlaylistTracks = {
+  items: App.PlaylistTrackDetail[];
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
+export const getPlaylistTracks = async (
   { app, params }: Context,
-  { limit, offset = 0 }: { limit: OneToFifty, offset?: number },
-): Promise<App.PlaylistTrackInfo | undefined> => {
+  { limit, offset = 0 }: {
+    limit: OneToFifty;
+    offset?: number;
+  },
+): Promise<PlaylistTracks | undefined> => {
   const { playlistId } = params;
   const market = app.$getters()['auth/userCountryCode'];
   const tracks = await app.$spotify.playlists.getPlaylistItems({
@@ -24,8 +30,9 @@ export const getPlaylistTrackInfo = async (
     .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
   if (filteredTrackList.length === 0) {
     return {
-      trackList: [],
-      isFullTrackList: true,
+      items: [],
+      hasNext: false,
+      hasPrevious: false,
     };
   }
 
@@ -33,15 +40,14 @@ export const getPlaylistTrackInfo = async (
   const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({
     trackIdList,
   });
-  const trackList = filteredTrackList.map(convertPlaylistTrackDetail({
+  const items = filteredTrackList.map(convertPlaylistTrackDetail({
     isTrackSavedList,
     offset,
   }));
 
-  const isFullTrackList = tracks.next == null;
-
   return {
-    trackList,
-    isFullTrackList,
+    items,
+    hasNext: tracks.next != null,
+    hasPrevious: tracks.previous != null,
   };
 };
