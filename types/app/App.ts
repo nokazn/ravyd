@@ -94,6 +94,7 @@ export namespace App {
     showName: string
   }
 
+  // DeviceSelectMenu component
   export type Device = {
     id: string | undefined
     type: SpotifyAPI.Device['type']
