@@ -57,8 +57,8 @@ export namespace App {
     addedBy?: SpotifyAPI.UserData
   }
 
-  // TracuQueueMenu component
-  export type TrackQueueInfo = {
+  // TrackQueueMenu component
+  export type TrackQueue = {
     isSet: boolean
     isPlaying: boolean
     index: number
@@ -94,7 +94,7 @@ export namespace App {
     showName: string
   }
 
-  export type DeviceInfo = {
+  export type Device = {
     id: string | undefined
     type: SpotifyAPI.Device['type']
     isActive: boolean

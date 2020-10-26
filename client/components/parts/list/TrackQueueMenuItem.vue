@@ -91,7 +91,7 @@ export default defineComponent({
 
   props: {
     item: {
-      type: Object as PropType<App.TrackQueueInfo>,
+      type: Object as PropType<App.TrackQueue>,
       required: true,
     },
   },

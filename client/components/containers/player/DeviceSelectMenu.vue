@@ -62,7 +62,7 @@ import Vue from 'vue';
 
 import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import DeviceSelectMenuItem, { On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
-import type { DeviceInfo } from '~/components/parts/list/DeviceSelectMenuItem.vue';
+import type { App } from '~~/types';
 
 type Data = {
   isShown: boolean
@@ -88,7 +88,7 @@ export default Vue.extend({
         ? 'active-icon'
         : undefined;
     },
-    deviceItemList(): DeviceInfo[] {
+    deviceItemList(): App.Device[] {
       return this.$getters()['playback/deviceList'];
     },
   },
