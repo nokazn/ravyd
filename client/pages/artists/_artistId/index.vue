@@ -36,7 +36,7 @@
         v-if="release.items.length > 0"
         :key="type"
         :title="release.title"
-        :full="!release.hasNext && !release.hasPrevious"
+        :more="release.hasNext || release.hasPrevious"
         :value="release.isAllShown"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"

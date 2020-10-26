@@ -92,7 +92,7 @@ export default class CategoryIdPage extends Vue implements AsyncData, Data {
 
   // plugins/local の getCategoryPlaylists と同じ処理で、スクロールが下限に到達したとき呼ばれる
   async appendCategoryPlaylist(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
-    if (this.playlists.hasNext) return;
+    if (!this.playlists.hasNext) return;
 
     const { playlists: currentPlaylists } = this;
     const { categoryId } = this.$route.params;

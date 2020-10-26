@@ -96,8 +96,8 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   const items = releases?.items.map(convertReleaseForCard) ?? [];
 
   const total = releases?.total ?? 0;
-  const hasNext = releases?.next == null;
-  const hasPrevious = releases?.previous == null;
+  const hasNext = releases?.next != null;
+  const hasPrevious = releases?.previous != null;
   // 未取得のアイテムがある場合に「すべて表示」ボタンを表示するためのフラグ
   const isAllShown = total > limit
     ? false

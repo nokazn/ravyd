@@ -26,7 +26,7 @@
 
     <IntersectionLoadingCircle
       v-if="value"
-      :loading="!full"
+      :loading="more"
       :class="$style.CardSection__loadingCircle"
       @appear="onLoadingAppeared"
     />
@@ -73,7 +73,7 @@ export default defineComponent({
       type: Boolean as PropType<boolean | undefined>,
       default: undefined,
     },
-    full: {
+    more: {
       type: Boolean,
       required: true,
     },
