@@ -7,7 +7,7 @@
       <ReleaseCard
         v-for="release in releaseList"
         :key="release.id"
-        v-bind="release"
+        :item="release"
         :min-width="$screen.cardWidthMinMax[0]"
         :max-width="$screen.cardWidthMinMax[1]"
       />
@@ -23,7 +23,6 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, RootGetters } from 'typed-vuex';
-
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';

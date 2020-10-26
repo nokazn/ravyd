@@ -126,7 +126,7 @@
         <ReleaseCard
           v-for="release in artist.items"
           :key="release.id"
-          v-bind="release"
+          :item="release"
           :width="$screen.cardWidth"
           discograpy
         />
@@ -199,7 +199,6 @@ interface Data {
 
   async asyncData(context: Context): Promise<AsyncData> {
     const releaseInfo = await getReleaseInfo(context);
-
     return {
       releaseInfo,
     };

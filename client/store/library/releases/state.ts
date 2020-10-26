@@ -1,7 +1,7 @@
 import { App } from '~~/types';
 
 export type LibraryReleasesState = {
-  releaseList: App.ReleaseCardInfo[]
+  releaseList: App.ReleaseCard<'album'>[]
   total: number | undefined
   unupdatedCounts: number
   actualIsSavedMap: Map<string, boolean>

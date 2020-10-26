@@ -1,9 +1,7 @@
 import { SpotifyAPI, App } from '~~/types';
 
-export const convertTrackForCard = (
-  track: SpotifyAPI.Track,
-): App.ReleaseCardInfo<'track'> => {
-  const info = {
+export const convertTrackForCard = (track: SpotifyAPI.Track): App.ReleaseCard<'track'> => {
+  return {
     type: track.type,
     releaseId: track.album.id,
     id: track.id,
@@ -14,6 +12,4 @@ export const convertTrackForCard = (
     externalUrls: track.external_urls,
     linkedFrom: track.linked_from,
   };
-
-  return info;
 };

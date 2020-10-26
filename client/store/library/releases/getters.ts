@@ -2,8 +2,8 @@ import { Getters } from 'typed-vuex';
 import { LibraryReleasesState } from './state';
 
 export type LibraryReleasesGetters = {
-  releaseListLength: number
-  isFull: boolean
+  releaseListLength: number;
+  isFull: boolean;
 };
 
 export type RootGetters = {

@@ -3,8 +3,8 @@ import { SpotifyAPI, App } from '~~/types';
 
 export const convertReleaseForCard = (
   release: SpotifyAPI.Album | SpotifyAPI.SimpleAlbum,
-): App.ReleaseCardInfo<'album'> => {
-  const info = {
+): App.ReleaseCard<'album'> => {
+  return {
     type: release.type,
     releaseId: release.id,
     id: release.id,
@@ -19,6 +19,4 @@ export const convertReleaseForCard = (
     images: release.images,
     externalUrls: release.external_urls,
   };
-
-  return info;
 };

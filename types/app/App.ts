@@ -111,7 +111,7 @@ export namespace App {
    */
 
   type _ReleaseCardType = 'album' | 'track'
-  type _ReleaseCardInfoBase<T extends _ReleaseCardType> = {
+  type _ReleaseCardBase<T extends _ReleaseCardType> = {
     type: T
     releaseId: string // id と同じ場合 (track のカードの場合) もある
     id: string // track または album の id
@@ -121,9 +121,9 @@ export namespace App {
     images: SpotifyAPI.Image[]
     externalUrls: SpotifyAPI.ExternalUrls
   }
-  export type ReleaseCardInfo<T extends _ReleaseCardType = _ReleaseCardType> = T extends 'album'
-    ? _ReleaseCardInfoBase<T> & { releaseYear: string }
-    : _ReleaseCardInfoBase<T> & { linkedFrom: SpotifyAPI.LinkedTrack | undefined }
+  export type ReleaseCard<T extends _ReleaseCardType = _ReleaseCardType> = T extends 'album'
+    ? _ReleaseCardBase<T> & { releaseYear: string }
+    : _ReleaseCardBase<T> & { linkedFrom: SpotifyAPI.LinkedTrack | undefined }
 
   export type ShowCardInfo = {
     id: string
@@ -158,7 +158,7 @@ export namespace App {
     externalUrls: SpotifyAPI.ExternalUrls
     genreList: string[]
     isFullTrackList: boolean
-    artistReleaseList: (SimpleArtistInfo & { items: ReleaseCardInfo[] })[]
+    artistReleaseList: (SimpleArtistInfo & { items: ReleaseCard<'album'>[] })[]
   }
 
   // /artists/:artistId page

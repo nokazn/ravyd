@@ -11,7 +11,7 @@ export type ReleaseType = keyof typeof TITLE_MAP
 export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T]
 export type ReleaseInfo<T extends ReleaseType> = {
   title: ReleaseTitle<T>;
-  items: App.ReleaseCardInfo[];
+  items: App.ReleaseCard<'album'>[];
   total: number;
   isFull: boolean;
   // undefined の時は最初からすべて表示
