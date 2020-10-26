@@ -1,7 +1,7 @@
 import { watchEffect, Ref, onBeforeUnmount } from '@vue/composition-api';
 
 export const useIntersectionObserver = (
-  elementRef: Ref<HTMLElement | undefined | null>,
+  elementRef: Ref<Element | undefined | null>,
   callback: (entry: IntersectionObserverEntry) => void,
   options?: IntersectionObserverInit,
 ) => {
