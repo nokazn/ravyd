@@ -184,13 +184,6 @@ export namespace App {
     track: SpotifyAPI.Track
   }
 
-  // /categories/:categoryId page
-  export type CategoryPage = {
-    id: string
-    name: string
-    images: SpotifyAPI.Image[]
-  }
-
   // /shows/:showId page
   export type ShowInfo = {
     id: string

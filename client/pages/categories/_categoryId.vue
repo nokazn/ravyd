@@ -44,10 +44,10 @@ import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionL
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getCategory, getCategoryPlaylists, CategoryPlaylists } from '~/services/local/_categoryId';
-import { App, OneToFifty } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
 interface AsyncData {
-  category: App.CategoryPage | undefined;
+  category: SpotifyAPI.Category | undefined;
   playlists: CategoryPlaylists;
 }
 interface Data {}
@@ -79,7 +79,7 @@ const LIMIT_OF_PLAYLISTS = 30;
   },
 })
 export default class CategoryIdPage extends Vue implements AsyncData, Data {
-  category: App.CategoryPage | undefined = undefined;
+  category: SpotifyAPI.Category | undefined = undefined;
   playlists: CategoryPlaylists = {
     items: [],
     hasNext: false,
@@ -90,9 +90,7 @@ export default class CategoryIdPage extends Vue implements AsyncData, Data {
     this.$dispatch('resetDominantBackgroundColor');
   }
 
-  /**
-   * plugins/local の getCategoryPlaylists と同じ処理で、スクロールが下限に到達したとき呼ばれる
-   */
+  // plugins/local の getCategoryPlaylists と同じ処理で、スクロールが下限に到達したとき呼ばれる
   async appendCategoryPlaylist(limit: OneToFifty = LIMIT_OF_PLAYLISTS) {
     if (this.playlists.hasNext) return;
 
