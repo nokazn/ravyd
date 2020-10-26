@@ -37,7 +37,7 @@ export default class RelatedArtistPage extends Vue implements Data {
   artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtistList!: App.ContentItemInfo<'artist'>[];
+  relatedArtistList!: App.ContentItem<'artist'>[];
 }
 </script>
 

@@ -171,7 +171,7 @@ type TabItem = {
 interface AsyncData {
   artist: App.ArtistPage | undefined;
   isFollowing: boolean;
-  relatedArtistList: App.ContentItemInfo<'artist'>[];
+  relatedArtistList: App.ContentItem<'artist'>[];
 }
 
 interface Data {
@@ -217,7 +217,7 @@ interface Data {
 export default class ArtistIdPage extends Vue implements AsyncData, Data {
   artist: App.ArtistPage | undefined = undefined;
   isFollowing = false;
-  relatedArtistList: App.ContentItemInfo<'artist'>[] = [];
+  relatedArtistList: App.ContentItem<'artist'>[] = [];
 
   tab: number | null = null;
   mutationUnsubscribe: (() => void) | undefined = undefined;

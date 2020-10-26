@@ -133,7 +133,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtists!: App.ContentItemInfo<'artist'>[];
+  relatedArtists!: App.ContentItem<'artist'>[];
 
   topTrackList: App.TrackDetail[] = [];
   releaseListMap: ArtistRelease = initalReleaseListMap;

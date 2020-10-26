@@ -106,8 +106,8 @@ type Data = {
 }
 
 export type ItemMap = {
-  title: string
-  items: App.ContentItemInfo<SpotifyAPI.SearchType>[]
+  title: string;
+  items: App.ContentItem<SpotifyAPI.SearchType>[];
 }
 
 export default Vue.extend({
@@ -195,13 +195,13 @@ export default Vue.extend({
 
       return itemMapList;
     },
-    itemList(): App.ContentItemInfo<SpotifyAPI.SearchType>[] {
+    itemList(): App.ContentItem<SpotifyAPI.SearchType>[] {
       return this.itemMapList.reduce(
         (prev, curr) => [...prev, ...curr.items],
-        [] as App.ContentItemInfo<SpotifyAPI.SearchType>[],
+        [] as App.ContentItem<SpotifyAPI.SearchType>[],
       );
     },
-    selectedItem(): App.ContentItemInfo<SpotifyAPI.SearchType> | undefined {
+    selectedItem(): App.ContentItem<SpotifyAPI.SearchType> | undefined {
       return this.selectedItemIndex != null
         ? this.itemList[this.selectedItemIndex] ?? undefined
         : undefined;

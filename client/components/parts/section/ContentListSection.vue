@@ -41,7 +41,7 @@ export default defineComponent({
       required: true,
     },
     items: {
-      type: Array as PropType<App.ContentItemInfo[]>,
+      type: Array as PropType<App.ContentItem[]>,
       required: true,
     },
     length: {

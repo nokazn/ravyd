@@ -57,7 +57,7 @@ export default defineComponent({
 
   props: {
     item: {
-      type: Object as PropType<SpotifyAPI.Artist | App.ContentItemInfo<'artist'>>,
+      type: Object as PropType<SpotifyAPI.Artist | App.ContentItem<'artist'>>,
       required: true,
     },
     width: {
