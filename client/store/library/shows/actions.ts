@@ -3,7 +3,6 @@ import { Actions } from 'typed-vuex';
 import { LibraryShowsState } from './state';
 import { LibraryShowsGetters } from './getters';
 import { LibraryShowsMutations } from './mutations';
-import { convertShowForCard } from '~/utils/converter';
 import { EMPTY_PAGING } from '~/constants';
 import { OneToFifty, SpotifyAPI } from '~~/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
@@ -62,7 +61,7 @@ const actions: Actions<
       return;
     }
 
-    const showList = shows.items.map(({ show }) => convertShowForCard(show));
+    const showList = shows.items.map(({ show }) => show);
     commit('ADD_TO_SHOW_LIST', showList);
     commit('SET_TOTAL', shows.total);
   },
@@ -122,8 +121,8 @@ const actions: Actions<
       .findIndex(({ show }) => show.id === currentLatestShowId);
 
     const addedShowList = lastShowIndex === -1
-      ? shows.items.map(({ show }) => convertShowForCard(show))
-      : shows.items.slice(0, lastShowIndex).map(({ show }) => convertShowForCard(show));
+      ? shows.items.map(({ show }) => show)
+      : shows.items.slice(0, lastShowIndex).map(({ show }) => show);
 
     commit('UNSHIFT_TO_SHOW_LIST', addedShowList);
     commit('SET_TOTAL', shows.total);

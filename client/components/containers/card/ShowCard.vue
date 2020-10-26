@@ -10,78 +10,52 @@
         overlay
         :border-radius="2"
         :src="artworkSrc"
-        :alt="name"
+        :alt="item.name"
         :size="width"
         :min-size="minWidth || width"
         :max-size="maxWidth || width"
         :icon="mediaIcon"
-        :title="name"
+        :title="item.name"
         @on-media-button-clicked="onMediaButtonClicked"
       />
     </template>
 
     <template #title>
       <span
-        :title="name"
+        :title="item.name"
         class="g-ellipsis-text"
       >
-        {{ name }}
+        {{ item.name }}
       </span>
     </template>
 
     <template #subtitle>
       <span
-        :title="publisher"
+        :title="item.publisher"
         class="g-ellipsis-text"
       >
-        {{ publisher }}
+        {{ item.publisher }}
       </span>
     </template>
   </Card>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RootState } from 'typed-vuex';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import { getImageSrc } from '~/utils/image';
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Card,
     ReleaseArtwork,
   },
 
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    publisher: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      required: true,
-    },
-    externalUrls: {
-      type: Object as PropType<SpotifyAPI.ExternalUrls>,
+    item: {
+      type: Object as PropType<SpotifyAPI.SimpleShow>,
       required: true,
     },
     width: {
@@ -98,39 +72,37 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.maxWidth ?? this.width);
-    },
-    showPath(): string {
-      return `/shows/${this.id}`;
-    },
-    isShowSet(): boolean {
-      return this.$getters()['playback/contextUri'] === this.uri;
-    },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
-    mediaIcon(): MediaIcon {
-      return this.isPlaying && this.isShowSet
+  setup(props, { root }) {
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      props.maxWidth ?? props.width,
+    ));
+    const showPath = computed(() => `/shows/${props.item.id}`);
+    const isShowSet = computed(() => root.$getters()['playback/contextUri'] === props.item.uri);
+    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const mediaIcon = computed<MediaIcon>(() => {
+      return isPlaying.value && isShowSet.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
-    },
-  },
-
-  methods: {
-    onMediaButtonClicked() {
-      // 現在再生中の場合
-      if (this.isShowSet) {
-        this.$dispatch(this.isPlaying
+    });
+    const onMediaButtonClicked = () => {
+      if (isShowSet.value) {
+        root.$dispatch(isPlaying.value
           ? 'playback/pause'
           : 'playback/play');
       } else {
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-        });
+        root.$dispatch('playback/play', { contextUri: props.item.uri });
       }
-    },
+    };
+
+    return {
+      artworkSrc,
+      showPath,
+      isShowSet,
+      isPlaying,
+      mediaIcon,
+      onMediaButtonClicked,
+    };
   },
 });
 </script>

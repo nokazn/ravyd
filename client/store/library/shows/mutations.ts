@@ -1,17 +1,17 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 import { LibraryShowsState } from './state';
-import { App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type LibraryShowsMutations = {
-  SET_SHOW_LIST: App.ShowCardInfo[]
-  ADD_TO_SHOW_LIST: App.ShowCardInfo[]
-  UNSHIFT_TO_SHOW_LIST: App.ShowCardInfo[]
-  SET_TOTAL: number
-  INCREMENT_UNUPDATED_COUNTS: void
-  RESET_UNUPDATED_COUNTS: void
-  SET_ACTUAL_IS_SAVED: [string, boolean],
-  DELETE_ACTUAL_IS_SAVED: string,
+  SET_SHOW_LIST: SpotifyAPI.SimpleShow[];
+  ADD_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
+  UNSHIFT_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
+  SET_TOTAL: number;
+  INCREMENT_UNUPDATED_COUNTS: void;
+  RESET_UNUPDATED_COUNTS: void;
+  SET_ACTUAL_IS_SAVED: [string, boolean];
+  DELETE_ACTUAL_IS_SAVED: string;
 }
 
 export type RootMutations = {

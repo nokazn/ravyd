@@ -125,16 +125,6 @@ export namespace App {
     ? _ReleaseCardBase<T> & { releaseYear: string }
     : _ReleaseCardBase<T> & { linkedFrom: SpotifyAPI.LinkedTrack | undefined }
 
-  export type ShowCardInfo = {
-    id: string
-    name: string
-    uri: string
-    publisher: string
-    description: string | null
-    images: SpotifyAPI.Image[]
-    externalUrls: SpotifyAPI.ExternalUrls
-  }
-
   /**
    * Page
    */

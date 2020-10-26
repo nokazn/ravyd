@@ -4,7 +4,6 @@ export * from './convertPlaylistTrackDetail';
 export * from './convertReleaseDate';
 export * from './convertReleaseForCard';
 export * from './convertReleaseType';
-export * from './convertShowForCard';
 export * from './convertToContentListItem';
 export * from './convertTrackDetail';
 export * from './convertTrackForCard';

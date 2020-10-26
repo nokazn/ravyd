@@ -1,10 +1,10 @@
-import { App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type LibraryShowsState = {
-  showList: App.ShowCardInfo[]
-  total: number | undefined
-  unupdatedCounts: number
-  actualIsSavedMap: Map<string, boolean>
+  showList: SpotifyAPI.SimpleShow[];
+  total: number | undefined;
+  unupdatedCounts: number;
+  actualIsSavedMap: Map<string, boolean>;
 }
 
 const state = (): LibraryShowsState => ({
