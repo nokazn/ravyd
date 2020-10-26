@@ -70,15 +70,13 @@ export const getReleaseInfo = async (
   ] as const);
 
   const trackList: App.TrackDetail[] = tracks.items.map((track, index) => {
-    const detail = convertTrackDetail<SpotifyAPI.SimpleTrack>({
+    return convertTrackDetail<SpotifyAPI.SimpleTrack>({
       isTrackSavedList,
       releaseId: id,
       releaseName: name,
       artistIdList,
       images,
     })(track, index);
-
-    return detail;
   });
 
   const filteredArtists = artists.filter((artist) => artist != null) as SpotifyAPI.Artist[];

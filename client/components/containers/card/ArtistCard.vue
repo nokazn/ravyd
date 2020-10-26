@@ -12,12 +12,12 @@
           overlay
           type="artist"
           :src="avatarSrc"
-          :alt="name"
+          :alt="item.name"
           :size="avatarSize"
           :min-size="minWidth"
           :max-size="avatarMaxSize"
           :icon="mediaIcon"
-          :title="name"
+          :title="item.name"
           @on-media-button-clicked="onMediaButtonClicked"
         />
       </div>
@@ -26,10 +26,10 @@
     <template #title>
       <div :class="$style.ArtistCard__title">
         <span
-          :title="name"
+          :title="item.name"
           class="g-ellipsis-text"
         >
-          {{ name }}
+          {{ item.name }}
         </span>
       </div>
     </template>
@@ -37,39 +37,27 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RootState } from 'typed-vuex';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/image/UserAvatar.vue';
 import { getImageSrc } from '~/utils/image';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI, App } from '~~/types';
 
-export default Vue.extend({
+const adjustAvatarSize = (width: number | undefined) => {
+  return width != null
+    ? width * 0.98
+    : undefined;
+};
+
+export default defineComponent({
   components: {
     Card,
     UserAvatar,
   },
 
   props: {
-    name: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      default: undefined,
-    },
-    externalUrls: {
-      type: Object as PropType<SpotifyAPI.ExternalUrls>,
+    item: {
+      type: Object as PropType<SpotifyAPI.Artist | App.ContentItemInfo<'artist'>>,
       required: true,
     },
     width: {
@@ -86,52 +74,40 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artistPath(): string {
-      return `/artists/${this.id}`;
-    },
-    avatarSrc(): string | undefined {
-      return getImageSrc(this.images, this.maxWidth ?? this.width);
-    },
-    isArtistSet(): boolean {
-      return this.$getters()['playback/isContextSet'](this.uri);
-    },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
+  setup(props, { root }) {
+    const artistPath = computed(() => `/artists/${props.item.id}`);
+    const avatarSrc = computed(() => getImageSrc(props.item.images, props.maxWidth ?? props.width));
+    const avatarSize = computed(() => adjustAvatarSize(props.width));
+    const avatarMaxSize = computed(() => adjustAvatarSize(props.maxWidth));
 
-    mediaIcon(): MediaIcon {
-      return this.isPlaying && this.isArtistSet
+    const isArtistSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
+    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const mediaIcon = computed<MediaIcon>(() => {
+      return isPlaying.value && isArtistSet.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
-    },
-    avatarSize(): number | undefined {
-      const { width } = this;
-      return width != null
-        ? width * 0.98
-        : undefined;
-    },
-    avatarMaxSize(): number | undefined {
-      const { maxWidth } = this;
-      return maxWidth != null
-        ? maxWidth * 0.98
-        : undefined;
-    },
-  },
+    });
 
-  methods: {
-    onMediaButtonClicked() {
-      // 現在再生中の場合
-      if (this.isArtistSet) {
-        this.$dispatch(this.isPlaying
+    const onMediaButtonClicked = () => {
+      if (isArtistSet.value) {
+        root.$dispatch(isPlaying.value
           ? 'playback/pause'
           : 'playback/play');
       } else {
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-        });
+        root.$dispatch('playback/play', { contextUri: props.item.uri });
       }
-    },
+    };
+
+    return {
+      artistPath,
+      avatarSrc,
+      avatarSize,
+      avatarMaxSize,
+      isArtistSet,
+      isPlaying,
+      mediaIcon,
+      onMediaButtonClicked,
+    };
   },
 });
 </script>

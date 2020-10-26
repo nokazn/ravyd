@@ -7,7 +7,7 @@
       <ShowCard
         v-for="(show, index) in showList"
         :key="`${show.id}-${index}`"
-        v-bind="show"
+        :item="show"
         :min-width="$screen.cardWidthMinMax[0]"
         :max-width="$screen.cardWidthMinMax[1]"
       />

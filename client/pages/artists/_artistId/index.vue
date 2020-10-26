@@ -47,7 +47,7 @@
           v-for="(item, index) in releaseInfo.items"
           v-show="releaseInfo.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
-          v-bind="item"
+          :item="item"
           :min-width="$constant.FLEX_CARD_MIN_WIDTH"
           :max-width="$constant.FLEX_CARD_MAX_WIDTH"
           discograpy
@@ -70,10 +70,15 @@ import CardsSection from '~/components/parts/section/CardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
-import { getReleaseListMap, getTopTrackList, initalReleaseListMap } from '~/services/local/_artistId';
+import {
+  getReleaseListMap,
+  getTopTrackList,
+  initalReleaseListMap,
+  ArtistReleaseInfo,
+  ReleaseType,
+} from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/utils/converter';
-import type { ArtistReleaseInfo, ReleaseType } from '~/services/local/_artistId';
 import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;

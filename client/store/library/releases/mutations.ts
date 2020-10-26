@@ -4,9 +4,9 @@ import { LibraryReleasesState } from './state';
 import { App } from '~~/types';
 
 export type LibraryReleasesMutations = {
-  SET_RELEASE_LIST: App.ReleaseCardInfo[]
-  ADD_TO_RELEASE_LIST: App.ReleaseCardInfo[]
-  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCardInfo[]
+  SET_RELEASE_LIST: App.ReleaseCard<'album'>[]
+  ADD_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
+  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
   SET_TOTAL: number
   INCREMENT_UNUPDATED_COUNTS: void
   RESET_UNUPDATED_COUNTS: void

@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 import { LibraryArtistsState } from './state';
-import { App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type LibraryArtistsMutations = {
-  SET_ARTIST_LIST: App.ArtistCardInfo[]
-  ADD_TO_ARTIST_LIST: App.ArtistCardInfo[]
-  UNSHIFT_TO_ARTIST_LIST: App.ArtistCardInfo[]
+  SET_ARTIST_LIST: SpotifyAPI.Artist[]
+  ADD_TO_ARTIST_LIST: SpotifyAPI.Artist[]
+  UNSHIFT_TO_ARTIST_LIST: SpotifyAPI.Artist[]
   SET_TOTAL: number
   INCREMENT_UNUPDATED_COUNTS: void
   RESET_UNUPDATED_COUNTS: void

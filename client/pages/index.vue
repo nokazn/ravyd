@@ -11,7 +11,7 @@
       <ReleaseCard
         v-for="release in newReleaseList"
         :key="release.id"
-        v-bind="release"
+        :item="release"
         :width="$screen.cardWidth"
       />
     </ScrollableCardsSection>
@@ -24,7 +24,7 @@
       <ReleaseCard
         v-for="release in topTrackList"
         :key="release.id"
-        v-bind="release"
+        :item="release"
         :width="$screen.cardWidth"
       />
     </ScrollableCardsSection>
@@ -37,7 +37,7 @@
       <ArtistCard
         v-for="artist in topArtistList"
         :key="artist.id"
-        v-bind="artist"
+        :item="artist"
         :width="$screen.cardWidth"
       />
     </ScrollableCardsSection>
@@ -50,22 +50,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-import {
-  convertTrackForCard,
-  convertArtistForCard,
-  convertReleaseForCard,
-} from '~/utils/converter';
-import { App } from '~~/types';
+import { convertTrackForCard, convertReleaseForCard } from '~/utils/converter';
+import type { App, SpotifyAPI } from '~~/types';
 
-export type AsyncData = {
-  topArtistList: App.ArtistCardInfo[];
-  topTrackList: App.ReleaseCardInfo[];
-  newReleaseList: App.ReleaseCardInfo[];
+type AsyncData = {
+  topArtistList: SpotifyAPI.Artist[];
+  topTrackList: App.ReleaseCard<'track'>[];
+  newReleaseList: App.ReleaseCard<'album'>[];
 }
 
 @Component({
@@ -83,7 +78,8 @@ export type AsyncData = {
       app.$spotify.top.getTopTracks({}),
       app.$spotify.browse.getNewReleases({ country }),
     ] as const);
-    const topArtistList = topArtists?.items.map(convertArtistForCard) ?? [];
+
+    const topArtistList = topArtists?.items ?? [];
     const topTrackList = topTracks?.items.map(convertTrackForCard) ?? [];
     const newReleaseList = newReleases.albums?.items.map(convertReleaseForCard) ?? [];
     app.$commit('SET_DOMINANT_BACKGROUND_COLOR', undefined);
@@ -102,9 +98,9 @@ export type AsyncData = {
   },
 })
 export default class RootPage extends Vue implements AsyncData {
-  topArtistList: App.ArtistCardInfo[] = [];
-  topTrackList: App.ReleaseCardInfo[] = [];
-  newReleaseList: App.ReleaseCardInfo[] = [];
+  topArtistList: SpotifyAPI.Artist[] = [];
+  topTrackList: App.ReleaseCard<'track'>[] = [];
+  newReleaseList: App.ReleaseCard<'album'>[] = [];
 
   get hasContent(): boolean {
     return this.topArtistList.length > 0

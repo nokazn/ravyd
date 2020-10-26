@@ -11,12 +11,12 @@
           overlay
           :border-radius="2"
           :src="artworkSrc"
-          :alt="name"
+          :alt="item.name"
           :size="width"
           :min-size="minWidth || width"
           :max-size="maxWidth || width"
           :icon="mediaIcon"
-          :title="name"
+          :title="item.name"
           @on-media-button-clicked="onMediaButtonClicked"
         />
       </nuxt-link>
@@ -25,26 +25,26 @@
     <template #title>
       <nuxt-link
         :to="releasePath"
-        :title="name"
+        :title="item.name"
         class="g-ellipsis-text"
       >
-        {{ name }}
+        {{ item.name }}
       </nuxt-link>
     </template>
 
     <template #subtitle>
       <template v-if="discograpy">
         <time
-          v-if="releaseYear != null"
-          :datetime="releaseYear"
+          v-if="item.type === 'album'"
+          :datetime="item.releaseYear"
           class="g-ellipsis-text"
         >
-          {{ releaseYear }}
+          {{ item.releaseYear }}
         </time>
       </template>
       <template v-else>
         <ArtistNames
-          :artists="artists"
+          :artists="item.artists"
           class="g-ellipsis-text"
         />
       </template>
@@ -53,18 +53,16 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RawLocation } from 'vue-router';
-import { RootState } from 'typed-vuex';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { RawLocation } from 'vue-router';
 
 import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/utils/image';
-import { hasProp } from '~~/utils/hasProp';
-import { SpotifyAPI, App } from '~~/types';
+import type { App } from '~~/types';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Card,
     ReleaseArtwork,
@@ -72,43 +70,8 @@ export default Vue.extend({
   },
 
   props: {
-    type: {
-      type: String as PropType<App.ReleaseCardInfo['type']>,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    releaseId: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    artists: {
-      type: Array as PropType<App.SimpleArtistInfo[]>,
-      required: true,
-      validator(value) {
-        return value.every((ele) => hasProp(ele, ['name', 'id']));
-      },
-    },
-    releaseYear: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      default: undefined,
-    },
-    externalUrls: {
-      type: Object as PropType<SpotifyAPI.ExternalUrls>,
+    item: {
+      type: Object as PropType<App.ReleaseCard>,
       required: true,
     },
     width: {
@@ -130,54 +93,56 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.maxWidth ?? this.width);
-    },
-    releasePath(): RawLocation {
-      const path = `/releases/${this.releaseId}`;
-      if (this.type === 'album') return path;
-
-      return {
-        path,
-        query: { track: this.id },
-      };
-    },
-    isReleaseSet(): boolean {
+  setup(props, { root }) {
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      props.maxWidth ?? props.width,
+    ));
+    const releasePath = computed<RawLocation>(() => ({
+      path: `/releases/${props.item.releaseId}`,
+      query: props.item.type === 'track'
+        ? { track: props.item.id }
+        : undefined,
+    }));
+    const isReleaseSet = computed(() => {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
-      return (this.type === 'track' && this.$getters()['playback/isTrackSet'](this.id))
-        || (this.type === 'album' && this.$getters()['playback/isContextSet'](this.uri));
-    },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
-    mediaIcon(): MediaIcon {
-      return this.isPlaying && this.isReleaseSet
+      if (props.item.type === 'track') {
+        return root.$getters()['playback/isTrackSet'](props.item.id);
+      }
+      return root.$getters()['playback/isContextSet'](props.item.uri);
+    });
+    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const mediaIcon = computed<MediaIcon>(() => {
+      return isPlaying.value && isReleaseSet.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
-    },
-  },
+    });
 
-  methods: {
-    onCardClicked() {
-      this.$router.push(this.releasePath);
-    },
-    onMediaButtonClicked() {
-      // 現在再生中のトラック/アルバムの場合
-      if (this.isReleaseSet) {
-        this.$dispatch(this.isPlaying
+    const onCardClicked = () => { root.$router.push(releasePath.value); };
+    const onMediaButtonClicked = () => {
+      if (isReleaseSet.value) {
+        root.$dispatch(isPlaying.value
           ? 'playback/pause'
           : 'playback/play');
         return;
       }
-
       // トラックとアルバムのカードで場合分け
-      const params = this.type === 'track'
-        ? { trackUriList: [this.uri] }
-        : { contextUri: this.uri };
+      const params = props.item.type === 'track'
+        ? { trackUriList: [props.item.uri] }
+        : { contextUri: props.item.uri };
       // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-      this.$dispatch('playback/play', params);
-    },
+      root.$dispatch('playback/play', params);
+    };
+
+    return {
+      artworkSrc,
+      releasePath,
+      isReleaseSet,
+      isPlaying,
+      mediaIcon,
+      onCardClicked,
+      onMediaButtonClicked,
+    };
   },
 });
 </script>

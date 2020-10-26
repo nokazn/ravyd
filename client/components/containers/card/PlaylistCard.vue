@@ -11,34 +11,34 @@
         overlay
         :border-radius="2"
         :src="artworkSrc"
-        :alt="name"
+        :alt="item.name"
         :size="width"
         :min-size="minWidth || width"
         :max-size="maxWidth || width"
         :icon="mediaIcon"
-        :title="name"
+        :title="item.name"
         @on-media-button-clicked="onMediaButtonClicked"
       />
     </template>
 
     <template #title>
       <span
-        :title="name"
+        :title="item.name"
         class="g-ellipsis-text"
       >
-        {{ name }}
+        {{ item.name }}
       </span>
     </template>
 
     <template #subtitle>
       <span :class="$style.PlaylistCard__text">
         <span
-          v-if="description"
-          :title="description"
-          v-html="description"
+          v-if="item.description"
+          :title="item.description"
+          v-html="item.description"
         />
-        <span v-else-if="owner.display_name != null">
-          by {{ owner.display_name }}
+        <span v-else-if="item.owner.display_name != null">
+          by {{ item.owner.display_name }}
         </span>
         <br>
         <br>
@@ -48,49 +48,21 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RootState } from 'typed-vuex';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import { getImageSrc } from '~/utils/image';
-import { App, SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from '~~/types';
 
-export type PlaylistCardInfo = App.PlaylistCardInfo
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     Card,
     ReleaseArtwork,
   },
 
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    uri: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String as PropType<string | undefined>,
-      default: undefined,
-    },
-    owner: {
-      type: Object as PropType<SpotifyAPI.UserData>,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
-      required: true,
-    },
-    externalUrls: {
-      type: Object as PropType<SpotifyAPI.ExternalUrls>,
+    item: {
+      type: Object as PropType<SpotifyAPI.SimplePlaylist>,
       required: true,
     },
     width: {
@@ -107,40 +79,38 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    artworkSrc(): string | undefined {
-      return getImageSrc(this.images, this.maxWidth ?? this.width);
-    },
-    playlistPath(): string {
-      return `/playlists/${this.id}`;
-    },
-    isPlaylistSet(): boolean {
-      return this.$getters()['playback/isContextSet'](this.uri);
-    },
-    isPlaying(): RootState['playback']['isPlaying'] {
-      return this.$state().playback.isPlaying;
-    },
-
-    mediaIcon(): MediaIcon {
-      return this.isPlaying && this.isPlaylistSet
+  setup(props, { root }) {
+    const artworkSrc = computed(() => getImageSrc(
+      props.item.images,
+      props.maxWidth ?? props.width,
+    ));
+    const playlistPath = computed(() => `/playlists/${props.item.id}`);
+    const isPlaylistSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
+    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const mediaIcon = computed<MediaIcon>(() => {
+      return isPlaying.value && isPlaylistSet.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
-    },
-  },
+    });
 
-  methods: {
-    onMediaButtonClicked() {
-      // 現在再生中の場合
-      if (this.isPlaylistSet) {
-        this.$dispatch(this.isPlaying
+    const onMediaButtonClicked = () => {
+      if (isPlaylistSet.value) {
+        root.$dispatch(isPlaying.value
           ? 'playback/pause'
           : 'playback/play');
       } else {
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-        });
+        root.$dispatch('playback/play', { contextUri: props.item.uri });
       }
-    },
+    };
+
+    return {
+      artworkSrc,
+      playlistPath,
+      isPlaylistSet,
+      isPlaying,
+      mediaIcon,
+      onMediaButtonClicked,
+    };
   },
 });
 </script>
