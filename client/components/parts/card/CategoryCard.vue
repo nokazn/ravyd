@@ -22,8 +22,8 @@
       <v-img
         v-if="artworkSrc != null"
         :src="artworkSrc"
-        :alt="name"
-        :title="name"
+        :alt="item.name"
+        :title="item.name"
         :min-width="minSize || size"
         :min-height="minSize || size"
         :width="size"
@@ -35,9 +35,9 @@
         <div :class="$style.CategoryCard__link">
           <span
             class="g-ellipsis-text"
-            :title="name"
+            :title="item.name"
           >
-            {{ name }}
+            {{ item.name }}
           </span>
         </div>
       </v-img>
@@ -48,7 +48,7 @@
       >
         <svg viewBox="0 0 1 1" />
         <v-sheet
-          :title="name"
+          :title="item.name"
           :min-width="minSize || size"
           :min-height="minSize || size"
           :width="size"
@@ -59,9 +59,9 @@
           <div :class="$style.CategoryCard__link">
             <span
               class="g-ellipsis-text"
-              :title="name"
+              :title="item.name"
             >
-              {{ name }}
+              {{ item.name }}
             </span>
           </div>
         </v-sheet>
@@ -84,16 +84,8 @@ import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: Array as PropType<SpotifyAPI.Image[]>,
+    item: {
+      type: Object as PropType<SpotifyAPI.Category>,
       required: true,
     },
     size: {
@@ -113,10 +105,10 @@ export default defineComponent({
   setup(props) {
     const isLoaded = ref(false);
     const artworkSrc = computed(() => getImageSrc(
-      props.images,
+      props.item.icons,
       props.maxSize ?? props.size,
     ));
-    const categoryPath = computed(() => `/categories/${props.id}`);
+    const categoryPath = computed(() => `/categories/${props.item.id}`);
     onMounted(() => { isLoaded.value = true; });
 
     return {

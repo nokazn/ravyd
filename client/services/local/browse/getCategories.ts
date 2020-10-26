@@ -1,8 +1,8 @@
 import { Context } from '@nuxt/types';
-import { App } from '~~/types';
+import { SpotifyAPI } from '~~/types';
 
 export type Categories = {
-  items: App.CategoryPage[];
+  items: SpotifyAPI.Category[];
   hasNext: boolean;
   hasPrevious: boolean;
 }
@@ -17,14 +17,8 @@ export const getCategories = async (
   });
   if (categories == null) return undefined;
 
-  const items = categories.items.map((category) => ({
-    id: category.id,
-    name: category.name,
-    images: category.icons,
-  }));
-
   return {
-    items,
+    items: categories.items,
     hasNext: categories.next != null,
     hasPrevious: categories.previous != null,
   };

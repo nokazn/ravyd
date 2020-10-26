@@ -15,7 +15,7 @@
       <CategoryCard
         v-for="category in categories.items"
         :key="category.id"
-        v-bind="category"
+        :item="category"
         :min-size="$screen.cardWidthMinMax[0]"
         :max-size="$screen.cardWidthMinMax[1]"
       />
@@ -96,15 +96,9 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
       return;
     }
 
-    const addedItems = categories.items.map((category) => ({
-      id: category.id,
-      name: category.name,
-      images: category.icons,
-    }));
-
     this.categories = {
       ...currentCategories,
-      items: [...currentCategories.items, ...addedItems],
+      items: [...currentCategories.items, ...categories.items],
       hasNext: categories.next != null,
     };
   }
