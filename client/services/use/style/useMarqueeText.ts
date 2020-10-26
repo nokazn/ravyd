@@ -28,7 +28,6 @@ export const useMarqueeText = (elementRef: Ref<HTMLElement | Vue | undefined | n
     const element = elementRef.value != null && '$el' in elementRef.value
       ? elementRef.value.$el
       : elementRef.value;
-    console.log({ element });
     if (element == null) return;
     elementWidth.value = element.clientWidth;
     parentWidth.value = element.parentElement?.clientWidth;
