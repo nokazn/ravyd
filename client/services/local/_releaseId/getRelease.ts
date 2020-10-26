@@ -2,9 +2,9 @@ import { Context } from '@nuxt/types';
 import { convertReleaseType, convertTrackDetail, convertReleaseForCard } from '~/utils/converter';
 import { App, SpotifyAPI, OneToFifty } from '~~/types';
 
-export const getReleaseInfo = async (
+export const getRelease = async (
   { app, params }: Context,
-): Promise<App.ReleaseInfo | undefined> => {
+): Promise<App.ReleasePage | undefined> => {
   // アーティストの他のリリースを取得
   const getArtistReleaseList = (
     artistList: SpotifyAPI.SimpleArtist[],
@@ -12,7 +12,7 @@ export const getReleaseInfo = async (
       market?: SpotifyAPI.Country
       limit?: OneToFifty
     },
-  ): Promise<App.ReleaseInfo['artistReleaseList']> => Promise.all(artistList.map(async (artist) => {
+  ): Promise<App.ReleasePage['artistReleaseList']> => Promise.all(artistList.map(async (artist) => {
     const releases = await app.$spotify.artists.getArtistAlbums({
       artistId: artist.id,
       country: market,

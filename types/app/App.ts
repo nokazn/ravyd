@@ -130,7 +130,7 @@ export namespace App {
    */
 
    // /releases/:releaseId page
-  export type ReleaseInfo = {
+  export type ReleasePage = {
     releaseType: 'アルバム' | 'シングル' | 'EP' | 'コンピレーション'
     id: string
     name: string

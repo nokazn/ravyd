@@ -67,7 +67,7 @@ export default defineComponent({
 
   props: {
     release: {
-      type: Object as PropType<App.ReleaseInfo>,
+      type: Object as PropType<App.ReleasePage>,
       required: true,
     },
   },
