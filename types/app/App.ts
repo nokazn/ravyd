@@ -185,7 +185,7 @@ export namespace App {
   }
 
   // /categories/:categoryId page
-  export type CategoryInfo = {
+  export type CategoryPage = {
     id: string
     name: string
     images: SpotifyAPI.Image[]

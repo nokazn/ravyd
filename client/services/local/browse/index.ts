@@ -1,1 +1,1 @@
-export * from './getCategoryList';
+export * from './getCategories';

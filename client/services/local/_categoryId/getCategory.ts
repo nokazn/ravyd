@@ -3,7 +3,7 @@ import { App } from '~~/types';
 
 export const getCategory = async (
   { app, params }: Context,
-): Promise<App.CategoryInfo | undefined> => {
+): Promise<App.CategoryPage | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
   const categoryInfo = await app.$spotify.browse.getCategory({
     categoryId: params.categoryId,

@@ -1,2 +1,2 @@
 export * from './getCategory';
-export * from './getCategoryPlaylist';
+export * from './getCategoryPlaylists';

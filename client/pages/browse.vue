@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="categoryList != null"
+    v-if="categories != null"
     :class="$style.BrowsePage"
   >
     <h1 :class="$style.BrowsePage__title">
@@ -8,12 +8,12 @@
     </h1>
 
     <CardsWrapper
-      v-if="categoryList != null"
+      v-if="categories != null"
       :min-width="$screen.cardWidthMinMax[0]"
       :max-width="$screen.cardWidthMinMax[1]"
     >
       <CategoryCard
-        v-for="category in categoryList"
+        v-for="category in categories.items"
         :key="category.id"
         v-bind="category"
         :min-size="$screen.cardWidthMinMax[0]"
@@ -22,7 +22,7 @@
     </CardsWrapper>
 
     <IntersectionLoadingCircle
-      :loading="!isFullCategoryList"
+      :loading="categories.hasNext"
       @appear="onLoadingCircleAppeared"
     />
   </div>
@@ -34,18 +34,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-
-import { getCategoryList } from '~/services/local/browse';
-import { App } from '~~/types';
+import { getCategories, Categories } from '~/services/local/browse';
 
 interface AsyncData {
-  isFullCategoryList: boolean;
-  categoryList: App.CategoryInfo[] | undefined;
+  categories: Categories | undefined;
 }
 
 interface Data {
@@ -63,20 +59,12 @@ const LIMIT_OF_CATEGORIES = 30;
   },
 
   async asyncData(context): Promise<AsyncData> {
-    const categoryList = await getCategoryList(context);
-    const isFullCategoryList = categoryList == null
-      || (categoryList != null && categoryList.length < LIMIT_OF_CATEGORIES);
-
-    return {
-      isFullCategoryList,
-      categoryList,
-    };
+    const categories = await getCategories(context);
+    return { categories };
   },
 })
 export default class BrowsePage extends Vue implements AsyncData, Data {
-  isFullCategoryList = false;
-  categoryList: App.CategoryInfo[] | undefined = undefined;
-
+  categories: Categories | undefined = undefined;
   title = '見つける';
 
   mounted() {
@@ -89,38 +77,40 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
     };
   }
 
-  async getCategoryList() {
-    if (this.isFullCategoryList) return;
+  async getCategories() {
+    if (this.categories == null || !this.categories.hasNext) return;
 
+    const currentCategories = this.categories;
     const country = this.$getters()['auth/userCountryCode'];
-    const offset = this.categoryList?.length;
-    const { categories } = await this.$spotify.browse.getCategoryList({
+    const offset = this.categories.items.length;
+    const { categories } = await this.$spotify.browse.getCategories({
       country,
       limit: LIMIT_OF_CATEGORIES,
       offset,
     });
     if (categories == null) {
-      this.isFullCategoryList = true;
+      this.categories = {
+        ...currentCategories,
+        hasNext: false,
+      };
       return;
     }
 
-    const addedCategoryList = categories.items.map((category) => ({
+    const addedItems = categories.items.map((category) => ({
       id: category.id,
       name: category.name,
       images: category.icons,
     }));
 
-    this.categoryList = this.categoryList != null
-      ? [...this.categoryList, ...addedCategoryList]
-      : addedCategoryList;
-
-    if (categories.next == null) {
-      this.isFullCategoryList = true;
-    }
+    this.categories = {
+      ...currentCategories,
+      items: [...currentCategories.items, ...addedItems],
+      hasNext: categories.next != null,
+    };
   }
 
   onLoadingCircleAppeared() {
-    this.getCategoryList();
+    this.getCategories();
   }
 }
 </script>
