@@ -31,21 +31,21 @@
       />
     </div>
 
-    <template v-for="[type, releaseInfo] in Array.from(releaseListMap.entries())">
+    <template v-for="[type, release] in Array.from(releaseListMap.entries())">
       <CardsSection
-        v-if="releaseInfo.items.length > 0"
+        v-if="release.items.length > 0"
         :key="type"
-        :title="releaseInfo.title"
-        :full="releaseInfo.isFull"
-        :value="releaseInfo.isAllShown"
+        :title="release.title"
+        :full="release.isFull"
+        :value="release.isAllShown"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"
         @on-button-hovered="onShowAllButtonHovered(type)"
         @on-loading-appeared="appendReleaseList(type)"
       >
         <ReleaseCard
-          v-for="(item, index) in releaseInfo.items"
-          v-show="releaseInfo.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
+          v-for="(item, index) in release.items"
+          v-show="release.isAllShown || index < ABBREVIATED_RELEASE_LENGTH"
           :key="item.id"
           :item="item"
           :min-width="$constant.FLEX_CARD_MIN_WIDTH"
