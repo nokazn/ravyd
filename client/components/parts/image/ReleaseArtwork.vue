@@ -148,7 +148,7 @@ export default defineComponent({
   display: inline-grid;
 
   & > * {
-    grid-area: 1 / 1 / -1 / -1;
+    grid-area: 1 / 1;
   }
 }
 </style>

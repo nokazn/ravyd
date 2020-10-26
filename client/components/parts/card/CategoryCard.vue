@@ -46,7 +46,10 @@
         v-else
         :class="$style.Ratio"
       >
-        <svg viewBox="0 0 1 1" />
+        <svg
+          v-if="size == null"
+          viewBox="0 0 1 1"
+        />
         <v-sheet
           :title="item.name"
           :min-width="minSize || size"
@@ -131,10 +134,10 @@ export default defineComponent({
 }
 
 .Ratio {
-  display: grid;
+  display: inline-grid;
 
   & > * {
-    grid-area: 1 / 1 / -1 / -1;
+    grid-area: 1 / 1;
   }
 }
 </style>
