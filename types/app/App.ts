@@ -168,7 +168,8 @@ export namespace App {
     trackList: App.TrackDetail[];
     externalUrls: SpotifyAPI.ExternalUrls;
     genreList: string[];
-    isFullTrackList: boolean;
+    hasNextTrack: boolean;
+    hasPreviousTrack: boolean;
     artistReleaseList: (MinimumArtist & { items: ReleaseCard<'album'>[] })[];
   }
 

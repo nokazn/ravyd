@@ -80,10 +80,10 @@ export const getRelease = async (
   });
 
   const filteredArtists = artists.filter((artist) => artist != null) as SpotifyAPI.Artist[];
-
   const releaseType = convertReleaseType(album_type, totalTracks);
-  const isFullTrackList = tracks.next == null;
   const durationMs = tracks.items.reduce((prev, curr) => prev + curr.duration_ms, 0);
+  const hasNextTrack = tracks.next != null;
+  const hasPreviousTrack = tracks.previous != null;
 
   return {
     releaseType,
@@ -102,7 +102,8 @@ export const getRelease = async (
     trackList,
     externalUrls,
     genreList,
-    isFullTrackList,
+    hasNextTrack,
+    hasPreviousTrack,
     artistReleaseList,
   };
 };

@@ -15,7 +15,8 @@ export type Release<T extends ReleaseType> = {
   title: ReleaseTitle<T>;
   items: App.ReleaseCard<'album'>[];
   total: number;
-  isFull: boolean;
+  hasNext: boolean;
+  hasPrevious: boolean;
   // undefined の時は最初からすべて表示
   isAllShown: boolean | undefined;
   isAppended: boolean;
@@ -29,7 +30,8 @@ export const initalReleaseListMap: ArtistRelease = new Map([
       title: 'アルバム',
       items: [],
       total: 0,
-      isFull: false,
+      hasNext: true,
+      hasPrevious: true,
       isAllShown: undefined,
       isAppended: false,
     },
@@ -40,7 +42,8 @@ export const initalReleaseListMap: ArtistRelease = new Map([
       title: 'シングル・EP',
       items: [],
       total: 0,
-      isFull: false,
+      hasNext: true,
+      hasPrevious: true,
       isAllShown: undefined,
       isAppended: false,
     },
@@ -51,7 +54,8 @@ export const initalReleaseListMap: ArtistRelease = new Map([
       title: 'コンピレーション',
       items: [],
       total: 0,
-      isFull: false,
+      hasNext: true,
+      hasPrevious: true,
       isAllShown: undefined,
       isAppended: false,
     },
@@ -62,7 +66,8 @@ export const initalReleaseListMap: ArtistRelease = new Map([
       title: '参加作品',
       items: [],
       total: 0,
-      isFull: false,
+      hasNext: true,
+      hasPrevious: true,
       isAllShown: undefined,
       isAppended: false,
     },
@@ -91,7 +96,8 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   const items = releases?.items.map(convertReleaseForCard) ?? [];
 
   const total = releases?.total ?? 0;
-  const isFull = releases?.next == null;
+  const hasNext = releases?.next == null;
+  const hasPrevious = releases?.previous == null;
   // 未取得のアイテムがある場合に「すべて表示」ボタンを表示するためのフラグ
   const isAllShown = total > limit
     ? false
@@ -103,7 +109,8 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
       title,
       items,
       total,
-      isFull,
+      hasNext,
+      hasPrevious,
       isAllShown,
       isAppended: false,
     },

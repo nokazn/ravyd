@@ -36,7 +36,7 @@
         v-if="release.items.length > 0"
         :key="type"
         :title="release.title"
-        :full="release.isFull"
+        :full="!release.hasNext && !release.hasPrevious"
         :value="release.isAllShown"
         :class="$style.DiscographySection"
         @input="onShowAllButtonClicked(type)"
@@ -219,7 +219,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   async appendReleaseList(type: ReleaseType) {
     const currentReleaseList = this.releaseListMap.get(type);
     // すべて読み込み済みの場合は何もしない
-    if (currentReleaseList == null || currentReleaseList.isFull) return;
+    if (currentReleaseList == null || !currentReleaseList.hasNext) return;
 
     this.releaseListMap = new Map(this.releaseListMap.set(type, {
       ...currentReleaseList,
@@ -234,12 +234,10 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
       offset,
     });
     const items = releases?.items.map(convertReleaseForCard) ?? [];
-    const isFull = releases?.next == null;
-
     this.releaseListMap = new Map(this.releaseListMap.set(type, {
       ...currentReleaseList,
       items: [...currentReleaseList.items, ...items],
-      isFull,
+      hasNext: releases?.next != null,
       // currentReleaseList ではまだ isAppended が反映されていないので再度指定する必要がある
       isAppended: true,
     }).entries());
@@ -249,7 +247,7 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     const currentReleaseList = this.releaseListMap.get(type);
     // すべて取得済みか初回の追加読み込みがなされている場合は何もしない
     if (currentReleaseList == null
-      || currentReleaseList.isFull
+      || (!currentReleaseList.hasNext && !currentReleaseList.hasPrevious)
       || currentReleaseList.isAppended) return;
     this.appendReleaseList(type);
   }

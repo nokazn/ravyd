@@ -101,7 +101,7 @@
     />
 
     <IntersectionLoadingCircle
-      :loading="!release.isFullTrackList"
+      :loading="release.hasNextTrack"
       @appear="appendTrackList"
     />
 
@@ -286,8 +286,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendTrackList(limit: OneToFifty = LIMIT_OF_TRACKS) {
-    if (this.release == null
-      || this.release.isFullTrackList) return;
+    if (this.release == null || !this.release.hasNextTrack) return;
 
     const currentRelease = this.release;
     const releaseId = currentRelease.id;
@@ -302,7 +301,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       this.$toast.pushError('トラックが取得できませんでした。');
       this.release = {
         ...currentRelease,
-        isFullTrackList: true,
+        hasNextTrack: false,
       };
       return;
     }
@@ -318,13 +317,11 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       images: currentRelease.images,
     }));
     const durationMs = trackList.reduce((prev, curr) => prev + curr.durationMs, 0);
-    const isFullTrackList = tracks.next == null;
-
     this.release = {
       ...currentRelease,
       trackList: [...currentRelease.trackList, ...trackList],
       durationMs: currentRelease.durationMs + durationMs,
-      isFullTrackList,
+      hasNextTrack: tracks.next != null,
     };
   }
 
