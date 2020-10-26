@@ -1,12 +1,20 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
+import type { OneToFifty, SpotifyAPI } from '~~/types';
 
-import { convertPlaylistForCard } from '~/utils/converter';
-import { OneToFifty, App } from '~~/types';
+export type UserPlaylists = {
+  items: SpotifyAPI.SimplePlaylist[];
+  hasNext: boolean;
+  hasPrevious: boolean;
+  total: number;
+}
 
 export const getUserPlaylists = async (
   { app, params }: Context,
-  { limit, offset = 0 }: { limit: OneToFifty, offset?: number },
-): Promise<App.UserPlaylistInfo> => {
+  { limit, offset = 0 }: {
+    limit: OneToFifty;
+    offset?: number;
+  },
+): Promise<UserPlaylists> => {
   const playlists = await app.$spotify.playlists.getListOfUserPlaylist({
     userId: params.userId,
     limit,
@@ -14,15 +22,17 @@ export const getUserPlaylists = async (
   });
   if (playlists == null) {
     return {
-      playlists: [],
+      items: [],
       hasNext: false,
+      hasPrevious: false,
       total: 0,
     };
   }
 
   return {
-    playlists: playlists.items.map(convertPlaylistForCard),
+    items: playlists.items,
     hasNext: playlists.next != null,
+    hasPrevious: playlists.previous != null,
     total: playlists.total,
   };
 };

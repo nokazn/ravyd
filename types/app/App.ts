@@ -125,16 +125,6 @@ export namespace App {
     ? _ReleaseCardInfoBase<T> & { releaseYear: string }
     : _ReleaseCardInfoBase<T> & { linkedFrom: SpotifyAPI.LinkedTrack | undefined }
 
-  export type PlaylistCardInfo = {
-    id: string
-    name: string
-    uri: string
-    description: string | undefined
-    owner: SpotifyAPI.UserData
-    images: SpotifyAPI.Image[]
-    externalUrls: SpotifyAPI.ExternalUrls
-  }
-
   export type ShowCardInfo = {
     id: string
     name: string
@@ -261,10 +251,5 @@ export namespace App {
     images: SpotifyAPI.Image[]
     type: 'user'
     uri: string
-  }
-  export type UserPlaylistInfo = {
-    playlists: PlaylistCardInfo[]
-    hasNext: boolean
-    total: number
   }
 }

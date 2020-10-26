@@ -1,19 +1,34 @@
 import { Context } from '@nuxt/types';
-import { App, OneToFifty } from '~~/types';
+import { SpotifyAPI, OneToFifty } from '~~/types';
 
-import { convertPlaylistForCard } from '~/utils/converter';
+export type CategoryPlaylists = {
+  items: SpotifyAPI.SimplePlaylist[];
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
 
 export const getCategoryPlaylist = async (
   { app, params }: Context,
   limit: OneToFifty,
-): Promise<App.PlaylistCardInfo[]> => {
+): Promise<CategoryPlaylists> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { playlists } = await app.$spotify.browse.getCategoryPlaylist({
     categoryId: params.categoryId,
     country,
     limit,
   });
-  if (playlists == null) return [];
 
-  return playlists.items.map(convertPlaylistForCard);
+  if (playlists == null) {
+    return {
+      items: [],
+      hasNext: false,
+      hasPrevious: false,
+    };
+  }
+
+  return {
+    items: playlists.items,
+    hasNext: playlists.next != null,
+    hasPrevious: playlists.previous != null,
+  };
 };

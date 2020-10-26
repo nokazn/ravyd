@@ -77,14 +77,14 @@
     <v-divider :class="$style.Divider" />
 
     <CardsWrapper
-      v-if="userPlaylistInfo.playlists.length > 0"
+      v-if="userPlaylistInfo.items.length > 0"
       :min-width="$screen.cardWidthMinMax[0]"
       :max-width="$screen.cardWidthMinMax[1]"
     >
       <PlaylistCard
-        v-for="playlist in userPlaylistInfo.playlists"
+        v-for="playlist in userPlaylistInfo.items"
         :key="playlist.id"
-        v-bind="playlist"
+        :item="playlist"
         :min-width="$screen.cardWidthMinMax[0]"
         :max-width="$screen.cardWidthMinMax[1]"
       />
@@ -114,19 +114,22 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-
-import { getUserInfo, getIsFollowing, getUserPlaylists } from '~/services/local/_userId';
+import {
+  getUserInfo,
+  getIsFollowing,
+  getUserPlaylists,
+  UserPlaylists,
+} from '~/services/local/_userId';
 import { getImageSrc } from '~/utils/image';
-import { convertPlaylistForCard } from '~/utils/converter';
-import { App, OneToFifty } from '~~/types';
+import type { App, OneToFifty } from '~~/types';
 
 const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
-  userInfo: App.UserInfo | undefined
-  isFollowing: boolean | undefined
-  userPlaylistInfo: App.UserPlaylistInfo
+  userInfo: App.UserInfo | undefined;
+  isFollowing: boolean | undefined;
+  userPlaylistInfo: UserPlaylists;
 }
 
 interface Data {
@@ -166,9 +169,10 @@ interface Data {
 export default class UserIdPage extends Vue implements AsyncData, Data {
   userInfo: App.UserInfo | undefined = undefined;
   isFollowing: boolean | undefined = undefined;
-  userPlaylistInfo: App.UserPlaylistInfo = {
-    playlists: [],
+  userPlaylistInfo: UserPlaylists = {
+    items: [],
     hasNext: false,
+    hasPrevious: false,
     total: 0,
   };
 
@@ -216,7 +220,7 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
     const { userPlaylistInfo } = this;
     const { userId } = this.$route.params;
-    const offset = userPlaylistInfo.playlists.length;
+    const offset = userPlaylistInfo.items.length;
     const playlists = await this.$spotify.playlists.getListOfUserPlaylist({
       userId,
       limit,
@@ -230,10 +234,10 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
       return;
     }
 
-    const addedPlaylists = playlists.items.map(convertPlaylistForCard);
+    const addedPlaylists = playlists.items;
     this.userPlaylistInfo = {
       ...userPlaylistInfo,
-      playlists: [...userPlaylistInfo.playlists, ...addedPlaylists],
+      items: [...userPlaylistInfo.items, ...addedPlaylists],
       hasNext: playlists.next != null,
     };
   }
