@@ -1,1 +1,1 @@
-export * from './getEpisodeInfo';
+export * from './getEpisode';
