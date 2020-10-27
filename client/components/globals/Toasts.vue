@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 import VSnackbars from 'v-snackbars/v-snackbars.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     VSnackbars,
   },

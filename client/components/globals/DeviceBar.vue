@@ -2,8 +2,8 @@
   <v-bottom-navigation
     app
     padless
-    :height="$constant.DEVICE_BAR_HEIGHT"
     background-color="primary"
+    :height="$constant.DEVICE_BAR_HEIGHT"
     :class="$style.DeviceBar"
   >
     <v-icon
@@ -19,13 +19,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
-export default Vue.extend({
-  computed: {
-    name(): string {
-      return this.$getters()['playback/activeDevice']?.name ?? '他のデバイス';
-    },
+export default defineComponent({
+  setup(_, { root }) {
+    const name = computed(() => root.$getters()['playback/activeDevice']?.name ?? '他のデバイス');
+    return { name };
   },
 });
 </script>

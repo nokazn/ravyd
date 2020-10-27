@@ -49,18 +49,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import SearchField from '~/components/containers/form/SearchField.vue';
 import SearchResultList from '~/components/containers/list/SearchResultList.vue';
 
 type HeaderStyles = {
-  backgroundColor: string
-  backdropFilter?: string
+  backgroundColor: string;
+  backdropFilter?: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
     SearchField,
@@ -74,38 +74,37 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    styles(): HeaderStyles {
-      const backgroundStyles = this.$getters().headerStyles;
-      const { backdropFiltered } = this.$header;
+  setup(props, { root }) {
+    const styles = computed<HeaderStyles>(() => {
+      const backgroundStyles = root.$getters().headerStyles;
+      const { backdropFiltered } = root.$header;
       if (backdropFiltered) {
         return {
           ...backgroundStyles,
           backdropFilter: 'blur(16px)',
         };
       }
-
-      const dominantColor = this.$state().dominantBackgroundColor;
+      const dominantColor = root.$state().dominantBackgroundColor;
       return {
-        backgroundColor: dominantColor?.hex ?? this.$constant.BACKGROUND_COLOR,
+        backgroundColor: dominantColor?.hex ?? root.$constant.BACKGROUND_COLOR,
       };
-    },
+    });
     // backdrop-filter が有効のときはヘッダーの下に sticky なコンテンツがないので elavation を有効にする
-    headerElevation(): number {
-      const { backdropFiltered } = this.$header;
-      return backdropFiltered
-        ? this.elevation
+    const headerElevation = computed(() => {
+      return root.$header.backdropFiltered
+        ? props.elevation
         : 0;
-    },
-  },
+    });
 
-  methods: {
-    onBackButtonClicked() {
-      this.$router.back();
-    },
-    onForwardButtonClicked() {
-      this.$router.forward();
-    },
+    const onBackButtonClicked = () => { root.$router.back(); };
+    const onForwardButtonClicked = () => { root.$router.forward(); };
+
+    return {
+      styles,
+      headerElevation,
+      onBackButtonClicked,
+      onForwardButtonClicked,
+    };
   },
 });
 </script>
