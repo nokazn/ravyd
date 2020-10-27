@@ -1,5 +1,5 @@
 {
-  "name": "spotify-player",
+  "name": "ravy",
   "version": "0.1.0",
   "private": true,
   "description": "",
@@ -24,8 +24,8 @@
     "test:server": "jest ./server/** --passWithNoTests",
     "start": "nuxt-ts start",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
-    "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|)' | xargs wc -l",
-    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.vue$\\|)' | xargs wc -l"
+    "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
+    "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
   },
   "husky": {
     "hooks": {
