@@ -74,15 +74,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  PropType,
-} from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import { getImageSrc } from '~/utils/image';
+import { useIsLoaded } from '~/services/use/util';
 import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
@@ -106,13 +101,12 @@ export default defineComponent({
   },
 
   setup(props) {
-    const isLoaded = ref(false);
+    const isLoaded = useIsLoaded();
     const artworkSrc = computed(() => getImageSrc(
       props.item.icons,
       props.maxSize ?? props.size,
     ));
     const categoryPath = computed(() => `/categories/${props.item.id}`);
-    onMounted(() => { isLoaded.value = true; });
 
     return {
       isLoaded,

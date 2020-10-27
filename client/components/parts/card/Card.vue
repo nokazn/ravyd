@@ -41,13 +41,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  PropType,
-} from '@vue/composition-api';
+import { defineComponent, PropType } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
+import { useIsLoaded } from '~/services/use/util';
 
 const CLICK = 'click';
 
@@ -84,9 +80,8 @@ export default defineComponent({
   },
 
   setup(_, { emit }) {
-    const isLoaded = ref(false);
+    const isLoaded = useIsLoaded();
     const onClick = () => { emit(CLICK); };
-    onMounted(() => { isLoaded.value = true; });
 
     return {
       isLoaded,

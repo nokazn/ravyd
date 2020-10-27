@@ -64,6 +64,7 @@ import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import ConfirmModal from '~/components/globals/ConfirmModal.vue';
 import { useIntersectionObserver } from '~/services/use/observer';
+import { useIsLoaded } from '~/services/use/util';
 import { $searchForm } from '~/observable/searchForm';
 
 export default defineComponent({
@@ -80,7 +81,7 @@ export default defineComponent({
   },
 
   setup(_, { root }) {
-    const isLoaded = ref(false);
+    const isLoaded = useIsLoaded();
     const elevation = ref(0);
     const SPACER_REF = ref<HTMLDivElement>();
 
@@ -109,12 +110,13 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      isLoaded.value = true;
       root.$screen.observe();
       // 初回アクセス時に onSpotifyWebPlaybackSDKReady が呼ばれるので、定義しておく必要がある
       root.$dispatch('player/initPlayer');
     });
-    onBeforeUnmount(() => { root.$screen.disconnectObserver(); });
+    onBeforeUnmount(() => {
+      root.$screen.disconnectObserver();
+    });
 
     const onOverlayChanged = (value: OnOverlay['input']) => { root.$overlay.change(value); };
 
