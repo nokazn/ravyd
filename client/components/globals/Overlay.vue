@@ -8,15 +8,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 
 const INPUT = 'input';
 
 export type On = {
-  [INPUT]: boolean
+  [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     value: {
       type: Boolean,
@@ -32,15 +32,12 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    overlay: {
-      get(): boolean {
-        return this.value;
-      },
-      set(value: boolean) {
-        this.$emit(INPUT, value);
-      },
-    },
+  setup(props, { emit }) {
+    const overlay = computed<boolean>({
+      get() { return props.value; },
+      set(value) { emit(INPUT, value); },
+    });
+    return { overlay };
   },
 });
 </script>

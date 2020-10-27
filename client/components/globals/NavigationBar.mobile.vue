@@ -42,9 +42,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import type { RawLocation } from 'vue-router';
 
+import { useIsLoaded } from '~/services/use/util';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 
 const ICON_SIZR = 32;
@@ -66,26 +67,17 @@ type Item<T extends ItemType = ItemType> = T extends 'to'
     text: string;
   };
 
-type Data = {
-  isLoaded: boolean;
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     UserAvatar,
   },
 
-  data(): Data {
-    return {
-      isLoaded: false,
-    };
-  },
+  setup(_, { root }) {
+    const isLoaded = useIsLoaded();
 
-  computed: {
-    itemList(): Item[] {
-      const isLoggedin = this.$getters()['auth/isLoggedin'];
-      const userAvatarSrc = this.$getters()['auth/userAvatarSrc'](ICON_SIZR);
-
+    const itemList = computed<Item[]>(() => {
+      const isLoggedin = root.$getters()['auth/isLoggedin'];
+      const userAvatarSrc = root.$getters()['auth/userAvatarSrc'](ICON_SIZR);
       const home: Item<'to'> = {
         type: 'to',
         value: 'home',
@@ -114,15 +106,15 @@ export default Vue.extend({
         iconSrc: userAvatarSrc,
         text: 'アカウント',
       };
-
       return isLoggedin
         ? [home, browse, library, account]
         : [home, browse, library];
-    },
-  },
+    });
 
-  mounted() {
-    this.isLoaded = true;
+    return {
+      isLoaded,
+      itemList,
+    };
   },
 });
 </script>

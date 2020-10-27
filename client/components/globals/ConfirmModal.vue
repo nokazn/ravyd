@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
 import ConfirmModal from '~/components/parts/modal/ConfirmModal.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ConfirmModal,
   },

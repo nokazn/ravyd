@@ -164,6 +164,7 @@ export default defineComponent({
         root.$dispatch('playlists/getAllPlaylists');
       }
     });
+
     const onPlaylistButtonClicked = () => { createPlaylistModal.value = true; };
 
     return {
