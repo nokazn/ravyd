@@ -45,9 +45,7 @@
                 <v-subheader>
                   {{ title }}
                 </v-subheader>
-
                 <v-divider />
-
                 <v-list-item-group>
                   <ContentListItem
                     v-for="item in items"
@@ -88,185 +86,89 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
-import { RawLocation } from 'vue-router';
-
+import { defineComponent, computed } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
+import { useSearchResult } from '~/services/use/keyboard';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
-
-type Data = {
-  selectedItemIndex: number | undefined
-  keyEventListener: ((e: KeyboardEvent) => void) | undefined
-  LIMIT_OF_SEARCH_ITEM: number
-  SEARCH_FORM_PORTAL_NAME: string
-}
 
 export type ItemMap = {
   title: string;
   items: App.ContentItem<SpotifyAPI.SearchType>[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContentListItem,
   },
 
-  data(): Data {
-    return {
-      selectedItemIndex: undefined,
-      keyEventListener: undefined,
-      LIMIT_OF_SEARCH_ITEM,
-      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
-    };
-  },
-
-  computed: {
-    query(): string {
-      return $searchForm.query;
-    },
-    isSearching(): boolean {
-      return $searchForm.isSearching;
-    },
-    menu: {
-      get(): boolean {
-        return $searchForm.isMenuShown;
-      },
-      set(isShown: boolean) {
-        $searchForm.handleMenu(isShown);
-      },
-    },
-    styles() {
-      const { top, left } = $searchForm.position;
-      return {
-        position: 'fixed',
-        top: `${top}px`,
-        left: `${left}px`,
-      };
-    },
-    tracks(): RootGetters['search/tracks'] {
-      return this.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    artists(): RootGetters['search/artists'] {
-      return this.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    albums(): RootGetters['search/albums'] {
-      return this.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    playlists(): RootGetters['search/playlists'] {
-      return this.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    shows(): RootGetters['search/shows'] {
-      return this.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    episodes(): RootGetters['search/episodes'] {
-      return this.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    itemMapList(): ItemMap[] {
-      const itemMapList = [
+  setup(_, { root }) {
+    const itemMapList = computed<ItemMap[]>(() => {
+      return [
         {
           title: '曲',
-          items: this.tracks,
+          items: root.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'アーティスト',
-          items: this.artists,
+          items: root.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'アルバム',
-          items: this.albums,
+          items: root.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'プレイリスト',
-          items: this.playlists,
+          items: root.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'ポッドキャスト',
-          items: this.shows,
+          items: root.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'エピソード',
-          items: this.episodes,
+          items: root.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
       ];
+    });
 
-      return itemMapList;
-    },
-    itemList(): App.ContentItem<SpotifyAPI.SearchType>[] {
-      return this.itemMapList.reduce(
+    const itemList = computed<App.ContentItem[]>(() => {
+      return itemMapList.value.reduce(
         (prev, curr) => [...prev, ...curr.items],
         [] as App.ContentItem<SpotifyAPI.SearchType>[],
       );
-    },
-    selectedItem(): App.ContentItem<SpotifyAPI.SearchType> | undefined {
-      return this.selectedItemIndex != null
-        ? this.itemList[this.selectedItemIndex] ?? undefined
-        : undefined;
-    },
-    hasItem(): boolean {
-      return this.itemList.length > 0;
-    },
-  },
+    });
+    const hasItem = computed(() => itemList.value.length > 0);
+    const styles = computed(() => ({
+      position: 'fixed',
+      top: `${$searchForm.position.top}px`,
+      left: `${$searchForm.position.left}px`,
+    }));
 
-  watch: {
-    // 検索用のクエリが変化するたびに初期化
-    query() {
-      this.selectedItemIndex = undefined;
-    },
-  },
+    const {
+      selectedItemIndex,
+      query,
+      isSearching,
+      selectedItem,
+      menu,
+      onItemClicked,
+    } = useSearchResult(root, itemList);
 
-  mounted() {
-    const keyEventListener = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowDown':
-          this.handleSelectedItem(1);
-          break;
-
-        case 'ArrowUp':
-          this.handleSelectedItem(-1);
-          break;
-
-        case 'Enter':
-          // 項目が選択されていたらページ遷移
-          if (this.selectedItem != null) {
-            this.onItemEntered(this.selectedItem.to);
-          }
-          break;
-
-        default:
-          break;
-      }
+    return {
+      selectedItemIndex,
+      query,
+      isSearching,
+      menu,
+      itemMapList,
+      selectedItem,
+      hasItem,
+      styles,
+      onItemClicked,
+      LIMIT_OF_SEARCH_ITEM,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
-
-    window.document.addEventListener('keydown', keyEventListener);
-    this.keyEventListener = keyEventListener;
-  },
-
-  beforeDestroy() {
-    if (this.keyEventListener != null) {
-      window.document.removeEventListener('keydown', this.keyEventListener);
-    }
-  },
-
-  methods: {
-    onItemClicked() {
-      this.menu = false;
-      this.$overlay.change(false);
-    },
-    handleSelectedItem(diff: 1 | -1) {
-      const { length } = this.itemList;
-      // 未選択の場合は down/up を押したときにそれぞれ 最初/最後 が選択されるようにする
-      const currentIndex = this.selectedItemIndex ?? (diff > 0 ? -1 : 0);
-      this.selectedItemIndex = (diff + currentIndex + length) % length;
-    },
-    onItemEntered(to: string | RawLocation) {
-      this.$router.push(to);
-      this.menu = false;
-      this.$overlay.change(false);
-    },
   },
 });
 </script>
