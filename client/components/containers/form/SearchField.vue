@@ -1,17 +1,17 @@
 <template>
   <v-text-field
-    :ref="SEARCH_FIELD_REF"
-    :value="query"
+    ref="SEARCH_FIELD_REF"
     dense
     hide-details
     rounded
     light
-    :height="32"
     background-color="white"
     placeholder="検索"
     title="検索"
     autocomplete="off"
     aria-autocomplete="none"
+    :height="32"
+    :value="query"
     :class="{
       [$style.SearchField]: true,
       'g-box-shadow': isFocused || isHovered
@@ -57,126 +57,119 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import {
+  defineComponent,
+  ref,
+  computed,
+  onMounted,
+  onBeforeMount,
+} from '@vue/composition-api';
 import { debounce } from 'lodash';
 import { $searchForm } from '~/observable/searchForm';
 
-const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const LIMIT_OF_SEARCH_ITEM = 4;
 
-type Data = {
-  isFocused: boolean;
-  isHovered: boolean;
-  debouncedDispatcher: ((query: string) => void) & ReturnType<typeof debounce>;
-  keyEventListener: ((e: KeyboardEvent) => void) | undefined;
-  SEARCH_FIELD_REF: string;
+type VTextFieldRef = {
+  focus(): void;
+  blur(): void;
 }
 
-export default Vue.extend({
-  data(): Data {
-    const interval = 500;
+export default defineComponent({
+  setup(_, { root }) {
+    const isFocused = ref(false);
+    const isHovered = ref(false);
+    const SEARCH_FIELD_REF = ref<Vue>();
+
     const debouncedDispatcher = debounce((query: string) => {
       $searchForm.setQuery(query);
       if (query) {
         $searchForm.handleSearching(true);
-        this.$dispatch('search/searchAllItems', {
-          // スペースをアンダーバーに置換して1単語として扱う
+        root.$dispatch('search/searchAllItems', {
+          // @todo スペースをアンダーバーに置換して1単語として扱う
           query: query.replace(/\s+/g, '_'),
           limit: LIMIT_OF_SEARCH_ITEM,
         }).then(() => {
           $searchForm.handleSearching(false);
         });
-
         // クエリが更新されたらメニューを閉じていても再表示
-        this.$nextTick().then(() => {
+        root.$nextTick().then(() => {
           $searchForm.handleMenu(true);
-          this.$overlay.change(true);
+          root.$overlay.change(true);
         });
       }
-    }, interval);
+    }, 500);
 
-    return {
-      isFocused: false,
-      isHovered: false,
-      debouncedDispatcher,
-      keyEventListener: undefined,
-      SEARCH_FIELD_REF,
-    };
-  },
-
-  computed: {
-    query: {
-      get(): string {
-        return $searchForm.query;
-      },
-      set(query: string) {
-        $searchForm.setQuery(query);
-      },
-    },
-    menu: {
-      get(): boolean {
-        return $searchForm.isMenuShown;
-      },
-      set(menu: boolean) {
-        $searchForm.handleMenu(menu);
+    const query = computed<string>({
+      get() { return $searchForm.query; },
+      set(value) { $searchForm.setQuery(value); },
+    });
+    const menu = computed<boolean>({
+      get() { return $searchForm.isMenuShown; },
+      set(value) {
+        $searchForm.handleMenu(value);
         // メニュー表示時に overlay も表示
-        this.$overlay.change(menu);
+        root.$overlay.change(value);
       },
-    },
-  },
+    });
 
-  mounted() {
-    // @as v-text-field は focus と blur ハンドラが存在
-    const ref = this.$refs[SEARCH_FIELD_REF] as Vue & { focus(): void, blur(): void };
-    const keyEventListener = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case '/':
-          ref.focus();
-          break;
-        case 'Escape':
-          ref.blur();
-          break;
-        default:
-          break;
-      }
-    };
-
-    window.document.addEventListener('keyup', keyEventListener);
-    this.keyEventListener = keyEventListener;
-  },
-
-  beforeDestroy() {
-    if (this.keyEventListener != null) {
-      window.document.removeEventListener('keyup', this.keyEventListener);
-    }
-  },
-
-  methods: {
-    toggleIsFocused(isFocused: boolean) {
-      this.isFocused = isFocused;
-
+    const toggleIsFocused = (focus: boolean) => {
+      isFocused.value = focus;
+      const element = SEARCH_FIELD_REF.value?.$el;
       // フォーカスされたらメニューの位置を計算する
-      if (isFocused) {
-        const ref = this.$refs[SEARCH_FIELD_REF] as Vue;
-        const { clientHeight } = ref.$el;
-        const { x, y } = ref.$el.getBoundingClientRect();
+      if (focus && element != null) {
+        const { clientHeight } = element;
+        const { x, y } = element.getBoundingClientRect();
         const offsetY = 4;
         const top = Math.ceil(y) + clientHeight + offsetY;
         const left = Math.ceil(x);
         $searchForm.setPosition(top, left);
       }
-
       // フォーカスの有無でメニューの表示が決まる
-      this.menu = isFocused;
-    },
-    toggleIsHovered(isHovered: boolean) {
-      this.isHovered = isHovered;
-    },
-    clearText() {
-      this.query = '';
-    },
-    onListItemClicked() {
-      this.menu = false;
-    },
+      menu.value = focus;
+    };
+    const toggleIsHovered = (hover: boolean) => { isHovered.value = hover; };
+    const clearText = () => { query.value = ''; };
+    const onListItemClicked = () => { menu.value = false; };
+
+    let keyEventListener: (e: KeyboardEvent) => void;
+    onMounted(() => {
+      // @as v-text-field は focus と blur ハンドラが存在
+      const element = SEARCH_FIELD_REF.value as Vue & VTextFieldRef;
+      if (element != null) {
+        keyEventListener = (e: KeyboardEvent) => {
+          switch (e.key) {
+            case '/':
+              element.focus();
+              break;
+            case 'Escape':
+              element.blur();
+              break;
+            default:
+              break;
+          }
+        };
+        window.addEventListener('keyup', keyEventListener);
+      }
+    });
+    onBeforeMount(() => {
+      if (keyEventListener != null) {
+        window.document.removeEventListener('keyup', keyEventListener);
+      }
+    });
+
+    return {
+      isFocused,
+      isHovered,
+      debouncedDispatcher,
+      query,
+      menu,
+      keyEventListener: undefined,
+      SEARCH_FIELD_REF,
+      toggleIsFocused,
+      toggleIsHovered,
+      clearText,
+      onListItemClicked,
+    };
   },
 });
 </script>
