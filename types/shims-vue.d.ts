@@ -12,6 +12,7 @@ import type { ServerServices } from '~/services/server';
 import type { Constant } from '~/plugins/constant';
 import type { $Confirm } from '~/plugins/observable/confirm';
 import type { $Header } from '~/plugins/observable/header';
+import type { $Keyboard } from '~/plugins/observable/keyboard';
 import type { $Overlay } from '~/plugins/observable/overlay';
 import type { $Screen } from '~/plugins/observable/screen';
 import type { $Toast } from '~/plugins/observable/toast';
@@ -38,6 +39,7 @@ declare module 'vue/types/vue' {
     // obserable
     $confirm: $Confirm;
     $header: $Header;
+    $keyboard: $Keyboard;
     $overlay: $Overlay;
     $screen: $Screen;
     $toast: $Toast;
