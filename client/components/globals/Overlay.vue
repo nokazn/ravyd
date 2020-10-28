@@ -1,43 +1,36 @@
 <template>
   <v-overlay
     v-model="overlay"
-    :opacity="opacity"
-    :z-index="zIndex"
+    :opacity="$overlay.opacity"
+    :z-index="$overlay.zIndex"
     :class="$style.Overlay"
+    :style="styles"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
-
-const INPUT = 'input';
-
-export type On = {
-  [INPUT]: boolean;
-}
+import { useContentPosition } from '~/services/use/style';
 
 export default defineComponent({
   props: {
-    value: {
+    fullscreen: {
       type: Boolean,
-      required: true,
-    },
-    opacity: {
-      type: Number,
-      default: 0.6,
-    },
-    zIndex: {
-      type: Number,
-      default: 10,
+      default: false,
     },
   },
 
-  setup(props, { emit }) {
+  setup(_, { root }) {
     const overlay = computed<boolean>({
-      get() { return props.value; },
-      set(value) { emit(INPUT, value); },
+      get() { return root.$overlay.value; },
+      set(value) { root.$overlay.change(value); },
     });
-    return { overlay };
+    const styles = useContentPosition(root);
+
+    return {
+      overlay,
+      styles,
+    };
   },
 });
 </script>
