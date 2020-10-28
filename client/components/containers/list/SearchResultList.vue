@@ -182,7 +182,6 @@ export default defineComponent({
   $content-max-width: 1200px;
   $card-footer-height: 48px;
 
-  min-width: 400px;
   margin: -4px 4% 0;
   z-index: z-index-of(front-menu);
 
@@ -194,6 +193,7 @@ export default defineComponent({
       $footer-height: $g-navigation-bar-height + $g-footer-height-mobile;
       $extra-height: $g-header-height + $card-footer-height + $footer-height;
 
+      min-width: 300px;
       max-width: $content-width;
       max-height: calc(100vh - #{$extra-height});
     }
@@ -205,6 +205,7 @@ export default defineComponent({
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: $content-side-padding;
+      min-width: 400px;
       max-width: min(#{$flexible-max-width}, #{$content-max-width});
       max-height: calc(100vh - #{$extra-height});
     }
