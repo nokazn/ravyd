@@ -17,12 +17,7 @@
         :class="$style.Spacer"
       />
       <nuxt />
-      <Overlay
-        v-bind="$overlay"
-        :style="contentOverlayStyles"
-        :class="$style.ContentOverlay"
-        @input="onOverlayChanged"
-      />
+      <Overlay />
     </v-main>
 
     <template v-if="isLoggedin">
@@ -54,15 +49,17 @@ import {
   onMounted,
   onBeforeUnmount,
 } from '@vue/composition-api';
+
 import WaveLoader from '~/components/globals/WaveLoader.vue';
 import Header from '~/components/globals/Header.vue';
 import NavigationDrawer from '~/components/globals/NavigationDrawer.vue';
 import PlayerBar from '~/components/globals/PlayerBar.vue';
 import NavigationBar from '~/components/globals/NavigationBar.mobile.vue';
 import DeviceBar from '~/components/globals/DeviceBar.vue';
-import Overlay, { On as OnOverlay } from '~/components/globals/Overlay.vue';
+import Overlay from '~/components/globals/Overlay.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import ConfirmModal from '~/components/globals/ConfirmModal.vue';
+
 import { useIntersectionObserver } from '~/services/use/observer';
 import { useIsLoaded } from '~/services/use/util';
 import { $searchForm } from '~/observable/searchForm';
@@ -94,20 +91,6 @@ export default defineComponent({
     const isLoggedin = computed(() => root.$getters()['auth/isLoggedin']);
     const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
     const contentContainerStyles = computed(() => root.$getters().backgroundStyles(320));
-    const contentOverlayStyles = computed<{ [k in string]?: string }>(() => {
-      const { isPc } = root.$screen;
-      // ナビゲーションバーが表示されてるかで変わる
-      const left = isPc
-        ? `${root.$constant.NAVIGATION_DRAWER_WIDTH}px`
-        : '0';
-      let footerHeight = root.$constant.FOOTER_HEIGHT;
-      // ナビゲーションバーが表示されているとき
-      if (!isPc) footerHeight += root.$constant.NAVIGATION_BAR_HEIGHT;
-      // 他のデバイスで再生中のとき
-      if (isAnotherDevicePlaying.value) footerHeight += root.$constant.DEVICE_BAR_HEIGHT;
-      const bottom = `${footerHeight}px`;
-      return { left, bottom };
-    });
 
     onMounted(() => {
       root.$screen.observe();
@@ -118,18 +101,14 @@ export default defineComponent({
       root.$screen.disconnectObserver();
     });
 
-    const onOverlayChanged = (value: OnOverlay['input']) => { root.$overlay.change(value); };
-
     return {
       isLoaded,
       elevation,
-      SPACER_REF,
-      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
       isLoggedin,
       isAnotherDevicePlaying,
       contentContainerStyles,
-      contentOverlayStyles,
-      onOverlayChanged,
+      SPACER_REF,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
   },
 });
@@ -142,11 +121,6 @@ export default defineComponent({
 
 .Spacer {
   height: 0;
-}
-
-// left, bottom は動的に設定
-.ContentOverlay {
-  top: $g-header-height;
 }
 
 .Fab {

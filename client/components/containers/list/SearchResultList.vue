@@ -1,291 +1,213 @@
 <template>
   <portal :to="SEARCH_FORM_PORTAL_NAME">
     <transition name="fade">
-      <v-card
+      <div
         v-show="menu && query"
-        rounded="lg"
-        :elevation="12"
-        :class="$style.SearchResultList"
         :style="styles"
+        :class="$style.SearchResultList"
       >
-        <v-list
-          dense
-          nav
-          subheader
-          :color="$constant.MENU_BACKGROUND_COLOR"
-        >
-          <div
-            v-show="isSearching"
-            :class="$style['SearchResultList__content--searching']"
+        <v-card rounded="lg">
+          <v-list
+            dense
+            nav
+            subheader
+            :elevation="12"
+            :color="$constant.MENU_BACKGROUND_COLOR"
           >
-            <v-progress-circular indeterminate />
-          </div>
-
-          <div
-            v-show="!isSearching && !hasItem"
-            :class="$style['SearchResultList__content--empty']"
-          >
-            <v-icon left>
-              mdi-alert-circle-outline
-            </v-icon>
-            "{{ query }}" に一致する項目が見つかりません
-          </div>
-
-          <div
-            v-show="!isSearching && hasItem"
-            class="g-custom-scroll-bar"
-            :class="$style.SearchResultList__content"
-          >
-            <template v-for="{ title, items } in itemMapList">
-              <div
-                v-if="items.length > 0"
-                :key="title"
-                :class="$style.SearchResultList__group"
-              >
-                <v-subheader>
-                  {{ title }}
-                </v-subheader>
-
-                <v-divider />
-
-                <v-list-item-group>
-                  <ContentListItem
-                    v-for="item in items"
-                    :key="item.id"
-                    :item="item"
-                    :selected="selectedItem != null ? item.id === selectedItem.id : false"
-                    @click="onItemClicked"
-                  />
-                </v-list-item-group>
-              </div>
-            </template>
-          </div>
-
-          <v-divider />
-
-          <div :class="$style.SearchResultList__moreButton">
-            <v-btn
-              rounded
-              text
-              small
-              nuxt
-              to="/search"
-              class="g-no-text-decoration"
+            <div
+              v-show="isSearching"
+              :class="$style['SearchResultList__content--searching']"
             >
-              <v-icon
-                left
-                small
-              >
-                mdi-magnify
+              <v-progress-circular indeterminate />
+            </div>
+
+            <div
+              v-show="!isSearching && !hasItem"
+              :class="$style['SearchResultList__content--empty']"
+            >
+              <v-icon left>
+                mdi-alert-circle-outline
               </v-icon>
-              もっと見る
-            </v-btn>
-          </div>
-        </v-list>
-      </v-card>
+              "{{ query }}" に一致する項目が見つかりません
+            </div>
+
+            <div
+              v-show="!isSearching && hasItem"
+              class="g-custom-scroll-bar"
+              :class="$style.SearchResultList__content"
+            >
+              <template v-for="{ title, items } in itemMapList">
+                <div
+                  v-if="items.length > 0"
+                  :key="title"
+                  :class="$style.SearchResultList__group"
+                >
+                  <v-subheader>
+                    {{ title }}
+                  </v-subheader>
+                  <v-divider />
+                  <v-list-item-group>
+                    <ContentListItem
+                      v-for="item in items"
+                      :key="item.id"
+                      :item="item"
+                      :selected="isSelected(item.id)"
+                    />
+                  </v-list-item-group>
+                </div>
+              </template>
+            </div>
+
+            <v-divider />
+
+            <div :class="$style.SearchResultList__moreButton">
+              <v-btn
+                rounded
+                text
+                small
+                nuxt
+                to="/search"
+                class="g-no-text-decoration"
+              >
+                <v-icon
+                  left
+                  small
+                >
+                  mdi-magnify
+                </v-icon>
+                もっと見る
+              </v-btn>
+            </div>
+          </v-list>
+        </v-card>
+      </div>
     </transition>
   </portal>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
-import { RawLocation } from 'vue-router';
-
+import { defineComponent, computed } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
+import { useSearchResult } from '~/services/use/keyboard';
+import { useContentPosition } from '~/services/use/style';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
-
-type Data = {
-  selectedItemIndex: number | undefined
-  keyEventListener: ((e: KeyboardEvent) => void) | undefined
-  LIMIT_OF_SEARCH_ITEM: number
-  SEARCH_FORM_PORTAL_NAME: string
-}
 
 export type ItemMap = {
   title: string;
   items: App.ContentItem<SpotifyAPI.SearchType>[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContentListItem,
   },
 
-  data(): Data {
-    return {
-      selectedItemIndex: undefined,
-      keyEventListener: undefined,
-      LIMIT_OF_SEARCH_ITEM,
-      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
-    };
-  },
-
-  computed: {
-    query(): string {
-      return $searchForm.query;
-    },
-    isSearching(): boolean {
-      return $searchForm.isSearching;
-    },
-    menu: {
-      get(): boolean {
-        return $searchForm.isMenuShown;
-      },
-      set(isShown: boolean) {
-        $searchForm.handleMenu(isShown);
-      },
-    },
-    styles() {
-      const { top, left } = $searchForm.position;
-      return {
-        position: 'fixed',
-        top: `${top}px`,
-        left: `${left}px`,
-      };
-    },
-    tracks(): RootGetters['search/tracks'] {
-      return this.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    artists(): RootGetters['search/artists'] {
-      return this.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    albums(): RootGetters['search/albums'] {
-      return this.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    playlists(): RootGetters['search/playlists'] {
-      return this.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    shows(): RootGetters['search/shows'] {
-      return this.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    episodes(): RootGetters['search/episodes'] {
-      return this.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM);
-    },
-    itemMapList(): ItemMap[] {
-      const itemMapList = [
+  setup(_, { root }) {
+    const itemMapList = computed<ItemMap[]>(() => {
+      return [
         {
           title: '曲',
-          items: this.tracks,
+          items: root.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'アーティスト',
-          items: this.artists,
+          items: root.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'アルバム',
-          items: this.albums,
+          items: root.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'プレイリスト',
-          items: this.playlists,
+          items: root.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'ポッドキャスト',
-          items: this.shows,
+          items: root.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
         {
           title: 'エピソード',
-          items: this.episodes,
+          items: root.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM),
         },
       ];
+    });
 
-      return itemMapList;
-    },
-    itemList(): App.ContentItem<SpotifyAPI.SearchType>[] {
-      return this.itemMapList.reduce(
+    const itemList = computed<App.ContentItem[]>(() => {
+      return itemMapList.value.reduce(
         (prev, curr) => [...prev, ...curr.items],
         [] as App.ContentItem<SpotifyAPI.SearchType>[],
       );
-    },
-    selectedItem(): App.ContentItem<SpotifyAPI.SearchType> | undefined {
-      return this.selectedItemIndex != null
-        ? this.itemList[this.selectedItemIndex] ?? undefined
-        : undefined;
-    },
-    hasItem(): boolean {
-      return this.itemList.length > 0;
-    },
-  },
+    });
+    const hasItem = computed(() => itemList.value.length > 0);
 
-  watch: {
-    // 検索用のクエリが変化するたびに初期化
-    query() {
-      this.selectedItemIndex = undefined;
-    },
-  },
+    const {
+      selectedItemIndex,
+      query,
+      isSearching,
+      selectedItem,
+      menu,
+    } = useSearchResult(root, itemList);
+    const styles = useContentPosition(root);
 
-  mounted() {
-    const keyEventListener = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowDown':
-          this.handleSelectedItem(1);
-          break;
-
-        case 'ArrowUp':
-          this.handleSelectedItem(-1);
-          break;
-
-        case 'Enter':
-          // 項目が選択されていたらページ遷移
-          if (this.selectedItem != null) {
-            this.onItemEntered(this.selectedItem.to);
-          }
-          break;
-
-        default:
-          break;
-      }
+    const isSelected = (id: string) => {
+      return selectedItem.value != null
+        ? id === selectedItem.value.id
+        : false;
     };
 
-    window.document.addEventListener('keydown', keyEventListener);
-    this.keyEventListener = keyEventListener;
-  },
-
-  beforeDestroy() {
-    if (this.keyEventListener != null) {
-      window.document.removeEventListener('keydown', this.keyEventListener);
-    }
-  },
-
-  methods: {
-    onItemClicked() {
-      this.menu = false;
-      this.$overlay.change(false);
-    },
-    handleSelectedItem(diff: 1 | -1) {
-      const { length } = this.itemList;
-      // 未選択の場合は down/up を押したときにそれぞれ 最初/最後 が選択されるようにする
-      const currentIndex = this.selectedItemIndex ?? (diff > 0 ? -1 : 0);
-      this.selectedItemIndex = (diff + currentIndex + length) % length;
-    },
-    onItemEntered(to: string | RawLocation) {
-      this.$router.push(to);
-      this.menu = false;
-      this.$overlay.change(false);
-    },
+    return {
+      selectedItemIndex,
+      query,
+      isSearching,
+      menu,
+      itemMapList,
+      selectedItem,
+      hasItem,
+      isSelected,
+      styles,
+      LIMIT_OF_SEARCH_ITEM,
+      SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
+    };
   },
 });
 </script>
 
 <style lang="scss" module>
 .SearchResultList {
+  $content-side-padding: 12px;
+  $content-width: 90vw;
+  $content-max-width: 1200px;
+  $card-footer-height: 48px;
+
   min-width: 400px;
+  margin: -4px 4% 0;
   z-index: z-index-of(front-menu);
 
   &__content {
-    min-width: 400px;
-    max-width: 60vw;
-    // 80vh と 100vh からヘッダーとフッターの高さを除いた高さのうち小さいほう
-    max-height: calc(100vh - #{$g-header-height} - #{$g-footer-height} - 48px);
     overflow-y: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 12px;
-    padding: 0 12px;
+    padding: 0 $content-side-padding;
+
+    @include smaller-than-lg() {
+      $footer-height: $g-navigation-bar-height + $g-footer-height-mobile;
+      $extra-height: $g-header-height + $card-footer-height + $footer-height;
+
+      max-width: $content-width;
+      max-height: calc(100vh - #{$extra-height});
+    }
+
+    @include larger-than-lg() {
+      $flexible-max-width: calc(#{$content-width} - #{$g-navigation-drawer-width * 0.9});
+      $extra-height: $g-header-height + $card-footer-height + $g-footer-height;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: $content-side-padding;
+      max-width: min(#{$flexible-max-width}, #{$content-max-width});
+      max-height: calc(100vh - #{$extra-height});
+    }
 
     &--searching,
     &--empty {
@@ -298,8 +220,18 @@ export default Vue.extend({
   }
 
   &__group {
-    max-width: calc(30vw - 18px);
     margin-bottom: 12px;
+
+    @include smaller-than-lg() {
+      max-width: calc(#{$content-width} - #{$content-side-padding * 2});
+    }
+
+    @include larger-than-lg() {
+      $content-width-with-nav: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
+      $flexible-max-width: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
+
+      max-width: min(#{$flexible-max-width}, #{$content-width / 2});
+    }
   }
 
   &__moreButton {

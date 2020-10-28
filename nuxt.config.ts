@@ -130,6 +130,7 @@ const nuxtConfig: NuxtConfig = {
     { src: '~/plugins/constant' },
     { src: '~/plugins/observable/confirm' },
     { src: '~/plugins/observable/header' },
+    { src: '~/plugins/observable/keyboard' },
     { src: '~/plugins/observable/overlay' },
     { src: '~/plugins/observable/screen' },
     { src: '~/plugins/observable/toast' },

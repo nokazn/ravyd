@@ -151,6 +151,7 @@ $g-page-side-margin: min(2vw, 24px);
 $g-header-height: 52px;
 $g-footer-height: 80px;
 $g-footer-height-mobile: $g-footer-height * 0.9;
+$g-navigation-bar-height: 48px;
 $g-device-bar-height: 24px;
 $g-navigation-drawer-width: 200px;
 $g-flex-card-min-width: 160px;
@@ -178,11 +179,11 @@ $__layer-map: (
   // overlay (z-index: 201) 上の modal (z-index: 202) より上にする
   toast: 203,
   loading: 13,
-  fab: 12,
   modal: 12,
   front-menu: 11,
   overlay: 10,
   menu: 9,
+  fab: 5,
   header: 4,
   navigation-drawer: 4,
   footer: 4,
