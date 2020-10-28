@@ -83,7 +83,7 @@ export default defineComponent({
     const isArtistSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
     const isPlaying = computed(() => root.$state().playback.isPlaying);
     const mediaIcon = computed<MediaIcon>(() => {
-      return isPlaying.value && isArtistSet.value
+      return isArtistSet.value && isPlaying.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     });
