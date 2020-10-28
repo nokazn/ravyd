@@ -68,16 +68,19 @@ export default defineComponent({
   setup(_, { root }) {
     const isFocused = ref(false);
     const isHovered = ref(false);
-    const query = ref($searchForm.query);
     const SEARCH_FIELD_REF = ref<Vue>();
 
+    const query = computed<string>({
+      get() { return $searchForm.query; },
+      set(q) { $searchForm.setQuery(q); },
+    });
     const menu = computed<boolean>({
       get() { return $searchForm.menu; },
       set(value) { $searchForm.handleMenu(value); },
     });
 
     const debouncedDispatcher = debounce((q: string) => {
-      $searchForm.setQuery(q);
+      query.value = q;
       if (q) {
         $searchForm.handleSearching(true);
         root.$dispatch('search/searchAllItems', {
