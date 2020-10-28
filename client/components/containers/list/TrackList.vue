@@ -3,13 +3,13 @@
     dense
     :color="$constant.BACKGROUND_COLOR"
   >
-    <template v-for="track in tracks">
+    <template v-for="(track, i) in tracks">
       <v-divider
-        v-show="length == null || track.index < length"
+        v-show="isVisible(i)"
         :key="`${track.id}-divider`"
       />
       <TrackListItem
-        v-show="length == null || track.index < length"
+        v-show="isVisible(i)"
         :key="track.id"
         :item="track"
         :set="isTrackSet(track.id)"
@@ -22,10 +22,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-
+import { defineComponent, PropType } from '@vue/composition-api';
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
@@ -33,11 +32,7 @@ export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked']
 }
 
-type Data = {
-  trackUriList: string[]
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     TrackListItem,
   },
@@ -57,45 +52,41 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
+  setup(props, { root, emit }) {
     // trackUriList は更新されることがない
-    const trackUriList = this.tracks.map((track) => track.uri);
-    return {
-      trackUriList,
-    };
-  },
+    const trackUriList = props.tracks.map((track) => track.uri);
 
-  computed: {
-    isTrackSet(): (id: string) => boolean {
-      return (id: string) => this.$getters()['playback/isTrackSet'](id);
-    },
-    isPlayingTrack(): (id: string) => boolean {
-      return (id: string) => this.isTrackSet(id)
-        && this.$state().playback.isPlaying;
-    },
-  },
+    const isTrackSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
+    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const isVisible = (index: number) => props.length == null || index < props.length;
 
-  methods: {
     // id, uri は track のパラメータで、this.uri は context のパラメータ
-    onMediaButtonClicked({ id, uri }: OnListItem['on-media-button-clicked']) {
-      if (this.isPlayingTrack(id)) {
-        this.$dispatch('playback/pause');
+    const onMediaButtonClicked = ({ id, uri }: OnListItem['on-media-button-clicked']) => {
+      if (isPlayingTrack(id)) {
+        root.$dispatch('playback/pause');
       } else {
-        this.$dispatch('playback/play', {
-          trackUriList: this.trackUriList,
+        root.$dispatch('playback/play', {
+          trackUriList,
           offset: { uri },
         });
         // アーティストの contextUri から直接再生はできない
-        this.$dispatch('playback/setCustomContext', {
-          contextUri: this.uri,
-          trackUriList: this.trackUriList,
+        root.$dispatch('playback/setCustomContext', {
+          contextUri: props.uri,
+          trackUriList,
         });
       }
-    },
+    };
+    const onFavoriteButtonClicked = (row: OnListItem['on-favorite-button-clicked']) => {
+      emit(ON_FAVORITE_BUTTON_CLICKED, row);
+    };
 
-    onFavoriteButtonClicked(row: OnListItem['on-favorite-button-clicked']) {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
-    },
+    return {
+      isTrackSet,
+      isPlayingTrack,
+      isVisible,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+    };
   },
 });
 </script>
