@@ -68,16 +68,12 @@ export default defineComponent({
   setup(_, { root }) {
     const isFocused = ref(false);
     const isHovered = ref(false);
-    const SEARCH_FIELD_REF = ref<Vue>();
     const query = ref($searchForm.query);
+    const SEARCH_FIELD_REF = ref<Vue>();
 
     const menu = computed<boolean>({
-      get() { return $searchForm.isMenuShown; },
-      set(value) {
-        $searchForm.handleMenu(value);
-        // メニュー表示時に overlay も表示
-        root.$overlay.change(value);
-      },
+      get() { return $searchForm.menu; },
+      set(value) { $searchForm.handleMenu(value); },
     });
 
     const debouncedDispatcher = debounce((q: string) => {
@@ -96,21 +92,10 @@ export default defineComponent({
 
     const toggleIsFocused = (focus: boolean) => {
       isFocused.value = focus;
-      const element = SEARCH_FIELD_REF.value?.$el;
-      // フォーカスされたらメニューの位置を計算する
-      if (focus && element != null) {
-        const { clientHeight } = element;
-        const { x, y } = element.getBoundingClientRect();
-        const offsetY = 4;
-        const top = Math.ceil(y) + clientHeight + offsetY;
-        const left = Math.ceil(x);
-        $searchForm.setPosition(top, left);
-      }
       menu.value = focus;
     };
     const toggleIsHovered = (hover: boolean) => { isHovered.value = hover; };
     const clearText = () => { query.value = ''; };
-    const onListItemClicked = () => { menu.value = false; };
 
     useTextField(root, 'search', SEARCH_FIELD_REF);
 
@@ -124,7 +109,6 @@ export default defineComponent({
       toggleIsFocused,
       toggleIsHovered,
       clearText,
-      onListItemClicked,
     };
   },
 });

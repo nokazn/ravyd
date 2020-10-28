@@ -1,86 +1,86 @@
 <template>
   <portal :to="SEARCH_FORM_PORTAL_NAME">
     <transition name="fade">
-      <v-card
+      <div
         v-show="menu && query"
-        rounded="lg"
-        :elevation="12"
-        :class="$style.SearchResultList"
         :style="styles"
+        :class="$style.SearchResultList"
       >
-        <v-list
-          dense
-          nav
-          subheader
-          :color="$constant.MENU_BACKGROUND_COLOR"
-        >
-          <div
-            v-show="isSearching"
-            :class="$style['SearchResultList__content--searching']"
+        <v-card rounded="lg">
+          <v-list
+            dense
+            nav
+            subheader
+            :elevation="12"
+            :color="$constant.MENU_BACKGROUND_COLOR"
           >
-            <v-progress-circular indeterminate />
-          </div>
-
-          <div
-            v-show="!isSearching && !hasItem"
-            :class="$style['SearchResultList__content--empty']"
-          >
-            <v-icon left>
-              mdi-alert-circle-outline
-            </v-icon>
-            "{{ query }}" に一致する項目が見つかりません
-          </div>
-
-          <div
-            v-show="!isSearching && hasItem"
-            class="g-custom-scroll-bar"
-            :class="$style.SearchResultList__content"
-          >
-            <template v-for="{ title, items } in itemMapList">
-              <div
-                v-if="items.length > 0"
-                :key="title"
-                :class="$style.SearchResultList__group"
-              >
-                <v-subheader>
-                  {{ title }}
-                </v-subheader>
-                <v-divider />
-                <v-list-item-group>
-                  <ContentListItem
-                    v-for="item in items"
-                    :key="item.id"
-                    :item="item"
-                    :selected="selectedItem != null ? item.id === selectedItem.id : false"
-                    @click="onItemClicked"
-                  />
-                </v-list-item-group>
-              </div>
-            </template>
-          </div>
-
-          <v-divider />
-
-          <div :class="$style.SearchResultList__moreButton">
-            <v-btn
-              rounded
-              text
-              small
-              nuxt
-              to="/search"
-              class="g-no-text-decoration"
+            <div
+              v-show="isSearching"
+              :class="$style['SearchResultList__content--searching']"
             >
-              <v-icon
-                left
-                small
-              >
-                mdi-magnify
+              <v-progress-circular indeterminate />
+            </div>
+
+            <div
+              v-show="!isSearching && !hasItem"
+              :class="$style['SearchResultList__content--empty']"
+            >
+              <v-icon left>
+                mdi-alert-circle-outline
               </v-icon>
-              もっと見る
-            </v-btn>
-          </div>
-        </v-list>
-      </v-card>
+              "{{ query }}" に一致する項目が見つかりません
+            </div>
+
+            <div
+              v-show="!isSearching && hasItem"
+              class="g-custom-scroll-bar"
+              :class="$style.SearchResultList__content"
+            >
+              <template v-for="{ title, items } in itemMapList">
+                <div
+                  v-if="items.length > 0"
+                  :key="title"
+                  :class="$style.SearchResultList__group"
+                >
+                  <v-subheader>
+                    {{ title }}
+                  </v-subheader>
+                  <v-divider />
+                  <v-list-item-group>
+                    <ContentListItem
+                      v-for="item in items"
+                      :key="item.id"
+                      :item="item"
+                      :selected="isSelected(item.id)"
+                    />
+                  </v-list-item-group>
+                </div>
+              </template>
+            </div>
+
+            <v-divider />
+
+            <div :class="$style.SearchResultList__moreButton">
+              <v-btn
+                rounded
+                text
+                small
+                nuxt
+                to="/search"
+                class="g-no-text-decoration"
+              >
+                <v-icon
+                  left
+                  small
+                >
+                  mdi-magnify
+                </v-icon>
+                もっと見る
+              </v-btn>
+            </div>
+          </v-list>
+        </v-card>
+      </div>
     </transition>
   </portal>
 </template>
@@ -90,6 +90,7 @@ import { defineComponent, computed } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
 import { useSearchResult } from '~/services/use/keyboard';
+import { useContentPosition } from '~/services/use/style';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
@@ -141,11 +142,6 @@ export default defineComponent({
       );
     });
     const hasItem = computed(() => itemList.value.length > 0);
-    const styles = computed(() => ({
-      position: 'fixed',
-      top: `${$searchForm.position.top}px`,
-      left: `${$searchForm.position.left}px`,
-    }));
 
     const {
       selectedItemIndex,
@@ -153,8 +149,14 @@ export default defineComponent({
       isSearching,
       selectedItem,
       menu,
-      onItemClicked,
     } = useSearchResult(root, itemList);
+    const styles = useContentPosition(root);
+
+    const isSelected = (id: string) => {
+      return selectedItem.value != null
+        ? id === selectedItem.value.id
+        : false;
+    };
 
     return {
       selectedItemIndex,
@@ -164,8 +166,8 @@ export default defineComponent({
       itemMapList,
       selectedItem,
       hasItem,
+      isSelected,
       styles,
-      onItemClicked,
       LIMIT_OF_SEARCH_ITEM,
       SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
@@ -175,19 +177,37 @@ export default defineComponent({
 
 <style lang="scss" module>
 .SearchResultList {
+  $content-side-padding: 12px;
+  $content-width: 90vw;
+  $content-max-width: 1200px;
+  $card-footer-height: 48px;
+
   min-width: 400px;
+  margin: -4px 4% 0;
   z-index: z-index-of(front-menu);
 
   &__content {
-    min-width: 400px;
-    max-width: 60vw;
-    // 80vh と 100vh からヘッダーとフッターの高さを除いた高さのうち小さいほう
-    max-height: calc(100vh - #{$g-header-height} - #{$g-footer-height} - 48px);
     overflow-y: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 12px;
-    padding: 0 12px;
+    padding: 0 $content-side-padding;
+
+    @include smaller-than-lg() {
+      $footer-height: $g-navigation-bar-height + $g-footer-height-mobile;
+      $extra-height: $g-header-height + $card-footer-height + $footer-height;
+
+      max-width: $content-width;
+      max-height: calc(100vh - #{$extra-height});
+    }
+
+    @include larger-than-lg() {
+      $flexible-max-width: calc(#{$content-width} - #{$g-navigation-drawer-width * 0.9});
+      $extra-height: $g-header-height + $card-footer-height + $g-footer-height;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: $content-side-padding;
+      max-width: min(#{$flexible-max-width}, #{$content-max-width});
+      max-height: calc(100vh - #{$extra-height});
+    }
 
     &--searching,
     &--empty {
@@ -200,8 +220,18 @@ export default defineComponent({
   }
 
   &__group {
-    max-width: calc(30vw - 18px);
     margin-bottom: 12px;
+
+    @include smaller-than-lg() {
+      max-width: calc(#{$content-width} - #{$content-side-padding * 2});
+    }
+
+    @include larger-than-lg() {
+      $content-width-with-nav: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
+      $flexible-max-width: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
+
+      max-width: min(#{$flexible-max-width}, #{$content-width / 2});
+    }
   }
 
   &__moreButton {

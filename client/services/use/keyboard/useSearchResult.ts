@@ -33,7 +33,6 @@ export const useSearchResult = (
       : undefined;
   });
 
-  const onItemClicked = () => { menu.value = false; };
   const handleSelectedItem = (diff: 1 | -1) => {
     const { length } = itemList.value;
     // 未選択の場合は down/up を押したときにそれぞれ 最初/最後 が選択されるようにする
@@ -83,6 +82,5 @@ export const useSearchResult = (
     isSearching,
     selectedItem,
     menu,
-    onItemClicked,
   };
 };
