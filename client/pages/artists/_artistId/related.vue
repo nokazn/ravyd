@@ -5,9 +5,10 @@
     <CardsWrapper
       :min-width="$screen.cardWidthMinMax[0]"
       :max-width="$screen.cardWidthMinMax[1]"
+      :class="$style.ArtistIdRelatedArtistPage__wrapper"
     >
       <ArtistCard
-        v-for="artist in relatedArtistList"
+        v-for="artist in relatedArtists"
         :key="artist.id"
         :item="artist"
         :min-width="$screen.cardWidthMinMax[0]"
@@ -37,13 +38,14 @@ export default class RelatedArtistPage extends Vue implements Data {
   artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtistList!: App.ContentItem<'artist'>[];
+  relatedArtists!: App.ContentItem<'artist'>[];
 }
 </script>
 
 <style lang="scss" module>
 .ArtistIdRelatedArtistPage {
-  &__divider {
+  &__divider,
+  &__wrapper {
     margin-bottom: 24px;
   }
 }
