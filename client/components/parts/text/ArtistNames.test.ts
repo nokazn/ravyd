@@ -16,7 +16,7 @@ const artist = (i: number, hasImages: boolean): SpotifyAPI.Artist => ({
   uri: 'uri',
   id: id(i),
   followers: {
-    href: 'path/to/follwers',
+    href: 'path/to/followers',
     total: 10000,
   },
   genres: ['rock', 'indie rock'],
