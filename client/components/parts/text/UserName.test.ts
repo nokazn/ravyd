@@ -18,7 +18,7 @@ const user = (i: number, hasDisplayName: boolean): SpotifyAPI.UserData => ({
     spotify: 'path/to/spotify',
   },
   followers: {
-    href: 'path/to/follwers',
+    href: 'path/to/followers',
     total: 10,
   },
   href: 'href',

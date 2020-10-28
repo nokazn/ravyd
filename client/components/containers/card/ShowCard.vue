@@ -78,10 +78,10 @@ export default defineComponent({
       props.maxWidth ?? props.width,
     ));
     const showPath = computed(() => `/shows/${props.item.id}`);
-    const isShowSet = computed(() => root.$getters()['playback/contextUri'] === props.item.uri);
+    const isShowSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
     const isPlaying = computed(() => root.$state().playback.isPlaying);
     const mediaIcon = computed<MediaIcon>(() => {
-      return isPlaying.value && isShowSet.value
+      return isShowSet.value && isPlaying.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     });

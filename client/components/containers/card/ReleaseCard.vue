@@ -113,7 +113,7 @@ export default defineComponent({
     });
     const isPlaying = computed(() => root.$state().playback.isPlaying);
     const mediaIcon = computed<MediaIcon>(() => {
-      return isPlaying.value && isReleaseSet.value
+      return isReleaseSet.value && isPlaying.value
         ? 'mdi-pause-circle'
         : 'mdi-play-circle';
     });
