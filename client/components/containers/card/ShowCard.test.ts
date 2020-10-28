@@ -73,7 +73,7 @@ describe('ShowCard', () => {
     expect(wrapper.findComponent(Card).props().to).toBe('/shows/id1');
   });
 
-  it('when an show\'s track is not set', async () => {
+  it('when a show\'s track is not set', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -81,7 +81,7 @@ describe('ShowCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when an show\'s track set', async () => {
+  it('when a show\'s track set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -89,7 +89,7 @@ describe('ShowCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when playing an show\'s track', async () => {
+  it('when playing a show\'s track', async () => {
     const wrapper = factory(true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -97,7 +97,7 @@ describe('ShowCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-pause-circle');
   });
 
-  it('play an show context', async () => {
+  it('play a show context', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,

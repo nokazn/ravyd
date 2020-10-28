@@ -91,7 +91,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(Card).props().to).toBe('/playlists/id1');
   });
 
-  it('when an playlist\'s track is not set', async () => {
+  it('when a playlist\'s track is not set', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -99,7 +99,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when an playlist\'s track set', async () => {
+  it('when a playlist\'s track set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -107,7 +107,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when playing an playlist\'s track', async () => {
+  it('when playing a playlist\'s track', async () => {
     const wrapper = factory(true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -115,7 +115,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-pause-circle');
   });
 
-  it('play an playlist context', async () => {
+  it('play a playlist context', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
