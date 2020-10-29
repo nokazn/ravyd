@@ -1,31 +1,33 @@
 <template>
-  <span
+  <TextInfo
+    :size="size"
+    :icon="icon"
+    :subtext="subtext"
     :title="duration.title"
-    :class="{ ['subtext--text']: subtext }"
   >
-    <v-icon
-      v-if="!hideIcon"
-      :size="iconSize"
-      :color="subtext ? 'subtext' : undefined"
-    >
+    <template #icon>
       mdi-clock-outline
-    </v-icon>
-    <span :style="textStyles">
-      {{ duration.text }}
-    </span>
-  </span>
+    </template>
+
+    {{ duration.text }}
+  </TextInfo>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import TextInfo from '~/components/parts/text/TextInfo.vue';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
 type Duration = {
-  text: string
-  title: string
+  text: string;
+  title: string;
 }
 
 export default defineComponent({
+  components: {
+    TextInfo,
+  },
+
   props: {
     durationMs: {
       type: Number,
@@ -36,10 +38,10 @@ export default defineComponent({
       default: false,
     },
     size: {
-      type: Number,
-      default: 13,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
-    hideIcon: {
+    icon: {
       type: Boolean,
       default: false,
     },
@@ -50,8 +52,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    const textStyles = { fontSize: `${props.size}px` };
-    const iconSize = Math.floor(props.size * 1.25);
     const duration = computed<Duration>(() => {
       const elapsedTime = elapsedTimeInJapanese(props.durationMs);
       const text = props.hasMore
@@ -63,11 +63,7 @@ export default defineComponent({
       };
     });
 
-    return {
-      textStyles,
-      iconSize,
-      duration,
-    };
+    return { duration };
   },
 });
 </script>

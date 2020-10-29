@@ -1,25 +1,27 @@
 <template>
-  <span
+  <TextInfo
+    :size="size"
+    :icon="icon"
+    :subtext="subtext"
     :title="title"
-    :class="{ ['subtext--text']: subtext }"
   >
-    <v-icon
-      v-if="!hideIcon"
-      :size="iconSize"
-      :color="subtext ? 'subtext' : undefined"
-    >
+    <template #icon>
       mdi-music-box-multiple-outline
-    </v-icon>
-    <span :style="textStyles">
-      {{ text }}
-    </span>
-  </span>
+    </template>
+
+    {{ text }}
+  </TextInfo>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import TextInfo from '~/components/parts/text/TextInfo.vue';
 
 export default defineComponent({
+  components: {
+    TextInfo,
+  },
+
   props: {
     total: {
       type: Number,
@@ -30,28 +32,23 @@ export default defineComponent({
       default: '曲',
     },
     size: {
-      type: Number,
-      default: 13,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
-    subtext: {
+    icon: {
       type: Boolean,
       default: false,
     },
-    hideIcon: {
+    subtext: {
       type: Boolean,
       default: false,
     },
   },
 
   setup(props) {
-    const textStyles = { fontSize: `${props.size}px` };
-    const iconSize = Math.floor(props.size * 1.25);
     const text = computed(() => `${props.total}${props.unit}`);
     const title = computed(() => `全${text.value}`);
-
     return {
-      textStyles,
-      iconSize,
       text,
       title,
     };

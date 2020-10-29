@@ -1,32 +1,29 @@
 <template>
-  <span
-    :title="text"
-    :class="{ ['subtext--text']: subtext }"
+  <TextInfo
+    :size="size"
+    :icon="icon"
+    :subtext="subtext"
+    :title="title"
   >
-    <template v-if="icon">
-      <v-icon
-        :size="iconSize"
-        :color="subtext ? 'subtext' : undefined"
-      >
-        mdi-account-multiple
-      </v-icon>
-      <span :style="textStyles">
-        {{ text }}
-      </span>
+    <template #icon>
+      mdi-account-multiple
     </template>
 
-    <template v-else>
-      {{ text }}
-    </template>
-  </span>
+    {{ text }}
+  </TextInfo>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import TextInfo from '~/components/parts/text/TextInfo.vue';
 import { getFollowersText } from '~/services/converter';
 import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
+  components: {
+    TextInfo,
+  },
+
   props: {
     followers: {
       type: Object as PropType<SpotifyAPI.Followers>,
@@ -47,19 +44,8 @@ export default defineComponent({
   },
 
   setup(props) {
-    const textStyles = props.size != null
-      ? { fontSize: `${props.size}px` }
-      : undefined;
-    const iconSize = props.size != null
-      ? Math.floor(props.size * 1.25)
-      : undefined;
     const text = computed(() => getFollowersText(props.followers.total));
-
-    return {
-      textStyles,
-      iconSize,
-      text,
-    };
+    return { text };
   },
 });
 </script>

@@ -1,51 +1,56 @@
 <template>
-  <div
-    v-if="$screen.isSingleColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <div>
+  <div :class="$style.ReleaseDetailWrapper">
+    <template v-if="$screen.isSingleColumn">
+      <div>
+        <ReleaseDate
+          :size="size"
+          :release-date="release.releaseDate"
+          :release-date-precision="release.releaseDatePrecision"
+        />
+        <span ckass="g-small-text">･</span>
+        <ReleaseTotalTracks
+          :size="size"
+          :total="release.totalTracks"
+        />
+      </div>
+      <div>
+        <ReleaseTotalTracks
+          :size="size"
+          :total="release.totalTracks"
+        />
+        <span ckass="g-small-text">･</span>
+        <ReleaseDuration
+          :size="size"
+          :duration-ms="release.durationMs"
+          :has-more="release.hasNextTrack || release.hasPreviousTrack"
+        />
+      </div>
+    </template>
+
+    <template v-else-if="$screen.isMultiColumn">
       <ReleaseDate
-        hide-icon
+        icon
+        :size="size"
         :release-date="release.releaseDate"
         :release-date-precision="release.releaseDatePrecision"
       />
-      <span ckass="g-small-text">･</span>
       <ReleaseTotalTracks
-        hide-icon
+        icon
+        :size="size"
         :total="release.totalTracks"
       />
-    </div>
-    <div>
-      <ReleaseTotalTracks
-        hide-icon
-        :total="release.totalTracks"
-      />
-      <span ckass="g-small-text">･</span>
       <ReleaseDuration
-        hide-icon
+        icon
+        :size="size"
         :duration-ms="release.durationMs"
         :has-more="release.hasNextTrack || release.hasPreviousTrack"
       />
-    </div>
-  </div>
-  <div
-    v-else-if="$screen.isMultiColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <ReleaseDate
-      :release-date="release.releaseDate"
-      :release-date-precision="release.releaseDatePrecision"
-    />
-    <ReleaseTotalTracks
-      :total="release.totalTracks"
-    />
-    <ReleaseDuration
-      :duration-ms="release.durationMs"
-      :has-more="release.hasNextTrack || release.hasPreviousTrack"
-    />
-    <ReleaseLabel
-      :label="release.label"
-    />
+      <ReleaseLabel
+        icon
+        :size="size"
+        :label="release.label"
+      />
+    </template>
   </div>
 </template>
 
@@ -70,6 +75,10 @@ export default defineComponent({
       type: Object as PropType<App.ReleasePage>,
       required: true,
     },
+  },
+
+  setup() {
+    return { size: 13 };
   },
 });
 </script>
