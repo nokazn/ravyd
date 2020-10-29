@@ -76,10 +76,7 @@
           class="subtext--text"
           :class="$style.Info__followers"
         >
-          <Followers
-            hide-icon
-            :followers="artist.followers"
-          />
+          <Followers :followers="artist.followers" />
         </p>
 
         <div :class="$style.Info__buttons">

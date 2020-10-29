@@ -227,7 +227,7 @@ export namespace App {
   export type UserPage = {
     displayName: string | null
     externalUrls: SpotifyAPI.ExternalUrls
-    followersText: string | undefined
+    followers: SpotifyAPI.Followers
     href: string
     id: string
     images: SpotifyAPI.Image[]

@@ -15,7 +15,6 @@
       />
       <span class="g-small-text">･</span>
       <Followers
-        hide-icon
         :followers="playlist.followers"
       />
     </div>
@@ -31,6 +30,7 @@
       :duration-ms="playlist.durationMs"
     />
     <Followers
+      icon
       :followers="playlist.followers"
     />
   </div>

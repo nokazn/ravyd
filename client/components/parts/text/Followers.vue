@@ -3,7 +3,7 @@
     :title="text"
     :class="{ ['subtext--text']: subtext }"
   >
-    <template v-if="!hideIcon">
+    <template v-if="icon">
       <v-icon
         :size="iconSize"
         :color="subtext ? 'subtext' : undefined"
@@ -36,7 +36,7 @@ export default defineComponent({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-    hideIcon: {
+    icon: {
       type: Boolean,
       default: false,
     },
