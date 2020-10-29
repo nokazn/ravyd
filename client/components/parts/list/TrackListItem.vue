@@ -104,7 +104,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { useButtonSize } from '~/use/style';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
 

@@ -128,9 +128,8 @@ import Copyrights from '~/components/parts/text/Copyrights.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShow, getIsSaved } from '~/services/local/_showId';
-import { getImageSrc } from '~/utils/image';
-import { convertEpisodeDetail } from '~/services/converter';
-import { App, OneToFifty, SpotifyAPI } from '~~/types';
+import { getImageSrc, convertEpisodeDetail } from '~/services/converter';
+import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_EPISODES = 30;

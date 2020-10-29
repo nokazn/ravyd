@@ -47,7 +47,7 @@ import type { RawLocation } from 'vue-router';
 
 import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
 import PlaylistTrackTableRowPc, { On as OnPc } from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~~/types';
 

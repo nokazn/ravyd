@@ -1,4 +1,4 @@
-import { generateContentPath } from '~/utils/text';
+import { generateContentPath } from '~/services/converter';
 import { App, SpotifyAPI } from '~~/types';
 
 export const convertToContentListItem = <T extends App.ContentItemType>(type: T) => (

@@ -57,7 +57,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { App } from '~~/types';
 
 const CLICK = 'click';

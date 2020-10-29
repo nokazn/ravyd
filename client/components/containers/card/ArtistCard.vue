@@ -40,7 +40,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
 import UserAvatar, { MediaIcon } from '~/components/parts/image/UserAvatar.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { SpotifyAPI, App } from '~~/types';
 
 const adjustAvatarSize = (width: number | undefined) => {

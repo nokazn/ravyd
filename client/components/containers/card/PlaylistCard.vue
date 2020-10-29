@@ -51,7 +51,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import type { SpotifyAPI } from '~~/types';
 
 export default defineComponent({

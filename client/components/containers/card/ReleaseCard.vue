@@ -59,7 +59,7 @@ import type { RawLocation } from 'vue-router';
 import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import type { App } from '~~/types';
 
 export default defineComponent({

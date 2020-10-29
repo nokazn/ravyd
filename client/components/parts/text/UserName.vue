@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import type { SpotifyAPI } from '~~/types';
 
 const SIZE_OF_AVATAR = 28;

@@ -158,7 +158,7 @@ import {
   getIsFollowing,
   getRelatedArtistList,
 } from '~/services/local/_artistId';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { App } from '~~/types';
 
 const HEADER_REF = 'HEADER_REF';

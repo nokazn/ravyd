@@ -179,8 +179,7 @@ import {
   getPlaylistTracks,
   PlaylistTracks,
 } from '~/services/local/_playlistId';
-import { convertPlaylistTrackDetail } from '~/services/converter';
-import { getImageSrc } from '~/utils/image';
+import { convertPlaylistTrackDetail, getImageSrc } from '~/services/converter';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import type { App, OneToFifty, SpotifyAPI } from '~~/types';
 

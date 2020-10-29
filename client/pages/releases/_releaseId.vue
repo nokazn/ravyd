@@ -160,9 +160,8 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getRelease } from '~/services/local/_releaseId';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import { getImageSrc } from '~/utils/image';
-import { convertTrackDetail } from '~/services/converter';
-import { SpotifyAPI, App, OneToFifty } from '~~/types';
+import { getImageSrc, convertTrackDetail } from '~/services/converter';
+import type { SpotifyAPI, App, OneToFifty } from '~~/types';
 
 const HEADER_REF = 'HEADER_REF';
 const LIMIT_OF_TRACKS = 30;

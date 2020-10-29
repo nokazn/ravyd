@@ -1,4 +1,4 @@
-import { convertAddedAt } from '~/utils/converter';
+import { convertAddedAt } from '~/services/converter';
 import { App, SpotifyAPI } from '~~/types';
 
 export const convertPlaylistTrackDetail = (

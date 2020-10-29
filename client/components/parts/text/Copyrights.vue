@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
-import { parseCopyrights } from '~/utils/text';
+import { parseCopyrights } from '~/services/converter';
 import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({

@@ -67,7 +67,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~~/types';
 

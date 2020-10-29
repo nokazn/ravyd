@@ -120,7 +120,7 @@ import {
   getUserPlaylists,
   UserPlaylists,
 } from '~/services/local/_userId';
-import { getImageSrc } from '~/utils/image';
+import { getImageSrc } from '~/services/converter';
 import type { App, OneToFifty } from '~~/types';
 
 const LIMIT_OF_PLAYLISTS = 30;

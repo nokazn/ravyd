@@ -1,4 +1,4 @@
-import { convertReleaseDate } from '~/utils/converter';
+import { convertReleaseDate } from '~/services/converter';
 import { SpotifyAPI, App } from '~~/types';
 
 export const convertReleaseForCard = (
