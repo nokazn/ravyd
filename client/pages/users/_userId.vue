@@ -50,7 +50,8 @@
         </h1>
 
         <p class="subtext--text">
-          {{ playlistCountsText }}・{{ user.followersText }}
+          {{ playlistCountsText }}・
+          <Followers :followers="user.followers" />
         </p>
 
         <div :class="$style.Info__buttons">
@@ -107,6 +108,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Followers from '~/components/parts/text/Followers.vue';
 import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
 import UserMenu, { On as OnUserMenu } from '~/components/parts/menu/UserMenu.vue';
@@ -133,12 +135,13 @@ interface AsyncData {
 }
 
 interface Data {
-  HEADER_REF: string
+  HEADER_REF: string;
 }
 
 @Component({
   components: {
     UserAvatar,
+    Followers,
     FollowButton,
     FavoriteButton,
     UserMenu,
@@ -192,8 +195,7 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
     return user?.displayName ?? user?.id;
   }
   get playlistCountsText(): string {
-    const { total } = this.userPlaylists;
-    return `${total}個のプレイリスト`;
+    return `${this.userPlaylists.total}個のプレイリスト`;
   }
 
   mounted() {

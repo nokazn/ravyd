@@ -1,40 +1,40 @@
 <template>
-  <div
-    v-if="$screen.isSingleColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <div>
+  <div :class="$style.ReleaseDetailWrapper">
+    <template v-if="$screen.isSingleColumn">
+      <div>
+        <ReleaseTotalTracks
+          :size="size"
+          :total="playlist.totalTracks"
+        />
+        <span class="g-small-text">･</span>
+        <ReleaseDuration
+          :size="size"
+          :duration-ms="playlist.durationMs"
+        />
+        <span class="g-small-text">･</span>
+        <Followers
+          :size="size"
+          :followers="playlist.followers"
+        />
+      </div>
+    </template>
+    <template v-else-if="$screen.isMultiColumn">
       <ReleaseTotalTracks
-        hide-icon
+        icon
+        :size="size"
         :total="playlist.totalTracks"
       />
-      <span class="g-small-text">･</span>
       <ReleaseDuration
-        hide-icon
+        icon
+        :size="size"
         :duration-ms="playlist.durationMs"
       />
-      <span class="g-small-text">･</span>
       <Followers
-        v-if="playlist.followersText != null"
-        hide-icon
-        :text="playlist.followersText"
+        icon
+        :size="size"
+        :followers="playlist.followers"
       />
-    </div>
-  </div>
-  <div
-    v-else-if="$screen.isMultiColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <ReleaseTotalTracks
-      :total="playlist.totalTracks"
-    />
-    <ReleaseDuration
-      :duration-ms="playlist.durationMs"
-    />
-    <Followers
-      v-if="playlist.followersText != null"
-      :text="playlist.followersText"
-    />
+    </template>
   </div>
 </template>
 
@@ -57,6 +57,10 @@ export default defineComponent({
       type: Object as PropType<App.PlaylistPage>,
       required: true,
     },
+  },
+
+  setup() {
+    return { size: 13 };
   },
 });
 </script>

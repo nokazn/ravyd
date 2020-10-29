@@ -179,7 +179,7 @@ export namespace App {
     id: string;
     uri: string;
     images: SpotifyAPI.Image[];
-    followersText: string | undefined;
+    followers: SpotifyAPI.Followers;
     genreList: string[];
     externalUrls: SpotifyAPI.ExternalUrls;
   }
@@ -197,7 +197,7 @@ export namespace App {
     totalTracks: number
     isPublic: boolean | null
     isOwnPlaylist: boolean
-    followersText: string | undefined
+    followers: SpotifyAPI.Followers
     externalUrls: SpotifyAPI.ExternalUrls
     trackUriList: string[]
   }
@@ -227,7 +227,7 @@ export namespace App {
   export type UserPage = {
     displayName: string | null
     externalUrls: SpotifyAPI.ExternalUrls
-    followersText: string | undefined
+    followers: SpotifyAPI.Followers
     href: string
     id: string
     images: SpotifyAPI.Image[]

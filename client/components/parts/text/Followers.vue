@@ -1,35 +1,39 @@
 <template>
-  <span
+  <TextInfo
+    :size="size"
+    :icon="icon"
+    :subtext="subtext"
     :title="text"
-    :class="{ ['subtext--text']: subtext }"
   >
-    <v-icon
-      v-if="!hideIcon"
-      :size="iconSize"
-      :color="subtext ? 'subtext' : undefined"
-    >
+    <template #icon>
       mdi-account-multiple
-    </v-icon>
-    <span :style="textStyles">
-      {{ text }}
-    </span>
-  </span>
+    </template>
+
+    {{ text }}
+  </TextInfo>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import TextInfo from '~/components/parts/text/TextInfo.vue';
+import { getFollowersText } from '~/services/converter';
+import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
+  components: {
+    TextInfo,
+  },
+
   props: {
-    text: {
-      type: String,
+    followers: {
+      type: Object as PropType<SpotifyAPI.Followers>,
       required: true,
     },
     size: {
-      type: Number,
-      default: 13,
+      type: Number as PropType<number | undefined>,
+      default: undefined,
     },
-    hideIcon: {
+    icon: {
       type: Boolean,
       default: false,
     },
@@ -40,13 +44,8 @@ export default defineComponent({
   },
 
   setup(props) {
-    const textStyles = { fontSize: `${props.size}px` };
-    const iconSize = Math.floor(props.size * 1.25);
-
-    return {
-      textStyles,
-      iconSize,
-    };
+    const text = computed(() => getFollowersText(props.followers.total));
+    return { text };
   },
 });
 </script>

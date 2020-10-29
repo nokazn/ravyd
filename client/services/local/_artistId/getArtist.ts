@@ -1,6 +1,5 @@
 import { Context } from '@nuxt/types';
 import { App } from '~~/types';
-import { getFollowersText } from '~/services/converter';
 
 export const getArtist = async (
   { app, params }: Context,
@@ -23,7 +22,7 @@ export const getArtist = async (
     id,
     uri,
     images,
-    followersText: getFollowersText(followers.total),
+    followers,
     genreList,
     externalUrls,
   };

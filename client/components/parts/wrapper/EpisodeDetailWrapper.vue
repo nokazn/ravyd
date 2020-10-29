@@ -1,30 +1,31 @@
 <template>
-  <div
-    v-if="$screen.isSingleColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <ReleaseDate
-      hide-icon
-      :release-date="episode.releaseDate"
-      :release-date-precision="episode.releaseDatePrecision"
-    />
-    <span ckass="g-small-text">･</span>
-    <ReleaseDuration
-      hide-icon
-      :duration-ms="episode.durationMs"
-    />
-  </div>
-  <div
-    v-else-if="$screen.isMultiColumn"
-    :class="$style.ReleaseDetailWrapper"
-  >
-    <ReleaseDate
-      :release-date="episode.releaseDate"
-      :release-date-precision="episode.releaseDatePrecision"
-    />
-    <ReleaseDuration
-      :duration-ms="episode.durationMs"
-    />
+  <div :class="$style.ReleaseDetailWrapper">
+    <template v-if="$screen.isSingleColumn">
+      <ReleaseDate
+        :size="size"
+        :release-date="episode.releaseDate"
+        :release-date-precision="episode.releaseDatePrecision"
+      />
+      <span ckass="g-small-text">･</span>
+      <ReleaseDuration
+        :size="size"
+        :duration-ms="episode.durationMs"
+      />
+    </template>
+
+    <template v-else-if="$screen.isMultiColumn">
+      <ReleaseDate
+        icon
+        :size="size"
+        :release-date="episode.releaseDate"
+        :release-date-precision="episode.releaseDatePrecision"
+      />
+      <ReleaseDuration
+        icon
+        :size="size"
+        :duration-ms="episode.durationMs"
+      />
+    </template>
   </div>
 </template>
 
@@ -45,6 +46,10 @@ export default defineComponent({
       type: Object as PropType<App.EpisodeDetail>,
       required: true,
     },
+  },
+
+  setup() {
+    return { size: 13 };
   },
 });
 </script>

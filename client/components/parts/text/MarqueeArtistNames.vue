@@ -64,11 +64,11 @@ export default defineComponent({
     });
 
     return {
-      MARQUEE_TEXT_REF,
       artistPath,
       title,
       marqueeStyles,
       onHovered,
+      MARQUEE_TEXT_REF,
     };
   },
 });

@@ -58,7 +58,7 @@
           {{ show.name }}
         </h1>
 
-        <p>
+        <p class="subtext--text">
           {{ show.publisher }}・{{ show.totalEpisodes }}個のエピソード
         </p>
 
