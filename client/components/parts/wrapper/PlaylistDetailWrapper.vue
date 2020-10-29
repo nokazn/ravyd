@@ -15,9 +15,8 @@
       />
       <span class="g-small-text">･</span>
       <Followers
-        v-if="playlist.followersText != null"
         hide-icon
-        :text="playlist.followersText"
+        :followers="playlist.followers"
       />
     </div>
   </div>
@@ -32,8 +31,7 @@
       :duration-ms="playlist.durationMs"
     />
     <Followers
-      v-if="playlist.followersText != null"
-      :text="playlist.followersText"
+      :followers="playlist.followers"
     />
   </div>
 </template>

@@ -76,7 +76,10 @@
           class="subtext--text"
           :class="$style.Info__followers"
         >
-          {{ artist.followersText }}
+          <Followers
+            hide-icon
+            :followers="artist.followers"
+          />
         </p>
 
         <div :class="$style.Info__buttons">
@@ -146,6 +149,7 @@ import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
+import Followers from '~/components/parts/text/Followers.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
@@ -184,6 +188,7 @@ interface Data {
   components: {
     UserAvatar,
     HashTags,
+    Followers,
     ContextMediaButton,
     FavoriteButton,
     FollowButton,

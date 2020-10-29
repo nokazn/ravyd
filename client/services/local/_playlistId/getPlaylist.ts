@@ -1,7 +1,5 @@
 import { Context } from '@nuxt/types';
-
-import { getFollowersText } from '~/services/converter';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 export const getPlaylist = async (
   { app, params }: Context,
@@ -53,7 +51,7 @@ export const getPlaylist = async (
     durationMs,
     isPublic,
     isOwnPlaylist,
-    followersText: getFollowersText(followers.total),
+    followers,
     externalUrls,
     trackUriList,
   };
