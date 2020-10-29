@@ -3,7 +3,7 @@
     :size="size"
     :icon="icon"
     :subtext="subtext"
-    :title="title"
+    :title="text"
   >
     <template #icon>
       mdi-account-multiple
