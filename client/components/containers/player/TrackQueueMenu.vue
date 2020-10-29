@@ -86,7 +86,7 @@ import { RootGetters } from 'typed-vuex';
 
 import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
-import { convertUriToUrl } from '~/utils/converter';
+import { convertUriToUrl } from '~/services/converter';
 
 type Data = {
   isShown: boolean

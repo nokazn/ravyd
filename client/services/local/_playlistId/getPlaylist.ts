@@ -1,6 +1,6 @@
 import { Context } from '@nuxt/types';
 
-import { getFollowersText } from '~/utils/converter';
+import { getFollowersText } from '~/services/converter';
 import { App } from '~~/types';
 
 export const getPlaylist = async (

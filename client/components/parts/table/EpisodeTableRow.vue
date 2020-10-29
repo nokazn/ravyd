@@ -30,7 +30,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import EpisodeTableRowMobile, { On as OnMobile } from '~/components/parts/table/EpisodeTableRow.mobile.vue';
 import EpisodeTableRowPc, { On as OnPc } from '~/components/parts/table/EpisodeTableRow.pc.vue';
-import { convertReleaseDate } from '~/utils/converter';
+import { convertReleaseDate } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~~/types';
 

@@ -54,7 +54,7 @@ import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSe
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-import { convertTrackForCard, convertReleaseForCard } from '~/utils/converter';
+import { convertTrackForCard, convertReleaseForCard } from '~/services/converter';
 import type { App, SpotifyAPI } from '~~/types';
 
 type AsyncData = {

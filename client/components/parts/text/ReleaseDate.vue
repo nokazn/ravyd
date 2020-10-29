@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
-import { convertReleaseDate } from '~/utils/converter';
+import { convertReleaseDate } from '~/services/converter';
 
 export default defineComponent({
   props: {

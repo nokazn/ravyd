@@ -1,5 +1,5 @@
 import type { Context } from '@nuxt/types';
-import { convertReleaseForCard } from '~/utils/converter';
+import { convertReleaseForCard } from '~/services/converter';
 import type { App, OneToFifty } from '~~/types';
 
 export const TITLE_MAP = {

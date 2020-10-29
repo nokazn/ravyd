@@ -78,7 +78,7 @@ import {
   ReleaseType,
 } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import { convertReleaseForCard } from '~/utils/converter';
+import { convertReleaseForCard } from '~/services/converter';
 import type { App } from '~~/types';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;

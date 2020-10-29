@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { convertTrackDetail } from '~/utils/converter';
+import { convertTrackDetail } from '~/services/converter';
 import { App, SpotifyAPI, OneToFifty } from '~~/types';
 
 /**

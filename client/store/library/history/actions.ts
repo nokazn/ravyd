@@ -1,6 +1,6 @@
 import { Actions } from 'typed-vuex';
 
-import { convertTrackDetail } from '~/utils/converter';
+import { convertTrackDetail } from '~/services/converter';
 import { LibraryHistoryState } from './state';
 import { LibraryHistoryGetters } from './getters';
 import { LibraryHistoryMutations } from './mutations';

@@ -1,6 +1,6 @@
 import { Actions } from 'typed-vuex';
 
-import { convertReleaseForCard } from '~/utils/converter';
+import { convertReleaseForCard } from '~/services/converter';
 import { LibraryReleasesState } from './state';
 import { LibraryReleasesGetters } from './getters';
 import { LibraryReleasesMutations } from './mutations';

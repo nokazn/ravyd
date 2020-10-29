@@ -1,5 +1,5 @@
 import type { Context } from '@nuxt/types';
-import { convertToContentListItem } from '~/utils/converter';
+import { convertToContentListItem } from '~/services/converter';
 import type { App } from '~~/types';
 
 export const getRelatedArtistList = async (

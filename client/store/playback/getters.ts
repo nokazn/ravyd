@@ -3,7 +3,7 @@ import { Getters } from 'typed-vuex';
 import { PlaybackState } from './state';
 import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import { getImageSrc } from '~/utils/image';
-import { convertTrackForQueue, convertUriToId } from '~/utils/converter';
+import { convertTrackForQueue, convertUriToId } from '~/services/converter';
 import { getExternalUrlFromUri } from '~~/utils/getExternalUrlFromUri';
 import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
 

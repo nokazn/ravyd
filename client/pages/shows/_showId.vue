@@ -129,7 +129,7 @@ import Fallback from '~/components/parts/others/Fallback.vue';
 
 import { getShow, getIsSaved } from '~/services/local/_showId';
 import { getImageSrc } from '~/utils/image';
-import { convertEpisodeDetail } from '~/utils/converter';
+import { convertEpisodeDetail } from '~/services/converter';
 import { App, OneToFifty, SpotifyAPI } from '~~/types';
 
 const ARTWORK_SIZE = 220;
