@@ -83,10 +83,10 @@ export default defineComponent({
     });
 
     return {
-      MARQUEE_TEXT_REF,
       trackPath,
       marqueeStyles,
       onHovered,
+      MARQUEE_TEXT_REF,
     };
   },
 });
