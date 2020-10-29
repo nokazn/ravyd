@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
-import { useContentPosition } from '~/services/use/style';
+import { useContentPosition } from '~/use/style';
 
 export default defineComponent({
   props: {

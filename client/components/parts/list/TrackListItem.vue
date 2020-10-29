@@ -103,7 +103,7 @@ import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
-import { useButtonSize } from '~/services/use/style';
+import { useButtonSize } from '~/use/style';
 import { getImageSrc } from '~/utils/image';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';

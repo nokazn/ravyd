@@ -45,7 +45,7 @@
 import { defineComponent, computed } from '@vue/composition-api';
 import type { RawLocation } from 'vue-router';
 
-import { useIsLoaded } from '~/services/use/util';
+import { useIsLoaded } from '~/use/util';
 import UserAvatar from '~/components/parts/image/UserAvatar.vue';
 
 const ICON_SIZR = 32;

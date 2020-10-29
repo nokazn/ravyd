@@ -46,7 +46,7 @@
 <script lang="ts">
 import { defineComponent, ref, PropType } from '@vue/composition-api';
 import NavigationListItem, { Item } from '~/components/parts/list/NavigationListItem.vue';
-import { useResizableVirtualScroll } from '~/services/use/observer';
+import { useResizableVirtualScroll } from '~/use/observer';
 
 export type { Item } from '~/components/parts/list/NavigationListItem.vue';
 

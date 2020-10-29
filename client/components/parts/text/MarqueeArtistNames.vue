@@ -33,7 +33,7 @@ import {
   watch,
   PropType,
 } from '@vue/composition-api';
-import { useMarqueeText } from '~/services/use/style';
+import { useMarqueeText } from '~/use/style';
 import { App } from '~~/types';
 
 export default defineComponent({

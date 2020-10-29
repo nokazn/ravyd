@@ -54,7 +54,7 @@ import {
   computed,
   PropType,
 } from '@vue/composition-api';
-import { useHorizontalScrollButton } from '~/services/use/style';
+import { useHorizontalScrollButton } from '~/use/style';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 export default defineComponent({

@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
-import { useIntersectionObserver } from '~/services/use/observer';
+import { useIntersectionObserver } from '~/use/observer';
 
 export const APPEAR = 'appear';
 

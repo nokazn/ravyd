@@ -65,7 +65,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
-import { useCopyText } from '~/services/use/util';
+import { useCopyText } from '~/use/util';
 import { createUrl } from '~~/utils/createUrl';
 import type { App, SpotifyAPI } from '~~/types';
 

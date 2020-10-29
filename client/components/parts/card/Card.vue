@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
-import { useIsLoaded } from '~/services/use/util';
+import { useIsLoaded } from '~/use/util';
 
 const CLICK = 'click';
 

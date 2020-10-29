@@ -60,7 +60,7 @@ import Vue from 'vue';
 import { defineComponent, ref, computed } from '@vue/composition-api';
 import { debounce } from 'lodash';
 import { $searchForm } from '~/observable/searchForm';
-import { useTextField } from '~/services/use/keyboard';
+import { useTextField } from '~/use/keyboard';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
 

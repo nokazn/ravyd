@@ -89,8 +89,8 @@
 import { defineComponent, computed } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
-import { useSearchResult } from '~/services/use/keyboard';
-import { useContentPosition } from '~/services/use/style';
+import { useSearchResult } from '~/use/keyboard';
+import { useContentPosition } from '~/use/style';
 import { SpotifyAPI, App } from '~~/types';
 
 const LIMIT_OF_SEARCH_ITEM = 4;

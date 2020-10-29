@@ -7,7 +7,7 @@ import {
   Ref,
 } from '@vue/composition-api';
 import { debounce } from 'lodash';
-import { useIntersectionObserver } from '~/services/use/observer';
+import { useIntersectionObserver } from '~/use/observer';
 
 type Card = {
   isVisible: boolean;

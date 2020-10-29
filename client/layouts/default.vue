@@ -60,8 +60,8 @@ import Overlay from '~/components/globals/Overlay.vue';
 import Toasts from '~/components/globals/Toasts.vue';
 import ConfirmModal from '~/components/globals/ConfirmModal.vue';
 
-import { useIntersectionObserver } from '~/services/use/observer';
-import { useIsLoaded } from '~/services/use/util';
+import { useIntersectionObserver } from '~/use/observer';
+import { useIsLoaded } from '~/use/util';
 import { $searchForm } from '~/observable/searchForm';
 
 export default defineComponent({

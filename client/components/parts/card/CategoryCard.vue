@@ -77,7 +77,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import { getImageSrc } from '~/utils/image';
-import { useIsLoaded } from '~/services/use/util';
+import { useIsLoaded } from '~/use/util';
 import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
