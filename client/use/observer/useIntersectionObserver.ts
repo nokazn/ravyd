@@ -3,8 +3,6 @@ import { watchEffect, Ref, onBeforeUnmount } from '@vue/composition-api';
 export const useIntersectionObserver = (
   elementRef: Ref<Element | undefined | null>,
   callback: (entry: IntersectionObserverEntry) => void,
-  // @todo false-positive
-  // eslint-disable-next-line no-undef
   options?: IntersectionObserverInit,
 ) => {
   let observer: IntersectionObserver | undefined;

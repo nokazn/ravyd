@@ -1,5 +1,3 @@
-// @todo false-positive
-/* eslint-disable no-undef */
 import { Store, SubscribeOptions } from 'vuex';
 import { Context } from '@nuxt/types';
 import type { ActionMethodMap } from '~~/types';

@@ -1,9 +1,3 @@
-/**
- * 'off' or 0 - turn the rule off
- * 'warn' or 1 - turn the rule on as a warning (doesn’t affect exit code)
- * 'error' or 2 - turn the rule on as an error (exit code will be 1)
- */
-
 const isProduction = process.env === 'production';
 
 module.exports = {
@@ -15,7 +9,7 @@ module.exports = {
     'jest/globals': true,
   },
   globals: {
-    // Spotify WEB Playback SDK で読み込まれる
+    // Spotify Web Playback SDK
     Spotify: 'readonly',
   },
   // .vue ファイルの template のパーサー
@@ -25,13 +19,12 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
+    extraFileExtensions: ['.vue'],
   },
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張している
-    // #129 .eslintignore に
-    // .nuxt/, dist/, static/, node_modules/
-    // を記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
+    // #129 .eslintignore を漏れなく記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
     '@nuxtjs/eslint-config-typescript',
     'plugin:vue/recommended',
     // eslint-plugin-vue を拡張している
@@ -39,30 +32,13 @@ module.exports = {
     'airbnb-base',
   ],
   plugins: ['jest'],
-  settings: {
-    // @todo import/no-unresolved を off にしてるので不要？
-    // import/no-unresolved の False Positive 検知対策
-    'import/resolver': {
-      node: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue'],
-      },
-      alias: {
-        map: [
-          ['~', './client'],
-          ['@', './client'],
-          ['~~', '.'],
-          ['@@', '.'],
-          ['typed-vuex', './types/typed-vuex/index.d.ts'],
-        ],
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.vue', '.json'],
-      },
-    },
-  },
   rules: {
     'no-console': isProduction ? [2, { allow: ['info', 'warn', 'error'] }] : [1, { allow: ['info', 'warn', 'error'] }],
     'no-debugger': isProduction ? 2 : 1,
     // 空白行は2行まで
     'no-multiple-empty-lines': [2, { max: 2 }],
+    // ts でチェック
+    'no-undef': 0,
     camelcase: 0,
     'lines-between-class-members': 0,
     'arrow-body-style': 0,
@@ -83,12 +59,11 @@ module.exports = {
         worker: 'always',
       },
     ],
-    // path は ts でチェックする
+    // ts でチェック
     'import/no-unresolved': 0,
     // dependencies, devDependencies にないパッケージからの import を許容
     'import/no-extraneous-dependencies': [0, { devDependencies: true }],
     // 'import/no-extraneous-dependencies': [1, { devDependencies: true }],
-    // named export は有用
     'import/prefer-default-export': 0,
 
     /**
