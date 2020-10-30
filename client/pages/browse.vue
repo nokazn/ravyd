@@ -1,35 +1,33 @@
 <template>
-  <div
-    v-if="categories != null"
-    :class="$style.BrowsePage"
-  >
+  <div :class="$style.BrowsePage">
     <h1 :class="$style.BrowsePage__title">
       {{ title }}
     </h1>
 
-    <CardsWrapper
-      v-if="categories != null"
-      :min-width="$screen.cardWidthMinMax[0]"
-      :max-width="$screen.cardWidthMinMax[1]"
-    >
-      <CategoryCard
-        v-for="category in categories.items"
-        :key="category.id"
-        :item="category"
-        :min-size="$screen.cardWidthMinMax[0]"
-        :max-size="$screen.cardWidthMinMax[1]"
-      />
-    </CardsWrapper>
+    <div :class="$style.BrowsePage__tabs">
+      <client-only>
+        <v-tabs
+          v-model="tab"
+          color="active"
+          :height="32"
+          :show-arrows="false"
+          :background-color="$constant.BACKGROUND_COLOR"
+        >
+          <v-tab
+            v-for="item in tabItemList"
+            :key="item.title"
+            nuxt
+            :to="item.to"
+          >
+            {{ item.title }}
+          </v-tab>
+        </v-tabs>
+        <v-divider />
+      </client-only>
+    </div>
 
-    <IntersectionLoadingCircle
-      :loading="categories.hasNext"
-      @appear="onLoadingCircleAppeared"
-    />
+    <nuxt-child keep-alive />
   </div>
-
-  <Fallback v-else>
-    カテゴリーの情報が取得できませんでした。
-  </Fallback>
 </template>
 
 <script lang="ts">
@@ -38,17 +36,15 @@ import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import CategoryCard from '~/components/parts/card/CategoryCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
-import { getCategories, Categories } from '~/services/local/browse';
 
-interface AsyncData {
-  categories: Categories | undefined;
+type TabItem = {
+  title: string;
+  to: string;
 }
 
 interface Data {
   title: string;
 }
-
-const LIMIT_OF_CATEGORIES = 30;
 
 @Component({
   components: {
@@ -57,54 +53,34 @@ const LIMIT_OF_CATEGORIES = 30;
     IntersectionLoadingCircle,
     Fallback,
   },
-
-  async asyncData(context): Promise<AsyncData> {
-    const categories = await getCategories(context);
-    return { categories };
-  },
 })
-export default class BrowsePage extends Vue implements AsyncData, Data {
-  categories: Categories | undefined = undefined;
+export default class BrowsePage extends Vue implements Data {
+  tab: number | null = null;
+  tabItemList: readonly TabItem[] = [
+    {
+      title: 'ジャンル',
+      to: '/browse/categories',
+    },
+    {
+      title: '特集',
+      to: '/browse/feature',
+    },
+  ];
   title = '見つける';
 
   mounted() {
     this.$dispatch('resetDominantBackgroundColor');
+    this.$header.toggleBackdropFilter(false);
+  }
+
+  destroyed() {
+    this.$header.toggleBackdropFilter(true);
   }
 
   head() {
     return {
       title: this.title,
     };
-  }
-
-  async getCategories() {
-    if (this.categories == null || !this.categories.hasNext) return;
-
-    const currentCategories = this.categories;
-    const country = this.$getters()['auth/userCountryCode'];
-    const offset = this.categories.items.length;
-    const { categories } = await this.$spotify.browse.getCategories({
-      country,
-      limit: LIMIT_OF_CATEGORIES,
-      offset,
-    });
-    if (categories == null) {
-      this.categories = {
-        ...currentCategories,
-        hasNext: false,
-      };
-      return;
-    }
-
-    this.categories = {
-      ...currentCategories,
-      items: [...currentCategories.items, ...categories.items],
-      hasNext: categories.next != null,
-    };
-  }
-
-  onLoadingCircleAppeared() {
-    this.getCategories();
   }
 }
 </script>
@@ -114,11 +90,15 @@ export default class BrowsePage extends Vue implements AsyncData, Data {
   @include page-margin();
 
   &__title {
-    margin-left: 3%;
+    margin-left: 2%;
+    margin-bottom: 8px;
   }
 
-  & > *:not(:last-child) {
+  &__tabs {
+    position: sticky;
+    top: $g-header-height;
     margin-bottom: 24px;
+    z-index: z-index-of(tab);
   }
 }
 </style>

@@ -3,9 +3,12 @@
     v-if="category != null"
     :class="$style.CategoryIdPage"
   >
-    <h1 :class="$style.CategoryIdPage__title">
-      {{ category.name }}
-    </h1>
+    <div>
+      <h1 :class="$style.CategoryIdPage__title">
+        {{ category.name }}
+      </h1>
+      <v-divider />
+    </div>
 
     <CardsWrapper
       v-if="playlists.items.length > 0"
@@ -126,7 +129,7 @@ export default class CategoryIdPage extends Vue implements AsyncData, Data {
   @include page-margin();
 
   &__title {
-    padding-left: 3%;
+    padding-left: 2%;
   }
 
   & > *:not(:last-child) {

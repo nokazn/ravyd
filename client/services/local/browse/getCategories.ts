@@ -1,5 +1,5 @@
 import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import { OneToFifty, SpotifyAPI } from '~~/types';
 
 export type Categories = {
   items: SpotifyAPI.Category[];
@@ -9,11 +9,16 @@ export type Categories = {
 
 export const getCategories = async (
   { app }: Context,
+  params?: {
+    offset?: number;
+    limit: OneToFifty;
+  },
 ): Promise<Categories | undefined> => {
   const country = app.$getters()['auth/userCountryCode'];
   const { categories } = await app.$spotify.browse.getCategories({
     country,
-    limit: 30,
+    limit: params?.limit ?? 50,
+    offset: params?.offset,
   });
   if (categories == null) return undefined;
 

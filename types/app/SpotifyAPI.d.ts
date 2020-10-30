@@ -146,6 +146,10 @@ export namespace SpotifyAPI {
       seeds: RecommendationSeed[]
       tracks: SimpleTrack[]
     }
+    export type Featured = {
+      message: string
+      playlists: Paging<SimplePlaylist>
+    }
   }
 
   export type Category = {
@@ -157,7 +161,7 @@ export namespace SpotifyAPI {
 
   type Context = {
     // @todo
-    type: 'artist' | 'playlist' | 'album' | 'track' | 'episode'| string
+    type: 'artist' | 'playlist' | 'album' | 'track' | 'episode' | string
     href: string
     external_urls: ExternalUrls
     uri: string
