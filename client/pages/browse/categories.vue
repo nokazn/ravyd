@@ -22,7 +22,10 @@
     />
   </div>
 
-  <Fallback v-else>
+  <Fallback
+    v-else
+    padless
+  >
     カテゴリーの情報が取得できませんでした。
   </Fallback>
 </template>

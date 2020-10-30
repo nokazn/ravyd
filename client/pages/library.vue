@@ -10,6 +10,7 @@
           v-model="tab"
           show-arrows="mobile"
           color="active"
+          :height="32"
           :background-color="$constant.BACKGROUND_COLOR"
         >
           <v-tab
@@ -98,8 +99,8 @@ export default class LibraryPage extends Vue implements Data {
   &__tabs {
     position: sticky;
     top: $g-header-height;
-    z-index: z-index-of(tab);
     margin-bottom: 24px;
+    z-index: z-index-of(tab);
   }
 }
 </style>

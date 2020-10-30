@@ -87,19 +87,17 @@ export default class BrowsePage extends Vue implements Data {
 
 <style lang="scss" module>
 .BrowsePage {
-  $margin-bottom: 24px;
-
   @include page-margin();
 
   &__title {
     margin-left: 2%;
-    margin-bottom: $margin-bottom / 3;
+    margin-bottom: 8px;
   }
 
   &__tabs {
     position: sticky;
     top: $g-header-height;
-    margin-bottom: $margin-bottom;
+    margin-bottom: 24px;
     z-index: z-index-of(tab);
   }
 }

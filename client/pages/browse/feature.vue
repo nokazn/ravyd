@@ -26,8 +26,11 @@
     />
   </div>
 
-  <Fallback v-else>
-    カテゴリーの情報が取得できませんでした。
+  <Fallback
+    v-else
+    padless
+  >
+    プレイリストの情報が取得できませんでした。
   </Fallback>
 </template>
 

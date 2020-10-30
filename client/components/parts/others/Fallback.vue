@@ -1,5 +1,10 @@
 <template>
-  <div :class="$style.Fallback">
+  <div
+    :class="{
+      [$style.Fallback]: true,
+      [$style.Pad]: !padless,
+    }"
+  >
     <div :class="$style.Fallback__wrapper">
       <div :class="$style.Fallback__title">
         <v-icon left>
@@ -25,6 +30,13 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
+  props: {
+    padless: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   setup(_, { root }) {
     const reload = () => { root.$router.go(0); };
     return { reload };
@@ -35,7 +47,6 @@ export default defineComponent({
 <style lang="scss" module>
 .Fallback {
   height: 100%;
-  padding: 1em 2em;
 
   &__wrapper {
     & > *:not(:last-child) {
@@ -46,5 +57,9 @@ export default defineComponent({
   &__title {
     font-size: 1.25em;
   }
+}
+
+.Pad {
+  padding: 1em 2em;
 }
 </style>
