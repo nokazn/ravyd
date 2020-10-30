@@ -99,7 +99,7 @@ export default defineComponent({
         },
         {
           name: '見つける',
-          to: '/browse',
+          to: '/browse/categories',
           icon: 'mdi-binoculars',
         },
       ],
