@@ -1,7 +1,5 @@
 <template>
   <div :class="$style.ArtistIdRelatedArtistPage">
-    <v-divider :class="$style.ArtistIdRelatedArtistPage__divider" />
-
     <CardsWrapper
       :min-width="$screen.cardWidthMinMax[0]"
       :max-width="$screen.cardWidthMinMax[1]"
@@ -44,7 +42,6 @@ export default class RelatedArtistPage extends Vue implements Data {
 
 <style lang="scss" module>
 .ArtistIdRelatedArtistPage {
-  &__divider,
   &__wrapper {
     margin-bottom: 24px;
   }

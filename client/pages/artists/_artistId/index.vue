@@ -273,8 +273,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   $margin-bottom: 24px;
 
   .TopContent {
-    margin-top: $margin-bottom;
-
     & > * {
       margin-bottom: $margin-bottom;
     }

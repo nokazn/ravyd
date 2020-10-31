@@ -108,24 +108,12 @@
       </div>
     </div>
 
-    <v-tabs
-      v-model="tab"
-      color="active"
-      background-color="transparent"
-      :height="32"
-      :show-arrows="false"
-    >
-      <v-tab
-        v-for="item in tabItemList"
-        :key="item.title"
-        nuxt
-        :to="item.to"
-      >
-        <span :class="subtextColor(item)">
-          {{ item.title }}
-        </span>
-      </v-tab>
-    </v-tabs>
+    <Tabs
+      transparent
+      :divider="isRelatedPage"
+      :items="tabs"
+      :class="$style.ArtistIdPage__tabs"
+    />
 
     <nuxt-child
       keep-alive
@@ -151,9 +139,9 @@ import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/butt
 import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ArtistMenu, { On as OnMenu } from '~/components/parts/menu/ArtistMenu.vue';
+import Tabs, { Item } from '~/components/parts/tab/Tabs.vue';
 import Fallback from '~/components/parts/others/Fallback.vue';
 
-import { subtextColorClass } from '~/utils/text';
 import {
   getArtist,
   getIsFollowing,
@@ -164,11 +152,6 @@ import { App } from '~~/types';
 
 const HEADER_REF = 'HEADER_REF';
 
-type TabItem = {
-  title: string;
-  to: string;
-}
-
 interface AsyncData {
   artist: App.ArtistPage | undefined;
   isFollowing: boolean;
@@ -176,7 +159,6 @@ interface AsyncData {
 }
 
 interface Data {
-  tab: number | null;
   mutationUnsubscribe: (() => void) | undefined
   HEADER_REF: string;
 }
@@ -190,6 +172,7 @@ interface Data {
     FavoriteButton,
     FollowButton,
     ArtistMenu,
+    Tabs,
     Fallback,
   },
 
@@ -221,7 +204,6 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   isFollowing = false;
   relatedArtistList: App.ContentItem<'artist'>[] = [];
 
-  tab: number | null = null;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   HEADER_REF = HEADER_REF;
 
@@ -240,7 +222,7 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   get isPlaying(): RootState['playback']['isPlaying'] {
     return this.$state().playback.isPlaying;
   }
-  get tabItemList(): TabItem[] {
+  get tabs(): Item[] {
     const { artistId } = this.$route.params;
     const { length } = this.relatedArtistList;
     const top = {
@@ -255,8 +237,9 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
       ? [top, relatedArtist]
       : [top];
   }
-  get subtextColor() {
-    return (item: TabItem) => subtextColorClass(this.$route.fullPath === item.to);
+  get isRelatedPage(): boolean {
+    const { artistId } = this.$route.params;
+    return this.$route.fullPath === `/artists/${artistId}/related`;
   }
 
   mounted() {
@@ -340,6 +323,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
     @include page-header();
 
     margin-bottom: 16px;
+  }
+
+  &__tabs {
+    margin-bottom: 24px;
   }
 }
 

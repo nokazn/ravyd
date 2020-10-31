@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="Tabs">
     <v-tabs
       v-model="tab"
       color="active"
@@ -12,6 +12,7 @@
         v-for="item in items"
         :key="item.title"
         nuxt
+        exact
         :to="item.to"
         @click.native.stop
       >
@@ -62,7 +63,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.v-slide-group {
+.Tabs .v-slide-group {
   @include side-gradation();
 
   &__prev,

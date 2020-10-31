@@ -3,60 +3,32 @@
     <h1 :class="$style.BrowsePage__title">
       {{ title }}
     </h1>
-
-    <div :class="$style.BrowsePage__tabs">
-      <client-only>
-        <v-tabs
-          v-model="tab"
-          color="active"
-          :height="32"
-          :show-arrows="false"
-          :background-color="$constant.BACKGROUND_COLOR"
-        >
-          <v-tab
-            v-for="item in tabItemList"
-            :key="item.title"
-            nuxt
-            :to="item.to"
-          >
-            {{ item.title }}
-          </v-tab>
-        </v-tabs>
-        <v-divider />
-      </client-only>
-    </div>
-
+    <Tabs
+      divider
+      :items="tabs"
+      :class="$style.BrowsePage__tabs"
+    />
     <nuxt-child keep-alive />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
-import CategoryCard from '~/components/parts/card/CategoryCard.vue';
-import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
-
-type TabItem = {
-  title: string;
-  to: string;
-}
+import Tabs, { Item } from '~/components/parts/tab/Tabs.vue';
 
 interface Data {
+  tabs: readonly Item[];
   title: string;
 }
 
 @Component({
   components: {
-    CardsWrapper,
-    CategoryCard,
-    IntersectionLoadingCircle,
-    Fallback,
+    Tabs,
   },
 })
 export default class BrowsePage extends Vue implements Data {
   tab: number | null = null;
-  tabItemList: readonly TabItem[] = [
+  tabs: readonly Item[] = [
     {
       title: 'ジャンル',
       to: '/browse/categories',
