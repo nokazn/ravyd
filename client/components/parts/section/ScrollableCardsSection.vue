@@ -31,15 +31,22 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
+@mixin scrollable-cards-wrapper-side-margin($ratio: 1) {
+  margin: {
+    right: calc(#{$g-gradation-width} * #{$ratio});
+    left: calc(#{$g-gradation-width} * #{$ratio});
+  }
+}
+
 .ScrollableCardSection {
   &__title {
-    @include scrollable-card-wrapper-side-margin();
+    @include scrollable-cards-wrapper-side-margin();
 
     margin-bottom: 4px;
   }
 
   &__divider {
-    @include scrollable-card-wrapper-side-margin();
+    @include scrollable-cards-wrapper-side-margin();
 
     margin-bottom: 12px;
   }

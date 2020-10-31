@@ -1,26 +1,25 @@
 <template>
   <div>
-    <client-only>
-      <v-tabs
-        v-model="tab"
-        color="active"
-        :mobile-breakpoint="0"
-        :show-arrows="false"
-        :height="32"
-        :background-color="backgroundColor"
+    <v-tabs
+      v-model="tab"
+      color="active"
+      :mobile-breakpoint="0"
+      :show-arrows="false"
+      :height="32"
+      :background-color="backgroundColor"
+    >
+      <v-tab
+        v-for="item in items"
+        :key="item.title"
+        nuxt
+        :to="item.to"
+        @click.native.stop
       >
-        <v-tab
-          v-for="item in items"
-          :key="item.title"
-          nuxt
-          :to="item.to"
-        >
-          {{ item.title }}
-        </v-tab>
-      </v-tabs>
+        {{ item.title }}
+      </v-tab>
+    </v-tabs>
 
-      <v-divider v-if="divider" />
-    </client-only>
+    <v-divider v-if="divider" />
   </div>
 </template>
 
@@ -72,15 +71,15 @@ export default defineComponent({
   }
 
   &__wrapper {
+    @include no-scroll-bar();
+
     overflow-x: auto;
     overflow-y: hidden;
     touch-action: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  }
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  &__content {
+    transform: translateX(0) !important;
   }
 }
 </style>

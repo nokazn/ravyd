@@ -125,11 +125,7 @@ a {
  * スクロールバーを無効化
  */
 .g-no-scroll-bar {
-  &::-webkit-scrollbar,
-  &::-webkit-scrollbar-track,
-  &::-webkit-scrollbar-thumb {
-    display: none;
-  }
+  @include no-scroll-bar();
 }
 
 /**
