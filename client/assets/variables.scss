@@ -245,31 +245,38 @@ $__layer-map: (
   z-index: z-index-of(text-gradation);
 }
 
-/*
- * ヘッダーの portal に表示させるボタン
- */
-@mixin additional-header-content() {
-  display: flex;
-
-  $margin: max(0.5vw, 6px);
-
-  @include smaller-than-md() {
-    flex-direction: column;
-
-    & > *:not(:last-child) {
-      margin-bottom: $margin;
-    }
+@mixin side-gradation() {
+  // 左のグラデーション
+  &::before {
+    // to right
+    @include edge-gradation(right);
+    // @todo 少しはみでてしまうのを調整している
+    left: -1px;
   }
 
-  @include larger-than-md() {
-    flex-wrap: nowrap;
+  // 右のグラデーション
+  &::after {
+    // to left
+    @include edge-gradation(left);
+    // @todo 少しはみでてしまうのを調整している
+    right: -1px;
+  }
+}
 
-    & > *:not(:last-child) {
-      margin-right: $margin;
+// scss module では .v-row-group__header が効かない
+@mixin v-data-table-height($height: 44px) {
+  table {
+    tr:not(.v-row-group__header) {
+      td {
+        height: $height !important;
+      }
     }
   }
 }
 
+/**
+ * pages
+ */
 @mixin page-title() {
   line-height: 1.2em;
   margin: 0.3em 0;
@@ -331,13 +338,27 @@ $__layer-map: (
   }
 }
 
-// scss module では .v-row-group__header が効かない
-@mixin v-data-table-height($height: 44px) {
-  table {
-    tr:not(.v-row-group__header) {
-      td {
-        height: $height !important;
-      }
+/*
+ * ヘッダーの portal に表示させるボタン
+ */
+@mixin additional-header-content() {
+  display: flex;
+
+  $margin: max(0.5vw, 6px);
+
+  @include smaller-than-md() {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: $margin;
+    }
+  }
+
+  @include larger-than-md() {
+    flex-wrap: nowrap;
+
+    & > *:not(:last-child) {
+      margin-right: $margin;
     }
   }
 }
