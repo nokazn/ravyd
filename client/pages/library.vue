@@ -3,53 +3,33 @@
     <h1 :class="$style.LibraryPage__title">
       ライブラリ
     </h1>
-
-    <div :class="$style.LibraryPage__tabs">
-      <client-only>
-        <v-tabs
-          v-model="tab"
-          show-arrows="mobile"
-          color="active"
-          :height="32"
-          :background-color="$constant.BACKGROUND_COLOR"
-        >
-          <v-tab
-            v-for="item in tabItemList"
-            :key="item.title"
-            nuxt
-            :to="item.to"
-          >
-            {{ item.title }}
-          </v-tab>
-        </v-tabs>
-
-        <v-divider />
-      </client-only>
-    </div>
-
+    <Tabs
+      :items="tabs"
+      divider
+      :class="$style.LibraryPage__tabs"
+    />
     <nuxt-child />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
+import Tabs, { Item } from '~/components/parts/tab/Tabs.vue';
 
-type TabItem = {
-  title: string
-  to: string
-}
 
 type Data = {
-  tab: number | null;
-  tabItemList: TabItem[]
+  tabs: Item[];
 }
 
 @Component({
+  components: {
+    Tabs,
+  },
+
   scrollToTop: true,
 })
 export default class LibraryPage extends Vue implements Data {
-  tab: number | null = null;
-  tabItemList: TabItem[] = [
+  tabs: Item[] = [
     {
       title: 'お気に入りの曲',
       to: '/library/tracks',

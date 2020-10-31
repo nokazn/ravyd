@@ -1,6 +1,4 @@
-/**
- * nuxt.config の styleResources.scss で読み込む
- */
+// nuxt.config の styleResources.scss で読み込む
 
 /**
  * color
@@ -29,8 +27,6 @@ $__breakpoints: (
   xl: $g-xl-breakpoint,
   xxl: $g-xxl-breakpoint,
 );
-
-$g-page-side-margin: min(2vw, 24px);
 
 @mixin smaller-than($key) {
   @media screen and (max-width: map-get($__breakpoints, $key)) {
@@ -106,45 +102,6 @@ $g-page-side-margin: min(2vw, 24px);
   }
 }
 
-// 基本的に全ページに適用
-@mixin page-margin($additional: 0, $side-ratio: 1) {
-  @if ($additional == 0) {
-    margin: 16px calc((#{$g-page-side-margin}) * #{$side-ratio}) 0;
-  }
-
-  @else {
-    margin: 16px calc((#{$g-page-side-margin} * #{$side-ratio}) + #{$additional}) 0;
-  }
-}
-
-@mixin __side-padding($padding) {
-  padding-left: $padding;
-  padding-right: $padding;
-}
-
-// ディスプレイサイズを大きくすると横の余白も大きくする
-@mixin page-padding($ratio: 1) {
-  @include smaller-than-sm() {
-    @include __side-padding(0);
-  }
-
-  @include larger-than-md() {
-    @include __side-padding(min(#{0.5vw * $ratio}, 8px));
-  }
-
-  @include larger-than-lg() {
-    @include __side-padding(#{1.5vw * $ratio});
-  }
-
-  @include larger-than-xl() {
-    @include __side-padding(#{4vw * $ratio});
-  }
-
-  @include larger-than-xxl() {
-    @include __side-padding(#{6vw * $ratio});
-  }
-}
-
 /*
  * size
  */
@@ -161,16 +118,7 @@ $g-artwork-base-size: 220px;
 $g-slider-height: 4px;
 // グラデーション自体の横幅
 $g-gradation-width: min(1.5vw, 16px);
-
-/**
- * ScrollableCardWrapper コンポーネントの横のマージン
- */
-@mixin scrollable-card-wrapper-side-margin($ratio: 1) {
-  margin: {
-    right: calc(#{$g-gradation-width} * #{$ratio});
-    left: calc(#{$g-gradation-width} * #{$ratio});
-  }
-}
+$g-page-side-margin: min(2vw, 24px);
 
 /**
  * z-index
@@ -194,6 +142,17 @@ $__layer-map: (
 
 @function z-index-of($key) {
   @return map-get($__layer-map, $key);
+}
+
+@mixin no-scroll-bar() {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    display: none;
+  }
 }
 
 /**
@@ -245,28 +204,74 @@ $__layer-map: (
   z-index: z-index-of(text-gradation);
 }
 
-/*
- * ヘッダーの portal に表示させるボタン
- */
-@mixin additional-header-content() {
-  display: flex;
+@mixin side-gradation() {
+  // 左のグラデーション
+  &::before {
+    // to right
+    @include edge-gradation(right);
+    // @todo 少しはみでてしまうのを調整している
+    left: -1px;
+  }
 
-  $margin: max(0.5vw, 6px);
+  // 右のグラデーション
+  &::after {
+    // to left
+    @include edge-gradation(left);
+    // @todo 少しはみでてしまうのを調整している
+    right: -1px;
+  }
+}
 
-  @include smaller-than-md() {
-    flex-direction: column;
-
-    & > *:not(:last-child) {
-      margin-bottom: $margin;
+// scss module では .v-row-group__header が効かない
+@mixin v-data-table-height($height: 44px) {
+  table {
+    tr:not(.v-row-group__header) {
+      td {
+        height: $height !important;
+      }
     }
+  }
+}
+
+/**
+ * pages
+ */
+// 基本的に全ページに適用
+@mixin page-margin($additional: 0, $side-ratio: 1) {
+  @if ($additional == 0) {
+    margin: 16px calc((#{$g-page-side-margin}) * #{$side-ratio}) 0;
+  }
+
+  @else {
+    margin: 16px calc((#{$g-page-side-margin} * #{$side-ratio}) + #{$additional}) 0;
+  }
+}
+
+@mixin __side-padding($padding) {
+  padding-left: $padding;
+  padding-right: $padding;
+}
+
+// ディスプレイサイズを大きくすると横の余白も大きくする
+@mixin page-padding($ratio: 1) {
+  @include smaller-than-sm() {
+    @include __side-padding(0);
   }
 
   @include larger-than-md() {
-    flex-wrap: nowrap;
+    @include __side-padding(min(#{0.5vw * $ratio}, 8px));
+  }
 
-    & > *:not(:last-child) {
-      margin-right: $margin;
-    }
+  @include larger-than-lg() {
+    @include __side-padding(#{1.5vw * $ratio});
+  }
+
+  @include larger-than-xl() {
+    @include __side-padding(#{4vw * $ratio});
+  }
+
+  @include larger-than-xxl() {
+    @include __side-padding(#{6vw * $ratio});
   }
 }
 
@@ -331,13 +336,27 @@ $__layer-map: (
   }
 }
 
-// scss module では .v-row-group__header が効かない
-@mixin v-data-table-height($height: 44px) {
-  table {
-    tr:not(.v-row-group__header) {
-      td {
-        height: $height !important;
-      }
+/*
+ * ヘッダーの portal に表示させるボタン
+ */
+@mixin additional-header-content() {
+  display: flex;
+
+  $margin: max(0.5vw, 6px);
+
+  @include smaller-than-md() {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: $margin;
+    }
+  }
+
+  @include larger-than-md() {
+    flex-wrap: nowrap;
+
+    & > *:not(:last-child) {
+      margin-right: $margin;
     }
   }
 }

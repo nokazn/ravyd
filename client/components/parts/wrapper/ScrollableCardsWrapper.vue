@@ -133,26 +133,6 @@ export default defineComponent({
     }
   }
 
-  // 左のグラデーション
-  &::before {
-    // to right
-    @include edge-gradation(right);
-
-    // @todo 少しはみでてしまうのを調整している
-    left: -1px;
-  }
-
-  // 右のグラデーション
-  &::after {
-    // to left
-    @include edge-gradation(left);
-
-    // @todo 少しはみでてしまうのを調整している
-    right: -1px;
-  }
+  @include side-gradation();
 }
-</style>
-
-<style lang="scss" scoped>
-@include fade-transition(0.3);
 </style>
