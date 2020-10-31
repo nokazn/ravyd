@@ -152,6 +152,8 @@ export default class LibraryTracksPage extends Vue implements Data {
 
 <style lang="scss" module>
 .LibraryTracksPage {
+  @include page-padding(0.375);
+
   & > * {
     margin-bottom: 8px;
   }

@@ -123,25 +123,25 @@ $g-page-side-margin: min(2vw, 24px);
 }
 
 // ディスプレイサイズを大きくすると横の余白も大きくする
-@mixin page-padding {
+@mixin page-padding($ratio: 1) {
   @include smaller-than-sm() {
     @include __side-padding(0);
   }
 
   @include larger-than-md() {
-    @include __side-padding(min(0.5vw, 8px));
+    @include __side-padding(min(#{0.5vw * $ratio}, 8px));
   }
 
   @include larger-than-lg() {
-    @include __side-padding(1.5vw);
+    @include __side-padding(#{1.5vw * $ratio});
   }
 
   @include larger-than-xl() {
-    @include __side-padding(4vw);
+    @include __side-padding(#{4vw * $ratio});
   }
 
   @include larger-than-xxl() {
-    @include __side-padding(6vw);
+    @include __side-padding(#{6vw * $ratio});
   }
 }
 

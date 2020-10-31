@@ -70,6 +70,8 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
 
 <style lang="scss" module>
 .LibraryHistoryPage {
+  @include page-padding(0.375);
+
   & > * {
     margin-bottom: 24px;
   }
