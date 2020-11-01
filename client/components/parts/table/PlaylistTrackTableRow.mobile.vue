@@ -23,13 +23,9 @@
           :title="item.name"
           :class="[$style.Content__title, titleColor]"
         >
-          <nuxt-link
-            :to="trackPath"
-            class="g-ellipsis-text"
-            @click.native.stop
-          >
+          <span class="g-ellipsis-text">
             {{ item.name }}
-          </nuxt-link>
+          </span>
           <ExplicitChip v-if="item.explicit" />
         </div>
 
@@ -39,32 +35,28 @@
         >
           <ArtistNames
             v-if="item.type === 'track'"
+            text
             ellipsis
             :artists="item.artists"
           />
-          <nuxt-link
+          <span
             v-else-if="item.type === 'episode'"
-            :to="releasePath"
             :title="item.releaseName"
             class="g-ellipsis-text"
-            @click.native.stop
           >
             {{ item.releaseName }}
-          </nuxt-link>
+          </span>
         </div>
       </div>
     </td>
 
-    <td class="text-center">
+    <td :class="$style.PlaylistTrackTableRow__actions">
       <FavoriteButton
-        v-if="item.type !== 'episode'"
+        :disabled="item.type === 'episode'"
         :size="buttonSize"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
       />
-    </td>
-
-    <td>
       <EpisodeMenu
         v-if="item.type === 'episode'"
         left
@@ -89,8 +81,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
-import type { RawLocation } from 'vue-router';
-
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -153,18 +143,6 @@ export default defineComponent({
       type: String as PropType<string | undefined>,
       default: undefined,
     },
-    trackPath: {
-      type: [Object, String] as PropType<RawLocation>,
-      required: true,
-    },
-    releasePath: {
-      type: [Object, String] as PropType<RawLocation>,
-      required: true,
-    },
-    userPath: {
-      type: [Object, String] as PropType<RawLocation | undefined>,
-      default: undefined,
-    },
     publisher: {
       type: String,
       required: true,
@@ -195,6 +173,12 @@ export default defineComponent({
 .PlaylistTrackTableRow {
   cursor: pointer;
 
+  &__actions {
+    & > *:not(:last-child) {
+      margin-right: 2px;
+    }
+  }
+
   .Content {
     & > *:not(:last-child) {
       margin-bottom: 0.25rem;
@@ -203,6 +187,7 @@ export default defineComponent({
     &__title {
       display: flex;
       align-items: center;
+      font-size: 0.9rem;
 
       & > *:not(:first-child) {
         margin-left: 0.25rem;

@@ -50,9 +50,9 @@
 
     <td>
       <EpisodeProgressBar
+        :max-width="56"
         :resume-point="item.resumePoint"
         :duration-ms="item.durationMs"
-        :max-width="56"
       />
     </td>
 

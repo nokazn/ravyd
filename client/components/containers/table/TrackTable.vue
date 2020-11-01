@@ -104,9 +104,11 @@ export default Vue.extend({
         : 32;
     },
     headers(): DataTableHeader[] {
-      const totalSidePadding = 12;
       // width は 左右の padding を含めた幅
-      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const buttonColumnWidth = (n: number = 1) => {
+        const totalSidePadding = 12;
+        return totalSidePadding + this.buttonSize * n + 2 * (n - 1);
+      };
       const indexColumn = {
         text: '#',
         value: 'index',
@@ -116,7 +118,7 @@ export default Vue.extend({
       const isSavedColumn = {
         text: '',
         value: 'isSaved',
-        width: buttonColumnWidth,
+        width: buttonColumnWidth(1),
         align: 'center' as const,
         sortable: false,
         filterable: false,
@@ -134,14 +136,14 @@ export default Vue.extend({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth,
+        width: buttonColumnWidth(this.$screen.isMultiColumn ? 1 : 2),
         align: 'center' as const,
         sortable: false,
         filterable: false,
       };
       return this.$screen.isMultiColumn
         ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
-        : [nameColumn, menuColumn, isSavedColumn];
+        : [nameColumn, menuColumn];
     },
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     hasMultipleDiscs(): boolean {
@@ -166,14 +168,16 @@ export default Vue.extend({
         return;
       }
 
-      const offset = row.linkedFrom != null
-        ? { position: row.index }
-        : { uri: row.uri };
+      if (row.isPlayable) {
+        const offset = row.linkedFrom != null
+          ? { position: row.index }
+          : { uri: row.uri };
 
-      this.$dispatch('playback/play', {
-        contextUri: this.uri,
-        offset,
-      });
+        this.$dispatch('playback/play', {
+          contextUri: this.uri,
+          offset,
+        });
+      }
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);

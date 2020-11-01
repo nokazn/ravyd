@@ -4,7 +4,6 @@
     :item="item"
     :publisher="publisher"
     :added-at="addedAt"
-    :episode-path="episodePath"
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
     :release-date="releaseDate"

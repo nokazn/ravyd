@@ -166,7 +166,9 @@ export default Vue.extend({
       const progressColumn = {
         text: '進捗',
         value: 'resumePoint',
-        width: 84,
+        width: this.$screen.isMultiColumn
+          ? 60 + totalSidePadding
+          : 44 + totalSidePadding,
       };
       const addedAtColumn = {
         text: '',
@@ -176,7 +178,7 @@ export default Vue.extend({
       const durationColumn = {
         text: '',
         value: 'duration',
-        width: 72,
+        width: 60,
         align: 'center' as const,
       };
       const menuColumn = {

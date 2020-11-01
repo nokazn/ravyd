@@ -3,7 +3,6 @@ import { options } from '~/tests/mocks/mount';
 import PlaylistTrackTableRowMobile from './PlaylistTrackTableRow.mobile.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
-import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
 
@@ -109,13 +108,11 @@ describe('PlaylistTrackTableRowMobile', () => {
     const wrapper = factory(false, false, false, 'track');
     expect(wrapper.findComponent(TrackMenu).exists()).toBe(true);
     expect(wrapper.findComponent(EpisodeMenu).exists()).toBe(false);
-    expect(wrapper.findComponent(FavoriteButton).exists()).toBe(true);
   });
 
   it('episode', () => {
     const wrapper = factory(false, false, false, 'episode');
     expect(wrapper.findComponent(TrackMenu).exists()).toBe(false);
     expect(wrapper.findComponent(EpisodeMenu).exists()).toBe(true);
-    expect(wrapper.findComponent(FavoriteButton).exists()).toBe(false);
   });
 });

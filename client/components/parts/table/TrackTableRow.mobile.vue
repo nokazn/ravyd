@@ -22,6 +22,7 @@
       </div>
 
       <ArtistNames
+        text
         ellipsis
         :artists="[...item.artists, ...item.featuredArtists]"
         :class="subtitleColor"
@@ -29,15 +30,12 @@
       />
     </td>
 
-    <td>
+    <td :class="$style.TrackTableRow__actions">
       <FavoriteButton
         :size="buttonSize"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
       />
-    </td>
-
-    <td>
       <TrackMenu
         left
         offset-x
@@ -118,12 +116,19 @@ export default defineComponent({
   &[data-is-active=true] {
     background-color: lighten($g-background-color, 16%);
   }
+
+  &__actions {
+    & > *:not(:last-child) {
+      margin-right: 2px;
+    }
+  }
 }
 
 .Content {
   &__title {
     display: flex;
     align-items: center;
+    font-size: 0.9rem;
 
     & > *:not(:last-child) {
       margin-right: 0.75rem;

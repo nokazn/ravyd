@@ -28,7 +28,7 @@
 
     <td class="text-center">
       <FavoriteButton
-        v-if="item.type !== 'episode'"
+        :disabled="item.type === 'episode'"
         :size="buttonSize"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
