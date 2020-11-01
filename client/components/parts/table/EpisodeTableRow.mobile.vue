@@ -12,13 +12,9 @@
           :title="item.name"
           :class="[$style.Content__title, titleColor]"
         >
-          <nuxt-link
-            :to="episodePath"
-            class="g-ellipsis-text"
-            @click.native.stop
-          >
+          <span class="g-ellipsis-text">
             {{ item.name }}
-          </nuxt-link>
+          </span>
           <ExplicitChip v-if="item.explicit" />
         </div>
 
@@ -34,9 +30,9 @@
 
     <td>
       <EpisodeProgressBar
+        :max-width="44"
         :resume-point="item.resumePoint"
         :duration-ms="item.durationMs"
-        :max-width="56"
       />
     </td>
 
@@ -83,10 +79,6 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    episodePath: {
-      type: String,
-      required: true,
-    },
     titleColor: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -120,6 +112,7 @@ export default defineComponent({
     &__title {
       display: flex;
       align-items: center;
+      font-size: 0.9rem;
 
       & > *:not(:first-child) {
         margin-left: 0.25rem;

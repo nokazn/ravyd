@@ -118,9 +118,11 @@ export default Vue.extend({
     },
     // マウント後に変化するのは $screen だけで、他の prop はキャッシュする必要なし
     headers(): DataTableHeader[] {
-      // 左右の padding: 8px を含めた幅
+      // width は 左右の padding を含めた幅
       const totalSidePadding = 12;
-      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const buttonColumnWidth = (n: number = 1) => {
+        return totalSidePadding + this.buttonSize * n + 2 * (n - 1);
+      };
       const imageColumn = {
         text: '',
         value: 'images',
@@ -131,14 +133,14 @@ export default Vue.extend({
       const mediaColumn = {
         text: '',
         value: 'media',
-        width: buttonColumnWidth,
+        width: buttonColumnWidth(1),
         sortable: false,
         filterable: false,
       };
       const isSavedColumn = {
         text: '',
         value: 'isSaved',
-        width: buttonColumnWidth,
+        width: buttonColumnWidth(1),
         sortable: false,
         filterable: false,
       };
@@ -165,7 +167,7 @@ export default Vue.extend({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth,
+        width: buttonColumnWidth(this.$screen.isMultiColumn ? 1 : 2),
         align: 'center' as const,
         sortable: false,
         filterable: false,
@@ -177,7 +179,6 @@ export default Vue.extend({
           // hideImage が指定されれば非表示
           this.hideImage ? undefined : imageColumn,
           titleColumn,
-          isSavedColumn,
           menuColumn,
         ];
       } else {
@@ -216,34 +217,33 @@ export default Vue.extend({
         trackIndex,
       });
     },
-    onMediaButtonClicked({ index, id, uri }: OnRow['on-media-button-clicked']) {
-      if (this.isPlayingTrack(id)) {
+    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
+      // @todo エピソードは isPlayable が false でも再生できるようにしている
+      if (row.type !== 'episode' && row.isPlayable === false) return;
+
+      if (this.isPlayingTrack(row.id)) {
         this.$dispatch('playback/pause');
         return;
       }
 
-      if (this.isTrackSet(id)) {
+      if (this.isTrackSet(row.id)) {
         this.$dispatch('playback/play');
         return;
       }
-
       // trackUriList は更新されうる
       const trackUriList = this.tracks.map((track) => track.uri);
-      /**
-       * プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
-       * ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
-       */
+      // プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
+      // ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
       this.$dispatch('playback/play', !this.custom && this.uri != null
         ? {
           contextUri: this.uri,
-          offset: { position: index },
+          offset: { position: row.index },
         }
         : {
           trackUriList,
-          offset: { uri },
+          offset: { uri: row.uri },
         });
-
-      this.setCustomContext(trackUriList, index);
+      this.setCustomContext(trackUriList, row.index);
     },
     onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
       this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
