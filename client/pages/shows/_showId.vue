@@ -6,7 +6,7 @@
     <portal :to="$header.PORTAL_NAME">
       <div
         v-if="show != null"
-        :class="$style.AdditionalHeaderContent"
+        :class="$style.Fab"
       >
         <ContextMediaButton
           fab
@@ -312,8 +312,8 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
-.AdditionalHeaderContent {
-  @include additional-header-content();
+.Fab {
+  @include global-fab();
 }
 
 $margin-bottom: 32px;

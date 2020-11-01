@@ -6,7 +6,7 @@
     <portal :to="$header.PORTAL_NAME">
       <div
         v-if="user != null"
-        :class="$style.AdditionalHeaderContent"
+        :class="$style.Fab"
       >
         <FavoriteButton
           v-if="isFollowing != null"
@@ -268,8 +268,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
-.AdditionalHeaderContent {
-  @include additional-header-content();
+.Fab {
+  @include global-fab();
 }
 
 .UserIdPage {

@@ -6,7 +6,7 @@
     <portal :to="$header.PORTAL_NAME">
       <div
         v-if="episode != null"
-        :class="$style.AdditionalHeaderContent"
+        :class="$style.Fab"
       >
         <ContextMediaButton
           fab
@@ -228,8 +228,8 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 </script>
 
 <style lang="scss" module>
-.AdditionalHeaderContent {
-  @include additional-header-content();
+.Fab {
+  @include global-fab();
 }
 
 .EpisodeIdPage {
