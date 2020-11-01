@@ -14,11 +14,34 @@ const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 const activeClass = 'active--text';
 const inactiveClass = 'inactive--text';
 const subtextClass = 'subtext--text';
-const artistMock = {
-  name: 'name',
+
+const artist = (i: number) => ({
+  name: `name${i}`,
+  id: `id${i}`,
+  uri: `uri${i}`,
+});
+const item = (isPlayable: boolean, featuredArtists: App.MinimumArtist[]): App.TrackDetail => ({
   id: 'id',
+  name: 'name',
   uri: 'uri',
-};
+  artists: [artist(1)],
+  durationMs: 10000,
+  externalUrls: { spotify: 'path/to/spotify' },
+  isSaved: false,
+  releaseId: 'releaseId',
+  releaseName: 'releaseName',
+  images: [],
+  linkedFrom: undefined,
+  index: 1,
+  trackNumber: 9,
+  discNumber: 1,
+  featuredArtists,
+  explicit: false,
+  isPlayable,
+  externalIds: undefined,
+  previewUrl: 'path/to/previewUrl',
+});
+
 const factory = (
   set: boolean,
   playing: boolean,
@@ -29,27 +52,7 @@ const factory = (
   return mount(TrackListItem, {
     ...options,
     propsData: {
-      item: {
-        id: 'id',
-        name: 'name',
-        uri: 'uri',
-        artists: [artistMock],
-        durationMs: 10000,
-        externalUrls: { spotify: 'path/to/spotify' },
-        isSaved: false,
-        releaseId: 'releaseId',
-        releaseName: 'releaseName',
-        images: [],
-        linkedFrom: undefined,
-        index: 1,
-        trackNumber: 9,
-        discNumber: 1,
-        featuredArtists,
-        explicit: false,
-        isPlayable,
-        externalIds: undefined,
-        previewUrl: 'path/to/previewUrl',
-      },
+      item: item(isPlayable, featuredArtists),
       set,
       playing,
     },
@@ -64,10 +67,9 @@ const factory = (
 };
 
 describe('TrackListItem', () => {
-  it('from normal to active', async () => {
-    const wrapper = factory(false, false, true, 'multi', [artistMock]);
+  it('from normal to active in pc', async () => {
+    const wrapper = factory(false, false, true, 'multi', [artist(2)]);
     const title = wrapper.findAll('div.g-ellipsis-text > *');
-    expect(title.length).toBe(3);
     const nuxtLink = title.at(0);
     const span = title.at(1);
     const artistNames = title.at(2);
@@ -85,8 +87,21 @@ describe('TrackListItem', () => {
     expect(artistNames.classes()).toContain(activeClass);
   });
 
-  it('disabled', async () => {
-    const wrapper = factory(false, false, false, 'multi', [artistMock]);
+  it('from normal to active in mobile', async () => {
+    const wrapper = factory(false, false, true, 'multi', [artist(2)]);
+    const title = wrapper.find('div.g-ellipsis-text > span');
+    expect(title.classes()).not.toContain(activeClass);
+
+    // play a track
+    await wrapper.setProps({
+      set: true,
+      playing: true,
+    });
+    expect(title.classes()).toContain(activeClass);
+  });
+
+  it('disabled in pc', async () => {
+    const wrapper = factory(false, false, false, 'multi', [artist(2)]);
     const title = wrapper.findAll('div.g-ellipsis-text > *');
     expect(title.length).toBe(3);
     const nuxtLink = title.at(0);
@@ -97,7 +112,13 @@ describe('TrackListItem', () => {
     expect(artistNames.classes()).toContain(inactiveClass);
   });
 
-  it('no featured artists', async () => {
+  it('disabled in mobile', async () => {
+    const wrapper = factory(false, false, false, 'multi', [artist(2)]);
+    const title = wrapper.find('div.g-ellipsis-text > span');
+    expect(title.classes()).toContain(inactiveClass);
+  });
+
+  it('no featured artists in pc', async () => {
     const wrapper = factory(false, false, true, 'multi', []);
     const title = wrapper.findAll('div.g-ellipsis-text > *');
     expect(title.length).toBe(1);
@@ -112,23 +133,8 @@ describe('TrackListItem', () => {
     expect(nuxtLink.classes()).toContain(activeClass);
   });
 
-  it('some featured artists in mobile device', async () => {
-    const wrapper = factory(false, false, true, 'single', [artistMock]);
-    const title = wrapper.findAll('div.g-ellipsis-text > *');
-    expect(title.length).toBe(1);
-    const nuxtLink = title.at(0);
-    expect(nuxtLink.classes()).not.toContain(activeClass);
-
-    // play a track
-    await wrapper.setProps({
-      set: true,
-      playing: true,
-    });
-    expect(nuxtLink.classes()).toContain(activeClass);
-  });
-
   it('click media button or item in pc', async () => {
-    const wrapper = factory(false, false, true, 'multi', [artistMock]);
+    const wrapper = factory(false, false, true, 'multi', [artist(2)]);
     await wrapper.find('.v-list-item__content .v-btn').trigger(CLICK);
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
 
@@ -137,7 +143,7 @@ describe('TrackListItem', () => {
   });
 
   it('click media button or item in mobile', async () => {
-    const wrapper = factory(false, false, true, 'single', [artistMock]);
+    const wrapper = factory(false, false, true, 'single', [artist(2)]);
     expect(wrapper.find('.v-list-item__content .v-btn').exists()).toBe(false);
 
     await wrapper.trigger(CLICK);
@@ -145,20 +151,19 @@ describe('TrackListItem', () => {
   });
 
   it('click favorite button in pc', async () => {
-    const wrapper = factory(false, false, true, 'multi', [artistMock]);
+    const wrapper = factory(false, false, true, 'multi', [artist(2)]);
     await wrapper.findComponent(FavoriteButton).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });
 
   it('click favorite button in mobile', async () => {
-    const wrapper = factory(false, false, true, 'single', [artistMock]);
+    const wrapper = factory(false, false, true, 'single', [artist(2)]);
     await wrapper.findComponent(FavoriteButton).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });
 
   it('click favorite menu item', async () => {
-    const wrapper = factory(false, false, true, 'multi', [artistMock]);
-    // @todo
+    const wrapper = factory(false, false, true, 'multi', [artist(2)]);
     await wrapper.findComponent(TrackMenu).vm.$emit(ON_FAVORITE_MENU_CLICKED);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });

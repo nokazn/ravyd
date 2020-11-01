@@ -4,7 +4,6 @@
     :item="item"
     :artwork-src="artworkSrc"
     :title-color="titleColor"
-    :subtitle-color="subtitleColor"
     :button-size="buttonSize"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
