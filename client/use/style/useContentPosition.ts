@@ -16,7 +16,9 @@ export const useContentPosition = (root: SetupContext['root']) => {
       ? root.$constant.FOOTER_HEIGHT
       : root.$constant.FOOTER_HEIGHT_MOBILE + root.$constant.NAVIGATION_BAR_HEIGHT;
     // 他のデバイスで再生中のとき
-    if (isAnotherDevicePlaying) footerHeight += root.$constant.DEVICE_BAR_HEIGHT;
+    if (isAnotherDevicePlaying && isPc) {
+      footerHeight += root.$constant.DEVICE_BAR_HEIGHT;
+    }
     const bottom = `${footerHeight}px`;
 
     return {
