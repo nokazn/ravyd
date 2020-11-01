@@ -178,7 +178,7 @@ export default defineComponent({
         margin-right: 0.25em;
       }
 
-      & > *:last-child {
+      & > *:not(:first-child) {
         font-size: 0.875em;
       }
     }
