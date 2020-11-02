@@ -53,7 +53,6 @@ const factory = (
       artworkSrc: 'path/to/artwork',
       titleColor: undefined,
       subtitleColor: 'subtext--text',
-      buttonSize: 36,
     },
     mocks: {
       ...mocks,

@@ -4,7 +4,6 @@
     :item="item"
     :artwork-src="artworkSrc"
     :title-color="titleColor"
-    :button-size="buttonSize"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
@@ -16,7 +15,6 @@
     :release-path="releasePath"
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
-    :button-size="buttonSize"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
   />
@@ -28,7 +26,6 @@ import type { RawLocation } from 'vue-router';
 
 import TrackListItemMobile, { On as OnMobile } from '~/components/parts/list/TrackListItem.mobile.vue';
 import TrackListItemPc, { On as OnPc } from '~/components/parts/list/TrackListItem.pc.vue';
-import { useButtonSize } from '~/use/style';
 import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import { App } from '~~/types';
@@ -70,7 +67,6 @@ export default defineComponent({
     }));
     const titleColor = computed(() => textColorClass(props.set, !props.item.isPlayable));
     const subtitleColor = computed(() => (subtextColorClass(props.set, !props.item.isPlayable)));
-    const buttonSize = useButtonSize(root);
 
     const onMediaButtonClicked = (row: On['on-media-button-clicked']) => { emit(ON_MEDIA_BUTTON_CLICKED, row); };
     const onFavoriteButtonClicked = (row: On['on-favorite-button-clicked']) => { emit(ON_FAVORITE_BUTTON_CLICKED, row); };
@@ -80,7 +76,6 @@ export default defineComponent({
       releasePath,
       titleColor,
       subtitleColor,
-      buttonSize,
       onMediaButtonClicked,
       onFavoriteButtonClicked,
     };

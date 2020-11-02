@@ -111,17 +111,15 @@ export default Vue.extend({
   },
 
   computed: {
-    buttonSize(): number {
-      return this.$screen.isMultiColumn
-        ? 36
-        : 32;
-    },
     // マウント後に変化するのは $screen だけで、他の prop はキャッシュする必要なし
     headers(): DataTableHeader[] {
       // width は 左右の padding を含めた幅
       const totalSidePadding = 12;
       const buttonColumnWidth = (n: number = 1) => {
-        return totalSidePadding + this.buttonSize * n + 2 * (n - 1);
+        const buttonSize = this.$screen.isSingleColumn
+          ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
+          : this.$constant.DEFAULT_BUTTON_SIZE;
+        return totalSidePadding + buttonSize * n + 2 * (n - 1);
       };
       const imageColumn = {
         text: '',

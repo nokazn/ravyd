@@ -3,7 +3,6 @@
     v-if="$screen.isSingleColumn"
     :item="item"
     :active="active"
-    :button-size="buttonSize"
     :title-color="titleColor"
     :subtitle-color="subtextColor"
     @on-row-clicked="onRowClicked"
@@ -14,7 +13,6 @@
     :item="item"
     :active="active"
     :playing="playing"
-    :button-size="buttonSize"
     :title-color="titleColor"
     :subtitle-color="subtextColor"
     @on-row-clicked="onRowClicked"
@@ -58,10 +56,6 @@ export default defineComponent({
     playing: {
       type: Boolean,
       required: true,
-    },
-    buttonSize: {
-      type: Number,
-      default: 36,
     },
   },
 

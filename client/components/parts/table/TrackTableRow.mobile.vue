@@ -30,16 +30,16 @@
       />
     </td>
 
-    <td :class="$style.TrackTableRow__actions">
+    <td :class="$style.TrackTableRow__action">
       <FavoriteButton
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
       />
       <TrackMenu
         left
         offset-x
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :track="item"
         @on-favorite-menu-clicked="onFavoriteButtonClicked"
       />
@@ -83,10 +83,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    buttonSize: {
-      type: Number,
-      default: 36,
-    },
     titleColor: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -117,7 +113,7 @@ export default defineComponent({
     background-color: lighten($g-background-color, 16%);
   }
 
-  &__actions {
+  &__action {
     & > *:not(:last-child) {
       margin-right: 2px;
     }
@@ -130,8 +126,8 @@ export default defineComponent({
     align-items: center;
     font-size: 0.9rem;
 
-    & > *:not(:last-child) {
-      margin-right: 0.75rem;
+    & > *:not(:first-child) {
+      margin-left: 0.75rem;
     }
   }
 }

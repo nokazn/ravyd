@@ -20,7 +20,7 @@
 
       <td>
         <FavoriteButton
-          :size="buttonSize"
+          :size="$constant.DEFAULT_BUTTON_SIZE"
           :value="item.isSaved"
           @input="onFavoriteButtonClicked"
         />
@@ -58,7 +58,7 @@
         <TrackMenu
           offset-x
           left
-          :size="buttonSize"
+          :size="$constant.DEFAULT_BUTTON_SIZE"
           :track="item"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
         />
@@ -111,10 +111,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    buttonSize: {
-      type: Number,
-      default: 36,
-    },
     titleColor: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -166,6 +162,7 @@ export default defineComponent({
   &__title {
     & > *:not(:first-child) {
       margin-left: 0.25rem;
+      font-size: 0.85rem;
     }
   }
 }

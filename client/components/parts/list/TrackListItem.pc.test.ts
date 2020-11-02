@@ -54,7 +54,6 @@ const factory = (
       releasePath: 'path/to/release',
       titleColor: undefined,
       subtitleColor: 'subtext--text',
-      buttonSize: 36,
     },
   });
 };

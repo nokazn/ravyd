@@ -50,10 +50,10 @@
       </div>
     </td>
 
-    <td :class="$style.PlaylistTrackTableRow__actions">
+    <td :class="$style.PlaylistTrackTableRow__action">
       <FavoriteButton
         :disabled="item.type === 'episode'"
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
       />
@@ -61,7 +61,7 @@
         v-if="item.type === 'episode'"
         left
         offset-x
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :episode="item"
         :playlist-id="playlistId"
         :publisher="publisher"
@@ -70,7 +70,7 @@
         v-else
         left
         offset-x
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :track="item"
         :playlist-id="playlistId"
         @on-favorite-menu-clicked="onFavoriteButtonClicked"
@@ -131,10 +131,6 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    buttonSize: {
-      type: Number,
-      default: 36,
-    },
     disabled: {
       type: Boolean,
       required: true,
@@ -173,7 +169,7 @@ export default defineComponent({
 .PlaylistTrackTableRow {
   cursor: pointer;
 
-  &__actions {
+  &__action {
     & > *:not(:last-child) {
       margin-right: 2px;
     }

@@ -12,6 +12,7 @@
     >
       <PlaylistMediaButton
         :disabled="!item.isPlayable"
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :value="playing"
         @input="onMediaButtonClicked"
       />
@@ -56,9 +57,7 @@
       />
     </td>
 
-    <td
-      :title="releaseDate"
-    >
+    <td :title="releaseDate">
       <time
         :datetime="item.releaseDate"
         class="g-small-text"
@@ -75,6 +74,7 @@
       <EpisodeMenu
         offset-x
         left
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :episode="item"
         :publisher="publisher"
       />

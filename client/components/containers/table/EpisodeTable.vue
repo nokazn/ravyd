@@ -143,15 +143,14 @@ export default Vue.extend({
   },
 
   computed: {
-    buttonSize(): number {
-      return this.$screen.isMultiColumn
-        ? 36
-        : 32;
-    },
     headers(): DataTableHeader[] {
       const totalSidePadding = 12;
+      const buttonSize = this.$screen.isSingleColumn
+        ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
+        : this.$constant.DEFAULT_BUTTON_SIZE;
       // width は 左右の padding を含めた幅
-      const buttonColumnWidth = totalSidePadding + this.buttonSize;
+      const buttonColumnWidth = totalSidePadding + buttonSize;
+
       const mediaButtonColumn = {
         text: '',
         value: 'index',

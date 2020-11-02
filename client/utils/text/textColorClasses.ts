@@ -1,7 +1,9 @@
+import type { App } from '~~/types';
+
 export const textColorClass = (
   active: boolean | undefined,
   inactive?: boolean | undefined,
-) => {
+): App.TitleColorClass => {
   if (inactive) return 'inactive--text';
   return active
     ? 'active--text'
@@ -11,7 +13,7 @@ export const textColorClass = (
 export const subtextColorClass = (
   active: boolean | undefined,
   inactive?: boolean | undefined,
-) => {
+): App.SubtitleColorClass => {
   if (inactive) return 'inactive--text';
   return active
     ? 'active--text'
@@ -21,7 +23,7 @@ export const subtextColorClass = (
 export const itemColor = (
   active: boolean | undefined,
   inactive?: boolean | undefined,
-) => {
+): App.ItemColor => {
   if (inactive) return 'inactive';
   return active
     ? 'active'

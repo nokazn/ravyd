@@ -41,7 +41,7 @@
     <v-list-item-action>
       <div :class="$style.TrackListItem__action">
         <FavoriteButton
-          :size="buttonSize"
+          :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
           :value="item.isSaved"
           @input="onFavoriteButtonClicked"
         />
@@ -49,7 +49,7 @@
           left
           offset-x
           :track="item"
-          :size="buttonSize"
+          :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
           @on-favorite-menu-clicked="onFavoriteButtonClicked"
         />
       </div>
@@ -91,10 +91,6 @@ export default defineComponent({
     titleColor: {
       type: String,
       default: undefined,
-    },
-    buttonSize: {
-      type: Number,
-      required: true,
     },
   },
 

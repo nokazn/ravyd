@@ -21,6 +21,10 @@ export namespace App {
     dateTime: string
   }
 
+  export type TitleColorClass = 'inactive--text' | 'active--text' | undefined;
+  export type SubtitleColorClass = 'inactive--text' | 'active--text' | 'subtext--text';
+  export type ItemColor = 'inactive' | 'active' | undefined;
+
   /**
    * Component
    */

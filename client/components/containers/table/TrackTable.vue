@@ -34,7 +34,6 @@
         :active="item.id === activeRowId"
         :set="isTrackSet(item.id)"
         :playing="isPlayingTrack(item.id)"
-        :button-size="buttonSize"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -98,16 +97,14 @@ export default Vue.extend({
       return (trackId: string) => this.isTrackSet(trackId)
         && this.$state().playback.isPlaying;
     },
-    buttonSize(): number {
-      return this.$screen.isMultiColumn
-        ? 36
-        : 32;
-    },
     headers(): DataTableHeader[] {
       // width は 左右の padding を含めた幅
       const buttonColumnWidth = (n: number = 1) => {
         const totalSidePadding = 12;
-        return totalSidePadding + this.buttonSize * n + 2 * (n - 1);
+        const buttonSize = this.$screen.isSingleColumn
+          ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
+          : this.$constant.DEFAULT_BUTTON_SIZE;
+        return totalSidePadding + buttonSize * n + 2 * (n - 1);
       };
       const indexColumn = {
         text: '#',

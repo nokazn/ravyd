@@ -27,6 +27,7 @@
             @input="onMediaButtonClicked"
           />
           <FavoriteButton
+            :size="$constant.DEFAULT_BUTTON_SIZE"
             :value="item.isSaved"
             @input="onFavoriteButtonClicked"
           />
@@ -65,7 +66,7 @@
             left
             offset-x
             :track="item"
-            :size="buttonSize"
+            :size="$constant.DEFAULT_BUTTON_SIZE"
             @on-favorite-menu-clicked="onFavoriteButtonClicked"
           />
         </div>
@@ -127,10 +128,6 @@ export default defineComponent({
     subtitleColor: {
       type: String,
       default: undefined,
-    },
-    buttonSize: {
-      type: Number,
-      required: true,
     },
   },
 
