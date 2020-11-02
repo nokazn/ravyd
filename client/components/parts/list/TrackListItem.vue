@@ -33,7 +33,7 @@ import { App } from '~~/types';
 export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
-type On = OnMobile | OnPc;
+export type On = OnMobile | OnPc;
 
 export default defineComponent({
   components: {
