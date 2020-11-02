@@ -3,10 +3,8 @@
     v-if="$screen.isSingleColumn"
     :item="item"
     :publisher="publisher"
-    :added-at="addedAt"
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
-    :release-date="releaseDate"
     @on-row-clicked="onRowClicked"
   />
   <EpisodeTableRowPc

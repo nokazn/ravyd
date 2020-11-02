@@ -40,6 +40,7 @@
       <EpisodeMenu
         offset-x
         left
+        :size="$constant.DEFAULT_BUTTON_SIZE_MOBILE"
         :episode="item"
         :publisher="publisher"
       />
@@ -75,19 +76,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    addedAt: {
-      type: Boolean,
-      default: true,
-    },
     titleColor: {
       type: String as PropType<string | undefined>,
       default: undefined,
     },
     subtitleColor: {
-      type: String,
-      required: true,
-    },
-    releaseDate: {
       type: String,
       required: true,
     },

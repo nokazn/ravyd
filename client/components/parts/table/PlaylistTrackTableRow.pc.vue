@@ -19,7 +19,7 @@
 
     <td class="text-center">
       <PlaylistMediaButton
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :disabled="disabled"
         :value="playing"
         @input="onMediaButtonClicked"
@@ -29,7 +29,7 @@
     <td class="text-center">
       <FavoriteButton
         :disabled="item.type === 'episode'"
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :value="item.isSaved"
         @input="onFavoriteButtonClicked"
       />
@@ -114,7 +114,7 @@
         v-if="item.type === 'episode'"
         offset-x
         left
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :episode="item"
         :playlist-id="playlistId"
         :publisher="publisher"
@@ -123,7 +123,7 @@
         v-else
         offset-x
         left
-        :size="buttonSize"
+        :size="$constant.DEFAULT_BUTTON_SIZE"
         :track="item"
         :playlist-id="playlistId"
         @on-favorite-menu-clicked="onFavoriteButtonClicked"
@@ -193,10 +193,6 @@ export default Vue.extend({
     hideAddedAt: {
       type: Boolean,
       default: false,
-    },
-    buttonSize: {
-      type: Number,
-      default: 36,
     },
     disabled: {
       type: Boolean,

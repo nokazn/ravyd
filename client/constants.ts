@@ -35,12 +35,17 @@ export const FOOTER_HEIGHT_MOBILE = FOOTER_HEIGHT * 0.9;
 export const DEVICE_BAR_HEIGHT = 24;
 export const NAVIGATION_BAR_HEIGHT = 48;
 export const NAVIGATION_DRAWER_WIDTH = 200;
+
 export const FLEX_CARD_MIN_WIDTH = 172;
 export const FLEX_CARD_MAX_WIDTH = 240;
 export const FIXED_CARD_BASE_WIDTH = 200;
 export const ARTWORK_BASE_SIZE = 220;
+
 export const TRACK_LIST_ARTWORK_SIZE = 40;
 export const PLAYLIST_TRACK_TABLE_ARTWORK_SIZE = 48;
+
+export const DEFAULT_BUTTON_SIZE = 36;
+export const DEFAULT_BUTTON_SIZE_MOBILE = 32;
 
 /**
  * z-index

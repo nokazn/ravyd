@@ -6,7 +6,6 @@
     :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
-    :button-size="buttonSize"
     :disabled="disabled"
     :artwork-src="artworkSrc"
     :publisher="publisher"
@@ -23,7 +22,6 @@
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
     :playing="playing"
-    :button-size="buttonSize"
     :disabled="disabled"
     :artwork-src="artworkSrc"
     :track-path="trackPath"
@@ -88,10 +86,6 @@ export default defineComponent({
     hideAddedAt: {
       type: Boolean,
       default: false,
-    },
-    buttonSize: {
-      type: Number,
-      default: 36,
     },
   },
 

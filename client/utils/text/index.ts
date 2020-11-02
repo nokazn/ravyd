@@ -1,2 +1,2 @@
 export * from './getQuery';
-export * from './textColor';
+export * from './textColorClasses';
