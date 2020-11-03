@@ -14,9 +14,8 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useAddItemToQueueMenu, useRemovePlaylistItemMenu } from '~/use/menu';
+import { useAddItemToQueueMenu, useRemovePlaylistItemMenu, useAddItemToPlaylistMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 export default defineComponent({
@@ -70,18 +69,12 @@ export default defineComponent({
   setup(props, { root }) {
     const addItemToQueue = useAddItemToQueueMenu(root, props.episode);
     const removePlaylistItem = useRemovePlaylistItemMenu(root, props.episode, props.playlistId);
+    const addItemToPlaylist = useAddItemToPlaylistMenu(props.episode, {
+      publisher: props.publisher,
+      left: props.left,
+      right: props.right,
+    });
 
-    const addItemToPlaylist: App.MenuItem<'component', AddItemToPlaylistMenuProps> = {
-      type: 'component',
-      component: AddItemToPlaylistMenu,
-      props: {
-        name: props.episode.name,
-        uriList: [props.episode.uri],
-        artists: props.publisher,
-        left: props.left,
-        right: props.right,
-      },
-    };
     const share: App.MenuItem<'component', ShareMenuProps> = {
       type: 'component',
       component: ShareMenu,

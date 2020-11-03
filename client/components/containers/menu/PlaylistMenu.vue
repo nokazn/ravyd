@@ -12,7 +12,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import {
+  defineComponent,
+  computed,
+  unref,
+  PropType,
+} from '@vue/composition-api';
+
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
@@ -26,7 +32,7 @@ export type On = {
   [ON_EDIT_MENU_CLICKED]: boolean
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContextMenu,
   },
@@ -62,9 +68,9 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    toggleIsCollaborative(): App.MenuItem<'custom'> {
-      const isCollaborative = !this.playlist.isCollaborative;
+  setup(props, { root, emit }) {
+    const toggleIsCollaborative = computed<App.MenuItem<'custom'>>(() => {
+      const isCollaborative = !props.playlist.isCollaborative;
       const name = isCollaborative
         ? 'コラボプレイリストにする'
         : 'コラボプレイリストにしない';
@@ -72,24 +78,25 @@ export default Vue.extend({
         type: 'custom',
         name,
         handler: () => {
-          this.$dispatch('playlists/editPlaylist', {
-            playlistId: this.playlist.id,
+          root.$dispatch('playlists/editPlaylist', {
+            playlistId: props.playlist.id,
             isCollaborative,
           }).then(() => {
-            this.$toast.pushPrimary(isCollaborative
+            root.$toast.pushPrimary(isCollaborative
               ? 'コラボプレイリストにしました。'
               : 'コラボプレイリストを解除しました。');
           }).catch((err: Error) => {
             console.error({ err });
-            this.$toast.pushError(isCollaborative
+            root.$toast.pushError(isCollaborative
               ? 'コラボプレイリストにできませんでした。'
               : 'コラボプレイリストを解除できませんでした。');
           });
         },
       };
-    },
-    toggleIsPublic(): App.MenuItem<'custom'> {
-      const isPublic = !this.playlist.isPublic;
+    });
+
+    const toggleIsPublic = computed<App.MenuItem<'custom'>>(() => {
+      const isPublic = !props.playlist.isPublic;
       const name = isPublic
         ? '公開する'
         : '非公開にする';
@@ -97,42 +104,41 @@ export default Vue.extend({
         type: 'custom',
         name,
         handler: () => {
-          this.$dispatch('playlists/editPlaylist', {
-            playlistId: this.playlist.id,
-            isPublic: !this.playlist.isPublic,
+          root.$dispatch('playlists/editPlaylist', {
+            playlistId: props.playlist.id,
+            isPublic,
           }).then(() => {
-            this.$toast.pushPrimary(isPublic
+            root.$toast.pushPrimary(isPublic
               ? 'プレイリストを公開しました。'
               : 'プレイリストを非公開にしました。');
           }).catch((err: Error) => {
             console.error({ err });
-            this.$toast.pushError(isPublic
+            root.$toast.pushError(isPublic
               ? 'プレイリストの公開に失敗しました。'
               : 'プレイリストを非公開にできませんでした。');
           });
         },
-        disabled: this.playlist.isCollaborative,
+        disabled: props.playlist.isCollaborative,
       };
-    },
-    editPlaylist(): App.MenuItem<'custom'> {
-      return {
-        type: 'custom',
-        name: '詳細の編集',
-        // 自分のプレイリストで削除済の場合
-        disabled: this.playlist.isOwnPlaylist && !this.following,
-        handler: () => {
-          this.$emit(ON_EDIT_MENU_CLICKED, true);
-        },
-      };
-    },
-    followPlaylist(): App.MenuItem<'custom'> {
+    });
+
+    const editPlaylist = computed<App.MenuItem<'custom'>>(() => ({
+      type: 'custom',
+      name: '詳細の編集',
+      handler: () => {
+        emit(ON_EDIT_MENU_CLICKED, true);
+      },
+      // 自分のプレイリストで削除済の場合
+      disabled: props.playlist.isOwnPlaylist && !props.following,
+    }));
+
+    const followPlaylist = computed<App.MenuItem<'custom'>>(() => {
       const type = 'custom';
-      const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
+      const isOwnPlaylist = props.playlist.owner.id === root.$getters()['auth/userId'];
       const handler = () => {
-        const nextFollowingState = !this.following;
-        this.$emit(ON_FOLLOW_MENU_CLICKED, nextFollowingState);
+        emit(ON_FOLLOW_MENU_CLICKED, props.following);
       };
-      return this.following
+      return props.following
         ? {
           type,
           name: isOwnPlaylist ? '削除する' : 'フォローしない',
@@ -143,57 +149,58 @@ export default Vue.extend({
           name: 'フォローする',
           handler,
         };
-    },
-    copyPlaylist(): App.MenuItem<'custom'> {
-      const handler = () => {
-        const name = generateCopiedName(this.playlist.name);
-        this.$dispatch('playlists/createPlaylist', {
+    });
+
+    const copyPlaylist: App.MenuItem<'custom'> = {
+      type: 'custom',
+      name: '同様のプレイリストを作成',
+      handler: () => {
+        const name = generateCopiedName(props.playlist.name);
+        root.$dispatch('playlists/createPlaylist', {
           name,
-          uriList: this.playlist.trackUriList,
+          uriList: props.playlist.trackUriList,
         }).then(() => {
-          this.$toast.pushPrimary(`"${name}" を作成しました。`);
+          root.$toast.pushPrimary(`"${name}" を作成しました。`);
         }).catch((err: Error) => {
           console.error({ err });
-          this.$toast.pushError(err.message);
+          root.$toast.pushError(err.message);
         });
-      };
-      return {
-        type: 'custom',
-        name: '同様のプレイリストを作成',
-        handler,
-      };
-    },
-    share(): App.MenuItem<'component'> {
-      const props: ShareMenuProps = {
-        name: this.playlist.name,
-        uri: this.playlist.uri,
+      },
+    };
+
+    const share: App.MenuItem<'component', ShareMenuProps> = {
+      type: 'component',
+      component: ShareMenu,
+      props: {
+        name: props.playlist.name,
+        uri: props.playlist.uri,
         typeName: 'プレイリスト',
         artists: undefined,
-        externalUrls: this.playlist.externalUrls,
-        left: this.left,
-        right: this.right,
-      };
-      return {
-        type: 'component',
-        component: ShareMenu,
-        props,
-      };
-    },
-    menuGroups(): App.MenuItemGroup[] {
+        externalUrls: props.playlist.externalUrls,
+        left: props.left,
+        right: props.right,
+      },
+    };
+
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
       // 自分のプレイリストの場合は編集するメニューを表示
-      return this.playlist.isOwnPlaylist
+      return props.playlist.isOwnPlaylist
         ? [
-          [this.toggleIsCollaborative, this.toggleIsPublic],
-          [this.editPlaylist, this.followPlaylist],
-          [this.copyPlaylist],
-          [this.share],
+          [unref(toggleIsCollaborative), unref(toggleIsPublic)],
+          [unref(editPlaylist), unref(followPlaylist)],
+          [unref(copyPlaylist)],
+          [unref(share)],
         ]
         : [
-          [this.followPlaylist],
-          [this.copyPlaylist],
-          [this.share],
+          [unref(followPlaylist)],
+          [unref(copyPlaylist)],
+          [unref(share)],
         ];
-    },
+    });
+
+    return {
+      menuGroups,
+    };
   },
 });
 </script>

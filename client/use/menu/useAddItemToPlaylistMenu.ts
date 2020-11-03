@@ -10,13 +10,14 @@ export type AddItemToPlaylistMenuProps = {
 }
 
 export const useAddItemToPlaylistMenu = (
-  trackOrEpisode: App.TrackDetail | App.EpisodeDetail | undefined,
-  options?: {
+  item: App.SimpleTrackDetail | App.EpisodeDetail | App.ReleasePage | undefined,
+  options: {
+    publisher: string | undefined;
     left: boolean;
     right: boolean;
   },
 ): App.MenuItem<'custom' | 'component', AddItemToPlaylistMenuProps> => {
-  if (trackOrEpisode == null) {
+  if (item == null) {
     return {
       type: 'custom',
       name: 'プレイリストに追加',
@@ -29,11 +30,13 @@ export const useAddItemToPlaylistMenu = (
     type: 'component',
     component: AddItemToPlaylistMenu,
     props: {
-      name: trackOrEpisode.name,
-      uriList: [trackOrEpisode.uri],
-      artists: 'artists' in trackOrEpisode
-        ? trackOrEpisode.artists
-        : undefined,
+      name: item.name,
+      uriList: 'trackList' in item
+        ? item.trackList.map((track) => track.uri)
+        : [item.uri],
+      artists: options?.publisher ?? ('artists' in item
+        ? item.artists
+        : undefined),
       left: options?.left ?? false,
       right: options?.right ?? true,
     },

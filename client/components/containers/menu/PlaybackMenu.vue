@@ -18,9 +18,9 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import {
+  useAddItemToPlaylistMenu,
   useAddItemToQueueMenu,
   useArtistLinkMenu,
   useReleaseLinkMenu,
@@ -47,13 +47,18 @@ export default defineComponent({
 
   setup(_, { root, emit }) {
     const isLoading = ref(false);
-
     const track = computed(() => root.$getters()['playback/currentTrack']);
+
     const addItemToQueue = computed(() => useAddItemToQueueMenu(root, unref(track)));
     const artistPage = computed(() => useArtistLinkMenu(root, unref(track), {
       left: true,
       right: false,
     }));
+    const addItemToPlaylist = useAddItemToPlaylistMenu(unref(track), {
+      publisher: undefined,
+      left: true,
+      right: false,
+    });
     const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
 
     const saveTrack = computed<App.MenuItem<'custom'>>(() => {
@@ -67,22 +72,6 @@ export default defineComponent({
           },
         }
         : emptyMenuItem('お気に入りに追加');
-    });
-
-    const addItemToPlaylist = computed<App.MenuItem<'custom' | 'component', AddItemToPlaylistMenuProps>>(() => {
-      const item = unref(track);
-      return item != null
-        ? {
-          type: 'component',
-          component: AddItemToPlaylistMenu,
-          props: {
-            name: item.name,
-            uriList: [item.uri],
-            artists: item.artists,
-            left: true,
-          },
-        }
-        : emptyMenuItem('プレイリストに追加');
     });
 
     const share = computed<App.MenuItem<'custom' | 'component', ShareMenuProps>>(() => {
