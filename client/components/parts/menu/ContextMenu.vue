@@ -81,32 +81,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import type { VueConstructor } from 'vue';
-
-export type MenuType = 'to' | 'custom' | 'component';
-export type MenuItem<
-  T extends MenuType = MenuType,
-  U extends { [k in string]: unknown } = {},
-> = T extends 'to'
-  ? {
-    type: T;
-    name: string;
-    disabled?: boolean;
-    to: string;
-  }
-  : T extends 'custom'
-  ? {
-    type: T;
-    name: string;
-    disabled?: boolean;
-    handler: () => void;
-  }
-  : {
-    type: T;
-    component: VueConstructor;
-    props: U;
-  };
-export type Group = MenuItem[];
+import type { App } from '~~/types';
 
 export default defineComponent({
   props: {
@@ -160,7 +135,7 @@ export default defineComponent({
       default: false,
     },
     groups: {
-      type: Array as PropType<MenuItem[][]>,
+      type: Array as PropType<App.MenuItemGroup[]>,
       required: true,
     },
   },

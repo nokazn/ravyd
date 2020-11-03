@@ -13,12 +13,15 @@
 
 <script lang="ts">
 import {
-  defineComponent, computed, unref, PropType,
+  defineComponent,
+  computed,
+  unref,
+  PropType,
 } from '@vue/composition-api';
 
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 
@@ -63,13 +66,13 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const saveShow = computed<MenuItem<'custom'>>(() => ({
+    const saveShow = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
       name: props.saved ? '保存しない' : '保存する',
       handler: () => { emit(ON_SAVE_MENU_CLICKED, !props.saved); },
     }));
 
-    const share = computed<MenuItem<'component', ShareMenuProps>>(() => ({
+    const share = computed<App.MenuItem<'component', ShareMenuProps>>(() => ({
       type: 'component',
       component: ShareMenu,
       props: {
@@ -83,7 +86,7 @@ export default defineComponent({
       },
     }));
 
-    const menuItemLists = computed<Group[]>(() => [
+    const menuItemLists = computed<App.MenuItemGroup[]>(() => [
       [unref(saveShow)],
       [unref(share)],
     ]);

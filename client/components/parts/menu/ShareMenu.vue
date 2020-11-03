@@ -83,7 +83,7 @@ type MenuItem<T extends MenuType = MenuType> = T extends 'to'
     handler: () => void;
     icon?: string;
     disabled?: boolean;
-  }
+  };
 
 export type Props = {
   name: string;

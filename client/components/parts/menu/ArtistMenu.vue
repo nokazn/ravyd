@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { App } from '~~/types';
 
@@ -60,13 +60,13 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const menuItemLists = computed<Group[]>(() => {
-      const followArtist: MenuItem<'custom'> = {
+    const menuItemLists = computed<App.MenuItemGroup[]>(() => {
+      const followArtist: App.MenuItem<'custom'> = {
         type: 'custom',
         name: props.following ? 'フォローしない' : 'フォローする',
         handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
       };
-      const share: MenuItem<'component', ShareMenuProps> = {
+      const share: App.MenuItem<'component', ShareMenuProps> = {
         type: 'component',
         component: ShareMenu,
         props: {

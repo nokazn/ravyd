@@ -13,11 +13,10 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
-import { App } from '~~/types';
+import type { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 const ON_EDIT_MENU_CLICKED = 'on-edit-menu-clicked';
@@ -64,7 +63,7 @@ export default Vue.extend({
   },
 
   computed: {
-    toggleIsCollaborative(): MenuItem<'custom'> {
+    toggleIsCollaborative(): App.MenuItem<'custom'> {
       const isCollaborative = !this.playlist.isCollaborative;
       const name = isCollaborative
         ? 'コラボプレイリストにする'
@@ -89,7 +88,7 @@ export default Vue.extend({
         },
       };
     },
-    toggleIsPublic(): MenuItem<'custom'> {
+    toggleIsPublic(): App.MenuItem<'custom'> {
       const isPublic = !this.playlist.isPublic;
       const name = isPublic
         ? '公開する'
@@ -115,7 +114,7 @@ export default Vue.extend({
         disabled: this.playlist.isCollaborative,
       };
     },
-    editPlaylist(): MenuItem<'custom'> {
+    editPlaylist(): App.MenuItem<'custom'> {
       return {
         type: 'custom',
         name: '詳細の編集',
@@ -126,7 +125,7 @@ export default Vue.extend({
         },
       };
     },
-    followPlaylist(): MenuItem<'custom'> {
+    followPlaylist(): App.MenuItem<'custom'> {
       const type = 'custom';
       const isOwnPlaylist = this.playlist.owner.id === this.$getters()['auth/userId'];
       const handler = () => {
@@ -145,7 +144,7 @@ export default Vue.extend({
           handler,
         };
     },
-    copyPlaylist(): MenuItem<'custom'> {
+    copyPlaylist(): App.MenuItem<'custom'> {
       const handler = () => {
         const name = generateCopiedName(this.playlist.name);
         this.$dispatch('playlists/createPlaylist', {
@@ -164,7 +163,7 @@ export default Vue.extend({
         handler,
       };
     },
-    share(): MenuItem<'component'> {
+    share(): App.MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.playlist.name,
         uri: this.playlist.uri,
@@ -180,7 +179,7 @@ export default Vue.extend({
         props,
       };
     },
-    menuItemLists(): Group[] {
+    menuItemLists(): App.MenuItemGroup[] {
       // 自分のプレイリストの場合は編集するメニューを表示
       return this.playlist.isOwnPlaylist
         ? [

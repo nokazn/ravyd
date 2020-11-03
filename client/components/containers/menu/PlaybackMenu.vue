@@ -12,11 +12,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import { RootGetters } from 'typed-vuex';
-
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 
@@ -43,7 +43,7 @@ export default Vue.extend({
     track(): RootGetters['playback/currentTrack'] {
       return this.$getters()['playback/currentTrack'];
     },
-    addItemToQueue(): MenuItem<'custom'> {
+    addItemToQueue(): App.MenuItem<'custom'> {
       const type = 'custom';
       const name = '次に再生に追加';
       const trackName = this.track?.name;
@@ -74,7 +74,7 @@ export default Vue.extend({
         },
       };
     },
-    artistPage(): MenuItem {
+    artistPage(): App.MenuItem {
       const name = 'アーティストページに移動';
       const artists = this.track?.artists;
       if (artists == null || artists.length === 0) {
@@ -106,7 +106,7 @@ export default Vue.extend({
         disabled: this.$route.params.artistId === artistId,
       };
     },
-    releasePage(): MenuItem<'custom' | 'to'> {
+    releasePage(): App.MenuItem<'custom' | 'to'> {
       const name = 'アルバムページに移動';
       const releaseId = this.track?.releaseId;
       if (releaseId == null) {
@@ -124,7 +124,7 @@ export default Vue.extend({
         disabled: this.$route.params.releaseId === releaseId,
       };
     },
-    saveTrack(): MenuItem<'custom'> {
+    saveTrack(): App.MenuItem<'custom'> {
       const isSaved = this.track?.isSaved;
       if (isSaved == null) {
         return {
@@ -143,7 +143,7 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem<'custom' | 'component'> {
+    addItemToPlaylist(): App.MenuItem<'custom' | 'component'> {
       const { track } = this;
       if (track == null) {
         return {
@@ -165,7 +165,7 @@ export default Vue.extend({
         props,
       };
     },
-    share(): MenuItem<'custom' | 'component'> {
+    share(): App.MenuItem<'custom' | 'component'> {
       const { track } = this;
       if (track == null) {
         return {
@@ -190,7 +190,7 @@ export default Vue.extend({
         props,
       };
     },
-    updatePlayback(): MenuItem<'custom'> {
+    updatePlayback(): App.MenuItem<'custom'> {
       return {
         type: 'custom',
         name: 'プレイヤーの情報を更新',
@@ -205,7 +205,7 @@ export default Vue.extend({
         },
       };
     },
-    menuItemLists(): Group[] {
+    menuItemLists(): App.MenuItemGroup[] {
       return [
         [this.addItemToQueue],
         [this.artistPage, this.releasePage],

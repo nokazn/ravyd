@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
@@ -66,7 +66,7 @@ export default Vue.extend({
   },
 
   computed: {
-    addItemToQueue(): MenuItem<'custom'> {
+    addItemToQueue(): App.MenuItem<'custom'> {
       const trackName = this.track.name;
       return {
         type: 'custom',
@@ -84,7 +84,7 @@ export default Vue.extend({
         },
       };
     },
-    artistPage(): MenuItem {
+    artistPage(): App.MenuItem {
       const artists = [...this.track.artists, ...this.track.featuredArtists];
       const { length } = artists;
       const name = 'アーティストページに移動';
@@ -117,7 +117,7 @@ export default Vue.extend({
         disabled: this.$route.params.artistId === artistId,
       };
     },
-    releasePage(): MenuItem<'to'> {
+    releasePage(): App.MenuItem<'to'> {
       const { releaseId } = this.track;
       return {
         type: 'to',
@@ -126,7 +126,7 @@ export default Vue.extend({
         disabled: this.$route.params.releaseId === releaseId,
       };
     },
-    saveTrack(): MenuItem<'custom'> {
+    saveTrack(): App.MenuItem<'custom'> {
       return {
         type: 'custom',
         name: this.track.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
@@ -136,7 +136,7 @@ export default Vue.extend({
         },
       };
     },
-    addItemToPlaylist(): MenuItem<'component'> {
+    addItemToPlaylist(): App.MenuItem<'component'> {
       const props: AddItemToPlaylistMenuProps = {
         name: this.track.name,
         uriList: [this.track.uri],
@@ -149,7 +149,7 @@ export default Vue.extend({
         props,
       };
     },
-    removePlaylistItem(): MenuItem<'custom'> {
+    removePlaylistItem(): App.MenuItem<'custom'> {
       const { playlistId } = this;
       return {
         type: 'custom',
@@ -174,7 +174,7 @@ export default Vue.extend({
         disabled: playlistId == null,
       };
     },
-    share(): MenuItem<'component'> {
+    share(): App.MenuItem<'component'> {
       const props: ShareMenuProps = {
         name: this.track.name,
         uri: this.track.uri,
@@ -189,7 +189,7 @@ export default Vue.extend({
         props,
       };
     },
-    menuItemLists(): Group[] {
+    menuItemLists(): App.MenuItemGroup[] {
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
       return this.playlistId != null
         ? [
