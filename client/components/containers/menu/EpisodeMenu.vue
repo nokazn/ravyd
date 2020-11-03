@@ -16,7 +16,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useAddItemToQueueMenu, useRemovePlaylistItemMenu } from '~/use/spotify';
+import { useAddItemToQueueMenu, useRemovePlaylistItemMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 export default defineComponent({

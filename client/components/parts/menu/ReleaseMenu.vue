@@ -22,7 +22,7 @@ import {
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useArtistLinkMenu } from '~/use/spotify';
+import { useArtistLinkMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';

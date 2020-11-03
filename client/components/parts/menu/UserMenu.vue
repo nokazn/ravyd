@@ -3,7 +3,7 @@
     bottom
     offset-y
     :fab="fab"
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :outlined="outlined"
     :left="left"
@@ -70,12 +70,14 @@ export default defineComponent({
       return {
         type: 'custom',
         name: props.following ? 'フォローしない' : 'フォローする',
-        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
+        handler: () => {
+          emit(ON_FOLLOW_MENU_CLICKED, !props.following);
+        },
         disabled: props.following == null,
       };
     });
 
-    const share = computed<App.MenuItem<'component', ShareMenuProps>>(() => ({
+    const share: App.MenuItem<'component', ShareMenuProps> = {
       type: 'component',
       component: ShareMenu,
       props: {
@@ -87,9 +89,9 @@ export default defineComponent({
         left: props.left,
         right: props.right,
       },
-    }));
+    };
 
-    const menuItemLists = computed<App.MenuItemGroup[]>(() => {
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
       return props.following != null
         ? [
           [unref(followArtist)],
@@ -100,7 +102,7 @@ export default defineComponent({
         ];
     });
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

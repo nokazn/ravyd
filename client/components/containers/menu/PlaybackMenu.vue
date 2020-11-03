@@ -24,7 +24,7 @@ import {
   useAddItemToQueueMenu,
   useArtistLinkMenu,
   useReleaseLinkMenu,
-} from '~/use/spotify';
+} from '~/use/menu';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';

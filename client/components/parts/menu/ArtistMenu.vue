@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -60,11 +60,13 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const menuItemLists = computed<App.MenuItemGroup[]>(() => {
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
       const followArtist: App.MenuItem<'custom'> = {
         type: 'custom',
         name: props.following ? 'フォローしない' : 'フォローする',
-        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
+        handler: () => {
+          emit(ON_FOLLOW_MENU_CLICKED, !props.following);
+        },
       };
       const share: App.MenuItem<'component', ShareMenuProps> = {
         type: 'component',
@@ -85,7 +87,7 @@ export default defineComponent({
       ];
     });
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

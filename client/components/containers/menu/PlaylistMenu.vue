@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -179,7 +179,7 @@ export default Vue.extend({
         props,
       };
     },
-    menuItemLists(): App.MenuItemGroup[] {
+    menuGroups(): App.MenuItemGroup[] {
       // 自分のプレイリストの場合は編集するメニューを表示
       return this.playlist.isOwnPlaylist
         ? [

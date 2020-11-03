@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -69,10 +69,12 @@ export default defineComponent({
     const saveShow = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
       name: props.saved ? '保存しない' : '保存する',
-      handler: () => { emit(ON_SAVE_MENU_CLICKED, !props.saved); },
+      handler: () => {
+        emit(ON_SAVE_MENU_CLICKED, !props.saved);
+      },
     }));
 
-    const share = computed<App.MenuItem<'component', ShareMenuProps>>(() => ({
+    const share: App.MenuItem<'component', ShareMenuProps> = {
       type: 'component',
       component: ShareMenu,
       props: {
@@ -84,14 +86,14 @@ export default defineComponent({
         left: props.left,
         right: props.right,
       },
-    }));
+    };
 
-    const menuItemLists = computed<App.MenuItemGroup[]>(() => [
+    const menuGroups = computed<App.MenuItemGroup[]>(() => [
       [unref(saveShow)],
       [unref(share)],
     ]);
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>
