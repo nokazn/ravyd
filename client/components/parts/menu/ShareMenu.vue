@@ -85,17 +85,6 @@ type MenuItem<T extends MenuType = MenuType> = T extends 'to'
     disabled?: boolean;
   };
 
-export type Props = {
-  name: string;
-  uri: string;
-  url?: string;
-  typeName: string;
-  artists: App.MinimumArtist[] | string | undefined;
-  externalUrls: SpotifyAPI.ExternalUrls;
-  left?: boolean;
-  right?: boolean;
-}
-
 export default defineComponent({
   components: {
     OptionMenu,

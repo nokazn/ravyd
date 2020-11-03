@@ -16,6 +16,7 @@ export default defineComponent({
 
   setup(_, { root }) {
     onMounted(() => { root.$dispatch('player/initPlayer'); });
+    return {};
   },
 });
 </script>
