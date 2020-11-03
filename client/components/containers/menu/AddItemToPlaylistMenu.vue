@@ -50,22 +50,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { RootGetters } from 'typed-vuex';
-
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
-import { SpotifyAPI, App } from '~~/types';
+import type { SpotifyAPI, App } from '~~/types';
 
-export type Props = {
-  name: string
-  uriList: string[]
-  artists: App.MinimumArtist[] | string | undefined
-  left?: boolean
-  right?: boolean
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     OptionMenu,
     ChildOptionMenuActivator,
@@ -94,41 +84,41 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    ownPlaylists(): RootGetters['playlists/ownPlaylists'] {
-      return this.$getters()['playlists/ownPlaylists'];
-    },
-  },
-
-  methods: {
-    onNewPlaylistClicked() {
-      const { artists, name } = this;
+  setup(props, { root }) {
+    const ownPlaylists = computed(() => root.$getters()['playlists/ownPlaylists']);
+    const onNewPlaylistClicked = () => {
+      const { artists, name } = props;
       const artistName = Array.isArray(artists)
         ? artists.map((artist) => artist.name).join(', ')
         : artists;
       const title = artistName != null
         ? `${name} - ${artistName}`
         : name;
-
-      this.$dispatch('playlists/createPlaylist', {
+      root.$dispatch('playlists/createPlaylist', {
         name: title,
         description: '',
-        uriList: this.uriList,
+        uriList: props.uriList,
       }).then(() => {
-        this.$toast.pushPrimary(`"${title}" を新規プレイリストに追加しました。`);
+        root.$toast.pushPrimary(`"${title}" を新規プレイリストに追加しました。`);
       }).catch((err: Error) => {
         console.error({ err });
-        this.$toast.pushError(`"${title}" を新規プレイリストに追加できませんでした。`);
+        root.$toast.pushError(`"${title}" を新規プレイリストに追加できませんでした。`);
       });
-    },
-    onItemClicked(playlist: SpotifyAPI.SimplePlaylist) {
-      this.$dispatch('playlists/addItemToPlaylist', {
+    };
+    const onItemClicked = (playlist: SpotifyAPI.SimplePlaylist) => {
+      root.$dispatch('playlists/addItemToPlaylist', {
         playlistId: playlist.id,
         playlistName: playlist.name,
-        uriList: this.uriList,
-        name: this.name,
+        name: props.name,
+        uriList: props.uriList,
       });
-    },
+    };
+
+    return {
+      ownPlaylists,
+      onNewPlaylistClicked,
+      onItemClicked,
+    };
   },
 });
 </script>
