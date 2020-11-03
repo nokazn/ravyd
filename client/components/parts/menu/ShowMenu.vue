@@ -20,7 +20,7 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import { useShareMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
@@ -74,19 +74,15 @@ export default defineComponent({
       },
     }));
 
-    const share: App.MenuItem<'component', ShareMenuProps> = {
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.show.name,
-        uri: props.show.uri,
-        typeName: 'ポッドキャスト',
-        artists: props.show.publisher,
-        externalUrls: props.show.externalUrls,
-        left: props.left,
-        right: props.right,
-      },
-    };
+    const share = useShareMenu({
+      name: props.show.name,
+      uri: props.show.uri,
+      typeName: 'ポッドキャスト',
+      artists: props.show.publisher,
+      externalUrls: props.show.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
 
     const menuGroups = computed<App.MenuItemGroup[]>(() => [
       [unref(saveShow)],

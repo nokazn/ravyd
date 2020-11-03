@@ -20,7 +20,7 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import { useShareMenu } from '~/use/menu';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
 import type { App } from '~~/types';
 
@@ -168,19 +168,15 @@ export default defineComponent({
       },
     };
 
-    const share: App.MenuItem<'component', ShareMenuProps> = {
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.playlist.name,
-        uri: props.playlist.uri,
-        typeName: 'プレイリスト',
-        artists: undefined,
-        externalUrls: props.playlist.externalUrls,
-        left: props.left,
-        right: props.right,
-      },
-    };
+    const share = useShareMenu({
+      name: props.playlist.name,
+      uri: props.playlist.uri,
+      typeName: 'プレイリスト',
+      artists: undefined,
+      externalUrls: props.playlist.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
 
     const menuGroups = computed<App.MenuItemGroup[]>(() => {
       // 自分のプレイリストの場合は編集するメニューを表示

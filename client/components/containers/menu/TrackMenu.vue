@@ -19,13 +19,13 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import {
   useAddItemToPlaylistMenu,
   useAddItemToQueueMenu,
   useRemovePlaylistItemMenu,
   useArtistLinkMenu,
   useReleaseLinkMenu,
+  useShareMenu,
 } from '~/use/menu';
 import type { App } from '~~/types';
 
@@ -97,18 +97,15 @@ export default defineComponent({
       },
     }));
 
-    const share: App.MenuItem<'component', ShareMenuProps> = {
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.track.name,
-        uri: props.track.uri,
-        typeName: '曲',
-        artists: props.track.artists,
-        externalUrls: props.track.externalUrls,
-        left: true,
-      },
-    };
+    const share = useShareMenu({
+      name: props.track.name,
+      uri: props.track.uri,
+      typeName: '曲',
+      artists: props.track.artists,
+      externalUrls: props.track.externalUrls,
+      left: true,
+      right: false,
+    });
 
     const menuGeoups = computed<App.MenuItemGroup[]>(() => {
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示

@@ -18,12 +18,12 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
 import {
   useAddItemToPlaylistMenu,
   useAddItemToQueueMenu,
   useArtistLinkMenu,
   useReleaseLinkMenu,
+  useShareMenu,
 } from '~/use/menu';
 import type { App } from '~~/types';
 
@@ -60,6 +60,21 @@ export default defineComponent({
       right: false,
     });
     const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
+    const share = computed(() => {
+      const item = unref(track);
+      return useShareMenu(item != null
+        ? {
+          name: item.name,
+          uri: item.uri,
+          url: `/releases/${item.releaseId}`,
+          typeName: '曲',
+          artists: item.artists,
+          externalUrls: item.externalUrls,
+          left: true,
+          right: false,
+        }
+        : undefined);
+    });
 
     const saveTrack = computed<App.MenuItem<'custom'>>(() => {
       const item = unref(track);
@@ -72,25 +87,6 @@ export default defineComponent({
           },
         }
         : emptyMenuItem('お気に入りに追加');
-    });
-
-    const share = computed<App.MenuItem<'custom' | 'component', ShareMenuProps>>(() => {
-      const item = unref(track);
-      return item != null
-        ? {
-          type: 'component',
-          component: ShareMenu,
-          props: {
-            name: item.name,
-            uri: item.uri,
-            url: `/releases/${item.releaseId}`,
-            typeName: '曲',
-            artists: item.artists,
-            externalUrls: item.externalUrls,
-            left: true,
-          },
-        }
-        : emptyMenuItem('シェア');
     });
 
     const updatePlayback = computed<App.MenuItem<'custom'>>(() => {

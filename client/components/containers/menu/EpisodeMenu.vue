@@ -14,8 +14,12 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useAddItemToQueueMenu, useRemovePlaylistItemMenu, useAddItemToPlaylistMenu } from '~/use/menu';
+import {
+  useAddItemToQueueMenu,
+  useRemovePlaylistItemMenu,
+  useAddItemToPlaylistMenu,
+  useShareMenu,
+} from '~/use/menu';
 import type { App } from '~~/types';
 
 export default defineComponent({
@@ -74,20 +78,15 @@ export default defineComponent({
       left: props.left,
       right: props.right,
     });
-
-    const share: App.MenuItem<'component', ShareMenuProps> = {
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.episode.name,
-        uri: props.episode.uri,
-        typeName: 'エピソード',
-        artists: props.publisher,
-        externalUrls: props.episode.externalUrls,
-        left: props.left,
-        right: props.right,
-      },
-    };
+    const share = useShareMenu({
+      name: props.episode.name,
+      uri: props.episode.uri,
+      typeName: 'エピソード',
+      artists: props.publisher,
+      externalUrls: props.episode.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
 
     const menuGroups = computed<App.MenuItemGroup[]>(() => {
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示

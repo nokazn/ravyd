@@ -20,8 +20,7 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useArtistLinkMenu, useAddItemToPlaylistMenu } from '~/use/menu';
+import { useArtistLinkMenu, useAddItemToPlaylistMenu, useShareMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
@@ -72,6 +71,15 @@ export default defineComponent({
       left: props.left,
       right: props.right,
     });
+    const share = useShareMenu({
+      name: props.release.name,
+      uri: props.release.uri,
+      typeName: 'アルバム',
+      artists: props.release.artists,
+      externalUrls: props.release.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
 
     const saveRelease = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
@@ -80,20 +88,6 @@ export default defineComponent({
         emit(ON_FAVORITE_MENU_CLICKED, !props.release.isSaved);
       },
     }));
-
-    const share: App.MenuItem<'component', ShareMenuProps> = {
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.release.name,
-        uri: props.release.uri,
-        typeName: 'アルバム',
-        artists: props.release.artists,
-        externalUrls: props.release.externalUrls,
-        left: props.left,
-        right: props.right,
-      },
-    };
 
     const menuGroups = computed<App.MenuItemGroup[]>(() => [
       [unref(artistPage)],
