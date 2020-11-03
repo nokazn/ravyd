@@ -1,14 +1,14 @@
 import { SetupContext } from '@vue/composition-api';
 import { App } from '~~/types';
 
-export const useReleaseLinkMenu = (
+export const useTrackLinkMenu = (
   root: SetupContext['root'],
   item: App.SimpleTrackDetail | undefined,
 ): App.MenuItem<'custom' | 'to'> => {
   const isEpisode = item?.type === 'episode';
   const name = isEpisode
-    ? 'ポッドキャストのページに移動'
-    : 'アルバムのページに移動';
+    ? 'エピソードのページに移動'
+    : '曲のページに移動';
   if (item == null) {
     return {
       type: 'custom',
@@ -18,15 +18,18 @@ export const useReleaseLinkMenu = (
     };
   }
 
-  const { releaseId } = item;
+  const { id, releaseId } = item;
   return {
     type: 'to',
     name,
     to: isEpisode
-      ? `/shows/${releaseId}`
-      : `/releases/${releaseId}`,
+      ? `/episodes/${id}`
+      : {
+        path: `/releases/${releaseId}`,
+        query: { track: id },
+      },
     disabled: isEpisode
-      ? root.$route.params.showId === releaseId
+      ? root.$route.params.episodeId === id
       : root.$route.params.releaseId === releaseId,
   };
 };

@@ -141,7 +141,7 @@ export type MenuItem<
     type: T;
     name: string;
     disabled?: boolean;
-    to: string;
+    to: RawLocation;
   }
   : T extends 'custom'
   ? {

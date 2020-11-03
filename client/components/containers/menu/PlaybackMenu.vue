@@ -24,6 +24,7 @@ import {
   useArtistLinkMenu,
   useReleaseLinkMenu,
   useShareMenu,
+  useTrackLinkMenu,
 } from '~/use/menu';
 import type { App } from '~~/types';
 
@@ -61,12 +62,13 @@ export default defineComponent({
       left: true,
       right: false,
     }));
+    const trackPage = computed(() => useTrackLinkMenu(root, unref(track)));
+    const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
     const addItemToPlaylist = useAddItemToPlaylistMenu(unref(track), {
       publisher: undefined,
       left: true,
       right: false,
     });
-    const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
     const share = computed(() => {
       const item = unref(track);
       return useShareMenu(item != null
@@ -113,13 +115,16 @@ export default defineComponent({
       };
     });
 
-    const menuGroups = computed<App.MenuItemGroup[]>(() => [
-      [unref(addItemToQueue)],
-      [unref(artistPage), unref(releasePage)],
-      [unref(saveTrack), unref(addItemToPlaylist)],
-      [unref(share)],
-      [unref(updatePlayback)],
-    ]);
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
+      const isEpisode = track.value?.type === 'episode';
+      return [
+        [unref(addItemToQueue)],
+        [isEpisode ? unref(trackPage) : unref(artistPage), unref(releasePage)],
+        [unref(saveTrack), unref(addItemToPlaylist)],
+        [unref(share)],
+        [unref(updatePlayback)],
+      ];
+    });
 
     return {
       isLoading,
