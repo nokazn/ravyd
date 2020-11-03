@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -13,12 +13,15 @@
 
 <script lang="ts">
 import {
-  defineComponent, computed, unref, PropType,
+  defineComponent,
+  computed,
+  unref,
+  PropType,
 } from '@vue/composition-api';
 
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { App } from '~~/types';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
+import { useShareMenu } from '~/use/menu';
+import type { App } from '~~/types';
 
 const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 
@@ -63,32 +66,30 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const saveShow = computed<MenuItem<'custom'>>(() => ({
+    const saveShow = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
       name: props.saved ? '保存しない' : '保存する',
-      handler: () => { emit(ON_SAVE_MENU_CLICKED, !props.saved); },
-    }));
-
-    const share = computed<MenuItem<'component', ShareMenuProps>>(() => ({
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.show.name,
-        uri: props.show.uri,
-        typeName: 'ポッドキャスト',
-        artists: props.show.publisher,
-        externalUrls: props.show.externalUrls,
-        left: props.left,
-        right: props.right,
+      handler: () => {
+        emit(ON_SAVE_MENU_CLICKED, !props.saved);
       },
     }));
 
-    const menuItemLists = computed<Group[]>(() => [
+    const share = useShareMenu({
+      name: props.show.name,
+      uri: props.show.uri,
+      typeName: 'ポッドキャスト',
+      artists: props.show.publisher,
+      externalUrls: props.show.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
+
+    const menuGroups = computed<App.MenuItemGroup[]>(() => [
       [unref(saveShow)],
       [unref(share)],
     ]);
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

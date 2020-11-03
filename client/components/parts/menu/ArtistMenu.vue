@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
+import { useShareMenu } from '~/use/menu';
 import { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
@@ -60,32 +60,31 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const menuItemLists = computed<Group[]>(() => {
-      const followArtist: MenuItem<'custom'> = {
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
+      const followArtist: App.MenuItem<'custom'> = {
         type: 'custom',
         name: props.following ? 'フォローしない' : 'フォローする',
-        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
-      };
-      const share: MenuItem<'component', ShareMenuProps> = {
-        type: 'component',
-        component: ShareMenu,
-        props: {
-          name: props.artist.name,
-          uri: props.artist.uri,
-          typeName: 'アーティスト',
-          artists: undefined,
-          externalUrls: props.artist.externalUrls,
-          left: props.left,
-          right: props.right,
+        handler: () => {
+          emit(ON_FOLLOW_MENU_CLICKED, !props.following);
         },
       };
+      const share = useShareMenu({
+        name: props.artist.name,
+        uri: props.artist.uri,
+        typeName: 'アーティスト',
+        artists: undefined,
+        externalUrls: props.artist.externalUrls,
+        left: props.left,
+        right: props.right,
+      });
+
       return [
         [followArtist],
         [share],
       ];
     });
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

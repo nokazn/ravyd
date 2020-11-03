@@ -13,6 +13,7 @@ const artist = (i: number) => ({
   uri: `artistUri${i}`,
 });
 const item = (i: number): App.TrackDetail => ({
+  type: 'track',
   id: `id${i}`,
   name: 'name',
   uri: `uri${i}`,

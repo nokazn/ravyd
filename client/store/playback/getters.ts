@@ -89,6 +89,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
 
   currentTrack(state, getters) {
     const {
+      trackType,
       trackId,
       trackName,
       trackUri,
@@ -97,7 +98,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       releaseUri,
       images,
       durationMs,
-      isSavedTrack: isSaved,
+      isSavedTrack,
       linkedFrom,
     } = state;
     const { releaseId } = getters;
@@ -118,6 +119,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       : {};
 
     return {
+      type: trackType,
       index: -1,
       id: trackId,
       name: trackName,
@@ -127,7 +129,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
       durationMs,
       externalUrls,
       previewUrl: {},
-      isSaved,
+      isSaved: isSavedTrack,
       releaseId,
       releaseName,
       images,

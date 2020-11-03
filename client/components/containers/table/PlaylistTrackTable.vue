@@ -47,7 +47,6 @@
         :hide-added-at="hideAddedAt"
         :set="isTrackSet(item.id)"
         :playing="isPlayingTrack(item.id)"
-        :button-size="buttonSize"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"

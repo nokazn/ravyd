@@ -49,7 +49,7 @@
         <div :class="$style.Right__buttons">
           <TrackQueueMenu />
           <DeviceSelectMenu />
-          <PlaybackMenu />
+          <PlaybackMenu v-model="isSavedTrack" />
         </div>
         <VolumeSlider />
       </div>
@@ -67,7 +67,7 @@ import SeekBar from '~/components/containers/player/SeekBar.vue';
 import MediaControllersWrapper from '~/components/parts/wrapper/MediaControllersWrapper.vue';
 import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
-import PlaybackMenu from '~/components/containers/menu/PlaybackMenu.vue';
+import PlaybackMenu, { On as OnPlaybackMenu } from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
 export default defineComponent({
@@ -99,7 +99,7 @@ export default defineComponent({
 
     const isSavedTrack = computed<boolean>({
       get() { return root.$state().playback.isSavedTrack; },
-      set(isSaved: OnFavorite['input']) {
+      set(isSaved: OnFavorite['input'] | OnPlaybackMenu['input']) {
         const id = trackId.value;
         if (id == null) return;
         // API との通信の結果を待たずに先に表示を変更させておく

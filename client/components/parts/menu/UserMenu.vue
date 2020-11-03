@@ -3,7 +3,7 @@
     bottom
     offset-y
     :fab="fab"
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :outlined="outlined"
     :left="left"
@@ -19,8 +19,8 @@ import {
   PropType,
 } from '@vue/composition-api';
 
-import ContextMenu, { Group, MenuItem } from '~/components/parts/menu/ContextMenu.vue';
-import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
+import { useShareMenu } from '~/use/menu';
 import type { App } from '~~/types';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
@@ -66,30 +66,28 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const followArtist = computed<MenuItem<'custom'>>(() => {
+    const followArtist = computed<App.MenuItem<'custom'>>(() => {
       return {
         type: 'custom',
         name: props.following ? 'フォローしない' : 'フォローする',
-        handler: () => { emit(ON_FOLLOW_MENU_CLICKED, !props.following); },
+        handler: () => {
+          emit(ON_FOLLOW_MENU_CLICKED, !props.following);
+        },
         disabled: props.following == null,
       };
     });
 
-    const share = computed<MenuItem<'component', ShareMenuProps>>(() => ({
-      type: 'component',
-      component: ShareMenu,
-      props: {
-        name: props.user.displayName ?? props.user.id,
-        uri: props.user.uri,
-        typeName: 'ユーザー',
-        artists: undefined,
-        externalUrls: props.user.externalUrls,
-        left: props.left,
-        right: props.right,
-      },
-    }));
+    const share = useShareMenu({
+      name: props.user.displayName ?? props.user.id,
+      uri: props.user.uri,
+      typeName: 'ユーザー',
+      artists: undefined,
+      externalUrls: props.user.externalUrls,
+      left: props.left,
+      right: props.right,
+    });
 
-    const menuItemLists = computed<Group[]>(() => {
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
       return props.following != null
         ? [
           [unref(followArtist)],
@@ -100,7 +98,7 @@ export default defineComponent({
         ];
     });
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

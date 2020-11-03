@@ -13,7 +13,7 @@
     </template>
 
     <v-list-item-group>
-      <template v-for="item in menuItemList">
+      <template v-for="item in menuItems">
         <a
           v-if="item.type === 'to'"
           :key="item.name"
@@ -83,18 +83,7 @@ type MenuItem<T extends MenuType = MenuType> = T extends 'to'
     handler: () => void;
     icon?: string;
     disabled?: boolean;
-  }
-
-export type Props = {
-  name: string;
-  uri: string;
-  url?: string;
-  typeName: string;
-  artists: App.MinimumArtist[] | string | undefined;
-  externalUrls: SpotifyAPI.ExternalUrls;
-  left?: boolean;
-  right?: boolean;
-}
+  };
 
 export default defineComponent({
   components: {
@@ -138,7 +127,7 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const menuItemList = computed<MenuItem[]>(() => {
+    const menuItems = computed<MenuItem[]>(() => {
       const artistNames: string | undefined = Array.isArray(props.artists)
         ? props.artists.map((artist) => artist.name).join(', ')
         : props.artists;
@@ -201,7 +190,7 @@ export default defineComponent({
       ];
     });
 
-    return { menuItemList };
+    return { menuItems };
   },
 });
 </script>

@@ -19,6 +19,7 @@ const artist = (i: number) => ({
   uri: 'uri',
 });
 const item = (isPlayable: boolean): App.TrackDetail => ({
+  type: 'track',
   id: 'id',
   name: 'name',
   uri: 'uri',

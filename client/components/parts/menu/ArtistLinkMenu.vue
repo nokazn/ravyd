@@ -14,7 +14,7 @@
 
     <v-list-item-group>
       <v-list-item
-        v-for="item in menuItemList"
+        v-for="item in menuItems"
         :key="item.to"
         nuxt
         :to="item.to"
@@ -41,12 +41,6 @@ type MenuItem = {
   disabled: boolean;
 }
 
-export type Props = {
-  artists: App.MinimumArtist[];
-  left?: boolean;
-  right?: boolean;
-}
-
 export default defineComponent({
   components: {
     OptionMenu,
@@ -71,13 +65,13 @@ export default defineComponent({
   setup(props, { root }) {
     // artistId is consistent during lifecycle
     const { artistId } = root.$route.params;
-    const menuItemList = computed<MenuItem[]>(() => props.artists.map((artist) => ({
+    const menuItems = computed<MenuItem[]>(() => props.artists.map((artist) => ({
       name: artist.name,
       to: `/artists/${artist.id}`,
       disabled: artist.id === artistId,
     })));
 
-    return { menuItemList };
+    return { menuItems };
   },
 });
 </script>

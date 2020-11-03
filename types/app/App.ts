@@ -1,7 +1,7 @@
-import { Swatch } from 'node-vibrant/lib/color';
-import { RawLocation } from 'vue-router';
-
-import { SpotifyAPI } from '~~/types';
+import type { Swatch } from 'node-vibrant/lib/color';
+import type { VueConstructor } from 'vue';
+import type { RawLocation } from 'vue-router';
+import type { SpotifyAPI } from '~~/types';
 
 export namespace App {
   export type DominantColor = {
@@ -31,6 +31,7 @@ export namespace App {
 
   // TrackTable, TrackList component
   export type SimpleTrackDetail = {
+    type: Spotify.Track['type'] | undefined
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
@@ -130,6 +131,31 @@ export namespace App {
     artists?: SpotifyAPI.SimpleArtist[] // type が release と track の時のみ存在
     linkedFrom?: SpotifyAPI.LinkedTrack | undefined
   }
+
+export type MenuType = 'to' | 'custom' | 'component';
+export type MenuItem<
+  T extends MenuType = MenuType,
+  U extends Record<string, unknown> = {},
+> = T extends 'to'
+  ? {
+    type: T;
+    name: string;
+    disabled?: boolean;
+    to: RawLocation;
+  }
+  : T extends 'custom'
+  ? {
+    type: T;
+    name: string;
+    disabled?: boolean;
+    handler: () => void;
+  }
+  : {
+    type: T;
+    component: VueConstructor;
+    props: U;
+  };
+export type MenuItemGroup = MenuItem[];
 
   /**
    * Card component

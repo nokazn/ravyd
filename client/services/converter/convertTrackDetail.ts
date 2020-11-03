@@ -47,6 +47,7 @@ export const convertTrackDetail = <
     });
 
     const detail = {
+      type: track.type,
       index: index + offset,
       id: track.id,
       name: track.name,
