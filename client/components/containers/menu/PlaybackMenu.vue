@@ -27,10 +27,10 @@ import {
 } from '~/use/menu';
 import type { App } from '~~/types';
 
-const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
+const INPUT = 'input';
 
 export type On = {
-  [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
+  [INPUT]: boolean;
 }
 
 const emptyMenuItem = (name: string) : App.MenuItem<'custom'> => ({
@@ -45,7 +45,14 @@ export default defineComponent({
     ContextMenu,
   },
 
-  setup(_, { root, emit }) {
+  props: {
+    value: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  setup(props, { root, emit }) {
     const isLoading = ref(false);
     const track = computed(() => root.$getters()['playback/currentTrack']);
 
@@ -81,10 +88,11 @@ export default defineComponent({
       return item != null
         ? {
           type: 'custom',
-          name: item.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
+          name: props.value ? 'お気に入りから削除' : 'お気に入りに追加',
           handler: () => {
-            emit(ON_FAVORITE_MENU_CLICKED, !item.isSaved);
+            emit(INPUT, !props.value);
           },
+          disabled: item.type !== 'track',
         }
         : emptyMenuItem('お気に入りに追加');
     });

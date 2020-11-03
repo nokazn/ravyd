@@ -31,6 +31,7 @@ export namespace App {
 
   // TrackTable, TrackList component
   export type SimpleTrackDetail = {
+    type: Spotify.Track['type'] | undefined
     id: SpotifyAPI.SimpleTrack['id']
     name: SpotifyAPI.SimpleTrack['name']
     uri: SpotifyAPI.SimpleTrack['uri']
