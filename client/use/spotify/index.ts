@@ -1,3 +1,4 @@
 export * from './useAddItemToQueueMenu';
-export * from './useArtistPage';
-export * from './useRemovePlaylistItem';
+export * from './useArtistLinkMenu';
+export * from './useReleaseLinkMenu';
+export * from './useRemovePlaylistItemMenu';

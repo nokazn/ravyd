@@ -1,7 +1,7 @@
 import type { SetupContext } from '@vue/composition-api';
 import type { App } from '~~/types';
 
-export const useRemovePlaylistItem = (
+export const useRemovePlaylistItemMenu = (
   root: SetupContext['root'],
   trackOrEpisode: App.TrackDetail | App.EpisodeDetail,
   playlistId: string | undefined,

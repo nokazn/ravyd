@@ -11,11 +11,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api';
+import {
+  defineComponent,
+  computed,
+  unref,
+  PropType,
+} from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useAddItemToQueueMenu, useRemovePlaylistItem, useArtistPage } from '~/use/spotify';
+import {
+  useAddItemToQueueMenu,
+  useRemovePlaylistItemMenu,
+  useArtistLinkMenu,
+  useReleaseLinkMenu,
+} from '~/use/spotify';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
@@ -66,15 +76,12 @@ export default defineComponent({
 
   setup(props, { root, emit }) {
     const addItemToQueue = useAddItemToQueueMenu(root, props.track);
-    const removePlaylistItem = useRemovePlaylistItem(root, props.track, props.playlistId);
-    const artistPage = useArtistPage(root, props.track);
-
-    const releasePage: App.MenuItem<'to'> = {
-      type: 'to',
-      name: 'アルバムページに移動',
-      to: `/releases/${props.track.releaseId}`,
-      disabled: root.$route.params.releaseId === props.track.releaseId,
-    };
+    const removePlaylistItem = useRemovePlaylistItemMenu(root, props.track, props.playlistId);
+    const artistPage = useArtistLinkMenu(root, props.track, {
+      left: true,
+      right: false,
+    });
+    const releasePage = useReleaseLinkMenu(root, props.track);
 
     const saveTrack = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
@@ -112,16 +119,16 @@ export default defineComponent({
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
       return props.playlistId != null
         ? [
-          [addItemToQueue],
-          [artistPage, releasePage],
-          [saveTrack.value, addItemToPlaylist, removePlaylistItem],
-          [share],
+          [unref(addItemToQueue)],
+          [unref(artistPage), unref(releasePage)],
+          [unref(saveTrack), unref(addItemToPlaylist), unref(removePlaylistItem)],
+          [unref(share)],
         ]
         : [
-          [addItemToQueue],
-          [artistPage, releasePage],
-          [saveTrack.value, addItemToPlaylist],
-          [share],
+          [unref(addItemToQueue)],
+          [unref(artistPage), unref(releasePage)],
+          [unref(saveTrack), unref(addItemToPlaylist)],
+          [unref(share)],
         ];
     });
 

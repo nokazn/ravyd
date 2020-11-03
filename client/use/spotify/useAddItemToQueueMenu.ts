@@ -3,12 +3,23 @@ import { App } from '~~/types';
 
 export const useAddItemToQueueMenu = (
   root: SetupContext['root'],
-  trackOrEpisode: App.TrackDetail | App.EpisodeDetail,
+  trackOrEpisode: App.SimpleTrackDetail | App.EpisodeDetail | undefined,
 ): App.MenuItem<'custom'> => {
+  const type = 'custom';
+  const name = '次に再生に追加';
+  if (trackOrEpisode == null) {
+    return {
+      type,
+      name,
+      handler: () => {},
+      disabled: true,
+    };
+  }
+
   const trackName = trackOrEpisode.name;
   return {
-    type: 'custom',
-    name: '次に再生に追加',
+    type,
+    name,
     handler: () => {
       root.$spotify.player.addItemToQueue({
         uri: trackOrEpisode.uri,

@@ -2,19 +2,35 @@ import type { SetupContext } from '@vue/composition-api';
 import ArtistLinkMenu from '~/components/parts/menu/ArtistLinkMenu.vue';
 import { App } from '~~/types';
 
-export type Props = {
+export type ArtistLinkMenuProps = {
   artists: App.MinimumArtist[];
   left?: boolean;
   right?: boolean;
 }
 
-export const useArtistPage = (
+export const useArtistLinkMenu = (
   root: SetupContext['root'],
-  track: App.TrackDetail,
-): App.MenuItem<App.MenuType, Props> => {
-  const artists = [...track.artists, ...track.featuredArtists];
-  const { length } = artists;
+  trackOrRelease: App.SimpleTrackDetail | App.TrackDetail | App.ReleasePage | undefined,
+  options?: {
+    left?: boolean;
+    right: boolean;
+  },
+): App.MenuItem<App.MenuType, ArtistLinkMenuProps> => {
   const name = 'アーティストページに移動';
+  if (trackOrRelease == null) {
+    return {
+      type: 'custom',
+      name,
+      handler: () => {},
+      disabled: true,
+    };
+  }
+
+  const artists = 'featuredArtists' in trackOrRelease
+    ? [...trackOrRelease.artists, ...trackOrRelease.featuredArtists]
+    : trackOrRelease.artists;
+  const { length } = artists;
+
   if (length === 0) {
     return {
       type: 'custom',
@@ -25,14 +41,14 @@ export const useArtistPage = (
   }
   //  アーティストが複数の時
   if (artists.length > 1) {
-    const props: Props = {
-      artists,
-      left: true,
-    };
     return {
       type: 'component',
       component: ArtistLinkMenu,
-      props,
+      props: {
+        artists,
+        left: options?.left ?? false,
+        right: options?.right ?? true,
+      },
     };
   }
   // アーティストが一組の時

@@ -2,7 +2,7 @@
   <ContextMenu
     bottom
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -20,9 +20,9 @@ import {
 } from '@vue/composition-api';
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import { useArtistLinkMenu } from '~/use/spotify';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
@@ -64,47 +64,20 @@ export default defineComponent({
   },
 
   setup(props, { root, emit }) {
-    const artistPage = computed<App.MenuItem<App.MenuType, ArtistLinkMenuProps>>(() => {
-      const { artists } = props.release;
-      const { length } = artists;
-      const name = 'アーティストページに移動';
-      if (length === 0) {
-        return {
-          type: 'custom',
-          name,
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      //  アーティストが複数の時
-      if (length > 1) {
-        return {
-          type: 'component',
-          component: ArtistLinkMenu,
-          props: {
-            artists,
-            left: props.left,
-            right: props.right,
-          },
-        };
-      }
-      // アーティストが一組の時
-      const artistId = artists[0].id;
-      return {
-        type: 'to',
-        name: 'アーティストページに移動',
-        to: `/artists/${artistId}`,
-        disabled: root.$route.params.artistId === artistId,
-      };
+    const artistPage = useArtistLinkMenu(root, props.release, {
+      left: props.left,
+      right: props.right,
     });
 
     const saveRelease = computed<App.MenuItem<'custom'>>(() => ({
       type: 'custom',
       name: props.release.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
-      handler: () => { emit(ON_FAVORITE_MENU_CLICKED, !props.release.isSaved); },
+      handler: () => {
+        emit(ON_FAVORITE_MENU_CLICKED, !props.release.isSaved);
+      },
     }));
 
-    const addItemToPlaylist = computed<App.MenuItem<'component', AddItemToPlaylistMenuProps>>(() => ({
+    const addItemToPlaylist: App.MenuItem<'component', AddItemToPlaylistMenuProps> = {
       type: 'component',
       component: AddItemToPlaylistMenu,
       props: {
@@ -114,9 +87,9 @@ export default defineComponent({
         left: props.left,
         right: props.right,
       },
-    }));
+    };
 
-    const share = computed<App.MenuItem<'component', ShareMenuProps>>(() => ({
+    const share: App.MenuItem<'component', ShareMenuProps> = {
       type: 'component',
       component: ShareMenu,
       props: {
@@ -128,15 +101,15 @@ export default defineComponent({
         left: props.left,
         right: props.right,
       },
-    }));
+    };
 
-    const menuItemLists = computed<App.MenuItemGroup[]>(() => [
+    const menuGroups = computed<App.MenuItemGroup[]>(() => [
       [unref(artistPage)],
       [unref(saveRelease), unref(addItemToPlaylist)],
       [unref(share)],
     ]);
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>

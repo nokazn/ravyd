@@ -16,7 +16,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
-import { useAddItemToQueueMenu, useRemovePlaylistItem } from '~/use/spotify';
+import { useAddItemToQueueMenu, useRemovePlaylistItemMenu } from '~/use/spotify';
 import type { App } from '~~/types';
 
 export default defineComponent({
@@ -69,7 +69,7 @@ export default defineComponent({
 
   setup(props, { root }) {
     const addItemToQueue = useAddItemToQueueMenu(root, props.episode);
-    const removePlaylistItem = useRemovePlaylistItem(root, props.episode, props.playlistId);
+    const removePlaylistItem = useRemovePlaylistItemMenu(root, props.episode, props.playlistId);
 
     const addItemToPlaylist: App.MenuItem<'component', AddItemToPlaylistMenuProps> = {
       type: 'component',

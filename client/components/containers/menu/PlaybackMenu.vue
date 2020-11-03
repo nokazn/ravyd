@@ -4,18 +4,27 @@
     left
     offset-x
     offset-y
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :loading="isLoading"
   />
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
+import {
+  defineComponent,
+  ref,
+  unref,
+  computed,
+} from '@vue/composition-api';
+
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
-import ArtistLinkMenu, { Props as ArtistLinkMenuProps } from '~/components/parts/menu/ArtistLinkMenu.vue';
 import AddItemToPlaylistMenu, { Props as AddItemToPlaylistMenuProps } from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
 import ShareMenu, { Props as ShareMenuProps } from '~/components/parts/menu/ShareMenu.vue';
+import {
+  useAddItemToQueueMenu,
+  useArtistLinkMenu,
+  useReleaseLinkMenu,
+} from '~/use/spotify';
 import type { App } from '~~/types';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
@@ -24,196 +33,105 @@ export type On = {
   [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
 }
 
-type Data = {
-  isLoading: boolean
-}
+const emptyMenuItem = (name: string) : App.MenuItem<'custom'> => ({
+  type: 'custom',
+  name,
+  handler: () => {},
+  disabled: true,
+});
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     ContextMenu,
   },
 
-  data(): Data {
-    return {
-      isLoading: false,
-    };
-  },
+  setup(_, { root, emit }) {
+    const isLoading = ref(false);
 
-  computed: {
-    track(): RootGetters['playback/currentTrack'] {
-      return this.$getters()['playback/currentTrack'];
-    },
-    addItemToQueue(): App.MenuItem<'custom'> {
-      const type = 'custom';
-      const name = '次に再生に追加';
-      const trackName = this.track?.name;
-      const uri = this.track?.uri;
-      if (trackName == null || uri == null) {
-        return {
-          type,
-          name,
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      return {
-        type,
-        name,
-        handler: () => {
-          this.$spotify.player.addItemToQueue({
-            uri,
-            deviceId: this.$getters()['playback/playbackDeviceId'],
-          })
-            .then(() => {
-              this.$toast.pushPrimary(`"${trackName}" を次に再生に追加しました。`);
-            })
-            .catch((err: Error) => {
-              console.error({ err });
-              this.$toast.pushError(`"${trackName}" を次に再生に追加できませんでした。`);
-            });
-        },
-      };
-    },
-    artistPage(): App.MenuItem {
-      const name = 'アーティストページに移動';
-      const artists = this.track?.artists;
-      if (artists == null || artists.length === 0) {
-        return {
+    const track = computed(() => root.$getters()['playback/currentTrack']);
+    const addItemToQueue = computed(() => useAddItemToQueueMenu(root, unref(track)));
+    const artistPage = computed(() => useArtistLinkMenu(root, unref(track), {
+      left: true,
+      right: false,
+    }));
+    const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
+
+    const saveTrack = computed<App.MenuItem<'custom'>>(() => {
+      const item = unref(track);
+      return item != null
+        ? {
           type: 'custom',
-          name,
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      //  アーティストが複数の時
-      if (artists.length > 1) {
-        const props: ArtistLinkMenuProps = {
-          artists,
-          left: true,
-        };
-        return {
+          name: item.isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
+          handler: () => {
+            emit(ON_FAVORITE_MENU_CLICKED, !item.isSaved);
+          },
+        }
+        : emptyMenuItem('お気に入りに追加');
+    });
+
+    const addItemToPlaylist = computed<App.MenuItem<'custom' | 'component', AddItemToPlaylistMenuProps>>(() => {
+      const item = unref(track);
+      return item != null
+        ? {
           type: 'component',
-          component: ArtistLinkMenu,
-          props,
-        };
-      }
-      // アーティストが一組の時
-      const artistId = artists[0].id;
-      return {
-        type: 'to',
-        name,
-        to: `/artists/${artistId}`,
-        disabled: this.$route.params.artistId === artistId,
-      };
-    },
-    releasePage(): App.MenuItem<'custom' | 'to'> {
-      const name = 'アルバムページに移動';
-      const releaseId = this.track?.releaseId;
-      if (releaseId == null) {
-        return {
-          type: 'custom',
-          name,
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      return {
-        type: 'to',
-        name,
-        to: `/releases/${releaseId}`,
-        disabled: this.$route.params.releaseId === releaseId,
-      };
-    },
-    saveTrack(): App.MenuItem<'custom'> {
-      const isSaved = this.track?.isSaved;
-      if (isSaved == null) {
-        return {
-          type: 'custom',
-          name: 'お気に入りに追加',
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      return {
-        type: 'custom',
-        name: isSaved ? 'お気に入りから削除' : 'お気に入りに追加',
-        handler: () => {
-          const nextSavedState = !isSaved;
-          this.$emit(ON_FAVORITE_MENU_CLICKED, nextSavedState);
-        },
-      };
-    },
-    addItemToPlaylist(): App.MenuItem<'custom' | 'component'> {
-      const { track } = this;
-      if (track == null) {
-        return {
-          type: 'custom',
-          name: 'プレイリストに追加',
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      const props: AddItemToPlaylistMenuProps = {
-        name: track.name,
-        uriList: [track.uri],
-        artists: track.artists,
-        left: true,
-      };
-      return {
-        type: 'component',
-        component: AddItemToPlaylistMenu,
-        props,
-      };
-    },
-    share(): App.MenuItem<'custom' | 'component'> {
-      const { track } = this;
-      if (track == null) {
-        return {
-          type: 'custom',
-          name: 'シェア',
-          handler: () => {},
-          disabled: true,
-        };
-      }
-      const props: ShareMenuProps = {
-        name: track.name,
-        uri: track.uri,
-        url: `/releases/${track.releaseId}`,
-        typeName: '曲',
-        artists: track.artists,
-        externalUrls: track.externalUrls,
-        left: true,
-      };
-      return {
-        type: 'component',
-        component: ShareMenu,
-        props,
-      };
-    },
-    updatePlayback(): App.MenuItem<'custom'> {
+          component: AddItemToPlaylistMenu,
+          props: {
+            name: item.name,
+            uriList: [item.uri],
+            artists: item.artists,
+            left: true,
+          },
+        }
+        : emptyMenuItem('プレイリストに追加');
+    });
+
+    const share = computed<App.MenuItem<'custom' | 'component', ShareMenuProps>>(() => {
+      const item = unref(track);
+      return item != null
+        ? {
+          type: 'component',
+          component: ShareMenu,
+          props: {
+            name: item.name,
+            uri: item.uri,
+            url: `/releases/${item.releaseId}`,
+            typeName: '曲',
+            artists: item.artists,
+            externalUrls: item.externalUrls,
+            left: true,
+          },
+        }
+        : emptyMenuItem('シェア');
+    });
+
+    const updatePlayback = computed<App.MenuItem<'custom'>>(() => {
       return {
         type: 'custom',
         name: 'プレイヤーの情報を更新',
         handler: () => {
-          this.isLoading = true;
+          isLoading.value = true;
           Promise.all([
-            this.$dispatch('playback/getCurrentPlayback'),
-            this.$dispatch('playback/getDeviceList'),
+            root.$dispatch('playback/getCurrentPlayback'),
+            root.$dispatch('playback/getDeviceList'),
           ]).then(() => {
-            this.isLoading = false;
+            isLoading.value = false;
           });
         },
       };
-    },
-    menuItemLists(): App.MenuItemGroup[] {
-      return [
-        [this.addItemToQueue],
-        [this.artistPage, this.releasePage],
-        [this.saveTrack, this.addItemToPlaylist],
-        [this.share],
-        [this.updatePlayback],
-      ];
-    },
+    });
+
+    const menuGroups = computed<App.MenuItemGroup[]>(() => [
+      [unref(addItemToQueue)],
+      [unref(artistPage), unref(releasePage)],
+      [unref(saveTrack), unref(addItemToPlaylist)],
+      [unref(share)],
+      [unref(updatePlayback)],
+    ]);
+
+    return {
+      isLoading,
+      menuGroups,
+    };
   },
 });
 </script>
