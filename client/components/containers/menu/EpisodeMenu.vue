@@ -1,6 +1,6 @@
 <template>
   <ContextMenu
-    :groups="menuItemLists"
+    :groups="menuGroups"
     :size="size"
     :fab="fab"
     :outlined="outlined"
@@ -96,7 +96,7 @@ export default defineComponent({
       },
     };
 
-    const menuItemLists = computed<App.MenuItemGroup[]>(() => {
+    const menuGroups = computed<App.MenuItemGroup[]>(() => {
       // 自分のプレイリスト内のトラックの場合は「プレイリストから削除」のメニューを表示
       return props.playlistId != null
         ? [
@@ -111,7 +111,7 @@ export default defineComponent({
         ];
     });
 
-    return { menuItemLists };
+    return { menuGroups };
   },
 });
 </script>
