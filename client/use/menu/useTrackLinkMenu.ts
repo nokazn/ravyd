@@ -3,33 +3,34 @@ import { App } from '~~/types';
 
 export const useTrackLinkMenu = (
   root: SetupContext['root'],
-  item: App.SimpleTrackDetail | undefined,
+  item: App.SimpleTrackDetail | App.EpisodeDetail | undefined,
 ): App.MenuItem<'custom' | 'to'> => {
-  const isEpisode = item?.type === 'episode';
-  const name = isEpisode
-    ? 'エピソードのページに移動'
-    : '曲のページに移動';
   if (item == null) {
     return {
       type: 'custom',
-      name,
+      name: '曲のページに移動',
       handler: () => {},
       disabled: true,
     };
   }
 
-  const { id, releaseId } = item;
+  // App.SimpleTrackDetail で episode の場合も考慮
+  if ('showId' in item || item.type === 'episode') {
+    return {
+      type: 'to',
+      name: 'エピソードのページに移動',
+      to: `/episodes/${item.id}`,
+      disabled: root.$route.params.episodeId === item.id,
+    };
+  }
+
   return {
     type: 'to',
-    name,
-    to: isEpisode
-      ? `/episodes/${id}`
-      : {
-        path: `/releases/${releaseId}`,
-        query: { track: id },
-      },
-    disabled: isEpisode
-      ? root.$route.params.episodeId === id
-      : root.$route.params.releaseId === releaseId,
+    name: '曲のページに移動',
+    to: {
+      path: `/releases/${item.releaseId}`,
+      query: { track: item.id },
+    },
+    disabled: root.$route.params.releaseId === item.releaseId || item.type !== 'track',
   };
 };

@@ -3,30 +3,39 @@ import { App } from '~~/types';
 
 export const useReleaseLinkMenu = (
   root: SetupContext['root'],
-  item: App.SimpleTrackDetail | undefined,
+  item: App.SimpleTrackDetail | App.EpisodeDetail | undefined,
 ): App.MenuItem<'custom' | 'to'> => {
-  const isEpisode = item?.type === 'episode';
-  const name = isEpisode
-    ? 'ポッドキャストのページに移動'
-    : 'アルバムのページに移動';
   if (item == null) {
     return {
       type: 'custom',
-      name,
+      name: 'アルバムのページに移動',
       handler: () => {},
       disabled: true,
     };
   }
 
-  const { releaseId } = item;
+  if ('showId' in item) {
+    return {
+      type: 'to',
+      name: 'ポッドキャストのページに移動',
+      to: `/shows/${item.showId}`,
+      disabled: root.$route.params.showId === item.showId,
+    };
+  }
+  // App.SimpleTrackDetail で episode の場合も考慮
+  if (item.type === 'episode') {
+    return {
+      type: 'to',
+      name: 'ポッドキャストのページに移動',
+      to: `/shows/${item.releaseId}`,
+      disabled: root.$route.params.showId === item.releaseId,
+    };
+  }
+
   return {
     type: 'to',
-    name,
-    to: isEpisode
-      ? `/shows/${releaseId}`
-      : `/releases/${releaseId}`,
-    disabled: isEpisode
-      ? root.$route.params.showId === releaseId
-      : root.$route.params.releaseId === releaseId,
+    name: 'アルバムのページに移動',
+    to: `/releases/${item.releaseId}`,
+    disabled: root.$route.params.releaseId === item.releaseId || item.type !== 'track',
   };
 };

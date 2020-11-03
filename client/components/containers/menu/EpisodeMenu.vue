@@ -16,8 +16,10 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import {
   useAddItemToQueueMenu,
-  useRemovePlaylistItemMenu,
+  useTrackLinkMenu,
+  useReleaseLinkMenu,
   useAddItemToPlaylistMenu,
+  useRemovePlaylistItemMenu,
   useShareMenu,
 } from '~/use/menu';
 import type { App } from '~~/types';
@@ -72,12 +74,14 @@ export default defineComponent({
 
   setup(props, { root }) {
     const addItemToQueue = useAddItemToQueueMenu(root, props.episode);
-    const removePlaylistItem = useRemovePlaylistItemMenu(root, props.episode, props.playlistId);
+    const trackPage = useTrackLinkMenu(root, props.episode);
+    const releasePage = useReleaseLinkMenu(root, props.episode);
     const addItemToPlaylist = useAddItemToPlaylistMenu(props.episode, {
       publisher: props.publisher,
       left: props.left,
       right: props.right,
     });
+    const removePlaylistItem = useRemovePlaylistItemMenu(root, props.episode, props.playlistId);
     const share = useShareMenu({
       name: props.episode.name,
       uri: props.episode.uri,
@@ -93,11 +97,13 @@ export default defineComponent({
       return props.playlistId != null
         ? [
           [addItemToQueue],
+          [trackPage, releasePage],
           [addItemToPlaylist, removePlaylistItem],
           [share],
         ]
         : [
           [addItemToQueue],
+          [trackPage, releasePage],
           [addItemToPlaylist],
           [share],
         ];
