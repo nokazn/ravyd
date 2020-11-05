@@ -30,10 +30,7 @@
           </CircleButton>
         </div>
 
-        <div :class="$style.Header__searchForm">
-          <SearchField />
-          <SearchResultList />
-        </div>
+        <Search />
       </div>
 
       <div :class="$style.Header__right">
@@ -52,8 +49,7 @@
 import { defineComponent, computed } from '@vue/composition-api';
 
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import SearchField from '~/components/containers/form/SearchField.vue';
-import SearchResultList from '~/components/containers/list/SearchResultList.vue';
+import Search from '~/components/globals/Search.vue';
 
 type HeaderStyles = {
   backgroundColor: string;
@@ -63,8 +59,7 @@ type HeaderStyles = {
 export default defineComponent({
   components: {
     CircleButton,
-    SearchField,
-    SearchResultList,
+    Search,
   },
 
   props: {
