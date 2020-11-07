@@ -40,7 +40,7 @@
       <div :class="$style.Info">
         <div>
           <span class="g-small-text">
-            ポッドキャストエピソード
+            エピソード
           </span>
           <ExplicitChip
             v-if="episode.explicit"
