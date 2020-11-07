@@ -171,11 +171,8 @@ export default defineComponent({
       line-height: 1.4em;
       font-size: 0.9em;
 
-      & > *:not(:last-child) {
-        margin-right: 0.25em;
-      }
-
       & > *:not(:first-child) {
+        margin-left: 0.25em;
         font-size: 0.875em;
       }
     }

@@ -168,11 +168,13 @@ export default Vue.extend({
         width: this.$screen.isMultiColumn
           ? 60 + totalSidePadding
           : 44 + totalSidePadding,
+        align: 'center' as const,
       };
       const addedAtColumn = {
         text: '',
         value: 'addedAt',
         width: 72,
+        align: 'center' as const,
       };
       const durationColumn = {
         text: '',

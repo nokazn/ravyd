@@ -176,7 +176,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   flex: 0 1 auto;
-  // flex item の場合は min-width のデフォルト値が auto になる
+  // flex の場合は min-width のデフォルト値が auto になる
   // 親要素をはみ出す大きさのときは .Left が縮むようにする
   min-width: 0;
   margin-right: min(4vw, 12px);

@@ -149,11 +149,13 @@ export default Vue.extend({
         text: '',
         value: 'addedBy',
         width: 96,
+        align: 'center' as const,
       };
       const addedAtColumn = {
         text: '',
         value: 'addedAt',
         width: 72,
+        align: 'center' as const,
       };
       const durationColumn = {
         text: '',

@@ -19,22 +19,23 @@
 
     <v-list-item-content>
       <div :class="$style.Content">
-        <span :class="$style.Content__index">
-          {{ item.index + 1 }}.
-        </span>
-
-        <div
-          :class="$style.Content__title"
-          class="g-ellipsis-text"
-        >
+        <div :class="$style.Content__left">
+          <span :class="$style.Content__index">
+            {{ item.index + 1 }}.
+          </span>
           <span
             :title="item.name"
-            :class="titleColor"
+            :class="[$style.Content__title, titleColor]"
+            class="g-ellipsis-text"
           >
             {{ item.name }}
           </span>
-          <ExplicitChip v-if="item.explicit" />
         </div>
+
+        <ExplicitChip
+          v-if="item.explicit"
+          :class="$style.Content__right"
+        />
       </div>
     </v-list-item-content>
 
@@ -130,8 +131,20 @@ export default defineComponent({
     align-items: center;
     overflow-x: hidden;
 
-    & > *:not(:last-child) {
-      margin-right: 0.75em;
+    &__left {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      line-height: 1.4em;
+
+      & > *:not(:last-child) {
+        margin-right: 0.5em;
+      }
+    }
+
+    &__right {
+      margin-left: 0.5em;
+      flex: 0 0 $g-explicit-chip-width;
     }
 
     &__index {
@@ -140,11 +153,6 @@ export default defineComponent({
 
     &__title {
       font-size: 0.9em;
-      line-height: 1.4em;
-
-      & > *:not(:last-child) {
-        margin-right: 0.5em;
-      }
     }
   }
 }

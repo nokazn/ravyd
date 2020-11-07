@@ -156,7 +156,8 @@ export default defineComponent({
   align-items: center;
 
   & > *:not(:first-child) {
-    margin-left: 0.25rem;
+    margin-left: 0.5rem;
+    flex: 0 0 $g-explicit-chip-width;
   }
 
   &__title {

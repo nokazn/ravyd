@@ -43,13 +43,14 @@
           </div>
         </div>
 
-        <div>
-          <ExplicitChip v-if="item.explicit" />
-        </div>
+        <ExplicitChip
+          v-if="item.explicit"
+          :class="$style.Content__right"
+        />
       </div>
     </td>
 
-    <td>
+    <td class="text-center">
       <EpisodeProgressBar
         :max-width="56"
         :resume-point="item.resumePoint"
@@ -57,7 +58,10 @@
       />
     </td>
 
-    <td :title="releaseDate">
+    <td
+      :title="releaseDate"
+      class="text-center"
+    >
       <time
         :datetime="item.releaseDate"
         class="g-small-text"
@@ -167,14 +171,17 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
 
-    & > *:not(:first-child) {
-      margin-left: 0.25rem;
-    }
-
     &__left {
+      min-width: 0;
+
       & > *:not(:last-child) {
         margin-bottom: 0.25rem;
       }
+    }
+
+    &__right {
+      margin-left: 0.5rem;
+      flex: 0 0 $g-explicit-chip-width;
     }
 
     &__subtitle {
