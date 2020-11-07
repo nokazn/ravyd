@@ -5,32 +5,75 @@ import {
   ref,
   watch,
   SetupContext,
-  ComputedRef,
+  WritableComputedRef,
 } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
-import { $searchForm } from '~/observable/searchForm';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
-const key = 'searchResult';
+type ItemMap = {
+  title: string;
+  items: App.ContentItem<SpotifyAPI.SearchType>[];
+}
+
+const key = 'SEARCH_RESULT';
+const LIMIT_OF_SEARCH_ITEM = 4;
 
 export const useSearchResult = (
   root: SetupContext['root'],
-  itemList: ComputedRef<App.ContentItem[]>,
+  query: WritableComputedRef<string>,
+  menu: WritableComputedRef<boolean>,
 ) => {
-  const selectedItemIndex = ref<number>();
-
-  const query = computed(() => $searchForm.query);
-  const isSearching = computed(() => $searchForm.isSearching);
-
-  const menu = computed<boolean>({
-    get() { return $searchForm.menu; },
-    set(value) { $searchForm.handleMenu(value); },
+  const itemMapList = computed<ItemMap[]>(() => {
+    return [
+      {
+        title: '曲',
+        items: root.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+      {
+        title: 'アーティスト',
+        items: root.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+      {
+        title: 'アルバム',
+        items: root.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+      {
+        title: 'プレイリスト',
+        items: root.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+      {
+        title: 'ポッドキャスト',
+        items: root.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+      {
+        title: 'エピソード',
+        items: root.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM),
+      },
+    ];
   });
+  const itemList = computed<App.ContentItem[]>(() => {
+    return itemMapList.value.reduce(
+      (prev, curr) => [...prev, ...curr.items],
+      [] as App.ContentItem[],
+    );
+  });
+  const hasItem = computed(() => itemList.value.length > 0);
 
+  const selectedItemIndex = ref<number>();
   const selectedItem = computed<App.ContentItem | undefined>(() => {
     return selectedItemIndex.value != null
       ? itemList.value[selectedItemIndex.value] ?? undefined
       : undefined;
+  });
+  const isSelected = (id: string) => {
+    return selectedItem.value != null
+      ? id === selectedItem.value.id
+      : false;
+  };
+
+  watch(query, () => {
+    // 検索用のクエリが変化するたびに初期化
+    selectedItemIndex.value = undefined;
   });
 
   const handleSelectedItem = (diff: 1 | -1) => {
@@ -41,13 +84,10 @@ export const useSearchResult = (
   };
   const onItemEntered = (to: RawLocation) => {
     root.$router.push(to);
+    // @todo
+    // eslint-disable-next-line no-param-reassign
     menu.value = false;
   };
-
-  watch(query, () => {
-    // 検索用のクエリが変化するたびに初期化
-    selectedItemIndex.value = undefined;
-  });
 
   onMounted(() => {
     root.$keyboard.add(key, (e: KeyboardEvent) => {
@@ -77,10 +117,11 @@ export const useSearchResult = (
   });
 
   return {
+    itemMapList,
+    itemList,
+    hasItem,
+    isSelected,
     selectedItemIndex,
-    query,
-    isSearching,
     selectedItem,
-    menu,
   };
 };

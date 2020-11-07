@@ -2,7 +2,7 @@
   <portal :to="SEARCH_FORM_PORTAL_NAME">
     <transition name="fade">
       <div
-        v-show="menu && query"
+        v-show="menuRef && queryRef"
         :style="styles"
         :class="$style.SearchResultList"
       >
@@ -15,24 +15,24 @@
             :color="$constant.MENU_BACKGROUND_COLOR"
           >
             <div
-              v-show="isSearching"
+              v-show="searchingRef"
               :class="$style['SearchResultList__content--searching']"
             >
               <v-progress-circular indeterminate />
             </div>
 
             <div
-              v-show="!isSearching && !hasItem"
+              v-show="!searchingRef && !hasItem"
               :class="$style['SearchResultList__content--empty']"
             >
               <v-icon left>
                 mdi-alert-circle-outline
               </v-icon>
-              "{{ query }}" に一致する項目が見つかりません
+              "{{ queryRef }}" に一致する項目が見つかりません
             </div>
 
             <div
-              v-show="!isSearching && hasItem"
+              v-show="!searchingRef && hasItem"
               class="g-custom-scroll-bar"
               :class="$style.SearchResultList__content"
             >
@@ -91,84 +91,60 @@ import ContentListItem from '~/components/parts/list/ContentListItem.vue';
 import { $searchForm } from '~/observable/searchForm';
 import { useSearchResult } from '~/use/keyboard';
 import { useContentPosition } from '~/use/style';
-import { SpotifyAPI, App } from '~~/types';
 
-const LIMIT_OF_SEARCH_ITEM = 4;
-
-export type ItemMap = {
-  title: string;
-  items: App.ContentItem<SpotifyAPI.SearchType>[];
-}
+const UPDATE_MENU = 'update:menu';
+const UPDATE_SEARCHING = 'update:searching';
 
 export default defineComponent({
   components: {
     ContentListItem,
   },
 
-  setup(_, { root }) {
-    const itemMapList = computed<ItemMap[]>(() => {
-      return [
-        {
-          title: '曲',
-          items: root.$getters()['search/tracks'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-        {
-          title: 'アーティスト',
-          items: root.$getters()['search/artists'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-        {
-          title: 'アルバム',
-          items: root.$getters()['search/albums'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-        {
-          title: 'プレイリスト',
-          items: root.$getters()['search/playlists'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-        {
-          title: 'ポッドキャスト',
-          items: root.$getters()['search/shows'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-        {
-          title: 'エピソード',
-          items: root.$getters()['search/episodes'].slice(0, LIMIT_OF_SEARCH_ITEM),
-        },
-      ];
-    });
+  props: {
+    query: {
+      type: String,
+      required: true,
+    },
+    menu: {
+      type: Boolean,
+      required: true,
+    },
+    searching: {
+      type: Boolean,
+      required: true,
+    },
+  },
 
-    const itemList = computed<App.ContentItem[]>(() => {
-      return itemMapList.value.reduce(
-        (prev, curr) => [...prev, ...curr.items],
-        [] as App.ContentItem<SpotifyAPI.SearchType>[],
-      );
+  setup(props, { root, emit }) {
+    const queryRef = computed(() => props.query);
+    const menuRef = computed<boolean>({
+      get() { return props.menu; },
+      set(v) { emit(UPDATE_MENU, v); },
     });
-    const hasItem = computed(() => itemList.value.length > 0);
+    const searchingRef = computed<boolean>({
+      get() { return props.searching; },
+      set(v) { emit(UPDATE_SEARCHING, v); },
+    });
 
     const {
+      itemMapList,
+      hasItem,
       selectedItemIndex,
-      query,
-      isSearching,
       selectedItem,
-      menu,
-    } = useSearchResult(root, itemList);
+      isSelected,
+    } = useSearchResult(root, queryRef, menuRef);
     const styles = useContentPosition(root);
-
-    const isSelected = (id: string) => {
-      return selectedItem.value != null
-        ? id === selectedItem.value.id
-        : false;
-    };
 
     return {
       selectedItemIndex,
-      query,
-      isSearching,
-      menu,
+      queryRef,
+      menuRef,
+      searchingRef,
       itemMapList,
       selectedItem,
       hasItem,
       isSelected,
       styles,
-      LIMIT_OF_SEARCH_ITEM,
       SEARCH_FORM_PORTAL_NAME: $searchForm.PORTAL_NAME,
     };
   },

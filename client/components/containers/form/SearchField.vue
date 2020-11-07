@@ -56,58 +56,93 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { defineComponent, ref, computed } from '@vue/composition-api';
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+} from '@vue/composition-api';
 import { debounce } from 'lodash';
-import { $searchForm } from '~/observable/searchForm';
-import { useTextField } from '~/use/keyboard';
+import { useTextField, VTextFieldRef } from '~/use/keyboard';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
+const UPDATE_QUERY = 'update:query';
+const UPDATE_MENU = 'update:menu';
+const UPDATE_SEARCHING = 'update:searching';
 
 export default defineComponent({
-  setup(_, { root }) {
+  props: {
+    query: {
+      type: String,
+      required: true,
+    },
+    menu: {
+      type: Boolean,
+      required: true,
+    },
+    searching: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  setup(props, { root, emit }) {
     const isFocused = ref(false);
     const isHovered = ref(false);
-    const SEARCH_FIELD_REF = ref<Vue>();
+    const SEARCH_FIELD_REF = ref<VTextFieldRef>();
 
-    const query = computed<string>({
-      get() { return $searchForm.query; },
-      set(q) { $searchForm.setQuery(q); },
+    const queryRef = computed<string>({
+      get() { return props.query; },
+      set(q) { emit(UPDATE_QUERY, q); },
     });
-    const menu = computed<boolean>({
-      get() { return $searchForm.menu; },
-      set(value) { $searchForm.handleMenu(value); },
+    const menuRef = computed<boolean>({
+      get() { return props.menu; },
+      set(v) { emit(UPDATE_MENU, v); },
+    });
+    const searchingRef = computed<boolean>({
+      get() { return props.searching; },
+      set(v) { emit(UPDATE_SEARCHING, v); },
     });
 
     const debouncedDispatcher = debounce((q: string) => {
-      query.value = q;
+      queryRef.value = q;
       if (q) {
-        $searchForm.handleSearching(true);
+        searchingRef.value = true;
         root.$dispatch('search/searchAllItems', {
           // @todo スペースをアンダーバーに置換して1単語として扱う
           query: q.replace(/\s+/g, '_'),
           limit: LIMIT_OF_SEARCH_ITEM,
         }).then(() => {
-          $searchForm.handleSearching(false);
+          searchingRef.value = false;
         });
       }
     }, 500);
 
     const toggleIsFocused = (focus: boolean) => {
       isFocused.value = focus;
-      menu.value = focus;
+      menuRef.value = focus;
     };
     const toggleIsHovered = (hover: boolean) => { isHovered.value = hover; };
-    const clearText = () => { query.value = ''; };
+    const clearText = () => { queryRef.value = ''; };
 
-    useTextField(root, 'search', SEARCH_FIELD_REF);
+    watch(menuRef, (v) => {
+      const element = SEARCH_FIELD_REF.value;
+      if (element == null) return;
+      if (v) {
+        element.focus();
+      } else {
+        element.blur();
+      }
+    });
+
+    useTextField(root, 'SEARCH_FIELD', SEARCH_FIELD_REF);
 
     return {
       isFocused,
       isHovered,
       debouncedDispatcher,
-      query,
-      menu,
+      queryRef,
+      menuRef,
       SEARCH_FIELD_REF,
       toggleIsFocused,
       toggleIsHovered,

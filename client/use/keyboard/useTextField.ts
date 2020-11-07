@@ -6,7 +6,7 @@ import {
   SetupContext,
 } from '@vue/composition-api';
 
-type VTextFieldRef = {
+export type VTextFieldRef = Vue & {
   focus(): void;
   blur(): void;
 }
@@ -14,11 +14,11 @@ type VTextFieldRef = {
 export const useTextField = (
   root: SetupContext['root'],
   key: string,
-  elementRef: Ref<Vue | null | undefined>,
+  elementRef: Ref<VTextFieldRef | null | undefined>,
 ) => {
   onMounted(() => {
     if (elementRef.value != null) {
-      const element = elementRef.value as Vue & VTextFieldRef;
+      const element = elementRef.value;
 
       root.$keyboard.add(key, (e: KeyboardEvent) => {
         switch (e.key) {
