@@ -6,7 +6,7 @@
     }"
   >
     <UserAvatar
-      v-if="avatar"
+      v-if="avatar && src != null"
       type="user"
       :src="src"
       :size="SIZE_OF_AVATAR"
