@@ -56,10 +56,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { defineComponent, ref, computed } from '@vue/composition-api';
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+} from '@vue/composition-api';
 import { debounce } from 'lodash';
-import { useTextField } from '~/use/keyboard';
+import { useTextField, VTextFieldRef } from '~/use/keyboard';
 
 const LIMIT_OF_SEARCH_ITEM = 4;
 const UPDATE_QUERY = 'update:query';
@@ -85,7 +89,7 @@ export default defineComponent({
   setup(props, { root, emit }) {
     const isFocused = ref(false);
     const isHovered = ref(false);
-    const SEARCH_FIELD_REF = ref<Vue>();
+    const SEARCH_FIELD_REF = ref<VTextFieldRef>();
 
     const queryRef = computed<string>({
       get() { return props.query; },
@@ -120,6 +124,16 @@ export default defineComponent({
     };
     const toggleIsHovered = (hover: boolean) => { isHovered.value = hover; };
     const clearText = () => { queryRef.value = ''; };
+
+    watch(menuRef, (v) => {
+      const element = SEARCH_FIELD_REF.value;
+      if (element == null) return;
+      if (v) {
+        element.focus();
+      } else {
+        element.blur();
+      }
+    });
 
     useTextField(root, 'SEARCH_FIELD', SEARCH_FIELD_REF);
 
