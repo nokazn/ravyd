@@ -229,12 +229,13 @@ export default Vue.extend({
       }
       // trackUriList は更新されうる
       const trackUriList = this.tracks.map((track) => track.uri);
-      // プレイリスト再生の際は position を uri で指定すると、403 が返る場合があるので index で指定
+      // @todo プレイリスト再生の際は offset を uri で指定すると、403 が返る場合がある?
       // ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
       this.$dispatch('playback/play', !this.custom && this.uri != null
         ? {
           contextUri: this.uri,
-          offset: { position: row.index },
+          offset: { uri: row.uri },
+          // offset: { position: row.index },
         }
         : {
           trackUriList,
