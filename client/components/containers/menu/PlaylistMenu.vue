@@ -136,7 +136,7 @@ export default defineComponent({
       const type = 'custom';
       const isOwnPlaylist = props.playlist.owner.id === root.$getters()['auth/userId'];
       const handler = () => {
-        emit(ON_FOLLOW_MENU_CLICKED, props.following);
+        emit(ON_FOLLOW_MENU_CLICKED, !props.following);
       };
       return props.following
         ? {
