@@ -64,11 +64,11 @@ export default defineComponent({
     }));
     const trackPage = computed(() => useTrackLinkMenu(root, unref(track)));
     const releasePage = computed(() => useReleaseLinkMenu(root, unref(track)));
-    const addItemToPlaylist = useAddItemToPlaylistMenu(unref(track), {
+    const addItemToPlaylist = computed(() => useAddItemToPlaylistMenu(unref(track), {
       publisher: undefined,
       left: true,
       right: false,
-    });
+    }));
     const share = computed(() => {
       const item = unref(track);
       return useShareMenu(item != null
