@@ -63,18 +63,6 @@ const factory = (
 };
 
 describe('TrackListItemMobile', () => {
-  it('with featured artists', async () => {
-    const wrapper = factory(false, false, true, [artist(2)]);
-    const title = wrapper.findAll('div.g-ellipsis-text > *');
-    expect(title.length).toBe(1);
-  });
-
-  it('without featured artists', async () => {
-    const wrapper = factory(false, false, true, []);
-    const title = wrapper.findAll('div.g-ellipsis-text > *');
-    expect(title.length).toBe(1);
-  });
-
   it('click item in mobile', async () => {
     const wrapper = factory(false, false, true, [artist(2)]);
     expect(wrapper.find('.v-list-item__content .v-btn').exists()).toBe(false);

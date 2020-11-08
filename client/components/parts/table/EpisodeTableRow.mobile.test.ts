@@ -60,8 +60,8 @@ describe('EpisodeTableRowMobile', () => {
 
   it('normal to active', async () => {
     const wrapper = factory(false, false, true);
-    const title = wrapper.find('.Content__title');
-    const subtitle = wrapper.find('.g-small-text');
+    const title = wrapper.find('tr > td:first-child > div > div');
+    const subtitle = wrapper.find('div.g-small-text');
     expect(title.classes()).not.toContain(activeClass);
     expect(subtitle.classes()).toContain(subtextClass);
 
@@ -77,8 +77,8 @@ describe('EpisodeTableRowMobile', () => {
 
   it('inacive', async () => {
     const wrapper = factory(false, false, false);
-    const title = wrapper.find('.Content__title');
-    const subtitle = wrapper.find('.g-small-text');
+    const title = wrapper.find('tr > td:first-child > div > div');
+    const subtitle = wrapper.find('div.g-small-text');
     expect(title.classes()).toContain(inactiveClass);
     expect(subtitle.classes()).toContain(inactiveClass);
   });

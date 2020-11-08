@@ -72,8 +72,8 @@ describe('EpisodeTableRowPc', () => {
 
   it('normal to active', async () => {
     const wrapper = factory(false, false, true);
-    const title = wrapper.find('.Content__left > *:first-child');
-    const subtitle = wrapper.find('.Content__left > .g-small-text');
+    const title = wrapper.find('td > div > div.g-ellipsis-text > *:first-child');
+    const subtitle = wrapper.find('td > div > div.g-ellipsis-text > div.g-small-text');
     expect(title.classes()).not.toContain(activeClass);
     expect(subtitle.classes()).toContain(subtextClass);
 
@@ -89,8 +89,8 @@ describe('EpisodeTableRowPc', () => {
 
   it('inacive', async () => {
     const wrapper = factory(false, false, false);
-    const title = wrapper.find('.Content__left > *:first-child');
-    const subtitle = wrapper.find('.Content__left > .g-small-text');
+    const title = wrapper.find('td > div > div.g-ellipsis-text > *:first-child');
+    const subtitle = wrapper.find('td > div > div.g-ellipsis-text > div.g-small-text');
     expect(title.classes()).toContain(inactiveClass);
     expect(subtitle.classes()).toContain(inactiveClass);
   });

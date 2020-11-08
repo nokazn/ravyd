@@ -81,8 +81,8 @@ describe('PlaylistTrackTableRowMobile', () => {
 
   it('normal to active', async () => {
     const wrapper = factory(false, false, true, 'track');
-    const title = wrapper.find('.Content__title');
-    const subtitle = wrapper.find('.g-small-text');
+    const title = wrapper.find('tr > td:nth-child(2) > div > div:first-child');
+    const subtitle = wrapper.find('tr > td:nth-child(2) > div > div.g-small-text');
     expect(title.classes()).not.toContain(activeClass);
     expect(subtitle.classes()).toContain(subtextClass);
 
@@ -98,8 +98,8 @@ describe('PlaylistTrackTableRowMobile', () => {
 
   it('inacive', async () => {
     const wrapper = factory(false, false, false, 'track');
-    const title = wrapper.find('.Content__title');
-    const subtitle = wrapper.find('.g-small-text');
+    const title = wrapper.find('tr > td:nth-child(2) > div > div:first-child');
+    const subtitle = wrapper.find('tr > td:nth-child(2) > div > div.g-small-text');
     expect(title.classes()).toContain(inactiveClass);
     expect(subtitle.classes()).toContain(inactiveClass);
   });

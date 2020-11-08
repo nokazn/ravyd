@@ -5,6 +5,7 @@ module.exports = {
     '^@@/(.*)$': '<rootDir>/$1',
     '^~~/(.*)$': '<rootDir>/$1',
     '^vue$': 'vue/dist/vue.common.js',
+    '\\.(css|less)$': 'identity-obj-proxy',
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   transform: {
@@ -16,4 +17,13 @@ module.exports = {
   collectCoverageFrom: ['<rootDir>/components/**/*.vue', '<rootDir>/pages/**/*.vue'],
   setupFiles: ['<rootDir>/client/tests/jest.setup.js'],
   setupFilesAfterEnv: ['<rootDir>/client/tests/testSetup.js'],
+  globals: {
+    'vue-jest': {
+      experimentalCSSCompile: true,
+      // @todo
+      resources: {
+        scss: ['<rootDir>/client/assets/variables.scss'],
+      },
+    },
+  },
 };
