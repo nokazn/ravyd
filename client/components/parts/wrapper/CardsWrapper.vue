@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { FLEX_CARD_MIN_WIDTH, FLEX_CARD_MAX_WIDTH } from '~/constants';
 
 export default defineComponent({
@@ -32,22 +32,20 @@ export default defineComponent({
     },
     minWidth: {
       type: Number,
-      // $constant では参照できない
       default: FLEX_CARD_MIN_WIDTH,
     },
     maxWidth: {
       type: Number,
-      // $constant では参照できない
       default: FLEX_CARD_MAX_WIDTH,
     },
   },
 
   setup(props) {
-    const cssProps = {
+    const cssProps = computed(() => ({
       '--margin': `${(props.margin ?? props.minWidth) / 8}px`,
       '--min-width': `${props.minWidth}px`,
       '--max-width': `${props.maxWidth}px`,
-    };
+    }));
     return { cssProps };
   },
 });
