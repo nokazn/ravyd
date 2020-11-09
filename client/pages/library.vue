@@ -6,6 +6,8 @@
     <Tabs
       :items="tabs"
       divider
+      shadow
+      :height="48"
       :class="$style.LibraryPage__tabs"
     />
     <nuxt-child />
