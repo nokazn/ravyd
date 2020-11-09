@@ -88,14 +88,14 @@ export default defineComponent({
       const browse: Item<'to'> = {
         type: 'to',
         value: 'browse',
-        to: '/browse',
+        to: '/browse/categories',
         icon: 'mdi-binoculars',
         text: '見つける',
       };
       const library: Item<'to'> = {
         type: 'to',
         value: 'library',
-        to: '/library',
+        to: '/library/tracks',
         icon: 'mdi-bookshelf',
         text: 'ライブラリ',
       };
