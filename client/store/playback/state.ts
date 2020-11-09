@@ -24,7 +24,7 @@ export type PlaybackState = {
   isPlaying: boolean
   isSavedTrack: boolean
   positionMs: number
-  disabledPlayingFromBegining: boolean
+  disabledPlayingFromBeginning: boolean
   durationMs: number
   isShuffled: boolean
   repeatMode: 0 | 1 | 2 | undefined
@@ -57,7 +57,7 @@ const state = (): PlaybackState => ({
   isPlaying: false,
   isSavedTrack: false,
   positionMs: 0,
-  disabledPlayingFromBegining: false,
+  disabledPlayingFromBeginning: false,
   // if set to 0, Seekbar has 0 length
   durationMs: 1,
   isShuffled: false,

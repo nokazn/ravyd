@@ -2,7 +2,7 @@
   <CircleButton
     title="前の曲"
     :size="size"
-    :disabled="disabledPlayingFromBegining && disabledSkippingPrev"
+    :disabled="disabledPlayingFromBeginning && disabledSkippingPrev"
     @click="onPreivousClicked"
   >
     mdi-skip-previous
@@ -42,8 +42,8 @@ export default Vue.extend({
     position(): RootState['playback']['positionMs'] {
       return this.$state().playback.positionMs;
     },
-    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
-      return this.$state().playback.disabledPlayingFromBegining;
+    disabledPlayingFromBeginning(): RootState['playback']['disabledPlayingFromBeginning'] {
+      return this.$state().playback.disabledPlayingFromBeginning;
     },
     disabledSkippingPrev(): boolean {
       return this.$getters()['playback/isDisallowed']('skipping_prev');
