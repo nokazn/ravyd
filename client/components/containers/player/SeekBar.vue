@@ -95,8 +95,8 @@ export default Vue.extend({
       return this.$getters()['playback/isDisallowed']('seeking')
         || this.durationMs === this.$constant.DEFAULT_DURATION_MS;
     },
-    disabledPlayingFromBegining(): RootState['playback']['disabledPlayingFromBegining'] {
-      return this.$state().playback.disabledPlayingFromBegining;
+    disabledPlayingFromBeginning(): RootState['playback']['disabledPlayingFromBeginning'] {
+      return this.$state().playback.disabledPlayingFromBeginning;
     },
     seekbarColor(): string {
       return this.isPlaying
@@ -175,9 +175,9 @@ export default Vue.extend({
         this.value += intervalMs;
 
         // 1000ms 以内かどうかの情報がストアと異なる場合は更新
-        const disabledPlayingFromBegining = this.value <= 1000;
-        if (disabledPlayingFromBegining !== this.disabledPlayingFromBegining) {
-          this.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBegining);
+        const disabledPlayingFromBeginning = this.value <= 1000;
+        if (disabledPlayingFromBeginning !== this.disabledPlayingFromBeginning) {
+          this.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINING', disabledPlayingFromBeginning);
         }
       }, intervalMs);
     },

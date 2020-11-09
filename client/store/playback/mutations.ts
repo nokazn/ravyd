@@ -141,7 +141,7 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
 
   SET_POSITION_MS(state, positionMs) {
     state.positionMs = positionMs;
-    state.disabledPlayingFromBegining = positionMs <= 1000;
+    state.disabledPlayingFromBeginning = positionMs <= 1000;
   },
 
   SET_DURATION_MS(state, durationMs) {
@@ -149,8 +149,8 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
     state.durationMs = durationMs ?? DEFAULT_DURATION_MS;
   },
 
-  SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBegining) {
-    state.disabledPlayingFromBegining = disabledPlayingFromBegining;
+  SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBeginning) {
+    state.disabledPlayingFromBeginning = disabledPlayingFromBeginning;
   },
 
   SET_IS_SHUFFLED(state, isShuffled) {
