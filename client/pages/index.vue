@@ -116,7 +116,7 @@ export default class RootPage extends Vue implements AsyncData {
 
 <style lang="scss" module>
 .RootPage {
-  @include page-margin($g-gradation-width, 0.5);
+  @include page-margin();
 
   &__section {
     margin-bottom: 32px;
