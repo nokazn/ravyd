@@ -18,7 +18,7 @@
         />
         <div
           v-if="hasTrack"
-          :class="$style.Left__trackInfo"
+          :class="$style.Left__info"
         >
           <MarqueeTrackName
             :id="trackId"
@@ -36,7 +36,7 @@
           v-if="isTrack && hasTrack"
           v-model="isSavedTrack"
           :size="36"
-          :class="$style.Left__favoriteButton"
+          :class="$style.Left__favorite"
         />
       </div>
 
@@ -156,7 +156,7 @@ $side-margin: 1vw;
     margin-right: 0.375em;
   }
 
-  &__trackInfo {
+  &__info {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -167,7 +167,7 @@ $side-margin: 1vw;
     }
   }
 
-  &__favoriteButton {
+  &__favorite {
     margin-right: 0.1em;
   }
 }
@@ -196,9 +196,5 @@ $side-margin: 1vw;
       margin-right: 8px;
     }
   }
-}
-
-.Overlay {
-  z-index: z-index-of(loading);
 }
 </style>
