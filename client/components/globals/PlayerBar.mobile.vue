@@ -16,7 +16,7 @@
           :title="trackName"
           :class="$style.Left__artWork"
         />
-        <div :class="$style.Left__trackInfo">
+        <div :class="$style.Left__info">
           <MarqueeTrackName
             v-if="hasTrack"
             :id="trackId"
@@ -32,7 +32,7 @@
         <FavoriteButton
           v-if="isTrack && hasTrack && !smallerThanSm"
           v-model="isSavedTrack"
-          :class="$style.Left__favoriteButton"
+          :class="$style.Left__favorite"
         />
       </div>
 
@@ -63,11 +63,7 @@
       </div>
     </div>
 
-    <SeekBar
-      hide-text
-      thumb-color="transparent"
-      :class="$style.Top"
-    />
+    <ProgressBar :class="$style.Top" />
   </v-footer>
 </template>
 
@@ -77,7 +73,7 @@ import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import MarqueeTrackName from '~/components/parts/text/MarqueeTrackName.vue';
 import MarqueeArtistNames from '~/components/parts/text/MarqueeArtistNames.vue';
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
-import SeekBar from '~/components/containers/player/SeekBar.vue';
+import ProgressBar from '~/components/containers/player/ProgressBar.vue';
 import SkipButton from '~/components/containers/player/SkipButton.vue';
 import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
 import PreviousButton from '~/components/containers/player/PreviousButton.vue';
@@ -91,14 +87,13 @@ export default defineComponent({
     MarqueeTrackName,
     MarqueeArtistNames,
     FavoriteButton,
-    SeekBar,
+    ProgressBar,
     SkipButton,
     ShuffleButton,
     PreviousButton,
     MediaButton,
     NextButton,
     RepeatButton,
-
   },
 
   setup(_, { root }) {
@@ -160,16 +155,15 @@ export default defineComponent({
     // .Top の position: absolute を利かせるため
     position: relative;
     width: 100vw;
-    height: calc(100% - #{$g-slider-height});
-    margin: $g-slider-height 1.5vw 0;
+    height: 100%;
+    margin: 0 1.5vw;
   }
 }
 
 .Top {
   position: absolute;
   width: 100vw;
-  // フッターの高さの半分分上にして、上部にあるシークバーの幅分下げる
-  transform: translateY(calc((#{$g-footer-height-mobile} / -2) + (#{$g-slider-height} / 2)));
+  transform: translateY(calc((#{$g-footer-height-mobile} / -2)));
 }
 
 .Left {
@@ -185,7 +179,7 @@ export default defineComponent({
     margin-right: 0.5em;
   }
 
-  &__trackInfo {
+  &__info {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -196,7 +190,7 @@ export default defineComponent({
     }
   }
 
-  &__favoriteButton {
+  &__favorite {
     margin-right: 0.1em;
   }
 }
@@ -223,9 +217,5 @@ export default defineComponent({
   & > *:not(:last-child) {
     margin-right: min(4vw, 12px);
   }
-}
-
-.Overlay {
-  z-index: z-index-of(loading);
 }
 </style>
