@@ -39,6 +39,15 @@ export const useSeekBar = (root: SetupContext['root']) => {
       : 'grey lighten-2';
   });
 
+  const setPositionMs = (p: number) => {
+    root.$commit('playback/SET_POSITION_MS', p);
+    // 1000ms 以内かどうかの情報がストアと異なる場合は更新
+    const isBeginning = p <= 1000;
+    if (isBeginning !== root.$state().playback.disabledPlayingFromBeginning) {
+      root.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINNING', isBeginning);
+    }
+  };
+
   let timer: ReturnType<typeof setInterval> | undefined;
   const clearTimer = () => {
     if (timer != null) {
@@ -50,21 +59,14 @@ export const useSeekBar = (root: SetupContext['root']) => {
     const intervalMs = 500;
     clearTimer();
     timer = setInterval(() => {
-      // this.value += intervalMs;
-      const currentPositionMs = root.$state().playback.positionMs;
-      root.$commit('playback/SET_POSITION_MS', currentPositionMs + intervalMs);
-      // 1000ms 以内かどうかの情報がストアと異なる場合は更新
-      const isBeginning = currentPositionMs <= 1000;
-      if (isBeginning !== root.$state().playback.disabledPlayingFromBeginning) {
-        root.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINNING', isBeginning);
-      }
+      setPositionMs(root.$state().playback.positionMs + intervalMs);
     }, intervalMs);
   };
 
   const onMouseDown = () => { clearTimer(); };
   const onChange = async (p: number) => {
     const currentPositionMs = root.$state().playback.positionMs;
-    root.$commit('playback/SET_POSITION_MS', p);
+    setPositionMs(p);
     await root.$dispatch('playback/seek', {
       positionMs: p,
       currentPositionMs,
@@ -77,7 +79,9 @@ export const useSeekBar = (root: SetupContext['root']) => {
 
   let mutationUnsubscribe: (() => void) | undefined;
   onMounted(() => {
-    if (isPlaying.value) updatePosition();
+    if (isPlaying.value) {
+      updatePosition();
+    }
     const subscribeIsPlaying = ({ payload }: ExtendedMutationPayload<'playback/SET_IS_PLAYING'>) => {
       if (payload) {
         updatePosition();

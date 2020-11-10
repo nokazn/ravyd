@@ -1,10 +1,9 @@
 <template>
   <v-progress-linear
-    :color="color"
     background-color="inactive"
     :height="height"
+    :color="color"
     :value="progress"
-    :class="$style.SeekBar__slider"
   />
 </template>
 
@@ -31,32 +30,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" module>
-.SeekBar {
-  width: 100%;
-
-  &__mss {
-    font-size: 0.75em;
-    margin-top: -0.5em;
-    position: relative;
-
-    & > * {
-      position: absolute;
-    }
-
-    &--right {
-      right: 0;
-    }
-  }
-}
-</style>
-
-<style lang="scss">
-.v-slider {
-  &--horizontal {
-    margin-left: var(--margin-side) !important;
-    margin-right: var(--margin-side) !important;
-  }
-}
-</style>
