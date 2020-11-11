@@ -16,15 +16,21 @@ const $gettersMock = (seekingDisallowed: boolean) => jest.fn().mockReturnValue({
   'playback/isDisallowed': jest.fn().mockReturnValue(seekingDisallowed),
 });
 // @todo state 変更したときの状態テストしたい
-const $stateMock = (firstState: PlaybackState, secondState?: PlaybackState) => jest.fn()
-  .mockReturnValueOnce({ playback: firstState })
-  .mockReturnValue({ playback: secondState ?? firstState });
+const $stateMock = (stateList: PlaybackState[]) => {
+  const mock = jest.fn();
+  const { length } = stateList;
+  return stateList.reduce((mocked, playback, i) => {
+    return i + 1 < length
+      ? mocked.mockReturnValueOnce({ playback })
+      : mocked.mockReturnValue({ playback });
+  }, mock);
+};
 const $commitMock = jest.fn();
 const $dispatchMock = jest.fn().mockResolvedValue(undefined);
 const $subscribeMock = jest.fn();
 
 const factory = (
-  [firstState, secondState]: PlaybackState[],
+  stateList: PlaybackState[],
   disallowed: boolean,
   hideText: boolean = false,
   thumbColor: string = 'white',
@@ -37,7 +43,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(firstState, secondState),
+      $state: $stateMock(stateList),
       $getters: $gettersMock(disallowed),
       $commit: $commitMock,
       $dispatch: $dispatchMock,
@@ -138,22 +144,8 @@ describe('SeekBar', () => {
 
   it('on change from 2:30 to 2:45', async () => {
     const wrapper = factory([
-      // initialized
       {
         positionMs: 2.5 * 60 * 1000,
-        durationMs: 4 * 60 * 1000,
-        isPlaying: true,
-        disabledPlayingFromBeginning: false,
-      },
-      // called for currentPositionMs
-      {
-        positionMs: 2.5 * 60 * 1000,
-        durationMs: 4 * 60 * 1000,
-        isPlaying: true,
-        disabledPlayingFromBeginning: false,
-      },
-      {
-        positionMs: 2.75 * 60 * 1000,
         durationMs: 4 * 60 * 1000,
         isPlaying: true,
         disabledPlayingFromBeginning: false,
@@ -163,49 +155,42 @@ describe('SeekBar', () => {
     const clearTimerMock = jest.spyOn(window, 'clearInterval').mockReturnValue();
     const setIntervalMock = jest.spyOn(window, 'setInterval').mockReturnValue({} as ReturnType<typeof setInterval>);
     await vSlider.vm.$emit(CHANGE, 2.75 * 60 * 1000);
+    // onMouseDown
     expect(clearTimerMock).toHaveBeenCalled();
+    // onChange
     expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 2.75 * 60 * 1000);
+    expect($commitMock).not.toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
     expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 2.75 * 60 * 1000,
       currentPositionMs: 2.5 * 60 * 1000,
     });
+    // setTimer
     expect(setIntervalMock).toHaveBeenCalled();
   });
 
   it('on change from 2:30 to 0:00', async () => {
     const wrapper = factory([
-      // initialized
       {
         positionMs: 2.5 * 60 * 1000,
         durationMs: 4 * 60 * 1000,
         isPlaying: true,
         disabledPlayingFromBeginning: false,
-      },
-      // called for currentPositionMs
-      {
-        positionMs: 2.5 * 60 * 1000,
-        durationMs: 4 * 60 * 1000,
-        isPlaying: true,
-        disabledPlayingFromBeginning: false,
-      },
-      {
-        positionMs: 0,
-        durationMs: 4 * 60 * 1000,
-        isPlaying: true,
-        disabledPlayingFromBeginning: true,
       },
     ], false);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     const clearTimerMock = jest.spyOn(window, 'clearInterval').mockReturnValue();
     const setIntervalMock = jest.spyOn(window, 'setInterval').mockReturnValue({} as ReturnType<typeof setInterval>);
     await vSlider.vm.$emit(CHANGE, 0);
+    // onMouseDown
     expect(clearTimerMock).toHaveBeenCalled();
+    // onChange
     expect($commitMock).toHaveBeenNthCalledWith(2, 'playback/SET_POSITION_MS', 0);
     expect($commitMock).toHaveBeenNthCalledWith(3, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
     expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/seek', {
       positionMs: 0,
       currentPositionMs: 2.5 * 60 * 1000,
     });
+    // setTimer
     expect(setIntervalMock).toHaveBeenCalled();
   });
 });

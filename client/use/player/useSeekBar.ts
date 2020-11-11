@@ -55,7 +55,8 @@ export const useSeekBar = (root: SetupContext['root']) => {
       timer = undefined;
     }
   };
-  const updatePosition = () => {
+  const setTimer = () => {
+    if (!isPlaying.value) return;
     const intervalMs = 500;
     clearTimer();
     timer = setInterval(() => {
@@ -72,7 +73,7 @@ export const useSeekBar = (root: SetupContext['root']) => {
       currentPositionMs,
     }).then(() => {
       if (isPlaying.value) {
-        updatePosition();
+        setTimer();
       }
     });
   };
@@ -80,11 +81,11 @@ export const useSeekBar = (root: SetupContext['root']) => {
   let mutationUnsubscribe: (() => void) | undefined;
   onMounted(() => {
     if (isPlaying.value) {
-      updatePosition();
+      setTimer();
     }
     const subscribeIsPlaying = ({ payload }: ExtendedMutationPayload<'playback/SET_IS_PLAYING'>) => {
       if (payload) {
-        updatePosition();
+        setTimer();
       } else {
         clearTimer();
       }
