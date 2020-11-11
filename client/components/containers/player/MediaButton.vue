@@ -2,6 +2,7 @@
   <CircleButton
     :size="size"
     :icon-size="iconSize"
+    :disabled="disabled"
     :title="mediaButton.title"
     @click="onClicked"
   >
@@ -39,6 +40,7 @@ export default defineComponent({
       ? props.size
       : Math.floor(props.size * 0.75);
 
+    const disabled = computed(() => root.$getters()['playback/isDisallowed']('interrupting_playback'));
     const mediaButton = computed<MediaButton>(() => {
       if (root.$state().playback.isPlaying) {
         return {
@@ -62,6 +64,7 @@ export default defineComponent({
 
     return {
       iconSize,
+      disabled,
       mediaButton,
       onClicked,
     };

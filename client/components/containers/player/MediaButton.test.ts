@@ -10,6 +10,9 @@ const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
     isPlaying,
   },
 });
+const $gettersMock = (disabled: boolean) => jest.fn().mockReturnValue({
+  'playback/isDisallowed': () => disabled,
+});
 const $dispatchMock = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
@@ -18,18 +21,18 @@ const factory = (
     size?: number;
     circle?: boolean,
   },
+  disabled: boolean = false,
 ) => {
-  const $state = $stateMock(playing);
-  const vm = mount(MediaButton, {
+  return mount(MediaButton, {
     ...options,
     propsData,
     mocks: {
       ...mocks,
-      $state,
+      $state: $stateMock(playing),
+      $getters: $gettersMock(disabled),
       $dispatch: $dispatchMock,
     },
   });
-  return vm;
 };
 
 describe('MediaButton', () => {
@@ -78,6 +81,14 @@ describe('MediaButton', () => {
     const circleButton = wrapper.findComponent(CircleButton);
     expect(circleButton.attributes().title).toBe('再生');
     expect(circleButton.find('.v-icon').classes()).toContain('mdi-play-circle');
+  });
+
+  it('disabled', async () => {
+    const wrapper = factory(false, undefined, true);
+    const circleButton = wrapper.findComponent(CircleButton);
+    expect(circleButton.props().disabled).toBe(true);
+    await wrapper.trigger(CLICK);
+    expect($dispatchMock).not.toHaveBeenCalled();
   });
 
   it('call play request', async () => {
