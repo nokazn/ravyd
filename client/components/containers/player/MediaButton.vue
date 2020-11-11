@@ -2,7 +2,6 @@
   <CircleButton
     :size="size"
     :icon-size="iconSize"
-    :disabled="disabled"
     :title="mediaButton.title"
     @click="onClicked"
   >
@@ -11,15 +10,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export type MediaButton = {
+type MediaButton = {
   icon: 'mdi-play-circle' | 'mdi-pause-circle' | 'mdi-play' | 'mdi-pause';
   title: '再生' | '停止';
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -33,41 +32,39 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
   },
 
-  computed: {
-    mediaButton(): MediaButton {
-      const { circle } = this;
-      if (this.$state().playback.isPlaying) {
+  setup(props, { root }) {
+    const iconSize = props.circle
+      ? props.size
+      : Math.floor(props.size * 0.75);
+
+    const mediaButton = computed<MediaButton>(() => {
+      if (root.$state().playback.isPlaying) {
         return {
-          icon: circle ? 'mdi-pause-circle' : 'mdi-pause',
+          icon: props.circle ? 'mdi-pause-circle' : 'mdi-pause',
           title: '停止',
         };
       }
       return {
-        icon: circle ? 'mdi-play-circle' : 'mdi-play',
+        icon: props.circle ? 'mdi-play-circle' : 'mdi-play',
         title: '再生',
       };
-    },
-    iconSize(): number {
-      return this.circle
-        ? this.size
-        : this.size * 0.75;
-    },
-  },
+    });
 
-  methods: {
-    onClicked() {
-      if (this.$state().playback.isPlaying) {
-        this.$dispatch('playback/pause');
+    const onClicked = () => {
+      if (root.$state().playback.isPlaying) {
+        root.$dispatch('playback/pause');
       } else {
-        this.$dispatch('playback/play');
+        root.$dispatch('playback/play');
       }
-    },
+    };
+
+    return {
+      iconSize,
+      mediaButton,
+      onClicked,
+    };
   },
 });
 </script>
