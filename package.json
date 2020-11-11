@@ -75,7 +75,7 @@
     "@types/express-session": "^1.17.0",
     "@types/ioredis": "^4.17.4",
     "@types/jest": "^26.0.15",
-    "@types/lodash": "^4.14.162",
+    "@types/lodash": "^4.14.165",
     "@types/lodash-webpack-plugin": "^0.11.4",
     "@types/node": "^14.14.6",
     "@types/resize-observer-browser": "^0.1.4",
