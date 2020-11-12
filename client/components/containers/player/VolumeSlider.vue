@@ -94,6 +94,10 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 140px;
+  min-width: 148px;
+
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
 }
 </style>

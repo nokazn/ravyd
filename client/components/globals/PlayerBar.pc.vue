@@ -174,7 +174,7 @@ $side-margin: 1vw;
 
 .Center {
   position: absolute;
-  top: 47%;
+  top: 45%;
   left: 50%;
   width: 40vw;
   transform: translate(-50%, -50%);
