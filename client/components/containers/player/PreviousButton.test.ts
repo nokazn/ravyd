@@ -68,7 +68,6 @@ describe('PreviousButton', () => {
   });
 
   it('call seek previous', async () => {
-    jest.useFakeTimers();
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
     // @ts-ignore

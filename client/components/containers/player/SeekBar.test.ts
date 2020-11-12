@@ -154,20 +154,18 @@ describe('SeekBar', () => {
       },
     ], false);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
-    const clearTimerMock = jest.spyOn(window, 'clearInterval').mockReturnValue();
-    const setIntervalMock = jest.spyOn(window, 'setInterval').mockReturnValue({} as ReturnType<typeof setInterval>);
     await vSlider.vm.$emit(CHANGE, 2.75 * 60 * 1000);
     // onMouseDown
-    expect(clearTimerMock).toHaveBeenCalled();
+    expect(clearInterval).toHaveBeenCalled();
     // onChange
     expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 2.75 * 60 * 1000);
-    expect($commitMock).not.toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
+    expect($commitMock).not.toHaveBeenCalledWith('playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
     expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 2.75 * 60 * 1000,
       currentPositionMs: 2.5 * 60 * 1000,
     });
     // setTimer
-    expect(setIntervalMock).toHaveBeenCalled();
+    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 500);
   });
 
   it('on change from 2:30 to 0:00', async () => {
@@ -180,11 +178,9 @@ describe('SeekBar', () => {
       },
     ], false);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
-    const clearTimerMock = jest.spyOn(window, 'clearInterval').mockReturnValue();
-    const setIntervalMock = jest.spyOn(window, 'setInterval').mockReturnValue({} as ReturnType<typeof setInterval>);
     await vSlider.vm.$emit(CHANGE, 0);
     // onMouseDown
-    expect(clearTimerMock).toHaveBeenCalled();
+    expect(clearInterval).toHaveBeenCalled();
     // onChange
     expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 0);
     expect($commitMock).toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
@@ -193,6 +189,21 @@ describe('SeekBar', () => {
       currentPositionMs: 2.5 * 60 * 1000,
     });
     // setTimer
-    expect(setIntervalMock).toHaveBeenCalled();
+    expect(setInterval).toHaveBeenCalled();
+  });
+
+  it('setting', async () => {
+    factory([
+      {
+        positionMs: 2.5 * 60 * 1000,
+        durationMs: 4 * 60 * 1000,
+        isPlaying: true,
+        disabledPlayingFromBeginning: false,
+      },
+    ], false);
+    jest.runOnlyPendingTimers();
+    // setTimer
+    expect(setInterval).toHaveBeenCalled();
+    expect($commitMock).toHaveBeenCalledWith('playback/SET_POSITION_MS', 2.5 * 60 * 1000 + 500);
   });
 });
