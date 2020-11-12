@@ -8,10 +8,10 @@
   >
     <v-list-item-avatar tile>
       <ReleaseArtwork
+        :size="40"
         :src="artworkSrc"
         :alt="item.name"
         :title="item.name"
-        :size="40"
       />
     </v-list-item-avatar>
 
@@ -75,10 +75,7 @@ const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';
 
 export type On = {
-  [ON_ITEM_CLICKED]: {
-    index: number;
-    uri: string;
-  }
+  [ON_ITEM_CLICKED]: App.TrackQueue;
   [ON_LINK_CLICKED]: void;
 }
 
@@ -104,12 +101,7 @@ export default defineComponent({
     const releasePath = computed(() => `/releases/${props.item.releaseId}`);
     const titleColor = computed(() => textColorClass(props.item.isSet));
     const subtitleColor = computed(() => subtextColorClass(props.item.isSet));
-    const onItemClicked = () => {
-      emit(ON_ITEM_CLICKED, {
-        index: props.item.index,
-        uri: props.item.uri,
-      });
-    };
+    const onItemClicked = () => { emit(ON_ITEM_CLICKED, props.item); };
     const onLinkClicked = () => { emit(ON_LINK_CLICKED); };
 
     return {

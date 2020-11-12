@@ -3,6 +3,8 @@ import { options, mocks } from '~/tests/mocks/mount';
 import { App } from '~~/types';
 import DeviceSelectMenu from './DeviceSelectMenu.vue';
 
+const CLICK = 'click';
+
 const device = (i: number, isActive: boolean = false, disabled: boolean = false) => ({
   id: `id${i}`,
   type: 'Computer' as const,
@@ -23,9 +25,6 @@ const factory = (
 ) => {
   const vm = mount(DeviceSelectMenu, {
     ...options,
-    data() {
-      return { menu: true };
-    },
     mocks: {
       ...mocks,
       $getters: $gettersMock(playing, devices),
@@ -45,5 +44,15 @@ describe('DeviceSelectMenu', () => {
     const wrapper = factory(false, [device(1, true), device(2, false)]);
     expect(wrapper.find('.v-btn--icon').props().color).toBe(undefined);
   });
+
+  it('open menu', async () => {
+    const wrapper = factory(false, [device(1), device(2)]);
+    // @ts-ignore
+    expect(wrapper.vm.menu).toBe(false);
+    await wrapper.findAll('.v-btn--icon').at(0).trigger(CLICK);
+    // @ts-ignore
+    expect(wrapper.vm.menu).toBe(true);
+  });
+
   // @todo menu 内のテスト
 });

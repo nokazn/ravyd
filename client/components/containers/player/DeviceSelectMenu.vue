@@ -113,8 +113,6 @@ export default defineComponent({
 
 <style lang="scss" module>
 .DeviceSelectMenu {
-  max-width: min(400px, 80vw);
-
   &__header {
     display: flex;
     justify-content: space-between;
@@ -123,6 +121,7 @@ export default defineComponent({
   }
 
   &__wrapper {
+    max-width: min(400px, 80vw);
     min-height: 64px;
     // header の分を差し引く
     max-height: calc(70vh - 40px);
