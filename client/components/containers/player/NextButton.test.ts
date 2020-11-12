@@ -2,16 +2,19 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import NextButton from './NextButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $gettersMock = (disabled: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': () => disabled,
+const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'skipping_next'
+    ? disallowed
+    : false),
 });
 const $dispatchMock = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
-  disabled: boolean = false,
+  disallowed: boolean = false,
   propsData?: {
     size?: number;
   },
@@ -21,7 +24,7 @@ const factory = (
     propsData,
     mocks: {
       ...mocks,
-      $getters: $gettersMock(disabled),
+      $getters: $gettersMock(disallowed),
       $dispatch: $dispatchMock,
     },
   });
@@ -35,7 +38,7 @@ describe('NextButton', () => {
     expect(wrapper.findComponent(CircleButton).props().size).toBe(32);
   });
 
-  it('disabled', async () => {
+  it('disallowed skipping_next', async () => {
     const wrapper = factory(true);
     expect(wrapper.findComponent(CircleButton).props().disabled).toBe(true);
     await wrapper.trigger(CLICK);

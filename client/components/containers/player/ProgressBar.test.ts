@@ -9,8 +9,8 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $gettersMock = (seekingDisallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': jest.fn().mockReturnValue(seekingDisallowed),
+const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+  'playback/isDisallowed': () => disallowed,
 });
 const $stateMock = (playback: PlaybackState) => jest.fn().mockReturnValue({ playback });
 const $commitMock = jest.fn();
@@ -19,8 +19,8 @@ const $subscribeMock = jest.fn();
 
 const factory = (
   state: PlaybackState,
-  disallowed: boolean,
   height: number = 2,
+  disallowed: boolean = false,
 ) => {
   const vm = mount(ProgressBar, {
     ...options,
@@ -46,7 +46,7 @@ describe('ProgressBar', () => {
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
       disabledPlayingFromBeginning: false,
-    }, false, 4);
+    }, 4);
     expect(wrapper.find('.v-progress-linear').props().height).toBe(4);
   });
 
@@ -56,7 +56,7 @@ describe('ProgressBar', () => {
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
       disabledPlayingFromBeginning: false,
-    }, false);
+    });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().value).toBe(50);
     // @todo state の更新
@@ -68,7 +68,7 @@ describe('ProgressBar', () => {
       durationMs: 4 * 60 * 1000,
       isPlaying: true,
       disabledPlayingFromBeginning: false,
-    }, false);
+    });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().color).toBe('active-icon');
   });
@@ -79,7 +79,7 @@ describe('ProgressBar', () => {
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
       disabledPlayingFromBeginning: false,
-    }, false);
+    });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().color).toBe('grey lighten-2');
   });

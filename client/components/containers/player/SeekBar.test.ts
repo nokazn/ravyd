@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import SeekBar from './SeekBar.vue';
+import type { SpotifyAPI } from '~~/types';
 
 const MOUSEDOWN = 'mousedown';
 const CHANGE = 'change';
@@ -12,8 +13,10 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $gettersMock = (seekingDisallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': jest.fn().mockReturnValue(seekingDisallowed),
+const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'seeking'
+    ? disallowed
+    : false),
 });
 // @todo state 変更したときの状態テストしたい
 const $stateMock = (stateList: PlaybackState[]) => {
@@ -35,7 +38,7 @@ const factory = (
   hideText: boolean = false,
   thumbColor: string = 'white',
 ) => {
-  const vm = mount(SeekBar, {
+  return mount(SeekBar, {
     ...options,
     propsData: {
       hideText,
@@ -50,7 +53,6 @@ const factory = (
       $subscribe: $subscribeMock,
     },
   });
-  return vm;
 };
 
 describe('SeekBar', () => {
@@ -118,7 +120,7 @@ describe('SeekBar', () => {
     expect(durationMss.attributes().title).toBe('再生時間が取得できません');
   });
 
-  it('disabled seeking', async () => {
+  it('disallowed seeking', async () => {
     const wrapper = factory([{
       positionMs: 0,
       durationMs: 4 * 60 * 1000,
