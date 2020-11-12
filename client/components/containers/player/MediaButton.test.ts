@@ -12,7 +12,8 @@ const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
   },
 });
 const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'resuming'
+  // @todo resuming
+  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'interrupting_playback'
     ? disallowed
     : false),
 });
