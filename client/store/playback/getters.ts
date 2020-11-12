@@ -22,7 +22,7 @@ export type PlaybackGetters = {
   isContextSet: (uri: string | undefined) => boolean
   remainingTimeMs: number
   repeatState: SpotifyAPI.RepeatState | undefined
-  isDisallowed: (disallow: keyof SpotifyAPI.Disallows) => boolean
+  isDisallowed: (disallow: keyof SpotifyAPI.Disallows | (keyof SpotifyAPI.Disallows)[]) => boolean
   volumePercent: ZeroToHundred
 }
 
@@ -221,7 +221,11 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   },
 
   isDisallowed(state) {
-    return (disallow) => !!state.disallows[disallow];
+    return (disallows) => {
+      return Array.isArray(disallows)
+        ? disallows.some((disallow) => state.disallows[disallow])
+        : state.disallows[disallows] ?? false;
+    };
   },
 
   remainingTimeMs(state) {
