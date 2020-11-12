@@ -48,6 +48,6 @@ describe('NextButton', () => {
   it('call pause request', async () => {
     const wrapper = factory();
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/next');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/next');
   });
 });

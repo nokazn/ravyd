@@ -97,12 +97,12 @@ describe('MediaButton', () => {
   it('call play request', async () => {
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/play');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
   });
 
   it('call pause request', async () => {
     const wrapper = factory(true);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/pause');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 });

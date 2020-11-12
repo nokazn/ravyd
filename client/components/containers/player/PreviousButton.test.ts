@@ -55,7 +55,7 @@ describe('PreviousButton', () => {
   it('call seek request when skipping_prev is disallowed', async () => {
     const wrapper = factory(true);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', { positionMs: 0 });
+    expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
   });
 
   it('call seek previous when double-clicked in the last 1 sec', async () => {
@@ -64,7 +64,7 @@ describe('PreviousButton', () => {
       firstClicked: true,
     });
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/previous');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/previous');
   });
 
   it('call seek previous', async () => {
@@ -74,10 +74,12 @@ describe('PreviousButton', () => {
     // @ts-ignore
     expect(wrapper.vm.firstClicked).toBe(true);
     jest.runOnlyPendingTimers();
+    // in 1000 ms timer
     expect(setTimeout).toHaveBeenNthCalledWith(1, expect.any(Function), 1000);
-    expect(setTimeout).toHaveBeenNthCalledWith(2, expect.any(Function), 400);
-    expect($dispatchMock).toHaveBeenNthCalledWith(3, 'playback/seek', { positionMs: 0 });
     // @ts-ignore
     expect(wrapper.vm.firstClicked).toBe(false);
+    // in 400 ms timer
+    expect(setTimeout).toHaveBeenNthCalledWith(2, expect.any(Function), 400);
+    expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
   });
 });

@@ -186,9 +186,9 @@ describe('SeekBar', () => {
     // onMouseDown
     expect(clearTimerMock).toHaveBeenCalled();
     // onChange
-    expect($commitMock).toHaveBeenNthCalledWith(2, 'playback/SET_POSITION_MS', 0);
-    expect($commitMock).toHaveBeenNthCalledWith(3, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
-    expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/seek', {
+    expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 0);
+    expect($commitMock).toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
+    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 0,
       currentPositionMs: 2.5 * 60 * 1000,
     });
