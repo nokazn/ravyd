@@ -10,15 +10,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 type SkipButton = {
-  title: string
-  icon: 'mdi-redo' | 'mdi-undo'
+  title: string;
+  icon: 'mdi-redo' | 'mdi-undo';
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -34,13 +34,13 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    skipButton(): SkipButton {
-      const seconds = Math.abs(this.seconds);
-      const skipText = this.seconds > 0
+  setup(props, { root }) {
+    const skipButton = computed<SkipButton>(() => {
+      const seconds = Math.abs(props.seconds);
+      const skipText = props.seconds > 0
         ? '進む'
         : '戻す';
-      const icon = this.seconds > 0
+      const icon = props.seconds > 0
         ? 'mdi-redo'
         : 'mdi-undo';
 
@@ -48,32 +48,31 @@ export default Vue.extend({
         title: `${seconds}秒${skipText}`,
         icon,
       };
-    },
-    disabled(): boolean {
-      return this.$getters()['playback/isDisallowed']('seeking');
-    },
-  },
+    });
+    const disabled = computed(() => root.$getters()['playback/isDisallowed']('seeking'));
 
-  methods: {
-    onClicked() {
-      const milliSeconds = this.seconds * 1000;
-      const positionMs = this.$state().playback.positionMs + milliSeconds;
+    const onClicked = () => {
+      const ms = props.seconds * 1000;
+      const positionMs = root.$state().playback.positionMs + ms;
       // 戻る
-      if (milliSeconds < 0) {
-        this.$dispatch('playback/seek', {
-          positionMs: Math.max(positionMs, 0),
-        });
+      if (ms < 0) {
+        root.$dispatch('playback/seek', { positionMs: Math.max(positionMs, 0) });
         return;
       }
-
-      if (positionMs < this.$state().playback.durationMs) {
+      if (positionMs < root.$state().playback.durationMs) {
         // 進む
-        this.$dispatch('playback/seek', { positionMs });
+        root.$dispatch('playback/seek', { positionMs });
       } else {
         // 次の曲
-        this.$dispatch('playback/next');
+        root.$dispatch('playback/next');
       }
-    },
+    };
+
+    return {
+      skipButton,
+      disabled,
+      onClicked,
+    };
   },
 });
 </script>
