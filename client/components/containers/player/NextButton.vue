@@ -10,10 +10,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -25,16 +25,14 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    disabled(): boolean {
-      return this.$getters()['playback/isDisallowed']('skipping_next');
-    },
-  },
+  setup(_, { root }) {
+    const disabled = computed(() => root.$getters()['playback/isDisallowed']('skipping_next'));
+    const onClicked = () => { root.$dispatch('playback/next'); };
 
-  methods: {
-    onClicked() {
-      this.$dispatch('playback/next');
-    },
+    return {
+      disabled,
+      onClicked,
+    };
   },
 });
 </script>

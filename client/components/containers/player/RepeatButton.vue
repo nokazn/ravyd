@@ -1,7 +1,7 @@
 <template>
   <CircleButton
-    :disabled="disabled"
     :size="size"
+    :disabled="disabled"
     :icon-size-ratio="0.5"
     :icon-color="repeatButton.color"
     :title="repeatButton.title"
@@ -12,16 +12,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export type RepeatButton = {
-  icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once'
-  title: 'リピート再生しない' | 'リピート再生' | '曲をリピート再生'
-  color: 'active-icon' | 'inactive'
+type RepeatButton = {
+  icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once';
+  title: 'リピート再生しない' | 'リピート再生' | '曲をリピート再生';
+  color: 'active-icon' | 'inactive';
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -33,9 +33,9 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    repeatButton(): RepeatButton {
-      switch (this.$state().playback.repeatMode) {
+  setup(_, { root }) {
+    const repeatButton = computed<RepeatButton>(() => {
+      switch (root.$state().playback.repeatMode) {
         case 1:
           return {
             icon: 'mdi-repeat',
@@ -55,17 +55,19 @@ export default Vue.extend({
             title: 'リピート再生',
           };
       }
-    },
-    disabled(): boolean {
-      return this.$getters()['playback/isDisallowed']('toggling_repeat_context')
-        || this.$getters()['playback/isDisallowed']('toggling_repeat_track');
-    },
-  },
+    });
+    const disabled = computed(() => root.$getters()['playback/isDisallowed']([
+      'toggling_repeat_context',
+      'toggling_repeat_track',
+    ]));
 
-  methods: {
-    onClicked() {
-      this.$dispatch('playback/repeat');
-    },
+    const onClicked = () => { root.$dispatch('playback/repeat'); };
+
+    return {
+      repeatButton,
+      disabled,
+      onClicked,
+    };
   },
 });
 </script>

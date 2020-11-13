@@ -156,7 +156,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/play', {
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
       contextUri: 'uri',
     });
   });
@@ -167,7 +167,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/play', {
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
       trackUriList: ['uri'],
     });
   });
@@ -178,7 +178,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(3, 'playback/play');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
   });
 
   it('resume a track', async () => {
@@ -187,7 +187,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(4, 'playback/play');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
   });
 
   it('pause a release\'s track', async () => {
@@ -196,7 +196,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(5, 'playback/pause');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 
   it('pause a track', async () => {
@@ -205,6 +205,6 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(6, 'playback/pause');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 });

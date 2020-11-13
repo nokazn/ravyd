@@ -27,7 +27,7 @@ export type PlaybackMutations = {
   SET_CONTEXT_URI: string | undefined
   SET_POSITION_MS: number
   SET_DURATION_MS: number | undefined
-  SET_DISABLED_PLAYING_FROM_BEGINING: boolean
+  SET_DISABLED_PLAYING_FROM_BEGINNING: boolean
   SET_IS_SHUFFLED: boolean
   SET_REPEAT_MODE: 0 | 1 | 2
   SET_DISALLOWS: SpotifyAPI.Disallows
@@ -52,7 +52,7 @@ export type RootMutations = {
   'playback/SET_CONTEXT_URI': PlaybackMutations['SET_CONTEXT_URI']
   'playback/SET_POSITION_MS': PlaybackMutations['SET_POSITION_MS']
   'playback/SET_DURATION_MS': PlaybackMutations['SET_DURATION_MS']
-  'playback/SET_DISABLED_PLAYING_FROM_BEGINING': PlaybackMutations['SET_DISABLED_PLAYING_FROM_BEGINING']
+  'playback/SET_DISABLED_PLAYING_FROM_BEGINNING': PlaybackMutations['SET_DISABLED_PLAYING_FROM_BEGINNING']
   'playback/SET_IS_SHUFFLED': PlaybackMutations['SET_IS_SHUFFLED']
   'playback/SET_REPEAT_MODE': PlaybackMutations['SET_REPEAT_MODE']
   'playback/SET_DISALLOWS': PlaybackMutations['SET_DISALLOWS']
@@ -149,7 +149,7 @@ const mutations: Mutations<PlaybackState, PlaybackMutations> = {
     state.durationMs = durationMs ?? DEFAULT_DURATION_MS;
   },
 
-  SET_DISABLED_PLAYING_FROM_BEGINING(state, disabledPlayingFromBeginning) {
+  SET_DISABLED_PLAYING_FROM_BEGINNING(state, disabledPlayingFromBeginning) {
     state.disabledPlayingFromBeginning = disabledPlayingFromBeginning;
   },
 

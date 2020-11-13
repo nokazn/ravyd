@@ -619,7 +619,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       this.$toast.requirePremium();
       return;
     }
-
     const { volumePercent: currentVolumePercent } = state;
     if (currentVolumePercent === volumePercent) return;
 
@@ -629,6 +628,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     })
       .then(() => {
         commit('SET_VOLUME_PERCENT', { volumePercent });
+        commit('SET_IS_MUTED', volumePercent === 0);
       })
       .catch((err: Error) => {
         console.error({ err });
@@ -655,17 +655,20 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       this.$toast.requirePremium();
       return;
     }
-
     const {
       isMuted,
       volumePercent: currentVolumePercent,
     } = state;
     const nextMuteState = !isMuted;
-    if (currentVolumePercent === 0) return;
+    if (currentVolumePercent === 0) {
+      commit('SET_IS_MUTED', nextMuteState);
+      return;
+    }
 
-    const volumePercent = nextMuteState ? 0 : currentVolumePercent;
     await this.$spotify.player.volume({
-      volumePercent,
+      volumePercent: nextMuteState
+        ? 0
+        : currentVolumePercent,
       deviceId: getters.playbackDeviceId,
     })
       .then(() => {
@@ -720,7 +723,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     commit('SET_CONTEXT_URI', undefined);
     commit('SET_POSITION_MS', 0);
     commit('SET_DURATION_MS', undefined);
-    commit('SET_DISABLED_PLAYING_FROM_BEGINING', false);
+    commit('SET_DISABLED_PLAYING_FROM_BEGINNING', false);
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
     commit('SET_DISALLOWS', {});

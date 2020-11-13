@@ -2,7 +2,7 @@
   <CircleButton
     title="前の曲"
     :size="size"
-    :disabled="disabledPlayingFromBeginning && disabledSkippingPrev"
+    :disabled="disabled"
     @click="onPreivousClicked"
   >
     mdi-skip-previous
@@ -10,16 +10,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootState } from 'typed-vuex';
+import { defineComponent, ref, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-type Data = {
-  firstClicked: boolean
-  previousTimer: ReturnType<typeof setTimeout> | undefined
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -31,53 +25,50 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    return {
-      firstClicked: false,
-      previousTimer: undefined,
-    };
-  },
+  setup(_, { root }) {
+    const firstClicked = ref(false);
 
-  computed: {
-    position(): RootState['playback']['positionMs'] {
-      return this.$state().playback.positionMs;
-    },
-    disabledPlayingFromBeginning(): RootState['playback']['disabledPlayingFromBeginning'] {
-      return this.$state().playback.disabledPlayingFromBeginning;
-    },
-    disabledSkippingPrev(): boolean {
-      return this.$getters()['playback/isDisallowed']('skipping_prev');
-    },
-  },
+    const position = computed(() => root.$state().playback.positionMs);
+    const disallowedSkippingPrev = computed(() => root.$getters()['playback/isDisallowed']('skipping_prev'));
+    const disabled = computed(() => {
+      return disallowedSkippingPrev.value && root.$state().playback.disabledPlayingFromBeginning;
+    });
 
-  methods: {
-    onPreivousClicked() {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onPreivousClicked = () => {
       // 前の曲がない場合はすぐに先頭から再生
-      if (this.disabledSkippingPrev) {
-        this.$dispatch('playback/seek', { positionMs: 0 });
+      if (disallowedSkippingPrev.value) {
+        root.$dispatch('playback/seek', { positionMs: 0 });
         return;
       }
 
       // 初めにクリックされてから1秒以内に再度クリックされたら前の曲に戻る
-      if (this.firstClicked) {
-        if (this.previousTimer != null) {
-          clearTimeout(this.previousTimer);
-          this.previousTimer = undefined;
+      if (firstClicked.value) {
+        if (timer != null) {
+          clearTimeout(timer);
+          timer = undefined;
         }
-        this.$dispatch('playback/previous');
+        root.$dispatch('playback/previous');
       } else {
-        this.firstClicked = true;
+        firstClicked.value = true;
         setTimeout(() => {
-          this.firstClicked = false;
+          firstClicked.value = false;
         }, 1000);
 
         // 二回目のクリックがないか 400ms は待ってキャンセルされなければ(とりあえず) 先頭から再生
-        this.previousTimer = setTimeout(() => {
-          this.$dispatch('playback/seek', { positionMs: 0 });
-          this.previousTimer = undefined;
+        timer = setTimeout(() => {
+          root.$dispatch('playback/seek', { positionMs: 0 });
+          timer = undefined;
         }, 400);
       }
-    },
+    };
+
+    return {
+      firstClicked,
+      position,
+      disabled,
+      onPreivousClicked,
+    };
   },
 });
 </script>

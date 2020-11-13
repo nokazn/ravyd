@@ -1,7 +1,7 @@
 <template>
   <CustomMenu
-    :key="deviceItemList.length"
-    v-model="isShown"
+    :key="deviceList.length"
+    v-model="menu"
     top
     left
     offset-y
@@ -32,7 +32,7 @@
         <v-btn
           icon
           small
-          :loading="isRefreshingDeviceList"
+          :loading="isRefreshing"
           title="デバイスの一覧を更新"
           @click.stop="updateDeviceList"
         >
@@ -48,7 +48,7 @@
       class="g-custom-scroll-bar"
     >
       <DeviceSelectMenuItem
-        v-for="(device, index) in deviceItemList"
+        v-for="(device, index) in deviceList"
         :key="`${device.id}-${index}`"
         :item="device"
         @click="onItemClicked"
@@ -58,68 +58,61 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
+import { defineComponent, ref, computed } from '@vue/composition-api';
 import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import DeviceSelectMenuItem, { On as OnItem } from '~/components/parts/list/DeviceSelectMenuItem.vue';
-import type { App } from '~~/types';
 
-type Data = {
-  isShown: boolean
-  isRefreshingDeviceList: boolean
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     CustomMenu,
     DeviceSelectMenuItem,
   },
 
-  data(): Data {
-    return {
-      isShown: false,
-      isRefreshingDeviceList: false,
-    };
-  },
+  setup(_, { root }) {
+    const menu = ref(false);
+    const isRefreshing = ref(false);
 
-  computed: {
-    deviceButtonColor(): string | undefined {
-      return this.$getters()['playback/isThisAppPlaying']
+    const deviceButtonColor = computed(() => {
+      return root.$getters()['playback/isThisAppPlaying']
         ? 'active-icon'
         : undefined;
-    },
-    deviceItemList(): App.Device[] {
-      return this.$getters()['playback/deviceList'];
-    },
-  },
+    });
+    const deviceList = computed(() => root.$getters()['playback/deviceList']);
 
-  methods: {
-    toggleMenu() {
-      if (!this.isShown) {
-        this.updateDeviceList();
+    const updateDeviceList = async () => {
+      isRefreshing.value = true;
+      await root.$dispatch('playback/getDeviceList');
+      isRefreshing.value = false;
+    };
+    const toggleMenu = () => {
+      if (!menu.value) {
+        updateDeviceList();
       }
-      this.isShown = !this.isShown;
-    },
-    async updateDeviceList() {
-      this.isRefreshingDeviceList = true;
-      await this.$dispatch('playback/getDeviceList');
-      this.isRefreshingDeviceList = false;
-    },
-    onItemClicked(deviceId: OnItem['click']) {
+      menu.value = !menu.value;
+    };
+    const onItemClicked = (deviceId: OnItem['click']) => {
       if (deviceId != null) {
-        this.$dispatch('playback/transferPlayback', { deviceId });
+        root.$dispatch('playback/transferPlayback', { deviceId });
       } else {
-        this.$toast.pushError('デバイスを変更できません。');
+        root.$toast.pushError('デバイスを変更できません。');
       }
-    },
+    };
+
+    return {
+      menu,
+      isRefreshing,
+      deviceButtonColor,
+      deviceList,
+      updateDeviceList,
+      toggleMenu,
+      onItemClicked,
+    };
   },
 });
 </script>
 
 <style lang="scss" module>
 .DeviceSelectMenu {
-  max-width: min(400px, 80vw);
-
   &__header {
     display: flex;
     justify-content: space-between;
@@ -128,6 +121,7 @@ export default Vue.extend({
   }
 
   &__wrapper {
+    max-width: min(400px, 80vw);
     min-height: 64px;
     // header の分を差し引く
     max-height: calc(70vh - 40px);

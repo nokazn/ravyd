@@ -1,7 +1,7 @@
 <template>
   <CustomMenu
     :key="trackQueue.length"
-    v-model="isShown"
+    v-model="menu"
     top
     left
     offset-y
@@ -32,7 +32,7 @@
           icon
           small
           title="再生中のページ"
-          :disabled="contextPath == null || $route.path === contextPath"
+          :disabled="contextPath == null"
           :to="contextPath"
           class="g-no-text-decoration"
         >
@@ -81,86 +81,69 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
-
+import { defineComponent, ref, computed } from '@vue/composition-api';
 import CustomMenu from '~/components/parts/menu/CustomMenu.vue';
 import TrackQueueMenuItem, { On as OnItem } from '~/components/parts/list/TrackQueueMenuItem.vue';
 import { convertUriToUrl } from '~/services/converter';
 
-type Data = {
-  isShown: boolean
-}
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     CustomMenu,
     TrackQueueMenuItem,
   },
 
-  data(): Data {
-    return {
-      isShown: false,
-    };
-  },
+  setup(_, { root }) {
+    const menu = ref(false);
+    const trackQueue = computed(() => root.$getters()['playback/trackQueue']);
+    const contextPath = computed(() => convertUriToUrl(root.$getters()['playback/contextUri']));
 
-  computed: {
-    trackQueue(): RootGetters['playback/trackQueue'] {
-      return this.$getters()['playback/trackQueue'];
-    },
-    contextPath(): string | undefined {
-      const contextUrl = this.$getters()['playback/contextUri'];
-      return convertUriToUrl(contextUrl);
-    },
-  },
-
-  methods: {
-    async onItemClicked({ index }: OnItem['on-item-clicked']) {
-      const isNext = index > 0;
-      const counts = Math.abs(index);
-
+    const toggleMenu = () => { menu.value = !menu.value; };
+    const onItemClicked = async (row: OnItem['on-item-clicked']) => {
+      const isNext = row.index > 0;
+      const counts = Math.abs(row.index);
       // @todo #174 次に再生に追加した曲が再生できないのに対処するため
       for (let i = 0; i < counts; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await this.$dispatch(isNext
+        await root.$dispatch(isNext
           ? 'playback/next'
           : 'playback/previous');
       }
 
-      // const { contextUri, customTrackUriList } = this.$state().player;
-
-      // album と playlist は contextUri + offset で操作できる
+      // const { contextUri, customTrackUriList } = root.$state().playback;
+      // // album と playlist は contextUri + offset で操作できる
       // if (contextUri != null && /album|playlist/.test(contextUri)) {
       //   // @todo #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
-      //   this.$dispatch('playback/play', {
+      //   root.$dispatch('playback/play', {
       //     contextUri,
       //     offset: customTrackUriList != null && contextUri.includes('playlist')
-      //       ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === uri) }
-      //       : { uri },
+      //       ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === row.uri) }
+      //       : { uri: row.uri },
       //   });
       // } else {
-      //   // playback-sdk から提供される contextUri が不適当かどうかで場合分け
+      //   // Playback SDK から提供される contextUri が不適当かどうかで場合分け
       //   const trackUriList = contextUri == null && customTrackUriList != null
       //     ? customTrackUriList
-      //     : this.trackQueue.map((track) => track.uri);
-      //   this.$dispatch('playback/play', {
+      //     : trackQueue.value.map((track) => track.uri);
+      //   root.$dispatch('playback/play', {
       //     trackUriList,
-      //     offset: { uri },
+      //     offset: { uri: row.uri },
       //   });
       // }
-    },
-    toggleMenu() {
-      this.isShown = !this.isShown;
-    },
+    };
+
+    return {
+      menu,
+      trackQueue,
+      contextPath,
+      onItemClicked,
+      toggleMenu,
+    };
   },
 });
 </script>
 
 <style lang="scss" module>
 .TrackQueueMenu {
-  min-width: 400px;
-  max-width: min(500px, 80vw);
-
   &__header {
     display: flex;
     justify-content: space-between;
@@ -170,6 +153,8 @@ export default Vue.extend({
 
   &__wrapper {
     min-height: 72px;
+    min-width: 400px;
+    max-width: min(500px, 80vw);
     // header と footer の分を差し引く
     max-height: calc(70vh - 80px);
     overflow-y: auto;

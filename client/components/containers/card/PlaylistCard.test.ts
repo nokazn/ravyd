@@ -121,7 +121,7 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/play', {
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
       contextUri: 'uri',
     });
   });
@@ -132,7 +132,7 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(2, 'playback/play');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
   });
 
   it('pause a track', async () => {
@@ -141,6 +141,6 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenNthCalledWith(3, 'playback/pause');
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 });
