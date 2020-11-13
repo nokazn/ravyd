@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import RepeatButton from './RepeatButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
@@ -15,11 +14,7 @@ const $stateMock = (repeatMode: 0 | 1 | 2) => {
 };
 const $gettersMock = (isDisallowed: boolean) => {
   return jest.fn().mockReturnValue({
-    'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => {
-      return d === 'toggling_repeat_context' || d === 'toggling_repeat_track'
-        ? isDisallowed
-        : false;
-    },
+    'playback/isDisallowed': () => isDisallowed,
   });
 };
 const $dispatchMock = jest.fn().mockResolvedValue(undefined);
