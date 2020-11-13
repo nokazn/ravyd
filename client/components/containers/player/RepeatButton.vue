@@ -1,7 +1,7 @@
 <template>
   <CircleButton
-    :disabled="disabled"
     :size="size"
+    :disabled="disabled"
     :icon-size-ratio="0.5"
     :icon-color="repeatButton.color"
     :title="repeatButton.title"
