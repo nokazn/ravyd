@@ -1,7 +1,7 @@
 <template>
   <CircleButton
-    :disabled="disabled"
     :size="size"
+    :disabled="disabled"
     :icon-size-ratio="0.5"
     :icon-color="shuffleButton.color"
     :title="shuffleButton.title"
@@ -12,15 +12,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
-export type ShuffleButton = {
+type ShuffleButton = {
   color: 'active-icon' | 'inactive',
   title: 'シャッフル再生' | 'シャッフル再生しない'
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     CircleButton,
   },
@@ -32,9 +32,9 @@ export default Vue.extend({
     },
   },
 
-  computed: {
-    shuffleButton(): ShuffleButton {
-      return this.$state().playback.isShuffled
+  setup(_, { root }) {
+    const shuffleButton = computed<ShuffleButton>(() => {
+      return root.$state().playback.isShuffled
         ? {
           color: 'active-icon',
           title: 'シャッフル再生しない',
@@ -43,16 +43,16 @@ export default Vue.extend({
           color: 'inactive',
           title: 'シャッフル再生',
         };
-    },
-    disabled(): boolean {
-      return this.$getters()['playback/isDisallowed']('toggling_shuffle');
-    },
-  },
+    });
+    const disabled = computed(() => root.$getters()['playback/isDisallowed']('toggling_shuffle'));
 
-  methods: {
-    onClicked() {
-      this.$dispatch('playback/shuffle');
-    },
+    const onClicked = () => { root.$dispatch('playback/shuffle'); };
+
+    return {
+      shuffleButton,
+      disabled,
+      onClicked,
+    };
   },
 });
 </script>
