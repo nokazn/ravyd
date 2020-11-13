@@ -17,7 +17,7 @@ describe('CardsSection', () => {
       ...options,
       propsData: {
         value: true,
-        full: true,
+        more: false,
         title: 'title',
       },
     });
@@ -34,7 +34,7 @@ describe('CardsSection', () => {
       ...options,
       propsData: {
         value: false,
-        full: true,
+        more: false,
         title: 'title',
       },
     });
@@ -52,7 +52,7 @@ describe('CardsSection', () => {
       ...options,
       propsData: {
         value: true,
-        full: false,
+        more: true,
         title: 'title',
       },
     });
@@ -71,7 +71,7 @@ describe('CardsSection', () => {
       ...options,
       propsData: {
         value: false,
-        full: false,
+        more: true,
         title: 'title',
       },
     });
