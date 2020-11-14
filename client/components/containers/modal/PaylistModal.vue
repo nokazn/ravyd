@@ -13,59 +13,59 @@
         text
         rounded
         :min-width="90"
-        @click="onCloseButtonClicked"
+        @click="closeModal"
       >
         キャンセル
       </v-btn>
       <v-btn
         rounded
-        :min-width="90"
         color="success"
+        :min-width="90"
         :loading="isLoading"
         :disabled="!isValid"
-        @click="createPlaylist"
+        @click="handlePlaylist"
       >
-        {{ resultText || detailText }}
+        {{ text }}
       </v-btn>
     </template>
 
     <v-form
-      :ref="FORM_REF"
+      ref="FORM_REF"
       v-model="isValid"
       :class="$style.Content"
       class="g-custom-scroll-bar"
     >
       <v-text-field
-        v-model="playlistName"
+        v-model="playlist.name"
         autofocus
-        label="名前"
         clearable
         required
-        :rules="playlistNameRules"
-
+        label="名前"
+        :rules="rules.name"
         @keydown.enter.prevent
       />
       <v-textarea
-        v-model="playlistDescription"
-        label="説明"
+        v-model="playlist.description"
         clearable
+        label="説明"
         :rows="3"
       />
       <v-file-input
-        v-model="playlistArtwork"
+        v-model="playlist.artwork"
         clearable
         show-size
         label="画像を選択"
-        accept="image/*"
+        accept="image/jpeg"
         prepend-icon="mdi-camera"
+        :rules="rules.artwork"
       />
       <v-checkbox
-        v-model="isPrivatePlaylist"
+        v-model="playlist.isPrivate"
         label="プレイリストを非公開にする"
-        :disabled="isCollaborativePlaylist"
+        :disabled="playlist.isCollaborative"
       />
       <v-checkbox
-        v-model="isCollaborativePlaylist"
+        v-model="playlist.isCollaborative"
         label="コラボプレイリストにする"
         :class="$style['Content__collaborative--last']"
       />
@@ -74,59 +74,66 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
+import {
+  defineComponent,
+  ref,
+  reactive,
+  toRef,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  PropType,
+} from '@vue/composition-api';
+import { InputValidationRules } from 'vuetify';
 import { ExtendedMutationPayload } from 'typed-vuex';
-
 import Modal from '~/components/parts/modal/Modal.vue';
+import { extractBase64EncodedFile } from '~/utils/text';
+import { useFileLoader } from '~/use/event';
 import { SpotifyAPI } from '~~/types';
 
-const FORM_REF = 'FORM_REF';
-
-type Data = {
-  isValid: boolean
-  playlistName: string
-  playlistDescription: string
-  playlistArtwork: Blob | undefined
-  isPrivatePlaylist: boolean
-  isCollaborativePlaylist: boolean
-  playlistNameRules: ((v: string) => boolean | string)[]
-  isLoading: boolean
-  mutationUnsubscribe: (() => void) | undefined
-  FORM_REF: string;
+type Playlist = {
+  name: string;
+  description: string;
+  artwork: File | undefined;
+  isPrivate: boolean;
+  isCollaborative: boolean;
 }
+type FormRef = Vue & { resetValidation(): void; }
 
 // 編集するとき
 export type Form = {
-  playlistId: string
-  name: string,
-  description: string,
-  images: SpotifyAPI.Image[],
-  isPrivate: boolean
-  isCollaborative: boolean
+  playlistId: string;
+  name: string;
+  description: string;
+  images: SpotifyAPI.Image[];
+  isPrivate: boolean;
+  isCollaborative: boolean;
 }
 
-export type Handler<T extends | 'create' | 'edit'> = (payload: T extends 'edit' ?
-  {
-    playlistId: string,
-    name: string
-    description: string
-    isPublic: boolean
-    isCollaborative: boolean
+export type Handler<T extends 'create' | 'edit'> = (payload: T extends 'edit'
+  ? {
+    playlistId: string;
+    name: string;
+    description: string;
+    isPublic: boolean;
+    isCollaborative: boolean;
   }
   : {
-    name: string
-    description: string
-    isPublic: boolean
-    isCollaborative: boolean
+    name: string;
+    description: string;
+    isPublic: boolean;
+    isCollaborative: boolean;
   }) => Promise<void>
 
 export const INPUT = 'input';
 
 export type On = {
-  [INPUT]: boolean
+  [INPUT]: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Modal,
   },
@@ -148,148 +155,142 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    resultText: {
+    handlerText: {
       type: String as PropType<string | undefined>,
       default: undefined,
     },
   },
 
-  data(): Data {
-    const playlistName = this.form?.name ?? '';
-    const playlistDescription = this.form?.description ?? '';
-    const playlistArtwork = undefined;
-    const isPrivatePlaylist = this.form?.isPrivate ?? false;
-    const isCollaborativePlaylist = this.form?.isCollaborative ?? false;
+  setup(props, { emit, root }) {
+    const playlist = reactive<Playlist>({
+      name: props.form?.name ?? '',
+      description: props.form?.description ?? '',
+      artwork: undefined,
+      isPrivate: props.form?.isPrivate ?? false,
+      isCollaborative: props.form?.isCollaborative ?? false,
+    });
+    const isValid = ref(playlist.name !== '');
+    const isLoading = ref(false);
+    const FORM_REF = ref<FormRef>();
 
-    return {
-      isValid: playlistName !== '',
-      playlistName,
-      playlistDescription,
-      playlistArtwork,
-      isPrivatePlaylist,
-      isCollaborativePlaylist,
-      playlistNameRules: [
+    const text = props.handlerText || props.detailText;
+    const rules: Record<'name' | 'artwork', InputValidationRules> = {
+      name: [
         (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
       ],
-      isLoading: false,
-      mutationUnsubscribe: undefined,
-      FORM_REF,
+      artwork: [
+        (v: File | undefined) => v == null || v.type === 'image/jpeg' || 'アップロードできるファイル形式は jpeg のみです。',
+        (v: File | undefined) => v == null || v.size <= 256 * 1000 || 'アップロードできるファイルの最大サイズは 256kB です。',
+      ],
     };
-  },
 
-  computed: {
-    modal: {
-      get(): boolean {
-        return this.value;
-      },
-      set(value: boolean) {
-        const ref = this.$refs[FORM_REF];
-        if (!value && ref != null) {
-          // モーダルを閉じたときにバリデーションをリセット
-          (ref as Vue & { resetValidation(): void }).resetValidation();
+    const modal = computed<boolean>({
+      get() { return props.value; },
+      set(v) {
+        const element = FORM_REF.value;
+        // モーダルを閉じたときにバリデーションをリセット
+        if (!v && element != null && 'resetValidation' in element) {
+          element.resetValidation();
         }
-        this.$emit(INPUT, value);
+        emit(INPUT, v);
       },
-    },
-  },
+    });
 
-  watch: {
-    isCollaborativePlaylist(isCollaborative: boolean) {
+    watch((toRef(playlist, 'isCollaborative')), (collaborative) => {
       // コラボプレイリストの場合は非公開
-      if (isCollaborative) {
-        this.isPrivatePlaylist = true;
-      }
-    },
-  },
-
-  mounted() {
-    // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
-    const subscribePlaylist = (mutationPayload: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
-      if (this.playlistArtwork == null) return;
-
-      const { id: playlistId } = mutationPayload.payload;
-      const fileReader = new FileReader();
-      const onLoad = () => {
-        this.$spotify.playlists.uploadPlaylistArtwork({
-          playlistId,
-          artwork: fileReader.result as string,
-        }).then(() => {
-          this.modal = false;
-          this.$toast.pushPrimary(`プレイリストを${this.resultText || this.detailText}しました。`);
-          this.resetForm();
-        }).catch(() => {
-          this.$toast.pushError('画像のアップロードに失敗しました。');
-        }).finally(() => {
-          this.isLoading = false;
-          fileReader.removeEventListener('load', onLoad);
-        });
-      };
-      fileReader.addEventListener('load', onLoad);
-
-      // @todo
-      const onError = (err: ProgressEvent<FileReader>) => {
-        console.warn(err);
-        this.isLoading = false;
-        this.$toast.pushError('画像の読み込みに失敗しました。');
-        fileReader.removeEventListener('error', onError);
-      };
-      fileReader.addEventListener('error', onError);
-
-      fileReader.readAsDataURL(this.playlistArtwork);
-    };
-
-    this.mutationUnsubscribe = this.$subscribe((mutation) => {
-      const { type } = mutation;
-      switch (type) {
-        case 'playlists/ADD_PLAYLIST':
-        case 'playlists/EDIT_PLAYLIST':
-          subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
-          break;
-        default:
-          break;
+      if (collaborative) {
+        playlist.isPrivate = true;
       }
     });
-  },
 
-  beforeDestroy() {
-    if (this.mutationUnsubscribe != null) {
-      this.mutationUnsubscribe();
-      this.mutationUnsubscribe = undefined;
-    }
-  },
-
-  methods: {
-    onCloseButtonClicked() {
-      this.modal = false;
-    },
-    createPlaylist() {
-      const userId = this.$getters()['auth/userId'];
-      if (userId == null) return;
-
-      this.isLoading = true;
-      this.handler({
-        playlistId: this.form?.playlistId,
-        name: this.playlistName,
-        description: this.playlistDescription,
-        isPublic: !this.isPrivatePlaylist,
-        isCollaborative: this.isCollaborativePlaylist,
-      }).then(() => {
-        if (this.playlistArtwork == null) {
-          this.modal = false;
-          this.$toast.pushPrimary(`プレイリストを${this.resultText || this.detailText}しました。`);
-          this.resetForm();
-        }
-      }).finally(() => {
-        this.isLoading = false;
+    const closeModal = () => {
+      modal.value = false;
+    };
+    const resetForm = () => {
+      isLoading.value = false;
+      closeModal();
+      root.$nextTick().then(() => {
+        playlist.name = props.form?.name ?? '';
+        playlist.description = props.form?.description ?? '';
+        playlist.artwork = undefined;
+        playlist.isPrivate = props.form?.isPrivate ?? false;
+        playlist.isCollaborative = props.form?.isCollaborative ?? false;
       });
-    },
-    resetForm() {
-      this.playlistName = this.form?.name ?? '';
-      this.playlistDescription = this.form?.description ?? '';
-      this.playlistArtwork = undefined;
-      this.isPrivatePlaylist = this.form?.isPrivate ?? false;
-      this.isCollaborativePlaylist = this.form?.isCollaborative ?? false;
-    },
+    };
+    const handlePlaylist = () => {
+      isLoading.value = true;
+      props.handler({
+        playlistId: props.form?.playlistId,
+        name: playlist.name,
+        description: playlist.description,
+        isPublic: !playlist.isPrivate,
+        isCollaborative: playlist.isCollaborative,
+      }).then(() => {
+        if (playlist.artwork == null) {
+          resetForm();
+          root.$toast.pushPrimary(`プレイリストを${text}しました。`);
+        }
+      }).catch(() => {
+        isLoading.value = false;
+      });
+    };
+
+    let mutationUnsubscribe: (() => void) | undefined;
+    onMounted(() => {
+      // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
+      const subscribePlaylist = ({
+        payload: { id: playlistId },
+      }: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
+        if (playlist.artwork == null) return;
+        const fileReader = useFileLoader((_, f) => {
+          const artwork = extractBase64EncodedFile(f);
+          if (artwork == null) return;
+          root.$spotify.playlists.uploadPlaylistArtwork({
+            playlistId,
+            artwork,
+          }).then(() => {
+            resetForm();
+            root.$toast.pushPrimary(`プレイリストを${text}しました。`);
+          }).catch(() => {
+            isLoading.value = false;
+            root.$toast.pushError('画像のアップロードに失敗しました。');
+          });
+        }, () => {
+          isLoading.value = false;
+          root.$toast.pushError('画像の読み込みに失敗しました。');
+        });
+        fileReader.readAsDataURL(playlist.artwork);
+      };
+      mutationUnsubscribe = root.$subscribe((mutation) => {
+        const { type } = mutation;
+        switch (type) {
+          case 'playlists/ADD_PLAYLIST':
+          case 'playlists/EDIT_PLAYLIST':
+            subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
+            break;
+          default:
+            break;
+        }
+      });
+    });
+    onBeforeUnmount(() => {
+      if (mutationUnsubscribe != null) {
+        mutationUnsubscribe();
+        mutationUnsubscribe = undefined;
+      }
+    });
+
+    return {
+      playlist,
+      isValid,
+      isLoading,
+      FORM_REF,
+      rules,
+      text,
+      modal,
+      closeModal,
+      handlePlaylist,
+    };
   },
 });
 </script>
