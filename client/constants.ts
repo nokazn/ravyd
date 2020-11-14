@@ -12,13 +12,13 @@ export const DEFAULT_DOMINANT_COLOR: App.DominantColor = {
 } as const;
 // 背景とヘッダーの明度を下げる割合
 export const DARKEN_FILTER_RATIO = 0.6;
-export const BACKGROUND_COLOR = '#202224';
-// #1e2024 を10進数の配列にしたもの
-export const BACKGROUND_COLOR_RGB = [32, 34, 36] as const;
-export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#282a2a';
-export const FOOTER_BACKGROUND_COLOR = '#3c3e3e';
-export const CARD_BACKGROUND_COLOR = '#2e3032';
-export const MENU_BACKGROUND_COLOR = '#383a3a';
+export const BACKGROUND_COLOR = '#1e2022';
+// #1e2022 を10進数の配列にしたもの
+export const BACKGROUND_COLOR_RGB = [30, 32, 34] as const;
+export const NAVIGATION_DRAWER_BACKGROUND_COLOR = '#242626';
+export const CARD_BACKGROUND_COLOR = '#2a2a2c';
+export const MENU_BACKGROUND_COLOR = '#2e3032';
+export const FOOTER_BACKGROUND_COLOR = '#343636';
 
 /**
  * size

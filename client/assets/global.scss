@@ -168,8 +168,8 @@ a {
     background-image:
       linear-gradient(
         to right,
-        rgba($g-bar-background-color, 1),
-        rgba($g-bar-background-color, 0),
+        rgba($g-footer-background-color, 1),
+        rgba($g-footer-background-color, 0),
       );
     z-index: z-index-of(text-gradation);
   }
@@ -183,8 +183,8 @@ a {
     background-image:
       linear-gradient(
         to left,
-        rgba($g-bar-background-color, 1),
-        rgba($g-bar-background-color, 0),
+        rgba($g-footer-background-color, 1),
+        rgba($g-footer-background-color, 0),
       );
     z-index: z-index-of(text-gradation);
   }

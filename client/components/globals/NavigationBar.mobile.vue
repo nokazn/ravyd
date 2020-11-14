@@ -120,7 +120,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-$border-color: darken($g-bar-background-color, 6%);
+$border-color: darken($g-footer-background-color, 6%);
 
 .NavigationBar {
   display: flex;
