@@ -1,8 +1,8 @@
 <template>
   <PlaylistModal
     v-model="modal"
-    :handler="handler"
     detail-text="作成"
+    :handler="handler"
   />
 </template>
 

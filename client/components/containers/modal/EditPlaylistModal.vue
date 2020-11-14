@@ -1,9 +1,9 @@
 <template>
   <PlaylistModal
     v-model="modal"
-    :handler="handler"
     detail-text="編集"
-    result-text="更新"
+    handler-text="更新"
+    :handler="handler"
     :form="form"
   />
 </template>
