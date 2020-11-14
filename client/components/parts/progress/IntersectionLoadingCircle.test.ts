@@ -3,7 +3,7 @@ import { options } from '~/tests/mocks/mount';
 import IntersectionLoadingCircle from './IntersectionLoadingCircle.vue';
 
 describe('IntersectionLoadingCircle', () => {
-  it('exist template ref & v-pregress-circular', async () => {
+  it('exist template ref & v-progress-circular', async () => {
     const wrapper = mount(IntersectionLoadingCircle, {
       ...options,
       propsData: {
