@@ -3,9 +3,8 @@ import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
 
-// @ts-ignore
-window.IntersectionObserver = jest.fn(() => ({
+window.IntersectionObserver = jest.fn().mockReturnValue({
   observe: () => {},
   unobserve: () => {},
   disconnect: () => {},
-}));
+});
