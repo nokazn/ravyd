@@ -128,6 +128,7 @@
     <EditPlaylistModal
       v-model="editPlaylistModal"
       :form="editPlaylistForm"
+      @update:image="onUpdateImage"
     />
 
     <p
@@ -421,6 +422,17 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       this.mutationUnsubscribe();
       this.mutationUnsubscribe = undefined;
     }
+  }
+
+  async onUpdateImage() {
+    if (this.playlist == null) return;
+    const images = await this.$spotify.playlists.getPlaylistArtwork({
+      playlistId: this.$route.params.playlistId,
+    });
+    this.playlist = {
+      ...this.playlist,
+      images,
+    };
   }
 
   async appendTrackList(counts: number = LIMIT_OF_TRACKS, payload?: { force: true } | undefined) {

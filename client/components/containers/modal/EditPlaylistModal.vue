@@ -5,6 +5,7 @@
     handler-text="更新"
     :handler="handler"
     :form="form"
+    @update:image="onUpdateImage"
   />
 </template>
 
@@ -13,6 +14,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import PlaylistModal, {
   On as OnModal,
   INPUT,
+  UPDATE_IMAGE,
   Form,
   Handler,
 } from '~/components/containers/modal/PaylistModal.vue';
@@ -21,6 +23,7 @@ export type { Form } from '~/components/containers/modal/PaylistModal.vue';
 
 export type On = {
   [INPUT]: OnModal['input']
+  [UPDATE_IMAGE]: OnModal['update:image']
 }
 
 export default defineComponent({
@@ -51,10 +54,12 @@ export default defineComponent({
           root.$toast.pushError(err.message);
         });
     };
+    const onUpdateImage = () => { emit(UPDATE_IMAGE); };
 
     return {
       modal,
       handler,
+      onUpdateImage,
     };
   },
 });
