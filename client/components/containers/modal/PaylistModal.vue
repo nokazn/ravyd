@@ -82,8 +82,6 @@ import {
   toRef,
   computed,
   watch,
-  onMounted,
-  onBeforeUnmount,
   PropType,
 } from '@vue/composition-api';
 import { InputValidationRules } from 'vuetify';
@@ -91,6 +89,7 @@ import { ExtendedMutationPayload } from 'typed-vuex';
 import Modal from '~/components/parts/modal/Modal.vue';
 import { extractBase64EncodedFile } from '~/utils/text';
 import { useFileLoader } from '~/use/event';
+import { useMutationSubscriber } from '~/use/observer';
 import { SpotifyAPI } from '~~/types';
 
 type Playlist = {
@@ -235,50 +234,31 @@ export default defineComponent({
       });
     };
 
-    let mutationUnsubscribe: (() => void) | undefined;
-    onMounted(() => {
-      // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
-      const subscribePlaylist = ({
-        payload: { id: playlistId },
-      }: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
-        if (playlist.artwork == null) return;
-        const fileReader = useFileLoader((_, f) => {
-          const artwork = extractBase64EncodedFile(f);
-          if (artwork == null) return;
-          root.$spotify.playlists.uploadPlaylistArtwork({
-            playlistId,
-            artwork,
-          }).then(() => {
-            resetForm();
-            root.$toast.pushPrimary(`プレイリストを${text}しました。`);
-          }).catch(() => {
-            isLoading.value = false;
-            root.$toast.pushError('画像のアップロードに失敗しました。');
-          });
-        }, () => {
+    // プレイリストが作成/編集された後、アップロードされた画像があれば更新する
+    const subscribePlaylist = ({
+      payload: { id: playlistId },
+    }: ExtendedMutationPayload<'playlists/ADD_PLAYLIST' | 'playlists/EDIT_PLAYLIST'>) => {
+      if (playlist.artwork == null) return;
+      const fileReader = useFileLoader((_, f) => {
+        const artwork = extractBase64EncodedFile(f);
+        if (artwork == null) return;
+        root.$spotify.playlists.uploadPlaylistArtwork({
+          playlistId,
+          artwork,
+        }).then(() => {
+          resetForm();
+          root.$toast.pushPrimary(`プレイリストを${text}しました。`);
+        }).catch(() => {
           isLoading.value = false;
-          root.$toast.pushError('画像の読み込みに失敗しました。');
+          root.$toast.pushError('画像のアップロードに失敗しました。');
         });
-        fileReader.readAsDataURL(playlist.artwork);
-      };
-      mutationUnsubscribe = root.$subscribe((mutation) => {
-        const { type } = mutation;
-        switch (type) {
-          case 'playlists/ADD_PLAYLIST':
-          case 'playlists/EDIT_PLAYLIST':
-            subscribePlaylist(mutation as ExtendedMutationPayload<typeof type>);
-            break;
-          default:
-            break;
-        }
+      }, () => {
+        isLoading.value = false;
+        root.$toast.pushError('画像の読み込みに失敗しました。');
       });
-    });
-    onBeforeUnmount(() => {
-      if (mutationUnsubscribe != null) {
-        mutationUnsubscribe();
-        mutationUnsubscribe = undefined;
-      }
-    });
+      fileReader.readAsDataURL(playlist.artwork);
+    };
+    useMutationSubscriber(root, ['playlists/ADD_PLAYLIST', 'playlists/EDIT_PLAYLIST'], subscribePlaylist);
 
     return {
       playlist,

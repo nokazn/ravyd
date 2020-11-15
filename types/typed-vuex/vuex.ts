@@ -129,8 +129,8 @@ declare module 'typed-vuex' {
     payload: RootMutations[T]
   }
 
-  type ExtendedSubscribe = <P extends ExtendedMutationPayload<keyof RootMutations>>(
-    fn: (mutation: P, state: RootState) => void | Promise<void>,
+  type ExtendedSubscribe = <T extends keyof RootMutations>(
+    fn: (mutation: ExtendedMutationPayload<T>, state: RootState) => void | Promise<void>,
     options?: SubscribeOptions
   ) => () => void
 }
