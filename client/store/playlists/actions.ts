@@ -177,7 +177,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   },
 
   /**
-   * 自分がオーナーのプレイリスト情報を編集数ｒ
+   * 自分がオーナーのプレイリスト情報を編集する
    */
   async editPlaylist({ commit, dispatch }, {
     playlistId,
