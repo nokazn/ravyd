@@ -127,9 +127,11 @@ export type Handler<T extends 'create' | 'edit'> = (payload: T extends 'edit'
   }) => Promise<void>
 
 export const INPUT = 'input';
+export const UPDATE_IMAGE = 'update:image';
 
 export type On = {
   [INPUT]: boolean;
+  [UPDATE_IMAGE]: void;
 }
 
 export default defineComponent({
@@ -247,6 +249,7 @@ export default defineComponent({
           artwork,
         }).then(() => {
           resetForm();
+          emit(UPDATE_IMAGE);
           root.$toast.pushPrimary(`プレイリストを${text}しました。`);
         }).catch(() => {
           isLoading.value = false;
