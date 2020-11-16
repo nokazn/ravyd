@@ -1,7 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
 import MarqueeArtistNames from './MarqueeArtistNames.vue';
-import { App } from '~~/types';
+import type { App, VHas } from '~~/types';
 
 const artist = (i: number): App.MinimumArtist => ({
   id: `id${i}`,
@@ -17,8 +17,7 @@ describe('MarqueeArtistNames', () => {
         artists: [artist(1)],
       },
     });
-    // @ts-ignore
-    expect(wrapper.vm.MARQUEE_TEXT_REF).toBeTruthy();
+    expect((wrapper.vm as VHas<'MARQUEE_TEXT_REF'>).MARQUEE_TEXT_REF).toBeTruthy();
   });
 
   it('3 artists', () => {
