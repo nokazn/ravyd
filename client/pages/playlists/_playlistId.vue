@@ -271,7 +271,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const {
       name,
       description,
-      images,
       isPublic,
       isCollaborative,
     } = this.playlist;
@@ -279,7 +278,6 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
       playlistId: this.$route.params.playlistId,
       name,
       description: description ?? '',
-      images,
       isPrivate: isPublic != null
         ? !isPublic
         : false,
