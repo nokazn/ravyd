@@ -17,9 +17,9 @@ import PlaylistModal, {
   UPDATE_IMAGE,
   Form,
   Handler,
-} from '~/components/containers/modal/PaylistModal.vue';
+} from '~/components/containers/modal/PlaylistModal.vue';
 
-export type { Form } from '~/components/containers/modal/PaylistModal.vue';
+export type { Form } from '~/components/containers/modal/PlaylistModal.vue';
 
 export type On = {
   [INPUT]: OnModal['input']
