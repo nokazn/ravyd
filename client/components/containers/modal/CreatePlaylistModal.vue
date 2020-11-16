@@ -8,10 +8,14 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
-import PlaylistModal, { On as OnModal, INPUT, Handler } from '~/components/containers/modal/PlaylistModal.vue';
+import PlaylistModal, {
+  On as OnModal,
+  INPUT,
+  Handler,
+} from '~/components/containers/modal/PlaylistModal.vue';
 
 export type On = {
-  [INPUT]: OnModal['input']
+  [INPUT]: OnModal['input'];
 }
 
 export default defineComponent({

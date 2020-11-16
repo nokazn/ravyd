@@ -11,7 +11,6 @@ type Form = {
   isCollaborative: boolean;
   playlistId?: string ;
 }
-// type Playlist = Omit<Form, 'artwork'> & { artwork: File | undefined; };
 
 const CLICK = 'click';
 const INPUT = 'input';
@@ -64,11 +63,16 @@ describe('PlaylistModal', () => {
       value: false,
       detailText: '作成',
     });
-    expect(wrapper.findComponent({ name: 'VDialog' }).props().value).toBe(false);
+    const VDialog = wrapper.findComponent({ name: 'VDialog' });
+    expect(VDialog.props().value).toBe(false);
+
+    await VDialog.vm.$emit(INPUT, true);
+    expect(wrapper.emitted(INPUT)?.[0][0]).toBe(true);
+
     await wrapper.setProps({
       value: true,
     });
-    expect(wrapper.findComponent({ name: 'VDialog' }).props().value).toBe(true);
+    expect(VDialog.props().value).toBe(true);
   });
 
   it('without initial form', () => {
@@ -281,5 +285,5 @@ describe('PlaylistModal', () => {
     });
   });
 
-  // @todo subscribePlaylist, emit('update:image) のテスト
+  // @todo subscribePlaylist, emit('update:image') のテスト
 });
