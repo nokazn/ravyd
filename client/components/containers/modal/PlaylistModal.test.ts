@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import PlaylistModal from './PlaylistModal.vue';
-import { VHas } from '~~/types';
+import type { VHas } from '~~/types';
 
 type Form = {
   name: string;

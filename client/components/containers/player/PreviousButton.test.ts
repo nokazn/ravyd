@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import PreviousButton from './PreviousButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI, VHas } from '~~/types';
 
 const CLICK = 'click';
 
@@ -70,13 +70,12 @@ describe('PreviousButton', () => {
   it('call seek previous', async () => {
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
-    // @ts-ignore
-    expect(wrapper.vm.firstClicked).toBe(true);
+    const vm = wrapper.vm as VHas<'firstClicked', boolean>;
+    expect(vm.firstClicked).toBe(true);
     jest.runOnlyPendingTimers();
     // in 1000 ms timer
     expect(setTimeout).toHaveBeenNthCalledWith(1, expect.any(Function), 1000);
-    // @ts-ignore
-    expect(wrapper.vm.firstClicked).toBe(false);
+    expect(vm.firstClicked).toBe(false);
     // in 400 ms timer
     expect(setTimeout).toHaveBeenNthCalledWith(2, expect.any(Function), 400);
     expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
