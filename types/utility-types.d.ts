@@ -1,4 +1,7 @@
 /* eslint-disable max-len */
+import { Vue } from 'vue/types/vue';
+import { Wrapper } from '@vue/test-utils';
+
 export type Except<ObjectType, KeysType extends keyof ObjectType> = Pick<
   ObjectType,
   Exclude<keyof ObjectType, KeysType>
@@ -8,6 +11,17 @@ export type Merge<FirstType, SecondType> = Except<
   FirstType,
   Extract<keyof FirstType, keyof SecondType>
 > & SecondType
+
+export type Has<
+  O extends Record<string, unknown>,
+  P extends string,
+  T extends unknown = unknown,
+> = O & Record<P, T>
+// test 中で vm のプロパティを参照するときにキャストする
+export type VHas<
+  P extends string,
+  T extends unknown = unknown,
+> = Wrapper<Vue>['vm'] & Record<P, T>
 
 export type ActionMethodMap = {
   [k: string]: (...args: any) => Promise<any> | any
