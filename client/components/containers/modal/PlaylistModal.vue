@@ -90,28 +90,19 @@ import Modal from '~/components/parts/modal/Modal.vue';
 import { extractBase64EncodedFile } from '~/utils/text';
 import { useFileLoader } from '~/use/event';
 import { useMutationSubscriber } from '~/use/observer';
-import { SpotifyAPI } from '~~/types';
 
-type Playlist = {
+type HandlerType = 'create' | 'edit';
+type PlaylistBase = {
   name: string;
   description: string;
-  artwork: File | undefined;
   isPrivate: boolean;
   isCollaborative: boolean;
 }
+type Playlist = PlaylistBase & { artwork: File | undefined; };
 type FormRef = Vue & { resetValidation(): void; }
-
-// 編集するとき
-export type Form = {
-  playlistId: string;
-  name: string;
-  description: string;
-  images: SpotifyAPI.Image[];
-  isPrivate: boolean;
-  isCollaborative: boolean;
-}
-
-export type Handler<T extends 'create' | 'edit'> = (payload: T extends 'edit'
+// 編集するときは playlistId を指定
+export type Form = PlaylistBase & { playlistId?: string; }
+export type Handler<T extends HandlerType> = (payload: T extends 'edit'
   ? {
     playlistId: string;
     name: string;
@@ -124,7 +115,8 @@ export type Handler<T extends 'create' | 'edit'> = (payload: T extends 'edit'
     description: string;
     isPublic: boolean;
     isCollaborative: boolean;
-  }) => Promise<void>
+  }
+) => Promise<void>
 
 export const INPUT = 'input';
 export const UPDATE_IMAGE = 'update:image';
@@ -149,7 +141,7 @@ export default defineComponent({
       default: undefined,
     },
     handler: {
-      type: Function as PropType<Handler<'create' | 'edit'>>,
+      type: Function as PropType<Handler<HandlerType>>,
       required: true,
     },
     detailText: {
@@ -221,7 +213,8 @@ export default defineComponent({
     const handlePlaylist = () => {
       isLoading.value = true;
       props.handler({
-        playlistId: props.form?.playlistId,
+        // @todo 型エラー回避のため
+        playlistId: props.form?.playlistId ?? '',
         name: playlist.name,
         description: playlist.description,
         isPublic: !playlist.isPrivate,
