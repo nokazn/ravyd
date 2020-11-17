@@ -29,6 +29,10 @@ export default defineComponent({
       type: Number,
       default: 36,
     },
+    ratio: {
+      type: Number,
+      default: 0.8,
+    },
     circle: {
       type: Boolean,
       default: false,
@@ -38,7 +42,7 @@ export default defineComponent({
   setup(props, { root }) {
     const iconSize = props.circle
       ? props.size
-      : Math.floor(props.size * 0.75);
+      : Math.floor(props.size * props.ratio);
 
     const disabled = computed(() => root.$getters()['playback/isDisallowed']('interrupting_playback'));
     const mediaButton = computed<MediaButton>(() => {

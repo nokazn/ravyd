@@ -31,7 +31,7 @@ export const XXL_BREAK_POINT = 1900;
 
 export const HEADER_HEIGHT = 52;
 export const FOOTER_HEIGHT = 80;
-export const FOOTER_HEIGHT_MOBILE = FOOTER_HEIGHT * 0.9;
+export const FOOTER_HEIGHT_MOBILE = FOOTER_HEIGHT * 0.8;
 export const DEVICE_BAR_HEIGHT = 24;
 export const NAVIGATION_BAR_HEIGHT = 48;
 export const NAVIGATION_DRAWER_WIDTH = 200;

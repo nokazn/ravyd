@@ -10,8 +10,8 @@
     <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
-          :src="artWorkSrc(60)"
-          :size="60"
+          :src="artWorkSrc"
+          :size="ARTWORK_SIZE"
           :alt="trackName"
           :title="trackName"
           :class="$style.Left__artWork"
@@ -70,6 +70,8 @@ import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vu
 import PlaybackMenu, { On as OnPlaybackMenu } from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
 
+const ARTWORK_SIZE = 60;
+
 export default defineComponent({
   components: {
     ReleaseArtwork,
@@ -87,16 +89,16 @@ export default defineComponent({
   setup(_, { root }) {
     const deviceSelectMenu = ref(false);
 
-    const artWorkSrc = (size: number) => root.$getters()['playback/artworkSrc'](size);
+    const artWorkSrc = computed(() => root.$getters()['playback/artworkSrc'](ARTWORK_SIZE));
     const trackName = computed(() => root.$state().playback.trackName || '不明のトラック');
     const trackId = computed(() => root.$state().playback.trackId);
     const trackType = computed(() => root.$state().playback.trackType);
     const releaseId = computed(() => root.$getters()['playback/releaseId']);
     const artists = computed(() => root.$state().playback.artists);
+
     const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
     const hasTrack = computed(() => root.$getters()['playback/hasTrack']);
     const isTrack = computed(() => trackType.value === 'track');
-
     const isSavedTrack = computed<boolean>({
       get() { return root.$state().playback.isSavedTrack; },
       set(isSaved: OnFavorite['input'] | OnPlaybackMenu['input']) {
@@ -114,16 +116,17 @@ export default defineComponent({
 
     return {
       deviceSelectMenu,
-      isAnotherDevicePlaying,
-      hasTrack,
-      isTrack,
       artWorkSrc,
       trackName,
       trackId,
       trackType,
       releaseId,
       artists,
+      isAnotherDevicePlaying,
+      hasTrack,
+      isTrack,
       isSavedTrack,
+      ARTWORK_SIZE,
     };
   },
 });
@@ -153,7 +156,7 @@ $side-margin: 1vw;
   height: 100%;
 
   & > *:not(:last-child) {
-    margin-right: 0.375em;
+    margin-right: 0.2em;
   }
 
   &__info {
@@ -165,10 +168,6 @@ $side-margin: 1vw;
     & > *:not(:last-child) {
       margin-bottom: 0.375em;
     }
-  }
-
-  &__favorite {
-    margin-right: 0.1em;
   }
 }
 

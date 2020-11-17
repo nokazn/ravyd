@@ -10,8 +10,8 @@
     <div :class="$style.PlayerBar__container">
       <div :class="$style.Left">
         <ReleaseArtwork
-          :src="artWorkSrc(56)"
-          :size="56"
+          :src="artWorkSrc"
+          :size="ARTWORK_SIZE"
           :alt="trackName"
           :title="trackName"
           :class="$style.Left__artWork"
@@ -41,10 +41,13 @@
           <FavoriteButton
             v-if="isTrack && hasTrack"
             v-model="isSavedTrack"
+            :ratio="0.85"
           />
-          <MediaButton />
+          <MediaButton
+            key="sm"
+            :ratio="0.85"
+          />
         </template>
-
         <template v-else>
           <SkipButton
             v-if="isEpisode"
@@ -52,7 +55,11 @@
           />
           <ShuffleButton v-else />
           <PreviousButton />
-          <MediaButton circle />
+          <MediaButton
+            key="md"
+            circle
+            :size="38"
+          />
           <NextButton />
           <SkipButton
             v-if="isEpisode"
@@ -81,6 +88,8 @@ import MediaButton from '~/components/containers/player/MediaButton.vue';
 import NextButton from '~/components/containers/player/NextButton.vue';
 import RepeatButton from '~/components/containers/player/RepeatButton.vue';
 
+const ARTWORK_SIZE = 48;
+
 export default defineComponent({
   components: {
     ReleaseArtwork,
@@ -100,12 +109,13 @@ export default defineComponent({
     const deviceSelectMenu = ref(false);
 
     const smallerThanSm = computed(() => root.$screen.smallerThan('sm'));
-    const artWorkSrc = (size: number) => root.$getters()['playback/artworkSrc'](size);
+    const artWorkSrc = computed(() => root.$getters()['playback/artworkSrc'](ARTWORK_SIZE));
     const trackName = computed(() => root.$state().playback.trackName || '不明のトラック');
     const trackId = computed(() => root.$state().playback.trackId);
     const trackType = computed(() => root.$state().playback.trackType);
     const releaseId = computed(() => root.$getters()['playback/releaseId']);
     const artists = computed(() => root.$state().playback.artists);
+
     const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
     const hasTrack = computed(() => root.$getters()['playback/hasTrack']);
     const isTrack = computed(() => trackType.value === 'track');
@@ -139,6 +149,7 @@ export default defineComponent({
       isTrack,
       isEpisode,
       isSavedTrack,
+      ARTWORK_SIZE,
     };
   },
 });
@@ -149,7 +160,17 @@ export default defineComponent({
   z-index: z-index-of(footer) !important;
 
   &__container {
-    display: flex;
+    @include smaller-than-sm() {
+      // 36px * 2 + 12px
+      grid-template-columns: auto 84px;
+    }
+
+    @include larger-than-sm() {
+      // 32px * 2 + 36px * 3 + 12px
+      grid-template-columns: auto 184px;
+    }
+
+    display: grid;
     justify-content: space-between;
     align-items: center;
     // .Top の position: absolute を利かせるため
@@ -163,20 +184,18 @@ export default defineComponent({
 .Top {
   position: absolute;
   width: 100vw;
-  transform: translateY(calc((#{$g-footer-height-mobile} / -2)));
+  transform: translateY(calc(#{$g-footer-height-mobile} / -2));
 }
 
 .Left {
   display: flex;
   align-items: center;
-  flex: 0 1 auto;
-  // flex の場合は min-width のデフォルト値が auto になる
+  // flex/grid の場合は min-width のデフォルト値が auto になる
   // 親要素をはみ出す大きさのときは .Left が縮むようにする
   min-width: 0;
-  margin-right: min(4vw, 12px);
 
   & > *:not(:last-child) {
-    margin-right: 0.5em;
+    margin-right: 0.2em;
   }
 
   &__info {
@@ -189,10 +208,6 @@ export default defineComponent({
       margin-bottom: 0.2em;
     }
   }
-
-  &__favorite {
-    margin-right: 0.1em;
-  }
 }
 
 .Right {
@@ -200,22 +215,9 @@ export default defineComponent({
   flex-wrap: nowrap;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 2%;
-
-  @include smaller-than-md() {
-    // 伸縮させない
-    // 36px * 2 + 12px
-    flex: 0 0 84px;
-  }
-
-  @include larger-than-md() {
-    // 伸縮させない
-    // 36px * 5 + 12px
-    flex: 0 0 192px;
-  }
 
   & > *:not(:last-child) {
-    margin-right: min(4vw, 12px);
+    margin-right: 0.2em;
   }
 }
 </style>

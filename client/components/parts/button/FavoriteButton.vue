@@ -43,6 +43,10 @@ export default defineComponent({
       type: Number,
       default: 36,
     },
+    ratio: {
+      type: Number,
+      default: 0.8,
+    },
     text: {
       type: String,
       default: '保存',
@@ -52,6 +56,7 @@ export default defineComponent({
       type: String,
       default: 'grey darken-3',
     },
+    // outlined で value === true の時のみ有効
     iconColor: {
       type: String as PropType<string | undefined>,
       default: undefined,
@@ -86,7 +91,7 @@ export default defineComponent({
           title: `${props.text}する`,
         };
     });
-    const iconSize = computed((): number => (props.size * 0.8) / Math.SQRT2);
+    const iconSize = computed((): number => (props.size * props.ratio) / Math.SQRT2);
     const onClick = () => { emit(INPUT, !props.value); };
 
     return {

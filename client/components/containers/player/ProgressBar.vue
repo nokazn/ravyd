@@ -1,6 +1,7 @@
 <template>
   <v-progress-linear
     background-color="inactive"
+    :background-opacity="0.2"
     :height="height"
     :color="color"
     :value="progress"
@@ -15,7 +16,7 @@ export default defineComponent({
   props: {
     height: {
       type: Number,
-      default: 2,
+      default: 1.8,
     },
   },
 
