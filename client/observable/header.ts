@@ -15,7 +15,8 @@ export type $Header = {
   readonly backdropFiltered: boolean;
   observe: (element: Element | null, margin?: number) => void;
   disconnectObserver: () => void;
-  toggleBackdropFilter:(isEnabled: boolean) => void;
+  hideFab: () => void;
+  toggleBackdropFilter: (isEnabled: boolean) => void;
 }
 
 const state = Vue.observable<HeaderState>({
@@ -49,7 +50,8 @@ export const $header: $Header = {
     const rootMargin = `-${margin ?? HEADER_HEIGHT}px 0px`;
     state.intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        // element がヘッダーに隠れて見えなくなったら additional contents を表示
+        // element がヘッダーに隠れて見えなくなったら fab を表示
+        console.log(entry.isIntersecting);
         state.isFabShown = !entry.isIntersecting;
       });
     }, { rootMargin });
@@ -62,6 +64,10 @@ export const $header: $Header = {
       state.intersectionObserver = undefined;
     }
 
+    state.isFabShown = false;
+  },
+
+  hideFab() {
     state.isFabShown = false;
   },
 

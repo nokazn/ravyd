@@ -121,6 +121,7 @@ const nuxtConfig: NuxtConfig = {
   plugins: [
     { src: '~/plugins/dayjs' },
     { src: '~/plugins/vuex' },
+    { src: '~/plugins/router' },
     { src: '~/plugins/axios' },
     { src: '~/plugins/spotify' },
     { src: '~/plugins/server' },
