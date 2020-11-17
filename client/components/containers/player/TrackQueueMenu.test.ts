@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import TrackQueueMenu from './TrackQueueMenu.vue';
-import type { App } from '~~/types';
+import type { App, VHas } from '~~/types';
 
 const CLICK = 'click';
 
@@ -57,11 +57,10 @@ describe('TrackQueueMenu', () => {
       item(1),
       item(2),
     ]);
-    // @ts-ignore
-    expect(wrapper.vm.menu).toBe(false);
+    const vm = wrapper.vm as VHas<'menu', boolean>;
+    expect(vm.menu).toBe(false);
     await wrapper.findAll('.v-btn--icon').at(0).trigger(CLICK);
-    // @ts-ignore
-    expect(wrapper.vm.menu).toBe(true);
+    expect(vm.menu).toBe(true);
   });
 
   // @todo menu 内のテスト

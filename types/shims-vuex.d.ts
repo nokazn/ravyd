@@ -3,7 +3,6 @@ import type {
   RootGetters,
   SFCCommit,
   SFCDispatch,
-  ExtendedSubscribe,
 } from 'typed-vuex';
 import type dayjs from 'dayjs';
 import type { TypedNuxtAxiosInstance } from 'typed-axios';
@@ -20,7 +19,6 @@ declare module 'vuex/types/index' {
     $getters: () => RootGetters;
     $commit: SFCCommit;
     $dispatch: SFCDispatch;
-    $subscribe: ExtendedSubscribe;
 
     // plugin
     $dayjs: typeof dayjs;
@@ -29,7 +27,7 @@ declare module 'vuex/types/index' {
     $serverApi: TypedNuxtAxiosInstance;
     $server: ServerServices;
 
-    // obserable
+    // observable
     $toast: $Toast;
   }
 }

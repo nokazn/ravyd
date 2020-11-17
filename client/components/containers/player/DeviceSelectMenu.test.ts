@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import { App } from '~~/types';
 import DeviceSelectMenu from './DeviceSelectMenu.vue';
+import type { App, VHas } from '~~/types';
 
 const CLICK = 'click';
 
@@ -47,11 +47,10 @@ describe('DeviceSelectMenu', () => {
 
   it('open menu', async () => {
     const wrapper = factory(false, [device(1), device(2)]);
-    // @ts-ignore
-    expect(wrapper.vm.menu).toBe(false);
+    const vm = wrapper.vm as VHas<'menu', boolean>;
+    expect(vm.menu).toBe(false);
     await wrapper.findAll('.v-btn--icon').at(0).trigger(CLICK);
-    // @ts-ignore
-    expect(wrapper.vm.menu).toBe(true);
+    expect(vm.menu).toBe(true);
   });
 
   // @todo menu 内のテスト

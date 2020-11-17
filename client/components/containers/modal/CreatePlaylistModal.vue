@@ -1,17 +1,21 @@
 <template>
   <PlaylistModal
     v-model="modal"
-    :handler="handler"
     detail-text="作成"
+    :handler="handler"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
-import PlaylistModal, { On as OnModal, INPUT, Handler } from '~/components/containers/modal/PaylistModal.vue';
+import PlaylistModal, {
+  On as OnModal,
+  INPUT,
+  Handler,
+} from '~/components/containers/modal/PlaylistModal.vue';
 
 export type On = {
-  [INPUT]: OnModal['input']
+  [INPUT]: OnModal['input'];
 }
 
 export default defineComponent({

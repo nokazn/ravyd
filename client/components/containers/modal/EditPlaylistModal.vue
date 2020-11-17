@@ -1,10 +1,11 @@
 <template>
   <PlaylistModal
     v-model="modal"
-    :handler="handler"
     detail-text="編集"
-    result-text="更新"
+    handler-text="更新"
+    :handler="handler"
     :form="form"
+    @update:image="onUpdateImage"
   />
 </template>
 
@@ -13,14 +14,16 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import PlaylistModal, {
   On as OnModal,
   INPUT,
+  UPDATE_IMAGE,
   Form,
   Handler,
-} from '~/components/containers/modal/PaylistModal.vue';
+} from '~/components/containers/modal/PlaylistModal.vue';
 
-export type { Form } from '~/components/containers/modal/PaylistModal.vue';
+export type { Form } from '~/components/containers/modal/PlaylistModal.vue';
 
 export type On = {
-  [INPUT]: OnModal['input']
+  [INPUT]: OnModal['input'];
+  [UPDATE_IMAGE]: OnModal['update:image'];
 }
 
 export default defineComponent({
@@ -51,10 +54,12 @@ export default defineComponent({
           root.$toast.pushError(err.message);
         });
     };
+    const onUpdateImage = () => { emit(UPDATE_IMAGE); };
 
     return {
       modal,
       handler,
+      onUpdateImage,
     };
   },
 });

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import SearchField from './SearchField.vue';
+import type { VHas } from '~~/types';
 
 const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const FOCUS = 'focus';
@@ -46,8 +47,7 @@ describe('SearchField', () => {
 
   it('clear text', async () => {
     const wrapper = factory('a', true);
-    // @ts-ignore
-    expect(wrapper.vm.queryRef).toBe('a');
+    expect((wrapper.vm as VHas<'queryRef'>).queryRef).toBe('a');
     await wrapper.find('div.v-input__append-inner > div > .v-btn').trigger(CLICK);
     expect(wrapper.emitted(UPDATE_QUERY)?.[0][0]).toBe('');
   });

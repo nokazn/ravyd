@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
 import NavigationListItemGroup from './NavigationListItemGroup.vue';
-
+import type { VHas } from '~~/types';
 
 describe('NavigationListItemGroup', () => {
   it('exist virtual scroller wrapper ref', () => {
@@ -27,7 +27,6 @@ describe('NavigationListItemGroup', () => {
         scroll: true,
       },
     });
-    // @ts-ignore
-    expect(wrapper.vm.VIRTUAL_SCROLLER_WRAPPER_REF).toBeTruthy();
+    expect((wrapper.vm as VHas<'VIRTUAL_SCROLLER_WRAPPER_REF'>).VIRTUAL_SCROLLER_WRAPPER_REF).toBeTruthy();
   });
 });

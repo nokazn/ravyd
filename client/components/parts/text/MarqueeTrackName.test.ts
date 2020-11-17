@@ -1,7 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
 import MarqueeTrackName from './MarqueeTrackName.vue';
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI, VHas } from '~~/types';
 
 const factory = (type: SpotifyAPI.Player.PlayingType) => {
   return mount(MarqueeTrackName, {
@@ -18,8 +18,7 @@ const factory = (type: SpotifyAPI.Player.PlayingType) => {
 describe('MarqueeTrackName', () => {
   it('exist template ref', () => {
     const wrapper = factory('track');
-    // @ts-ignore
-    expect(wrapper.vm.MARQUEE_TEXT_REF).toBeTruthy();
+    expect((wrapper.vm as VHas<'MARQUEE_TEXT_REF'>).MARQUEE_TEXT_REF).toBeTruthy();
   });
 
   it('track', () => {

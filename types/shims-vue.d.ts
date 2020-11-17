@@ -36,7 +36,7 @@ declare module 'vue/types/vue' {
     $server: ServerServices;
     $constant: Constant;
 
-    // obserable
+    // observable
     $confirm: $Confirm;
     $header: $Header;
     $keyboard: $Keyboard;
