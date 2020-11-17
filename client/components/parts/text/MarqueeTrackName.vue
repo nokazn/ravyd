@@ -1,7 +1,7 @@
 <template>
   <div
     :title="name"
-    :class="[$style.TrackName, 'g-text-gradation']"
+    :class="[$style.TrackName]"
   >
     <span
       ref="MARQUEE_TEXT_REF"
@@ -94,6 +94,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .TrackName {
+  @include side-gradation($g-footer-background-color, 8px);
+
   color: $g-title-color;
   font-size: 0.9em;
   line-height: 1.5em;

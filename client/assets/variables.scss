@@ -188,27 +188,27 @@ $__layer-map: (
 /*
  * 両端の影を疑似要素で表現
  */
-@mixin edge-gradation($to-left-or-right) {
+@mixin edge-gradation($to-left-or-right, $color, $width) {
   display: block;
   position: absolute;
   top: 0;
   height: 100%;
-  width: $g-gradation-width;
+  width: calc(#{$width} + 1px);
   content: "";
   background-image:
     linear-gradient(
       to #{$to-left-or-right},
-      rgba($g-background-color, 1),
-      rgba($g-background-color, 0),
+      rgba($color, 1),
+      rgba($color, 0),
     );
   z-index: z-index-of(text-gradation);
 }
 
-@mixin side-gradation() {
+@mixin side-gradation($color: $g-background-color, $width: $g-gradation-width) {
   // 左のグラデーション
   &::before {
     // to right
-    @include edge-gradation(right);
+    @include edge-gradation(right, $color, $width);
     // @todo 少しはみでてしまうのを調整している
     left: -1px;
   }
@@ -216,7 +216,7 @@ $__layer-map: (
   // 右のグラデーション
   &::after {
     // to left
-    @include edge-gradation(left);
+    @include edge-gradation(left, $color, $width);
     // @todo 少しはみでてしまうのを調整している
     right: -1px;
   }

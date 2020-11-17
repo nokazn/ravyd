@@ -154,42 +154,6 @@ a {
   box-shadow: 0 0 8px 8px rgba($g-background-color, 0.2);
 }
 
-/**
- * テキストの両端ヲグラデーションにする
- * 親要素を position: relative にする必要がある
- */
-.g-text-gradation {
-  &::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    padding: 8px 4px;
-    background-image:
-      linear-gradient(
-        to right,
-        rgba($g-footer-background-color, 1),
-        rgba($g-footer-background-color, 0),
-      );
-    z-index: z-index-of(text-gradation);
-  }
-
-  &::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    content: "";
-    padding: 8px 4px;
-    background-image:
-      linear-gradient(
-        to left,
-        rgba($g-footer-background-color, 1),
-        rgba($g-footer-background-color, 0),
-      );
-    z-index: z-index-of(text-gradation);
-  }
-}
-
 .g-small-text {
   font-size: 0.75rem;
 }

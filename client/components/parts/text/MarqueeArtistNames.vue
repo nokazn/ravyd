@@ -2,7 +2,7 @@
   <div
     :title="title"
     :class="$style.MarqueeArtistNames"
-    class="g-text-gradation subtext--text"
+    class="subtext--text"
   >
     <div
       ref="MARQUEE_TEXT_REF"
@@ -76,6 +76,8 @@ export default defineComponent({
 
 <style lang="scss" module>
 .MarqueeArtistNames {
+  @include side-gradation($g-footer-background-color, 8px);
+
   font-size: 0.8em;
   line-height: 1.5em;
   padding: 0 0.5em;
