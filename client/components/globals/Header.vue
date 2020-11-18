@@ -38,7 +38,6 @@
           v-if="$screen.isMultiColumn"
           v-show="$header.isFabShown"
           :name="$header.PORTAL_NAME"
-          :class="$style.Header__additional"
         />
       </div>
     </div>

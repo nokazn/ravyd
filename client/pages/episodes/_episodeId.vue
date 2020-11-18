@@ -9,7 +9,7 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          fab
+          :fab="$screen.isMultiColumn"
           :disabled="!episode.isPlayable"
           :value="isEpisodeSet && isPlaying"
           @input="onContextMediaButtonClicked"

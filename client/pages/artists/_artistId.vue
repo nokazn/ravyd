@@ -9,7 +9,7 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          fab
+          :fab="$screen.isMultiColumn"
           :value="isArtistSet && isPlaying "
           @input="onContextMediaButtonClicked"
         />

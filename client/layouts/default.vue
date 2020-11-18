@@ -29,15 +29,18 @@
     <Toasts />
     <ConfirmModal />
     <portal-target
-      v-if="$screen.isSingleColumn"
-      v-show="$header.isFabShown"
-      :name="$header.PORTAL_NAME"
-      :class="$style.Fab"
-    />
-    <portal-target
       role="menu"
       :name="SEARCH_FORM_PORTAL_NAME"
     />
+    <template v-if="$screen.isSingleColumn">
+      <transition name="fade">
+        <portal-target
+          v-show="$header.isFabShown"
+          :name="$header.PORTAL_NAME"
+          :class="$style.Fab"
+        />
+      </transition>
+    </template>
   </v-app>
 </template>
 
@@ -125,12 +128,13 @@ export default defineComponent({
 
 .Fab {
   position: fixed;
-  top: calc(#{$g-header-height} + 2%);
-  right: 2%;
+  top: calc(#{$g-header-height} - 8px);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: z-index-of(fab);
 }
 </style>
 
 <style lang="scss" scoped>
-@include fade-transition(0.3);
+@include fade-transition(0.2);
 </style>

@@ -1,9 +1,12 @@
 import type { Plugin } from '@nuxt/types';
 
 const injector: Plugin = ({ app }) => {
-  app.router?.beforeEach(() => {
-    app.$header.hideFab();
-  });
+  if (app.router != null) {
+    app.router.beforeEach((_t, _f, next) => {
+      app.$header.hideFab();
+      next();
+    });
+  }
 };
 
 export default (injector);
