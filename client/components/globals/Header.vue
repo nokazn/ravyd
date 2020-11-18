@@ -34,7 +34,7 @@
       </div>
 
       <div :class="$style.Header__right">
-        <template v-if="$screen.isMultiColumn">
+        <template v-if="!$screen.isSp">
           <transition name="fade">
             <portal-target
               v-show="$header.isFabShown"

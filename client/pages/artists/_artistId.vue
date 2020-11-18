@@ -9,21 +9,21 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          :fab="$screen.isMultiColumn"
+          :fab="!$screen.isSp"
           :value="isArtistSet && isPlaying "
           @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
           text="フォロー"
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <ArtistMenu
           left
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :artist="artist"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"

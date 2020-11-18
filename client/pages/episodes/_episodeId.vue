@@ -9,7 +9,7 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          :fab="$screen.isMultiColumn"
+          :fab="!$screen.isSp"
           :disabled="!episode.isPlayable"
           :value="isEpisodeSet && isPlaying"
           @input="onContextMediaButtonClicked"
@@ -17,8 +17,8 @@
         <EpisodeMenu
           left
           offset-y
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :episode="episode"
           :publisher="episode.showName"
         />

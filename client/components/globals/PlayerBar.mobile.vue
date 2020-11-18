@@ -30,14 +30,14 @@
           />
         </div>
         <FavoriteButton
-          v-if="isTrack && hasTrack && !smallerThanSm"
+          v-if="isTrack && hasTrack && !$screen.isSp"
           v-model="isSavedTrack"
           :class="$style.Left__favorite"
         />
       </div>
 
       <div :class="$style.Right">
-        <template v-if="smallerThanSm">
+        <template v-if="$screen.isSp">
           <FavoriteButton
             v-if="isTrack && hasTrack"
             v-model="isSavedTrack"
@@ -108,7 +108,6 @@ export default defineComponent({
   setup(_, { root }) {
     const deviceSelectMenu = ref(false);
 
-    const smallerThanSm = computed(() => root.$screen.smallerThan('sm'));
     const artWorkSrc = computed(() => root.$getters()['playback/artworkSrc'](ARTWORK_SIZE));
     const trackName = computed(() => root.$state().playback.trackName || '不明のトラック');
     const trackId = computed(() => root.$state().playback.trackId);
@@ -137,7 +136,6 @@ export default defineComponent({
 
     return {
       deviceSelectMenu,
-      smallerThanSm,
       artWorkSrc,
       trackName,
       trackId,

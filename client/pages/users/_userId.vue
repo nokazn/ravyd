@@ -11,15 +11,15 @@
         <FavoriteButton
           v-if="isFollowing != null"
           text="フォロー"
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
         <UserMenu
           left
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :user="user"
           :following="isFollowing"
           @on-follow-menu-clicked="toggleFollowingState"

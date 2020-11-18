@@ -32,7 +32,7 @@
       role="menu"
       :name="SEARCH_FORM_PORTAL_NAME"
     />
-    <template v-if="$screen.isSingleColumn">
+    <template v-if="$screen.isSp">
       <transition name="fade">
         <portal-target
           v-show="$header.isFabShown"
