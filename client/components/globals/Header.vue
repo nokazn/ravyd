@@ -37,7 +37,7 @@
         <template v-if="!$screen.isSp">
           <transition name="fade">
             <portal-target
-              v-show="$header.isFabShown"
+              v-show="$header.fab"
               :name="$header.PORTAL_NAME"
             />
           </transition>
