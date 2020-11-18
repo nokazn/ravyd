@@ -9,20 +9,20 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          fab
+          :fab="!$screen.isSp"
           :value="isReleaseSet && isPlaying"
           @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :value="release.isSaved"
           @input="toggleSavedState"
         />
         <ReleaseMenu
           left
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :release="release"
           @on-favorite-menu-clicked="toggleSavedState"
         />

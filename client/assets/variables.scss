@@ -158,7 +158,7 @@ $__layer-map: (
 /**
  * フェードイン・フェードアウト
  */
-@mixin fade-transition($seconds) {
+@mixin fade-transition($seconds: 0.3) {
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity #{$seconds}s;
@@ -342,22 +342,9 @@ $__layer-map: (
  */
 @mixin global-fab() {
   display: flex;
+  flex-wrap: nowrap;
 
-  $margin: max(0.5vw, 6px);
-
-  @include smaller-than-md() {
-    flex-direction: column;
-
-    & > *:not(:last-child) {
-      margin-bottom: $margin;
-    }
-  }
-
-  @include larger-than-md() {
-    flex-wrap: nowrap;
-
-    & > *:not(:last-child) {
-      margin-right: $margin;
-    }
+  & > *:not(:last-child) {
+    margin-right: 8px;
   }
 }

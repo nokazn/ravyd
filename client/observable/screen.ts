@@ -81,6 +81,7 @@ export type $Screen = {
   readonly isPc: boolean;
   readonly isSingleColumn: boolean;
   readonly isMultiColumn: boolean;
+  readonly isSp: boolean;
   readonly smallerThan: (type: DeviceType) => boolean;
   readonly largerThan: (type: DeviceType) => boolean;
   readonly cardWidth: number;
@@ -134,7 +135,6 @@ export const $screen: $Screen = {
   get isMobile() {
     return this.smallerThan('lg');
   },
-
   get isPc() {
     return this.largerThan('lg');
   },
@@ -142,9 +142,12 @@ export const $screen: $Screen = {
   get isSingleColumn() {
     return this.smallerThan('md');
   },
-
   get isMultiColumn() {
     return this.largerThan('md');
+  },
+
+  get isSp() {
+    return this.smallerThan('sm');
   },
 
   get cardWidth() {

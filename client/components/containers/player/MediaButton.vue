@@ -31,7 +31,7 @@ export default defineComponent({
     },
     ratio: {
       type: Number,
-      default: 0.8,
+      default: 0.75,
     },
     circle: {
       type: Boolean,

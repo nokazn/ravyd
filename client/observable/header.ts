@@ -4,29 +4,30 @@ import { HEADER_HEIGHT } from '~/constants';
 const PORTAL_NAME = 'CONTENT_HEADER';
 
 type HeaderState = {
-  isFabShown: boolean;
+  fab: boolean;
   intersectionObserver: IntersectionObserver | undefined;
   backdropFiltered: boolean;
 }
 
 export type $Header = {
-  readonly isFabShown: boolean;
+  readonly fab: boolean;
   readonly PORTAL_NAME: typeof PORTAL_NAME;
   readonly backdropFiltered: boolean;
   observe: (element: Element | null, margin?: number) => void;
   disconnectObserver: () => void;
-  toggleBackdropFilter:(isEnabled: boolean) => void;
+  hideFab: () => void;
+  toggleBackdropFilter: (isEnabled: boolean) => void;
 }
 
 const state = Vue.observable<HeaderState>({
-  isFabShown: false,
+  fab: false,
   intersectionObserver: undefined,
   backdropFiltered: true,
 });
 
 export const $header: $Header = {
-  get isFabShown() {
-    return state.isFabShown;
+  get fab() {
+    return state.fab;
   },
   get PORTAL_NAME(): typeof PORTAL_NAME {
     return PORTAL_NAME;
@@ -40,17 +41,15 @@ export const $header: $Header = {
    */
   observe(element, margin) {
     if (element == null) return;
-
     if (state.intersectionObserver != null) {
       state.intersectionObserver.disconnect();
     }
-
     // ヘッダーの分のマージン
     const rootMargin = `-${margin ?? HEADER_HEIGHT}px 0px`;
     state.intersectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        // element がヘッダーに隠れて見えなくなったら additional contents を表示
-        state.isFabShown = !entry.isIntersecting;
+        // element がヘッダーに隠れて見えなくなったら fab を表示
+        state.fab = !entry.isIntersecting;
       });
     }, { rootMargin });
     state.intersectionObserver.observe(element);
@@ -61,8 +60,11 @@ export const $header: $Header = {
       state.intersectionObserver.disconnect();
       state.intersectionObserver = undefined;
     }
+    state.fab = false;
+  },
 
-    state.isFabShown = false;
+  hideFab() {
+    state.fab = false;
   },
 
   toggleBackdropFilter(isEnabled: boolean) {

@@ -9,33 +9,31 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          fab
+          :fab="!$screen.isSp"
           :disabled="!hasTracks"
           :value="isPlaylistSet && isPlaying"
           @input="onContextMediaButtonClicked"
         />
-
         <CircleButton
           v-if="playlist.isOwnPlaylist"
           title="編集する"
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           @click="toggleEditPlaylistModal(true)"
         >
           mdi-pencil
         </CircleButton>
         <FavoriteButton
           v-else
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :value="isFollowing"
           @input="toggleFollowingState"
         />
-
         <PlaylistMenu
           left
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :playlist="playlist"
           :following="isFollowing"
           @on-edit-menu-clicked="toggleEditPlaylistModal"
@@ -90,7 +88,6 @@
               :value="isPlaylistSet && isPlaying"
               @input="onContextMediaButtonClicked"
             />
-
             <CircleButton
               v-if="playlist.isOwnPlaylist"
               outlined
@@ -107,7 +104,6 @@
               :value="isFollowing"
               @input="toggleFollowingState"
             />
-
             <PlaylistMenu
               outlined
               :playlist="playlist"

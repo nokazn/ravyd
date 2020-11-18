@@ -9,21 +9,21 @@
         :class="$style.Fab"
       >
         <ContextMediaButton
-          fab
+          :fab="!$screen.isSp"
           :disabled="!hasEpisodes"
           :value="isShowSet && isPlaying"
           @input="onContextMediaButtonClicked"
         />
         <FavoriteButton
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :value="isSaved"
           @input="toggleSavedState"
         />
         <ShowMenu
           left
-          :fab="$screen.isSingleColumn"
-          :outlined="$screen.isMultiColumn"
+          :fab="$screen.isSp"
+          :outlined="!$screen.isSp"
           :saved="isSaved"
           :show="show"
           @on-save-menu-clicked="toggleSavedState"
