@@ -56,19 +56,17 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
 import type { DataTableHeader } from 'vuetify';
-
-import PlaylistTrackTableRow, { On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import PlaylistTrackTableRow, { ON_FAVORITE_BUTTON_CLICKED, On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
+import { useButtonSize } from '~/use/style';
 import type { App } from '~~/types';
-
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     PlaylistTrackTableRow,
   },
@@ -109,21 +107,19 @@ export default Vue.extend({
     },
   },
 
-  computed: {
+  setup(props, { root, emit }) {
     // マウント後に変化するのは $screen だけで、他の prop はキャッシュする必要なし
-    headers(): DataTableHeader[] {
+    const headers = computed<DataTableHeader[]>(() => {
       // width は 左右の padding を含めた幅
-      const totalSidePadding = 12;
+      const sidePadding = 12;
       const buttonColumnWidth = (n: number = 1) => {
-        const buttonSize = this.$screen.isSingleColumn
-          ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
-          : this.$constant.DEFAULT_BUTTON_SIZE;
-        return totalSidePadding + buttonSize * n + 2 * (n - 1);
+        const buttonSize = useButtonSize(root).value;
+        return sidePadding + buttonSize * n + 2 * (n - 1);
       };
       const imageColumn = {
         text: '',
         value: 'images',
-        width: this.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE + totalSidePadding,
+        width: root.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE + sidePadding,
         sortable: false,
         filterable: false,
       };
@@ -166,93 +162,86 @@ export default Vue.extend({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth(this.$screen.isMultiColumn ? 1 : 2),
+        width: buttonColumnWidth(root.$screen.isMultiColumn ? 1 : 2),
         align: 'center' as const,
         sortable: false,
         filterable: false,
       };
 
-      let headers: (DataTableHeader | undefined)[];
-      if (this.$screen.isSingleColumn) {
-        headers = [
-          // hideImage が指定されれば非表示
-          this.hideImage ? undefined : imageColumn,
+      let h: (DataTableHeader | undefined)[];
+      if (root.$screen.isSingleColumn) {
+        h = [
+          props.hideImage ? undefined : imageColumn,
           titleColumn,
           menuColumn,
         ];
       } else {
-        headers = [
-          // hideImage が指定されれば非表示
-          this.hideImage ? undefined : imageColumn,
+        h = [
+          props.hideImage ? undefined : imageColumn,
           mediaColumn,
           isSavedColumn,
           titleColumn,
-          // collaborative が指定されれば表示
-          this.collaborative ? addedByColumn : undefined,
-          // hideImage が指定されれば非表示
-          this.hideAddedAt ? undefined : addedAtColumn,
+          props.collaborative ? addedByColumn : undefined,
+          props.hideAddedAt ? undefined : addedAtColumn,
           durationColumn,
           menuColumn,
         ];
       }
       // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
-      return headers.filter((header) => header != null) as DataTableHeader[];
-    },
-    isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['playback/contextUri'] === this.uri
-        && this.$getters()['playback/isTrackSet'](trackId);
-    },
-    isPlayingTrack(): (trackId: string) => boolean {
-      return (trackId: string) => this.isTrackSet(trackId)
-        && this.$state().playback.isPlaying;
-    },
-  },
+      return h.filter((header) => header != null) as DataTableHeader[];
+    });
+    const isTrackSet = (id: string) => root.$getters()['playback/isContextSet'](props.uri) && root.$getters()['playback/isTrackSet'](id);
+    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
 
-  methods: {
-    setCustomContext(trackUriList: string[], trackIndex: number) {
-      this.$dispatch('playback/setCustomContext', {
-        contextUri: this.uri,
-        trackUriList,
-        trackIndex,
-      });
-    },
-    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
+    const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       // @todo エピソードは isPlayable が false でも再生できるようにしている
       if (row.type !== 'episode' && row.isPlayable === false) return;
 
-      if (this.isPlayingTrack(row.id)) {
-        this.$dispatch('playback/pause');
+      if (isPlayingTrack(row.id)) {
+        root.$dispatch('playback/pause');
         return;
       }
-
-      if (this.isTrackSet(row.id)) {
-        this.$dispatch('playback/play');
+      if (isTrackSet(row.id)) {
+        root.$dispatch('playback/play');
         return;
       }
-      // trackUriList は更新されうる
-      const trackUriList = this.tracks.map((track) => track.uri);
-      // @todo プレイリスト再生の際は offset を uri で指定すると、403 が返る場合がある?
+      // trackUriList は更新されうるので都度算出する
+      const trackUriList = props.tracks.map((track) => track.uri);
+      // @todo #552 offset を uri で指定すると、403 が返る場合がある?
       // ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
-      this.$dispatch('playback/play', !this.custom && this.uri != null
+      root.$dispatch('playback/play', props.custom || props.uri == null
         ? {
-          contextUri: this.uri,
-          offset: { uri: row.uri },
-          // offset: { position: row.index },
-        }
-        : {
           trackUriList,
           offset: { uri: row.uri },
+        }
+        : {
+          contextUri: props.uri,
+          offset: { uri: row.uri },
+          // offset: { position: row.index },
         });
-      this.setCustomContext(trackUriList, row.index);
-    },
-    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
-    },
-    onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$screen.isSingleColumn) {
-        this.onMediaButtonClicked(row);
+      root.$dispatch('playback/setCustomContext', {
+        contextUri: props.uri,
+        trackUriList,
+        trackIndex: row.index,
+      });
+    };
+    const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {
+      emit(ON_FAVORITE_BUTTON_CLICKED, row);
+    };
+    const onRowClicked = (row: OnRow['on-row-clicked']) => {
+      if (root.$screen.isSingleColumn) {
+        onMediaButtonClicked(row);
       }
-    },
+    };
+
+    return {
+      headers,
+      isTrackSet,
+      isPlayingTrack,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+      onRowClicked,
+    };
   },
 });
 </script>
