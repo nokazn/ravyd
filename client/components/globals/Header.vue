@@ -34,11 +34,14 @@
       </div>
 
       <div :class="$style.Header__right">
-        <portal-target
-          v-if="$screen.isMultiColumn"
-          v-show="$header.isFabShown"
-          :name="$header.PORTAL_NAME"
-        />
+        <template v-if="$screen.isMultiColumn">
+          <transition name="fade">
+            <portal-target
+              v-show="$header.isFabShown"
+              :name="$header.PORTAL_NAME"
+            />
+          </transition>
+        </template>
       </div>
     </div>
   </v-app-bar>
@@ -126,4 +129,8 @@ export default defineComponent({
     }
   }
 }
+</style>
+
+<style lang="scss" scoped>
+@include fade-transition(0.2);
 </style>
