@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-select
-      v-model="searchText"
+      v-model="select"
       dense
       :items="selectItems"
       :class="$style.EpisodeSelect"
@@ -10,10 +10,10 @@
     <v-data-table
       disable-pagination
       hide-default-footer
+      :mobile-breakpoint="0"
       :headers="headers"
       :items="episodes"
-      :mobile-breakpoint="0"
-      :search="searchText"
+      :search="select"
       :custom-filter="customFilter"
       :no-data-text="noDataText"
       class="episode-table"
@@ -45,8 +45,8 @@
           :set="isEpisodeSet(item.id)"
           :playing="isPlayingEpisode(item.id)"
           :hide-added-at="hideAddedAt"
-          @on-row-clicked="onRowClicked"
           @on-media-button-clicked="onMediaButtonClicked"
+          @on-row-clicked="onRowClicked"
         />
       </template>
     </v-data-table>
@@ -65,7 +65,7 @@ import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTa
 import { useButtonSize } from '~/use/style';
 import type { App } from '~~/types';
 
-type EpisodeSelector = 'all' | 'inProgress' | 'unplayed';
+type EpisodeSelector = 'all' | 'unplayed' | 'inProgress';
 type SelectItem = {
   text: string;
   value: EpisodeSelector;
@@ -100,7 +100,7 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const searchText = ref<EpisodeSelector>('all');
+    const select = ref<EpisodeSelector>('all');
 
     const customFilter: DataTableFilterFunction = (_, search, item: App.EpisodeDetail) => {
       const position = item.resumePoint.resume_position_ms;
@@ -109,7 +109,7 @@ export default defineComponent({
         case 'inProgress':
           return position > 0 && !isFulllyPlayed;
         case 'unplayed':
-          return position === 0;
+          return position === 0 && !isFulllyPlayed;
         case 'all':
           return true;
         default:
@@ -133,15 +133,17 @@ export default defineComponent({
 
     const headers = computed<DataTableHeader[]>(() => {
       const sidePadding = 12;
+      const offset = 8;
       const buttonSize = useButtonSize(root);
       // width は 左右の padding を含めた幅
       const buttonColumnWidth = sidePadding + buttonSize.value;
       const mediaButtonColumn = {
         text: '',
         value: 'index',
-        width: 60,
+        width: buttonColumnWidth + offset,
         sortable: false,
         filterable: false,
+        align: 'center' as const,
       };
       const titleColumn = {
         text: 'タイトル',
@@ -151,7 +153,7 @@ export default defineComponent({
         text: '進捗',
         value: 'resumePoint',
         width: root.$screen.isMultiColumn
-          ? 60 + sidePadding
+          ? 56 + sidePadding + offset
           : 44 + sidePadding,
         align: 'center' as const,
       };
@@ -212,7 +214,7 @@ export default defineComponent({
     };
 
     return {
-      searchText,
+      select,
       selectItems,
       customFilter,
       headers,
