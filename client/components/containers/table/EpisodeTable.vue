@@ -42,9 +42,9 @@
         <EpisodeTableRow
           :item="item"
           :publisher="publisher"
-          :added-at="addedAt"
           :set="isEpisodeSet(item.id)"
           :playing="isPlayingEpisode(item.id)"
+          :hide-added-at="hideAddedAt"
           @on-row-clicked="onRowClicked"
           @on-media-button-clicked="onMediaButtonClicked"
         />
@@ -93,9 +93,9 @@ export default defineComponent({
       type: String,
       default: 'エピソードがありません。',
     },
-    addedAt: {
+    hideAddedAt: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -175,7 +175,7 @@ export default defineComponent({
         sortable: false,
         filterable: false,
       };
-      // addedAt が有効かどうか
+      // hideAddedAt が有効かどうか
       const h: (DataTableHeader | undefined)[] = root.$screen.isSingleColumn
         ? [
           titleColumn,
@@ -186,7 +186,7 @@ export default defineComponent({
           mediaButtonColumn,
           titleColumn,
           progressColumn,
-          props.addedAt ? addedAtColumn : undefined,
+          props.hideAddedAt ? undefined : addedAtColumn,
           durationColumn,
           menuColumn,
         ];

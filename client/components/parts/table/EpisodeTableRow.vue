@@ -12,11 +12,11 @@
     :item="item"
     :publisher="publisher"
     :playing="playing"
-    :added-at="addedAt"
     :episode-path="episodePath"
     :title-color="titleColor"
     :subtitle-color="subtitleColor"
     :release-date="releaseDate"
+    :hide-added-at="hideAddedAt"
     @on-row-clicked="onRowClicked"
     @on-media-button-clicked="onMediaButtonClicked"
     @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -59,9 +59,9 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    addedAt: {
+    hideAddedAt: {
       type: Boolean,
-      default: true,
+      required: true,
     },
   },
 

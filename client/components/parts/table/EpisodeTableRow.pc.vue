@@ -59,6 +59,7 @@
     </td>
 
     <td
+      v-if="!hideAddedAt"
       :title="releaseDate"
       class="text-center"
     >
@@ -128,10 +129,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    addedAt: {
-      type: Boolean,
-      default: true,
-    },
     episodePath: {
       type: String,
       required: true,
@@ -146,6 +143,10 @@ export default defineComponent({
     },
     releaseDate: {
       type: String,
+      required: true,
+    },
+    hideAddedAt: {
+      type: Boolean,
       required: true,
     },
   },
