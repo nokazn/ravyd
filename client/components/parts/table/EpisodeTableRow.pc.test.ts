@@ -35,7 +35,12 @@ const item = (isPlayable: boolean): App.EpisodeDetail => ({
   showId: 'showId',
   showName: 'showName',
 });
-const factory = (set: boolean, playing: boolean, isPlayable: boolean) => {
+const factory = (
+  set: boolean,
+  playing: boolean,
+  isPlayable: boolean,
+  hideAddedAt: boolean = false,
+) => {
   return mount(EpisodeTableRowPc, {
     ...options,
     propsData: {
@@ -47,6 +52,7 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean) => {
       titleColor: textColorClass(set, !isPlayable),
       subtitleColor: subtextColorClass(set, !isPlayable),
       releaseDate: 'releaseDate',
+      hideAddedAt,
     },
   });
 };
@@ -72,8 +78,8 @@ describe('EpisodeTableRowPc', () => {
 
   it('normal to active', async () => {
     const wrapper = factory(false, false, true);
-    const title = wrapper.find('td > div > div.g-ellipsis-text > *:first-child');
-    const subtitle = wrapper.find('td > div > div.g-ellipsis-text > div.g-small-text');
+    const title = wrapper.find('td:nth-child(2) > div > div > *:first-child');
+    const subtitle = wrapper.find('td:nth-child(2) > div > div > div.g-small-text');
     expect(title.classes()).not.toContain(activeClass);
     expect(subtitle.classes()).toContain(subtextClass);
 
@@ -89,9 +95,18 @@ describe('EpisodeTableRowPc', () => {
 
   it('inacive', async () => {
     const wrapper = factory(false, false, false);
-    const title = wrapper.find('td > div > div.g-ellipsis-text > *:first-child');
-    const subtitle = wrapper.find('td > div > div.g-ellipsis-text > div.g-small-text');
+    const title = wrapper.find('td:nth-child(2) > div > div > *:first-child');
+    const subtitle = wrapper.find('td:nth-child(2) > div > div > div.g-small-text');
     expect(title.classes()).toContain(inactiveClass);
     expect(subtitle.classes()).toContain(inactiveClass);
+  });
+
+  it('hideAddedAt prop', async () => {
+    const wrapper = factory(false, false, true, true);
+    expect(wrapper.findAll('tr > td').length).toBe(5);
+    await wrapper.setProps({
+      hideAddedAt: false,
+    });
+    expect(wrapper.findAll('tr > td').length).toBe(6);
   });
 });
