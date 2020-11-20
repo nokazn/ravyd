@@ -16,8 +16,8 @@ export const convertAddedAt = (addedAt: string): App.AddedAt => {
     : moment.fromNow();
 
   return {
+    origin: addedAt,
     text: isTooOld ? undefined : text,
     title: moment.format('YYYY/M/D H:mm'),
-    dateTime: addedAt,
   };
 };

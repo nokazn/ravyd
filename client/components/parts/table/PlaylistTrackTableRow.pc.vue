@@ -98,7 +98,7 @@
     >
       <time
         v-if="item.addedAt.text"
-        :datetime="item.addedAt.text"
+        :datetime="item.addedAt.origin"
         class="g-small-text"
       >
         {{ item.addedAt.text }}
