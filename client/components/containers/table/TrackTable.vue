@@ -112,14 +112,14 @@ export default defineComponent({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth(root.$screen.isMultiColumn ? 1 : 2),
+        width: buttonColumnWidth(root.$screen.isSingleColumn ? 2 : 1),
         align: 'center' as const,
         sortable: false,
         filterable: false,
       };
-      return root.$screen.isMultiColumn
-        ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
-        : [nameColumn, menuColumn];
+      return root.$screen.isSingleColumn
+        ? [nameColumn, menuColumn]
+        : [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     });
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
     const hasMultipleDiscs = computed<boolean>(() => {

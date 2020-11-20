@@ -152,9 +152,9 @@ export default defineComponent({
       const progressColumn = {
         text: '進捗',
         value: 'resumePoint',
-        width: root.$screen.isMultiColumn
-          ? 56 + sidePadding + offset
-          : 44 + sidePadding,
+        width: root.$screen.isSingleColumn
+          ? 44 + sidePadding
+          : 56 + sidePadding + offset,
         align: 'center' as const,
       };
       const addedAtColumn = {

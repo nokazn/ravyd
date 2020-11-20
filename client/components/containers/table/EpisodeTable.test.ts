@@ -11,7 +11,7 @@ const textStartClass = 'text-start';
 const textCenterClass = 'text-center';
 const width = (p: number) => `width: ${p}px; min-width: ${p}px;`;
 
-const episode = (i: number, resumePoint?: [boolean, number]): App.EpisodeDetail => ({
+const item = (i: number, resumePoint?: [boolean, number]): App.EpisodeDetail => ({
   index: i,
   id: `id${i}`,
   name: `name${i}`,
@@ -74,7 +74,7 @@ const factory = ({ episodes, noDataText, hideAddedAt = false }: {
 
 describe('EpisodeTable', () => {
   it('headers for single column', () => {
-    const wrapper = factory({ episodes: [episode(1), episode(2)] }, 'single');
+    const wrapper = factory({ episodes: [item(1), item(2)] }, 'single');
     const th = wrapper.findAll('thead > tr > th');
     expect(th.length).toBe(3);
     expect(th.at(0).classes()).toContain(textStartClass);
@@ -85,7 +85,7 @@ describe('EpisodeTable', () => {
   });
 
   it('headers for multi column with added-at column', () => {
-    const wrapper = factory({ episodes: [episode(1), episode(2)] }, 'multi');
+    const wrapper = factory({ episodes: [item(1), item(2)] }, 'multi');
     const th = wrapper.findAll('thead > tr > th');
     expect(th.length).toBe(6);
     expect(th.at(0).classes()).toContain(textCenterClass);
@@ -103,7 +103,7 @@ describe('EpisodeTable', () => {
 
   it('headers for multi column without added-at column', () => {
     const wrapper = factory({
-      episodes: [episode(1), episode(2)],
+      episodes: [item(1), item(2)],
       hideAddedAt: true,
     }, 'multi');
     const th = wrapper.findAll('thead > tr > th');
@@ -122,10 +122,10 @@ describe('EpisodeTable', () => {
   it('select unplayed from all', async () => {
     const wrapper = factory({
       episodes: [
-        episode(1),
-        episode(2, [true, 10 * 60 * 1000]),
-        episode(3, [false, 10 * 60 * 1000]),
-        episode(4, [true, 0]),
+        item(1),
+        item(2, [true, 10 * 60 * 1000]),
+        item(3, [false, 10 * 60 * 1000]),
+        item(4, [true, 0]),
       ],
     }, 'multi');
     await wrapper.setData(({
@@ -138,10 +138,10 @@ describe('EpisodeTable', () => {
   it('select inProgress from all', async () => {
     const wrapper = factory({
       episodes: [
-        episode(1),
-        episode(2, [true, 10 * 60 * 1000]),
-        episode(3, [false, 10 * 60 * 1000]),
-        episode(4, [true, 0]),
+        item(1),
+        item(2, [true, 10 * 60 * 1000]),
+        item(3, [false, 10 * 60 * 1000]),
+        item(4, [true, 0]),
       ],
     }, 'multi');
     await wrapper.setData(({
@@ -153,9 +153,9 @@ describe('EpisodeTable', () => {
 
   it('call play request on media button clicked', async () => {
     const wrapper = factory({
-      episodes: [episode(1), episode(2), episode(3)],
+      episodes: [item(1), item(2), item(3)],
     }, 'multi');
-    await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK, episode(2));
+    await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
     expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
       contextUri: 'contextUri',
       offset: { uri: 'uri2' },
@@ -164,15 +164,15 @@ describe('EpisodeTable', () => {
 
   it('call pause request on media button clicked', async () => {
     const wrapper = factory({
-      episodes: [episode(1), episode(2), episode(3)],
+      episodes: [item(1), item(2), item(3)],
     }, 'multi', 'id2', true);
-    await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK, episode(2));
+    await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
     expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 
   it('call pause request on row clicked for mobile', async () => {
     const wrapper = factory({
-      episodes: [episode(1), episode(2), episode(3)],
+      episodes: [item(1), item(2), item(3)],
     }, 'single');
     await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
     expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
@@ -183,7 +183,7 @@ describe('EpisodeTable', () => {
 
   it('call pause request on row clicked for mobile', async () => {
     const wrapper = factory({
-      episodes: [episode(1), episode(2), episode(3)],
+      episodes: [item(1), item(2), item(3)],
     }, 'single', 'id2', true);
     await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
     expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
