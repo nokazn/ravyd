@@ -42,7 +42,6 @@
       <PlaylistTrackTableRow
         :item="item"
         :playlist-id="playlistId"
-        :hide-image="hideImage"
         :collaborative="collaborative"
         :hide-added-at="hideAddedAt"
         :set="isTrackSet(item.id)"
@@ -93,10 +92,6 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    hideImage: {
-      type: Boolean,
-      default: false,
-    },
     collaborative: {
       type: Boolean,
       default: false,
@@ -122,6 +117,7 @@ export default defineComponent({
         width: root.$constant.PLAYLIST_TRACK_TABLE_ARTWORK_SIZE + sidePadding,
         sortable: false,
         filterable: false,
+        align: 'center' as const,
       };
       const mediaColumn = {
         text: '',
@@ -129,6 +125,7 @@ export default defineComponent({
         width: buttonColumnWidth(1),
         sortable: false,
         filterable: false,
+        align: 'center' as const,
       };
       const isSavedColumn = {
         text: '',
@@ -136,6 +133,7 @@ export default defineComponent({
         width: buttonColumnWidth(1),
         sortable: false,
         filterable: false,
+        align: 'center' as const,
       };
       const titleColumn = {
         text: 'タイトル',
@@ -162,33 +160,30 @@ export default defineComponent({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth(root.$screen.isMultiColumn ? 1 : 2),
+        width: buttonColumnWidth(root.$screen.isSingleColumn ? 2 : 1),
         align: 'center' as const,
         sortable: false,
         filterable: false,
       };
 
-      let h: (DataTableHeader | undefined)[];
       if (root.$screen.isSingleColumn) {
-        h = [
-          props.hideImage ? undefined : imageColumn,
+        return [
+          imageColumn,
           titleColumn,
-          menuColumn,
-        ];
-      } else {
-        h = [
-          props.hideImage ? undefined : imageColumn,
-          mediaColumn,
-          isSavedColumn,
-          titleColumn,
-          props.collaborative ? addedByColumn : undefined,
-          props.hideAddedAt ? undefined : addedAtColumn,
-          durationColumn,
           menuColumn,
         ];
       }
-      // @as addedAt, addedBy が有効かどうかで分け、undefined を除く
-      return h.filter((header) => header != null) as DataTableHeader[];
+      //  collaborative, addedAt が有効かどうかで分け、undefined を除く
+      return [
+        imageColumn,
+        mediaColumn,
+        isSavedColumn,
+        titleColumn,
+        props.collaborative ? addedByColumn : undefined,
+        props.hideAddedAt ? undefined : addedAtColumn,
+        durationColumn,
+        menuColumn,
+      ].filter((header) => header != null) as DataTableHeader[];
     });
     const isTrackSet = (id: string) => root.$getters()['playback/isContextSet'](props.uri) && root.$getters()['playback/isTrackSet'](id);
     const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;

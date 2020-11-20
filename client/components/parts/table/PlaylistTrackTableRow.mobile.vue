@@ -6,10 +6,7 @@
     }"
     @click="onRowClicked"
   >
-    <td
-      v-if="!hideImage"
-      :title="item.name"
-    >
+    <td :title="item.name">
       <ReleaseArtwork
         :src="artworkSrc"
         :alt="item.name"
@@ -118,10 +115,6 @@ export default defineComponent({
     playlistId: {
       type: String as PropType<string | undefined>,
       default: undefined,
-    },
-    hideImage: {
-      type: Boolean,
-      default: false,
     },
     collaborative: {
       type: Boolean,

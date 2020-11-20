@@ -6,10 +6,7 @@
     }"
     @click="onRowClicked"
   >
-    <td
-      v-if="!hideImage"
-      :title="item.name"
-    >
+    <td :title="item.name">
       <ReleaseArtwork
         :src="artworkSrc"
         :alt="item.name"
@@ -183,10 +180,6 @@ export default defineComponent({
     playing: {
       type: Boolean,
       required: true,
-    },
-    hideImage: {
-      type: Boolean,
-      default: false,
     },
     collaborative: {
       type: Boolean,
