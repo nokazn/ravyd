@@ -3,7 +3,6 @@
     v-if="$screen.isSingleColumn"
     :item="item"
     :playlist-id="playlistId"
-    :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
     :disabled="disabled"
@@ -18,7 +17,6 @@
     v-else-if="$screen.isMultiColumn"
     :item="item"
     :playlist-id="playlistId"
-    :hide-image="hideImage"
     :collaborative="collaborative"
     :hide-added-at="hideAddedAt"
     :playing="playing"
@@ -74,10 +72,6 @@ export default defineComponent({
     playing: {
       type: Boolean,
       required: true,
-    },
-    hideImage: {
-      type: Boolean,
-      default: false,
     },
     collaborative: {
       type: Boolean,

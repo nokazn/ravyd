@@ -57,7 +57,7 @@ import { ON_ROW_CLICKED } from '~/components/parts/table/EpisodeTableRow.vue';
 import type { App } from '~~/types';
 
 export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail;
+  [ON_ROW_CLICKED]: App.EpisodeDetail;
 }
 
 export default defineComponent({

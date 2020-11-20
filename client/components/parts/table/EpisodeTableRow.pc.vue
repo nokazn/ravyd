@@ -20,10 +20,7 @@
 
     <td>
       <div :class="$style.Content">
-        <div
-          :class="$style.Content__left"
-          class="g-ellipsis-text"
-        >
+        <div :class="$style.Content__left">
           <div
             :class="titleColor"
             class="g-ellipsis-text"
@@ -59,6 +56,7 @@
     </td>
 
     <td
+      v-if="!hideAddedAt"
       :title="releaseDate"
       class="text-center"
     >
@@ -101,9 +99,9 @@ import {
 import type { App } from '~~/types';
 
 export type On = {
-  [ON_ROW_CLICKED]: App.PlaylistTrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail
+  [ON_ROW_CLICKED]: App.EpisodeDetail;
+  [ON_MEDIA_BUTTON_CLICKED]: App.EpisodeDetail;
+  [ON_FAVORITE_BUTTON_CLICKED]: App.EpisodeDetail;
 }
 
 export default defineComponent({
@@ -128,10 +126,6 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    addedAt: {
-      type: Boolean,
-      default: true,
-    },
     episodePath: {
       type: String,
       required: true,
@@ -146,6 +140,10 @@ export default defineComponent({
     },
     releaseDate: {
       type: String,
+      required: true,
+    },
+    hideAddedAt: {
+      type: Boolean,
       required: true,
     },
   },

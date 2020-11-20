@@ -43,25 +43,19 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { DataTableHeader } from 'vuetify';
-
-import TrackTableRow, { On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
+import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { DataTableHeader } from 'vuetify';
+import TrackTableRow, { ON_FAVORITE_BUTTON_CLICKED, On as OnRow } from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
+import { useButtonSize } from '~/use/style';
 import { getQuery } from '~/utils/text';
-import { App } from '~~/types';
-
-type Data = {
-  activeRowId: string | undefined
-};
-
-const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
+import type { App } from '~~/types';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     TrackTableRow,
     TrackTableGroupHeader,
@@ -78,33 +72,18 @@ export default Vue.extend({
     },
   },
 
-  data(): Data {
-    const trackId = getQuery(this.$route.query, 'track');
+  setup(props, { root, emit }) {
+    const trackId = getQuery(root.$route.query, 'track');
     const activeRowId = trackId != null
-      ? this.tracks.find((item) => item.id === trackId)?.id
+      ? props.tracks.find((item) => item.id === trackId)?.id
       : undefined;
+    const isActiveRow = (id: string) => activeRowId === id;
 
-    return {
-      activeRowId,
-    };
-  },
-
-  computed: {
-    isTrackSet(): (trackId: string) => boolean {
-      return (trackId: string) => this.$getters()['playback/isTrackSet'](trackId);
-    },
-    isPlayingTrack(): (trackId: string) => boolean {
-      return (trackId: string) => this.isTrackSet(trackId)
-        && this.$state().playback.isPlaying;
-    },
-    headers(): DataTableHeader[] {
-      // width は 左右の padding を含めた幅
+    const headers = computed<DataTableHeader[]>(() => {
       const buttonColumnWidth = (n: number = 1) => {
-        const totalSidePadding = 12;
-        const buttonSize = this.$screen.isSingleColumn
-          ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
-          : this.$constant.DEFAULT_BUTTON_SIZE;
-        return totalSidePadding + buttonSize * n + 2 * (n - 1);
+        const sidePadding = 12;
+        const buttonSize = useButtonSize(root);
+        return sidePadding + buttonSize.value * n + 2 * (n - 1);
       };
       const indexColumn = {
         text: '#',
@@ -115,7 +94,7 @@ export default Vue.extend({
       const isSavedColumn = {
         text: '',
         value: 'isSaved',
-        width: buttonColumnWidth(1),
+        width: buttonColumnWidth(),
         align: 'center' as const,
         sortable: false,
         filterable: false,
@@ -133,57 +112,58 @@ export default Vue.extend({
       const menuColumn = {
         text: '',
         value: 'menu',
-        width: buttonColumnWidth(this.$screen.isMultiColumn ? 1 : 2),
+        width: buttonColumnWidth(root.$screen.isSingleColumn ? 2 : 1),
         align: 'center' as const,
         sortable: false,
         filterable: false,
       };
-      return this.$screen.isMultiColumn
-        ? [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn]
-        : [nameColumn, menuColumn];
-    },
+      return root.$screen.isSingleColumn
+        ? [nameColumn, menuColumn]
+        : [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
+    });
     // relink されたトラックがある場合はディスクによるグループ表示は行わない
-    hasMultipleDiscs(): boolean {
-      const { tracks } = this;
-      const relinkedTrack = tracks.find((track) => track.linkedFrom != null);
-      const discNumberList = Array.from(new Set(tracks
-        .map((track) => track.discNumber)));
-
+    const hasMultipleDiscs = computed<boolean>(() => {
+      const relinkedTrack = props.tracks.find((track) => track.linkedFrom != null);
+      const discNumberList = Array.from(new Set(props.tracks.map((track) => track.discNumber)));
       return relinkedTrack != null
         ? false
         : discNumberList.length > 1;
-    },
-    isActiveRow(): (id: string) => boolean {
-      return (id: string) => this.activeRowId === id;
-    },
-  },
+    });
 
-  methods: {
-    onMediaButtonClicked(row: OnRow['on-media-button-clicked']) {
-      if (this.isPlayingTrack(row.id)) {
-        this.$dispatch('playback/pause');
+    const isTrackSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
+    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
+      if (isPlayingTrack(row.id)) {
+        root.$dispatch('playback/pause');
         return;
       }
-
-      if (row.isPlayable) {
-        const offset = row.linkedFrom != null
+      root.$dispatch('playback/play', {
+        contextUri: props.uri,
+        offset: row.linkedFrom != null
           ? { position: row.index }
-          : { uri: row.uri };
+          : { uri: row.uri },
+      });
+    };
+    const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {
+      emit(ON_FAVORITE_BUTTON_CLICKED, row);
+    };
+    const onRowClicked = (row: OnRow['on-row-clicked']) => {
+      if (root.$screen.isSingleColumn) {
+        onMediaButtonClicked(row);
+      }
+    };
 
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-          offset,
-        });
-      }
-    },
-    onFavoriteButtonClicked(row: OnRow['on-favorite-button-clicked']) {
-      this.$emit(ON_FAVORITE_BUTTON_CLICKED, row);
-    },
-    onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$screen.isSingleColumn) {
-        this.onMediaButtonClicked(row);
-      }
-    },
+    return {
+      activeRowId,
+      isActiveRow,
+      headers,
+      hasMultipleDiscs,
+      isTrackSet,
+      isPlayingTrack,
+      onMediaButtonClicked,
+      onFavoriteButtonClicked,
+      onRowClicked,
+    };
   },
 });
 </script>

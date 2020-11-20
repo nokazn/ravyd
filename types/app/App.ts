@@ -5,20 +5,20 @@ import type { SpotifyAPI } from '~~/types';
 
 export namespace App {
   export type DominantColor = {
-    hex: Swatch['hex']
-    rgb: Swatch['rgb']
+    hex: Swatch['hex'];
+    rgb: Swatch['rgb'];
   }
 
   export type MinimumArtist = {
-    name: string
-    id: string
-    uri: string
+    name: string;
+    id: string;
+    uri: string;
   }
 
   export type AddedAt = {
-    text: string | undefined
-    title: string
-    dateTime: string
+    origin: string;
+    text: string | undefined;
+    title: string;
   }
 
   export type TitleColorClass = 'inactive--text' | 'active--text' | undefined;

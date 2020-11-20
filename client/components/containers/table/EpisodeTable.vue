@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-select
-      v-model="searchText"
+      v-model="select"
       dense
       :items="selectItems"
       :class="$style.EpisodeSelect"
@@ -10,10 +10,10 @@
     <v-data-table
       disable-pagination
       hide-default-footer
+      :mobile-breakpoint="0"
       :headers="headers"
       :items="episodes"
-      :mobile-breakpoint="0"
-      :search="searchText"
+      :search="select"
       :custom-filter="customFilter"
       :no-data-text="noDataText"
       class="episode-table"
@@ -42,11 +42,11 @@
         <EpisodeTableRow
           :item="item"
           :publisher="publisher"
-          :added-at="addedAt"
           :set="isEpisodeSet(item.id)"
           :playing="isPlayingEpisode(item.id)"
-          @on-row-clicked="onRowClicked"
+          :hide-added-at="hideAddedAt"
           @on-media-button-clicked="onMediaButtonClicked"
+          @on-row-clicked="onRowClicked"
         />
       </template>
     </v-data-table>
@@ -54,25 +54,24 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import type { DataTableHeader } from 'vuetify';
-
+import {
+  defineComponent,
+  ref,
+  computed,
+  PropType,
+} from '@vue/composition-api';
+import type { DataTableHeader, DataTableFilterFunction } from 'vuetify';
 import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTableRow.vue';
+import { useButtonSize } from '~/use/style';
 import type { App } from '~~/types';
 
-type EpisodeSelector = 'all' | 'inProgress' | 'unplayed';
+type EpisodeSelector = 'all' | 'unplayed' | 'inProgress';
 type SelectItem = {
   text: string;
   value: EpisodeSelector;
 }
 
-type Data = {
-  searchText: EpisodeSelector;
-  selectItems: SelectItem[];
-  customFilter: (value: any, search: EpisodeSelector, item: App.EpisodeDetail) => boolean;
-};
-
-export default Vue.extend({
+export default defineComponent({
   components: {
     EpisodeTableRow,
   },
@@ -94,32 +93,29 @@ export default Vue.extend({
       type: String,
       default: 'エピソードがありません。',
     },
-    addedAt: {
+    hideAddedAt: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
-  data(): Data {
-    const customFilter = (
-      _: any,
-      search: EpisodeSelector,
-      item: App.EpisodeDetail,
-    ): boolean => {
+  setup(props, { root }) {
+    const select = ref<EpisodeSelector>('all');
+
+    const customFilter: DataTableFilterFunction = (_, search, item: App.EpisodeDetail) => {
       const position = item.resumePoint.resume_position_ms;
       const isFulllyPlayed = item.resumePoint.fully_played;
-      switch (search) {
+      switch (search as EpisodeSelector) {
         case 'inProgress':
           return position > 0 && !isFulllyPlayed;
         case 'unplayed':
-          return position === 0;
+          return position === 0 && !isFulllyPlayed;
         case 'all':
           return true;
         default:
           return true;
       }
     };
-
     const selectItems: SelectItem[] = [
       {
         text: 'すべてのエピソード',
@@ -135,28 +131,19 @@ export default Vue.extend({
       },
     ];
 
-    return {
-      searchText: 'all',
-      selectItems,
-      customFilter,
-    };
-  },
-
-  computed: {
-    headers(): DataTableHeader[] {
-      const totalSidePadding = 12;
-      const buttonSize = this.$screen.isSingleColumn
-        ? this.$constant.DEFAULT_BUTTON_SIZE_MOBILE
-        : this.$constant.DEFAULT_BUTTON_SIZE;
+    const headers = computed<DataTableHeader[]>(() => {
+      const sidePadding = 12;
+      const offset = 8;
+      const buttonSize = useButtonSize(root);
       // width は 左右の padding を含めた幅
-      const buttonColumnWidth = totalSidePadding + buttonSize;
-
+      const buttonColumnWidth = sidePadding + buttonSize.value;
       const mediaButtonColumn = {
         text: '',
         value: 'index',
-        width: 60,
+        width: buttonColumnWidth + offset,
         sortable: false,
         filterable: false,
+        align: 'center' as const,
       };
       const titleColumn = {
         text: 'タイトル',
@@ -165,9 +152,9 @@ export default Vue.extend({
       const progressColumn = {
         text: '進捗',
         value: 'resumePoint',
-        width: this.$screen.isMultiColumn
-          ? 60 + totalSidePadding
-          : 44 + totalSidePadding,
+        width: root.$screen.isSingleColumn
+          ? 44 + sidePadding
+          : 56 + sidePadding + offset,
         align: 'center' as const,
       };
       const addedAtColumn = {
@@ -190,9 +177,8 @@ export default Vue.extend({
         sortable: false,
         filterable: false,
       };
-
-      // addedAt が有効かどうか
-      const headers: (DataTableHeader | undefined)[] = this.$screen.isSingleColumn
+      // hideAddedAt が有効かどうか
+      const h: (DataTableHeader | undefined)[] = root.$screen.isSingleColumn
         ? [
           titleColumn,
           progressColumn,
@@ -202,37 +188,41 @@ export default Vue.extend({
           mediaButtonColumn,
           titleColumn,
           progressColumn,
-          this.addedAt ? addedAtColumn : undefined,
+          props.hideAddedAt ? undefined : addedAtColumn,
           durationColumn,
           menuColumn,
         ];
-      return headers.filter((header) => header != null) as DataTableHeader[];
-    },
-    isEpisodeSet(): (episodeId: string) => boolean {
-      return (episodeId: string) => this.$getters()['playback/isTrackSet'](episodeId);
-    },
-    isPlayingEpisode(): (episodeId: string) => boolean {
-      return (episodeId: string) => this.isEpisodeSet(episodeId)
-        && this.$state().playback.isPlaying;
-    },
-  },
+      return h.filter((header) => header != null) as DataTableHeader[];
+    });
 
-  methods: {
-    onMediaButtonClicked({ id, uri }: OnRow['on-media-button-clicked']) {
-      if (this.isPlayingEpisode(id)) {
-        this.$dispatch('playback/pause');
+    const isEpisodeSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
+    const isPlayingEpisode = (id: string) => isEpisodeSet(id) && root.$state().playback.isPlaying;
+    const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
+      if (isPlayingEpisode(row.id)) {
+        root.$dispatch('playback/pause');
       } else {
-        this.$dispatch('playback/play', {
-          contextUri: this.uri,
-          offset: { uri },
+        root.$dispatch('playback/play', {
+          contextUri: props.uri,
+          offset: { uri: row.uri },
         });
       }
-    },
-    onRowClicked(row: OnRow['on-row-clicked']) {
-      if (this.$screen.isSingleColumn) {
-        this.onMediaButtonClicked(row);
+    };
+    const onRowClicked = (row: OnRow['on-row-clicked']) => {
+      if (root.$screen.isSingleColumn) {
+        onMediaButtonClicked(row);
       }
-    },
+    };
+
+    return {
+      select,
+      selectItems,
+      customFilter,
+      headers,
+      isEpisodeSet,
+      isPlayingEpisode,
+      onMediaButtonClicked,
+      onRowClicked,
+    };
   },
 });
 </script>
