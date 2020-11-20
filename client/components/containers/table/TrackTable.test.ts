@@ -3,9 +3,11 @@ import { mocks, options } from '~/tests/mocks/mount';
 import TrackTable from './TrackTable.vue';
 import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import { App } from '~~/types';
 
 const CLICK = 'click';
+const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 const textStartClass = 'text-start';
 const textCenterClass = 'text-center';
@@ -44,8 +46,8 @@ const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
     isPlaying,
   },
 });
-const $gettersMock = (episodeId?: string) => jest.fn().mockReturnValue({
-  'playback/isTrackSet': (id: string) => id === episodeId,
+const $gettersMock = (trackId?: string) => jest.fn().mockReturnValue({
+  'playback/isTrackSet': (id: string) => id === trackId,
 });
 const $dispatchMock = jest.fn().mockResolvedValue(undefined);
 
@@ -99,6 +101,21 @@ describe('TrackTable', () => {
     expect(th.at(4).attributes().style).toBe(width(36 + 12));
   });
 
+  it('call play request on row clicked for mobile', async () => {
+    const wrapper = factory([item(1), item(2), item(3)], 'single');
+    await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+      contextUri: 'contextUri',
+      offset: { uri: 'uri2' },
+    });
+  });
+
+  it('call pause request on row clicked for mobile', async () => {
+    const wrapper = factory([item(1), item(2), item(3)], 'single', 'id2', true);
+    await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+  });
+
   it('call play request on media button clicked', async () => {
     const wrapper = factory([item(1), item(2), item(3)], 'multi');
     await wrapper.findAllComponents(CircleButton).at(1).trigger(CLICK);
@@ -114,18 +131,15 @@ describe('TrackTable', () => {
     expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('call pause request on row clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single');
-    await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'contextUri',
-      offset: { uri: 'uri2' },
-    });
+  it('emit on favorite button clicked for mobile', async () => {
+    const wrapper = factory([item(1), item(2), item(3)], 'single', 'id2', true);
+    await wrapper.findAllComponents(FavoriteButton).at(1).trigger(CLICK);
+    expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0]).toBeTruthy();
   });
 
-  it('call pause request on row clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single', 'id2', true);
-    await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+  it('emit on favorite button clicked for pc', async () => {
+    const wrapper = factory([item(1), item(2), item(3)], 'multi', 'id2', true);
+    await wrapper.findAllComponents(FavoriteButton).at(1).trigger(CLICK);
+    expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0]).toBeTruthy();
   });
 });

@@ -151,6 +151,25 @@ describe('EpisodeTable', () => {
     expect(wrapper.find('tbody > tr > td:nth-child(2) > div > div > div.g-ellipsis-text > a').text()).toBe('name3');
   });
 
+  it('call play request on row clicked for mobile', async () => {
+    const wrapper = factory({
+      episodes: [item(1), item(2), item(3)],
+    }, 'single');
+    await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
+    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+      contextUri: 'contextUri',
+      offset: { uri: 'uri2' },
+    });
+  });
+
+  it('call pause request on row clicked for mobile', async () => {
+    const wrapper = factory({
+      episodes: [item(1), item(2), item(3)],
+    }, 'single', 'id2', true);
+    await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
+    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+  });
+
   it('call play request on media button clicked', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
@@ -167,25 +186,6 @@ describe('EpisodeTable', () => {
       episodes: [item(1), item(2), item(3)],
     }, 'multi', 'id2', true);
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
-  });
-
-  it('call pause request on row clicked for mobile', async () => {
-    const wrapper = factory({
-      episodes: [item(1), item(2), item(3)],
-    }, 'single');
-    await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'contextUri',
-      offset: { uri: 'uri2' },
-    });
-  });
-
-  it('call pause request on row clicked for mobile', async () => {
-    const wrapper = factory({
-      episodes: [item(1), item(2), item(3)],
-    }, 'single', 'id2', true);
-    await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
     expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
   });
 });
