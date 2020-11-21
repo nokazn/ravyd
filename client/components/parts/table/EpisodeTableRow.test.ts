@@ -34,7 +34,7 @@ const item: App.EpisodeDetail = {
   showId: 'showId',
   showName: 'showName',
 };
-const factory = (columnType: 'single' | 'multi') => {
+const factory = (columnType: 'single' | 'multi', hideAddedAt: boolean = false) => {
   return mount(EpisodeTableRow, {
     ...options,
     propsData: {
@@ -42,6 +42,7 @@ const factory = (columnType: 'single' | 'multi') => {
       publisher: 'publisher',
       set: false,
       playing: false,
+      hideAddedAt,
     },
     mocks: {
       ...mocks,
@@ -89,4 +90,8 @@ describe('EpisodeTableRow', () => {
     await wrapper.findComponent(EpisodeTableRowPc).vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item);
   });
+
+  it.todo('active text color');
+  it.todo('inactive text color');
+  it.todo('hideAddedAt prop');
 });

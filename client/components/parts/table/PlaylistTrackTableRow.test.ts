@@ -93,4 +93,8 @@ describe('PlaylistTrackTableRow', () => {
     await wrapper.findComponent(PlaylistTrackTableRowPc).vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item);
   });
+
+  it.todo('active text color');
+  it.todo('inactive text color');
+  it.todo('hideAddedAt prop');
 });

@@ -41,7 +41,7 @@ const item = (i: number): App.PlaylistTrackDetail => ({
   isPlayable: true,
   previewUrl: 'path/to/preview',
   addedAt: {
-    origin: '2020/1/1 0:00',
+    origin: '2020-01-01T00:00:00Z',
     text: '2020/1/1',
     title: '2020-01-01',
   },
