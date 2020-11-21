@@ -13,13 +13,12 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
   'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'seeking'
     ? disallowed
     : false),
 });
-// @todo state 変更したときの状態テストしたい
-const $stateMock = (stateList: PlaybackState[]) => {
+const $state = (stateList: PlaybackState[]) => {
   const mock = jest.fn();
   const { length } = stateList;
   return stateList.reduce((mocked, playback, i) => {
@@ -28,9 +27,9 @@ const $stateMock = (stateList: PlaybackState[]) => {
       : mocked.mockReturnValue({ playback });
   }, mock);
 };
-const $commitMock = jest.fn();
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
-const $subscribeMock = jest.fn();
+const $commit = jest.fn();
+const $dispatch = jest.fn().mockResolvedValue(undefined);
+const $subscribe = jest.fn();
 
 const factory = (
   stateList: PlaybackState[],
@@ -46,11 +45,11 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(stateList),
-      $getters: $gettersMock(disallowed),
-      $commit: $commitMock,
-      $dispatch: $dispatchMock,
-      $subscribe: $subscribeMock,
+      $state: $state(stateList),
+      $getters: $getters(disallowed),
+      $commit,
+      $dispatch,
+      $subscribe,
     },
   });
 };
@@ -139,9 +138,9 @@ describe('SeekBar', () => {
       disabledPlayingFromBeginning: false,
     }], false);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
-    const clearTimerMock = jest.spyOn(window, 'clearInterval').mockReturnValue();
+    const clearTimer = jest.spyOn(window, 'clearInterval').mockReturnValue();
     await vSlider.vm.$emit(MOUSEDOWN);
-    expect(clearTimerMock).toHaveBeenCalled();
+    expect(clearTimer).toHaveBeenCalled();
   });
 
   it('on change from 2:30 to 2:45', async () => {
@@ -158,9 +157,9 @@ describe('SeekBar', () => {
     // onMouseDown
     expect(clearInterval).toHaveBeenCalled();
     // onChange
-    expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 2.75 * 60 * 1000);
-    expect($commitMock).not.toHaveBeenCalledWith('playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', {
+    expect($commit).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 2.75 * 60 * 1000);
+    expect($commit).not.toHaveBeenCalledWith('playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
+    expect($dispatch).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 2.75 * 60 * 1000,
       currentPositionMs: 2.5 * 60 * 1000,
     });
@@ -182,9 +181,9 @@ describe('SeekBar', () => {
     // onMouseDown
     expect(clearInterval).toHaveBeenCalled();
     // onChange
-    expect($commitMock).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 0);
-    expect($commitMock).toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
-    expect($dispatchMock).toHaveBeenNthCalledWith(1, 'playback/seek', {
+    expect($commit).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 0);
+    expect($commit).toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
+    expect($dispatch).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 0,
       currentPositionMs: 2.5 * 60 * 1000,
     });
@@ -204,6 +203,10 @@ describe('SeekBar', () => {
     jest.runOnlyPendingTimers();
     // setTimer
     expect(setInterval).toHaveBeenCalled();
-    expect($commitMock).toHaveBeenCalledWith('playback/SET_POSITION_MS', 2.5 * 60 * 1000 + 500);
+    expect($commit).toHaveBeenCalledWith('playback/SET_POSITION_MS', 2.5 * 60 * 1000 + 500);
   });
+
+  it.todo('stop updating seek bar when paused');
+  it.todo('start updating seek bar after playing');
+  it.todo('add a few seconds');
 });

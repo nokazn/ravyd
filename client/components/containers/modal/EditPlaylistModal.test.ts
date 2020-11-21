@@ -27,7 +27,7 @@ const form = (
   isPrivate,
   isCollaborative,
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (value: boolean, f: Form) => {
   const vm = mount(EditPlaylistModal, {
@@ -38,7 +38,7 @@ const factory = (value: boolean, f: Form) => {
     },
     mocks: {
       ...mocks,
-      $dispatch: $dispatchMock,
+      $dispatch,
       $subscribe: jest.fn(),
       $screen: {
         isSingleColumn: false,
@@ -55,7 +55,6 @@ describe('EditPlaylistModal', () => {
     expect(VDialog.props().value).toBe(false);
     await VDialog.vm.$emit(INPUT, true);
     expect(wrapper.emitted(INPUT)?.[0][0]).toBe(true);
-
     await wrapper.setProps({
       value: true,
     });
@@ -74,7 +73,7 @@ describe('EditPlaylistModal', () => {
     await wrapper.find('.v-form > *:first-child input').setValue('name2');
     await Vue.nextTick();
     await wrapper.find('.v-card__actions > .v-btn:nth-child(2)').trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playlists/editPlaylist', {
+    expect($dispatch).toHaveBeenCalledWith('playlists/editPlaylist', {
       playlistId: 'playlistId1',
       name: 'name2',
       description: 'description1',

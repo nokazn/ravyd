@@ -57,19 +57,19 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean) => {
 };
 
 describe('TrackTableRowPc', () => {
-  it('emit on click item', async () => {
+  it('emit when click item', async () => {
     const wrapper = factory(false, false, false);
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('emit on click media button', async () => {
+  it('emit when click media button', async () => {
     const wrapper = factory(false, false, false);
     await wrapper.vm.$emit(ON_MEDIA_BUTTON_CLICKED, item(false));
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('emit on click favorite button', async () => {
+  it('emit when click favorite button', async () => {
     const wrapper = factory(false, false, false);
     await wrapper.vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item(false));
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false));

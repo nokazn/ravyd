@@ -41,16 +41,16 @@ const track = (i: number): App.ReleaseCard<'track'> => ({
   linkedFrom: undefined,
 });
 
-const $gettersMock = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => jest.fn().mockReturnValue({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
 });
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $dispatchMock = jest.fn();
+const $dispatch = jest.fn();
 
 const factory = (type: 'album' | 'track', set: boolean, playing: boolean) => {
   return mount(ReleaseCard, {
@@ -60,9 +60,9 @@ const factory = (type: 'album' | 'track', set: boolean, playing: boolean) => {
     },
     mocks: {
       ...mocks,
-      $getters: $gettersMock(set),
-      $state: $stateMock(playing),
-      $dispatch: $dispatchMock,
+      $getters: $getters(set),
+      $state: $state(playing),
+      $dispatch,
       $screen: {
         isMultiColumn: true,
         isSingleColumn: false,
@@ -72,7 +72,7 @@ const factory = (type: 'album' | 'track', set: boolean, playing: boolean) => {
 };
 
 describe('ReleaseCard', () => {
-  it('album\'s path', async () => {
+  it('album path', async () => {
     const wrapper = factory('album', false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -86,7 +86,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findAllComponents(RouterLinkStub).at(2).props().to).toBe('/artists/artistId1');
   });
 
-  it('track\'s path', async () => {
+  it('track path', async () => {
     const wrapper = factory('track', false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -102,7 +102,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findAllComponents(RouterLinkStub).at(2).props().to).toBe('/artists/artistId1');
   });
 
-  it('when a release\'s track is not set', async () => {
+  it('when a release track is not set', async () => {
     const wrapper = factory('album', false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -118,7 +118,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when a release\'s track set', async () => {
+  it('when a release track set', async () => {
     const wrapper = factory('album', true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -134,7 +134,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when playing a release\'s track', async () => {
+  it('when playing a release track', async () => {
     const wrapper = factory('album', true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -156,7 +156,7 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'uri',
     });
   });
@@ -167,18 +167,18 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       trackUriList: ['uri'],
     });
   });
 
-  it('resume a release\'s track', async () => {
+  it('resume a release track', async () => {
     const wrapper = factory('album', true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
   it('resume a track', async () => {
@@ -187,16 +187,16 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
-  it('pause a release\'s track', async () => {
+  it('pause a release track', async () => {
     const wrapper = factory('album', true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
   it('pause a track', async () => {
@@ -205,6 +205,6 @@ describe('ReleaseCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

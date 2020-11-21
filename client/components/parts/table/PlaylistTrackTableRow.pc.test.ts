@@ -65,19 +65,19 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean, type: 'tra
 };
 
 describe('PlaylistTrackTableRowPc', () => {
-  it('emit on click item', async () => {
+  it('emit when click item', async () => {
     const wrapper = factory(false, false, false, 'track');
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item(false, 'track'));
   });
 
-  it('emit on click media button', async () => {
+  it('emit when click media button', async () => {
     const wrapper = factory(false, false, false, 'track');
     await wrapper.vm.$emit(ON_MEDIA_BUTTON_CLICKED, item(false, 'track'));
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)?.[0][0]).toEqual(item(false, 'track'));
   });
 
-  it('emit on click favorite button', async () => {
+  it('emit when click favorite button', async () => {
     const wrapper = factory(false, false, false, 'track');
     await wrapper.vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item(false, 'track'));
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false, 'track'));

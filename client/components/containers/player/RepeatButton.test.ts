@@ -5,19 +5,17 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 const CLICK = 'click';
 
-const $stateMock = (repeatMode: 0 | 1 | 2) => {
-  return jest.fn().mockReturnValue({
-    playback: {
-      repeatMode,
-    },
-  });
-};
-const $gettersMock = (isDisallowed: boolean) => {
+const $state = (repeatMode: 0 | 1 | 2) => jest.fn().mockReturnValue({
+  playback: {
+    repeatMode,
+  },
+});
+const $getters = (isDisallowed: boolean) => {
   return jest.fn().mockReturnValue({
     'playback/isDisallowed': () => isDisallowed,
   });
 };
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (mode: 0 | 1 | 2, isDisallowed: boolean = false, size: number = 32) => {
   return mount(RepeatButton, {
@@ -27,9 +25,9 @@ const factory = (mode: 0 | 1 | 2, isDisallowed: boolean = false, size: number = 
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(mode),
-      $getters: $gettersMock(isDisallowed),
-      $dispatch: $dispatchMock,
+      $state: $state(mode),
+      $getters: $getters(isDisallowed),
+      $dispatch,
     },
   });
 };
@@ -72,6 +70,6 @@ describe('RepeatButton', () => {
   it('click button', async () => {
     const wrapper = factory(0);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/repeat');
+    expect($dispatch).toHaveBeenCalledWith('playback/repeat');
   });
 });

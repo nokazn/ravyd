@@ -24,7 +24,7 @@ describe('TrackListMediaButton', () => {
     expect(icon.classes()).toContain('mdi-volume-high');
   });
 
-  it('hover on playing', async () => {
+  it('hover when playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
       ...options,
       propsData: {
@@ -60,7 +60,7 @@ describe('TrackListMediaButton', () => {
     expect(text.text()).toBe('3');
   });
 
-  it('hover on not playing', async () => {
+  it('hover when not playing', async () => {
     const wrapper = mount(TrackListMediaButton, {
       ...options,
       propsData: {

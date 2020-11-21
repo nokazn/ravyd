@@ -70,25 +70,25 @@ describe('PlaylistTrackTableRow', () => {
     expect(wrapper.findComponent(PlaylistTrackTableRowMobile).exists()).toBe(false);
   });
 
-  it('emit on click item in mobile', async () => {
+  it('emit when click item in mobile', async () => {
     const wrapper = factory('single');
     await wrapper.findComponent(PlaylistTrackTableRowMobile).trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item);
   });
 
-  it('emit on click item in pc', async () => {
+  it('emit when click item in pc', async () => {
     const wrapper = factory('multi');
     await wrapper.findComponent(PlaylistTrackTableRowPc).trigger(CLICK);
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item);
   });
 
-  it('emit on media button item in pc', async () => {
+  it('emit when media button item in pc', async () => {
     const wrapper = factory('multi');
     await wrapper.findComponent(PlaylistTrackTableRowPc).vm.$emit(ON_MEDIA_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)?.[0][0]).toEqual(item);
   });
 
-  it('emit on favorite button item in pc', async () => {
+  it('emit when favorite button item in pc', async () => {
     const wrapper = factory('multi');
     await wrapper.findComponent(PlaylistTrackTableRowPc).vm.$emit(ON_FAVORITE_BUTTON_CLICKED, item);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item);

@@ -10,14 +10,13 @@ const CLICK = 'click';
 
 const UPDATE_QUERY = 'update:query';
 const UPDATE_MENU = 'update:menu';
-// const UPDATE_SEARCHING = 'update:searching';
 
 const $keyboard = {
   add: jest.fn(),
   remove: jest.fn(),
 };
-
 const $dispatch = jest.fn();
+
 const factory = (query: string = '', menu: boolean = false, searching: boolean = false) => {
   return mount(SearchField, {
     ...options,
@@ -35,7 +34,7 @@ const factory = (query: string = '', menu: boolean = false, searching: boolean =
 };
 
 describe('SearchField', () => {
-  it('emit on focus', async () => {
+  it('emit when focus', async () => {
     const wrapper = factory();
     // https://github.com/vuejs/vue-test-utils/issues/1385
     const vTextField = wrapper.findComponent({ ref: SEARCH_FIELD_REF });

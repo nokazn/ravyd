@@ -6,16 +6,16 @@ const CLICK = 'click';
 
 describe('Fallback', () => {
   it('click reload button', async () => {
-    const routerGoMock = jest.fn();
+    const go = jest.fn();
     const wrapper = mount(Fallback, {
       ...options,
       mocks: {
         $router: {
-          go: routerGoMock,
+          go,
         },
       },
     });
     await wrapper.find('.Fallback__wrapper > .v-btn').trigger(CLICK);
-    expect(routerGoMock).toHaveBeenCalledWith(0);
+    expect(go).toHaveBeenCalledWith(0);
   });
 });

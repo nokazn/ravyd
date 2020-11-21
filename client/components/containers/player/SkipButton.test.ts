@@ -6,7 +6,7 @@ import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $stateMock = (positionMs: number, durationMs: number) => {
+const $state = (positionMs: number, durationMs: number) => {
   return jest.fn().mockReturnValue({
     playback: {
       positionMs,
@@ -14,14 +14,14 @@ const $stateMock = (positionMs: number, durationMs: number) => {
     },
   });
 };
-const $gettersMock = (isDisallowed: boolean) => {
+const $getters = (isDisallowed: boolean) => {
   return jest.fn().mockReturnValue({
     'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'seeking'
       ? isDisallowed
       : false),
   });
 };
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
   positionMs: number,
@@ -38,9 +38,9 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(positionMs, durationMs),
-      $getters: $gettersMock(isDisallowed),
-      $dispatch: $dispatchMock,
+      $state: $state(positionMs, durationMs),
+      $getters: $getters(isDisallowed),
+      $dispatch,
     },
   });
 };
@@ -73,24 +73,24 @@ describe('SkipButton', () => {
   it('click +15sec button at 0:30/1:00', async () => {
     const wrapper = factory(30 * 1000, 60 * 1000, 15);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 45 * 1000 });
+    expect($dispatch).toHaveBeenCalledWith('playback/seek', { positionMs: 45 * 1000 });
   });
 
   it('click +15sec button at 0:50/1:00', async () => {
     const wrapper = factory(50 * 1000, 60 * 1000, 15);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/next');
+    expect($dispatch).toHaveBeenCalledWith('playback/next');
   });
 
   it('click -15sec button at 0:30/1:00', async () => {
     const wrapper = factory(30 * 1000, 60 * 1000, -15);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 15 * 1000 });
+    expect($dispatch).toHaveBeenCalledWith('playback/seek', { positionMs: 15 * 1000 });
   });
 
   it('click -15sec button at 0:10/1:00', async () => {
     const wrapper = factory(10 * 1000, 60 * 1000, -15);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
+    expect($dispatch).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
   });
 });

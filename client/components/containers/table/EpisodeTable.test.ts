@@ -35,15 +35,15 @@ const item = (i: number, resumePoint?: [boolean, number]): App.EpisodeDetail => 
   showName: `showName${i}`,
 });
 
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $gettersMock = (episodeId?: string) => jest.fn().mockReturnValue({
+const $getters = (episodeId?: string) => jest.fn().mockReturnValue({
   'playback/isTrackSet': (id: string) => id === episodeId,
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = ({ episodes, noDataText, hideAddedAt = false }: {
   episodes: App.EpisodeDetail[];
@@ -61,9 +61,9 @@ const factory = ({ episodes, noDataText, hideAddedAt = false }: {
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(playing),
-      $getters: $gettersMock(setId),
-      $dispatch: $dispatchMock,
+      $state: $state(playing),
+      $getters: $getters(setId),
+      $dispatch,
       $screen: {
         isSingleColumn: column === 'single',
         isMultiColumn: column === 'multi',
@@ -151,41 +151,41 @@ describe('EpisodeTable', () => {
     expect(wrapper.find('tbody > tr > td:nth-child(2) > div > div > div.g-ellipsis-text > a').text()).toBe('name3');
   });
 
-  it('call play request on row clicked for mobile', async () => {
+  it('call play request when row clicked for mobile', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'single');
     await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'contextUri',
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call pause request on row clicked for mobile', async () => {
+  it('call pause request when row clicked for mobile', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'single', 'id2', true);
     await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('call play request on media button clicked', async () => {
+  it('call play request when media button clicked', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'multi');
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'contextUri',
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call pause request on media button clicked', async () => {
+  it('call pause request when media button clicked', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'multi', 'id2', true);
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

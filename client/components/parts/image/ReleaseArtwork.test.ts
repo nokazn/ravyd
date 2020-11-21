@@ -24,14 +24,13 @@ const factory = (overlay: boolean) => {
 };
 
 describe('ReleaseArtwork', () => {
-  it('emit on clicked', async () => {
+  it('emit when clicked', async () => {
     const wrapper = factory(true);
-    // await wrapper.findComponent(ImageOverlay).find('v-btn').trigger(CLICK);
-    await wrapper.findComponent(ImageOverlay).vm.$emit(CLICK);
+    await wrapper.findComponent(ImageOverlay).find('.v-btn').trigger(CLICK);
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)).toBeTruthy();
   });
 
-  it('emit on load', async () => {
+  it('emit when load', async () => {
     const wrapper = factory(false);
     await wrapper.find('.v-image').trigger(LOAD);
     expect(wrapper.emitted(ON_LOADED)).toBeTruthy();

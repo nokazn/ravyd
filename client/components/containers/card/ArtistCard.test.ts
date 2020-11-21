@@ -29,15 +29,15 @@ const item = (i: number): SpotifyAPI.Artist => ({
   popularity: 100,
 });
 
-const $gettersMock = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => jest.fn().mockReturnValue({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
 });
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $dispatchMock = jest.fn();
+const $dispatch = jest.fn();
 
 const factory = (set: boolean, playing: boolean) => {
   return mount(ArtistCard, {
@@ -47,9 +47,9 @@ const factory = (set: boolean, playing: boolean) => {
     },
     mocks: {
       ...mocks,
-      $getters: $gettersMock(set),
-      $state: $stateMock(playing),
-      $dispatch: $dispatchMock,
+      $getters: $getters(set),
+      $state: $state(playing),
+      $dispatch,
       $screen: {
         isMultiColumn: true,
         isSingleColumn: false,
@@ -59,7 +59,7 @@ const factory = (set: boolean, playing: boolean) => {
 };
 
 describe('ArtistCard', () => {
-  it('artist\'s path', async () => {
+  it('artist path', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -67,7 +67,7 @@ describe('ArtistCard', () => {
     expect(wrapper.findComponent(Card).props().to).toBe('/artists/id1');
   });
 
-  it('when an artist\'s track is not set', async () => {
+  it('when an artist track is not set', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -75,7 +75,7 @@ describe('ArtistCard', () => {
     expect(wrapper.findComponent(UserAvatar).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when an aritst\'s track set', async () => {
+  it('when an artist track set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -83,7 +83,7 @@ describe('ArtistCard', () => {
     expect(wrapper.findComponent(UserAvatar).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when playing an artist\'s track', async () => {
+  it('when playing an artist track', async () => {
     const wrapper = factory(true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -97,7 +97,7 @@ describe('ArtistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'uri',
     });
   });
@@ -108,7 +108,7 @@ describe('ArtistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
   it('pause a track', async () => {
@@ -117,6 +117,6 @@ describe('ArtistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

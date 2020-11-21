@@ -55,7 +55,7 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean) => {
 };
 
 describe('TrackTableRowMobile', () => {
-  it('emit on click item', async () => {
+  it('emit when click item', async () => {
     const wrapper = factory(false, false, false);
     const row = wrapper.findComponent(TrackTableRowMobile);
     expect(row.exists()).toBe(true);
@@ -63,7 +63,7 @@ describe('TrackTableRowMobile', () => {
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('emit on click favorite button', async () => {
+  it('emit when click favorite button', async () => {
     const wrapper = factory(false, false, false);
     const row = wrapper.findComponent(TrackTableRowMobile);
     expect(row.exists()).toBe(true);
@@ -88,7 +88,7 @@ describe('TrackTableRowMobile', () => {
     expect(subtitle.classes()).toContain(activeClass);
   });
 
-  it('inacive', async () => {
+  it('inactive', async () => {
     const wrapper = factory(false, false, false);
     const title = wrapper.find('td > div');
     const subtitle = wrapper.find('td > *:last-child');

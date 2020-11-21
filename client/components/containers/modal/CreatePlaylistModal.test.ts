@@ -6,24 +6,23 @@ import CreatePlaylistModal from './CreatePlaylistModal.vue';
 const CLICK = 'click';
 const INPUT = 'input';
 
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (value: boolean) => {
-  const vm = mount(CreatePlaylistModal, {
+  return mount(CreatePlaylistModal, {
     ...options,
     propsData: {
       value,
     },
     mocks: {
       ...mocks,
-      $dispatch: $dispatchMock,
+      $dispatch,
       $subscribe: jest.fn(),
       $screen: {
         isSingleColumn: false,
       },
     },
   });
-  return vm;
 };
 
 describe('CreatePlaylistModal', () => {
@@ -31,10 +30,8 @@ describe('CreatePlaylistModal', () => {
     const wrapper = factory(false);
     const VDialog = wrapper.findComponent({ name: 'VDialog' });
     expect(VDialog.props().value).toBe(false);
-
     await VDialog.vm.$emit(INPUT, true);
     expect(wrapper.emitted(INPUT)?.[0][0]).toBe(true);
-
     await wrapper.setProps({
       value: true,
     });
@@ -46,8 +43,8 @@ describe('CreatePlaylistModal', () => {
     await wrapper.find('.v-form > *:first-child input').setValue('a');
     await Vue.nextTick();
     await wrapper.find('.v-card__actions > .v-btn:nth-child(2)').trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playlists/createPlaylist', {
-      // @todo
+    expect($dispatch).toHaveBeenCalledWith('playlists/createPlaylist', {
+      // @todo undefined にする
       playlistId: '',
       name: 'a',
       description: '',

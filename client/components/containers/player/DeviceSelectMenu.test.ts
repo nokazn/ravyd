@@ -13,11 +13,11 @@ const device = (i: number, isActive: boolean = false, disabled: boolean = false)
   title: `title${i}`,
   subtitle: `subtitle${i}`,
 });
-const $gettersMock = (playing: boolean, devices: App.Device[]) => jest.fn().mockReturnValue({
+const $getters = (playing: boolean, devices: App.Device[]) => jest.fn().mockReturnValue({
   'playback/isThisAppPlaying': playing,
   'playback/deviceList': devices,
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
   playing: boolean,
@@ -27,8 +27,8 @@ const factory = (
     ...options,
     mocks: {
       ...mocks,
-      $getters: $gettersMock(playing, devices),
-      $dispatch: $dispatchMock,
+      $getters: $getters(playing, devices),
+      $dispatch,
     },
   });
   return vm;
@@ -53,5 +53,6 @@ describe('DeviceSelectMenu', () => {
     expect(vm.menu).toBe(true);
   });
 
-  // @todo menu 内のテスト
+  it.todo('update device list');
+  it.todo('call transfer-playback request when item clicked');
 });

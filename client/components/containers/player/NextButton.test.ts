@@ -6,12 +6,12 @@ import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
   'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'skipping_next'
     ? disallowed
     : false),
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
   disallowed: boolean = false,
@@ -24,8 +24,8 @@ const factory = (
     propsData,
     mocks: {
       ...mocks,
-      $getters: $gettersMock(disallowed),
-      $dispatch: $dispatchMock,
+      $getters: $getters(disallowed),
+      $dispatch,
     },
   });
 };
@@ -42,12 +42,12 @@ describe('NextButton', () => {
     const wrapper = factory(true);
     expect(wrapper.findComponent(CircleButton).props().disabled).toBe(true);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).not.toHaveBeenCalled();
+    expect($dispatch).not.toHaveBeenCalled();
   });
 
   it('call pause request', async () => {
     const wrapper = factory();
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/next');
+    expect($dispatch).toHaveBeenCalledWith('playback/next');
   });
 });

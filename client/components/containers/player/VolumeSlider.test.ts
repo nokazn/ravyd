@@ -6,21 +6,21 @@ import type { ZeroToHundred } from '~~/types';
 const CHANGE = 'change';
 const CLICK = 'click';
 
-const $stateMock = (volumePercent: ZeroToHundred, isMuted: boolean) => jest.fn().mockReturnValue({
+const $state = (volumePercent: ZeroToHundred, isMuted: boolean) => jest.fn().mockReturnValue({
   playback: {
     volumePercent,
     isMuted,
   },
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (volumePercent: ZeroToHundred, isMuted: boolean = false) => {
   return mount(VolumeSlider, {
     ...options,
     mocks: {
       ...mocks,
-      $state: $stateMock(volumePercent, isMuted),
-      $dispatch: $dispatchMock,
+      $state: $state(volumePercent, isMuted),
+      $dispatch,
     },
   });
 };
@@ -137,12 +137,12 @@ describe('VolumeSlider', () => {
   it('change volume', async () => {
     const wrapper = factory(100);
     await wrapper.findComponent({ name: 'VSlider' }).vm.$emit(CHANGE, 50);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/volume', { volumePercent: 50 });
+    expect($dispatch).toHaveBeenCalledWith('playback/volume', { volumePercent: 50 });
   });
 
   it('toggle mute', async () => {
     const wrapper = factory(100, true);
     await wrapper.find('div > .v-btn--icon').trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/mute');
+    expect($dispatch).toHaveBeenCalledWith('playback/mute');
   });
 });

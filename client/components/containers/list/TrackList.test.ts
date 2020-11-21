@@ -23,8 +23,8 @@ const item = (i: number): App.TrackDetail => ({
     spotify: 'path/to/spotify',
   },
   isSaved: true,
-  releaseId: 'releaseId',
-  releaseName: 'releaseName',
+  releaseId: `releaseId${i}`,
+  releaseName: `releaseName${i}`,
   images: [],
   linkedFrom: undefined,
   index: 1,
@@ -36,15 +36,15 @@ const item = (i: number): App.TrackDetail => ({
   previewUrl: 'path/to/preview',
 });
 
-const $gettersMock = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => jest.fn().mockReturnValue({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
 });
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $dispatchMock = jest.fn();
+const $dispatch = jest.fn();
 
 const factory = (t: number, l: number | undefined, set: boolean, playing: boolean) => {
   return mount(TrackList, {
@@ -56,9 +56,9 @@ const factory = (t: number, l: number | undefined, set: boolean, playing: boolea
     },
     mocks: {
       ...mocks,
-      $getters: $gettersMock(set),
-      $state: $stateMock(playing),
-      $dispatch: $dispatchMock,
+      $getters: $getters(set),
+      $state: $state(playing),
+      $dispatch,
       $screen: {
         isMultiColumn: true,
         isSingleColumn: false,
@@ -101,7 +101,7 @@ describe('TrackList', () => {
     expect(items.at(5).isVisible()).toBe(true);
   });
 
-  it('emit on a favorite button of 2nd item clicked', async () => {
+  it('emit when a favorite button of 2nd item clicked', async () => {
     const wrapper = factory(6, 3, false, false);
     await wrapper
       .findAllComponents(TrackListItem)
@@ -111,17 +111,17 @@ describe('TrackList', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(2));
   });
 
-  it('emit on a media button of 2nd item clicked when playing a track', async () => {
+  it('emit when a media button of 2nd item clicked when playing a track', async () => {
     const wrapper = factory(6, 3, true, true);
     await wrapper
       .findAllComponents(TrackListItem)
       .at(1)
       .vm
       .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('emit on a media button of 2nd item clicked when not playing a track', async () => {
+  it('emit when a media button of 2nd item clicked when not playing a track', async () => {
     const wrapper = factory(6, 3, false, false);
     await wrapper
       .findAllComponents(TrackListItem)
@@ -129,11 +129,11 @@ describe('TrackList', () => {
       .vm
       .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
     const trackUriList = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       trackUriList,
       offset: { uri: 'uri2' },
     });
-    expect($dispatchMock).toHaveBeenCalledWith('playback/setCustomContext', {
+    expect($dispatch).toHaveBeenCalledWith('playback/setCustomContext', {
       trackUriList,
       contextUri: 'contextUri',
     });

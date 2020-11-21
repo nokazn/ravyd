@@ -6,18 +6,17 @@ import type { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
-  // @todo resuming
+const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
   'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'interrupting_playback'
     ? disallowed
     : false),
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
   playing: boolean,
@@ -32,9 +31,9 @@ const factory = (
     propsData,
     mocks: {
       ...mocks,
-      $state: $stateMock(playing),
-      $getters: $gettersMock(disabled),
-      $dispatch: $dispatchMock,
+      $state: $state(playing),
+      $getters: $getters(disabled),
+      $dispatch,
     },
   });
 };
@@ -92,18 +91,18 @@ describe('MediaButton', () => {
     const circleButton = wrapper.findComponent(CircleButton);
     expect(circleButton.props().disabled).toBe(true);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).not.toHaveBeenCalled();
+    expect($dispatch).not.toHaveBeenCalled();
   });
 
   it('call play request', async () => {
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
   it('call pause request', async () => {
     const wrapper = factory(true);
     await wrapper.trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

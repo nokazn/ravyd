@@ -12,7 +12,7 @@ const ON_LINK_CLICKED = 'on-link-clicked';
 const activeTextClass = 'active--text';
 const subtextClass = 'subtext--text';
 
-const artistMock = (i: number) => ({
+const artist = (i: number) => ({
   name: `name${i}`,
   id: `id${i}`,
   uri: `uri${i}`,
@@ -26,7 +26,7 @@ const item = (i: number, type: 'track' | 'episode' = 'track'): Item => ({
   uri: `uri${i}`,
   releaseId: 'releaseId',
   releaseName: 'releaseName',
-  artists: [artistMock(i)],
+  artists: [artist(i)],
   images: [],
   linkedFrom: undefined,
   durationMs: 10000,
@@ -83,13 +83,13 @@ describe('TrackQueueMenuItem', () => {
     expect(icon.isVisible()).toBe(true);
   });
 
-  it('emit on item clicked', async () => {
+  it('emit when item clicked', async () => {
     const wrapper = factory(item(1), false, false);
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(ON_ITEM_CLICKED)?.[0][0]).toEqual(item(1));
   });
 
-  it('emit on link clicked', async () => {
+  it('emit when link clicked', async () => {
     const wrapper = factory(item(1), false, false);
     await wrapper
       .find('.v-list-item__subtitle > *:first-child')

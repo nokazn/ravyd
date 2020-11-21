@@ -8,7 +8,7 @@
     <v-hover v-slot="{ hover: buttonHoverd }">
       <v-btn
         icon
-        @click.stop.prevent="onClick"
+        @click.stop="onClick"
       >
         <v-icon
           :size="iconSize(buttonHoverd)"
@@ -56,7 +56,6 @@ export default defineComponent({
         ? 0.375
         : 0.3;
       const maxSize = 180;
-
       return props.size == null || props.size < maxSize
         ? maxSize * ratio
         : props.size * ratio;

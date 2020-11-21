@@ -50,7 +50,7 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean) => {
 };
 
 describe('EpisodeTableRowMobile', () => {
-  it('emit on click item', async () => {
+  it('emit when click item', async () => {
     const wrapper = factory(false, false, false);
     const row = wrapper.findComponent(EpisodeTableRowMobile);
     expect(row.exists()).toBe(true);
@@ -75,7 +75,7 @@ describe('EpisodeTableRowMobile', () => {
     expect(subtitle.classes()).toContain(activeClass);
   });
 
-  it('inacive', async () => {
+  it('inactive', async () => {
     const wrapper = factory(false, false, false);
     const title = wrapper.find('tr > td:first-child > div > div');
     const subtitle = wrapper.find('div.g-small-text');

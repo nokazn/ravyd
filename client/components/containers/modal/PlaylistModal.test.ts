@@ -15,7 +15,7 @@ type Form = {
 const CLICK = 'click';
 const INPUT = 'input';
 
-const $spotifyMock = {
+const $spotify = {
   playlists: {
     uploadPlaylistArtwork: jest.fn().mockReturnValue(undefined),
   },
@@ -31,7 +31,7 @@ const form = (
   isPrivate,
   isCollaborative,
 });
-const handlerMock = jest.fn().mockResolvedValue(undefined);
+const handler = jest.fn().mockResolvedValue(undefined);
 
 const factory = (propsData: {
   value: boolean;
@@ -43,11 +43,11 @@ const factory = (propsData: {
     ...options,
     propsData: {
       ...propsData,
-      handler: handlerMock,
+      handler,
     },
     mocks: {
       ...mocks,
-      $spotify: $spotifyMock,
+      $spotify,
       $subscribe: jest.fn(),
       $screen: {
         isSingleColumn: false,
@@ -258,7 +258,7 @@ describe('PlaylistModal', () => {
     await Vue.nextTick();
     const vButton = wrapper.find('.v-card__actions > .v-btn:nth-child(2)');
     await vButton.trigger(CLICK);
-    expect(handlerMock).toHaveBeenCalledWith({
+    expect(handler).toHaveBeenCalledWith({
       playlistId: '',
       name: 'a',
       description: '',
@@ -276,7 +276,7 @@ describe('PlaylistModal', () => {
     });
     await wrapper.find('.v-card__actions > .v-btn:nth-child(2)').trigger(CLICK);
     const f = form(1);
-    expect(handlerMock).toHaveBeenCalledWith({
+    expect(handler).toHaveBeenCalledWith({
       playlistId: f.playlistId,
       name: f.name,
       description: f.description,
@@ -285,5 +285,5 @@ describe('PlaylistModal', () => {
     });
   });
 
-  // @todo subscribePlaylist, emit('update:image') のテスト
+  it.todo('subscribe playlist & emit update:image');
 });

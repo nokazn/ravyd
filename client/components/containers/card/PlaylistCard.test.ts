@@ -50,18 +50,18 @@ const item = (i: number): SpotifyAPI.SimplePlaylist => ({
     total: 100,
   },
   type: 'playlist',
-  uri: 'uri',
+  uri: `uri${i}`,
 });
 
-const $gettersMock = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => jest.fn().mockReturnValue({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
 });
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $dispatchMock = jest.fn();
+const $dispatch = jest.fn();
 
 const factory = (set: boolean, playing: boolean) => {
   return mount(PlaylistCard, {
@@ -71,9 +71,9 @@ const factory = (set: boolean, playing: boolean) => {
     },
     mocks: {
       ...mocks,
-      $getters: $gettersMock(set),
-      $state: $stateMock(playing),
-      $dispatch: $dispatchMock,
+      $getters: $getters(set),
+      $state: $state(playing),
+      $dispatch,
       $screen: {
         isMultiColumn: true,
         isSingleColumn: false,
@@ -83,7 +83,7 @@ const factory = (set: boolean, playing: boolean) => {
 };
 
 describe('PlaylistCard', () => {
-  it('playlst\'s path', async () => {
+  it('playlist path', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -91,7 +91,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(Card).props().to).toBe('/playlists/id1');
   });
 
-  it('when a playlist\'s track is not set', async () => {
+  it('when a playlist track is not set', async () => {
     const wrapper = factory(false, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -99,7 +99,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when a playlist\'s track set', async () => {
+  it('when a playlist track set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -107,7 +107,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when playing a playlist\'s track', async () => {
+  it('when playing a playlist track', async () => {
     const wrapper = factory(true, true);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -121,8 +121,8 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'uri',
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
+      contextUri: 'uri1',
     });
   });
 
@@ -132,7 +132,7 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
   it('pause a track', async () => {
@@ -141,6 +141,6 @@ describe('PlaylistCard', () => {
       isLoaded: true,
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

@@ -5,7 +5,7 @@ import ContentListItem from './ContentListItem.vue';
 const CLICK = 'click';
 
 describe('ContentListItem', () => {
-  it('emit on clicked', async () => {
+  it('emit when clicked', async () => {
     const wrapper = mount(ContentListItem, {
       ...options,
       propsData: {

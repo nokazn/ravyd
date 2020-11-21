@@ -5,7 +5,7 @@ import type { App, VHas } from '~~/types';
 
 const CLICK = 'click';
 
-const artistMock = (i: number) => ({
+const artist = (i: number) => ({
   name: `artistName${i}`,
   id: `artistId${i}`,
   uri: `artistUri${i}`,
@@ -24,33 +24,33 @@ const item = (
   uri: `uri${i}`,
   releaseId: 'releaseId',
   releaseName: 'releaseName',
-  artists: [artistMock(i)],
+  artists: [artist(i)],
   images: [],
   linkedFrom: undefined,
   durationMs: 10000,
 });
 
-const $gettersMock = (items: App.TrackQueue[], uri: string) => {
+const $getters = (items: App.TrackQueue[], uri: string) => {
   return jest.fn().mockReturnValue({
     'playback/trackQueue': items,
     'playback/contextUri': uri,
   });
 };
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (items: App.TrackQueue[], uri: string = 'contextUri') => {
   return mount(TrackQueueMenu, {
     ...options,
     mocks: {
       ...mocks,
-      $getters: $gettersMock(items, uri),
-      $dispatch: $dispatchMock,
+      $getters: $getters(items, uri),
+      $dispatch,
     },
   });
 };
 
 describe('TrackQueueMenu', () => {
-  it('opne menu', async () => {
+  it('open menu', async () => {
     const wrapper = factory([
       item(-1),
       item(0, true),
@@ -63,5 +63,8 @@ describe('TrackQueueMenu', () => {
     expect(vm.menu).toBe(true);
   });
 
-  // @todo menu 内のテスト
+  it.todo('call next request when item clicked');
+  it.todo('call next request 2 times when item clicked');
+  it.todo('empty track queue');
+  it.todo('link to /library/history');
 });

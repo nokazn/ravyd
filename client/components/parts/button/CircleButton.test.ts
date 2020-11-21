@@ -5,7 +5,7 @@ import CircleButton from './CircleButton.vue';
 const CLICK = 'click';
 
 describe('CircleButton', () => {
-  it('emit on clicked', async () => {
+  it('emit when clicked', async () => {
     const wrapper = mount(CircleButton, options);
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(CLICK)).toBeTruthy();

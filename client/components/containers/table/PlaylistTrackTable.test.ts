@@ -46,16 +46,16 @@ const item = (i: number): App.PlaylistTrackDetail => ({
     title: '2020-01-01',
   },
 });
-const $stateMock = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
   playback: {
     isPlaying,
   },
 });
-const $gettersMock = (trackId?: string) => jest.fn().mockReturnValue({
+const $getters = (trackId?: string) => jest.fn().mockReturnValue({
   'playback/isTrackSet': (id: string) => id === trackId,
   'playback/isContextSet': () => trackId != null,
 });
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
   {
@@ -92,9 +92,9 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(playing),
-      $getters: $gettersMock(setId),
-      $dispatch: $dispatchMock,
+      $state: $state(playing),
+      $getters: $getters(setId),
+      $dispatch,
       $screen: {
         isSingleColumn: column === 'single',
         isMultiColumn: column === 'multi',
@@ -161,69 +161,69 @@ describe('PlaylistTrackTable', () => {
     expect(th.at(5).attributes().style).toBe(width(36 + 12));
   });
 
-  it('call play request on row clicked for mobile', async () => {
+  it('call play request when row clicked for mobile', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'single');
     await wrapper.findAllComponents(PlaylistTrackTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'contextUri',
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call play request on row clicked without uri prop for mobile', async () => {
+  it('call play request when row clicked without uri prop for mobile', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
       emptyUri: true,
     }, 'single');
     await wrapper.findAllComponents(PlaylistTrackTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       trackUriList: ['uri1', 'uri2', 'uri3'],
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call pause request on row clicked for mobile', async () => {
+  it('call pause request when row clicked for mobile', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'single', 'id2', true);
     await wrapper.findAllComponents(PlaylistTrackTableRow).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('call play request on media button clicked', async () => {
+  it('call play request when media button clicked', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'multi');
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'contextUri',
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call play request on media button clicked with custom prop', async () => {
+  it('call play request when media button clicked with custom prop', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
       custom: true,
     }, 'multi');
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/play', {
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
       trackUriList: ['uri1', 'uri2', 'uri3'],
       offset: { uri: 'uri2' },
     });
   });
 
-  it('call pause request on media button clicked', async () => {
+  it('call pause request when media button clicked', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'multi', 'id2', true);
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('emit on favorite button clicked for mobile', async () => {
+  it('emit when favorite button clicked for mobile', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'single', 'id2', true);
@@ -231,7 +231,7 @@ describe('PlaylistTrackTable', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0]).toBeTruthy();
   });
 
-  it('emit on favorite button clicked for pc', async () => {
+  it('emit when favorite button clicked for pc', async () => {
     const wrapper = factory({
       tracks: [item(1), item(2), item(3)],
     }, 'multi', 'id2', true);

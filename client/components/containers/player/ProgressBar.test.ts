@@ -9,17 +9,17 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $gettersMock = (disallowed: boolean) => jest.fn().mockReturnValue({
+const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
   'playback/isDisallowed': () => disallowed,
 });
-const $stateMock = (playback: PlaybackState) => jest.fn().mockReturnValue({ playback });
-const $commitMock = jest.fn();
-const $dispatchMock = jest.fn();
-const $subscribeMock = jest.fn();
+const $state = (playback: PlaybackState) => jest.fn().mockReturnValue({ playback });
+const $commit = jest.fn();
+const $dispatch = jest.fn();
+const $subscribe = jest.fn();
 
 const factory = (
   state: PlaybackState,
-  height: number = 2,
+  height?: number,
   disallowed: boolean = false,
 ) => {
   const vm = mount(ProgressBar, {
@@ -29,11 +29,11 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(state),
-      $getters: $gettersMock(disallowed),
-      $commit: $commitMock,
-      $dispatch: $dispatchMock,
-      $subscribe: $subscribeMock,
+      $state: $state(state),
+      $getters: $getters(disallowed),
+      $commit,
+      $dispatch,
+      $subscribe,
     },
   });
   return vm;
@@ -83,4 +83,8 @@ describe('ProgressBar', () => {
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().color).toBe('grey lighten-2');
   });
+
+  it.todo('stop updating seek bar when paused');
+  it.todo('start updating seek bar after playing');
+  it.todo('add a few seconds');
 });

@@ -6,21 +6,21 @@ import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $stateMock = (isShuffled: boolean) => {
+const $state = (isShuffled: boolean) => {
   return jest.fn().mockReturnValue({
     playback: {
       isShuffled,
     },
   });
 };
-const $gettersMock = (isDisallowed: boolean) => {
+const $getters = (isDisallowed: boolean) => {
   return jest.fn().mockReturnValue({
     'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'toggling_shuffle'
       ? isDisallowed
       : false),
   });
 };
-const $dispatchMock = jest.fn().mockResolvedValue(undefined);
+const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (isShuffled: boolean, isDisallowed: boolean = false, size: number = 32) => {
   return mount(ShuffleButton, {
@@ -30,9 +30,9 @@ const factory = (isShuffled: boolean, isDisallowed: boolean = false, size: numbe
     },
     mocks: {
       ...mocks,
-      $state: $stateMock(isShuffled),
-      $getters: $gettersMock(isDisallowed),
-      $dispatch: $dispatchMock,
+      $state: $state(isShuffled),
+      $getters: $getters(isDisallowed),
+      $dispatch,
     },
   });
 };
@@ -65,6 +65,6 @@ describe('ShuffleButton', () => {
   it('click button', async () => {
     const wrapper = factory(false);
     await wrapper.findComponent(CircleButton).trigger(CLICK);
-    expect($dispatchMock).toHaveBeenCalledWith('playback/shuffle');
+    expect($dispatch).toHaveBeenCalledWith('playback/shuffle');
   });
 });

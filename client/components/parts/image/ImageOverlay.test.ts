@@ -5,7 +5,7 @@ import ImageOverlay from './ImageOverlay.vue';
 const CLICK = 'click';
 
 describe('ImageOverlay', () => {
-  it('emit on clicked', async () => {
+  it('emit when clicked', async () => {
     const wrapper = mount(ImageOverlay, {
       ...options,
       propsData: {

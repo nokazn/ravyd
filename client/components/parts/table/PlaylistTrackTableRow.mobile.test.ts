@@ -63,7 +63,7 @@ const factory = (set: boolean, playing: boolean, isPlayable: boolean, type: 'tra
 };
 
 describe('PlaylistTrackTableRowMobile', () => {
-  it('emit on click item', async () => {
+  it('emit when click item', async () => {
     const wrapper = factory(false, false, false, 'track');
     const row = wrapper.findComponent(PlaylistTrackTableRowMobile);
     expect(row.exists()).toBe(true);
@@ -71,7 +71,7 @@ describe('PlaylistTrackTableRowMobile', () => {
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item(false, 'track'));
   });
 
-  it('emit on click favorite button', async () => {
+  it('emit when click favorite button', async () => {
     const wrapper = factory(false, false, false, 'track');
     const row = wrapper.findComponent(PlaylistTrackTableRowMobile);
     expect(row.exists()).toBe(true);
