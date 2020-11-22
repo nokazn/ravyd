@@ -25,4 +25,9 @@ describe('CategoryCard', () => {
     const wrapper = factory(true);
     expect(wrapper.find('.v-card').exists()).toBe(true);
   });
+
+  it.todo('width prop');
+  it.todo('minWidth & maxWidth prop');
+  it.todo('when artworkSrc is undefined');
+  it.todo('category path');
 });

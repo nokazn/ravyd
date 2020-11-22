@@ -1,9 +1,10 @@
 <template>
   <Card
+    :to="releasePath"
+    :custom="!discograpy"
     :width="width"
     :min-width="width"
     :max-width="maxWidth || width"
-    @click="onCardClicked"
   >
     <template #image>
       <nuxt-link :to="releasePath">
@@ -42,12 +43,11 @@
           {{ item.releaseYear }}
         </time>
       </template>
-      <template v-else>
-        <ArtistNames
-          :artists="item.artists"
-          class="g-ellipsis-text"
-        />
-      </template>
+      <ArtistNames
+        v-else
+        :artists="item.artists"
+        class="g-ellipsis-text"
+      />
     </template>
   </Card>
 </template>
@@ -118,7 +118,6 @@ export default defineComponent({
         : 'mdi-play-circle';
     });
 
-    const onCardClicked = () => { root.$router.push(releasePath.value); };
     const onMediaButtonClicked = () => {
       if (isReleaseSet.value) {
         root.$dispatch(isPlaying.value
@@ -140,7 +139,6 @@ export default defineComponent({
       isReleaseSet,
       isPlaying,
       mediaIcon,
-      onCardClicked,
       onMediaButtonClicked,
     };
   },

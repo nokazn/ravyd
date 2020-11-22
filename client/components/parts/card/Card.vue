@@ -12,10 +12,10 @@
       v-else
       hover
       ripple
-      nuxt
       rounded
+      nuxt
+      :to="custom ? undefined : to"
       :color="$constant.CARD_BACKGROUND_COLOR"
-      :to="to"
       :width="width"
       :min-width="width"
       :max-width="maxWidth || width"
@@ -30,7 +30,7 @@
         </v-card-title>
 
         <v-card-subtitle
-          v-if="!onlyTitle"
+          v-if="!hideSubtitle"
           :class="$style.Card__subtitle"
         >
           <slot name="subtitle" />
@@ -45,17 +45,11 @@ import { defineComponent, PropType } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
 import { useIsLoaded } from '~/use/util';
 
-const CLICK = 'click';
-
-export type On = {
-  [CLICK]: void;
-}
-
 export default defineComponent({
   props: {
     to: {
-      type: [String, Object] as PropType<RawLocation | undefined>,
-      default: undefined,
+      type: [String, Object] as PropType<RawLocation>,
+      required: true,
     },
     width: {
       type: Number as PropType<number | undefined>,
@@ -69,19 +63,23 @@ export default defineComponent({
       type: Number as PropType<number | undefined>,
       default: undefined,
     },
-    onlyTitle: {
+    custom: {
+      type: Boolean,
+      default: false,
+    },
+    hideSubtitle: {
       type: Boolean,
       default: false,
     },
   },
 
-  emits: {
-    [CLICK]: null,
-  },
-
-  setup(_, { emit }) {
+  setup(props, { root }) {
     const isLoaded = useIsLoaded();
-    const onClick = () => { emit(CLICK); };
+    const onClick = () => {
+      if (props.custom) {
+        root.$router.push(props.to);
+      }
+    };
 
     return {
       isLoaded,
