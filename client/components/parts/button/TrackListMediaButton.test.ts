@@ -20,7 +20,7 @@ describe('TrackListMediaButton', () => {
     });
     const icon = wrapper.findAll('.v-icon').at(1);
     expect(icon.isVisible()).toBe(true);
-    expect(icon.attributes('title')).toBe('再生中');
+    expect(icon.attributes().title).toBe('再生中');
     expect(icon.classes()).toContain('mdi-volume-high');
   });
 
@@ -36,7 +36,7 @@ describe('TrackListMediaButton', () => {
     });
     const button = wrapper.find('.v-btn');
     expect(button.isVisible()).toBe(true);
-    expect(button.attributes('title')).toBe('停止');
+    expect(button.attributes().title).toBe('停止');
 
     const icon = wrapper.find('.v-btn .v-icon');
     expect(icon.classes()).toContain('mdi-pause');
@@ -72,7 +72,7 @@ describe('TrackListMediaButton', () => {
     });
     const button = wrapper.find('.v-btn');
     expect(button.isVisible()).toBe(true);
-    expect(button.attributes('title')).toBe('再生');
+    expect(button.attributes().title).toBe('再生');
 
     const icon = wrapper.find('.v-btn .v-icon');
     expect(icon.classes()).toContain('mdi-play');
@@ -92,8 +92,9 @@ describe('TrackListMediaButton', () => {
       },
     });
     const text = wrapper.find('span > span');
+    expect(text.isVisible()).toBe(true);
     expect(text.classes()).toContain(inactiveClass);
-    expect(text.attributes('title')).toBe('再生できない項目');
+    expect(text.attributes().title).toBe('再生できない項目');
   });
 
   it('hover with disabled', async () => {
@@ -107,7 +108,8 @@ describe('TrackListMediaButton', () => {
       },
     });
     const text = wrapper.find('span > span');
+    expect(text.isVisible()).toBe(true);
     expect(text.classes()).toContain(inactiveClass);
-    expect(text.attributes('title')).toBe('再生できない項目');
+    expect(text.attributes().title).toBe('再生できない項目');
   });
 });

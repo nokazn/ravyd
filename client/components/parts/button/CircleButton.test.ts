@@ -10,4 +10,8 @@ describe('CircleButton', () => {
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(CLICK)).toBeTruthy();
   });
+
+  it.todo('color & icon size when fab prop is set to true');
+  it.todo('color & icon size when fab prop is set to false');
+  it.todo('disabled prop');
 });

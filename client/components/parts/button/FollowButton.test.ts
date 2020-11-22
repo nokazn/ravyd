@@ -13,11 +13,13 @@ describe('FollowButton', () => {
         value: true,
       },
     });
-    expect(wrapper.get('.v-icon').classes()).toContain('mdi-heart');
-    const button = wrapper.get('.v-btn');
+    expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart');
+    const button = wrapper.findComponent({ name: 'VBtn' });
     expect(button.text()).toBe('フォロー中');
-    await wrapper.trigger(CLICK);
-    expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
+    expect(button.props().color).toBe('grey darken-3');
+    expect(button.props().outlined).toBe(false);
+    await button.trigger(CLICK);
+    expect(wrapper.emitted(INPUT)?.[0][0]).toBe(false);
   });
 
   it('not followed', async () => {
@@ -28,9 +30,13 @@ describe('FollowButton', () => {
       },
     });
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart-plus-outline');
-    const button = wrapper.get('.v-btn');
+    const button = wrapper.findComponent({ name: 'VBtn' });
     expect(button.text()).toBe('フォロー');
+    expect(button.props().color).toBeUndefined();
+    expect(button.props().outlined).toBe(true);
     await button.trigger(CLICK);
-    expect(button.emitted(INPUT)?.[0]).toEqual([true]);
+    expect(wrapper.emitted(INPUT)?.[0][0]).toBe(true);
   });
+
+  it.todo('hover when value is true');
 });

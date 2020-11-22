@@ -31,4 +31,8 @@ describe('ContextMediaButton', () => {
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([true]);
   });
+
+  it.todo('rounded & width when fab prop is set to true');
+  it.todo('rounded & width when fab prop is set to false');
+  it.todo('disabled prop');
 });

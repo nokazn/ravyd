@@ -15,7 +15,7 @@ describe('PlaylistMediaButton', () => {
       },
     });
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-pause');
-    expect(wrapper.attributes('title')).toBe('停止');
+    expect(wrapper.attributes().title).toBe('停止');
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
   });
@@ -29,7 +29,7 @@ describe('PlaylistMediaButton', () => {
       },
     });
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-play');
-    expect(wrapper.attributes('title')).toBe('再生');
+    expect(wrapper.attributes().title).toBe('再生');
     await wrapper.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([true]);
   });
@@ -43,7 +43,7 @@ describe('PlaylistMediaButton', () => {
       },
     });
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-play');
-    expect(wrapper.attributes('title')).toBe('再生できない項目');
+    expect(wrapper.attributes().title).toBe('再生できない項目');
   });
 
   it('disabled with not playing', async () => {
@@ -55,6 +55,6 @@ describe('PlaylistMediaButton', () => {
       },
     });
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-play');
-    expect(wrapper.attributes('title')).toBe('再生できない項目');
+    expect(wrapper.attributes().title).toBe('再生できない項目');
   });
 });

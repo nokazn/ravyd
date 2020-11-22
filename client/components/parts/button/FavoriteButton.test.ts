@@ -13,9 +13,10 @@ describe('FavoriteButton', () => {
         value: true,
       },
     });
-    expect(wrapper.get('.v-icon').classes()).toContain('mdi-heart');
+    expect(wrapper.find('.v-btn').attributes().title).toBe('保存しない');
+    expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart');
     await wrapper.trigger(CLICK);
-    expect(wrapper.emitted(INPUT)?.[0]).toEqual([false]);
+    expect(wrapper.emitted(INPUT)?.[0][0]).toBe(false);
   });
 
   it('not favorited', async () => {
@@ -25,8 +26,15 @@ describe('FavoriteButton', () => {
         value: false,
       },
     });
+    expect(wrapper.find('.v-btn').attributes().title).toBe('保存する');
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart-outline');
     await wrapper.trigger(CLICK);
-    expect(wrapper.emitted(INPUT)?.[0]).toEqual([true]);
+    expect(wrapper.emitted(INPUT)?.[0][0]).toBe(true);
   });
+
+  it.todo('color & icon size when fab prop is set to true');
+  it.todo('color & icon size when fab prop is set to false');
+  it.todo('icon color when outlined prop is set to true');
+  it.todo('icon color when outlined prop is set to false');
+  it.todo('disabled prop');
 });

@@ -2,15 +2,15 @@
   <v-hover v-slot="{ hover }">
     <v-btn
       rounded
-      :width="172"
+      :width="width"
       :color="color"
       :outlined="!value"
       :height="height"
       @click="onClick"
     >
       <v-icon
-        :size="18"
         left
+        :size="18"
       >
         {{ button(hover).icon }}
       </v-icon>
@@ -38,6 +38,10 @@ export default defineComponent({
     value: {
       type: Boolean,
       required: true,
+    },
+    width: {
+      type: Number,
+      default: 172,
     },
     height: {
       type: Number,
