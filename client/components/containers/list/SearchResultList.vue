@@ -198,16 +198,7 @@ export default defineComponent({
   &__group {
     margin-bottom: 12px;
 
-    @include smaller-than-lg() {
-      max-width: calc(#{$content-width} - #{$content-side-padding * 2});
-    }
-
-    @include larger-than-lg() {
-      $content-width-with-nav: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
-      $flexible-max-width: calc((#{$content-width} - #{$g-navigation-drawer-width}) / 2);
-
-      max-width: min(#{$flexible-max-width}, #{$content-width / 2});
-    }
+    @include avoid-overflowing();
   }
 
   &__moreButton {

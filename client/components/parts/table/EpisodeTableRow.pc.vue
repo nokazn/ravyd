@@ -170,7 +170,7 @@ export default defineComponent({
     justify-content: space-between;
 
     &__left {
-      min-width: 0;
+      @include avoid-overflowing();
 
       & > *:not(:last-child) {
         margin-bottom: 0.25rem;

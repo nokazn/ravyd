@@ -179,7 +179,7 @@ export default defineComponent({
       font-size: 0.9rem;
 
       & > *:first-child {
-        min-width: 0;
+        @include avoid-overflowing();
       }
 
       & > *:not(:first-child) {

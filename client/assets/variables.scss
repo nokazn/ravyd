@@ -348,3 +348,10 @@ $__layer-map: (
     margin-right: 8px;
   }
 }
+
+/*
+ * min-width を auto 以外にして親要素をはみ出さないようにする
+ */
+@mixin avoid-overflowing() {
+  min-width: 0;
+}

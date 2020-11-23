@@ -187,9 +187,8 @@ export default defineComponent({
 .Left {
   display: flex;
   align-items: center;
-  // flex/grid の場合は min-width のデフォルト値が auto になる
-  // 親要素をはみ出す大きさのときは .Left が縮むようにする
-  min-width: 0;
+
+  @include avoid-overflowing();
 
   & > *:not(:last-child) {
     margin-right: 0.2em;

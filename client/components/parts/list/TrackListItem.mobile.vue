@@ -134,8 +134,9 @@ export default defineComponent({
     &__left {
       display: flex;
       align-items: center;
-      min-width: 0;
       line-height: 1.4em;
+
+      @include avoid-overflowing();
 
       & > *:not(:last-child) {
         margin-right: 0.5em;
