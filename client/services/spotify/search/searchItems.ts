@@ -25,11 +25,10 @@ export const searchItems = (context: Context) => {
   }): Promise<SearchResults<T>> => {
     if (query === '') return Promise.resolve({});
 
-    // スペースをエンコード
-    const q = query.replace(/\s/g, '%20');
+    // \s と " はエンコードされる
     return app.$spotifyApi.$get<SearchResults<T>>('/search', {
       params: {
-        q,
+        q: query,
         type: typeList.join(','),
         market,
         limit,

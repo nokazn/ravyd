@@ -104,13 +104,12 @@ export default defineComponent({
       set(v) { emit(UPDATE_SEARCHING, v); },
     });
 
-    const debouncedDispatcher = debounce((q: string) => {
-      queryRef.value = q;
-      if (q) {
+    const debouncedDispatcher = debounce((query: string) => {
+      queryRef.value = query;
+      if (query) {
         searchingRef.value = true;
         root.$dispatch('search/searchAllItems', {
-          // @todo スペースをアンダーバーに置換して1単語として扱う
-          query: q.replace(/\s+/g, '_'),
+          query,
           limit: LIMIT_OF_SEARCH_ITEM,
         }).then(() => {
           searchingRef.value = false;
