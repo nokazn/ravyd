@@ -92,11 +92,11 @@ export default defineComponent({
   }
 
   &__content {
-    padding: 0 2%;
+    padding: 0 max(12px, 2%);
   }
 
   &__footer {
-    padding: 2%;
+    padding: max(12px, 2%);
     display: flex;
     justify-content: flex-end;
 

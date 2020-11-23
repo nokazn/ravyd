@@ -169,7 +169,7 @@ export default defineComponent({
     const text = props.handlerText || props.detailText;
     const rules: Record<'name' | 'artwork', InputValidationRules> = {
       name: [
-        (v: string) => v !== '' || 'プレイリスト名の入力は必須です。',
+        (v: string) => !!v || 'プレイリスト名の入力は必須です。',
       ],
       artwork: [
         (v: File | undefined) => v == null || v.type === 'image/jpeg' || 'アップロードできるファイル形式は jpeg のみです。',
