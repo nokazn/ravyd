@@ -12,7 +12,7 @@ const item = (isActive: boolean, disabled: boolean) => ({
   type: 'Computer',
   isActive,
   disabled,
-  title: '再生中のデバイス',
+  title: '再生中',
   subtitle: 'Chrome',
 });
 const factory = (isActive: boolean, disabled: boolean) => {

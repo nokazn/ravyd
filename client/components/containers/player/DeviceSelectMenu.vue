@@ -82,6 +82,9 @@ export default defineComponent({
     const updateDeviceList = async () => {
       isRefreshing.value = true;
       await root.$dispatch('playback/getDeviceList');
+      if (root.$getters()['playback/activeDevice'] == null) {
+        await root.$dispatch('playback/transferPlayback');
+      }
       isRefreshing.value = false;
     };
     const toggleMenu = () => {

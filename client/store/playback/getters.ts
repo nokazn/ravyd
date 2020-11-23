@@ -60,18 +60,27 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
 
   deviceList(state, getters) {
     const disabled = getters.isDisallowed('transferring_playback');
-
+    const title = (device: SpotifyAPI.Device) => {
+      if (device.is_active) return '再生中';
+      return device.id === state.deviceId
+        ? 'このデバイス'
+        : device.name;
+    };
+    const subtitle = (device: SpotifyAPI.Device) => {
+      if (device.is_active) {
+        return device.id === state.deviceId
+          ? 'このデバイス'
+          : device.name;
+      }
+      return 'Spotify Connect';
+    };
     return state.deviceList.map((device) => ({
       id: device.id ?? undefined,
       type: device.type,
       isActive: device.is_active,
       disabled: device.id == null || disabled,
-      title: device.is_active
-        ? '再生中のデバイス'
-        : device.name,
-      subtitle: device.is_active
-        ? device.name
-        : 'Spotify Connect',
+      title: title(device),
+      subtitle: subtitle(device),
     }));
   },
 
