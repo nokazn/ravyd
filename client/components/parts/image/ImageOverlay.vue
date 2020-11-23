@@ -8,7 +8,7 @@
     <v-hover v-slot="{ hover: buttonHoverd }">
       <v-btn
         icon
-        @click.stop="onClick"
+        @click.stop.prevent="onClick"
       >
         <v-icon
           :size="iconSize(buttonHoverd)"
