@@ -33,4 +33,6 @@ describe('ImageOverlay', () => {
     });
     expect(wrapper.isVisible()).toBe(false);
   });
+
+  it.todo('icon size when hovered');
 });

@@ -26,8 +26,7 @@ const factory = (overlay: boolean) => {
 describe('UserAvatar', () => {
   it('emit when clicked', async () => {
     const wrapper = factory(true);
-    // await wrapper.findComponent(ImageOverlay).find('v-btn').trigger(CLICK);
-    await wrapper.findComponent(ImageOverlay).vm.$emit(CLICK);
+    await wrapper.findComponent(ImageOverlay).find('.v-btn').trigger(CLICK);
     expect(wrapper.emitted(ON_MEDIA_BUTTON_CLICKED)).toBeTruthy();
   });
 
@@ -36,4 +35,10 @@ describe('UserAvatar', () => {
     await wrapper.find('.v-image').trigger(LOAD);
     expect(wrapper.emitted(ON_LOADED)).toBeTruthy();
   });
+
+  it.todo('width prop');
+  it.todo('minWidth & maxWidth prop');
+  it.todo('custom icon');
+  it.todo('icon size');
+  it.todo('overlay prop');
 });

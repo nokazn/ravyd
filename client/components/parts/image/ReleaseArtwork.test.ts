@@ -35,4 +35,10 @@ describe('ReleaseArtwork', () => {
     await wrapper.find('.v-image').trigger(LOAD);
     expect(wrapper.emitted(ON_LOADED)).toBeTruthy();
   });
+
+  it.todo('width prop');
+  it.todo('minWidth & maxWidth prop');
+  it.todo('custom icon');
+  it.todo('icon size');
+  it.todo('overlay prop');
 });
