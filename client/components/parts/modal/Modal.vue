@@ -12,7 +12,7 @@
       :class="$style.Card"
     >
       <div :class="$style.Card__header">
-        <v-card-title>
+        <v-card-title :class="$style.Card__title">
           <slot name="header" />
         </v-card-title>
         <v-btn
@@ -85,18 +85,18 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
 
-    & > *:last-child {
-      margin-right: 12px;
-    }
+  &__title {
+    padding: max(12px, 2%);
   }
 
   &__content {
-    padding: 0 16px;
+    padding: 0 2%;
   }
 
   &__footer {
-    padding: 16px;
+    padding: 2%;
     display: flex;
     justify-content: flex-end;
 

@@ -277,9 +277,7 @@ export default defineComponent({
 }
 
 .Content {
-  min-height: 72px;
-  // header と footer の分を差し引く
-  max-height: calc(90vh - 2rem - 32px - 68px);
+  height: 100%;
   // チェックボックスの hover effect がはみ出すのを考慮する
   margin: 0 -12px;
   padding: 0 12px;
