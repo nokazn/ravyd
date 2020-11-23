@@ -13,7 +13,9 @@ describe('Modal', () => {
         value: true,
       },
     });
-    await wrapper.find('.Card__header > .v-btn').trigger(CLICK);
+    await wrapper.find('.v-card > div:first-child > .v-btn').trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0][0]).toBe(false);
   });
+
+  it.todo('toggle modal');
 });
