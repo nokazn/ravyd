@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
 import UserName from './UserName.vue';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import type { SpotifyAPI } from '~~/types';
 
 const userName = (i: number) => `display_name${i}`;
@@ -47,7 +47,7 @@ describe('UserName', () => {
         avatar: true,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(false);
   });
 
   it('invisible avatar despite images are valid', () => {
@@ -58,7 +58,7 @@ describe('UserName', () => {
         avatar: false,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(false);
   });
 
   it('modify user name to undefined', async () => {

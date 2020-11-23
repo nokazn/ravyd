@@ -30,7 +30,7 @@
         :key="item.value"
         @click="item.handler"
       >
-        <UserAvatar
+        <Avatar
           type="user"
           :src="item.iconSrc"
           :alt="item.text"
@@ -46,7 +46,7 @@ import { defineComponent, computed } from '@vue/composition-api';
 import type { RawLocation } from 'vue-router';
 
 import { useIsLoaded } from '~/use/util';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 
 const ICON_SIZR = 32;
 
@@ -69,7 +69,7 @@ type Item<T extends ItemType = ItemType> = T extends 'to'
 
 export default defineComponent({
   components: {
-    UserAvatar,
+    Avatar,
   },
 
   setup(_, { root }) {

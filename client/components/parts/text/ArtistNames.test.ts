@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
 import ArtistNames from './ArtistNames.vue';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import type { SpotifyAPI } from '~~/types';
 
 const id = (i: number) => `id${i}`;
@@ -37,7 +37,7 @@ describe('ArtistNames', () => {
         avatar: true,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(true);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(true);
     expect(wrapper.find('span > .v-icon').exists()).toBe(false);
   });
 
@@ -49,7 +49,7 @@ describe('ArtistNames', () => {
         avatar: true,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(false);
     expect(wrapper.find('span > .v-icon').exists()).toBe(false);
   });
 
@@ -84,7 +84,7 @@ describe('ArtistNames', () => {
         avatar: false,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(false);
   });
 
   it('text mode', () => {
@@ -97,7 +97,7 @@ describe('ArtistNames', () => {
         text: true,
       },
     });
-    expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
+    expect(wrapper.findComponent(Avatar).exists()).toBe(false);
     expect(wrapper.find('div > span').text()).toBe(`${name(1)}, ${name(2)}, ${name(3)}`);
   });
 });

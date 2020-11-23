@@ -35,7 +35,7 @@
       :ref="HEADER_REF"
       :class="$style.ArtistIdPage__header"
     >
-      <UserAvatar
+      <Avatar
         shadow
         type="artist"
         :src="avatarSrc"
@@ -132,7 +132,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -165,7 +165,7 @@ interface Data {
 
 @Component({
   components: {
-    UserAvatar,
+    Avatar,
     HashTags,
     Followers,
     ContextMediaButton,

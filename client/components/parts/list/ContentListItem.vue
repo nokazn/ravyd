@@ -13,7 +13,7 @@
       tile
       :class="$style.ContentListItem__avatar"
     >
-      <UserAvatar
+      <Avatar
         v-if="item.type === 'artist'"
         type="artist"
         :size="40"
@@ -55,7 +55,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/services/converter';
 import { App } from '~~/types';
@@ -69,7 +69,7 @@ export type On = {
 export default defineComponent({
   components: {
     ReleaseArtwork,
-    UserAvatar,
+    Avatar,
     ArtistNames,
   },
 

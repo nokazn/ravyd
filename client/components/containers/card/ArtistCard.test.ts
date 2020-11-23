@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import ArtistCard from './ArtistCard.vue';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import Card from '~/components/parts/card/Card.vue';
 import type { SpotifyAPI } from '~~/types';
 
@@ -72,7 +72,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    expect(wrapper.findComponent(UserAvatar).props().icon).toBe('mdi-play-circle');
+    expect(wrapper.findComponent(Avatar).props().icon).toBe('mdi-play-circle');
   });
 
   it('when an artist track set', async () => {
@@ -80,7 +80,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    expect(wrapper.findComponent(UserAvatar).props().icon).toBe('mdi-play-circle');
+    expect(wrapper.findComponent(Avatar).props().icon).toBe('mdi-play-circle');
   });
 
   it('when playing an artist track', async () => {
@@ -88,7 +88,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    expect(wrapper.findComponent(UserAvatar).props().icon).toBe('mdi-pause-circle');
+    expect(wrapper.findComponent(Avatar).props().icon).toBe('mdi-pause-circle');
   });
 
   it('play an artist context', async () => {
@@ -96,7 +96,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
+    await wrapper.findComponent(Avatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
       contextUri: 'uri',
     });
@@ -107,7 +107,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
+    await wrapper.findComponent(Avatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
@@ -116,7 +116,7 @@ describe('ArtistCard', () => {
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
     });
-    await wrapper.findComponent(UserAvatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
+    await wrapper.findComponent(Avatar).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 });

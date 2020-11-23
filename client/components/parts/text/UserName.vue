@@ -5,7 +5,7 @@
       [$style.inline]: inline
     }"
   >
-    <UserAvatar
+    <Avatar
       v-if="avatar && src != null"
       type="user"
       :src="src"
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import { getImageSrc } from '~/services/converter';
 import type { SpotifyAPI } from '~~/types';
 
@@ -29,7 +29,7 @@ const SIZE_OF_AVATAR = 28;
 
 export default defineComponent({
   components: {
-    UserAvatar,
+    Avatar,
   },
 
   props: {

@@ -20,7 +20,7 @@
         :class="$style.Artist"
       >
         <template v-if="avatar">
-          <UserAvatar
+          <Avatar
             v-if="hasImages(artist)"
             type="artist"
             :size="avatarSize"
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import { getImageSrc } from '~/services/converter';
 import type { App, SpotifyAPI } from '~~/types';
 
@@ -67,7 +67,7 @@ type Artist = App.MinimumArtist | SpotifyAPI.Artist;
 
 export default defineComponent({
   components: {
-    UserAvatar,
+    Avatar,
   },
 
   props: {

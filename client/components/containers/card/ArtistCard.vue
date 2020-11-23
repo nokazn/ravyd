@@ -8,7 +8,7 @@
   >
     <template #image>
       <div :class="$style.ArtistCard__avatar">
-        <UserAvatar
+        <Avatar
           overlay
           type="artist"
           :src="avatarSrc"
@@ -39,7 +39,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import Card from '~/components/parts/card/Card.vue';
-import UserAvatar, { MediaIcon } from '~/components/parts/image/UserAvatar.vue';
+import Avatar, { MediaIcon } from '~/components/parts/image/Avatar.vue';
 import { getImageSrc } from '~/services/converter';
 import { SpotifyAPI, App } from '~~/types';
 
@@ -52,7 +52,7 @@ const adjustAvatarSize = (width: number | undefined) => {
 export default defineComponent({
   components: {
     Card,
-    UserAvatar,
+    Avatar,
   },
 
   props: {

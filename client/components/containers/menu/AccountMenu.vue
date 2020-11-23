@@ -9,7 +9,7 @@
         :class="$style.UserMenuButton"
         v-on="on"
       >
-        <UserAvatar
+        <Avatar
           type="user"
           :src="userAvatarSrc"
           :alt="userDisplayName"
@@ -54,7 +54,7 @@
 import { defineComponent, computed } from '@vue/composition-api';
 
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 
 const AVATAR_SIZE = 32;
 
@@ -67,7 +67,7 @@ type MenuItem = {
 export default defineComponent({
   components: {
     OptionMenu,
-    UserAvatar,
+    Avatar,
   },
 
   props: {

@@ -31,7 +31,7 @@
       :ref="HEADER_REF"
       :class="$style.UserIdPage__header"
     >
-      <UserAvatar
+      <Avatar
         type="user"
         :src="avatarSrc"
         :size="Math.min($screen.artworkSize, 200)"
@@ -107,7 +107,7 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
-import UserAvatar from '~/components/parts/image/UserAvatar.vue';
+import Avatar from '~/components/parts/image/Avatar.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
 import FavoriteButton, { On as OnFavoriteButton } from '~/components/parts/button/FavoriteButton.vue';
@@ -140,7 +140,7 @@ interface Data {
 
 @Component({
   components: {
-    UserAvatar,
+    Avatar,
     Followers,
     FollowButton,
     FavoriteButton,
