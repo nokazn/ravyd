@@ -1,21 +1,27 @@
 import type { SpotifyAPI } from '~~/types';
 
 // @todo
-type ContextType = 'artist' | 'playlist' | 'album' | 'track' | 'episode' | 'user'
+type ContextType = 'artist' | 'playlist' | 'album' | 'track' | 'episode' | 'user';
 
 const genUrl = (type: string, id: string) => `/${type}s/${id}`;
+// 最後が collection か history で終わるとき
+const getUserContextUrl = (last: string) => {
+  if (last === 'collection') return '/library/tracks';
+  if (last === 'history') return '/library/history';
+  return undefined;
+};
 
 /**
- * @param uri spotify:track:hoge1234 のような形式
+ * @param uri spotify:track:foo のような形式
  */
 export const convertUriToUrl = (uri: string | undefined): string | undefined => {
   if (uri == null) return undefined;
 
-  const elementList = uri.split(':');
-  if (elementList[0] !== 'spotify') return undefined;
+  const elements = uri.split(':');
+  if (elements[0] !== 'spotify') return undefined;
 
-  const type = elementList[1] as SpotifyAPI.Context['type'] as ContextType;
-  const id = elementList[2];
+  const type = elements[1] as SpotifyAPI.Context['type'] as ContextType;
+  const id = elements[2];
 
   switch (type) {
     case 'artist':
@@ -25,10 +31,7 @@ export const convertUriToUrl = (uri: string | undefined): string | undefined => 
     case 'album':
       return genUrl('release', id);
     case 'user':
-      // 最後が collection で終わるとき
-      return elementList[elementList.length - 1] === 'collection'
-        ? '/library/tracks'
-        : undefined;
+      return getUserContextUrl(elements[elements.length - 1]);
     default:
       return undefined;
   }

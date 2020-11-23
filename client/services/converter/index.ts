@@ -10,7 +10,7 @@ export * from './convertTrackForCard';
 export * from './convertTrackForQueue';
 export * from './convertUriToId';
 export * from './convertUriToUrl';
-export * from './generateCollectionContextUri';
+export * from './generateUserContextUri';
 export * from './generateContentPath';
 export * from './getFollowersText';
 export * from './getImageSrc';

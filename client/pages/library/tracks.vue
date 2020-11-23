@@ -29,13 +29,16 @@ import { RootState, RootGetters } from 'typed-vuex';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { generateCollectionContextUri } from '~/services/converter';
+import { generateUserContextUri } from '~/services/converter';
+
+interface AsyncData {
+  uri: string | undefined;
+}
 
 interface Data {
-  uri: string
-  observer: IntersectionObserver | undefined
-  mutationUnsubscribe: (() => void) | undefined
-  MEDIA_BUTTON_REF: string
+  observer: IntersectionObserver | undefined;
+  mutationUnsubscribe: (() => void) | undefined;
+  MEDIA_BUTTON_REF: string;
 }
 
 const LIMIT_OF_TRACKS = 30 as const;
@@ -60,15 +63,20 @@ const MEDIA_BUTTON_REF = 'MEDIA_BUTTON_REF';
     app.$dispatch('library/tracks/removeUnsavedTracks');
   },
 
+  async asyncData({ app }) {
+    return {
+      uri: generateUserContextUri(app.$getters()['auth/userId'], 'collection'),
+    };
+  },
+
   head() {
     return {
       title: 'お気に入りの曲',
     };
   },
 })
-export default class LibraryTracksPage extends Vue implements Data {
-  // @non-null ログイン中なので userId は必ず存在
-  uri = generateCollectionContextUri(this.$getters()['auth/userId']!);
+export default class LibraryTracksPage extends Vue implements AsyncData, Data {
+  uri: string | undefined;
   observer: IntersectionObserver | undefined = undefined;
   mutationUnsubscribe: (() => void) | undefined = undefined;
   MEDIA_BUTTON_REF = MEDIA_BUTTON_REF;

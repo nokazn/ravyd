@@ -2,8 +2,10 @@
   <div :class="$style.LibraryHistoryPage">
     <PlaylistTrackTable
       v-if="trackList != null"
+      custom
       hide-added-at
       :tracks="trackList"
+      :uri="uri"
       :class="$style.LibraryHistoryPage__table"
       @on-favorite-button-clicked="onFavoriteButtonClicked"
     />
@@ -16,8 +18,11 @@ import { RootState } from 'typed-vuex';
 
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import { generateUserContextUri } from '~/services/converter';
 
-interface AsyncData {}
+interface AsyncData {
+  uri: string | undefined;
+}
 
 interface Data {
   mutationUnsubscribe: (() => void) | undefined
@@ -28,11 +33,25 @@ interface Data {
     PlaylistTrackTable,
     IntersectionLoadingCircle,
   },
+
   async fetch({ app }) {
     await app.$dispatch('library/history/getRecentlyPlayed');
   },
+
+  async asyncData({ app }) {
+    return {
+      uri: generateUserContextUri(app.$getters()['auth/userId'], 'history'),
+    };
+  },
+
+  head() {
+    return {
+      title: '最近再生した項目',
+    };
+  },
 })
 export default class HistoryPage extends Vue implements AsyncData, Data {
+  uri: string | undefined;
   mutationUnsubscribe: (() => void) | undefined = undefined;
 
   get trackList(): RootState['library']['history']['trackHistoryList'] {
