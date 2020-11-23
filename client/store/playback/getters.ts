@@ -204,7 +204,6 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   },
 
   isTrackSet(state) {
-    // id を指定
     return (trackId) => state.trackId === trackId;
   },
 

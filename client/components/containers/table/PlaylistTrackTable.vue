@@ -185,8 +185,13 @@ export default defineComponent({
         menuColumn,
       ].filter((header) => header != null) as DataTableHeader[];
     });
-    const isTrackSet = (id: string) => root.$getters()['playback/isContextSet'](props.uri) && root.$getters()['playback/isTrackSet'](id);
-    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const isTrackSet = (id: string) => {
+      return root.$getters()['playback/isContextSet'](props.uri)
+        && root.$getters()['playback/isTrackSet'](id);
+    };
+    const isPlayingTrack = (id: string) => {
+      return isTrackSet(id) && root.$state().playback.isPlaying;
+    };
 
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       // @todo エピソードは isPlayable が false でも再生できるようにしている
@@ -202,17 +207,22 @@ export default defineComponent({
       }
       // trackUriList は更新されうるので都度算出する
       const trackUriList = props.tracks.map((track) => track.uri);
-      // @todo #552 offset を uri で指定すると、403 が返る場合がある?
-      // ライブラリのお気に入りの曲を再生する場合は contextUri では指定できないので、trackUriList を指定
+      // history と collection は contextUri では指定できないので、trackUriList を指定
       root.$dispatch('playback/play', props.custom || props.uri == null
         ? {
           trackUriList,
-          offset: { uri: row.uri },
+          offset: {
+            // position: row.index,
+            uri: row.uri,
+          },
         }
         : {
           contextUri: props.uri,
-          offset: { uri: row.uri },
-          // offset: { position: row.index },
+          // @todo #552 offset を uri で指定すると、403 が返る場合がある?
+          offset: {
+            // position: row.index,
+            uri: row.uri,
+          },
         });
       root.$dispatch('playback/setCustomContext', {
         contextUri: props.uri,

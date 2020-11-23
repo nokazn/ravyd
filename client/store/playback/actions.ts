@@ -100,11 +100,10 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
           await dispatch('getDeviceList');
           return;
         }
-
         if (device != null) {
           await dispatch('updateDeviceList', device);
         }
-        // 他のデバイスに変更した場合タイマーをセットしあ雄
+        // 他のデバイスに変更した場合タイマーをセットする
         if (deviceId !== thisDeviceId) {
           dispatch('pollCurrentPlayback', 1000);
         }
@@ -124,14 +123,12 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       this.$toast.requirePremium();
       return;
     }
-
     const deviceList = (await this.$spotify.player.getDeviceList()).devices ?? [];
     commit('SET_DEVICE_LIST', deviceList);
     const activeDevice = deviceList.find((device) => device.is_active);
     if (activeDevice != null) {
       // activeDevice がなく、このデバイスで再生する場合は localStorage で永続化されてる volumePercent が採用される
       commit('SET_VOLUME_PERCENT', { volumePercent: activeDevice.volume_percent });
-
       if (activeDevice.id != null) {
         commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
       }
@@ -147,7 +144,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       this.$toast.requirePremium();
       return;
     }
-
     // 変更するデバイスのボリュームを取得
     const getVolumePercent = async (
       deviceId: string | null,
@@ -172,7 +168,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
         : { ...device, is_active };
     });
     commit('SET_DEVICE_LIST', deviceList);
-
     const volumePercent = await getVolumePercent(activeDevice.id, deviceList);
     if (volumePercent != null) {
       commit('SET_VOLUME_PERCENT', { volumePercent });
@@ -352,37 +347,19 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       this.$toast.requirePremium();
       return;
     }
-
     if (getters.isDisallowed('resuming') && payload == null) {
       // @todo resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
       // commit('SET_IS_PLAYING', true);
       this.$toast.pushError('トラックを再生できません');
       return;
     }
-
-    const {
-      positionMs,
-      trackUri: currentTrackUri,
-    } = state;
+    const { positionMs } = state;
+    const deviceId = getters.playbackDeviceId;
     const contextUri = payload?.contextUri;
     const trackUriList = payload?.trackUriList;
     const offset = payload?.offset;
-
-    // uri を指定していない場合
-    const isNotUriPassed = contextUri == null && trackUriList == null;
-    // offset.uri で指定された uri が同じ場合か、trackUriList と offset.position で指定された uri が同じ場合
-    const isRestartingTracks = (
-      currentTrackUri != null
-      && currentTrackUri === offset?.uri
-    ) || (
-      trackUriList != null
-      && offset?.position != null
-      && currentTrackUri === trackUriList[offset.position]
-    );
-    const deviceId = getters.playbackDeviceId;
-
-    // uri が指定されなかったか、指定した uri がセットされているトラックと同じ場合は一時停止を解除
-    const params = isNotUriPassed || isRestartingTracks
+    // uri が指定されなかった場合は一時停止を解除
+    const params = contextUri == null && trackUriList == null
       ? {
         positionMs,
         deviceId,
