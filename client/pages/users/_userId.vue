@@ -62,7 +62,8 @@
           />
           <UserMenu
             outlined
-            right
+            :left="$screen.isSingleColumn"
+            :right="$screen.isMultiColumn"
             :user="user"
             :following="isFollowing"
             @on-follow-menu-clicked="toggleFollowingState"

@@ -102,6 +102,8 @@
             outlined
             :artist="artist"
             :following="isFollowing"
+            :left="$screen.isSingleColumn"
+            :right="$screen.isMultiColumn"
             @on-follow-menu-clicked="toggleFollowingState"
           />
         </div>

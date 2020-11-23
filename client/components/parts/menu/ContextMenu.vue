@@ -1,6 +1,7 @@
 <template>
   <v-menu
-    :min-width="160"
+    v-model="menu"
+    :min-width="172"
     :offset-x="offsetX"
     :offset-y="offsetY"
     :top="top"
@@ -80,7 +81,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from '@vue/composition-api';
+import {
+  defineComponent,
+  computed,
+  ref,
+  watch,
+  PropType,
+} from '@vue/composition-api';
 import type { App } from '~~/types';
 
 export default defineComponent({
@@ -140,9 +147,22 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { root }) {
     const iconSize = computed(() => Math.floor(props.size * 0.7));
-    return { iconSize };
+    const menu = ref(false);
+
+    watch(menu, (v) => {
+      if (root.$screen.isSingleColumn) {
+        root.$overlay.change(v, {
+          fullscreen: true,
+        });
+      }
+    });
+
+    return {
+      iconSize,
+      menu,
+    };
   },
 });
 </script>

@@ -22,7 +22,7 @@ export const useContentPosition = (root: SetupContext['root']) => {
     const bottom = `${footerHeight}px`;
 
     return {
-      position: 'fixed',
+      position: 'fixed' as const,
       top,
       left,
       bottom,

@@ -76,6 +76,8 @@
             />
             <ShowMenu
               outlined
+              :left="$screen.isSingleColumn"
+              :right="$screen.isMultiColumn"
               :show="show"
               :saved="isSaved"
               @on-save-menu-clicked="toggleSavedState"

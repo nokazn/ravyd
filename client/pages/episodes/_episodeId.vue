@@ -66,6 +66,8 @@
             <EpisodeMenu
               offset-y
               outlined
+              :left="$screen.isSingleColumn"
+              :right="$screen.isMultiColumn"
               :episode="episode"
               :publisher="episode.showName"
             />

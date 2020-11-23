@@ -106,6 +106,8 @@
             />
             <PlaylistMenu
               outlined
+              :left="$screen.isSingleColumn"
+              :right="$screen.isMultiColumn"
               :playlist="playlist"
               :following="isFollowing"
               @on-edit-menu-clicked="toggleEditPlaylistModal(true)"

@@ -2,18 +2,21 @@ import Vue from 'vue';
 
 type OverlayOptions = {
   opacity?: number;
+  fullscreen: boolean;
   zIndex?: number;
 }
 
 type OverlayState = {
   value: boolean;
   opacity: number | undefined;
+  fullscreen: boolean;
   zIndex: number | undefined;
 }
 
 export type $Overlay = {
   readonly value: boolean;
   readonly opacity: number | undefined;
+  readonly fullscreen: boolean;
   readonly zIndex: number | undefined;
   change: (value: boolean, options?: OverlayOptions) => void;
 }
@@ -21,6 +24,7 @@ export type $Overlay = {
 const state = Vue.observable<OverlayState>({
   value: false,
   opacity: undefined,
+  fullscreen: false,
   zIndex: undefined,
 });
 
@@ -33,17 +37,19 @@ export const $overlay: $Overlay = {
     return state.opacity;
   },
 
+  get fullscreen(): boolean {
+    return state.fullscreen;
+  },
+
   get zIndex(): number | undefined {
     return state.zIndex;
   },
 
-  change(value: boolean, options?: OverlayOptions) {
+  async change(value: boolean, options?: OverlayOptions) {
+    state.opacity = options?.opacity;
+    state.fullscreen = options?.fullscreen ?? false;
+    state.zIndex = options?.zIndex;
+    // await Vue.nextTick();
     state.value = value;
-
-    if (options != null) {
-      const { opacity, zIndex } = options;
-      state.opacity = opacity;
-      state.zIndex = zIndex;
-    }
   },
 };
