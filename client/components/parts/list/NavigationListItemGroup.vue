@@ -18,9 +18,9 @@
     >
       <v-virtual-scroll
         v-if="virtualScrollerHeight > 0"
-        :items="items"
+        :min-height="1"
         :item-height="36"
-        min-height="1"
+        :items="items"
         :height="virtualScrollerHeight"
         class="g-custom-scroll-bar"
       >

@@ -93,4 +93,7 @@ describe('TrackListItemPc', () => {
     await wrapper.findComponent(TrackMenu).vm.$emit(ON_FAVORITE_MENU_CLICKED);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toBeTruthy();
   });
+
+  it.todo('disabled & inactive props are true when item is unplayable');
+  it.todo('explicit item');
 });

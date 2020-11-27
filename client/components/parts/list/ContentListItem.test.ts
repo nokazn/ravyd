@@ -30,4 +30,7 @@ describe('ContentListItem', () => {
     await wrapper.find('.v-list-item').trigger(CLICK);
     expect(wrapper.emitted(CLICK)).toBeTruthy();
   });
+
+  it.todo('artwork');
+  it.todo('revoke link when isTwoLine is set to true');
 });

@@ -17,7 +17,6 @@ const artist = (i: number) => ({
   id: `id${i}`,
   uri: `uri${i}`,
 });
-
 const item = (i: number, type: 'track' | 'episode' = 'track'): Item => ({
   index: i,
   type,

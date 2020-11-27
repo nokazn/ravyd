@@ -29,4 +29,6 @@ describe('NavigationListItemGroup', () => {
     });
     expect((wrapper.vm as VHas<'VIRTUAL_SCROLLER_WRAPPER_REF'>).VIRTUAL_SCROLLER_WRAPPER_REF).toBeTruthy();
   });
+
+  it.todo('enable virtual scroll');
 });

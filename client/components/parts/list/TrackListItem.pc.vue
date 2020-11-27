@@ -59,9 +59,7 @@
       <v-list-item-action>
         <div :class="$style.TrackListItem__action">
           <ExplicitChip v-if="item.explicit" />
-          <TrackTime
-            :time-ms="item.durationMs"
-          />
+          <TrackTime :time-ms="item.durationMs" />
           <TrackMenu
             left
             offset-x

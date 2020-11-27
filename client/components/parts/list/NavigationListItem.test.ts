@@ -62,4 +62,6 @@ describe('NavigationListItem', () => {
     expect(icon.exists()).toBe(true);
     expect(icon.classes()).toContain(activeClass);
   });
+
+  it.todo('dense prop');
 });
