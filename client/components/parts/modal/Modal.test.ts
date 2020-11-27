@@ -18,4 +18,5 @@ describe('Modal', () => {
   });
 
   it.todo('toggle modal');
+  it.todo('fullscreen prop');
 });

@@ -82,4 +82,6 @@ describe('EpisodeTableRowMobile', () => {
     expect(title.classes()).toContain(inactiveClass);
     expect(subtitle.classes()).toContain(inactiveClass);
   });
+
+  it.todo('explicit item');
 });

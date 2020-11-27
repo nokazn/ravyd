@@ -109,4 +109,6 @@ describe('EpisodeTableRowPc', () => {
     });
     expect(wrapper.findAll('tr > td').length).toBe(6);
   });
+
+  it.todo('explicit item');
 });

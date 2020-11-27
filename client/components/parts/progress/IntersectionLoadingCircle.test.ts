@@ -14,4 +14,6 @@ describe('IntersectionLoadingCircle', () => {
     expect((wrapper.vm as VHas<'LOADING_REF'>).LOADING_REF).toBeTruthy();
     expect(wrapper.find('.v-progress-circular').exists()).toBe(true);
   });
+
+  it.todo('emit appear when scrolled');
 });

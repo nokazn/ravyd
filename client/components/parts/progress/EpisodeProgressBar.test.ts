@@ -56,4 +56,7 @@ describe('EpisodeProgressBar', () => {
     expect(progress.attributes().title).toBe('再生済み');
     expect(progress.props().value).toBe(100);
   });
+
+  it.todo('show only text when text prop is set to true');
+  it.todo('subtext prop');
 });

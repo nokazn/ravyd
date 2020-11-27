@@ -104,4 +104,6 @@ describe('TrackTableRowPc', () => {
     expect(divider.classes()).toContain(inactiveClass);
     expect(artistNames.classes()).toContain(inactiveClass);
   });
+
+  it.todo('explicit item');
 });
