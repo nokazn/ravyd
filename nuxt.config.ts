@@ -76,7 +76,6 @@ const nuxtConfig: NuxtConfig = {
       : undefined,
   },
   build: {
-    analyze: process.env.NODE_ENV === 'development',
     babel: {
       presets: ({ isServer }) => babelPresets(isServer),
     },
