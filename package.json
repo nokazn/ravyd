@@ -9,10 +9,10 @@
     "url": "https://github.com/nokazn"
   },
   "scripts": {
-    "analyze": "nuxt-ts build --analyze",
     "build": "nuxt-ts build",
+    "analyze": "nuxt-ts build --analyze",
     "dev": "nuxt-ts",
-    "generate": "nuxt-ts generate",
+    "dev:server": "cross-env TS_NODE_PROJECT=./server/tsconfig.json ts-node-dev --respawn ./server/app",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore .",
     "lint:fix": "npm run lint -- --fix",
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
@@ -23,6 +23,7 @@
     "test:client": "jest ./client/**",
     "test:server": "jest ./server/** --passWithNoTests",
     "start": "nuxt-ts start",
+    "start:server": "node",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
@@ -87,6 +88,7 @@
     "babel-jest": "^26.6.3",
     "babel-plugin-lodash": "^3.3.4",
     "core-js": "3",
+    "cross-env": "^7.0.2",
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -101,6 +103,7 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
     "ts-jest": "^26.4.4",
+    "ts-node-dev": "^1.0.0",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.12",
     "vue-type-check": "^1.0.0",

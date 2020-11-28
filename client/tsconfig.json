@@ -1,11 +1,6 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "ESNext.AsyncIterable",
-      "DOM" // .vue ファイルはこの設定ファイルしか読み取らない?
-    ],
     "baseUrl": "../"
   }
 }
