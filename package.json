@@ -45,7 +45,7 @@
     "dayjs": "^1.9.6",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "ioredis": "^4.16.0",
+    "ioredis": "^4.19.2",
     "lodash": "^4.17.20",
     "node-vibrant": "^3.1.6",
     "nuxt": "^2.14.7",
