@@ -115,7 +115,7 @@ const nuxtConfig: NuxtConfig = {
     },
   },
   serverMiddleware: [
-    '~~/server/app/',
+    '~~/serverMiddleware/app/',
   ],
   plugins: [
     { src: '~/plugins/dayjs' },
