@@ -44,7 +44,7 @@ export default defineComponent({
       ? props.size
       : Math.floor(props.size * props.ratio);
 
-    // @todo resuming
+    // TODO: resuming
     const disabled = computed(() => root.$getters()['playback/isDisallowed']('interrupting_playback'));
     const mediaButton = computed<MediaButton>(() => {
       if (root.$state().playback.isPlaying) {

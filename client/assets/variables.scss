@@ -209,7 +209,7 @@ $__layer-map: (
   &::before {
     // to right
     @include edge-gradation(right, $color, $width);
-    // @todo 少しはみでてしまうのを調整している
+    // TODO: 少しはみでてしまうのを調整している
     left: -1px;
   }
 
@@ -217,7 +217,7 @@ $__layer-map: (
   &::after {
     // to left
     @include edge-gradation(left, $color, $width);
-    // @todo 少しはみでてしまうのを調整している
+    // TODO: 少しはみでてしまうのを調整している
     right: -1px;
   }
 }

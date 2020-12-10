@@ -94,7 +94,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const all = computed<boolean | undefined>({
       get() { return props.value; },
-      // @todo undefined は除外できる
+      // TODO: undefined は除外できる
       set(value) { emit(INPUT, value); },
     });
     const onButtonHovered = () => {

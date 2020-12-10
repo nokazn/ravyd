@@ -1,7 +1,7 @@
 import { Context } from '@nuxt/types';
 
 /**
- * @todo 400 Bad request になる
+ * TODO: 400 Bad request になる
  */
 export const uploadPlaylistArtwork = (context: Context) => {
   const { app } = context;

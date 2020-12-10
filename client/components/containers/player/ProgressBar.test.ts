@@ -59,7 +59,7 @@ describe('ProgressBar', () => {
     });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().value).toBe(50);
-    // @todo state の更新
+    // TODO: state の更新
   });
 
   it('playing', async () => {

@@ -9,7 +9,7 @@ import { elapsedTime } from '~~/utils/elapsedTime';
 
 export const useSeekBar = (root: SetupContext['root']) => {
   const positionMs = computed(() => root.$state().playback.positionMs);
-  // @todo this.value が undefined になるときがある
+  // TODO: this.value が undefined になるときがある
   const positionMss = computed(() => {
     const min = Math.floor((positionMs.value ?? 0) / 1000 / 60).toString();
     const sec = Math.floor(((positionMs.value ?? 0) / 1000) % 60).toString().padStart(2, '0');

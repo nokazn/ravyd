@@ -153,7 +153,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       if (deviceId != null && deviceId !== state.deviceId) {
         return deviceList.find((device) => device.is_active)?.volume_percent;
       }
-      // @todo 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
+      // TODO: 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
       const volume = await this.$state().player.playbackPlayer?.getVolume();
       return volume != null
         ? volume * 100 as ZeroToHundred
@@ -200,7 +200,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
   },
 
   /**
-   * @todo
+   * TODO
    * このリクエストではエピソードを再生中でもコンテンツの内容は取得できない
    * Web Playback SDK では取得できるので、このデバイスで再生中の場合はそちらから取得できる
    */
@@ -222,7 +222,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       item: SpotifyAPI.Track | SpotifyAPI.Episode | null,
       currentTrackId: string | undefined,
     ) => {
-      // @todo episode 再生中だと null になる
+      // TODO: episode 再生中だと null になる
       const track: Spotify.Track | undefined = item?.type === 'track'
         ? { ...item, media_type: 'audio' }
         : undefined;
@@ -260,7 +260,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       trackId: currentTrackId,
     } = state;
     const market = rootGetters['auth/userCountryCode'];
-    // @todo 複数タブ開いた場合はデバイスが消失する場合がある?
+    // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
     const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
     // デバイスがアクティブでなくなったとき空文字が返る
     commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
@@ -292,7 +292,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       const hasTrack = this.$getters()['playback/hasTrack'];
       const { isPlaying } = this.$state().playback;
 
-      // @todo 設定で間隔設定できるようにしたい
+      // TODO: 設定で間隔設定できるようにしたい
       // timeout が指定されない場合は、このデバイスで再生中の場合は30秒、そうでなければ10秒
       const nextTimeout = timeout ?? (isThisAppPlaying
         ? 30 * 1000
@@ -319,7 +319,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       // 何らかのエラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合は普通にタイマーを設定
       if (playbackState == null) return;
 
-      // @todo 無限にリトライしちゃう
+      // TODO: 無限にリトライしちゃう
       // 再生中のアイテムの情報を保持していて、エピソード以外でアイテムが取得できなかった場合はリトライ
       const shouldRetry = previousHasTrack
         && playbackState
@@ -348,7 +348,7 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       return;
     }
     if (getters.isDisallowed('resuming') && payload == null) {
-      // @todo resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
+      // TODO: resuming が禁止されるのは再生中である場合に限らない (ネットワークエラーなど)
       // commit('SET_IS_PLAYING', true);
       this.$toast.pushError('トラックを再生できません');
       return;

@@ -21,7 +21,7 @@ export const replacePlaylistItems = (context: Context) => {
     const limit = 100;
     const handler = (index: number) => {
       const uris = uriList?.slice(limit * index, limit * (index + 1));
-      // @todo 1周目のリクエストでは replace する
+      // TODO: 1周目のリクエストでは replace する
       if (index === 0) {
         return app.$spotifyApi.$put<SpotifyAPI.PlaylistSnapshot>(`/playlists/${playlistId}/tracks`, { uris });
       }

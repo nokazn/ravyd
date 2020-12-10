@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from '~~/types';
 
-// @todo
+// TODO
 type ContextType = 'artist' | 'playlist' | 'album' | 'track' | 'episode' | 'user';
 
 const genUrl = (type: string, id: string) => `/${type}s/${id}`;

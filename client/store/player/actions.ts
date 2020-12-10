@@ -180,10 +180,10 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
       // 再生状態の変更を受信したとき
       player.addListener('player_state_changed', ((playerState) => {
-        // @todo playerState は Nullable
+        // TODO: playerState は Nullable
         if (playerState == null) return;
 
-        // @todo
+        // TODO
         console.info(playerState);
         const {
           trackId: currentTrackId,

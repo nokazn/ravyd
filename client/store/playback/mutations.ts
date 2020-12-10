@@ -5,7 +5,7 @@ import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertUriToId } from '~/services/converter';
 import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
-// @todo
+// TODO
 type ExtendedTrack = Spotify.Track & {
   linked_from?: SpotifyAPI.LinkedTrack
 }

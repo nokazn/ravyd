@@ -101,7 +101,7 @@ export default defineComponent({
     const onItemClicked = async (row: OnItem['on-item-clicked']) => {
       const isNext = row.index > 0;
       const counts = Math.abs(row.index);
-      // @todo #174 次に再生に追加した曲が再生できないのに対処するため
+      // TODO: #174 次に再生に追加した曲が再生できないのに対処するため
       for (let i = 0; i < counts; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         await root.$dispatch(isNext
@@ -112,7 +112,7 @@ export default defineComponent({
       // const { contextUri, customTrackUriList } = root.$state().playback;
       // // album と playlist は contextUri + offset で操作できる
       // if (contextUri != null && /album|playlist/.test(contextUri)) {
-      //   // @todo #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
+      //   // TODO: #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
       //   root.$dispatch('playback/play', {
       //     contextUri,
       //     offset: customTrackUriList != null && contextUri.includes('playlist')

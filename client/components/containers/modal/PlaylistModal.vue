@@ -213,7 +213,7 @@ export default defineComponent({
     const handlePlaylist = () => {
       isLoading.value = true;
       props.handler({
-        // @todo 型エラー回避のため
+        // TODO: 型エラー回避のため
         playlistId: props.form?.playlistId ?? '',
         name: playlist.name,
         description: playlist.description,

@@ -131,8 +131,8 @@ const actions: Actions<
     const lastTrackIndex = tracks.items
       .findIndex(({ track }) => track.id === currentLatestTrackId);
 
-    // @todo lastRelease の位置まで取得すべき?
-    // 現在のライブラリの先頭があるかどうか// @todo
+    // TODO: lastRelease の位置まで取得すべき?
+    // 現在のライブラリの先頭があるかどうか// TODO
     const addedTrackList = lastTrackIndex === -1
       ? tracks.items
         .map(convertPlaylistTrackDetail({ isTrackSavedList }))
@@ -205,7 +205,7 @@ const actions: Actions<
    * saveTracks, removeTracks から呼ばれる
    */
   modifyTrackSavedState({ state, commit, dispatch }, { trackId, isSaved }) {
-    // @todo コピーしないと表示に反映されない
+    // TODO: コピーしないと表示に反映されない
     const trackList = [...state.trackList];
     const savedTrackIndex = trackList.findIndex((track) => track.id === trackId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除

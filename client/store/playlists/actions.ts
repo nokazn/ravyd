@@ -192,7 +192,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
     await this.$spotify.playlists.editPlaylistDetail({
       playlistId,
       name,
-      // @todo 空文字列を渡せない
+      // TODO: 空文字列を渡せない
       description: description || undefined,
       isPublic: isCollaborative ? false : isPublic,
       isCollaborative,
@@ -265,7 +265,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
         commit('SET_ACTUAL_IS_SAVED', [playlistId, false]);
         if (isOwnPlaylist) {
           this.$toast.pushPrimary('プレイリストを削除しました。');
-          // @todo プレイリスト一覧に飛ばす
+          // TODO: プレイリスト一覧に飛ばす
           this.$router.replace('/');
         }
       })

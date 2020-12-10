@@ -9,7 +9,7 @@ export const checkTrackSavedState = <T extends Track>(
   $commit: SFCCommit,
 ) => (currentTrackList: T[]): T[] => {
     const [id, isSaved] = mutation.payload;
-    // @todo パフォーマンス
+    // TODO: パフォーマンス
     const trackList = [...currentTrackList].map((track) => {
       const actualTrack = track.id === id
         ? { ...track, isSaved }

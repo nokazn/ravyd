@@ -194,7 +194,7 @@ export default defineComponent({
     };
 
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
-      // @todo エピソードは isPlayable が false でも再生できるようにしている
+      // TODO: エピソードは isPlayable が false でも再生できるようにしている
       if (row.type !== 'episode' && row.isPlayable === false) return;
 
       if (isPlayingTrack(row.id)) {
@@ -218,7 +218,7 @@ export default defineComponent({
         }
         : {
           contextUri: props.uri,
-          // @todo #552 offset を uri で指定すると、403 が返る場合がある?
+          // TODO: #552 offset を uri で指定すると、403 が返る場合がある?
           offset: {
             // position: row.index,
             uri: row.uri,

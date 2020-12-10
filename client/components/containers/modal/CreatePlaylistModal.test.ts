@@ -44,7 +44,7 @@ describe('CreatePlaylistModal', () => {
     await Vue.nextTick();
     await wrapper.find('.v-card__actions > .v-btn:nth-child(2)').trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playlists/createPlaylist', {
-      // @todo undefined にする
+      // TODO: undefined にする
       playlistId: '',
       name: 'a',
       description: '',

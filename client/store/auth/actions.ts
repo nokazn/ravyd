@@ -38,7 +38,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
       commit('SET_EXPIRATION_MS', data.expireIn);
 
       await dispatch('getUserData');
-      // @todo
+      // TODO
       this.$router.push('/');
       return;
     }

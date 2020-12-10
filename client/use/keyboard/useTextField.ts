@@ -23,7 +23,7 @@ export const useTextField = (
       root.$keyboard.add(key, (e: KeyboardEvent) => {
         switch (e.key) {
           case '/':
-            // @todo
+            // TODO
             setTimeout(() => {
               element.focus();
             }, 0);

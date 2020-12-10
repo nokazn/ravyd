@@ -122,7 +122,7 @@ const actions: Actions<
       return;
     }
 
-    // @todo lastRelease の位置まで取得すべき?
+    // TODO: lastRelease の位置まで取得すべき?
     // 現在のライブラリの先頭があるかどうか
     const currentLatestReleaseId = currentReleaseList[0].id;
     const lastReleaseIndex = releases.items
@@ -183,7 +183,7 @@ const actions: Actions<
    * saveReleases, removeReleases から呼ばれる
    */
   modifyReleaseSavedState({ state, commit }, { releaseId, isSaved }) {
-    // @todo コピーしないと表示に反映されない
+    // TODO: コピーしないと表示に反映されない
     const releaseList = [...state.releaseList];
     const savedReleaseIndex = releaseList.findIndex((release) => release.id === releaseId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除

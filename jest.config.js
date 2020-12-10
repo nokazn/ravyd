@@ -20,7 +20,7 @@ module.exports = {
   globals: {
     'vue-jest': {
       experimentalCSSCompile: true,
-      // @todo
+      // TODO
       resources: {
         scss: ['<rootDir>/client/assets/variables.scss'],
       },

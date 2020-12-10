@@ -84,7 +84,7 @@ export default defineComponent({
   },
 
   setup(props, { emit, root }) {
-    // @todo エピソードは isPlayable が false でも再生できるようにしている
+    // TODO: エピソードは isPlayable が false でも再生できるようにしている
     const disabled = computed(() => props.item.type !== 'episode' && props.item.isPlayable === false);
     const artworkSrc = computed(() => getImageSrc(
       props.item.images,

@@ -160,7 +160,7 @@ export namespace SpotifyAPI {
   }
 
   type Context = {
-    // @todo
+    // TODO
     type: 'artist' | 'playlist' | 'album' | 'track' | 'episode' | string
     href: string
     external_urls: ExternalUrls
@@ -219,7 +219,7 @@ export namespace SpotifyAPI {
     show: SimpleShow
   }
 
-  // @todo
+  // TODO
   type ExternalId = Merge<{
     isrc?: string
     ean?: string
@@ -228,7 +228,7 @@ export namespace SpotifyAPI {
     [k: string]: string
   }>
 
-  // @todo
+  // TODO
   type ExternalUrls = {
     spotify?: string
   } & {
@@ -344,7 +344,7 @@ export namespace SpotifyAPI {
   }
   export type PlaylistTrack = {
     added_at: string // timestamp
-    // @todo display_name など取得できないフィールドがある
+    // TODO: display_name など取得できないフィールドがある
     added_by: UserData
     is_local: boolean
     track: Track | null
@@ -353,7 +353,7 @@ export namespace SpotifyAPI {
     snapshot_id: string
   }
 
-  // @todo
+  // TODO
   export type SearchTypes = {
     album: 'albums',
     artist: 'artists',

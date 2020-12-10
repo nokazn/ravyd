@@ -175,7 +175,7 @@ const actions: Actions<
    * saveShows, removeShows から呼ばれる
    */
   modifyShowSavedState({ state, commit }, { showId, isSaved }) {
-    // @todo コピーしないと表示に反映されない
+    // TODO: コピーしないと表示に反映されない
     const showList = [...state.showList];
     const savedShowIndex = showList.findIndex((show) => show.id === showId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除

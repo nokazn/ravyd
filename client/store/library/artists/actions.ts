@@ -59,7 +59,7 @@ const actions: Actions<
 
   /**
    * 未更新分を追加
-   * @todo 追加順に取得できないので未更新分を上から見ていっても意味ない
+   * TODO: 追加順に取得できないので未更新分を上から見ていっても意味ない
    */
   async updateLatestSavedArtistList({ state, commit, dispatch }) {
     // ライブラリの情報が更新されていないものの数
@@ -73,7 +73,7 @@ const actions: Actions<
     if (!isAuthorized) return;
 
     const maxLimit = 50;
-    // @todo コンパイルを通すためにとりあえずキャストする
+    // TODO: コンパイルを通すためにとりあえずキャストする
     const { artists } = await this.$spotify.following.getUserFollowed({
       type: 'artist',
       limit: Math.min(unupdatedCounts, maxLimit) as TODO,
@@ -84,7 +84,7 @@ const actions: Actions<
       return;
     }
 
-    // @todo lastRelease の位置まで取得すべき?
+    // TODO: lastRelease の位置まで取得すべき?
     // 現在のライブラリの先頭があるかどうか
     const currentLatestArtistId = currentArtistList[0].id;
     const lastArtistIndex = artists.items
@@ -149,7 +149,7 @@ const actions: Actions<
    * followArtists, unfollowArtists から呼ばれる
    */
   modifyArtistSavedState({ state, commit }, { artistId, isSaved }) {
-    // @todo コピーしないと表示に反映されない
+    // TODO: コピーしないと表示に反映されない
     const artistList = [...state.artistList];
     const savedArtistIndex = artistList
       .findIndex((artist) => artist.id === artistId);

@@ -1,7 +1,7 @@
 import { convertUriToId } from '~/services/converter';
 import { App, SpotifyAPI } from '~~/types';
 
-// @todo
+// TODO
 type ExtendedTrack = Spotify.Track & {
   duration_ms?: number
   linked_from?: SpotifyAPI.LinkedTrack

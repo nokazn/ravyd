@@ -84,7 +84,7 @@ export const useSearchResult = (
   };
   const onItemEntered = (to: RawLocation) => {
     root.$router.push(to);
-    // @todo
+    // TODO
     // eslint-disable-next-line no-param-reassign
     menu.value = false;
   };

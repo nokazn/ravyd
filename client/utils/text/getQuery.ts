@@ -1,7 +1,7 @@
 import { Route } from 'vue-router';
 
 export const getQuery = (query: Route['query'], key: string): string | undefined => {
-  // @todo param は Nullable
+  // TODO: param は Nullable
   const param = query[key];
   if (param == null || typeof param === 'string') return param;
 

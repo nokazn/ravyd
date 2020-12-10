@@ -9,7 +9,7 @@ export const callback = (context: Context) => {
     code: string;
     state: string;
   }): Promise<ServerAPI.Auth.Token> => {
-    // @todo path
+    // TODO: path
     return app.$serverApi.$get<ServerAPI.Auth.Token>('/auth/login/callback', {
       params: {
         code,
