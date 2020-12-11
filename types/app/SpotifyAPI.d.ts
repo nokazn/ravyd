@@ -71,10 +71,10 @@ export namespace SpotifyAPI {
   } & SimpleArtist
 
   export namespace Browse {
-    export type NewReleases = Paging<Album>
-    export type TopArtists = Paging<Artist>
-    export type TopTracks = Paging<Track>
-
+    export type NewReleases = Paging<Album>;
+    export type TopArtists = Paging<Artist>;
+    export type TopTracks = Paging<Track>;
+    export type TimeRange = 'long_term' | 'medium_term' | 'short_term';
     export type TrackAttributes = 'acousticness' // 0.0 ~ 1.0
       | 'danceability' // 0.0 ~ 1.0
       | 'duration_ms' // milliseconds

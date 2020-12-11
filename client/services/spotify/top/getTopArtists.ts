@@ -7,11 +7,11 @@ export const getTopArtists = (context: Context) => {
   return ({
     limit = 20,
     offset = 0,
-    timeRange = 'medium_term',
+    timeRange = 'short_term',
   }: {
     limit?: OneToFifty;
     offset?: number;
-    timeRange?: 'long_term' | 'medium_term' | 'short_term';
+    timeRange?: SpotifyAPI.Browse.TimeRange;
   }): Promise<SpotifyAPI.Paging<SpotifyAPI.Artist> | undefined> => {
     return app.$spotifyApi.$get<SpotifyAPI.Paging<SpotifyAPI.Artist>>('/me/top/artists', {
       params: {
