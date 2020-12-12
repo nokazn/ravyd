@@ -122,7 +122,13 @@ export default defineComponent({
         : [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     });
     const hasMultipleDiscs = computed<boolean>(() => {
-      const discNumberList = Array.from(new Set(props.tracks.map((track) => track.discNumber)));
+      const discNumberList = props.tracks.reduce<number[]>((prev, curr) => {
+        const lastIndex = prev.length - 1;
+        if (lastIndex < 0 || prev[lastIndex] !== curr.discNumber) {
+          prev.push(curr.discNumber);
+        }
+        return prev;
+      }, []);
       // 連番でない場合はグループ表示しない
       return discNumberList.length > 1
         ? discNumberList.every((n, i) => n === i + 1)

@@ -15,12 +15,12 @@ export const parseCopyrights = (copyrights: SpotifyAPI.Copyright[]): string[] =>
   });
 
   // 同じ Copyright の文面はまとめる
-  const parsedCopyrightMap = textNormalizedCopyrights.reduce((prev, copyright) => ({
+  const parsedCopyrightMap = textNormalizedCopyrights.reduce<CopyrightMap>((prev, copyright) => ({
     ...prev,
     [copyright.text]: prev[copyright.text] != null
       ? [...prev[copyright.text], copyright.type]
       : [copyright.type],
-  }), {} as CopyrightMap);
+  }), {});
 
   const copyrightMapKeys = Object.keys(parsedCopyrightMap) as Array<
     keyof CopyrightMap
