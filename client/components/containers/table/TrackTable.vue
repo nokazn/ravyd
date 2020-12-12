@@ -121,13 +121,12 @@ export default defineComponent({
         ? [nameColumn, menuColumn]
         : [indexColumn, isSavedColumn, nameColumn, durationColumn, menuColumn];
     });
-    // relink されたトラックがある場合はディスクによるグループ表示は行わない
     const hasMultipleDiscs = computed<boolean>(() => {
-      const relinkedTrack = props.tracks.find((track) => track.linkedFrom != null);
       const discNumberList = Array.from(new Set(props.tracks.map((track) => track.discNumber)));
-      return relinkedTrack != null
-        ? false
-        : discNumberList.length > 1;
+      // 連番でない場合はグループ表示しない
+      return discNumberList.length > 1
+        ? discNumberList.every((n, i) => n === i + 1)
+        : false;
     });
 
     const isTrackSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
