@@ -51,12 +51,10 @@ export const useSearchResult = (
       },
     ];
   });
-  const itemList = computed<App.ContentItem[]>(() => {
-    return itemMapList.value.reduce(
-      (prev, curr) => [...prev, ...curr.items],
-      [] as App.ContentItem[],
-    );
-  });
+  const itemList = computed<App.ContentItem[]>(() => itemMapList.value.reduce<App.ContentItem[]>(
+    (prev, curr) => [...prev, ...curr.items],
+    [],
+  ));
   const hasItem = computed(() => itemList.value.length > 0);
 
   const selectedItemIndex = ref<number>();

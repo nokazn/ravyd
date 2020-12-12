@@ -2,9 +2,10 @@ import { mount } from '@vue/test-utils';
 import { mocks, options } from '~/tests/mocks/mount';
 import TrackTable from './TrackTable.vue';
 import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
+import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
-import { App } from '~~/types';
+import { App, SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -18,7 +19,20 @@ const artist = (i: number) => ({
   name: 'name',
   uri: 'uri',
 });
-const item = (i: number): App.TrackDetail => ({
+const linkedTrack = (i: number): SpotifyAPI.LinkedTrack => ({
+  external_urls: {
+    spotify: 'path/to/spotify',
+  },
+  href: 'path/to/track',
+  id: `id${i}`,
+  type: 'track',
+  uri: `uri${i}`,
+});
+const item = (
+  i: number,
+  discNumber: number = 1,
+  linkedFrom?: SpotifyAPI.LinkedTrack,
+): App.TrackDetail => ({
   type: 'track',
   id: `id${i}`,
   name: `name${i}`,
@@ -32,10 +46,10 @@ const item = (i: number): App.TrackDetail => ({
   releaseId: `releaseId${i}`,
   releaseName: `releaseName${i}`,
   images: [],
-  linkedFrom: undefined,
+  linkedFrom,
   index: i,
   trackNumber: i,
-  discNumber: 1,
+  discNumber,
   featuredArtists: [artist(2)],
   explicit: false,
   isPlayable: true,
@@ -99,6 +113,54 @@ describe('TrackTable', () => {
     expect(th.at(3).attributes().style).toBe(width(72));
     expect(th.at(4).classes()).toContain(textCenterClass);
     expect(th.at(4).attributes().style).toBe(width(36 + 12));
+  });
+
+  it("hide group of single set track's disc number", () => {
+    const wrapper = factory([
+      item(1, 1),
+      item(2, 1),
+      item(3, 1),
+      item(4, 1),
+      item(5, 1),
+      item(6, 1),
+    ], 'multi');
+    expect(wrapper.findComponent(TrackTableGroupHeader).exists()).toBe(false);
+  });
+
+  it('show group of disc number', () => {
+    const wrapper = factory([
+      item(1, 1),
+      item(2, 1),
+      item(3, 1),
+      item(4, 2),
+      item(5, 2),
+      item(6, 2),
+    ], 'multi');
+    expect(wrapper.findComponent(TrackTableGroupHeader).exists()).toBe(true);
+  });
+
+  it("show group of relinked track's incremental disc number", () => {
+    const wrapper = factory([
+      item(1, 1, linkedTrack(1)),
+      item(2, 1, linkedTrack(2)),
+      item(3, 1, linkedTrack(3)),
+      item(4, 2, linkedTrack(4)),
+      item(5, 2, linkedTrack(5)),
+      item(6, 2, linkedTrack(6)),
+    ], 'multi');
+    expect(wrapper.findComponent(TrackTableGroupHeader).exists()).toBe(true);
+  });
+
+  it("hide group of relinked track's non-incremental disc number", () => {
+    const wrapper = factory([
+      item(1, 1),
+      item(2, 1),
+      item(3, 2, linkedTrack(3)),
+      item(4, 4, linkedTrack(4)),
+      item(5, 2, linkedTrack(5)),
+      item(6, 1, linkedTrack(6)),
+    ], 'multi');
+    expect(wrapper.findComponent(TrackTableGroupHeader).exists()).toBe(false);
   });
 
   it('call play request when row clicked for mobile', async () => {
