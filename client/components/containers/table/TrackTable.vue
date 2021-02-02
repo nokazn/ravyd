@@ -135,19 +135,23 @@ export default defineComponent({
         : false;
     });
 
-    const isTrackSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
+    const isTrackSet = (id: string | undefined) => root.$getters()['playback/isTrackSet'](id);
     const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       if (isPlayingTrack(row.id)) {
         root.$dispatch('playback/pause');
-        return;
+      // TODO: relinked track を参照する必要性
+      } else if (isTrackSet(row.id) || isTrackSet(row.linkedFrom?.id)) {
+        root.$dispatch('playback/play');
+      } else {
+        root.$dispatch('playback/play', {
+          contextUri: props.uri,
+          // TODO:
+          offset: row.linkedFrom != null
+            ? { position: row.index }
+            : { uri: row.uri },
+        });
       }
-      root.$dispatch('playback/play', {
-        contextUri: props.uri,
-        offset: row.linkedFrom != null
-          ? { position: row.index }
-          : { uri: row.uri },
-      });
     };
     const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {
       emit(ON_FAVORITE_BUTTON_CLICKED, row);

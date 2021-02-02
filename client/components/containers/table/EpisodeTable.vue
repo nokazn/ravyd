@@ -200,6 +200,8 @@ export default defineComponent({
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       if (isPlayingEpisode(row.id)) {
         root.$dispatch('playback/pause');
+      } else if (isEpisodeSet(row.id)) {
+        root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
           contextUri: props.uri,

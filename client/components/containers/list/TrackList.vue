@@ -56,18 +56,21 @@ export default defineComponent({
     // trackUriList は更新されることがない
     const trackUriList = props.tracks.map((track) => track.uri);
 
-    const isTrackSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
+    const isTrackSet = (id: string | undefined) => root.$getters()['playback/isTrackSet'](id);
     const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
     const isVisible = (index: number) => props.length == null || index < props.length;
 
     // id, uri は track のパラメータで、this.uri は context のパラメータ
-    const onMediaButtonClicked = ({ id, uri }: OnListItem['on-media-button-clicked']) => {
-      if (isPlayingTrack(id)) {
+    const onMediaButtonClicked = (row: OnListItem['on-media-button-clicked']) => {
+      if (isPlayingTrack(row.id)) {
         root.$dispatch('playback/pause');
+      // TODO: relinked track を参照する必要性
+      } else if (isTrackSet(row.id) || isTrackSet(row.linkedFrom?.id)) {
+        root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
           trackUriList,
-          offset: { uri },
+          offset: { uri: row.uri },
         });
         // アーティストの contextUri から直接再生はできない
         root.$dispatch('playback/setCustomContext', {
