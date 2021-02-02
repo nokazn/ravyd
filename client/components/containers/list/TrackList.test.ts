@@ -36,7 +36,7 @@ const item = (i: number): App.TrackDetail => ({
   previewUrl: 'path/to/preview',
 });
 
-const $getters = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
 });
 const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
@@ -46,7 +46,13 @@ const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
 });
 const $dispatch = jest.fn();
 
-const factory = (t: number, l: number | undefined, set: boolean, playing: boolean) => {
+const factory = (
+  t: number,
+  l: number | undefined,
+  column: 'single' | 'multi',
+  set: boolean = false,
+  playing: boolean = false,
+) => {
   return mount(TrackList, {
     ...options,
     propsData: {
@@ -60,8 +66,8 @@ const factory = (t: number, l: number | undefined, set: boolean, playing: boolea
       $state: $state(playing),
       $dispatch,
       $screen: {
-        isMultiColumn: true,
-        isSingleColumn: false,
+        isMultiColumn: column === 'multi',
+        isSingleColumn: column === 'single',
       },
     },
   });
@@ -69,7 +75,7 @@ const factory = (t: number, l: number | undefined, set: boolean, playing: boolea
 
 describe('TrackList', () => {
   it('3 / 6 items are visible', async () => {
-    const wrapper = factory(6, 3, false, false);
+    const wrapper = factory(6, 3, 'multi');
     const items = wrapper.findAllComponents(TrackListItem);
     expect(items.at(0).isVisible()).toBe(true);
     expect(items.at(1).isVisible()).toBe(true);
@@ -80,7 +86,7 @@ describe('TrackList', () => {
   });
 
   it('all items are visible', async () => {
-    const wrapper = factory(6, undefined, false, false);
+    const wrapper = factory(6, undefined, 'multi');
     const items = wrapper.findAllComponents(TrackListItem);
     expect(items.at(0).isVisible()).toBe(true);
     expect(items.at(1).isVisible()).toBe(true);
@@ -91,7 +97,7 @@ describe('TrackList', () => {
   });
 
   it('all items are visible2', async () => {
-    const wrapper = factory(6, 10, false, false);
+    const wrapper = factory(6, 10, 'multi');
     const items = wrapper.findAllComponents(TrackListItem);
     expect(items.at(0).isVisible()).toBe(true);
     expect(items.at(1).isVisible()).toBe(true);
@@ -101,28 +107,21 @@ describe('TrackList', () => {
     expect(items.at(5).isVisible()).toBe(true);
   });
 
-  it('emit when a favorite button of 2nd item clicked', async () => {
-    const wrapper = factory(6, 3, false, false);
-    await wrapper
-      .findAllComponents(TrackListItem)
-      .at(1)
-      .vm
-      .$emit(ON_FAVORITE_BUTTON_CLICKED, item(2));
-    expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(2));
-  });
-
-  it('emit when a media button of 2nd item clicked when playing a track', async () => {
-    const wrapper = factory(6, 3, true, true);
+  it('call resuming when 2nd media button is clicked for mobile', async () => {
+    const wrapper = factory(6, 3, 'single', true, false);
     await wrapper
       .findAllComponents(TrackListItem)
       .at(1)
       .vm
       .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
-    expect($dispatch).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
+    // setCustomContext は呼ばれない
+    expect($dispatch).toBeCalledTimes(1);
   });
 
-  it('emit when a media button of 2nd item clicked when not playing a track', async () => {
-    const wrapper = factory(6, 3, false, false);
+
+  it('call playing request when 2nd media button is clicked for mobile', async () => {
+    const wrapper = factory(6, 3, 'single');
     await wrapper
       .findAllComponents(TrackListItem)
       .at(1)
@@ -137,5 +136,79 @@ describe('TrackList', () => {
       trackUriList,
       contextUri: 'contextUri',
     });
+    expect($dispatch).toBeCalledTimes(2);
+  });
+
+  it('call pausing request when 2nd media button is clicked for mobile', async () => {
+    const wrapper = factory(6, 3, 'single', true, true);
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toBeCalledTimes(1);
+  });
+
+  it('call resuming when 2nd media button is clicked', async () => {
+    const wrapper = factory(6, 3, 'multi', true, false);
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
+    // setCustomContext は呼ばれない
+    expect($dispatch).toBeCalledTimes(1);
+  });
+
+  it('call playing request when 2nd media button is clicked', async () => {
+    const wrapper = factory(6, 3, 'multi');
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
+    const trackUriList = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
+    expect($dispatch).toHaveBeenCalledWith('playback/play', {
+      trackUriList,
+      offset: { uri: 'uri2' },
+    });
+    expect($dispatch).toHaveBeenCalledWith('playback/setCustomContext', {
+      trackUriList,
+      contextUri: 'contextUri',
+    });
+    expect($dispatch).toBeCalledTimes(2);
+  });
+
+  it('call pausing request when 2nd media button is clicked', async () => {
+    const wrapper = factory(6, 3, 'multi', true, true);
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
+    expect($dispatch).toHaveBeenCalledWith('playback/pause');
+    expect($dispatch).toBeCalledTimes(1);
+  });
+
+  it('emit when 2nd favorite button is clicked for mobile', async () => {
+    const wrapper = factory(6, 3, 'single');
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_FAVORITE_BUTTON_CLICKED, item(2));
+    expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(2));
+  });
+
+  it('emit when 2nd favorite button is clicked', async () => {
+    const wrapper = factory(6, 3, 'multi');
+    await wrapper
+      .findAllComponents(TrackListItem)
+      .at(1)
+      .vm
+      .$emit(ON_FAVORITE_BUTTON_CLICKED, item(2));
+    expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(2));
   });
 });

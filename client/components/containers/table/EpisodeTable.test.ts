@@ -40,8 +40,8 @@ const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
     isPlaying,
   },
 });
-const $getters = (episodeId?: string) => jest.fn().mockReturnValue({
-  'playback/isTrackSet': (id: string) => id === episodeId,
+const $getters = (set: boolean) => () => ({
+  'playback/isTrackSet': jest.fn().mockReturnValue(set),
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
@@ -49,7 +49,7 @@ const factory = ({ episodes, noDataText, hideAddedAt = false }: {
   episodes: App.EpisodeDetail[];
   noDataText?: string;
   hideAddedAt?: boolean;
-}, column: 'single' | 'multi', setId?: string, playing: boolean = false) => {
+}, column: 'single' | 'multi', set: boolean = false, playing: boolean = false) => {
   return mount(EpisodeTable, {
     ...options,
     propsData: {
@@ -62,7 +62,7 @@ const factory = ({ episodes, noDataText, hideAddedAt = false }: {
     mocks: {
       ...mocks,
       $state: $state(playing),
-      $getters: $getters(setId),
+      $getters: $getters(set),
       $dispatch,
       $screen: {
         isSingleColumn: column === 'single',
@@ -151,7 +151,15 @@ describe('EpisodeTable', () => {
     expect(wrapper.find('tbody > tr > td:nth-child(2) > div > div > div.g-ellipsis-text > a').text()).toBe('name3');
   });
 
-  it('call play request when row clicked for mobile', async () => {
+  it('call resuming request when 2nd row clicked for mobile', async () => {
+    const wrapper = factory({
+      episodes: [item(1), item(2), item(3)],
+    }, 'single', true, false);
+    await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
+  });
+
+  it('call playing request when 2nd row clicked for mobile', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'single');
@@ -162,15 +170,23 @@ describe('EpisodeTable', () => {
     });
   });
 
-  it('call pause request when row clicked for mobile', async () => {
+  it('call pausing request when 2nd row clicked for mobile', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
-    }, 'single', 'id2', true);
+    }, 'single', true, true);
     await wrapper.findAllComponents(EpisodeTableRow).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
-  it('call play request when media button clicked', async () => {
+  it('call resuming request when 2nd media button clicked', async () => {
+    const wrapper = factory({
+      episodes: [item(1), item(2), item(3)],
+    }, 'multi', true, false);
+    await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
+    expect($dispatch).toHaveBeenCalledWith('playback/play');
+  });
+
+  it('call playing request when 2nd media button clicked', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
     }, 'multi');
@@ -181,10 +197,10 @@ describe('EpisodeTable', () => {
     });
   });
 
-  it('call pause request when media button clicked', async () => {
+  it('call pausing request when 2nd media button clicked', async () => {
     const wrapper = factory({
       episodes: [item(1), item(2), item(3)],
-    }, 'multi', 'id2', true);
+    }, 'multi', true, true);
     await wrapper.findAllComponents(PlaylistMediaButton).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
