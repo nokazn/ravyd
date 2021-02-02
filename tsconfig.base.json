@@ -56,7 +56,6 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@types/spotify-web-playback-sdk",
       "@types/connect-redis",
       "@types/cookie-parser",
       "@types/express",
@@ -65,7 +64,6 @@
       "@types/jest",
       "@types/lodash",
       "@types/lodash-webpack-plugin",
-      "@types/node",
       "@types/resize-observer-browser",
       "@types/spotify-web-playback-sdk",
       "@types/wicg-mediasession",
