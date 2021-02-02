@@ -17,7 +17,7 @@ export type PlaybackGetters = {
   releaseId: string | undefined
   artworkSrc: (minSize?: number) => string | undefined
   hasTrack: boolean
-  isTrackSet: (trackId: string) => boolean
+  isTrackSet: (trackId: string | undefined) => boolean
   contextUri: string | undefined
   isContextSet: (uri: string | undefined) => boolean
   remainingTimeMs: number
@@ -213,7 +213,7 @@ const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
   },
 
   isTrackSet(state) {
-    return (trackId) => state.trackId === trackId;
+    return (trackId) => trackId != null && state.trackId === trackId;
   },
 
   contextUri(state) {
