@@ -1,3 +1,6 @@
+[![test](https://github.com/nokazn/ravy/workflows/test/badge.svg)](https://github.com/nokazn/ravy/actions?workflow=test)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # ravy
 
 ## Build Setup
