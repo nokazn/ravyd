@@ -1,8 +1,17 @@
-name: static-check
+name: test
 
 on:
   push:
     branches: [ develop, master, main ]
+    paths:
+      - "**.ts"
+      - "**.js"
+      - "**.vue"
+      - "**.json"
+      - "**package.json"
+      - "**yarn.lock"
+      - "**ignore"
+      - ".github/workflows/**"
   pull_request:
     branches: [ develop, master, main ]
 
