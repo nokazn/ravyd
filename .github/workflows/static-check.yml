@@ -71,7 +71,8 @@ jobs:
         yarn --frozen-lockfile --production=false
 
     - name: Run vtc
-      run: yarn vtc
+      # .vue ファイルが更新されたときのみ実行
+      run: git log -1 --pretty="format:" --name-only --rename-empty | grep -E "\.vue$" && yarn vtc
 
   lint_tsc_test:
     runs-on: ubuntu-latest
