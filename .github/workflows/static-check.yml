@@ -1,4 +1,4 @@
-name: lint & type checking & vtc & test
+name: static-check
 
 on:
   push:
@@ -34,6 +34,36 @@ jobs:
       run: |
         yarn --frozen-lockfile --production=false
 
+  vtc:
+    runs-on: ubuntu-latest
+    needs: dependencies
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Restore cache of node_modules
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: node_modules_${{ hashFiles('**/yarn.lock') }}
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    # 実際は dependencies でキャッシュしてるので実行されない
+    - name: Install dependencies
+      if: steps.node_modules_cache.outputs.cache-hit != 'true'
+      run: |
+        yarn --frozen-lockfile --production=false
+
+    - name: Run vtc
+      run: yarn vtc
+
   lint_tsc_test:
     runs-on: ubuntu-latest
     needs: dependencies
@@ -55,7 +85,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    # キャッシュがヒットしなかった場合のみ実行 (実際は dependencies でキャッシュしてるので実行されない？)
+    # 実際は dependencies でキャッシュしてるので実行されない
     - name: Install dependencies
       if: steps.node_modules_cache.outputs.cache-hit != 'true'
       run: |
@@ -69,32 +99,3 @@ jobs:
 
     - name: Run test
       run: yarn test
-
-  vtc:
-    runs-on: ubuntu-latest
-    needs: dependencies
-    strategy:
-      matrix:
-        node-version: [12.x]
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Restore cache of node_modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: node_modules_${{ hashFiles('**/yarn.lock') }}
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    # キャッシュがヒットしなかった場合のみ実行 (実際は dependencies でキャッシュしてるので実行されない？)
-    - name: Install dependencies
-      if: steps.node_modules_cache.outputs.cache-hit != 'true'
-      run: |
-        yarn --frozen-lockfile --production=false
-
-    - name: Run vtc
-      run: yarn vtc
