@@ -118,7 +118,7 @@ import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.v
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import { getEpisode } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/services/converter';

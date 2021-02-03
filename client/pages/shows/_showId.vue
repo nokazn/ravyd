@@ -127,7 +127,7 @@ import ShowMenu, { On as OnMenu } from '~/components/parts/menu/ShowMenu.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import Copyrights from '~/components/parts/text/Copyrights.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import { getShow, getIsSaved } from '~/services/local/_showId';
 import { getImageSrc, convertEpisodeDetail } from '~/services/converter';
