@@ -46,7 +46,7 @@ const item = (i: number): App.PlaylistTrackDetail => ({
     title: '2020-01-01',
   },
 });
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },

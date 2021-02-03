@@ -6,7 +6,7 @@ import type { ZeroToHundred } from '~~/types';
 const CHANGE = 'change';
 const CLICK = 'click';
 
-const $state = (volumePercent: ZeroToHundred, isMuted: boolean) => jest.fn().mockReturnValue({
+const $state = (volumePercent: ZeroToHundred, isMuted: boolean) => () => ({
   playback: {
     volumePercent,
     isMuted,

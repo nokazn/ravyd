@@ -53,10 +53,10 @@ const item = (i: number): SpotifyAPI.SimplePlaylist => ({
   uri: `uri${i}`,
 });
 
-const $getters = (set: boolean) => jest.fn().mockReturnValue({
+const $getters = (set: boolean) => () => ({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
 });
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },

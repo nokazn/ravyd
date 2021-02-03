@@ -2,19 +2,16 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import MediaButton from './MediaButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import type { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },
 });
-const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'interrupting_playback'
-    ? disallowed
-    : false),
+const $getters = (disallowed: boolean) => () => ({
+  'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 

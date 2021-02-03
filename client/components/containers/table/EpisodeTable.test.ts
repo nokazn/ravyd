@@ -35,7 +35,7 @@ const item = (i: number, resumePoint?: [boolean, number]): App.EpisodeDetail => 
   showName: `showName${i}`,
 });
 
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },
