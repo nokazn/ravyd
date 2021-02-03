@@ -49,7 +49,7 @@ describe('ReleaseDuration', () => {
     expect(wrapper.find('.v-icon').exists()).toBe(false);
   });
 
-  it('confirm duration', async () => {
+  it('confirmed duration', async () => {
     const wrapper = mount(ReleaseDuration, {
       ...options,
       propsData: {

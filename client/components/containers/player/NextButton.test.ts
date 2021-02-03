@@ -42,7 +42,7 @@ describe('NextButton', () => {
     expect($dispatch).not.toHaveBeenCalled();
   });
 
-  it('call pause request', async () => {
+  it('call pausing request', async () => {
     const wrapper = factory();
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/next');

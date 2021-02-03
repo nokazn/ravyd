@@ -50,13 +50,13 @@ describe('PreviousButton', () => {
     expect($dispatch).not.toHaveBeenCalled();
   });
 
-  it('call seek request when skipping_prev is disallowed', async () => {
+  it('call seeking request when skipping_prev is disallowed', async () => {
     const wrapper = factory(true);
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
   });
 
-  it('call seek previous when double-clicked in the last 1 sec', async () => {
+  it('call previous request when double-clicked in the last 1 sec', async () => {
     const wrapper = factory(false);
     await wrapper.setData({
       firstClicked: true,
@@ -65,7 +65,7 @@ describe('PreviousButton', () => {
     expect($dispatch).toHaveBeenCalledWith('playback/previous');
   });
 
-  it('call seek previous', async () => {
+  it('call restarting from beginning request', async () => {
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
     const vm = wrapper.vm as VHas<'firstClicked', boolean>;

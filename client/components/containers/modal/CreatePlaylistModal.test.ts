@@ -38,7 +38,7 @@ describe('CreatePlaylistModal', () => {
     expect(VDialog.props().value).toBe(true);
   });
 
-  it('create playlist', async () => {
+  it('create a playlist', async () => {
     const wrapper = factory(true);
     await wrapper.find('.v-form > *:first-child input').setValue('a');
     await Vue.nextTick();

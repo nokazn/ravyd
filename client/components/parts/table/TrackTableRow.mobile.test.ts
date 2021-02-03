@@ -71,7 +71,7 @@ describe('TrackTableRowMobile', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('normal to active', async () => {
+  it('change from normal to active', async () => {
     const wrapper = factory(false, false, true);
     const title = wrapper.find('td > div');
     const subtitle = wrapper.find('td > *:last-child');

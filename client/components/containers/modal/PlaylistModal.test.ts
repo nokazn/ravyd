@@ -217,7 +217,7 @@ describe('PlaylistModal', () => {
     expect(wrapper.find('.v-messages__message').text()).toBe('アップロードできるファイル形式は jpeg のみです。');
   });
 
-  it('set isPrivate true when isCollaborative is set to true', async () => {
+  it('set isPrivate to true when isCollaborative prop is set to true', async () => {
     const wrapper = factory({
       value: true,
       detailText: '作成',
@@ -249,7 +249,7 @@ describe('PlaylistModal', () => {
     expect((wrapper.emitted(INPUT)?.[0][0])).toBe(false);
   });
 
-  it('handle playlist without initial form', async () => {
+  it('handle a playlist without initial form', async () => {
     const wrapper = await factory({
       value: true,
       detailText: '作成',
@@ -267,7 +267,7 @@ describe('PlaylistModal', () => {
     });
   });
 
-  it('handle playlist with initial form', async () => {
+  it('handle a playlist with initial form', async () => {
     const wrapper = await factory({
       value: true,
       detailText: '編集',

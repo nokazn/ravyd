@@ -42,7 +42,7 @@ describe('NavigationListItem', () => {
     expect(title.find('.v-icon').classes()).toContain(activeClass);
   });
 
-  it('normal to set, and then to playing', async () => {
+  it('set to normal, and then set to playing', async () => {
     const wrapper = factory(false, false);
     const title = wrapper.find('.v-list-item__title');
     expect(title.classes()).not.toContain(activeClass);

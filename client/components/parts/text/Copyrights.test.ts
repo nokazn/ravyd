@@ -22,7 +22,7 @@ describe('Copyrights', () => {
     expect(smalls.at(1).text()).toBe('℗ 2020 Bar Records');
   });
 
-  it('same texts', () => {
+  it('the same texts', () => {
     const wrapper = mount(Copyrights, {
       ...options,
       propsData: {
