@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import SeekBar from './SeekBar.vue';
-import type { SpotifyAPI } from '~~/types';
 
 const MOUSEDOWN = 'mousedown';
 const CHANGE = 'change';
@@ -13,10 +12,8 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'seeking'
-    ? disallowed
-    : false),
+const $getters = (disallowed: boolean) => () => ({
+  'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
 });
 const $state = (stateList: PlaybackState[]) => {
   const mock = jest.fn();

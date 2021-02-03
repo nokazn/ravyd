@@ -9,10 +9,10 @@ type PlaybackState = {
   disabledPlayingFromBeginning: boolean;
 }
 
-const $getters = (disallowed: boolean) => jest.fn().mockReturnValue({
-  'playback/isDisallowed': () => disallowed,
+const $getters = (disallowed: boolean) => () => ({
+  'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
 });
-const $state = (playback: PlaybackState) => jest.fn().mockReturnValue({ playback });
+const $state = (playback: PlaybackState) => () => ({ playback });
 const $commit = jest.fn();
 const $dispatch = jest.fn();
 const $subscribe = jest.fn();

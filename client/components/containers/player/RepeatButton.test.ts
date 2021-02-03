@@ -5,16 +5,14 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 const CLICK = 'click';
 
-const $state = (repeatMode: 0 | 1 | 2) => jest.fn().mockReturnValue({
+const $state = (repeatMode: 0 | 1 | 2) => () => ({
   playback: {
     repeatMode,
   },
 });
-const $getters = (isDisallowed: boolean) => {
-  return jest.fn().mockReturnValue({
-    'playback/isDisallowed': () => isDisallowed,
-  });
-};
+const $getters = (isDisallowed: boolean) => () => ({
+  'playback/isDisallowed': jest.fn().mockReturnValue(isDisallowed),
+});
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (mode: 0 | 1 | 2, isDisallowed: boolean = false, size: number = 32) => {

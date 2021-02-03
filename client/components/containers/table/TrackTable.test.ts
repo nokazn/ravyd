@@ -55,7 +55,7 @@ const item = (
   isPlayable: true,
   previewUrl: 'path/to/preview',
 });
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },

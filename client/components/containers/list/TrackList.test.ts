@@ -39,7 +39,7 @@ const item = (i: number): App.TrackDetail => ({
 const $getters = (set: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
 });
-const $state = (isPlaying: boolean) => jest.fn().mockReturnValue({
+const $state = (isPlaying: boolean) => () => ({
   playback: {
     isPlaying,
   },

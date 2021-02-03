@@ -13,7 +13,7 @@ const device = (i: number, isActive: boolean = false, disabled: boolean = false)
   title: `title${i}`,
   subtitle: `subtitle${i}`,
 });
-const $getters = (playing: boolean, devices: App.Device[]) => jest.fn().mockReturnValue({
+const $getters = (playing: boolean, devices: App.Device[]) => () => ({
   'playback/isThisAppPlaying': playing,
   'playback/deviceList': devices,
 });
