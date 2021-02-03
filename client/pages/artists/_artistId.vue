@@ -142,7 +142,7 @@ import FollowButton, { On as OnFollow } from '~/components/parts/button/FollowBu
 import FavoriteButton, { On as OnFavorite } from '~/components/parts/button/FavoriteButton.vue';
 import ArtistMenu, { On as OnMenu } from '~/components/parts/menu/ArtistMenu.vue';
 import Tabs, { Item } from '~/components/parts/tab/Tabs.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import {
   getArtist,

@@ -53,7 +53,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import ScrollableCardsSection from '~/components/parts/section/ScrollableCardsSection.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 import { convertTrackForCard, convertReleaseForCard } from '~/services/converter';
 import type { App, SpotifyAPI } from '~~/types';
 

@@ -170,7 +170,7 @@ import PlaylistMenu, { On as OnMenu } from '~/components/containers/menu/Playlis
 import PlaylistDetailWrapper from '~/components/parts/wrapper/PlaylistDetailWrapper.vue';
 import EditPlaylistModal, { On as OnEditModal, Form } from '~/components/containers/modal/EditPlaylistModal.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import {
   getPlaylist,

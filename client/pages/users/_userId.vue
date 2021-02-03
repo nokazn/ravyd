@@ -116,7 +116,7 @@ import UserMenu, { On as OnUserMenu } from '~/components/parts/menu/UserMenu.vue
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import Fallback from '~/components/parts/others/Fallback.vue';
+import Fallback from '~/components/parts/utils/Fallback.vue';
 import {
   getUser,
   getIsFollowing,
