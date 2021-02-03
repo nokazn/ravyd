@@ -61,14 +61,14 @@ describe('EditPlaylistModal', () => {
     expect(VDialog.props().value).toBe(true);
   });
 
-  it('on image uploaded', async () => {
+  it('when an image is uploaded', async () => {
     const wrapper = factory(false, form(1));
     const modal = wrapper.findComponent(PlaylistModal);
     await modal.vm.$emit(UPDATE_IMAGE, true);
     expect(wrapper.emitted(UPDATE_IMAGE)?.[0]).toBeTruthy();
   });
 
-  it('update playlist', async () => {
+  it('update a playlist', async () => {
     const wrapper = factory(true, form(1));
     await wrapper.find('.v-form > *:first-child input').setValue('name2');
     await Vue.nextTick();

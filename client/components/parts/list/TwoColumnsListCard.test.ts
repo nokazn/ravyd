@@ -8,7 +8,7 @@ const item = (i: number) => ({
 });
 
 describe('TwoColumnsListCard', () => {
-  it('component exists', async () => {
+  it('with 2 items', async () => {
     const wrapper = mount(TwoColumnsListCard, {
       ...options,
       propsData: {

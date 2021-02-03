@@ -91,13 +91,13 @@ describe('MediaButton', () => {
     expect($dispatch).not.toHaveBeenCalled();
   });
 
-  it('call play request', async () => {
+  it('call playing request', async () => {
     const wrapper = factory(false);
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
-  it('call pause request', async () => {
+  it('call pausing request', async () => {
     const wrapper = factory(true);
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');

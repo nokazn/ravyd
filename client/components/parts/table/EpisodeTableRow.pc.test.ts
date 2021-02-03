@@ -76,7 +76,7 @@ describe('EpisodeTableRowPc', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('normal to active', async () => {
+  it('change from normal to active', async () => {
     const wrapper = factory(false, false, true);
     const title = wrapper.find('td:nth-child(2) > div > div > *:first-child');
     const subtitle = wrapper.find('td:nth-child(2) > div > div > div.g-small-text');

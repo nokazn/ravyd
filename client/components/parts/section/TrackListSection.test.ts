@@ -7,7 +7,7 @@ const CLICK = 'click';
 const INPUT = 'input';
 
 describe('TrackListSection', () => {
-  it('showing all', async () => {
+  it('show all', async () => {
     const wrapper = mount(TrackListSection, {
       ...options,
       propsData: {
@@ -31,7 +31,7 @@ describe('TrackListSection', () => {
     expect(wrapper.emitted(INPUT)?.[0]).toEqual([true]);
   });
 
-  it('hidden shown-all button', async () => {
+  it('hidden show-all button', async () => {
     const wrapper = mount(TrackListSection, {
       ...options,
       propsData: {

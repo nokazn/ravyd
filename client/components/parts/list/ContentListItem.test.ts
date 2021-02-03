@@ -32,5 +32,5 @@ describe('ContentListItem', () => {
   });
 
   it.todo('artwork');
-  it.todo('revoke link when isTwoLine is set to true');
+  it.todo('revoke link when isTwoLine is true');
 });

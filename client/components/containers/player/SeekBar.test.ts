@@ -140,7 +140,7 @@ describe('SeekBar', () => {
     expect(clearTimer).toHaveBeenCalled();
   });
 
-  it('on change from 2:30 to 2:45', async () => {
+  it('change from 2:30 to 2:45', async () => {
     const wrapper = factory([
       {
         positionMs: 2.5 * 60 * 1000,
@@ -164,7 +164,7 @@ describe('SeekBar', () => {
     expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 500);
   });
 
-  it('on change from 2:30 to 0:00', async () => {
+  it('change from 2:30 to 0:00', async () => {
     const wrapper = factory([
       {
         positionMs: 2.5 * 60 * 1000,
@@ -188,7 +188,7 @@ describe('SeekBar', () => {
     expect(setInterval).toHaveBeenCalled();
   });
 
-  it('setting', async () => {
+  it('set position', async () => {
     factory([
       {
         positionMs: 2.5 * 60 * 1000,

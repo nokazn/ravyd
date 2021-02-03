@@ -99,7 +99,7 @@ describe('PlaylistCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when a playlist track set', async () => {
+  it('when a playlist track is set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,

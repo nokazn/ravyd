@@ -58,7 +58,7 @@ describe('EpisodeTableRowMobile', () => {
     expect(wrapper.emitted(ON_ROW_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('normal to active', async () => {
+  it('change from normal to active', async () => {
     const wrapper = factory(false, false, true);
     const title = wrapper.find('tr > td:first-child > div > div');
     const subtitle = wrapper.find('div.g-small-text');

@@ -83,7 +83,7 @@ describe('PlaylistTrackTableRowPc', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false, 'track'));
   });
 
-  it('normal to active', async () => {
+  it('change from normal to active', async () => {
     const wrapper = factory(false, false, true, 'track');
     const title = wrapper.find('tr > td:nth-child(4) > div > div > div:first-child');
     const subtitle = wrapper.find('tr > td:nth-child(4) > div > div > div.g-small-text');

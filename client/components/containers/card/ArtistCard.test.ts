@@ -75,7 +75,7 @@ describe('ArtistCard', () => {
     expect(wrapper.findComponent(Avatar).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when an artist track set', async () => {
+  it('when an artist track is set', async () => {
     const wrapper = factory(true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,

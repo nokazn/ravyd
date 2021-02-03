@@ -75,7 +75,7 @@ describe('TrackTableRowPc', () => {
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0][0]).toEqual(item(false));
   });
 
-  it('normal to active', async () => {
+  it('change from normal to active', async () => {
     const wrapper = factory(false, false, true);
     const title = wrapper.find('td > div > span.g-ellipsis-text > *:first-child');
     const divider = wrapper.find('td > div > span.g-ellipsis-text > *:nth-child(2)');

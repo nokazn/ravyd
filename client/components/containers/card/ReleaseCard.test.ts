@@ -118,7 +118,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when a release track set', async () => {
+  it('when a release track is set', async () => {
     const wrapper = factory('album', true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
@@ -126,7 +126,7 @@ describe('ReleaseCard', () => {
     expect(wrapper.findComponent(ReleaseArtwork).props().icon).toBe('mdi-play-circle');
   });
 
-  it('when a track set', async () => {
+  it('when a track is set', async () => {
     const wrapper = factory('track', true, false);
     await wrapper.findComponent(Card).setData({
       isLoaded: true,
