@@ -1,20 +1,13 @@
 import sessionMiddleware from 'express-session';
-import dotenv from 'dotenv';
 import connectRedis from 'connect-redis';
 
 import client from '../../db/redis';
-
-dotenv.config();
-
-if (process.env.SESSION_SECRET == null) {
-  console.error(process.env);
-  throw new Error('セッションIDを署名するための seed が設定されていません。');
-}
+import { SESSION_SECRET } from '../config/constants';
 
 const RedisStore = connectRedis(sessionMiddleware);
 
 export const session = sessionMiddleware({
-  secret: process.env.SESSION_SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   // X-Forwarded-Proto ヘッダーがある場合リバースプロキシを信頼する
