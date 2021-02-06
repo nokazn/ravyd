@@ -14,18 +14,6 @@ export const refresh = async (
   req: Request<{}, {}, RequestBody>,
   res: Response<ResponseBody>,
 ) => {
-  if (req.session == null) {
-    console.error('セッションを取得できず、トークンを更新できませんでした。', {
-      session: req.session,
-    });
-
-    return res.status(500).send({
-      accessToken: undefined,
-      expireIn: 0,
-      message: 'トークンを更新できませんでした。',
-    });
-  }
-
   const tokenInReqBody = req.body.accessToken;
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   // リフレッシュトークンが存在しない場合

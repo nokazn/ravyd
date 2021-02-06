@@ -10,16 +10,6 @@ export const auth = async (
   req: Request,
   res: Response<ResponseBody>,
 ) => {
-  if (req.session == null) {
-    console.error({ session: req.session });
-
-    return res.status(500).send({
-      accessToken: undefined,
-      expireIn: 0,
-      message: 'トークンを更新できませんでした。',
-    });
-  }
-
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session.token;
   if (currentToken == null) {
     return res.send({

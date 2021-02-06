@@ -15,16 +15,6 @@ export const callback = async (
   req: Request<{}, {}, {}, RequestQuery>,
   res: Response<ResponseBody>,
 ) => {
-  if (req.session == null) {
-    console.error({ session: req.session });
-
-    return res.status(500).send({
-      accessToken: undefined,
-      expireIn: 0,
-      message: 'トークンを更新できませんでした。',
-    });
-  }
-
   const { code, state } = req.query;
   if (code == null) {
     console.error('code が取得できませんでした。', {
