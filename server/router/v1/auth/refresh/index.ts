@@ -4,14 +4,14 @@ import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
-type ReqestBody = {
+type RequestBody = {
   accessToken: string;
 }
 
 type ResponseBody = ServerAPI.Auth.Token
 
 export const refresh = async (
-  req: Request<{}, {}, ReqestBody>,
+  req: Request<{}, {}, RequestBody>,
   res: Response<ResponseBody>,
 ) => {
   if (req.session == null) {
