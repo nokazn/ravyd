@@ -42,6 +42,18 @@ module.exports = {
     camelcase: 0,
     'lines-between-class-members': 0,
     'arrow-body-style': 0,
+    'max-len': [
+      'error',
+      120,
+      2,
+      {
+        ignoreUrls: true,
+        ignoreComments: true,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
 
     /**
      * eslint-plugin-import
