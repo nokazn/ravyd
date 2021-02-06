@@ -1,8 +1,8 @@
 import sessionMiddleware from 'express-session';
 import connectRedis from 'connect-redis';
 
-import client from '../../db/redis';
-import { SESSION_SECRET } from '../config/constants';
+import { SESSION_SECRET } from '@/config/constants';
+import client from '~~/db/redis';
 
 const RedisStore = connectRedis(sessionMiddleware);
 

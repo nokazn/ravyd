@@ -1,18 +1,21 @@
-import crypto from 'crypto';
 import { Request, Response } from 'express';
+import crypto from 'crypto';
+import httpStatusCodes from 'http-status-codes';
 
-import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
-import { createUrl } from '../../../../../utils/createUrl';
+import { refreshAccessToken, logger } from '@/helper';
 import {
   BASE_ORIGIN,
   SPOTIFY_CLIENT_ID,
   TOKEN_EXPIRE_IN,
   CSRF_STATE_COOKIE_KEY,
   SPOTIFY_AUTHORIZE_BASE_URL,
-} from '../../../../config/constants';
+} from '@/config/constants';
+import { createUrl } from '~~/shared/utils/createUrl';
 import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Login
+
+const { BAD_REQUEST } = httpStatusCodes;
 
 export const login = async (req: Request, res: Response<ResponseBody>) => {
   const currentToken: SpotifyAPI.Auth.Token | undefined = req.session?.token;
@@ -20,13 +23,13 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   if (currentToken?.refresh_token != null) {
     const token = await refreshAccessToken(currentToken.refresh_token);
     if (token == null) {
-      console.error({
+      logger.error({
         session: req.session,
         currentToken,
         token,
       });
 
-      return res.status(400).send({
+      return res.status(BAD_REQUEST).send({
         accessToken: undefined,
         expireIn: 0,
         message: 'トークンを更新できませんでした。',
@@ -65,7 +68,6 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     'user-follow-read',
     'user-follow-modify',
   ].join(' ');
-
   const url = createUrl(SPOTIFY_AUTHORIZE_BASE_URL, {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: 'code',
@@ -75,8 +77,8 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   });
 
   res.cookie(CSRF_STATE_COOKIE_KEY, csrfState, {
-    // 30分間有効
-    maxAge: 1000 * 60 * 30,
+    // 5分間有効
+    maxAge: 5 * 60 * 1000,
     httpOnly: true,
     secure: true,
   });

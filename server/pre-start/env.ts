@@ -1,6 +1,7 @@
 import path from 'path';
 import { path as ROOT_PATH } from 'app-root-path';
 import dotenv from 'dotenv';
+import { logger } from '@/helper';
 
 // 候補の配列の内すべての要素が process.env に存在するものがあればチェックを通す
 const checkEnv = (...candidates: string[][]): [boolean, NodeJS.ProcessEnv] => {
@@ -37,7 +38,7 @@ const checkEnv = (...candidates: string[][]): [boolean, NodeJS.ProcessEnv] => {
     'SPOTIFY_CLIENT_SECRET',
   ]);
   if (!isValid) {
-    console.error({
+    logger.error({
       result,
       isValid,
       env,

@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
+import httpStatusCodes from 'http-status-codes';
 
-import { getAccessToken } from '../../../../helper/getAccessToken';
-import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '../../../../config/constants';
-import { ServerAPI } from '~~/types';
+import { generateAccessTokenKey, exchangeAccessToken, logger } from '@/helper';
+import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '@/config/constants';
+import type { paths } from '~~/shared/types';
 
-type RequestQuery = {
-  code: string
-  state: string
-}
+type Path = paths['/auth/login/callback']['get']
+type RequestQuery = Path['parameters']['query']
+type ResponseBody = Path['responses'][200 | 400 | 403 |500]['content']['application/json']
 
-type ResponseBody = ServerAPI.Auth.Token
+const { BAD_REQUEST, UNAUTHORIZED } = httpStatusCodes;
 
 export const callback = async (
   req: Request<{}, {}, {}, RequestQuery>,
@@ -17,54 +17,54 @@ export const callback = async (
 ) => {
   const { code, state } = req.query;
   if (code == null) {
-    console.error('code が取得できませんでした。', {
-      params: req.params,
+    const message = 'code in query parameters is invalid.';
+    logger.error(message, {
+      query: req.query,
       body: req.body,
       code,
     });
-
-    return res.status(400).send({
-      accessToken: undefined,
+    return res.status(BAD_REQUEST).send({
+      code: 'BAD REQUEST',
+      message,
+      accessTokenKey: null,
+      accessToken: null,
       expireIn: 0,
-      message: '認証時にエラーが発生しました。',
     });
   }
 
-  // 送られてきた state と、認可時に送信し、cookie に埋め込んだ csrfState を比較
+  // 送られてきた state と、認可時に送信し cookie に埋め込んだ state を比較
   const { [CSRF_STATE_COOKIE_KEY]: csrfState } = req.cookies;
-  if (state != null && state !== csrfState) {
-    const message = 'state が一致しないため、アクセストークンを発行できません。';
-    console.error(message, {
-      params: req.params,
+  if (state == null || state !== csrfState) {
+    const message = "CSRF state doesn't match.";
+    logger.error(message, {
+      query: req.query,
       body: req.body,
-      code,
       state,
       csrfState,
     });
-
-    return res.status(403).send({
-      accessToken: undefined,
-      expireIn: 0,
+    return res.status(UNAUTHORIZED).send({
+      code: 'UNAUTHORIZED',
       message,
+      accessTokenKey: null,
+      accessToken: null,
+      expireIn: 0,
     });
   }
 
-  // csrfState を削除
-  res.clearCookie(CSRF_STATE_COOKIE_KEY);
-
   // code と token を交換する
-  const token = await getAccessToken(code);
+  const token = await exchangeAccessToken(code);
   if (token == null) {
-    console.error({
+    logger.error({
       session: req.session,
       code,
       token,
     });
-
-    return res.status(400).send({
-      accessToken: undefined,
-      expireIn: 0,
+    return res.clearCookie(CSRF_STATE_COOKIE_KEY).status(BAD_REQUEST).send({
+      code: 'INTERNAL SERVER ERROR',
       message: '認証時にエラーが発生しました。',
+      accessTokenKey: null,
+      accessToken: null,
+      expireIn: 0,
     });
   }
 
@@ -73,8 +73,21 @@ export const callback = async (
     ...currentToken,
     ...token,
   };
+  const currentTokens = req.session.tokens ?? [];
+  const accessTokenKey = generateAccessTokenKey(token.refresh_token);
+  req.session.tokens = [
+    ...currentTokens,
+    {
+      key: accessTokenKey,
+      value: token,
+    },
+  ];
 
-  return res.send({
+  return res.clearCookie(CSRF_STATE_COOKIE_KEY).send({
+    // TODO:
+    code: '',
+    message: '',
+    accessTokenKey,
     accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
   });

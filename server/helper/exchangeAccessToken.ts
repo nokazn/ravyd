@@ -5,7 +5,8 @@ import {
   SPOTIFY_TOKEN_BASE_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
-} from '../config/constants';
+} from '@/config/constants';
+import { logger } from '@/helper/logger';
 import type { SpotifyAPI } from '~~/types';
 
 export const exchangeAccessToken = (
@@ -30,7 +31,7 @@ export const exchangeAccessToken = (
   })
     .then((res) => res.data)
     .catch((err: Error) => {
-      console.error({ err });
+      logger.error({ err });
       return undefined;
     });
 };

@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
+import httpStatusCodes from 'http-status-codes';
 
-import { refreshAccessToken } from '../../../helper/refreshAccessToken';
-import { TOKEN_EXPIRE_IN } from '../../../config/constants';
-import { SpotifyAPI, ServerAPI } from '~~/types';
+import { refreshAccessToken, logger } from '@/helper';
+import { TOKEN_EXPIRE_IN } from '@/config/constants';
+import type { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ResponseBody = ServerAPI.Auth.Token
+
+const { BAD_REQUEST } = httpStatusCodes;
 
 export const auth = async (
   req: Request,
@@ -29,13 +32,13 @@ export const auth = async (
 
   const token = await refreshAccessToken(currentToken.refresh_token);
   if (token == null) {
-    console.error({
+    logger.error({
       session: req.session,
       currentToken,
       token,
     });
 
-    return res.status(400).send({
+    return res.status(BAD_REQUEST).send({
       accessToken: undefined,
       expireIn: 0,
       message: 'トークンを更新できませんでした。',

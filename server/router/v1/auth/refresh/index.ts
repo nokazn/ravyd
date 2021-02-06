@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
+import httpStatusCodes from 'http-status-codes';
 
-import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
-import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
-import { SpotifyAPI, ServerAPI } from '~~/types';
+import { TOKEN_EXPIRE_IN } from '@/config/constants';
+import { refreshAccessToken, logger } from '@/helper';
+import type { SpotifyAPI, ServerAPI } from '~~/types';
 
 type RequestBody = {
   accessToken: string;
 }
 
 type ResponseBody = ServerAPI.Auth.Token
+
+const { BAD_REQUEST, CONFLICT } = httpStatusCodes;
 
 export const refresh = async (
   req: Request<{}, {}, RequestBody>,
@@ -19,13 +22,13 @@ export const refresh = async (
   // リフレッシュトークンが存在しない場合
   if (currentToken?.refresh_token == null) {
     const message = 'リフレッシュトークンを取得できず、トークンを更新できませんでした。';
-    console.warn(message, {
+    logger.warn(message, {
       session: req.session,
       currentToken,
       tokenInReqBody,
     });
 
-    return res.status(400).send({
+    return res.status(BAD_REQUEST).send({
       accessToken: undefined,
       expireIn: 0,
       message,
@@ -35,14 +38,14 @@ export const refresh = async (
   // 現在のトークンが一致しない場合
   if (currentToken.access_token !== tokenInReqBody) {
     const message = '現在のトークンが一致しないため、トークンを更新できませんでした。';
-    console.warn(message, {
+    logger.warn(message, {
       session: req.session,
       currentToken,
       tokenInReqBody,
     });
 
     // conflict
-    return res.status(409).send({
+    return res.status(CONFLICT).send({
       accessToken: req.body.accessToken,
       expireIn: 0,
       message,
@@ -51,13 +54,13 @@ export const refresh = async (
 
   const token = await refreshAccessToken(currentToken.refresh_token);
   if (token == null) {
-    console.error('トークンの更新に失敗しました。', {
+    logger.error('トークンの更新に失敗しました。', {
       session: req.session,
       currentToken,
       token,
     });
 
-    return res.status(400).send({
+    return res.status(BAD_REQUEST).send({
       accessToken: undefined,
       expireIn: 0,
       message: 'トークンの更新に失敗しました。',
