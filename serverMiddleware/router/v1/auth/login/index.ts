@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import { SpotifyAPI, ServerAPI } from 'shared/types';
 import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
-import { createUrl } from '../../../../../utils/createUrl';
+import { createUrl } from '../../../../../shared/utils/createUrl';
 import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, SPOTIFY_AUTHORIZE_BASE_URL } from '../../../../config/constants';
 
 type ResponseBody = ServerAPI.Auth.Login

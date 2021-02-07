@@ -1,10 +1,10 @@
 import { Getters } from 'typed-vuex';
 
+import { getExternalUrlFromUri } from 'shared/utils';
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { PlaybackState } from './state';
 import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import { getImageSrc, convertTrackForQueue, convertUriToId } from '~/services/converter';
-import { getExternalUrlFromUri } from '~~/utils/getExternalUrlFromUri';
 import type { App } from '~/entities';
 
 

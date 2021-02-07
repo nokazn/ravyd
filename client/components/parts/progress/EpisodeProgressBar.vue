@@ -23,9 +23,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import { elapsedTimeInJapanese, elapsedTime } from 'shared/utils';
 import type { SpotifyAPI } from 'shared/types';
-import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
-import { elapsedTime } from '~~/utils/elapsedTime';
 
 export default defineComponent({
   props: {

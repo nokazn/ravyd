@@ -19,9 +19,9 @@ import {
   PropType,
 } from '@vue/composition-api';
 
+import { generateCopiedName } from 'shared/utils';
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import { useShareMenu } from '~/use/menu';
-import { generateCopiedName } from '~~/utils/generateCopiedName';
 import type { App } from '~/entities';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';

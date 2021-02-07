@@ -110,6 +110,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState } from 'typed-vuex';
 
+import { elapsedTimeInJapanese } from 'shared/utils';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
@@ -122,7 +123,6 @@ import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import { getEpisode } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/services/converter';
-import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 import type { App } from '~/entities';
 
 const ARTWORK_SIZE = 220;

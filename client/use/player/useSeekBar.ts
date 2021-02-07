@@ -5,7 +5,7 @@ import {
   SetupContext,
 } from '@vue/composition-api';
 import { ExtendedMutationPayload } from 'typed-vuex';
-import { elapsedTime } from '~~/utils/elapsedTime';
+import { elapsedTime } from 'shared/utils';
 
 export const useSeekBar = (root: SetupContext['root']) => {
   const positionMs = computed(() => root.$state().playback.positionMs);

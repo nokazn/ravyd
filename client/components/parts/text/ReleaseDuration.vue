@@ -15,8 +15,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import { elapsedTimeInJapanese } from 'shared/utils';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
-import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
 
 type Duration = {
   text: string;

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { isPromise } from '~~/utils/isPromise';
+import { isPromise } from 'shared/utils';
 
 type ConfirmState = {
   value: boolean;

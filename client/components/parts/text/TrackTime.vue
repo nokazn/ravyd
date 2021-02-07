@@ -9,8 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
-import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
-import { elapsedTime } from '~~/utils/elapsedTime';
+import { elapsedTimeInJapanese, elapsedTime } from 'shared/utils';
 
 export default defineComponent({
   props: {

@@ -21,14 +21,17 @@ const hmmss = (timeMs: number) => {
   const minutes = Math.floor(remainingTimeSeconds / 60);
   const seconds = Math.floor(remainingTimeSeconds - 60 * minutes);
 
-  if (hours > 0) return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-  return `${minutes}:${twoDigits(seconds)}`;
+  return hours > 0
+    ? `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`
+    : `${minutes}:${twoDigits(seconds)}`;
 };
 
 /**
  * timeMs が Infinity のときは '???' を返す
  * format に hmmss を指定すると、1時間以上の場合は H:mm:ss で表示
  */
-export const elapsedTime = (timeMs: number, format: 'mss' | 'hmmss' = 'mss'): string => (format === 'mss'
-  ? mss(timeMs)
-  : hmmss(timeMs));
+export const elapsedTime = (timeMs: number, format: 'mss' | 'hmmss' = 'mss'): string => {
+  return format === 'mss'
+    ? mss(timeMs)
+    : hmmss(timeMs);
+};

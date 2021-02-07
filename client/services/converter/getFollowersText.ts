@@ -1,4 +1,4 @@
-import { addComma } from '~~/utils/addComma';
+import { addComma } from 'shared/utils';
 
 export const getFollowersText = (followers: number | null): string | undefined => {
   return followers != null

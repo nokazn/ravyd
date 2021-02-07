@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { ref, computed, Ref } from '@vue/composition-api';
-import { sleep } from '~~/utils/sleep';
+import { sleep } from 'shared/utils';
 
 export const useMarqueeText = (elementRef: Ref<HTMLElement | Vue | undefined | null>) => {
   let animationTimeoutId: ReturnType<typeof setTimeout> | undefined;

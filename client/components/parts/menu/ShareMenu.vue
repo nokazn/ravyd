@@ -63,11 +63,11 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 
+import { createUrl } from 'shared/utils';
 import type { SpotifyAPI } from 'shared/types';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
 import { useCopyText } from '~/use/util';
-import { createUrl } from '~~/utils/createUrl';
 import type { App } from '~/entities';
 
 type MenuType = 'to' | 'custom';
