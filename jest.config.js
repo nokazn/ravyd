@@ -1,9 +1,9 @@
 module.exports = {
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/client/$1',
     '^~/(.*)$': '<rootDir>/client/$1',
-    '^@@/(.*)$': '<rootDir>/$1',
     '^~~/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/server/$1',
+    '^shared/(.*)$': '<rootDir>/shared/$1',
     '^vue$': 'vue/dist/vue.common.js',
     '\\.(css|less)$': 'identity-obj-proxy',
   },
