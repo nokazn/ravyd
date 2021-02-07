@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
+import type { VHas } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
 import NavigationListItemGroup from './NavigationListItemGroup.vue';
-import type { VHas } from '~~/types';
 
 describe('NavigationListItemGroup', () => {
   it('exist virtual scroller wrapper ref', () => {

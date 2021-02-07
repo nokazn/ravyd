@@ -1,10 +1,10 @@
 import { Actions } from 'typed-vuex';
 
+import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import { LibraryShowsState } from './state';
 import { LibraryShowsGetters } from './getters';
 import { LibraryShowsMutations } from './mutations';
 import { EMPTY_PAGING } from '~/constants';
-import { OneToFifty, SpotifyAPI } from '~~/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
 
 export type LibraryShowsActions = {

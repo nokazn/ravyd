@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import TrackList from './TrackList.vue';
 import TrackListItem from '~/components/parts/list/TrackListItem.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';

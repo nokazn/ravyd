@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import type { App } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { App } from '~/entities';
 
 export const getPlaylist = async (
   { app, params }: Context,

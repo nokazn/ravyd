@@ -1,5 +1,7 @@
+import type { SpotifyAPI } from 'shared/types';
 import { generateContentPath } from '~/services/converter';
-import { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
+
 
 export const convertToContentListItem = <T extends App.ContentItemType>(type: T) => (
   item: App.ContentItemTypes[T],

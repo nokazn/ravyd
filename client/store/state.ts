@@ -1,4 +1,4 @@
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type RootState = {
   dominantBackgroundColor: App.DominantColor | undefined;

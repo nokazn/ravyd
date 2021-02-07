@@ -1,5 +1,6 @@
+import type { SpotifyAPI } from 'shared/types';
 import { convertReleaseDate } from '~/services/converter';
-import { SpotifyAPI, App } from '~~/types';
+import type { App } from '~/entities';
 
 export const convertReleaseForCard = (
   release: SpotifyAPI.Album | SpotifyAPI.SimpleAlbum,

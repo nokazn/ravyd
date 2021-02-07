@@ -34,7 +34,7 @@ import {
   PropType,
 } from '@vue/composition-api';
 import { useMarqueeText } from '~/use/style';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   props: {

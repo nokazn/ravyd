@@ -1,5 +1,6 @@
+import type { SpotifyAPI } from 'shared/types';
 import ShareMenu from '~/components/parts/menu/ShareMenu.vue';
-import type { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 export type ShareMenuProps = {
   name: string;

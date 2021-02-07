@@ -21,7 +21,7 @@ import {
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import { useShareMenu } from '~/use/menu';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 

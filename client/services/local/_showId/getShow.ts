@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import { App } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { App } from '~/entities';
 import { convertEpisodeDetail } from '~/services/converter';
 
 export const getShow = async (

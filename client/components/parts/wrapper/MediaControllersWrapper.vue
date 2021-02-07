@@ -21,13 +21,13 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import SkipButton from '~/components/containers/player/SkipButton.vue';
 import ShuffleButton from '~/components/containers/player/ShuffleButton.vue';
 import PreviousButton from '~/components/containers/player/PreviousButton.vue';
 import MediaButton from '~/components/containers/player/MediaButton.vue';
 import NextButton from '~/components/containers/player/NextButton.vue';
 import RepeatButton from '~/components/containers/player/RepeatButton.vue';
-import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
   components: {

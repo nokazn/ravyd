@@ -1,9 +1,10 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
+import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import { convertTrackDetail } from '~/services/converter';
-import { App, SpotifyAPI, OneToFifty } from '~~/types';
+import type { App } from '~/entities';
 
 /**
- * deprecated
+ * @deprecated
  */
 export const getAllTrackListHandler = ({ app, params }: Context) => async (
   {

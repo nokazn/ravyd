@@ -1,8 +1,7 @@
-import { Getters } from 'typed-vuex';
-
+import type { Getters } from 'typed-vuex';
+import type { SpotifyAPI } from 'shared/types';
 import { getImageSrc } from '~/services/converter';
-import { AuthState } from './state';
-import { SpotifyAPI } from '~~/types';
+import type { AuthState } from './state';
 
 export type AuthGetters = {
   isLoggedin: boolean

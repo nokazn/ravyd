@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 dayjs.extend(relativeTime);
 

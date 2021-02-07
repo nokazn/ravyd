@@ -1,10 +1,10 @@
 import type { AxiosError } from 'axios';
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 
-import { AuthState } from './state';
-import { AuthGetters } from './getters';
-import { AuthMutations } from './mutations';
-import { ServerAPI } from '~~/types';
+import type { ServerAPI } from 'shared/types';
+import type { AuthState } from './state';
+import type { AuthGetters } from './getters';
+import type { AuthMutations } from './mutations';
 
 export type AuthActions = {
   login: () => Promise<void>

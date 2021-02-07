@@ -33,7 +33,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 type MenuItem = {
   name: string;

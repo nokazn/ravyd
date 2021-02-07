@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
-import { LibraryHistoryState } from './state';
-import { SpotifyAPI, App } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
+import type { App } from '~/entities';
+import type { LibraryHistoryState } from './state';
+
 
 export type LibraryHistoryMutations = {
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.History[]

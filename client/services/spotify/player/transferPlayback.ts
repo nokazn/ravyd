@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
 export const transferPlayback = (context: Context) => {
   const { app } = context;

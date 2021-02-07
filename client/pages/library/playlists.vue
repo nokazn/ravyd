@@ -18,10 +18,10 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import type { SpotifyAPI } from 'shared/types';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import PlaylistCard from '~/components/containers/card/PlaylistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
-import { SpotifyAPI } from '~~/types';
 
 interface Data {}
 

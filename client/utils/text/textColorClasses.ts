@@ -1,4 +1,4 @@
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const textColorClass = (
   active: boolean | undefined,

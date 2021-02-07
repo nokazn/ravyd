@@ -1,7 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import { App } from '~~/types';
 import TrackQueueMenuItem from './TrackQueueMenuItem.vue';
+import type { App } from '~/entities';
 
 type Item = Omit<App.TrackQueue, 'isPlaying' | 'isSet'>;
 

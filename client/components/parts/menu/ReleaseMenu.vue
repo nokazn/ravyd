@@ -21,7 +21,7 @@ import {
 
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import { useArtistLinkMenu, useAddItemToPlaylistMenu, useShareMenu } from '~/use/menu';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 

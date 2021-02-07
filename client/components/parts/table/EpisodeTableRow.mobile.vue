@@ -54,7 +54,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeProgressBar from '~/components/parts/progress/EpisodeProgressBar.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import { ON_ROW_CLICKED } from '~/components/parts/table/EpisodeTableRow.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type On = {
   [ON_ROW_CLICKED]: App.EpisodeDetail;

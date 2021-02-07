@@ -63,7 +63,7 @@ import {
 import type { DataTableHeader, DataTableFilterFunction } from 'vuetify';
 import EpisodeTableRow, { On as OnRow } from '~/components/parts/table/EpisodeTableRow.vue';
 import { useButtonSize } from '~/use/style';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 type EpisodeSelector = 'all' | 'unplayed' | 'inProgress';
 type SelectItem = {

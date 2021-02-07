@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
+import type { VHas } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
 import IntersectionLoadingCircle from './IntersectionLoadingCircle.vue';
-import type { VHas } from '~~/types';
 
 describe('IntersectionLoadingCircle', () => {
   it('exist template ref & v-progress-circular', async () => {

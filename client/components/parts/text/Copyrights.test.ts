@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
+import type { SpotifyAPI } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
 import Copyrights from './Copyrights.vue';
-import type { SpotifyAPI } from '~~/types';
 
 const copyrights = (type: 'C' | 'P', recordName: string): SpotifyAPI.Copyright => ({
   type,

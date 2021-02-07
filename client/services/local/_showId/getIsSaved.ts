@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
 export const getIsSaved = async ({ app, params }: Context): Promise<boolean> => {
   const [isSaved] = await app.$spotify.library.checkUserSavedShows({

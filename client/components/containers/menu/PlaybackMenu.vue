@@ -26,7 +26,7 @@ import {
   useShareMenu,
   useTrackLinkMenu,
 } from '~/use/menu';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const INPUT = 'input';
 

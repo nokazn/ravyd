@@ -1,5 +1,6 @@
+import type { SpotifyAPI } from 'shared/types';
 import { convertUriToId } from '~/services/converter';
-import { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 // TODO
 type ExtendedTrack = Spotify.Track & {

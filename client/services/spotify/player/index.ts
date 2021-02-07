@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
 import { addItemToQueue } from './addItemToQueue';
 import { getDeviceList } from './getDeviceList';

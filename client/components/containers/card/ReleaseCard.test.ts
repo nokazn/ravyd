@@ -3,7 +3,7 @@ import { options, mocks } from '~/tests/mocks/mount';
 import ReleaseCard from './ReleaseCard.vue';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import Card from '~/components/parts/card/Card.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 

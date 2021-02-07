@@ -1,7 +1,7 @@
 import { Getters } from 'typed-vuex';
 
+import type { SpotifyAPI } from 'shared/types';
 import { PlaylistsState } from './state';
-import { SpotifyAPI } from '~~/types';
 
 export type PlaylistsGetters = {
   ownPlaylists: SpotifyAPI.SimplePlaylist[]

@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { SpotifyAPI } from 'shared/types';
 
 type Devices = { devices: SpotifyAPI.Device[] };
 

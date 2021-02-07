@@ -1,4 +1,4 @@
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 const computeAbsoluteRatioDiff = (
   num: number | null | undefined,

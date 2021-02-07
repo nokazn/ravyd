@@ -148,7 +148,7 @@ import {
   ON_MEDIA_BUTTON_CLICKED,
   ON_FAVORITE_BUTTON_CLICKED,
 } from '~/components/parts/table/PlaylistTrackTableRow.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type On = {
   [ON_ROW_CLICKED]: App.PlaylistTrackDetail

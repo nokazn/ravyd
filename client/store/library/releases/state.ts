@@ -1,4 +1,4 @@
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type LibraryReleasesState = {
   releaseList: App.ReleaseCard<'album'>[]

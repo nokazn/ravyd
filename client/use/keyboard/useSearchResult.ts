@@ -7,8 +7,9 @@ import {
   SetupContext,
   WritableComputedRef,
 } from '@vue/composition-api';
-import { RawLocation } from 'vue-router';
-import { App, SpotifyAPI } from '~~/types';
+import type { RawLocation } from 'vue-router';
+import type { SpotifyAPI } from 'shared/types';
+import type { App } from '~/entities';
 
 type ItemMap = {
   title: string;

@@ -1,7 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
+import type { SpotifyAPI, VHas } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
 import MarqueeTrackName from './MarqueeTrackName.vue';
-import type { SpotifyAPI, VHas } from '~~/types';
 
 const factory = (type: SpotifyAPI.Player.PlayingType) => {
   return mount(MarqueeTrackName, {

@@ -42,7 +42,7 @@ import PlaylistTrackTableRowMobile, { On as OnMobile } from '~/components/parts/
 import PlaylistTrackTableRowPc, { On as OnPc } from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
 export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';

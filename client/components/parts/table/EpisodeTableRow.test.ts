@@ -3,7 +3,7 @@ import EpisodeTableRow from './EpisodeTableRow.vue';
 import EpisodeTableRowMobile from '~/components/parts/table/EpisodeTableRow.mobile.vue';
 import EpisodeTableRowPc from '~/components/parts/table/EpisodeTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 

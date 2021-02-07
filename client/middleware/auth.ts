@@ -1,4 +1,4 @@
-import { Middleware } from '@nuxt/types';
+import type { Middleware } from '@nuxt/types';
 
 const middleware: Middleware = ({ app, route, redirect }) => {
   const isLoggedin = app.$getters()['auth/isLoggedin'];

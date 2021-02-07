@@ -1,4 +1,5 @@
-import { SpotifyAPI, App } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
+import type { App } from '~/entities';
 
 export const convertReleaseType = (
   releaseType: SpotifyAPI.Album['album_type'],

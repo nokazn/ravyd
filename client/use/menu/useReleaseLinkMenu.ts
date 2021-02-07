@@ -1,5 +1,5 @@
 import { SetupContext } from '@vue/composition-api';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const useReleaseLinkMenu = (
   root: SetupContext['root'],

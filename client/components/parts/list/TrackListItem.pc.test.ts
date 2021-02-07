@@ -3,7 +3,7 @@ import { options } from '~/tests/mocks/mount';
 import TrackListItemPc from './TrackListItem.pc.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';

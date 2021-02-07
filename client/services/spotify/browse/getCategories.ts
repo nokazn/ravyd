@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI, OneToFifty } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { SpotifyAPI, OneToFifty } from 'shared/types';
 
 type Categories = { categories: SpotifyAPI.Paging<SpotifyAPI.Category> };
 

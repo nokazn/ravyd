@@ -60,7 +60,7 @@ import Card from '~/components/parts/card/Card.vue';
 import ReleaseArtwork, { MediaIcon } from '~/components/parts/image/ReleaseArtwork.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/services/converter';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

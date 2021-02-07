@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
+import type { ZeroToHundred } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
 import VolumeSlider from './VolumeSlider.vue';
-import type { ZeroToHundred } from '~~/types';
 
 const CHANGE = 'change';
 const CLICK = 'click';

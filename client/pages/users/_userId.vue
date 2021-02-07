@@ -108,6 +108,7 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
 
+import type { OneToFifty } from 'shared/types';
 import Avatar from '~/components/parts/image/Avatar.vue';
 import Followers from '~/components/parts/text/Followers.vue';
 import FollowButton, { On as OnFollowButton } from '~/components/parts/button/FollowButton.vue';
@@ -124,7 +125,7 @@ import {
   UserPlaylists,
 } from '~/services/local/_userId';
 import { getImageSrc } from '~/services/converter';
-import type { App, OneToFifty } from '~~/types';
+import type { App } from '~/entities';
 
 const LIMIT_OF_PLAYLISTS = 30;
 const HEADER_REF = 'HEADER_REF';

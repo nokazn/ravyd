@@ -1,7 +1,8 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
+import type { OneToFifty } from 'shared/types';
 import { convertPlaylistTrackDetail } from '~/services/converter';
-import { App, OneToFifty } from '~~/types';
+import type { App } from '~/entities';
 
 export type PlaylistTracks = {
   items: App.PlaylistTrackDetail[];

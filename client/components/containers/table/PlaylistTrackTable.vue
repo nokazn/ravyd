@@ -59,7 +59,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import type { DataTableHeader } from 'vuetify';
 import PlaylistTrackTableRow, { ON_FAVORITE_BUTTON_CLICKED, On as OnRow } from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import { useButtonSize } from '~/use/style';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']

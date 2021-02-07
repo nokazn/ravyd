@@ -1,5 +1,5 @@
-import { ExtendedMutationPayload, SFCCommit } from 'typed-vuex';
-import { App } from '~~/types';
+import type { ExtendedMutationPayload, SFCCommit } from 'typed-vuex';
+import type { App } from '~/entities';
 
 type Track = App.TrackDetail | App.PlaylistTrackDetail
 

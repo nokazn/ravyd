@@ -39,8 +39,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import { textColorClass, subtextColorClass, itemColor } from '~/utils/text';
-import { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
+
 
 const CLICK = 'click';
 

@@ -1,5 +1,5 @@
 import AddItemToPlaylistMenu from '~/components/containers/menu/AddItemToPlaylistMenu.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type AddItemToPlaylistMenuProps = {
   name: string;

@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
 import TrackListItem, { On as OnListItem } from '~/components/parts/list/TrackListItem.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 

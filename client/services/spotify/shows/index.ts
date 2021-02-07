@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 import { getShow } from './getShow';
 import { getShowEpisodes } from './getShowEpisodes';
 import { getShows } from './getShows';

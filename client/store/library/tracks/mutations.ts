@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
+import type { App } from '~/entities';
 import { LibraryTracksState } from './state';
-import { App } from '~~/types';
 
 export type LibraryTracksMutations = {
   SET_TRACK_LIST: App.PlaylistTrackDetail[]

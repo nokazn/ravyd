@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
+import type { SpotifyAPI } from 'shared/types';
 import { AuthState } from './state';
-import { SpotifyAPI } from '~~/types';
 
 export type AuthMutations = {
   SET_ACCESS_TOKEN: SpotifyAPI.Auth.Token['access_token'] | undefined

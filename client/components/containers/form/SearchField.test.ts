@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
+import type { VHas } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
 import SearchField from './SearchField.vue';
-import type { VHas } from '~~/types';
 
 const SEARCH_FIELD_REF = 'SEARCH_FIELD_REF';
 const FOCUS = 'focus';

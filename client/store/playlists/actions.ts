@@ -1,8 +1,8 @@
 import { Actions } from 'typed-vuex';
+import type { OneToFifty } from 'shared/types';
 import { PlaylistsState } from './state';
 import { PlaylistsGetters } from './getters';
 import { PlaylistsMutations } from './mutations';
-import { OneToFifty } from '~~/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
 
 export type PlaylistsActions = {

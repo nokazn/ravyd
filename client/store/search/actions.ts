@@ -1,10 +1,10 @@
 import { Actions } from 'typed-vuex';
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
+import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import { SearchState } from './state';
 import { SearchGetters } from './getters';
 import { SearchMutations } from './mutations';
-import { SpotifyAPI, OneToFifty } from '~~/types';
 
 type SearchParams = {
   query: string

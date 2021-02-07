@@ -1,5 +1,6 @@
+import type { SpotifyAPI } from 'shared/types';
 import { convertAddedAt } from '~/services/converter';
-import { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 export const convertPlaylistTrackDetail = (
   { isTrackSavedList, offset = 0 }: {

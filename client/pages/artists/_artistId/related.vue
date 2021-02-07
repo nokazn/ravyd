@@ -21,7 +21,7 @@ import { Vue, Component, Prop } from 'nuxt-property-decorator';
 
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 interface Data {}
 

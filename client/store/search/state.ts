@@ -1,4 +1,4 @@
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 export type SearchState = {
   albums: SpotifyAPI.SimpleAlbum[] | undefined

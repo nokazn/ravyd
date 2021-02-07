@@ -1,7 +1,7 @@
 import type { Context } from '@nuxt/types';
 
+import type { SpotifyAPI } from 'shared/types';
 import { multipleRequestsWithId } from '~/utils/request';
-import type { SpotifyAPI } from '~~/types';
 
 type Episodes = { episodes: (SpotifyAPI.Episode | null)[] };
 

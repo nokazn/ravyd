@@ -15,9 +15,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
 import { getFollowersText } from '~/services/converter';
-import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
   components: {

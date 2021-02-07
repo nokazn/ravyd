@@ -1,6 +1,6 @@
 import type { SetupContext } from '@vue/composition-api';
+import type { App } from '~/entities';
 import ArtistLinkMenu from '~/components/parts/menu/ArtistLinkMenu.vue';
-import { App } from '~~/types';
 
 export type ArtistLinkMenuProps = {
   artists: App.MinimumArtist[];

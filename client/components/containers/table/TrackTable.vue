@@ -49,7 +49,7 @@ import TrackTableRow, { ON_FAVORITE_BUTTON_CLICKED, On as OnRow } from '~/compon
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import { useButtonSize } from '~/use/style';
 import { getQuery } from '~/utils/text';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type On = {
   [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']

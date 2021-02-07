@@ -1,4 +1,5 @@
-import type { SpotifyAPI, App, ZeroToHundred } from '~~/types';
+import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
+import type { App } from '~/entities';
 
 export type PlaybackState = {
   pollingPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined

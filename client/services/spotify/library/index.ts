@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
 import { checkUserSavedAlbums } from './checkUserSavedAlbums';
 import { checkUserSavedShows } from './checkUserSavedShows';

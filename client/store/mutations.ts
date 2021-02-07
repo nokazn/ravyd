@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { Mutations } from 'typed-vuex';
 
-import { App } from '~~/types';
-import { RootState } from './state';
+import type { App } from '~/entities';
+import type { RootState } from './state';
 
 export type RootMutations = {
   SET_DOMINANT_BACKGROUND_COLOR: App.DominantColor | undefined;

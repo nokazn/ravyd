@@ -1,6 +1,6 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
+import type { SpotifyAPI } from 'shared/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import { SpotifyAPI } from '~~/types';
 import { addItemToPlaylist } from './addItemToPlaylist';
 
 export const replacePlaylistItems = (context: Context) => {

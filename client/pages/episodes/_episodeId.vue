@@ -123,7 +123,7 @@ import Fallback from '~/components/parts/utils/Fallback.vue';
 import { getEpisode } from '~/services/local/_episodeId';
 import { getImageSrc } from '~/services/converter';
 import { elapsedTimeInJapanese } from '~~/utils/elapsedTimeInJapanese';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ARTWORK_SIZE = 220;
 const HEADER_REF = 'HEADER_REF';

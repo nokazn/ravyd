@@ -1,7 +1,7 @@
 import type { Context } from '@nuxt/types';
 
+import type { SpotifyAPI } from 'shared/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { SpotifyAPI } from '~~/types';
 
 export const removePlaylistItems = (context: Context) => {
   const { app } = context;

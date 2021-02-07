@@ -1,5 +1,4 @@
-import { Context } from '@nuxt/types';
-
+import type { Context } from '@nuxt/types';
 import { auth } from './auth';
 
 export const server = (context: Context) => ({

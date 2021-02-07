@@ -3,7 +3,7 @@ import Vue from 'vue';
 
 import { options } from '~/tests/mocks/mount';
 import ContentListSection from './ContentListSection.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const item = (i: number): App.ContentItem<'artist'> => ({
   type: 'artist',

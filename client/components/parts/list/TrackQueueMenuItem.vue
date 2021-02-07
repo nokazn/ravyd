@@ -69,7 +69,7 @@ import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_ITEM_CLICKED = 'on-item-clicked';
 const ON_LINK_CLICKED = 'on-link-clicked';

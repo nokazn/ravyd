@@ -84,7 +84,7 @@ import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import TrackTime from '~/components/parts/text/TrackTime.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import { ON_MEDIA_BUTTON_CLICKED, ON_FAVORITE_BUTTON_CLICKED } from '~/components/parts/list/TrackListItem.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export type On = {
   [ON_MEDIA_BUTTON_CLICKED]:App.TrackDetail;

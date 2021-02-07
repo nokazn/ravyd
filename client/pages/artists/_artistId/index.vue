@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator';
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 import { ExtendedMutationPayload } from 'typed-vuex';
 
 import TrackListSection, { On as OnListSection } from '~/components/parts/section/TrackListSection.vue';
@@ -79,7 +79,7 @@ import {
 } from '~/services/local/_artistId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { convertReleaseForCard } from '~/services/converter';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ABBREVIATED_TOP_TRACK_LENGTH = 5;
 const FULL_TOP_TRACK_LENGTH = 10;

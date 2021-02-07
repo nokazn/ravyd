@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import { OneToHundred, SpotifyAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { OneToHundred, SpotifyAPI } from 'shared/types';
 
 type BrowseAttributes = SpotifyAPI.Browse.MinTrackAttributes
   | SpotifyAPI.Browse.MaxTrackAttributes

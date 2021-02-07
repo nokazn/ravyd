@@ -1,5 +1,5 @@
-import { Context } from '@nuxt/types';
-import { ZeroToHundred } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { ZeroToHundred } from 'shared/types';
 
 export const volume = (context: Context) => {
   const { app } = context;

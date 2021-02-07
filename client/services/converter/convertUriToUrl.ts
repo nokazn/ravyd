@@ -1,4 +1,4 @@
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 // TODO
 type ContextType = 'artist' | 'playlist' | 'album' | 'track' | 'episode' | 'user';

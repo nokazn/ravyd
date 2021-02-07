@@ -60,7 +60,7 @@ import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseTotalTracks from '~/components/parts/text/ReleaseTotalTracks.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
 import ReleaseLabel from '~/components/parts/text/ReleaseLabel.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

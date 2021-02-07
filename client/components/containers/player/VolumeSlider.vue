@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
-import { ZeroToHundred } from '~~/types';
+import type { ZeroToHundred } from 'shared/types';
 
 type VolumeButtonIcon = 'mdi-volume-mute' | 'mdi-volume-low' | 'mdi-volume-medium' | 'mdi-volume-high' | 'mdi-volume-high'
 type VolumeButton = {

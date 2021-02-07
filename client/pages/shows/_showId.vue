@@ -118,6 +118,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
+import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import ExplicitChip from '~/components/parts/chip/ExplicitChip.vue';
 import EpisodeTable from '~/components/containers/table/EpisodeTable.vue';
@@ -131,7 +132,7 @@ import Fallback from '~/components/parts/utils/Fallback.vue';
 
 import { getShow, getIsSaved } from '~/services/local/_showId';
 import { getImageSrc, convertEpisodeDetail } from '~/services/converter';
-import type { App, OneToFifty, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 const ARTWORK_SIZE = 220;
 const LIMIT_OF_EPISODES = 30;

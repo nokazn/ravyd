@@ -1,4 +1,5 @@
-import { App, SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
+import type { App } from '~/entities';
 
 export const convertTrackDetail = <
   T extends SpotifyAPI.Track | SpotifyAPI.SimpleTrack = SpotifyAPI.Track

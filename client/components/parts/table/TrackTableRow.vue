@@ -26,7 +26,7 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import TrackTableRowMobile, { On as OnMobile } from '~/components/parts/table/TrackTableRow.mobile.vue';
 import TrackTableRowPc, { On as OnPc } from '~/components/parts/table/TrackTableRow.pc.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const ON_ROW_CLICKED = 'on-row-clicked';
 export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';

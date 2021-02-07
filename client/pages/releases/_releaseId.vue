@@ -141,9 +141,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-import { Context } from '@nuxt/types';
-import { RootState, ExtendedMutationPayload } from 'typed-vuex';
+import type { Context } from '@nuxt/types';
+import type { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
+import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
@@ -161,7 +162,7 @@ import Fallback from '~/components/parts/utils/Fallback.vue';
 import { getRelease } from '~/services/local/_releaseId';
 import { checkTrackSavedState } from '~/utils/subscriber';
 import { getImageSrc, convertTrackDetail } from '~/services/converter';
-import type { SpotifyAPI, App, OneToFifty } from '~~/types';
+import type { App } from '~/entities';
 
 const HEADER_REF = 'HEADER_REF';
 const LIMIT_OF_TRACKS = 30;

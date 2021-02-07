@@ -1,6 +1,7 @@
 import type { Context } from '@nuxt/types';
+import type { OneToFifty } from 'shared/types';
 import { convertReleaseForCard } from '~/services/converter';
-import type { App, OneToFifty } from '~~/types';
+import type { App } from '~/entities';
 
 export const TITLE_MAP = {
   album: 'アルバム',

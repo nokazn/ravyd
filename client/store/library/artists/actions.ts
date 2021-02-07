@@ -1,8 +1,8 @@
 import type { Actions } from 'typed-vuex';
+import type { OneToFifty, TODO } from 'shared/types';
 import type { LibraryArtistsState } from './state';
 import type { LibraryArtistsGetters } from './getters';
 import type { LibraryArtistsMutations } from './mutations';
-import type { OneToFifty, TODO } from '~~/types';
 
 export type LibraryArtistsActions = {
   getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>

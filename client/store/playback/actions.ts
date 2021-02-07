@@ -1,11 +1,11 @@
 import { Actions } from 'typed-vuex';
 import type { AxiosError } from 'axios';
 
+import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { PlaybackState } from './state';
 import { PlaybackGetters } from './getters';
 import { PlaybackMutations } from './mutations';
 import { REPEAT_STATE_LIST } from '~/constants';
-import type { SpotifyAPI, ZeroToHundred } from '~~/types';
 
 export type PlaybackActions = {
   transferPlayback: (params?: {

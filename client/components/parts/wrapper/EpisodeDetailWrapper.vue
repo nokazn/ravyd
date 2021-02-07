@@ -33,7 +33,7 @@
 import { defineComponent, PropType } from '@vue/composition-api';
 import ReleaseDate from '~/components/parts/text/ReleaseDate.vue';
 import ReleaseDuration from '~/components/parts/text/ReleaseDuration.vue';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

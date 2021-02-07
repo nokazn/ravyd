@@ -1,4 +1,4 @@
-import { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 type CopyrightMap = Record<string, ('C' | 'P')[]>
 

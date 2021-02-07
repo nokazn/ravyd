@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
+import type { SpotifyAPI } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
 import ShowCard from './ShowCard.vue';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import Card from '~/components/parts/card/Card.vue';
-import type { SpotifyAPI } from '~~/types';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 

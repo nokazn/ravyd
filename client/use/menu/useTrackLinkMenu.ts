@@ -1,5 +1,5 @@
-import { SetupContext } from '@vue/composition-api';
-import { App } from '~~/types';
+import type { SetupContext } from '@vue/composition-api';
+import type { App } from '~/entities';
 
 export const useTrackLinkMenu = (
   root: SetupContext['root'],

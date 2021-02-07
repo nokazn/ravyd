@@ -131,7 +131,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
 import Avatar from '~/components/parts/image/Avatar.vue';
@@ -150,7 +150,7 @@ import {
   getRelatedArtistList,
 } from '~/services/local/_artistId';
 import { getImageSrc } from '~/services/converter';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const HEADER_REF = 'HEADER_REF';
 

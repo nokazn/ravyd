@@ -38,10 +38,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import Card from '~/components/parts/card/Card.vue';
 import Avatar, { MediaIcon } from '~/components/parts/image/Avatar.vue';
 import { getImageSrc } from '~/services/converter';
-import { SpotifyAPI, App } from '~~/types';
+import type { App } from '~/entities';
 
 const adjustAvatarSize = (width: number | undefined) => {
   return width != null

@@ -3,7 +3,7 @@ import PlaylistTrackTableRow from './PlaylistTrackTableRow.vue';
 import PlaylistTrackTableRowMobile from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
 import PlaylistTrackTableRowPc from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 

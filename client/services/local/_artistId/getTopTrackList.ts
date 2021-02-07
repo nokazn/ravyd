@@ -1,6 +1,6 @@
 import type { Context } from '@nuxt/types';
 import { convertTrackDetail } from '~/services/converter';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const getTopTrackList = async (
   { app, params }: Context,

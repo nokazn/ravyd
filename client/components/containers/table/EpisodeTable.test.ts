@@ -3,7 +3,7 @@ import { mocks, options } from '~/tests/mocks/mount';
 import EpisodeTable from './EpisodeTable.vue';
 import EpisodeTableRow from '~/components/parts/table/EpisodeTableRow.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
+import { SpotifyAPI } from 'shared/types';
 import { SPOTIFY_TOKEN_BASE_URL } from '../config/constants';
-import { SpotifyAPI } from '~~/types';
 
 export const getAccessToken = (
   code: string,

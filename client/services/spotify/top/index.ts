@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 
 import { getTopArtists } from './getTopArtists';
 import { getTopTracks } from './getTopTracks';

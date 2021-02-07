@@ -1,6 +1,6 @@
-import { Context } from '@nuxt/types';
-import { AxiosError } from 'axios';
-import { ServerAPI } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { AxiosError } from 'axios';
+import type { ServerAPI } from 'shared/types';
 
 export const root = (context: Context) => {
   const { app } = context;

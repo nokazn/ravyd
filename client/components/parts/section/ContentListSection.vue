@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api';
 import ContentListItem from '~/components/parts/list/ContentListItem.vue';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

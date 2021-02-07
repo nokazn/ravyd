@@ -58,7 +58,7 @@ import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import Avatar from '~/components/parts/image/Avatar.vue';
 import ArtistNames from '~/components/parts/text/ArtistNames.vue';
 import { getImageSrc } from '~/services/converter';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 

@@ -22,7 +22,7 @@ import {
   useRemovePlaylistItemMenu,
   useShareMenu,
 } from '~/use/menu';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

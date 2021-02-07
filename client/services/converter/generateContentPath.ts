@@ -1,5 +1,5 @@
 import { RawLocation } from 'vue-router';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const generateContentPath = (
   type: App.ContentItemType,

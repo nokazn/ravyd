@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { NuxtError } from '@nuxt/types';
+import type { NuxtError } from '@nuxt/types';
 
 type Data = {
   errorMessage: string

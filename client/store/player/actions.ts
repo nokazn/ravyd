@@ -1,11 +1,11 @@
 import type { AxiosError } from 'axios';
 import { Actions } from 'typed-vuex';
 
+import type { ServerAPI } from 'shared/types';
 import { PlayerState } from './state';
 import { PlayerGetters } from './getters';
 import { PlayerMutations } from './mutations';
 import { APP_NAME } from '~/constants';
-import { ServerAPI } from '~~/types';
 
 export type PlayerActions = {
   initPlayer: () => void

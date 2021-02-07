@@ -160,6 +160,7 @@
 import { Vue, Component } from 'nuxt-property-decorator';
 import { RootState, ExtendedMutationPayload } from 'typed-vuex';
 
+import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import UserName from '~/components/parts/text/UserName.vue';
@@ -180,7 +181,7 @@ import {
 } from '~/services/local/_playlistId';
 import { convertPlaylistTrackDetail, getImageSrc } from '~/services/converter';
 import { checkTrackSavedState } from '~/utils/subscriber';
-import type { App, OneToFifty, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 const LIMIT_OF_TRACKS = 30;
 const HEADER_REF = 'HEADER_REF';

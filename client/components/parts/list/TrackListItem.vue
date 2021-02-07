@@ -28,7 +28,7 @@ import TrackListItemMobile, { On as OnMobile } from '~/components/parts/list/Tra
 import TrackListItemPc, { On as OnPc } from '~/components/parts/list/TrackListItem.pc.vue';
 import { getImageSrc } from '~/services/converter';
 import { textColorClass, subtextColorClass } from '~/utils/text';
-import { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 export const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';

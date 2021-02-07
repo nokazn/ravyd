@@ -1,10 +1,12 @@
 import { Getters } from 'typed-vuex';
 
+import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { PlaybackState } from './state';
 import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import { getImageSrc, convertTrackForQueue, convertUriToId } from '~/services/converter';
 import { getExternalUrlFromUri } from '~~/utils/getExternalUrlFromUri';
-import { SpotifyAPI, App, ZeroToHundred } from '~~/types';
+import type { App } from '~/entities';
+
 
 export type PlaybackGetters = {
   activeDevice: SpotifyAPI.Device | undefined

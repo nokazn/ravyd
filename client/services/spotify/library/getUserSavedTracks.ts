@@ -1,9 +1,6 @@
-import { Context } from '@nuxt/types';
-import { SpotifyAPI, OneToFifty } from '~~/types';
+import type { Context } from '@nuxt/types';
+import type { SpotifyAPI, OneToFifty } from 'shared/types';
 
-/**
- * limit は 1~50 までで指定できる
- */
 export const getUserSavedTracks = (context: Context) => {
   const { app } = context;
 

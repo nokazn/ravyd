@@ -1,4 +1,4 @@
-import { OneToHundred } from '~~/types';
+import type { OneToHundred } from 'shared/types';
 
 export const multipleRequestsWithId = <T>(
   request: (ids: string, length: number) => Promise<T>,

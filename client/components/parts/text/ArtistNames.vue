@@ -53,9 +53,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import Avatar from '~/components/parts/image/Avatar.vue';
 import { getImageSrc } from '~/services/converter';
-import type { App, SpotifyAPI } from '~~/types';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 

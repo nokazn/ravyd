@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
+import type { SpotifyAPI } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
 import ShuffleButton from './ShuffleButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
-import { SpotifyAPI } from '~~/types';
 
 const CLICK = 'click';
 

@@ -1,5 +1,5 @@
 import type { Context } from '@nuxt/types';
-import type { OneToFifty, SpotifyAPI } from '~~/types';
+import type { OneToFifty, SpotifyAPI } from 'shared/types';
 
 export type UserPlaylists = {
   items: SpotifyAPI.SimplePlaylist[];

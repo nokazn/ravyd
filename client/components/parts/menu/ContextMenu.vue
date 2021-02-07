@@ -88,7 +88,7 @@ import {
   watch,
   PropType,
 } from '@vue/composition-api';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   props: {

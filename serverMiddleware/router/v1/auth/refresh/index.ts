@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
+import { SpotifyAPI, ServerAPI } from 'shared/types';
 import { refreshAccessToken } from '../../../../helper/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../../../config/constants';
-import { SpotifyAPI, ServerAPI } from '~~/types';
 
 type ReqestBody = {
   accessToken: string;

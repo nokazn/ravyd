@@ -51,9 +51,10 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import type { SpotifyAPI } from 'shared/types';
 import OptionMenu from '~/components/parts/menu/OptionMenu.vue';
 import ChildOptionMenuActivator from '~/components/parts/menu/ChildOptionMenuActivator.vue';
-import type { SpotifyAPI, App } from '~~/types';
+import type { App } from '~/entities';
 
 export default defineComponent({
   components: {

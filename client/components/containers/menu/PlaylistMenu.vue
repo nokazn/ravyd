@@ -22,7 +22,7 @@ import {
 import ContextMenu from '~/components/parts/menu/ContextMenu.vue';
 import { useShareMenu } from '~/use/menu';
 import { generateCopiedName } from '~~/utils/generateCopiedName';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 const ON_EDIT_MENU_CLICKED = 'on-edit-menu-clicked';

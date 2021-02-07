@@ -31,8 +31,8 @@ import {
   PropType,
 } from '@vue/composition-api';
 import { RawLocation } from 'vue-router';
+import type { SpotifyAPI } from 'shared/types';
 import { useMarqueeText } from '~/use/style';
-import { SpotifyAPI } from '~~/types';
 
 export default defineComponent({
   props: {

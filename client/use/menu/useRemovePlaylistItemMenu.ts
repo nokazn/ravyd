@@ -1,5 +1,5 @@
 import type { SetupContext } from '@vue/composition-api';
-import type { App } from '~~/types';
+import type { App } from '~/entities';
 
 export const useRemovePlaylistItemMenu = (
   root: SetupContext['root'],

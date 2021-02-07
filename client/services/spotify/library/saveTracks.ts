@@ -1,4 +1,4 @@
-import { Context } from '@nuxt/types';
+import type { Context } from '@nuxt/types';
 import { multipleRequestsWithId } from '~/utils/request';
 
 export const saveTracks = (context: Context) => {
