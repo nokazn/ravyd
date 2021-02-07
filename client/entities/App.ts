@@ -1,7 +1,7 @@
 import type { Swatch } from 'node-vibrant/lib/color';
 import type { VueConstructor } from 'vue';
 import type { RawLocation } from 'vue-router';
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 export namespace App {
   export type DominantColor = {

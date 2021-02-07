@@ -1,4 +1,4 @@
-import { Merge, ZeroToHundred } from '~~/types/utility-types';
+import { Merge, ZeroToHundred } from 'shared/types';
 
 export namespace SpotifyAPI {
   export namespace Auth {

@@ -1,6 +1,6 @@
 import { Store, SubscribeOptions } from 'vuex';
 import { Context } from '@nuxt/types';
-import type { ActionMethodMap } from '~~/types';
+import type { ActionMethodMap } from 'shared/types';
 
 /**
  * 公式の型定義の拡張
