@@ -22,9 +22,9 @@
     "build": "nuxt-ts build",
     "build:analyze": "nuxt-ts build --analyze",
     "dev": "nuxt-ts",
-    "dev:server": "cross-env TS_NODE_PROJECT=./server/tsconfig.json ts-node-dev -r ./server/pre-start -P ./server/tsconfig.json --respawn --files ./server/app",
+    "dev:server": "cross-env TS_NODE_PROJECT=./server/tsconfig.json ts-node-dev -P ./server/tsconfig.json --respawn --files ./server/app",
     "start": "nuxt-ts start",
-    "start:server": "ts-node -r ./server/pre-start -P ./server/tsconfig.json --files ./server/app",
+    "start:server": "ts-node -P ./server/tsconfig.json --files ./server/app",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"

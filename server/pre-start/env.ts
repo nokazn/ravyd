@@ -1,7 +1,7 @@
 import path from 'path';
 import { path as ROOT_PATH } from 'app-root-path';
 import dotenv from 'dotenv';
-// 他のモジュールを先に読み込まないようにする
+// 他のモジュールを先に読み込まないよう直接 import する
 import { logger } from '@/helper/logger';
 
 // 候補の配列の内すべての要素が process.env に存在するものがあればチェックを通す
