@@ -38,7 +38,8 @@
     "~": "client",
     "~~": ".",
     "@": "server",
-    "@@": "."
+    "@@": ".",
+    "shared": "shared"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",

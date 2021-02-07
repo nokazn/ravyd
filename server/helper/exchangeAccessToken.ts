@@ -7,7 +7,7 @@ import {
   SPOTIFY_CLIENT_SECRET,
 } from '@/config/constants';
 import { logger } from '@/helper/logger';
-import type { SpotifyAPI } from '~~/types';
+import type { SpotifyAPI } from 'shared/types';
 
 export const exchangeAccessToken = (
   code: string,

@@ -3,7 +3,7 @@ import httpStatusCodes from 'http-status-codes';
 
 import { upsertToken, exchangeAccessToken, logger } from '@/helper';
 import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, AUTH_STATE_COOKIE_KEY } from '@/config/constants';
-import type { paths } from '~~/shared/types';
+import type { paths } from 'shared/types';
 
 type Path = paths['/auth/login/callback']['get']
 type RequestQuery = Path['parameters']['query']

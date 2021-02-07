@@ -3,7 +3,7 @@ import httpStatusCodes from 'http-status-codes';
 
 import { upsertToken, refreshAccessToken, logger } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
-import type { paths } from '~~/shared/types';
+import type { paths } from 'shared/types';
 
 type Path = paths['/auth']['get']
 type ResponseBody = Path['responses'][200]['content']['application/json']

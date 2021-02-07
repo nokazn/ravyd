@@ -1,8 +1,5 @@
 import { Merge, ZeroToHundred } from '~~/types/utility-types';
 
-/**
- * @deprecated
- */
 export namespace SpotifyAPI {
   export namespace Auth {
     export type Token = {

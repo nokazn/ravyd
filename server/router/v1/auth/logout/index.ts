@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 import { logger } from '@/helper';
-import type { paths } from '~~/shared/types';
+import type { paths } from 'shared/types';
 
 type Path = paths['/auth/logout']['post'];
 type ResponseBody = Path['responses'][204 | 500]['content']['application/json']

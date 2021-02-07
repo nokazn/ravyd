@@ -9,8 +9,8 @@ import {
   CSRF_STATE_COOKIE_KEY,
   SPOTIFY_AUTHORIZE_BASE_URL,
 } from '@/config/constants';
-import { createUrl } from '~~/shared/utils/createUrl';
-import type { paths } from '~~/shared/types';
+import { createUrl } from 'shared/utils/createUrl';
+import type { paths } from 'shared/types';
 
 type Path = paths['/auth/login']['post']
 type ResponseBody = Path['responses'][200]['content']['application/json'];

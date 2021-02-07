@@ -1,6 +1,6 @@
 import { v4 as uuid4, v5 as uuid5 } from 'uuid';
 import type { Request } from 'express';
-import { SpotifyAPI } from '~~/types';
+import { SpotifyAPI } from 'shared/types';
 
 type Params = {
   authState: string;
