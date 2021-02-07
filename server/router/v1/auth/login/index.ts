@@ -60,7 +60,7 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     'user-follow-read',
     'user-follow-modify',
   ].join(' ');
-  const url = createUrl(SPOTIFY_AUTHORIZE_BASE_URL, {
+  const url = createUrl(`${SPOTIFY_AUTHORIZE_BASE_URL}/authorize`, {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: 'code',
     redirect_uri: `${BASE_ORIGIN}/login/callback`,

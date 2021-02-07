@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import {
   BASE_ORIGIN,
-  SPOTIFY_TOKEN_BASE_URL,
+  SPOTIFY_AUTHORIZE_BASE_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
 } from '@/config/constants';
@@ -19,7 +19,8 @@ export const exchangeAccessToken = (
     redirect_uri: `${BASE_ORIGIN}/login/callback`,
   };
 
-  return axios.post(SPOTIFY_TOKEN_BASE_URL, undefined, {
+  // TODO: クライアントはまとめる
+  return axios.post(`${SPOTIFY_AUTHORIZE_BASE_URL}/api/token`, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

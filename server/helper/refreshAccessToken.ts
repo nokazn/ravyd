@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { SPOTIFY_TOKEN_BASE_URL, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/config/constants';
+import { SPOTIFY_AUTHORIZE_BASE_URL, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/config/constants';
 import { logger } from 'shared/logger';
 import type { SpotifyAPI } from 'shared/types';
 
@@ -15,7 +15,8 @@ export const refreshAccessToken = (
     grant_type: 'refresh_token',
     refresh_token,
   };
-  return axios.post(SPOTIFY_TOKEN_BASE_URL, undefined, {
+  // TODO: クライアントはまとめる
+  return axios.post(`${SPOTIFY_AUTHORIZE_BASE_URL}/api/token`, undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
