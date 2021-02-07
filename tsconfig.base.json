@@ -33,16 +33,16 @@
     "baseUrl": "./",
     "paths": {
       "~/*": [
-        "./client/*"
-      ],
-      "@/*": [
-        "./server/*"
+        "client/*"
       ],
       "~~/*": [
         "./*"
       ],
-      "@@/*": [
-        "./*"
+      "@/*": [
+        "server/*"
+      ],
+      "shared/*": [
+        "shared/*"
       ],
       "typed-vuex": [
         "./types/typed-vuex/index.d.ts"
@@ -53,22 +53,7 @@
     },
     // "rootDirs": [],
     // "typeRoots": [],
-    "types": [
-      "@types/node",
-      "@nuxt/types",
-      "@types/connect-redis",
-      "@types/cookie-parser",
-      "@types/express",
-      "@types/express-session",
-      "@types/ioredis",
-      "@types/jest",
-      "@types/lodash",
-      "@types/lodash-webpack-plugin",
-      "@types/resize-observer-browser",
-      "@types/spotify-web-playback-sdk",
-      "@types/wicg-mediasession",
-      "vuetify",
-  ],
+  //   "types": [],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     // "preserveSymlinks": true,
