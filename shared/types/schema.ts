@@ -16,7 +16,7 @@ export interface paths {
         200: {
           content: {
             'application/json': components['schemas']['AccessToken'] & {
-              authenticated?: boolean;
+              authenticated: boolean;
             };
           };
         };
@@ -35,7 +35,7 @@ export interface paths {
         200: {
           content: {
             'application/json': components['schemas']['AccessToken'] & {
-              authenticated?: boolean;
+              authenticated: boolean;
               url: string | null;
             };
           };
@@ -128,14 +128,15 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            access_token?: string;
+            accessToken: string;
+            authState: string;
           };
         };
       };
     };
   };
   '/auth/logout': {
-    delete: {
+    post: {
       parameters: {
         cookie: {
           /** Session ID */
@@ -146,7 +147,14 @@ export interface paths {
         /** Log out successfully. */
         204: never;
         /** Internal server error */
-        500: unknown;
+        500: {
+          content: {
+            'application/json': {
+              code: string;
+              message: string;
+            };
+          };
+        };
       };
     };
   };
@@ -157,7 +165,7 @@ export interface components {
     AccessToken: {
       code: string;
       message?: string;
-      accessTokenKey: string | null;
+      authState: string | null;
       accessToken: string | null;
       expireIn: number;
     };

@@ -10,6 +10,10 @@ export namespace SpotifyAPI {
       refresh_token?: string
     }
 
+    export type InitialToken = Token & {
+      refresh_token: string
+    }
+
     export namespace GetToken {
       export type Params = {
         grant_type: 'authorization_code'

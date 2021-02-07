@@ -23,6 +23,6 @@ export const session = sessionMiddleware({
     // 同一オリジンでのみ Cookie を送信
     sameSite: 'strict',
     // 1年間
-    maxAge: 1000 * 60 * 60 * 24 * 365,
+    maxAge: 60 * 24 * 60 * 60 * 1000,
   },
 });

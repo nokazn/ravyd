@@ -12,6 +12,6 @@ router.get('/auth', auth);
 router.post('/auth/login', login);
 router.get('/auth/login/callback', callback);
 router.put('/auth/refresh', refresh);
-router.delete('/auth/logout', logout);
+router.post('/auth/logout', logout);
 
 export default router;

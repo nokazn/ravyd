@@ -32,7 +32,7 @@ components:
           type: string
         message:
           type: string
-        accessTokenKey:
+        authState:
           type: string
           nullable: true
         accessToken:
@@ -43,7 +43,7 @@ components:
           minimum: 0
       required:
         - code
-        - accessTokenKey
+        - authState
         - accessToken
         - expireIn
 
@@ -66,7 +66,8 @@ paths:
                     properties:
                       authenticated:
                         type: boolean
-
+                    required:
+                      - authenticated
 
   /auth/login:
     post:
@@ -89,6 +90,7 @@ paths:
                         type: string
                         nullable: true
                     required:
+                      - authenticated
                       - url
 
   /auth/login/callback:
@@ -151,8 +153,13 @@ paths:
               schema:
                 type: object
                 properties:
-                  access_token:
+                  accessToken:
                     type: string
+                  authState:
+                    type: string
+                required:
+                  - accessToken
+                  - authState
       responses:
         200:
           description: Update an access token successfully.
@@ -186,7 +193,7 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
 
   /auth/logout:
-    delete:
+    post:
       summary: Delete access token & refresh token in session.
       parameters:
         - $ref: '#/components/parameters/SessionId'
@@ -195,3 +202,15 @@ paths:
           description: Log out successfully.
         500:
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message

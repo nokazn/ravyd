@@ -1,14 +1,23 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 import { logger } from '@/helper';
+import type { paths } from '~~/shared/types';
 
-const { BAD_REQUEST, NO_CONTENT } = httpStatusCodes;
+type Path = paths['/auth/logout']['post'];
+type ResponseBody = Path['responses'][204 | 500]['content']['application/json']
 
-export const logout = (req: Request, res: Response) => {
-  return req.session.destroy((err: Error) => {
+const { INTERNAL_SERVER_ERROR, NO_CONTENT } = httpStatusCodes;
+
+export const logout = (req: Request, res: Response<ResponseBody>) => {
+  return req.session.destroy((err: Error | undefined) => {
     if (err != null) {
-      logger.error({ err });
-      return res.status(BAD_REQUEST).send();
+      const code = 'INTERNAL_SERVER_ERROR';
+      const message = 'Failed to log out.';
+      logger.error(code, message, { err });
+      return res.status(INTERNAL_SERVER_ERROR).send({
+        code,
+        message,
+      });
     }
 
     return res.status(NO_CONTENT).send();

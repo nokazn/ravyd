@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import crypto from 'crypto';
-import httpStatusCodes from 'http-status-codes';
 
-import { refreshAccessToken, logger } from '@/helper';
+import { upsertToken, refreshAccessToken, logger } from '@/helper';
 import {
   BASE_ORIGIN,
   SPOTIFY_CLIENT_ID,
@@ -11,44 +10,36 @@ import {
   SPOTIFY_AUTHORIZE_BASE_URL,
 } from '@/config/constants';
 import { createUrl } from '~~/shared/utils/createUrl';
-import { SpotifyAPI, ServerAPI } from '~~/types';
+import type { paths } from '~~/shared/types';
 
-type ResponseBody = ServerAPI.Auth.Login
-
-const { BAD_REQUEST } = httpStatusCodes;
+type Path = paths['/auth/login']['post']
+type ResponseBody = Path['responses'][200]['content']['application/json'];
 
 export const login = async (req: Request, res: Response<ResponseBody>) => {
-  const currentToken: SpotifyAPI.Auth.Token | undefined = req.session?.token;
+  const { refreshToken } = req.session;
   // リフレッシュトークンが存在していた場合はそれを更新
-  if (currentToken?.refresh_token != null) {
-    const token = await refreshAccessToken(currentToken.refresh_token);
-    if (token == null) {
-      logger.error({
-        session: req.session,
-        currentToken,
-        token,
-      });
-
-      return res.status(BAD_REQUEST).send({
-        accessToken: undefined,
-        expireIn: 0,
-        message: 'トークンを更新できませんでした。',
+  if (refreshToken != null) {
+    const token = await refreshAccessToken(refreshToken);
+    if (token != null) {
+      const authState = upsertToken(req, token, { refreshToken });
+      return res.send({
+        code: 'OK',
+        message: 'Current refresh token is valid.',
+        authenticated: true,
+        authState,
+        accessToken: token.access_token,
+        expireIn: TOKEN_EXPIRE_IN,
+        url: null,
       });
     }
-
-    req.session.token = {
-      ...currentToken,
-      ...token,
-    };
-
-    return res.send({
-      accessToken: token.access_token,
-      expireIn: TOKEN_EXPIRE_IN,
+    logger.warn('Failed to update an access token when logging in. Need to authorize to Spotify again.', {
+      session: req.session,
+      token,
     });
   }
 
-  // 認可用のページの URL を返す
-  const csrfState = crypto.randomBytes(100).toString('base64');
+  // TODO:
+  const state = crypto.randomBytes(100).toString('base64');
   const scope = [
     'user-read-private',
     'user-read-email',
@@ -72,16 +63,22 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: 'code',
     redirect_uri: `${BASE_ORIGIN}/login/callback`,
-    state: csrfState,
+    state,
     scope,
   });
 
-  res.cookie(CSRF_STATE_COOKIE_KEY, csrfState, {
+  return res
+    .cookie(CSRF_STATE_COOKIE_KEY, state, {
     // 5分間有効
-    maxAge: 5 * 60 * 1000,
-    httpOnly: true,
-    secure: true,
-  });
-
-  return res.send({ url });
+      maxAge: 5 * 60 * 1000,
+    })
+    .send({
+      code: 'OK',
+      authenticated: false,
+      message: 'Needs to authorize with Spotify.',
+      authState: null,
+      accessToken: null,
+      expireIn: 0,
+      url,
+    });
 };

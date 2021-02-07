@@ -11,7 +11,7 @@ import type { SpotifyAPI } from '~~/types';
 
 export const exchangeAccessToken = (
   code: string,
-): Promise<SpotifyAPI.Auth.Token | undefined> => {
+): Promise<SpotifyAPI.Auth.InitialToken | undefined> => {
   const params: SpotifyAPI.Auth.GetToken.Params = {
     grant_type: 'authorization_code',
     code,

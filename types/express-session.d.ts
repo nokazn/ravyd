@@ -2,6 +2,12 @@ import { SpotifyAPI } from '~~/types';
 
 declare module 'express-session' {
     interface SessionData {
-        token: SpotifyAPI.Auth.Token;
+        /**
+         * TODO: あとで削除する
+         * @deprecated
+         */
+        token?: SpotifyAPI.Auth.Token;
+        refreshToken?: SpotifyAPI.Auth.InitialToken['refresh_token'];
+        tokens?: Record<string, SpotifyAPI.Auth.Token>;
     }
 }
