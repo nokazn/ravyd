@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 
-import { upsertToken, exchangeAccessToken, logger } from '@/helper';
+import { upsertToken, exchangeAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, AUTH_STATE_COOKIE_KEY } from '@/config/constants';
+import { logger } from 'shared/logger';
 import type { paths } from 'shared/types';
 
 type Path = paths['/auth/login/callback']['get']

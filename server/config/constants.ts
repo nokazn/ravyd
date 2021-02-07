@@ -1,6 +1,7 @@
 export const {
   BASE_ORIGIN,
   PORT,
+  REDIS_URL,
   REDIS_PORT,
   REDIS_PASSWORD,
   SESSION_SECRET,

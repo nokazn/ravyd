@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import crypto from 'crypto';
 
-import { upsertToken, refreshAccessToken, logger } from '@/helper';
+import { upsertToken, refreshAccessToken } from '@/helper';
 import {
   BASE_ORIGIN,
   SPOTIFY_CLIENT_ID,
@@ -10,6 +10,7 @@ import {
   SPOTIFY_AUTHORIZE_BASE_URL,
 } from '@/config/constants';
 import { createUrl } from 'shared/utils/createUrl';
+import { logger } from 'shared/logger';
 import type { paths } from 'shared/types';
 
 type Path = paths['/auth/login']['post']

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
-import { logger } from '@/helper';
+import { logger } from 'shared/logger';
 import type { paths } from 'shared/types';
 
 type Path = paths['/auth/logout']['post'];

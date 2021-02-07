@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 
-import { upsertToken, refreshAccessToken, logger } from '@/helper';
+import { upsertToken, refreshAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
+import { logger } from 'shared/logger';
 import type { paths } from 'shared/types';
 
 type Path = paths['/auth']['get']

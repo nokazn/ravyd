@@ -1,34 +1,24 @@
 import Redis from 'ioredis';
-import dotenv from 'dotenv';
+import { REDIS_URL, REDIS_PORT, REDIS_PASSWORD } from '@/config/constants';
+import { logger } from 'shared/logger';
 
-dotenv.config();
-
-const host = process.env.REDIS_URL;
-const port = process.env.REDIS_PORT;
-const password = process.env.REDIS_PASSWORD;
-
-if (host == null) {
-  console.error({
-    host,
-    port,
-    password: password ? 'Password is set' : 'Password is not set.',
-  });
-  throw new Error('An environment variable "REDIS_URL" is not set.');
-}
-
-const client = new Redis(host, {
-  port: port != null
-    ? parseInt(port, 10)
+const client = new Redis(REDIS_URL, {
+  port: REDIS_PORT != null
+    ? parseInt(REDIS_PORT, 10)
     : undefined,
-  password,
+  password: REDIS_PASSWORD,
 });
 
 client.on('connect', () => {
-  console.info('Redis client has connected. 🎉\n');
+  logger.info('✅ Redis client has connected.\n');
 });
 
 client.on('error', (err: Error) => {
-  console.error('Redis client could not connect.', err);
+  logger.error('❌ Redis client could not connect.', err, {
+    REDIS_URL,
+    REDIS_PORT,
+    password: REDIS_PASSWORD ? 'Password is set' : 'Password is not set.',
+  });
 });
 
 export default client;

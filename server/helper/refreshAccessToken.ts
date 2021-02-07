@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import { logger } from '@/helper/logger';
 import { SPOTIFY_TOKEN_BASE_URL, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/config/constants';
-import { SpotifyAPI } from 'shared/types';
+import { logger } from 'shared/logger';
+import type { SpotifyAPI } from 'shared/types';
 
 export const refreshAccessToken = (
   refresh_token: string | undefined,

@@ -5,7 +5,7 @@ import express from 'express';
 import helmet from 'helmet';
 
 import { cookieParser, session } from '@/middleware';
-import { logger } from '@/helper';
+import { logger } from 'shared/logger';
 import router from '@/router/v1';
 import { PORT } from '@/config/constants';
 
