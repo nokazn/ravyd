@@ -15,9 +15,15 @@ export interface paths {
       responses: {
         200: {
           content: {
-            'application/json': components['schemas']['AccessToken'] & {
-              authenticated: boolean;
-            };
+            'application/json': components['schemas']['Status'] &
+              (
+                | (components['schemas']['AccessToken'] & {
+                    authenticated: true;
+                  })
+                | (components['schemas']['EmptyAccessToken'] & {
+                    authenticated: false;
+                  })
+              );
           };
         };
       };
@@ -34,10 +40,17 @@ export interface paths {
       responses: {
         200: {
           content: {
-            'application/json': components['schemas']['AccessToken'] & {
-              authenticated: boolean;
-              url: string | null;
-            };
+            'application/json': components['schemas']['Status'] &
+              (
+                | (components['schemas']['AccessToken'] & {
+                    authenticated: true;
+                    url: null;
+                  })
+                | (components['schemas']['EmptyAccessToken'] & {
+                    authenticated: false;
+                    url: string | null;
+                  })
+              );
           };
         };
       };
@@ -61,25 +74,29 @@ export interface paths {
         /** Obtain an access token successfully. */
         200: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['AccessToken'];
           };
         };
         /** Fail to obtain an access token mainly caused by incorrect code or state in query parameters. */
         400: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
         /** Fail to obtain an access token especially caused by not matching between state in cookie and in query parameters. */
         403: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
         /** Internal server error */
         500: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
       };
@@ -97,31 +114,36 @@ export interface paths {
         /** Update an access token successfully. */
         200: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['AccessToken'];
           };
         };
         /** Failure mainly caused by invalid request body. */
         400: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
         /** Failure mainly caused by no refresh token in session or no correspond access_token_key in session. */
         403: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
         /** Failure mainly caused by conflicting on refreshing. */
         409: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
         /** Internal server error */
         500: {
           content: {
-            'application/json': components['schemas']['AccessToken'];
+            'application/json': components['schemas']['Status'] &
+              components['schemas']['EmptyAccessToken'];
           };
         };
       };
@@ -149,10 +171,7 @@ export interface paths {
         /** Internal server error */
         500: {
           content: {
-            'application/json': {
-              code: string;
-              message: string;
-            };
+            'application/json': components['schemas']['Status'];
           };
         };
       };
@@ -162,12 +181,19 @@ export interface paths {
 
 export interface components {
   schemas: {
-    AccessToken: {
+    Status: {
       code: string;
-      message?: string;
-      authState: string | null;
-      accessToken: string | null;
+      message: string;
+    };
+    AccessToken: {
+      authState: string;
+      accessToken: string;
       expireIn: number;
+    };
+    EmptyAccessToken: {
+      authState: string | null;
+      accessToken: null;
+      expireIn: 0;
     };
   };
   parameters: {

@@ -17,10 +17,12 @@ export default Vue.extend({
     const code = getQuery(query, 'code');
     const state = getQuery(query, 'state');
     if (code != null && state != null) {
-      await app.$dispatch('auth/exchangeCodeToAccessToken', {
+      await app.$dispatch('auth/exchangeCodeWithAccessToken', {
         code,
         state,
       });
+    } else {
+      // TODO:
     }
 
     redirect('/');

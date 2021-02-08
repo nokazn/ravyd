@@ -24,29 +24,52 @@ components:
       description: Session ID
 
   schemas:
-    AccessToken:
+    Status:
       type: object
       properties:
-
         code:
           type: string
         message:
           type: string
+      required:
+        - code
+        - message
+
+    AccessToken:
+      type: object
+      properties:
+        authState:
+          type: string
+        accessToken:
+          type: string
+          nullable: false
+        expireIn:
+          type: integer
+          minimum: 0
+      required:
+        - authState
+        - accessToken
+        - expireIn
+
+    EmptyAccessToken:
+      type: object
+      properties:
         authState:
           type: string
           nullable: true
         accessToken:
           type: string
-          nullable: true
+          enum:
+            - null
         expireIn:
           type: integer
           minimum: 0
+          enum:
+            - 0
       required:
-        - code
         - authState
         - accessToken
         - expireIn
-
 
 paths:
   /auth:
@@ -61,13 +84,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/AccessToken'
-                  - type: object
-                    properties:
-                      authenticated:
-                        type: boolean
-                    required:
-                      - authenticated
+                  - $ref: '#/components/schemas/Status'
+                  - oneOf:
+                    - allOf:
+                      - $ref: '#/components/schemas/AccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - true
+                        required:
+                          - authenticated
+                    - allOf:
+                      - $ref: '#/components/schemas/EmptyAccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - false
+                        required:
+                          - authenticated
 
   /auth/login:
     post:
@@ -81,17 +119,37 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/AccessToken'
-                  - type: object
-                    properties:
-                      authenticated:
-                        type: boolean
-                      url:
-                        type: string
-                        nullable: true
-                    required:
-                      - authenticated
-                      - url
+                  - $ref: '#/components/schemas/Status'
+                  - oneOf:
+                    - allOf:
+                      - $ref: '#/components/schemas/AccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - true
+                          url:
+                            type: string
+                            enum:
+                              - null
+                        required:
+                          - authenticated
+                          - url
+                    - allOf:
+                      - $ref: '#/components/schemas/EmptyAccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - false
+                          url:
+                            type: string
+                            nullable: true
+                        required:
+                          - authenticated
+                          - url
 
   /auth/login/callback:
     get:
@@ -121,25 +179,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/AccessToken'
         400:
           description: Fail to obtain an access token mainly caused by incorrect code or state in query parameters.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
         403:
           description: Fail to obtain an access token especially caused by not matching between state in cookie and in query parameters.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
         500:
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
 
   /auth/refresh:
     put:
@@ -166,31 +232,41 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/AccessToken'
         400:
           description: Failure mainly caused by invalid request body.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
         403:
           description: Failure mainly caused by no refresh token in session or no correspond access_token_key in session.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
         409:
           description: Failure mainly caused by conflicting on refreshing.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
         500:
           description: 'Internal server error'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
 
   /auth/logout:
     post:
@@ -205,12 +281,4 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: string
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
+                $ref: '#/components/schemas/Status'

@@ -10,7 +10,7 @@ export const refresh = (context: Context) => {
   const { app } = context;
 
   return ({ accessToken, authState }: RequestBody): Promise<Response> => {
-    return app.$serverApi.$post<Response, RequestBody>('/auth/refresh', {
+    return app.$serverApi.$put<Response, RequestBody>('/auth/refresh', {
       accessToken,
       authState,
     })

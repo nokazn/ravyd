@@ -8,7 +8,7 @@ import type { AuthMutations } from './mutations';
 
 export type AuthActions = {
   login: () => Promise<void>
-  exchangeCodeToAccessToken: (params: {
+  exchangeCodeWithAccessToken: (params: {
     code: string;
     state: string;
   }) => Promise<void>
@@ -50,7 +50,7 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     this.$toast.pushError('トークン取得時にエラーが発生し、ログインできません。');
   },
 
-  async exchangeCodeToAccessToken({ commit }, { code, state }) {
+  async exchangeCodeWithAccessToken({ commit }, { code, state }) {
     const { accessToken, expireIn } = await this.$server.auth.callback({
       code,
       state,
