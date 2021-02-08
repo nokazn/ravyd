@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { ServerAPI } from 'shared/types';
+import { ServerAPI } from '../../../../../shared/types';
 import { getAccessToken } from '../../../../helper/getAccessToken';
 import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY } from '../../../../config/constants';
 

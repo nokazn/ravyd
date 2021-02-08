@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { SpotifyAPI } from 'shared/types';
+import { SpotifyAPI } from '../../shared/types';
 import { SPOTIFY_TOKEN_BASE_URL } from '../config/constants';
 
 export const refreshAccessToken = (

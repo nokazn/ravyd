@@ -1,7 +1,8 @@
 import axios from 'axios';
+import urljoin from 'url-join';
 
 import {
-  BASE_ORIGIN,
+  CLIENT_ORIGIN,
   SPOTIFY_AUTHORIZE_BASE_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
@@ -16,11 +17,11 @@ export const exchangeAccessToken = (
     grant_type: 'authorization_code',
     code,
     // validation のためのもので実際にレダイレクトされるわけではない
-    redirect_uri: `${BASE_ORIGIN}/login/callback`,
+    redirect_uri: urljoin(CLIENT_ORIGIN, '/login/callback'),
   };
 
   // TODO: クライアントはまとめる
-  return axios.post(`${SPOTIFY_AUTHORIZE_BASE_URL}/api/token`, undefined, {
+  return axios.post(urljoin(SPOTIFY_AUTHORIZE_BASE_URL, '/api/token'), undefined, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

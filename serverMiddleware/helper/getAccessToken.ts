@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-import { SpotifyAPI } from 'shared/types';
+import { SpotifyAPI } from '../../shared/types';
 import { SPOTIFY_TOKEN_BASE_URL } from '../config/constants';
 
 export const getAccessToken = (
   code: string,
 ): Promise<SpotifyAPI.Auth.Token> | undefined => {
-  const REDIRECT_URL = process.env.BASE_URL;
+  const REDIRECT_URL = process.env.CLIENT_ORIGIN;
   const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
   const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
   if (REDIRECT_URL == null || CLIENT_ID == null || CLIENT_SECRET == null) {

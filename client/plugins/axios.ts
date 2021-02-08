@@ -2,8 +2,9 @@
 import https from 'https';
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
+import urljoin from 'url-join';
 
-import { SPOTIFY_API_URL } from '~/constants';
+import { CLIENT_ORIGIN, SPOTIFY_API_URL } from '~/constants';
 
 const injector: Plugin = ({ $axios, app }, inject) => {
   /**
@@ -48,7 +49,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
    * serverMiddleware と通信する axios インスタンス
    */
   const serverApi = $axios.create({
-    baseURL: `${process.env.BASE_URL}/api/v1`,
+    baseURL: urljoin(CLIENT_ORIGIN, '/api/v1'),
     withCredentials: true,
   }) as NuxtAxiosInstance;
 

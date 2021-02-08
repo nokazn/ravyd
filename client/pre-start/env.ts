@@ -3,18 +3,9 @@ import { logger } from 'shared/logger';
 
 (() => {
   const e = process.env.NODE_ENV ?? 'development';
-  const result = loadEnv(`server/.env.${e}`);
+  const result = loadEnv(`client/.env.${e}`);
 
-  const [isValid, env] = checkEnv([
-    'CLIENT_ORIGIN',
-    'PORT',
-    'REDIS_URL',
-    'REDIS_PORT',
-    'REDIS_PASSWORD',
-    'SESSION_SECRET',
-    'SPOTIFY_CLIENT_ID',
-    'SPOTIFY_CLIENT_SECRET',
-  ]);
+  const [isValid, env] = checkEnv(['CLIENT_ORIGIN']);
   if (!isValid) {
     logger.error({
       result,

@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import urljoin from 'url-join';
 import crypto from 'crypto';
 
 import { upsertToken, refreshAccessToken } from '@/helper';
 import {
-  BASE_ORIGIN,
+  CLIENT_ORIGIN,
   SPOTIFY_CLIENT_ID,
   TOKEN_EXPIRE_IN,
   CSRF_STATE_COOKIE_KEY,
@@ -60,10 +61,10 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     'user-follow-read',
     'user-follow-modify',
   ].join(' ');
-  const url = createUrl(`${SPOTIFY_AUTHORIZE_BASE_URL}/authorize`, {
+  const url = createUrl(urljoin(SPOTIFY_AUTHORIZE_BASE_URL, '/authorize'), {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: 'code',
-    redirect_uri: `${BASE_ORIGIN}/login/callback`,
+    redirect_uri: urljoin(CLIENT_ORIGIN, '/login/callback'),
     state,
     scope,
   });

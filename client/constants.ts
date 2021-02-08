@@ -1,6 +1,8 @@
 import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
+// destructuring assignment は使わない (process.env のプロパティに CLIENT_ORIGIN が生えてるわけではない)
+export const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN as string;
 export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
 
 /**

@@ -1,4 +1,4 @@
-// Must be first line
+// Must be at first line
 import '../pre-start';
 
 import express from 'express';
@@ -24,6 +24,6 @@ app.use((_, res) => {
   });
 });
 
-app.listen(parseInt(PORT, 10), () => {
+app.listen(PORT, () => {
   logger.info(`Listening at http://localhost:${PORT}`);
 });

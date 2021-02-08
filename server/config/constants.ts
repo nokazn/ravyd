@@ -1,13 +1,14 @@
+const ENV = process.env as Record<string, string>;
 export const {
-  BASE_ORIGIN,
-  PORT,
+  CLIENT_ORIGIN,
   REDIS_URL,
   REDIS_PORT,
   REDIS_PASSWORD,
   SESSION_SECRET,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
-} = process.env as Record<string, string>;
+} = ENV;
+export const PORT = parseInt(ENV.PORT, 10);
 
 export const SPOTIFY_AUTHORIZE_BASE_URL = 'https://accounts.spotify.com';
 

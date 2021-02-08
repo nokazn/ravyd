@@ -1,4 +1,7 @@
 /* eslint-disable no-param-reassign */
+// Must be at first line
+import './client/pre-start';
+
 import fs from 'fs';
 import path from 'path';
 import colors from 'vuetify/es5/util/colors';
@@ -43,7 +46,7 @@ const nuxtConfig: NuxtConfig = {
       },
     ],
     script: [
-      // eslintrc.globals.Spotify を設定する必要がある
+      // .eslintrc.globals.Spotify を設定する必要がある
       {
         src: 'https://sdk.scdn.co/spotify-player.js',
         body: true,
@@ -51,11 +54,13 @@ const nuxtConfig: NuxtConfig = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
+  env: {
+    CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://127.0.0.1:3000',
+  },
   buildModules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/stylelint-module',
     '@nuxt/typescript-build',
-    '@nuxtjs/dotenv',
     '@nuxtjs/style-resources',
     '@nuxtjs/vuetify',
   ],
@@ -64,9 +69,6 @@ const nuxtConfig: NuxtConfig = {
     '@nuxtjs/pwa',
     'portal-vue/nuxt',
   ],
-  env: {
-    BASE_URL: process.env.BASE_URL || 'https://127.0.0.1:3000',
-  },
   server: {
     https: process.env.NODE_ENV === 'development'
       ? {
@@ -86,11 +88,11 @@ const nuxtConfig: NuxtConfig = {
     extend(config, { isServer }) {
       config.module = config.module ?? { rules: [] };
 
-      // lodash から必要な関数だけ取り出す
       config.module.rules.push({
         // vue ファイルを js ファイルに変換してから適用させたい
         enforce: 'post',
         use: {
+          // lodash から必要な関数だけ取り出す
           loader: 'babel-loader',
           options: {
             plugins: ['lodash'],
@@ -100,6 +102,15 @@ const nuxtConfig: NuxtConfig = {
         test: /\.(ts|js|vue)$/,
         exclude: /node_modules/,
       });
+
+      config.resolve = config.resolve ?? { alias: {} };
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '~': path.join(__dirname, 'client'),
+        '~~': __dirname,
+        '@': path.join(__dirname, 'server'),
+        shared: path.join(__dirname, 'shared'),
+      };
 
       // worker-loader を読み込む
       // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
@@ -144,7 +155,7 @@ const nuxtConfig: NuxtConfig = {
   ],
   loading: { color: '#fff' },
   axios: {
-    baseURL: process.env.BASE_URL,
+    baseURL: process.env.CLIENT_ORIGIN,
     browserBaseURL: 'https://api.spotify.com/v1',
     progress: false,
     retry: true,
@@ -155,9 +166,6 @@ const nuxtConfig: NuxtConfig = {
       },
     },
   },
-  dotenv: {
-    filename: process.env.NODE_ENV === 'production' ? './.env.prod' : './.env.dev',
-  },
   stylelint: {
     configFile: './.stylelintrc.js',
     fix: true,
@@ -166,7 +174,7 @@ const nuxtConfig: NuxtConfig = {
     scss: ['~/assets/variables.scss'],
   },
   typescript: {
-    // type-check & lint
+    // type check & lint
     typeCheck: {
       eslint: {
         files: './client/**/*.{ts,js,vue}',

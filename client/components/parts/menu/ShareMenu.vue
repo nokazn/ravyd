@@ -62,6 +62,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from '@vue/composition-api';
+import urljoin from 'url-join';
 
 import { createUrl } from 'shared/utils';
 import type { SpotifyAPI } from 'shared/types';
@@ -137,7 +138,7 @@ export default defineComponent({
         : props.name;
 
       const path = props.url ?? root.$route.path;
-      const url = `${process.env.BASE_URL}${path}`;
+      const url = urljoin(root.$constant.CLIENT_ORIGIN, path);
 
       const twitter: MenuItem<'to'> = {
         type: 'to',

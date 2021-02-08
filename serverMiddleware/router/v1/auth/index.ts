@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { SpotifyAPI, ServerAPI } from 'shared/types';
+import { SpotifyAPI, ServerAPI } from '../../../../shared/types';
 import { refreshAccessToken } from '../../../helper/refreshAccessToken';
 import { TOKEN_EXPIRE_IN } from '../../../config/constants';
 
