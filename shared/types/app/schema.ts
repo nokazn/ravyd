@@ -143,7 +143,7 @@ export interface paths {
         500: {
           content: {
             'application/json': components['schemas']['Status'] &
-              components['schemas']['EmptyAccessToken'];
+              components['schemas']['FailedAccessToken'];
           };
         };
       };
@@ -191,7 +191,12 @@ export interface components {
       expireIn: number;
     };
     EmptyAccessToken: {
-      authState: string | null;
+      authState: null;
+      accessToken: null;
+      expireIn: 0;
+    };
+    FailedAccessToken: {
+      authState: string;
       accessToken: null;
       expireIn: 0;
     };

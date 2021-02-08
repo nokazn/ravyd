@@ -56,7 +56,27 @@ components:
       properties:
         authState:
           type: string
-          nullable: true
+          enum:
+            - null
+        accessToken:
+          type: string
+          enum:
+            - null
+        expireIn:
+          type: integer
+          minimum: 0
+          enum:
+            - 0
+      required:
+        - authState
+        - accessToken
+        - expireIn
+
+    FailedAccessToken:
+      type: object
+      properties:
+        authState:
+          type: string
         accessToken:
           type: string
           enum:
@@ -266,7 +286,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Status'
-                  - $ref: '#/components/schemas/EmptyAccessToken'
+                  - $ref: '#/components/schemas/FailedAccessToken'
 
   /auth/logout:
     post:

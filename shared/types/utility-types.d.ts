@@ -14,6 +14,15 @@ export type Merge<FirstType, SecondType> = Except<
 
 export type ValueOf<T extends Record<string, unknown>> = T[keyof T];
 
+type Responses<T = unknown> = {
+  responses: {
+    [k in number]: {
+      content: { 'application/json': T }
+    }
+  }
+};
+export type JSONResponseOf<T extends Responses> = T extends Responses<infer U> ? U : never;
+
 export type Has<
   O extends Record<string, unknown>,
   P extends string,

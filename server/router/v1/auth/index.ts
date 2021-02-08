@@ -4,10 +4,9 @@ import httpStatusCodes from 'http-status-codes';
 import { upsertToken, refreshAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import { logger } from 'shared/logger';
-import type { paths } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth']['get']
-type ResponseBody = Path['responses'][200]['content']['application/json']
+type ResponseBody = JSONResponseOf<paths['/auth']['get']>
 
 const { INTERNAL_SERVER_ERROR } = httpStatusCodes;
 

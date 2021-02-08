@@ -1,9 +1,8 @@
 import type { Context } from '@nuxt/types';
 import type { AxiosError } from 'axios';
-import type { paths, ValueOf } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth']['get']
-type Response = ValueOf<Path['responses']>['content']['application/json'];
+type Response = JSONResponseOf<paths['/auth']['get']>;
 
 export const root = (context: Context) => {
   const { app } = context;

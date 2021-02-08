@@ -4,11 +4,11 @@ import httpStatusCodes from 'http-status-codes';
 import { upsertToken, exchangeAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, AUTH_STATE_COOKIE_KEY } from '@/config/constants';
 import { logger } from 'shared/logger';
-import type { paths } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
 type Path = paths['/auth/login/callback']['get']
 type RequestQuery = Path['parameters']['query']
-type ResponseBody = Path['responses'][200 | 400 | 403 |500]['content']['application/json']
+type ResponseBody = JSONResponseOf<Path>
 
 const { BAD_REQUEST, UNAUTHORIZED } = httpStatusCodes;
 

@@ -12,10 +12,9 @@ import {
 } from '@/config/constants';
 import { createUrl } from 'shared/utils/createUrl';
 import { logger } from 'shared/logger';
-import type { paths } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth/login']['post']
-type ResponseBody = Path['responses'][200]['content']['application/json'];
+type ResponseBody = JSONResponseOf<paths['/auth/login']['post']>;
 
 export const login = async (req: Request, res: Response<ResponseBody>) => {
   const { refreshToken } = req.session;

@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 import { logger } from 'shared/logger';
-import type { paths } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth/logout']['post'];
-type ResponseBody = Path['responses'][204 | 500]['content']['application/json']
+type ResponseBody = JSONResponseOf<paths['/auth/logout']['post']>;
 
 const { INTERNAL_SERVER_ERROR, NO_CONTENT } = httpStatusCodes;
 

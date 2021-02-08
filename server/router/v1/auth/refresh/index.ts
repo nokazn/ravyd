@@ -4,11 +4,11 @@ import httpStatusCodes from 'http-status-codes';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import { refreshAccessToken, upsertToken } from '@/helper';
 import { logger } from 'shared/logger';
-import type { paths } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth/refresh']['put']
-type RequestBody = Path['requestBody']['content']['application/json']
-type ResponseBody = Path['responses'][200 | 400 | 403 | 409 | 500]['content']['application/json']
+type Path = paths['/auth/refresh']['put'];
+type RequestBody = Path['requestBody']['content']['application/json'];
+type ResponseBody = JSONResponseOf<Path>;
 
 const {
   BAD_REQUEST,
@@ -52,13 +52,14 @@ export const refresh = async (
     return res.status(UNAUTHORIZED).send({
       code,
       message,
-      authState,
-      accessToken: accessTokenInReq,
+      authState: null,
+      accessToken: null,
       expireIn: 0,
     });
   }
 
-  // 現在のトークンが一致しない場合
+  // TODO:
+  // 現在のトークンが一致しない場合は更新済のトークンを返す
   if (accessTokenInReq !== tokenInSession?.access_token) {
     const code = 'CONFLICT';
     const message = 'Fail to update an token because of conflicting.';
@@ -70,7 +71,7 @@ export const refresh = async (
       code,
       message,
       authState,
-      accessToken: accessTokenInReq,
+      accessToken: tokenInSession?.access_token,
       expireIn: 0,
     });
   }

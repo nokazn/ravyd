@@ -1,10 +1,10 @@
 import type { Context } from '@nuxt/types';
 import type { AxiosError } from 'axios';
-import type { paths, ValueOf } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth/refresh']['put']
-type RequestBody = Path['requestBody']['content']['application/json']
-type Response = ValueOf<Path['responses']>['content']['application/json']
+type Path = paths['/auth/refresh']['put'];
+type RequestBody = Path['requestBody']['content']['application/json'];
+type Response = JSONResponseOf<Path>;
 
 export const refresh = (context: Context) => {
   const { app } = context;
