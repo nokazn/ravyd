@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 export namespace ServerAPI {
   export namespace Auth {
     export type Token = {

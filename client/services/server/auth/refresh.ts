@@ -1,13 +1,20 @@
 import type { Context } from '@nuxt/types';
 import type { AxiosError } from 'axios';
-import type { ServerAPI } from 'shared/types';
+import type { paths, ValueOf } from 'shared/types';
+
+type Path = paths['/auth/refresh']['put']
+type RequestBody = Path['requestBody']['content']['application/json']
+type Response = ValueOf<Path['responses']>['content']['application/json']
 
 export const refresh = (context: Context) => {
   const { app } = context;
 
-  return (accessToken: string): Promise<ServerAPI.Auth.Token> => {
-    return app.$serverApi.$post<ServerAPI.Auth.Token>('/auth/refresh', { accessToken })
-      .catch((err: AxiosError<ServerAPI.Auth.Token>) => {
+  return ({ accessToken, authState }: RequestBody): Promise<Response> => {
+    return app.$serverApi.$post<Response, RequestBody>('/auth/refresh', {
+      accessToken,
+      authState,
+    })
+      .catch((err: AxiosError<Response>) => {
         console.error({ err });
         throw err;
       });

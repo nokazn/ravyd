@@ -80,8 +80,9 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit,
     dispatch,
   }) {
+    const { authState, accessToken } = state;
     // 現在ログイン済でないときは更新しない
-    if (state.accessToken == null) return;
+    if (authState == null || accessToken == null) return;
 
     // トークン更新中であれば待機して、期限切れのときのみ更新
     await getters.finishedRefreshingToken();
@@ -92,7 +93,10 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit('SET_EXPIRATION_MS', undefined);
     commit('SET_IS_REFRESHING', true);
 
-    await this.$server.auth.refresh(state.accessToken)
+    await this.$server.auth.refresh({
+      authState,
+      accessToken,
+    })
       .then((token) => {
         commit('SET_ACCESS_TOKEN', token.accessToken);
         commit('SET_EXPIRATION_MS', token.expireIn);

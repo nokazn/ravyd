@@ -1,24 +1,27 @@
 import type { Context } from '@nuxt/types';
 import type { AxiosError } from 'axios';
-import type { ServerAPI } from 'shared/types';
+import type { paths, ValueOf } from 'shared/types';
+
+type Path = paths['/auth/login/callback']['get']
+type Params = Path['parameters']['query']
+type Response = ValueOf<Path['responses']>['content']['application/json']
 
 export const callback = (context: Context) => {
   const { app } = context;
 
-  return ({ code, state }: {
-    code: string;
-    state: string;
-  }): Promise<ServerAPI.Auth.Token> => {
-    // TODO: path
-    return app.$serverApi.$get<ServerAPI.Auth.Token>('/auth/login/callback', {
+  return ({ code, state }: Params): Promise<Response> => {
+    return app.$serverApi.$get<Response, Params>('/auth/login/callback', {
       params: {
         code,
         state,
       },
-    }).catch((err: AxiosError<ServerAPI.Auth.Token>) => {
+    }).catch((err: AxiosError<Response>) => {
       console.error({ err });
       return err.response?.data ?? {
-        accessToken: undefined,
+        code: app.$constant.UNEXPECTED_ERROR_CODE,
+        message: err.message,
+        authState: null,
+        accessToken: null,
         expireIn: 0,
       };
     });

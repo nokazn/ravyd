@@ -4,13 +4,15 @@ import type { SpotifyAPI } from 'shared/types';
 import { AuthState } from './state';
 
 export type AuthMutations = {
-  SET_ACCESS_TOKEN: SpotifyAPI.Auth.Token['access_token'] | undefined
-  SET_EXPIRATION_MS: number | undefined
-  SET_USER_DATA: SpotifyAPI.UserData |undefined
-  SET_IS_REFRESHING: boolean
+  SET_AUTH_STATE: string | undefined | null;
+  SET_ACCESS_TOKEN: SpotifyAPI.Auth.Token['access_token'] | undefined | null;
+  SET_EXPIRATION_MS: number | undefined;
+  SET_USER_DATA: SpotifyAPI.UserData |undefined;
+  SET_IS_REFRESHING: boolean;
 }
 
 export type RootMutations = {
+  'auth/SET_AUTH_STATE': AuthMutations['SET_AUTH_STATE']
   'auth/SET_ACCESS_TOKEN': AuthMutations['SET_ACCESS_TOKEN']
   'auth/SET_EXPIRATION_MS': AuthMutations['SET_EXPIRATION_MS']
   'auth/SET_USER_DATA': AuthMutations['SET_USER_DATA']
@@ -18,13 +20,17 @@ export type RootMutations = {
 }
 
 const mutations: Mutations<AuthState, AuthMutations> = {
-  SET_ACCESS_TOKEN(state, token): void {
-    state.accessToken = token;
+  SET_AUTH_STATE(state, authState): void {
+    state.authState = authState ?? undefined;
   },
 
-  SET_EXPIRATION_MS(state, expireMillis) {
-    state.expirationMs = expireMillis != null
-      ? Date.now() + expireMillis
+  SET_ACCESS_TOKEN(state, accessToken): void {
+    state.accessToken = accessToken ?? undefined;
+  },
+
+  SET_EXPIRATION_MS(state, expirationMs) {
+    state.expirationMs = expirationMs != null
+      ? Date.now() + expirationMs
       : undefined;
   },
 

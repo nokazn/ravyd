@@ -33,11 +33,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const { accessToken, expireIn } = await this.$server.auth.root();
       commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
       commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
-      return accessToken;
+      return accessToken ?? undefined;
     };
 
     const refreshAccessToken = async (
       currentAccessToken: string,
+      currentAuthState: string,
       currentExpirationMs: number | undefined,
     ): Promise<string | undefined> => {
       // トークン更新中であれば待機して、期限切れのときのみ更新
@@ -50,11 +51,14 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
       commit('auth/SET_IS_REFRESHING', true, { root: true });
 
-      return this.$server.auth.refresh(currentAccessToken)
+      return this.$server.auth.refresh({
+        accessToken: currentAccessToken,
+        authState: currentAuthState,
+      })
         .then((token) => {
           commit('auth/SET_ACCESS_TOKEN', token.accessToken, { root: true });
           commit('auth/SET_EXPIRATION_MS', token.expireIn, { root: true });
-          return token.accessToken;
+          return token.accessToken ?? undefined;
         })
         .catch(async (err: AxiosError<ServerAPI.Auth.Token>) => {
           console.error({ err });
@@ -93,6 +97,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         getOAuthToken: async (callback) => {
           const {
             accessToken: currentAccessToken,
+            authState: currentAuthState,
             expirationMs,
           } = this.$state().auth;
           const isExpired = this.$getters()['auth/isTokenExpired']();
@@ -102,9 +107,9 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
             return;
           }
 
-          const accessToken = currentAccessToken == null
+          const accessToken = currentAccessToken == null || currentAuthState == null
             ? await checkAccessToken()
-            : await refreshAccessToken(currentAccessToken, expirationMs);
+            : await refreshAccessToken(currentAccessToken, currentAuthState, expirationMs);
 
           if (accessToken == null) {
             await dispatch('auth/logout', undefined, { root: true });

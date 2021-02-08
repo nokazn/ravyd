@@ -1,17 +1,25 @@
 import type { Context } from '@nuxt/types';
 import type { AxiosError } from 'axios';
-import type { ServerAPI } from 'shared/types';
+import type { paths, ValueOf } from 'shared/types';
+
+type Path = paths['/auth/login']['post'];
+type Response = ValueOf<Path['responses']>['content']['application/json']
 
 export const login = (context: Context) => {
   const { app } = context;
 
-  return (): Promise<ServerAPI.Auth.Login> => {
-    return app.$serverApi.$post<ServerAPI.Auth.Login>('/auth/login')
-      .catch((err: AxiosError<ServerAPI.Auth.Login>) => {
+  return (): Promise<Response> => {
+    return app.$serverApi.$post<Response>('/auth/login')
+      .catch((err: AxiosError<Response>) => {
         console.error({ err });
         return err.response?.data ?? {
-          accessToken: undefined,
-          url: undefined,
+          code: app.$constant.UNEXPECTED_ERROR_CODE,
+          message: err.message,
+          authState: null,
+          accessToken: null,
+          expireIn: 0,
+          url: null,
+          authenticated: false,
         };
       });
   };

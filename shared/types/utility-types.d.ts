@@ -12,6 +12,8 @@ export type Merge<FirstType, SecondType> = Except<
   Extract<keyof FirstType, keyof SecondType>
 > & SecondType
 
+export type ValueOf<T extends Record<string, unknown>> = T[keyof T];
+
 export type Has<
   O extends Record<string, unknown>,
   P extends string,

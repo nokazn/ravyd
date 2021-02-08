@@ -9,6 +9,7 @@ import type { TypedNuxtAxiosInstance } from 'typed-axios';
 
 import type { SpotifyServices } from '~/services/spotify';
 import type { ServerServices } from '~/services/server';
+import type { Constant } from '~/plugins/constant';
 import type { $Header } from '~/plugins/observable/header';
 import type { $Overlay } from '~/plugins/observable/overlay';
 import type { $Toast } from '~/plugins/observable/toast';
@@ -23,6 +24,7 @@ declare module '@nuxt/types/app' {
     $dispatch: SFCDispatch;
 
     // plugin
+    $constant: Constant;
     $dayjs: typeof dayjs;
     $spotifyApi: TypedNuxtAxiosInstance;
     $spotify: SpotifyServices;

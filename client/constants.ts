@@ -5,6 +5,8 @@ import type { App } from '~/entities';
 export const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN as string;
 export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
 
+export const UNEXPECTED_ERROR_CODE = 'UNEXPECTED_ERROR';
+
 /**
  * colors
  */

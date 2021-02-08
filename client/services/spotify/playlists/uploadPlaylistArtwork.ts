@@ -3,10 +3,7 @@ import type { Context } from '@nuxt/types';
 export const uploadPlaylistArtwork = (context: Context) => {
   const { app } = context;
 
-  return ({
-    playlistId,
-    artwork,
-  }: {
+  return ({ playlistId, artwork }: {
     playlistId: string;
     artwork: string;
   }): Promise<void> => {
