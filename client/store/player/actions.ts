@@ -1,11 +1,8 @@
-import type { AxiosError } from 'axios';
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 
-import type { ServerAPI } from 'shared/types';
-import { PlayerState } from './state';
-import { PlayerGetters } from './getters';
-import { PlayerMutations } from './mutations';
-import { APP_NAME } from '~/constants';
+import type { PlayerState } from './state';
+import type { PlayerGetters } from './getters';
+import type { PlayerMutations } from './mutations';
 
 export type PlayerActions = {
   initPlayer: () => void
@@ -29,105 +26,30 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       return;
     }
 
-    const checkAccessToken = async (): Promise<string | undefined> => {
-      const { accessToken, expireIn } = await this.$server.auth.root();
-      commit('auth/SET_ACCESS_TOKEN', accessToken, { root: true });
-      commit('auth/SET_EXPIRATION_MS', expireIn, { root: true });
-      return accessToken ?? undefined;
-    };
-
-    const refreshAccessToken = async (
-      currentAccessToken: string,
-      currentAuthState: string,
-      currentExpirationMs: number | undefined,
-    ): Promise<string | undefined> => {
-      // トークン更新中であれば待機して、期限切れのときのみ更新
-      await this.$getters()['auth/finishedRefreshingToken']();
-      if (!this.$getters()['auth/isTokenExpired']()) {
-        return this.$state().auth.accessToken;
-      }
-
-      // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
-      commit('auth/SET_EXPIRATION_MS', undefined, { root: true });
-      commit('auth/SET_IS_REFRESHING', true, { root: true });
-
-      return this.$server.auth.refresh({
-        accessToken: currentAccessToken,
-        authState: currentAuthState,
-      })
-        .then((token) => {
-          commit('auth/SET_ACCESS_TOKEN', token.accessToken, { root: true });
-          commit('auth/SET_EXPIRATION_MS', token.expireIn, { root: true });
-          return token.accessToken ?? undefined;
-        })
-        .catch(async (err: AxiosError<ServerAPI.Auth.Token>) => {
-          console.error({ err });
-          if (err.response?.data == null) {
-            commit('auth/SET_ACCESS_TOKEN', undefined, { root: true });
-            commit('auth/SET_IS_REFRESHING', false, { root: true });
-            return undefined;
-          }
-          if (err.response?.status === 409) {
-            // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
-            await dispatch('auth/getAccessToken', undefined, { root: true });
-            // 一度リセットした expirationMs を元に戻す
-            commit('auth/SET_EXPIRATION_MS', currentExpirationMs, { root: true });
-            return this.$state().auth.accessToken;
-          }
-          return err.response.data.accessToken;
-        })
-        .finally(() => {
-          commit('auth/SET_IS_REFRESHING', false, { root: true });
-        });
-    };
-
     window.onSpotifyWebPlaybackSDKReady = async () => {
       // player が登録されていないときのみ初期化
-      if (getters.isPlayerConnected || window.Spotify == null) return;
+      if (getters.isPlayerConnected) return;
 
       // volumePercent と isMuted は localStorage で永続化されてる
       const volume = this.$state().playback.isMuted
         ? 0
         : this.$state().playback.volumePercent / 100;
       const player = new Spotify.Player({
-        name: APP_NAME,
+        name: this.$constant.APP_NAME,
         // 0 ~ 1 で指定
         volume,
         // アクセストークンの更新が必要になったら呼ばれる
         getOAuthToken: async (callback) => {
-          const {
-            accessToken: currentAccessToken,
-            authState: currentAuthState,
-            expirationMs,
-          } = this.$state().auth;
-          const isExpired = this.$getters()['auth/isTokenExpired']();
-          // すでに保持しているアクセストークンが有効の場合はそれを使う
-          if (currentAccessToken != null && !isExpired) {
-            callback(currentAccessToken);
-            return;
+          const token = await dispatch('auth/refreshAccessToken', undefined, { root: true });
+          if (token?.accessToken != null) {
+            callback(token.accessToken);
           }
-
-          const accessToken = currentAccessToken == null || currentAuthState == null
-            ? await checkAccessToken()
-            : await refreshAccessToken(currentAccessToken, currentAuthState, expirationMs);
-
-          if (accessToken == null) {
-            await dispatch('auth/logout', undefined, { root: true });
-            this.$router.push('/login');
-            this.$toast.pushError('トークンを取得できなかったためログアウトしました。');
-            return;
-          }
-
-          callback(accessToken);
         },
       });
 
       // デバイスの接続が完了したとき
       player.addListener('ready', async ({ device_id }) => {
         commit('playback/SET_DEVICE_ID', device_id, { root: true });
-        // プレミアムアカウントのときのみ
-        if (!this.$getters()['auth/isPremium']) return;
-
         await dispatch('playback/getDeviceList', undefined, { root: true });
         const currentActiveDevice = this.$getters()['playback/activeDevice'];
         if (currentActiveDevice == null) {
@@ -142,12 +64,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
-        console.info('Ready with this device 🚀');
+        console.info('Ready with this device. 🚀');
       });
 
       // デバイスがオフラインのとき
       player.addListener('not_ready', ({ device_id }) => {
-        console.info('This device has gone offline 😴', device_id);
+        console.info('This device has gone offline. 😴', device_id);
       });
 
       // ブラウザが EME コンテンツをサポートしていないなどの理由で現在の環境をサポートしていないとき
@@ -164,6 +86,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       player.addListener('authentication_error', async (err) => {
         console.error({ err });
         await dispatch('auth/refreshAccessToken', undefined, { root: true });
+        // TODO: 再接続
         await dispatch('player/disconnectPlayer', undefined, { root: true });
         await dispatch('player/initPlayer', undefined, { root: true });
       });
@@ -218,6 +141,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
         commit('playback/SET_DISALLOWS', playerState.disallows, { root: true });
         commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
 
+        // TODO
         // 表示がちらつくので、初回以外は player/repeat 内で commit する
         if (currentRepeatMode == null) {
           commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
@@ -229,7 +153,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
       const isConnected = await player.connect();
       if (isConnected) {
         commit('SET_PLAYBACK_PLAYER', player);
-        console.info('Successfully connected this device 🎉');
+        console.info('Successfully connected with this device. 🎉');
       }
     };
 
@@ -238,13 +162,12 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
   disconnectPlayer({ state, commit }) {
     const { playbackPlayer } = state;
-    if (playbackPlayer == null) return;
-
-    playbackPlayer.disconnect();
-
-    // タイマーはクリア
-    commit('playback/SET_POLLING_PLAYBACK_TIMER', undefined, { root: true });
-    commit('SET_PLAYBACK_PLAYER', undefined);
+    if (playbackPlayer != null) {
+      playbackPlayer.disconnect();
+      // タイマーはクリア
+      commit('playback/SET_POLLING_PLAYBACK_TIMER', undefined, { root: true });
+      commit('SET_PLAYBACK_PLAYER', undefined);
+    }
   },
 };
 

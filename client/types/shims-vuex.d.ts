@@ -7,6 +7,7 @@ import type {
 import type dayjs from 'dayjs';
 import type { TypedNuxtAxiosInstance } from 'typed-axios';
 
+import type { Constant } from '~/plugins/constant';
 import type { $Toast } from '~/plugins/observable/toast';
 import type { SpotifyServices } from '~/services/spotify';
 import type { ServerServices } from '~/services/server';
@@ -22,6 +23,7 @@ declare module 'vuex/types/index' {
 
     // plugin
     $dayjs: typeof dayjs;
+    $constant: Constant;
     $spotifyApi: TypedNuxtAxiosInstance;
     $spotify: SpotifyServices;
     $serverApi: TypedNuxtAxiosInstance;

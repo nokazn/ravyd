@@ -14,13 +14,14 @@ export type RootActions = {
 
 const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
   async nuxtServerInit({ dispatch }) {
-    await dispatch('auth/getAccessToken', undefined, { root: true });
-    await dispatch('auth/getUserData', undefined, { root: true });
+    const token = await dispatch('auth/getAccessToken', undefined, { root: true });
+    if (token != null) {
+      await dispatch('auth/getUserData', undefined, { root: true });
+    }
   },
 
   async extractDominantBackgroundColor({ commit }, src) {
     const colors = await extractDominantColors(src);
-
     commit('SET_DOMINANT_BACKGROUND_COLOR', colors?.Muted, { root: true });
   },
   setDefaultDominantBackgroundColor({ commit }) {

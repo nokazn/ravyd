@@ -1,27 +1,28 @@
+import httpStatusCodes from 'http-status-codes';
 import type { AxiosError } from 'axios';
 import type { Actions } from 'typed-vuex';
 
-import type { ServerAPI } from 'shared/types';
+import type { paths, JSONResponseOf } from 'shared/types';
 import type { AuthState } from './state';
 import type { AuthGetters } from './getters';
 import type { AuthMutations } from './mutations';
 
 export type AuthActions = {
-  login: () => Promise<void>
+  login: () => Promise<JSONResponseOf<paths['/auth/login']['post']>>
   exchangeCodeWithAccessToken: (params: {
     code: string;
     state: string;
-  }) => Promise<void>
+  }) => Promise<JSONResponseOf<paths['/auth/login/callback']['get']>>
+  getAccessToken: () => Promise<JSONResponseOf<paths['/auth']['get']>>
   getUserData: () => Promise<void>
-  getAccessToken: () => Promise<void>
-  refreshAccessToken: () => Promise<void>
+  refreshAccessToken: () => Promise<JSONResponseOf<paths['/auth/refresh']['put']> | undefined>
   logout: () => Promise<void>
   confirmAuthState: (params?: { checkPremium?: boolean } | undefined) => Promise<boolean>
 }
 
 export type RootActions = {
   'auth/login': AuthActions['login']
-  'auth/exchangeCodeToAccessToken': AuthActions['exchangeCodeToAccessToken']
+  'auth/exchangeCodeWithAccessToken': AuthActions['exchangeCodeWithAccessToken']
   'auth/getUserData': AuthActions['getUserData']
   'auth/getAccessToken': AuthActions['getAccessToken']
   'auth/refreshAccessToken': AuthActions['refreshAccessToken']
@@ -29,49 +30,45 @@ export type RootActions = {
   'auth/confirmAuthState': AuthActions['confirmAuthState']
 }
 
+const { CONFLICT } = httpStatusCodes;
+
 const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   async login({ commit, dispatch }) {
     const data = await this.$server.auth.login();
-
-    if (data.accessToken != null && data.expireIn != null) {
-      commit('SET_ACCESS_TOKEN', data.accessToken);
-      commit('SET_EXPIRATION_MS', data.expireIn);
-
+    if (data.authenticated) {
+      commit('SET_TOKEN', data);
       await dispatch('getUserData');
-      // TODO
+      // TODO: リダイレクト先
       this.$router.push('/');
-      return;
-    }
-    if (data.url != null) {
+    } else if (data.url != null) {
+      // TODO:
       window.location.href = data.url;
-      return;
+    } else {
+      console.error('An error occurred on obtaining an access token.');
+      this.$toast.pushError('トークン取得時にエラーが発生し、ログインできません。');
     }
-    console.error('トークン取得時にエラーが発生しました。');
-    this.$toast.pushError('トークン取得時にエラーが発生し、ログインできません。');
+    return data;
   },
 
   async exchangeCodeWithAccessToken({ commit }, { code, state }) {
-    const { accessToken, expireIn } = await this.$server.auth.callback({
-      code,
-      state,
-    });
-
-    commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRATION_MS', expireIn);
+    const data = await this.$server.auth.callback({ code, state });
+    if (data.authState != null) {
+      commit('SET_TOKEN', data);
+    }
+    return data;
   },
 
   async getAccessToken({ commit }) {
-    const { accessToken, expireIn } = await this.$server.auth.root();
-
-    commit('SET_ACCESS_TOKEN', accessToken);
-    commit('SET_EXPIRATION_MS', expireIn);
+    const data = await this.$server.auth.root();
+    commit('SET_TOKEN', data.authenticated ? data : undefined);
+    return data;
   },
 
   async getUserData({ state, commit }): Promise<void> {
-    if (state.accessToken == null) return;
-
-    const userData = await this.$spotify.users.getCurrentUserProfile();
-    commit('SET_USER_DATA', userData);
+    if (state.accessToken != null) {
+      const userData = await this.$spotify.users.getCurrentUserProfile();
+      commit('SET_USER_DATA', userData);
+    }
   },
 
   async refreshAccessToken({
@@ -80,41 +77,37 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
     commit,
     dispatch,
   }) {
-    const { authState, accessToken } = state;
+    const { authState, accessToken, isRefreshing } = state;
     // 現在ログイン済でないときは更新しない
-    if (authState == null || accessToken == null) return;
+    if (authState == null || accessToken == null || isRefreshing) {
+      return Promise.resolve(undefined);
+    }
 
     // トークン更新中であれば待機して、期限切れのときのみ更新
     await getters.finishedRefreshingToken();
-    if (!getters.isTokenExpired()) return;
+    if (!getters.isTokenExpired()) {
+      return Promise.resolve(undefined);
+    }
 
-    // 先に expireIn を設定しておき、他の action で refreshAccessToken されないようにする
-    const currentExpirationMs = state.expirationMs;
-    commit('SET_EXPIRATION_MS', undefined);
     commit('SET_IS_REFRESHING', true);
-
-    await this.$server.auth.refresh({
-      authState,
-      accessToken,
-    })
+    return this.$server.auth.refresh({ authState, accessToken })
       .then((token) => {
-        commit('SET_ACCESS_TOKEN', token.accessToken);
-        commit('SET_EXPIRATION_MS', token.expireIn);
+        commit('SET_TOKEN', token.accessToken != null ? token : undefined);
+        return token;
       })
-      .catch(async (err: AxiosError<ServerAPI.Auth.Token>) => {
+      .catch(async (err: AxiosError<JSONResponseOf<paths['/auth/refresh']['put']>>) => {
         console.error({ err });
-        if (err.response?.data == null) {
-          commit('SET_ACCESS_TOKEN', undefined);
-          commit('SET_EXPIRATION_MS', undefined);
+        if (err.response?.status === CONFLICT) {
+          // TODO: check のみにする
+          // コンフリクトして現在のトークンが一致しない場合は再取得
+          await dispatch('getAccessToken');
+        } else {
+          commit('SET_TOKEN', undefined);
           await dispatch('logout');
           this.$router.push('/login');
           this.$toast.pushError('トークンを取得できなかったためログアウトしました。');
-        } else if (err.response?.status === 409) {
-          // コンフリクトして現在のトークンが一致しない場合 (409) は再取得
-          await dispatch('getAccessToken');
-          // 一度リセットした expirationMs を元に戻す
-          commit('SET_EXPIRATION_MS', currentExpirationMs);
         }
+        return err.response?.data;
       })
       .finally(() => {
         commit('SET_IS_REFRESHING', false);
@@ -122,15 +115,13 @@ const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
   },
 
   async logout({ commit, dispatch }) {
-    // プレイヤーをリセット
     dispatch('player/disconnectPlayer', undefined, { root: true });
-    // セッションを削除
-    await this.$server.auth.logout();
-
-    commit('SET_ACCESS_TOKEN', undefined);
-    commit('SET_USER_DATA', undefined);
-    // playback をリセット
-    dispatch('playback/resetPlayback', undefined, { root: true });
+    return this.$server.auth.logout()
+      .then(() => {
+        commit('SET_TOKEN', undefined);
+        commit('SET_USER_DATA', undefined);
+        dispatch('playback/resetPlayback', undefined, { root: true });
+      });
   },
 
   async confirmAuthState({ getters, dispatch }, params) {

@@ -9,5 +9,6 @@ declare module 'express-session' {
         token?: SpotifyAPI.Auth.Token;
         refreshToken?: SpotifyAPI.Auth.InitialToken['refresh_token'];
         tokens?: Record<string, SpotifyAPI.Auth.Token>;
+        state?: string;
     }
 }

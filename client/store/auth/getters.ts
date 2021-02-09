@@ -27,7 +27,9 @@ export type RootGetters = {
 
 const getters: Getters<AuthState, AuthGetters> = {
   isLoggedin(state) {
-    return state.accessToken != null && state.userData != null;
+    return state.authState != null
+      && state.accessToken != null
+      && state.userData != null;
   },
 
   isPremium(state) {

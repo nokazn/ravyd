@@ -7,7 +7,6 @@ import {
   CLIENT_ORIGIN,
   SPOTIFY_CLIENT_ID,
   TOKEN_EXPIRE_IN,
-  CSRF_STATE_COOKIE_KEY,
   SPOTIFY_AUTHORIZE_BASE_URL,
 } from '@/config/constants';
 import { createUrl } from 'shared/utils/createUrl';
@@ -68,18 +67,14 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     scope,
   });
 
-  return res
-    .cookie(CSRF_STATE_COOKIE_KEY, state, {
-    // 5分間有効
-      maxAge: 5 * 60 * 1000,
-    })
-    .send({
-      code: 'OK',
-      authenticated: false,
-      message: 'Needs to authorize with Spotify.',
-      authState: null,
-      accessToken: null,
-      expireIn: 0,
-      url,
-    });
+  req.session.state = state;
+  return res.send({
+    code: 'OK',
+    authenticated: false,
+    message: 'Needs to authorize with Spotify.',
+    authState: null,
+    accessToken: null,
+    expireIn: 0,
+    url,
+  });
 };
