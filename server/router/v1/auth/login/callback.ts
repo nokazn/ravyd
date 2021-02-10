@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
 
 import { upsertToken, exchangeAccessToken } from '@/helper';
-import { TOKEN_EXPIRE_IN, CSRF_STATE_COOKIE_KEY, AUTH_STATE_COOKIE_KEY } from '@/config/constants';
+import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
@@ -22,7 +22,6 @@ export const callback = async (
     const message = 'Code in query parameters is invalid.';
     logger.error(message, {
       query: req.query,
-      body: req.body,
       codeInQuery,
     });
     return res.status(BAD_REQUEST).send({
@@ -36,15 +35,13 @@ export const callback = async (
 
   // 送られてきた state と、認可時に送信し cookie に埋め込んだ state を比較
   // TODO:
-  const csrfState = req.cookies[CSRF_STATE_COOKIE_KEY] as string | undefined;
-  if (state == null || state !== csrfState) {
+  if (state == null || state !== req.session.state) {
     const code = 'UNAUTHORIZED';
     const message = "CSRF state token doesn't match.";
     logger.error(code, message, {
       query: req.query,
-      body: req.body,
+      session: req.session,
       state,
-      csrfState,
     });
     return res.status(UNAUTHORIZED).send({
       code,
@@ -65,28 +62,21 @@ export const callback = async (
       code,
       token,
     });
-    return res
-      .clearCookie(CSRF_STATE_COOKIE_KEY)
-      .status(BAD_REQUEST)
-      .send({
-        code,
-        message,
-        authState: null,
-        accessToken: null,
-        expireIn: 0,
-      });
+    return res.status(BAD_REQUEST).send({
+      code,
+      message,
+      authState: null,
+      accessToken: null,
+      expireIn: 0,
+    });
   }
 
   const authState = upsertToken(req, token, { refreshToken: token.refresh_token });
-  return res
-    .cookie(AUTH_STATE_COOKIE_KEY, authState)
-    .clearCookie(CSRF_STATE_COOKIE_KEY)
-    .send({
-      // TODO:
-      code: 'OK',
-      message: 'Logged in successfully.',
-      authState,
-      accessToken: token.access_token,
-      expireIn: TOKEN_EXPIRE_IN,
-    });
+  return res.send({
+    code: 'OK',
+    message: 'Logged in successfully.',
+    authState,
+    accessToken: token.access_token,
+    expireIn: TOKEN_EXPIRE_IN,
+  });
 };

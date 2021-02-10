@@ -12,7 +12,6 @@ export const PORT = parseInt(ENV.PORT, 10);
 
 export const SPOTIFY_AUTHORIZE_BASE_URL = 'https://accounts.spotify.com';
 
-export const CSRF_STATE_COOKIE_KEY = 'csrf_state';
 export const AUTH_STATE_COOKIE_KEY = 'auth_state';
 
 // 20分でトークンを更新させる
