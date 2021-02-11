@@ -1,5 +1,5 @@
 // Must be at first line
-import '../pre-start';
+import './pre-start';
 
 import express from 'express';
 import https from 'https';

@@ -1,11 +1,9 @@
 import Redis from 'ioredis';
-import { REDIS_URL, REDIS_PORT, REDIS_PASSWORD } from '../server/config/constants';
-import { logger } from '../shared/logger';
+import { REDIS_URL, REDIS_PORT, REDIS_PASSWORD } from '@/config/constants';
+import { logger } from '~~/shared/logger';
 
 const client = new Redis(REDIS_URL, {
-  port: REDIS_PORT != null
-    ? parseInt(REDIS_PORT, 10)
-    : undefined,
+  port: REDIS_PORT,
   password: REDIS_PASSWORD,
 });
 

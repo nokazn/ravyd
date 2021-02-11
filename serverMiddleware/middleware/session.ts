@@ -2,7 +2,7 @@ import sessionMiddleware from 'express-session';
 import dotenv from 'dotenv';
 import connectRedis from 'connect-redis';
 
-import client from '../../db/redis';
+import client from '@/redis';
 
 dotenv.config();
 
