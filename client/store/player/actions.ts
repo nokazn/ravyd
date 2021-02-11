@@ -28,21 +28,25 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
 
     window.onSpotifyWebPlaybackSDKReady = async () => {
       // player が登録されていないときのみ初期化
-      if (getters.isPlayerConnected) return;
+      if (getters.isPlayerConnected || window.Spotify == null) return;
 
       // volumePercent と isMuted は localStorage で永続化されてる
-      const volume = this.$state().playback.isMuted
-        ? 0
-        : this.$state().playback.volumePercent / 100;
       const player = new Spotify.Player({
         name: this.$constant.APP_NAME,
         // 0 ~ 1 で指定
-        volume,
-        // アクセストークンの更新が必要になったら呼ばれる
+        volume: this.$state().playback.isMuted
+          ? 0
+          : this.$state().playback.volumePercent / 100,
+        // 初期化時とアクセストークンの更新が必要になった時に呼ばれる
         getOAuthToken: async (callback) => {
           const token = await dispatch('auth/refreshAccessToken', undefined, { root: true });
           if (token?.accessToken != null) {
             callback(token.accessToken);
+            return;
+          }
+          const currentAccessToken = this.$state().auth.accessToken;
+          if (currentAccessToken != null) {
+            callback(currentAccessToken);
           }
         },
       });
@@ -64,7 +68,7 @@ const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutation
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
-        console.info('Ready with this device. 🚀');
+        console.info('This device goes active. 🚀');
       });
 
       // デバイスがオフラインのとき

@@ -56,6 +56,7 @@ const nuxtConfig: NuxtConfig = {
   },
   env: {
     CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://127.0.0.1:3000',
+    SERVER_ORIGIN: process.env.SERVER_ORIGIN || 'http://localhost:5000',
   },
   buildModules: [
     '@nuxtjs/eslint-module',
@@ -87,7 +88,6 @@ const nuxtConfig: NuxtConfig = {
     ],
     extend(config, { isServer }) {
       config.module = config.module ?? { rules: [] };
-
       config.module.rules.push({
         // vue ファイルを js ファイルに変換してから適用させたい
         enforce: 'post',
@@ -125,9 +125,6 @@ const nuxtConfig: NuxtConfig = {
       // }
     },
   },
-  serverMiddleware: [
-    '~~/serverMiddleware/app/',
-  ],
   plugins: [
     { src: '~/plugins/dayjs' },
     { src: '~/plugins/vuex' },

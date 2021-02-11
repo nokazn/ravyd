@@ -2,10 +2,14 @@
 import '../pre-start';
 
 import express from 'express';
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
+import { path as ROOT_PATH } from 'app-root-path';
 import helmet from 'helmet';
 
-import { cookieParser, session } from '@/middleware';
 import { logger } from 'shared/logger';
+import { cors, cookieParser, session } from '@/middleware';
 import router from '@/router/v1';
 import { PORT } from '@/config/constants';
 
@@ -15,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser);
 app.use(helmet());
+app.use(cors);
 app.use(session);
 app.use('/api/v1', router);
 
@@ -24,6 +29,19 @@ app.use((_, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  logger.info(`Listening at http://localhost:${PORT}`);
-});
+console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'development') {
+  const server = https.createServer({
+    key: fs.readFileSync(path.join(ROOT_PATH, 'localhost-key.pem')),
+    cert: fs.readFileSync(path.join(ROOT_PATH, 'localhost.pem')),
+  }, app);
+  server.listen(PORT, '127.0.0.1', () => {
+    logger.info(`Listening at https://127.0.0.1:${PORT}`);
+  });
+} else {
+  app.listen(PORT, () => {
+    logger.info(`Listening at http://localhost:${PORT}`);
+  });
+}
+

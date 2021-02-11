@@ -4,7 +4,7 @@ import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
 import urljoin from 'url-join';
 
-import { CLIENT_ORIGIN, SPOTIFY_API_URL } from '~/constants';
+import { SERVER_ORIGIN, SPOTIFY_API_URL } from '~/constants';
 
 const injector: Plugin = ({ $axios, app }, inject) => {
   /**
@@ -16,18 +16,23 @@ const injector: Plugin = ({ $axios, app }, inject) => {
 
   spotifyApi.onRequest((config) => {
     const { accessToken } = app.$state().auth;
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
+    if (accessToken != null) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
   });
 
   spotifyApi.onResponse(() => {
     // アクセストークンの期限が切れていたらリクエストが終わった後に更新
-    app.$dispatch('auth/refreshAccessToken');
+    if (app.$getters()['auth/isTokenExpired']() && !app.$state().auth.isRefreshing) {
+      app.$dispatch('auth/refreshAccessToken');
+    }
   });
 
   spotifyApi.onResponseError((err) => {
+    // TODO:
     if (err.response?.status === 401) {
       // 認可リクエストによるエラーだった場合はアクセストークンを更新
       app.$dispatch('auth/refreshAccessToken');
@@ -49,7 +54,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
    * serverMiddleware と通信する axios インスタンス
    */
   const serverApi = $axios.create({
-    baseURL: urljoin(CLIENT_ORIGIN, '/api/v1'),
+    baseURL: urljoin(SERVER_ORIGIN, '/api/v1'),
     withCredentials: true,
   }) as NuxtAxiosInstance;
 

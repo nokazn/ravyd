@@ -1,4 +1,4 @@
-import { v4 as uuid4, v5 as uuid5 } from 'uuid';
+import { v4 as uuid4 } from 'uuid';
 import type { Request } from 'express';
 import { SpotifyAPI } from 'shared/types';
 
@@ -10,9 +10,11 @@ type Params = {
   refreshToken: string;
 }
 
-const generateAuthStateKey = (refreshToken: string) => {
+const generateAuthStateKey = () => {
   const key = uuid4();
-  return uuid5(key, refreshToken);
+  // TODO:
+  // return uuid5(key, refreshToken);
+  return key;
 };
 
 export const upsertToken = (
@@ -21,7 +23,7 @@ export const upsertToken = (
   params: Params,
 ): string => {
   const currentTokens = req.session.tokens ?? {};
-  const authState = params.authState ?? generateAuthStateKey(params.refreshToken);
+  const authState = params.authState ?? generateAuthStateKey();
   if (params.refreshToken != null) {
     req.session.refreshToken = params.refreshToken;
   }

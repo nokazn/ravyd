@@ -21,7 +21,7 @@ export const session = sessionMiddleware({
     // クライアントサイドのJSから読めないようにする
     httpOnly: true,
     // 同一オリジンでのみ Cookie を送信
-    sameSite: 'strict',
+    sameSite: 'none',
     // 1年間
     maxAge: 60 * 24 * 60 * 60 * 1000,
   },
