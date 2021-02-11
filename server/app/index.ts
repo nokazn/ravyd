@@ -5,13 +5,12 @@ import express from 'express';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
-import { path as ROOT_PATH } from 'app-root-path';
 import helmet from 'helmet';
 
 import { logger } from 'shared/logger';
 import { cors, cookieParser, session } from '@/middleware';
 import router from '@/router/v1';
-import { PORT } from '@/config/constants';
+import { PORT, ROOT_PATH } from '@/config/constants';
 
 const app = express();
 
@@ -29,7 +28,6 @@ app.use((_, res) => {
   });
 });
 
-console.log(process.env.NODE_ENV);
 
 if (process.env.NODE_ENV === 'development') {
   const server = https.createServer({

@@ -1,3 +1,7 @@
+import { path } from 'app-root-path';
+
+export const ROOT_PATH = path;
+
 const ENV = process.env as Record<string, string>;
 export const {
   CLIENT_ORIGIN,
