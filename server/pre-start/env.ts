@@ -1,5 +1,5 @@
-import { loadEnv, checkEnv } from 'shared/pre-start/env';
-import { logger } from 'shared/logger';
+import { loadEnv, checkEnv } from '../../shared/pre-start/env';
+import { logger } from '../../shared/logger';
 
 (() => {
   const e = process.env.NODE_ENV ?? 'development';

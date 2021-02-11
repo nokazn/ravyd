@@ -1,11 +1,11 @@
-import { loadEnv, checkEnv } from 'shared/pre-start/env';
-import { logger } from 'shared/logger';
+import { loadEnv, checkEnv } from '../../shared/pre-start/env';
+import { logger } from '../../shared/logger';
 
 (() => {
   const e = process.env.NODE_ENV ?? 'development';
   const result = loadEnv(`client/.env.${e}`);
 
-  const [isValid, env] = checkEnv(['CLIENT_ORIGIN']);
+  const [isValid, env] = checkEnv(['CLIENT_ORIGIN', 'SERVER_ORIGIN']);
   if (!isValid) {
     logger.error({
       result,
