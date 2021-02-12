@@ -10,7 +10,7 @@ import helmet from 'helmet';
 import { logger } from 'shared/logger';
 import { cors, cookieParser, session } from '@/middleware';
 import router from '@/router/v1';
-import { PORT, ROOT_PATH } from '@/config/constants';
+import { PORT, APP_ROOT_PATH } from '@/config/constants';
 
 const app = express();
 
@@ -31,8 +31,8 @@ app.use((_, res) => {
 
 if (process.env.NODE_ENV === 'development') {
   const server = https.createServer({
-    key: fs.readFileSync(path.join(ROOT_PATH, 'localhost-key.pem')),
-    cert: fs.readFileSync(path.join(ROOT_PATH, 'localhost.pem')),
+    key: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost-key.pem')),
+    cert: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost.pem')),
   }, app);
   server.listen(PORT, '127.0.0.1', () => {
     logger.info(`Listening at https://127.0.0.1:${PORT}`);
