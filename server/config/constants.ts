@@ -1,6 +1,4 @@
-import { path } from 'app-root-path';
-
-export const ROOT_PATH = path;
+export * from 'shared/constants';
 
 const ENV = process.env as Record<string, string>;
 export const {

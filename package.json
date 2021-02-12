@@ -14,31 +14,31 @@
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
     "stylelint:fix": "yarn lint --fix",
     "tsc": "tsc --noEmit",
-    "vtc": "vtc --workspace ./ --srcDir ./client/",
+    "vtc": "vtc --workspace ./ --srcDir client/",
     "test": "yarn test:client && yarn test:server",
-    "test:client": "jest ./client/**",
-    "test:server": "jest ./server/** --passWithNoTests",
-    "generate:specs": "openapi-typescript ./shared/openapi/schema.yml --output shared/types/app/schema.ts && eslint ./shared/types/app/schema.ts --fix",
-    "build": "nuxt-ts build",
-    "build:analyze": "nuxt-ts build --analyze",
-    "dev:client": "nuxt-ts",
-    "dev:server": "cross-env TS_NODE_PROJECT=./server/tsconfig.json ts-node-dev -P ./server/tsconfig.json --respawn --files ./server/app",
-    "start": "nuxt-ts start",
-    "start:server": "ts-node -P ./server/tsconfig.json --files ./server/app",
+    "test:client": "jest client/**",
+    "test:server": "jest server/** --passWithNoTests",
+    "generate:specs": "openapi-typescript shared/openapi/schema.yml --output shared/types/app/schema.ts && eslint shared/types/app/schema.ts --fix",
+    "dev:client": "nuxt-ts -c client/nuxt.config.ts",
+    "dev:server": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register -P server/tsconfig.json --respawn --files server/bootstrap",
+    "build:client": "nuxt-ts build -c client/nuxt.config.ts",
+    "build:client:analyze": "nuxt-ts build -c client/nuxt.config.ts --analyze",
+    "build:server": "tsc --build server/tsconfig.json server",
+    "start:client": "nuxt-ts start -c client/nuxt.config.ts",
+    "start:server": "cross-env NODE_ENV=production node -r module-alias/register dist/server/bootstrap",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn generate:specs && yarn lint && yarn tsc && yarn stylelint"
+      "pre-commit": "yarn generate:specs && yarn lint && yarn stylelint && yarn tsc"
     }
   },
   "_moduleAliases": {
-    "~": "client",
-    "~~": ".",
-    "@": "server",
-    "shared": "shared"
+    "~~": "dist",
+    "@": "dist/server",
+    "shared": "dist/shared"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
@@ -127,6 +127,7 @@
     "stylelint-scss": "^3.18.0",
     "ts-jest": "^26.4.4",
     "ts-node-dev": "^1.0.0",
+    "tsconfig-paths": "^3.9.0",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.12",
     "vue-type-check": "^1.0.0",

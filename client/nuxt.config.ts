@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // Must be at first line
-import './client/pre-start';
+import './pre-start';
 
 import fs from 'fs';
 import path from 'path';
@@ -8,6 +8,7 @@ import colors from 'vuetify/es5/util/colors';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
 import type { PluginItem } from '@babel/core';
+import { APP_ROOT_PATH } from '../shared/constants';
 
 const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
   const params = {
@@ -28,10 +29,18 @@ const babelPresets = (isServer: boolean, options?: Record<string, unknown>): Plu
   ];
 };
 
+const generateRelativePath = (r: string) => (p?: string) => {
+  return p != null
+    ? path.join(r, p)
+    : r;
+};
+const relativeFromRoot = generateRelativePath(APP_ROOT_PATH);
+const relative = generateRelativePath(path.join(APP_ROOT_PATH, 'client'));
+
 const nuxtConfig: NuxtConfig = {
   ssr: true,
-  srcDir: './client/',
-  rootDir: './',
+  rootDir: relativeFromRoot(),
+  srcDir: relative(),
   telemetry: false,
   head: {
     titleTemplate: `%s - ${process.env.npm_package_name}`,
@@ -54,10 +63,6 @@ const nuxtConfig: NuxtConfig = {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
-  env: {
-    CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://127.0.0.1:3000',
-    SERVER_ORIGIN: process.env.SERVER_ORIGIN || 'http://localhost:5000',
-  },
   buildModules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/stylelint-module',
@@ -70,11 +75,16 @@ const nuxtConfig: NuxtConfig = {
     '@nuxtjs/pwa',
     'portal-vue/nuxt',
   ],
+  env: {
+    CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://127.0.0.1:3000',
+    SERVER_ORIGIN: process.env.SERVER_ORIGIN || 'https://127.0.0.1:5000',
+  },
   server: {
+    port: process.env.PORT ?? 3000,
     https: process.env.NODE_ENV === 'development'
       ? {
-        key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
-        cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem')),
+        key: fs.readFileSync(relativeFromRoot('localhost-key.pem')),
+        cert: fs.readFileSync(relativeFromRoot('localhost.pem')),
       }
       : undefined,
   },
@@ -106,10 +116,10 @@ const nuxtConfig: NuxtConfig = {
       config.resolve = config.resolve ?? { alias: {} };
       config.resolve.alias = {
         ...config.resolve.alias,
-        '~': path.join(__dirname, 'client'),
-        '~~': __dirname,
-        '@': path.join(__dirname, 'server'),
-        shared: path.join(__dirname, 'shared'),
+        '~': relativeFromRoot('client'),
+        '~~': APP_ROOT_PATH,
+        '@': relativeFromRoot('server'),
+        shared: relativeFromRoot('shared'),
       };
 
       // worker-loader を読み込む
@@ -164,22 +174,22 @@ const nuxtConfig: NuxtConfig = {
     },
   },
   stylelint: {
-    configFile: './.stylelintrc.js',
+    configFile: relative('.stylelintrc.js'),
     fix: true,
   },
   styleResources: {
-    scss: ['~/assets/variables.scss'],
+    scss: [relative('assets/variables.scss')],
   },
   typescript: {
     // type check & lint
     typeCheck: {
       eslint: {
-        files: './client/**/*.{ts,js,vue}',
+        files: relative('**/*.{ts,js,vue}'),
       },
     },
   },
   vuetify: {
-    customVariables: ['~/assets/vuetify.scss'],
+    customVariables: [relative('assets/vuetify.scss')],
     treeShake: true,
     icons: {
       iconfont: 'mdi',

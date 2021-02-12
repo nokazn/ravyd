@@ -5,5 +5,3 @@ WORKDIR /data
 VOLUME /data
 
 EXPOSE 6379
-
-CMD ["sh", "-c", "redis-server --requirepass $REDIS_PASSWORD"]

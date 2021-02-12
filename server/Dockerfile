@@ -12,19 +12,17 @@ FROM init-stage as dev-stage
 
 WORKDIR /app/
 
-EXPOSE 3000
+EXPOSE ${SERVER_PORT}
 
-CMD ["yarn", "dev:client"]
+CMD ["yarn", "dev:server"]
 
 # Start
 FROM init-stage as start-stage
 
-ENV HOST="0.0.0.0"
-
 WORKDIR /app/
 
-RUN yarn build:client
+RUN yarn build:server
 
-EXPOSE 3000
+EXPOSE ${SERVER_PORT}
 
-CMD ["yarn", "start:client"]
+CMD ["yarn", "start:server"]

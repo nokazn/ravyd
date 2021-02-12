@@ -1,6 +1,19 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "../"
-  }
+    "noEmit": true,
+    "baseUrl": "../",
+    "paths": {
+      "typed-vuex": [
+        "./types/typed-vuex/index.d.ts",
+      ],
+      "typed-axios": [
+        "../shared/types/typed-axios.d.ts",
+      ],
+    },
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.vue",
+  ],
 }

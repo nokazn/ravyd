@@ -1,12 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
-      "WebWorker"
+      "WebWorker",
     ],
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "../"
-  }
+    "baseUrl": "../../"
+  },
+  "include": [
+    "**/*.ts",
+  ],
 }
