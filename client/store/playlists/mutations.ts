@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import { PlaylistsState } from './state';
+import type { PlaylistsState } from './state';
 
 export type PlaylistsMutations = {
   SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined

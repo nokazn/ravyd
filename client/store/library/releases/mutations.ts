@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
+
 import type { App } from '~/entities';
-import { LibraryReleasesState } from './state';
+import type { LibraryReleasesState } from './state';
 
 export type LibraryReleasesMutations = {
   SET_RELEASE_LIST: App.ReleaseCard<'album'>[]

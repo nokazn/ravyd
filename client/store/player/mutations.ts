@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
-import { PlayerState } from './state';
+import type { Mutations } from 'typed-vuex';
+import type { PlayerState } from './state';
 
 export type PlayerMutations = {
   SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined

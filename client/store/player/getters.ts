@@ -1,6 +1,5 @@
-import { Getters } from 'typed-vuex';
-
-import { PlayerState } from './state';
+import type { Getters } from 'typed-vuex';
+import type { PlayerState } from './state';
 
 export type PlayerGetters = {
   isPlayerConnected: boolean

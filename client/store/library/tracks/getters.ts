@@ -1,5 +1,5 @@
-import { Getters } from 'typed-vuex';
-import { LibraryTracksState } from './state';
+import type { Getters } from 'typed-vuex';
+import type { LibraryTracksState } from './state';
 
 export type LibraryTracksGetters = {
   trackListLength: number

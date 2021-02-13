@@ -1,9 +1,9 @@
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 
 import { convertTrackDetail } from '~/services/converter';
-import { LibraryHistoryState } from './state';
-import { LibraryHistoryGetters } from './getters';
-import { LibraryHistoryMutations } from './mutations';
+import type { LibraryHistoryState } from './state';
+import type { LibraryHistoryGetters } from './getters';
+import type { LibraryHistoryMutations } from './mutations';
 
 export type LibraryHistoryActions = {
   getRecentlyPlayed: () => Promise<void>

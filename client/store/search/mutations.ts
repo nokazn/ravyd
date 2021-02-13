@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
 
 import type { SpotifyAPI } from 'shared/types';
-import { SearchState } from './state';
+import type { SearchState } from './state';
 
 export type SearchMutations = {
   SET_ALBUMS: SpotifyAPI.SimpleAlbum[] | undefined

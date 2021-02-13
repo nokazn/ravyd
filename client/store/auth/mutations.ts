@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import { AuthState } from './state';
+import type { AuthState } from './state';
 
 type Token = {
   authState: string;

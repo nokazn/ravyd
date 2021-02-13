@@ -1,4 +1,4 @@
-import { Getters } from 'typed-vuex';
+import type { Getters } from 'typed-vuex';
 
 import { BACKGROUND_COLOR, DARKEN_FILTER_RATIO, BACKGROUND_COLOR_RGB } from '~/constants';
 import type { App } from '~/entities';

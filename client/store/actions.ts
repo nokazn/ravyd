@@ -1,10 +1,10 @@
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 
 import { extractDominantColors } from '~/utils/image';
 import { DEFAULT_DOMINANT_COLOR } from '~/constants';
-import { RootState } from './state';
-import { RootGetters } from './getters';
-import { RootMutations } from './mutations';
+import type { RootState } from './state';
+import type { RootGetters } from './getters';
+import type { RootMutations } from './mutations';
 
 export type RootActions = {
   extractDominantBackgroundColor: (src: string) => Promise<void>

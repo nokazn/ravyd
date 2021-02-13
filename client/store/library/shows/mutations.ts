@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import { LibraryShowsState } from './state';
+import type { LibraryShowsState } from './state';
 
 export type LibraryShowsMutations = {
   SET_SHOW_LIST: SpotifyAPI.SimpleShow[];

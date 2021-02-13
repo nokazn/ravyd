@@ -1,5 +1,5 @@
-import { Getters } from 'typed-vuex';
-import { LibraryReleasesState } from './state';
+import type { Getters } from 'typed-vuex';
+import type { LibraryReleasesState } from './state';
 
 export type LibraryReleasesGetters = {
   releaseListLength: number;

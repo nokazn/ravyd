@@ -1,9 +1,9 @@
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 import type { OneToFifty } from 'shared/types';
-import { PlaylistsState } from './state';
-import { PlaylistsGetters } from './getters';
-import { PlaylistsMutations } from './mutations';
 import { multipleRequests } from '~/utils/request/multipleRequests';
+import type { PlaylistsState } from './state';
+import type { PlaylistsGetters } from './getters';
+import type { PlaylistsMutations } from './mutations';
 
 export type PlaylistsActions = {
   getPlaylists: (payload?: { offset?: number, limit?: OneToFifty }) => Promise<void>

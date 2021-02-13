@@ -1,8 +1,8 @@
-import { Getters } from 'typed-vuex';
+import type { Getters } from 'typed-vuex';
 
-import type { App } from '~/entities';
 import { convertToContentListItem } from '~/services/converter';
-import { SearchState } from './state';
+import type { App } from '~/entities';
+import type { SearchState } from './state';
 
 export type SearchGetters = {
   tracks: App.ContentItem<'track'>[]

@@ -1,6 +1,5 @@
-import { Getters } from 'typed-vuex';
-
-import { LibraryHistoryState } from './state';
+import type { Getters } from 'typed-vuex';
+import type { LibraryHistoryState } from './state';
 
 export type LibraryHistoryGetters = {
   historyLength: number

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
 
 import type { App } from '~/entities';
 import type { RootState } from './state';

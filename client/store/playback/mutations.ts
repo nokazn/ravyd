@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
-import { Mutations } from 'typed-vuex';
+import type { Mutations } from 'typed-vuex';
+
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
-import { PlaybackState } from './state';
 import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertUriToId } from '~/services/converter';
+import type { PlaybackState } from './state';
 
 // TODO
 type ExtendedTrack = Spotify.Track & {

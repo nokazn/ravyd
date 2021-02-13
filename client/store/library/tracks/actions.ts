@@ -1,12 +1,12 @@
-import { Actions } from 'typed-vuex';
+import type { Actions } from 'typed-vuex';
 
 import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import { convertPlaylistTrackDetail } from '~/services/converter';
-import { LibraryTracksState } from './state';
-import { LibraryTracksGetters } from './getters';
-import { LibraryTracksMutations } from './mutations';
 import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
+import type { LibraryTracksState } from './state';
+import type { LibraryTracksGetters } from './getters';
+import type { LibraryTracksMutations } from './mutations';
 
 export type LibraryTracksActions = {
   getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
