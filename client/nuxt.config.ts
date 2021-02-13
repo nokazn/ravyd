@@ -174,7 +174,7 @@ const nuxtConfig: NuxtConfig = {
     },
   },
   stylelint: {
-    configFile: relative('.stylelintrc.js'),
+    configFile: relativeFromRoot('.stylelintrc.js'),
     fix: true,
   },
   styleResources: {
