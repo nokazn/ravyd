@@ -28,13 +28,14 @@ app.use((_, res) => {
   });
 });
 
+const HOST = process.env.HOST ?? '127.0.0.1';
 
 if (process.env.NODE_ENV === 'development') {
   const server = https.createServer({
     key: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost-key.pem')),
     cert: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost.pem')),
   }, app);
-  server.listen(PORT, '127.0.0.1', () => {
+  server.listen(PORT, HOST, () => {
     logger.info(`Listening at https://127.0.0.1:${PORT}`);
   });
 } else {

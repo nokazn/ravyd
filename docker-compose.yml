@@ -9,12 +9,16 @@ services:
     container_name: nuxt
     tty: true
     ports:
-      - 3000:3000
+      - ${CLIENT_PORT}:${CLIENT_PORT}
     env_file:
       - ./client/.env.development
+    environment:
+      - CLIENT_PORT
     volumes:
       - .:/app
-      - ./node_modules:/app/node_modules
+      # Exclude node_modules & server directories
+      - node_modules:/app/node_modules
+      - server:/app/server
 
   server:
     build:
@@ -33,7 +37,9 @@ services:
       - redis
     volumes:
       - .:/app
-      - ./node_modules:/app/node_modules
+      # Exclude node_modules & client directories
+      - node_modules:/app/node_modules
+      - client:/app/client
 
   redis:
     image: redis:6.0.4-alpine
@@ -46,8 +52,11 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - redis-session:/data
+      - redis:/data
     command: redis-server --requirepass ${REDIS_PASSWORD}
 
 volumes:
-  redis-session:
+  redis:
+  node_modules:
+  client:
+  server:
