@@ -1,0 +1,12 @@
+{
+  "name": "@ravy/shared",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "generate:specs": "openapi-typescript openapi/schema.yml --output types/app/schema.ts && eslint types/app/schema.ts --fix"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^3.0.1"
+  }
+}

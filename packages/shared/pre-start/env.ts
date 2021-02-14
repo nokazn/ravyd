@@ -5,7 +5,7 @@ import { path as ROOT_PATH } from 'app-root-path';
 import { logger } from '../logger';
 
 export const loadEnv = (relativePath: string): DotenvConfigOutput | undefined => {
-  const p = path.join(ROOT_PATH, relativePath);
+  const p = path.join(ROOT_PATH, 'packages', relativePath);
   let result: DotenvConfigOutput | undefined;
   if (fs.existsSync(p)) {
     result = dotenv.config({ path: p });

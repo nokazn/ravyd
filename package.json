@@ -4,6 +4,10 @@
   "private": true,
   "description": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nokazn/ravy"
+  },
   "author": {
     "name": "nokazn",
     "url": "https://github.com/nokazn"
@@ -11,27 +15,24 @@
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "node": "12"
+  },
   "scripts": {
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore .",
     "lint:fix": "yarn lint --fix",
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
-    "stylelint:fix": "yarn lint --fix",
+    "stylelint:fix": "yarn stylelint --fix",
     "tsc": "tsc --noEmit",
-    "vtc": "vtc --workspace ./ --srcDir client/",
-    "test": "yarn test:client && yarn test:server",
-    "test:client": "jest client/**",
-    "generate:specs": "openapi-typescript shared/openapi/schema.yml --output shared/types/app/schema.ts && eslint shared/types/app/schema.ts --fix",
-    "dev:client": "nuxt-ts -c client/nuxt.config.ts",
-    "build:client": "nuxt-ts build -c client/nuxt.config.ts",
-    "build:client:analyze": "nuxt-ts build -c client/nuxt.config.ts --analyze",
-    "start:client": "nuxt-ts start -c client/nuxt.config.ts",
+    "vtc": "vtc --workspace packages/client/ --srcDir packages/client/",
+    "test": "jest packages/",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn generate:specs && yarn lint && yarn stylelint && yarn tsc"
+      "pre-commit": "lerna run generate:specs --scope @ravy/shared && yarn lint && yarn stylelint && yarn tsc"
     }
   },
   "_moduleAliases": {
@@ -40,24 +41,10 @@
     "shared": "dist/shared"
   },
   "dependencies": {
-    "@nuxt/typescript-runtime": "^2.0.0",
-    "@nuxtjs/axios": "^5.12.3",
-    "@nuxtjs/pwa": "^3.3.2",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "@vue/composition-api": "^1.0.0-beta.21",
     "dayjs": "^1.9.7",
     "lodash": "^4.17.20",
-    "log4js": "^6.3.0",
     "module-alias": "^2.2.2",
-    "node-vibrant": "^3.1.6",
-    "nuxt": "^2.14.11",
-    "nuxt-property-decorator": "^2.8.8",
-    "portal-vue": "^2.1.7",
-    "spinkit": "^2.0.1",
-    "url-join": "^4.0.1",
-    "v-snackbars": "^3.1.0",
-    "vue": "^2.6.12",
-    "vuex-persist": "^2.2.0"
+    "url-join": "^4.0.1"
   },
   "devDependencies": {
     "@babel/compat-data": "^7.12.7",
@@ -65,30 +52,16 @@
     "@babel/preset-env": "^7.12.10",
     "@babel/preset-typescript": "^7.12.7",
     "@babel/runtime-corejs3": "^7.12.5",
-    "@mdi/font": "^5.8.55",
-    "@nuxt/types": "^2.14.11",
-    "@nuxt/typescript-build": "^2.0.2",
-    "@nuxtjs/eslint-config-typescript": "^5.0.0",
-    "@nuxtjs/eslint-module": "^3.0.1",
-    "@nuxtjs/stylelint-module": "^4.0.0",
-    "@nuxtjs/vuetify": "^1.11.2",
     "@types/app-root-path": "^1.2.4",
     "@types/dotenv": "^8.2.0",
     "@types/jest": "^26.0.19",
     "@types/lodash": "^4.14.165",
-    "@types/lodash-webpack-plugin": "^0.11.4",
     "@types/node": "^14.14.12",
-    "@types/resize-observer-browser": "^0.1.4",
-    "@types/spotify-web-playback-sdk": "^0.1.7",
     "@types/url-join": "^4.0.0",
-    "@types/uuid": "^8.3.0",
-    "@types/wicg-mediasession": "^1.1.0",
     "@typescript-eslint/parser": "^4.8.2",
-    "@vue/test-utils": "^1.1.2",
     "app-root-path": "^3.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^26.6.3",
-    "babel-plugin-lodash": "^3.3.4",
     "core-js": "3",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
@@ -101,20 +74,11 @@
     "husky": "^4.3.0",
     "jest": "^26.6.3",
     "lerna": "^3.22.1",
-    "lodash-webpack-plugin": "^0.11.5",
-    "node-sass": "^4.14.1",
-    "openapi-typescript": "^3.0.1",
     "stylelint": "^13.8.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
     "ts-jest": "^26.4.4",
     "tsconfig-paths": "^3.9.0",
-    "vue-jest": "^3.0.7",
-    "vue-template-compiler": "^2.6.12",
-    "vue-type-check": "^1.0.0",
-    "worker-loader": "^2.0.0"
-  },
-  "engines": {
-    "node": "12"
+    "vue-jest": "^3.0.7"
   }
 }

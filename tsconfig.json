@@ -5,7 +5,7 @@
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
-      "DOM",
+      "DOM"
     ],
     "resolveJsonModule": true,
     "allowJs": true,
@@ -33,22 +33,22 @@
     "baseUrl": "./",
     "paths": {
       "~/*": [
-        "./client/*",
+        "packages/client/*"
       ],
       "~~/*": [
-        "./*",
+        "./*"
       ],
       "@/*": [
-        "./server/*",
+        "packages/server/*"
       ],
       "shared/*": [
-        "shared/*",
+        "packages/shared/*"
       ],
       "typed-vuex": [
-        "client/types/typed-vuex/index.d.ts",
+        "packages/client/types/typed-vuex/index.d.ts"
       ],
       "typed-axios": [
-        "shared/types/typed-axios.d.ts",
+        "packages/shared/types/typed-axios.d.ts"
       ]
     },
     // "rootDirs": [],
@@ -62,22 +62,20 @@
     // "mapRoot": "",
     // "inlineSourceMap": true,
     // "inlineSources": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": true
     // "emitDecoratorMetadata": true,
     // "forceConsistentCasingInFileNames": true,
   },
   "include": [
     "./*.ts",
-    "client/**/*.ts",
-    "server/**/*.ts",
-    "shared/**/*.ts",
+    "packages/**/*.ts",
     // ESLint で @typescript-eslint/parser が認識できるように
     "babel.config.js",
     ".eslintrc.js",
     "**/jest.*.js",
-    "client/tests/*.js",
+    "**/tests/*.js"
   ],
   "exclude": [
     "node_modules"
-  ],
+  ]
 }

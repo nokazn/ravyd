@@ -35,11 +35,11 @@ const generateRelativePath = (r: string) => (p?: string) => {
     : r;
 };
 const relativeFromRoot = generateRelativePath(APP_ROOT_PATH);
-const relative = generateRelativePath(path.join(APP_ROOT_PATH, 'client'));
+const relative = generateRelativePath(path.join(APP_ROOT_PATH, 'packages/client'));
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
-  rootDir: relativeFromRoot(),
+  rootDir: relative(),
   srcDir: relative(),
   telemetry: false,
   head: {
@@ -116,10 +116,10 @@ const nuxtConfig: NuxtConfig = {
       config.resolve = config.resolve ?? { alias: {} };
       config.resolve.alias = {
         ...config.resolve.alias,
-        '~': relativeFromRoot('client'),
-        '~~': APP_ROOT_PATH,
-        '@': relativeFromRoot('server'),
-        shared: relativeFromRoot('shared'),
+        '~': relative(),
+        '~~': relativeFromRoot(),
+        '@': relativeFromRoot('packages/server'),
+        shared: relativeFromRoot('packages/shared'),
       };
 
       // worker-loader を読み込む
@@ -157,7 +157,7 @@ const nuxtConfig: NuxtConfig = {
     middleware: 'auth',
   },
   css: [
-    './assets/global.scss',
+    relative('/assets/global.scss'),
     'spinkit/spinkit.min.css',
   ],
   loading: { color: '#fff' },
