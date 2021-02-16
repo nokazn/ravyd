@@ -1,5 +1,5 @@
-/* eslint-disable no-param-reassign */
 // Must be at first line
+// eslint-disable-next-line import/order
 import { https } from './pre-start';
 
 import * as path from 'path';
@@ -7,8 +7,6 @@ import colors from 'vuetify/es5/util/colors';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
 import type { PluginItem } from '@babel/core';
-
-const isDevelopment = process.env.NODE_ENV === 'development';
 
 const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
   const params = {
@@ -29,11 +27,14 @@ const babelPresets = (isServer: boolean, options?: Record<string, unknown>): Plu
   ];
 };
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const generateRelativePath = (r: string) => (p?: string) => {
   return path.join(__dirname, r, p ?? '');
 };
 const relativeFromRoot = generateRelativePath('../../');
 const relative = generateRelativePath('./');
+
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
@@ -90,6 +91,7 @@ const nuxtConfig: NuxtConfig = {
       new LodashModuleReplacementPlugin(),
     ],
     extend(config, { isServer }) {
+      // eslint-disable-next-line no-param-reassign
       config.module = config.module ?? { rules: [] };
       config.module.rules.push({
         // vue ファイルを js ファイルに変換してから適用させたい
@@ -106,14 +108,15 @@ const nuxtConfig: NuxtConfig = {
         exclude: /node_modules/,
       });
 
+      // eslint-disable-next-line no-param-reassign
       config.resolve = config.resolve ?? { alias: {} };
-      config.resolve.alias = {
+      Object.assign(config.resolve.alias, {
         ...config.resolve.alias,
         '~': relative(),
         '~~': relativeFromRoot(),
         '@': relativeFromRoot('packages/server'),
         shared: relativeFromRoot('packages/shared'),
-      };
+      });
 
       // worker-loader を読み込む
       // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387

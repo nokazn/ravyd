@@ -4,5 +4,10 @@
     "source.fixAll.eslint": true,
     "source.fixAll.stylelint": true
   },
+  "eslint.workingDirectories": [
+    "packages/client",
+    "packages/server",
+    "packages/shared"
+  ],
   "editor.formatOnSave": false
 }
