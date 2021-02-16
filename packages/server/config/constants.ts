@@ -11,6 +11,7 @@ export const {
 } = ENV;
 export const PORT = parseInt(ENV.PORT, 10);
 export const REDIS_PORT = parseInt(ENV.REDIS_PORT, 10);
+export const HOST = process.env.HOST ?? 'localhost';
 
 export const SPOTIFY_AUTHORIZE_BASE_URL = 'https://accounts.spotify.com';
 

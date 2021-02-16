@@ -3,8 +3,8 @@ import path from 'path';
 import dotenv, { DotenvConfigOutput } from 'dotenv';
 import { logger } from '../logger';
 
-export const loadEnv = (relativePath: string): DotenvConfigOutput | undefined => {
-  const p = path.join(__dirname, '../', relativePath);
+export const loadEnv = (relativeFromPackages: string): DotenvConfigOutput | undefined => {
+  const p = path.join(__dirname, '../../', relativeFromPackages);
   let result: DotenvConfigOutput | undefined;
   if (fs.existsSync(p)) {
     result = dotenv.config({ path: p });

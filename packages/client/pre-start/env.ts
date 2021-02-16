@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import dotenv, { DotenvConfigOutput } from 'dotenv';
 
-const loadEnv = (relativePath: string): DotenvConfigOutput | undefined => {
-  const p = path.join(__dirname, '../', relativePath);
+const loadEnv = (fileName: string): DotenvConfigOutput | undefined => {
+  const p = path.join(__dirname, '../', fileName);
   let result: DotenvConfigOutput | undefined;
   if (fs.existsSync(p)) {
     result = dotenv.config({ path: p });

@@ -1,16 +1,14 @@
 // Must be at first line
-import './pre-start';
+import { httpsServerOptions } from './pre-start';
 
 import express from 'express';
 import https from 'https';
-import fs from 'fs';
-import path from 'path';
 import helmet from 'helmet';
 
 import { logger } from 'shared/logger';
 import { cors, cookieParser, session } from '@/middleware';
 import router from '@/router/v1';
-import { PORT, APP_ROOT_PATH } from '@/config/constants';
+import { PORT, HOST } from '@/config/constants';
 
 const app = express();
 
@@ -28,19 +26,14 @@ app.use((_, res) => {
   });
 });
 
-const HOST = process.env.HOST ?? '127.0.0.1';
-
-if (process.env.NODE_ENV === 'development') {
-  const server = https.createServer({
-    key: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost-key.pem')),
-    cert: fs.readFileSync(path.join(APP_ROOT_PATH, 'localhost.pem')),
-  }, app);
+if (httpsServerOptions != null) {
+  const server = https.createServer(httpsServerOptions, app);
   server.listen(PORT, HOST, () => {
-    logger.info(`Listening at https://127.0.0.1:${PORT}`);
+    logger.info(`Listening at https://${HOST}:${PORT}`);
   });
 } else {
-  app.listen(PORT, () => {
-    logger.info(`Listening at http://localhost:${PORT}`);
+  app.listen(PORT, HOST, () => {
+    logger.info(`Listening at http://${HOST}:${PORT}`);
   });
 }
 
