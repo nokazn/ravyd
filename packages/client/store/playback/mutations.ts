@@ -12,7 +12,7 @@ type ExtendedTrack = Spotify.Track & {
 }
 
 export type PlaybackMutations = {
-  SET_POLLING_PLAYBACK_TIMER: ReturnType<typeof setTimeout> | number | undefined
+  SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_ID: string | undefined
   SET_DEVICE_LIST: SpotifyAPI.Device[]

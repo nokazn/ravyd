@@ -97,3 +97,5 @@ TODO.md
 *.key
 *.cer
 *.crt
+
+.vercel

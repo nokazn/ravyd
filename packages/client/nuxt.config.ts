@@ -2,13 +2,14 @@
 // Must be at first line
 import './pre-start';
 
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
 import type { PluginItem } from '@babel/core';
-import { APP_ROOT_PATH } from '../shared/constants';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
   const params = {
@@ -30,16 +31,14 @@ const babelPresets = (isServer: boolean, options?: Record<string, unknown>): Plu
 };
 
 const generateRelativePath = (r: string) => (p?: string) => {
-  return p != null
-    ? path.join(r, p)
-    : r;
+  return path.join(__dirname, r, p ?? '');
 };
-const relativeFromRoot = generateRelativePath(APP_ROOT_PATH);
-const relative = generateRelativePath(path.join(APP_ROOT_PATH, 'packages/client'));
+const relativeFromRoot = generateRelativePath('../../');
+const relative = generateRelativePath('./');
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
-  rootDir: relative(),
+  rootDir: relativeFromRoot(),
   srcDir: relative(),
   telemetry: false,
   head: {
@@ -81,7 +80,7 @@ const nuxtConfig: NuxtConfig = {
   },
   server: {
     port: process.env.PORT ?? 3000,
-    https: process.env.NODE_ENV === 'development'
+    https: isDevelopment
       ? {
         key: fs.readFileSync(relativeFromRoot('localhost-key.pem')),
         cert: fs.readFileSync(relativeFromRoot('localhost.pem')),
@@ -166,7 +165,7 @@ const nuxtConfig: NuxtConfig = {
     browserBaseURL: 'https://api.spotify.com/v1',
     progress: false,
     retry: true,
-    debug: process.env.NODE_ENV === 'development',
+    debug: isDevelopment,
     headers: {
       common: {
         Accept: 'application/json',
@@ -182,11 +181,13 @@ const nuxtConfig: NuxtConfig = {
   },
   typescript: {
     // type check & lint
-    typeCheck: {
-      eslint: {
-        files: relative('**/*.{ts,js,vue}'),
-      },
-    },
+    typeCheck: isDevelopment
+      ? {
+        eslint: {
+          files: relative('**/*.{ts,js,vue}'),
+        },
+      }
+      : undefined,
   },
   vuetify: {
     customVariables: [relative('assets/vuetify.scss')],

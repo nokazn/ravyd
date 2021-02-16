@@ -30,6 +30,7 @@ module.exports = {
     'airbnb-base',
   ],
   plugins: [
+    '@typescript-eslint',
     'jest',
   ],
   rules: {
