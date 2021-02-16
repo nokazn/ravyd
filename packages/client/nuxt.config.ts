@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 // Must be at first line
-import './pre-start';
+import { https } from './pre-start';
 
-import * as fs from 'fs';
 import * as path from 'path';
 import colors from 'vuetify/es5/util/colors';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
@@ -80,12 +79,7 @@ const nuxtConfig: NuxtConfig = {
   },
   server: {
     port: process.env.PORT ?? 3000,
-    https: isDevelopment
-      ? {
-        key: fs.readFileSync(relativeFromRoot('localhost-key.pem')),
-        cert: fs.readFileSync(relativeFromRoot('localhost.pem')),
-      }
-      : undefined,
+    https,
   },
   build: {
     babel: {
