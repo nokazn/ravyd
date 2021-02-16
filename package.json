@@ -19,6 +19,7 @@
     "node": "12.x"
   },
   "scripts": {
+    "postinstall": "husky install",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .eslintignore .",
     "lint:fix": "yarn lint --fix",
     "stylelint": "stylelint --ignore-path .stylelintignore \"**/*.{css,scss,vue}\"",
@@ -29,11 +30,6 @@
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lerna run generate:specs --scope @ravy/shared && yarn lint && yarn stylelint && yarn tsc"
-    }
   },
   "_moduleAliases": {
     "~~": "dist",
