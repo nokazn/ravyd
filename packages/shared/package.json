@@ -1,0 +1,27 @@
+{
+  "name": "@ravy/shared",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "generate:specs": "openapi-typescript openapi/schema.yml --output types/app/schema.ts && eslint types/app/schema.ts --fix"
+  },
+  "dependencies": {
+    "@types/app-root-path": "^1.2.4",
+    "dayjs": "^1.9.7",
+    "lodash": "^4.17.20",
+    "url-join": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
+    "@types/dotenv": "^8.2.0",
+    "@types/lodash": "^4.14.165",
+    "@types/node": "^14.14.12",
+    "@types/url-join": "^4.0.0",
+    "app-root-path": "^3.0.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "openapi-typescript": "^3.0.1",
+    "tsconfig-paths": "^3.9.0"
+  }
+}

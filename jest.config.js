@@ -1,28 +1,35 @@
 module.exports = {
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/client/$1',
-    '^~/(.*)$': '<rootDir>/client/$1',
-    '^@@/(.*)$': '<rootDir>/$1',
+    '^~/(.*)$': '<rootDir>/packages/client/$1',
     '^~~/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/packages/server/$1',
+    '^shared/(.*)$': '<rootDir>/packages/shared/$1',
     '^vue$': 'vue/dist/vue.common.js',
-    '\\.(css|less)$': 'identity-obj-proxy',
+    '\\.(scss|css)$': 'identity-obj-proxy',
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest',
+    '.*\\.vue$': 'vue-jest',
   },
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/components/**/*.vue', '<rootDir>/pages/**/*.vue'],
-  setupFiles: ['<rootDir>/client/tests/jest.setup.js'],
-  setupFilesAfterEnv: ['<rootDir>/client/tests/testSetup.js'],
+  collectCoverageFrom: [
+    '<rootDir>/packages/client/components/**',
+    '<rootDir>/packages/client/pages/**',
+  ],
+  setupFiles: [
+    '<rootDir>/packages/client/tests/jest.setup.js',
+  ],
+  setupFilesAfterEnv: [
+    '<rootDir>/packages/client/tests/testTasks.js',
+  ],
   globals: {
     'vue-jest': {
       experimentalCSSCompile: true,
       // TODO
       resources: {
-        scss: ['<rootDir>/client/assets/variables.scss'],
+        scss: ['<rootDir>/packages/client/assets/variables.scss'],
       },
     },
   },

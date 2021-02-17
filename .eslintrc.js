@@ -9,7 +9,6 @@ module.exports = {
     'jest/globals': true,
   },
   globals: {
-    // Spotify Web Playback SDK
     Spotify: 'readonly',
   },
   // .vue ファイルの template のパーサー
@@ -23,25 +22,38 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
-    // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張している
-    // #129 .eslintignore を漏れなく記載しないと fork-ts-checker-webpack-plugin が無限ループで死ぬ
+    // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張
     '@nuxtjs/eslint-config-typescript',
     'plugin:vue/recommended',
-    // eslint-plugin-vue を拡張している
+    // eslint-plugin-vue を拡張
     'plugin:nuxt/recommended',
     'airbnb-base',
   ],
-  plugins: ['jest'],
+  plugins: [
+    '@typescript-eslint',
+    'jest',
+  ],
   rules: {
     'no-console': isProduction ? [2, { allow: ['info', 'warn', 'error'] }] : [1, { allow: ['info', 'warn', 'error'] }],
     'no-debugger': isProduction ? 2 : 1,
-    // 空白行は2行まで
     'no-multiple-empty-lines': [2, { max: 2 }],
-    // ts でチェック
+    // TypeScript でチェック
     'no-undef': 0,
     camelcase: 0,
     'lines-between-class-members': 0,
     'arrow-body-style': 0,
+    'max-len': [
+      'error',
+      120,
+      2,
+      {
+        ignoreUrls: true,
+        ignoreComments: true,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
 
     /**
      * eslint-plugin-import
@@ -52,10 +64,10 @@ module.exports = {
       {
         js: 'never',
         ts: 'never',
-        json: 'never',
         scss: 'never',
         // *.vue ファイルを ts として読み込むために拡張子必須
         vue: 'always',
+        json: 'always',
         worker: 'always',
       },
     ],

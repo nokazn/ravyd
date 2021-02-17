@@ -3,9 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./client/*"],
-      "@/*": ["./client/*"],
+      "@/*": ["./server/*"],
       "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "shared/*": ["./shared/*"]
     }
   },
   "exclude": ["node_modules", ".nuxt", "dist"]

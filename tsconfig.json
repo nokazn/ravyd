@@ -1,6 +1,81 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "esnext"
-  }
+    "target": "es2019",
+    "module": "esnext",
+    "lib": [
+      "ESNext",
+      "ESNext.AsyncIterable",
+      "DOM"
+    ],
+    "resolveJsonModule": true,
+    "allowJs": true,
+    // "checkJs": true,
+    // "jsx": "preserve",
+    // "declaration": true,
+    // "declarationMap": true,
+    "sourceMap": true,
+    // "outFile": "./",
+    // "outDir": "./",
+    "rootDir": "./",
+    // "composite": true,
+    // "tsBuildInfoFile": "./",
+    // "removeComments": true,
+    // "noEmit": true,
+    // "importHelpers": true,
+    // "downlevelIteration": true,
+    // "isolatedModules": true,
+    "strict": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    // "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": [
+        "packages/client/*"
+      ],
+      "~~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "packages/server/*"
+      ],
+      "shared/*": [
+        "packages/shared/*"
+      ],
+      "typed-vuex": [
+        "packages/client/types/typed-vuex/index.d.ts"
+      ],
+      "typed-axios": [
+        "packages/shared/types/typed-axios.d.ts"
+      ]
+    },
+    // "rootDirs": [],
+    // "typeRoots": [],
+  //   "types": [],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    // "preserveSymlinks": true,
+    // "allowUmdGlobalAccess": true,
+    // "sourceRoot": "",
+    // "mapRoot": "",
+    // "inlineSourceMap": true,
+    // "inlineSources": true,
+    "experimentalDecorators": true
+    // "emitDecoratorMetadata": true,
+    // "forceConsistentCasingInFileNames": true,
+  },
+  "include": [
+    "./*.ts",
+    "packages/**/*.ts",
+    // ESLint で @typescript-eslint/parser が認識できるように
+    "babel.config.js",
+    ".eslintrc.js",
+    "**/jest.*.js",
+    "**/tests/*.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

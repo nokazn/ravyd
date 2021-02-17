@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "ESNext.AsyncIterable",
+      "WebWorker",
+    ],
+    "baseUrl": "../../"
+  },
+  "include": [
+    "**/*.ts",
+  ],
+}

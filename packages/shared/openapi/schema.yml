@@ -1,0 +1,304 @@
+openapi: 3.0.2
+info:
+  title: Auth API
+  description: ''
+  version: 0.1.0
+
+servers:
+  - url: '{protocol}://example.com/api/v1'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: https
+
+# TODO: add a component used for error message
+components:
+  parameters:
+    SessionId:
+      in: cookie
+      name: connect.sid
+      schema:
+        type: string
+      description: Session ID
+
+  schemas:
+    Status:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+    AccessToken:
+      type: object
+      properties:
+        authState:
+          type: string
+        accessToken:
+          type: string
+          nullable: false
+        expireIn:
+          type: integer
+          minimum: 0
+      required:
+        - authState
+        - accessToken
+        - expireIn
+
+    EmptyAccessToken:
+      type: object
+      properties:
+        authState:
+          type: string
+          enum:
+            - null
+        accessToken:
+          type: string
+          enum:
+            - null
+        expireIn:
+          type: integer
+          minimum: 0
+          enum:
+            - 0
+      required:
+        - authState
+        - accessToken
+        - expireIn
+
+    FailedAccessToken:
+      type: object
+      properties:
+        authState:
+          type: string
+        accessToken:
+          type: string
+          enum:
+            - null
+        expireIn:
+          type: integer
+          minimum: 0
+          enum:
+            - 0
+      required:
+        - authState
+        - accessToken
+        - expireIn
+
+paths:
+  /auth:
+    get:
+      summary: Check whether a user loges in.
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - oneOf:
+                    - allOf:
+                      - $ref: '#/components/schemas/AccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - true
+                        required:
+                          - authenticated
+                    - allOf:
+                      - $ref: '#/components/schemas/EmptyAccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - false
+                        required:
+                          - authenticated
+
+  /auth/login:
+    post:
+      summary: Return refresh token if exists, or URL for login to Spotify.
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - oneOf:
+                    - allOf:
+                      - $ref: '#/components/schemas/AccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - true
+                          url:
+                            type: string
+                            enum:
+                              - null
+                        required:
+                          - authenticated
+                          - url
+                    - allOf:
+                      - $ref: '#/components/schemas/EmptyAccessToken'
+                      - type: object
+                        properties:
+                          authenticated:
+                            type: boolean
+                            enum:
+                              - false
+                          url:
+                            type: string
+                            nullable: true
+                        required:
+                          - authenticated
+                          - url
+
+  /auth/login/callback:
+    get:
+      summary: Receive code & state from Spotify's auth server, and return access token.
+      parameters:
+        - in: cookie
+          name: csrfState
+          description: CSRF token for checking 'state' that Spotify's auth server returns in query parameters.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: code
+          description: Authorization code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: state
+          description: CSRF state
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Obtain an access token successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/AccessToken'
+        400:
+          description: Fail to obtain an access token mainly caused by incorrect code or state in query parameters.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+        403:
+          description: Fail to obtain an access token especially caused by not matching between state in cookie and in query parameters.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+
+  /auth/refresh:
+    put:
+      summary: Refresh access token.
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  authState:
+                    type: string
+                required:
+                  - accessToken
+                  - authState
+      responses:
+        200:
+          description: Update an access token successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/AccessToken'
+        400:
+          description: Failure mainly caused by invalid request body.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+        403:
+          description: Failure mainly caused by no refresh token in session or no correspond access_token_key in session.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+        409:
+          description: Failure mainly caused by conflicting on refreshing.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/EmptyAccessToken'
+        500:
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Status'
+                  - $ref: '#/components/schemas/FailedAccessToken'
+
+  /auth/logout:
+    post:
+      summary: Delete access token & refresh token in session.
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        204:
+          description: Log out successfully.
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
