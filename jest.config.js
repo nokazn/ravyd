@@ -5,7 +5,7 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/packages/server/$1',
     '^shared/(.*)$': '<rootDir>/packages/shared/$1',
     '^vue$': 'vue/dist/vue.common.js',
-    '\\.(css|less)$': 'identity-obj-proxy',
+    '\\.(scss|css)$': 'identity-obj-proxy',
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   transform: {

@@ -27,6 +27,7 @@
     "tsc": "tsc --noEmit",
     "vtc": "vtc --workspace packages/client/ --srcDir packages/client/",
     "test": "jest packages/",
+    "test:ci": "jest packages/ --ci",
     "steps": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '.+(\\|\\.ts$\\|\\.js$\\|\\.vue$\\|\\.scss$\\|\\.json\\|)' | xargs wc -l",
     "steps:ts": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.ts$' | xargs wc -l",
     "steps:vue": "find . -type f -not -path \"**/node_modules/**\" -not -path \"./.nuxt/**\" -not -path \"**/dist/**\" | grep -e '\\.vue$' | xargs wc -l"
@@ -57,6 +58,7 @@
     "eslint-plugin-nuxt": "^1.0.0",
     "eslint-plugin-vue": "^7.1.0",
     "husky": "^5.0.9",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
     "lerna": "^3.22.1",
     "stylelint": "^13.8.0",
