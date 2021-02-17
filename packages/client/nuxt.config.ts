@@ -38,7 +38,7 @@ const relative = generateRelativePath('./');
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
-  rootDir: relativeFromRoot(),
+  rootDir: relative(),
   srcDir: relative(),
   telemetry: false,
   head: {
