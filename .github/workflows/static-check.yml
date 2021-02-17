@@ -24,25 +24,26 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Find cache of node_modules
-      id: node_modules_cache
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: node_modules_${{ hashFiles('**/yarn.lock') }}
+      - name: Find cache of node_modules
+        id: node_modules_cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules_${{ hashFiles('**/yarn.lock') }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    # キャッシュがヒットしなかった場合のみ実行
-    - name: Install dependencies
-      if: steps.node_modules_cache.outputs.cache-hit != 'true'
-      run: |
-        yarn --frozen-lockfile --production=false
+      # キャッシュがヒットしなかった場合のみ実行
+      - name: Install dependencies
+        if: steps.node_modules_cache.outputs.cache-hit != 'true'
+        run: |
+          yarn global all lerna
+          lerna bootstrap
 
   vtc:
     runs-on: ubuntu-latest
@@ -52,30 +53,31 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Restore cache of node_modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: node_modules_${{ hashFiles('**/yarn.lock') }}
+      - name: Restore cache of node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules_${{ hashFiles('**/yarn.lock') }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    # 実際は dependencies でキャッシュしてるので実行されない
-    - name: Install dependencies
-      if: steps.node_modules_cache.outputs.cache-hit != 'true'
-      run: |
-        yarn --frozen-lockfile --production=false
+      # 実際は dependencies でキャッシュしてるので実行されない
+      - name: Install dependencies
+        if: steps.node_modules_cache.outputs.cache-hit != 'true'
+        run: |
+          yarn global all lerna
+          lerna bootstrap
 
-    - name: Run vtc
-      # .vue ファイルが更新されたときのみ実行
-      run: git log -1 --pretty="format:" --name-only --rename-empty | grep -E "\.vue$" && yarn vtc
+      - name: Run vtc
+        # .vue ファイルが更新されたときのみ実行
+        run: git log -1 --pretty="format:" --name-only --rename-empty | grep -E "\.vue$" && yarn vtc
 
-  lint_tsc_test:
+  test:
     runs-on: ubuntu-latest
     needs: dependencies
     strategy:
@@ -83,30 +85,31 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Restore cache of node_modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: node_modules_${{ hashFiles('**/yarn.lock') }}
+      - name: Restore cache of node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules_${{ hashFiles('**/yarn.lock') }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    # 実際は dependencies でキャッシュしてるので実行されない
-    - name: Install dependencies
-      if: steps.node_modules_cache.outputs.cache-hit != 'true'
-      run: |
-        yarn --frozen-lockfile --production=false
+      # 実際は dependencies でキャッシュしてるので実行されない
+      - name: Install dependencies
+        if: steps.node_modules_cache.outputs.cache-hit != 'true'
+        run: |
+          yarn global all lerna
+          lerna bootstrap
 
-    - name: Run ESLint & styleLint
-      run: yarn run lint && yarn stylelint
+      - name: Run ESLint & styleLint
+        run: yarn lint && yarn stylelint
 
-    - name: Type Checking
-      run: yarn tsc
+      - name: Type Checking
+        run: yarn tsc
 
-    - name: Run test
-      run: yarn test
+      - name: Run test
+        run: yarn test

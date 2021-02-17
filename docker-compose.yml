@@ -4,33 +4,33 @@ services:
   client:
     build:
       context: .
-      dockerfile: ./client/Dockerfile
+      dockerfile: ./packages/client/Dockerfile
       target: dev-stage
     container_name: nuxt
     tty: true
     ports:
       - ${CLIENT_PORT}:${CLIENT_PORT}
     env_file:
-      - ./client/.env.development
+      - ./packages/client/.env.development
     environment:
       - CLIENT_PORT
     volumes:
       - .:/app
       # Exclude node_modules & server directories
       - node_modules:/app/node_modules
-      - server:/app/server
+      - server:/app/packages/server
 
   server:
     build:
       context: .
-      dockerfile: ./server/Dockerfile
+      dockerfile: ./packages/server/Dockerfile
       target: dev-stage
     container_name: server
     tty: true
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
     env_file:
-      - ./server/.env.development
+      - ./packages/server/.env.development
     environment:
       - SERVER_PORT
     depends_on:
@@ -39,14 +39,14 @@ services:
       - .:/app
       # Exclude node_modules & client directories
       - node_modules:/app/node_modules
-      - client:/app/client
+      - client:/app/packages/client
 
   redis:
-    image: redis:6.0.4-alpine
+    image: redis:6.0.10-alpine
     container_name: redis
-    build: ./server/redis
+    build: ./packages/server/redis
     env_file:
-      - ./server/.env.development
+      - ./packages/server/.env.development
     environment:
       - REDIS_PASSWORD
     ports:

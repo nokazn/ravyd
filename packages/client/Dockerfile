@@ -9,20 +9,20 @@ WORKDIR /app/
 # The current directory is where the command is executed.
 COPY . /app/
 
-RUN yarn --frozen-lockfile --production=false
+RUN yarn global add lerna && lerna bootstrap
 
 # Dev
 FROM init-stage as dev-stage
 
 EXPOSE ${CLIENT_PORT}
 
-CMD ["yarn", "dev:client"]
+CMD ["lerna", "run", "dev", "--scope", "@ravy/client", "--stream"]
 
 # Start
 FROM init-stage as start-stage
 
-RUN yarn build:client
+RUN lerna build
 
 EXPOSE ${CLIENT_PORT}
 
-CMD ["yarn", "start:client"]
+CMD ["lerna", "run", "start", "--scope", "@ravy/client", "--stream"]
