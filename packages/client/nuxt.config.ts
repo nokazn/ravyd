@@ -8,6 +8,9 @@ import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
 import type { PluginItem } from '@babel/core';
 
+const APP_NAME = 'ravy';
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
   const params = {
     loose: true,
@@ -27,8 +30,6 @@ const babelPresets = (isServer: boolean, options?: Record<string, unknown>): Plu
   ];
 };
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-
 const generateRelativePath = (r: string) => (p?: string) => {
   return path.join(__dirname, r, p ?? '');
 };
@@ -42,8 +43,8 @@ const nuxtConfig: NuxtConfig = {
   srcDir: relative(),
   telemetry: false,
   head: {
-    titleTemplate: `%s - ${process.env.npm_package_name}`,
-    title: process.env.npm_package_name,
+    titleTemplate: `%s - ${APP_NAME}`,
+    title: APP_NAME,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
