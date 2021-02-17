@@ -22,7 +22,7 @@ module.exports = {
     '<rootDir>/packages/client/tests/jest.setup.js',
   ],
   setupFilesAfterEnv: [
-    '<rootDir>/packages/client/tests/testSetup.js',
+    '<rootDir>/packages/client/tests/testTasks.js',
   ],
   globals: {
     'vue-jest': {
