@@ -16,7 +16,7 @@ FROM init-stage as dev-stage
 
 EXPOSE ${SERVER_PORT}
 
-CMD ["lerna", "run", "dev", "--scope", "@ravy/server", "--stream"]
+CMD ["lerna", "run", "dev", "--scope", "@ravyd/server", "--stream"]
 
 # Start
 FROM init-stage as start-stage
@@ -25,4 +25,4 @@ RUN yarn build
 
 EXPOSE ${SERVER_PORT}
 
-CMD ["lerna", "run", "start", "--scope", "@ravy/server", "--stream"]
+CMD ["lerna", "run", "start", "--scope", "@ravyd/server", "--stream"]

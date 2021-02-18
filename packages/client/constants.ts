@@ -80,7 +80,7 @@ export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
   'track',
 ];
 export const DEFAULT_DURATION_MS = Infinity;
-export const APP_NAME = 'ravy';
+export const APP_NAME = 'Ravyd';
 
 export const EMPTY_PAGING: SpotifyAPI.Paging<unknown> = {
   href: '',

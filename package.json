@@ -1,12 +1,12 @@
 {
-  "name": "ravy",
+  "name": "ravyd",
   "version": "0.1.0",
   "private": true,
   "description": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nokazn/ravy"
+    "url": "https://github.com/nokazn/ravyd"
   },
   "author": {
     "name": "nokazn",

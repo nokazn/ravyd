@@ -1,5 +1,5 @@
 {
-  "name": "@ravy/server",
+  "name": "@ravyd/server",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -14,7 +14,7 @@
     "start": "cross-env NODE_ENV=production node -r module-alias/register ../../dist/server/bootstrap"
   },
   "dependencies": {
-    "@ravy/shared": "^0.1.0",
+    "@ravyd/shared": "^0.1.0",
     "connect-redis": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",

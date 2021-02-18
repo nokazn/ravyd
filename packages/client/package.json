@@ -1,5 +1,5 @@
 {
-  "name": "@ravy/client",
+  "name": "@ravyd/client",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -24,7 +24,7 @@
     "@nuxtjs/axios": "^5.12.3",
     "@nuxtjs/pwa": "^3.3.2",
     "@nuxtjs/style-resources": "^1.0.0",
-    "@ravy/shared": "^0.1.0",
+    "@ravyd/shared": "^0.1.0",
     "@vue/composition-api": "^1.0.0-beta.21",
     "dayjs": "^1.9.7",
     "lodash": "^4.17.20",

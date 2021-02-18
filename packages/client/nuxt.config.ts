@@ -8,7 +8,7 @@ import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
 import type { PluginItem } from '@babel/core';
 
-const APP_NAME = 'ravy';
+const APP_NAME = 'Ravyd';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
