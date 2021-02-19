@@ -4,6 +4,7 @@
     "target": "es2019",
     "module": "CommonJS",
     "outDir": "../../dist",
+    "rootDir": "../",
     "noEmit": false
   },
   "include": [

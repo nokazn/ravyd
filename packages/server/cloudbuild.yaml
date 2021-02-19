@@ -1,0 +1,41 @@
+# This file must be run at project root.
+
+steps:
+  # Build
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+      - "--file"
+      - "./packages/server/Dockerfile"
+      - "--target"
+      - "start-stage"
+      - "."
+
+  # Push to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"]
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "${_IMAGE_NAME}"
+      - "--image"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+      - "--region"
+      - "${_REGION}"
+      - "--platform"
+      - "managed"
+
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+
+timeout: 900s
+
+substitutions:
+  _REPOSITORY_NAME: "ravyd-repository"
+  _IMAGE_NAME: "ravyd-server"
