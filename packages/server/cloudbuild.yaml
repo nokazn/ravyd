@@ -6,7 +6,7 @@ steps:
     args:
       - "build"
       - "-t"
-      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
       - "--file"
       - "./packages/server/Dockerfile"
       - "--target"
@@ -15,7 +15,7 @@ steps:
 
   # Push to Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"]
+    args: ["push", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"]
 
   # Deploy to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -25,7 +25,7 @@ steps:
       - "deploy"
       - "${_IMAGE_NAME}"
       - "--image"
-      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
       - "--region"
       - "${_REGION}"
       - "--platform"
@@ -34,14 +34,23 @@ steps:
       - "${_PORT}"
       - "--timeout"
       - "20"
+      - "--cpu"
+      - "1"
+      - "--memory"
+      - "256Mi"
       - "--max-instances"
-      - "50"
+      - "30"
+      - "--allow-unauthenticated"
+      - "--no-traffic"
 
 images:
-  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
 
 timeout: 900s
 
-substitutions:
-  _REPOSITORY_NAME: "ravyd-repository"
-  _IMAGE_NAME: "ravyd-server"
+# These substitutions must be passed from command.
+# substitutions:
+#   _REPOSITORY_NAME:
+#   _IMAGE_NAME:
+#   _REGION:
+#   _PORT:
