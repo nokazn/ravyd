@@ -21,7 +21,7 @@ CMD ["lerna", "run", "dev", "--scope", "@ravyd/server", "--stream"]
 # Start
 FROM init-stage as start-stage
 
-RUN lerna run build --scope @ravyd/server --stream
+RUN yarn build
 
 EXPOSE ${SERVER_PORT}
 
