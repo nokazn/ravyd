@@ -30,6 +30,12 @@ steps:
       - "${_REGION}"
       - "--platform"
       - "managed"
+      - "--port"
+      - "${_PORT}"
+      - "--timeout"
+      - "20"
+      - "--max-instances"
+      - "50"
 
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${SHORT_SHA}"
