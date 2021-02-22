@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: [ develop, master, main ]
+    branches: [develop, master, main]
     paths:
       - "**.ts"
       - "**.js"
@@ -14,7 +14,7 @@ on:
       - "**ignore"
       - ".github/workflows/**"
   pull_request:
-    branches: [ develop, master, main ]
+    branches: [develop, master, main]
 
 jobs:
   dependencies:

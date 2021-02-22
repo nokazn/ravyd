@@ -1,0 +1,47 @@
+name: deployment
+
+on:
+  workflow_run:
+    workflows: [test]
+    branches: [main]
+    types:
+      - completed
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  GCP_REGION: ${{ secrets.GCP_REGION }}
+  GCP_REPOSITORY_NAME: ${{ secrets.GCP_REPOSITORY_NAME }}
+  GCP_IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME }}
+  SERVER_PORT: ${{ secrets.SERVER_PORT }}
+
+jobs:
+  deploy-to-cloud-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ahmadnassri/action-workflow-run-wait@v1
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        if: ${{ github.event.workflow_run.event == 'push' }}
+        with:
+          project_id: ${GCP_PROJECT_ID}
+          service_account_key: ${GCP_SA_KEY}
+          export_default_credentials: true
+
+      - name: Prepare for deploy
+        run: |
+          gcloud auth configure-docker --quiet
+          if [[ -z $(gcloud artifacts repositories describe ${GCP_REPOSITORY_NAME} --location=${GCP_REGION} 2>/dev/null) ]]; then
+            gcloud artifacts repositories create ${GCP_REPOSITORY_NAME} \
+              --repository-format=docker \
+              --location=${GCP_REGION}
+          fi
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud builds submit \
+            --substitutions="COMMIT_SHA=${{ github.sha }},_REGION=${GCP_REGION},_REPOSITORY_NAME=${GCP_REPOSITORY_NAME},_IMAGE_NAME=${GCP_IMAGE_NAME},_PORT=${SERVER_PORT}" \
+            --config ./packages/server/cloudbuild.yaml

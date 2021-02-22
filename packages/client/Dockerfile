@@ -21,7 +21,7 @@ CMD ["lerna", "run", "dev", "--scope", "@ravyd/client", "--stream"]
 # Start
 FROM init-stage as start-stage
 
-RUN lerna build
+RUN lerna run build --scope @ravyd/client --stream
 
 EXPOSE ${CLIENT_PORT}
 

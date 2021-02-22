@@ -98,4 +98,6 @@ TODO.md
 *.cer
 *.crt
 
+**/credential.json
+
 .vercel
