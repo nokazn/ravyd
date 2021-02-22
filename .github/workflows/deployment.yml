@@ -30,16 +30,18 @@ jobs:
           project_id: ${GCP_PROJECT_ID}
           service_account_key: ${GCP_SA_KEY}
           export_default_credentials: true
+
+      - name: Prepare for deploy
         run: |
           gcloud auth configure-docker --quiet
-
-      - name: Deploy to Cloud Run
-        run: |
           if [[ -z $(gcloud artifacts repositories describe ${GCP_REPOSITORY_NAME} --location=${GCP_REGION} 2>/dev/null) ]]; then
             gcloud artifacts repositories create ${GCP_REPOSITORY_NAME} \
               --repository-format=docker \
               --location=${GCP_REGION}
           fi
+
+      - name: Deploy to Cloud Run
+        run: |
           gcloud builds submit \
             --substitutions="COMMIT_SHA=${{ github.sha }},_REGION=${GCP_REGION},_REPOSITORY_NAME=${GCP_REPOSITORY_NAME},_IMAGE_NAME=${GCP_IMAGE_NAME},_PORT=${SERVER_PORT}" \
             --config ./packages/server/cloudbuild.yaml
