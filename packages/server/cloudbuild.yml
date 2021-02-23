@@ -46,11 +46,6 @@ steps:
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
 
-timeout: 900s
+logsBucket: "gs://github-actions-cloud-build-logs"
 
-# These substitutions must be passed from command.
-# substitutions:
-#   _REPOSITORY_NAME:
-#   _IMAGE_NAME:
-#   _REGION:
-#   _PORT:
+timeout: 900s

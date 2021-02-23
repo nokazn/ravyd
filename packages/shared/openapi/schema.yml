@@ -1,11 +1,11 @@
 openapi: 3.0.2
 info:
-  title: Auth API
+  title: Authorization API
   description: ''
   version: 0.1.0
 
 servers:
-  - url: '{protocol}://example.com/api/v1'
+  - url: '{protocol}://api.ravyd.com/v1'
     variables:
       protocol:
         enum:

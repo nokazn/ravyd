@@ -1,8 +1,9 @@
 #!/bin/bash
 
+set -eu -o pipefail
+
 readonly LOCATION="asia-northeast1"
 readonly PROJECT_ID=$(gcloud config get-value project)
-readonly PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
 readonly SERVICE_ACCOUNT_ID="github-actions-builder"
 readonly SERVICE_ACCOUNT="${SERVICE_ACCOUNT_ID}@${PROJECT_ID}.iam.gserviceaccount.com"
 
@@ -21,6 +22,7 @@ gcloud services enable \
   artifactregistry.googleapis.com \
   cloudbuild.googleapis.com \
   run.googleapis.com \
+  cloudresourcemanager.googleapis.com \
   secretmanager.googleapis.com
 
 if [[ -z $(gcloud artifacts repositories describe "${REPOSITORY_NAME}" --location=${LOCATION} 2>/dev/null) ]]; then
@@ -38,5 +40,8 @@ if [[ -z $(gcloud iam service-accounts describe "${SERVICE_ACCOUNT}" 2>/dev/null
   gcloud iam service-accounts create "${SERVICE_ACCOUNT_ID}" \
     --display-name="Github Actions builder"
 fi
-gcloud iam service-accounts keys create ./credential.json \
-  --iam-account "${SERVICE_ACCOUNT}"
+
+if [[ ! -f "./credential.json" ]]; then
+  gcloud iam service-accounts keys create ./credential.json \
+    --iam-account "${SERVICE_ACCOUNT}"
+fi
