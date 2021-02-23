@@ -1,7 +1,7 @@
 import sessionMiddleware from 'express-session';
 import connectRedis from 'connect-redis';
 
-import { SESSION_SECRET } from '@/config/constants';
+import { CLIENT_ORIGIN, IS_PRODUCTION, SESSION_SECRET } from '@/config/constants';
 import client from '@/redis';
 
 const RedisStore = connectRedis(sessionMiddleware);
@@ -21,7 +21,13 @@ export const session = sessionMiddleware({
     // クライアントサイドのJSから読めないようにする
     httpOnly: true,
     // 同一オリジンでのみ Cookie を送信
-    sameSite: 'none',
+    sameSite: IS_PRODUCTION
+      ? 'strict'
+      : 'none',
+    // production ではサブドメインにも許可
+    domain: IS_PRODUCTION
+      ? CLIENT_ORIGIN.replace(/^https?:\/\//, '').replace(/\/+$/, '')
+      : undefined,
     // 1年間
     maxAge: 60 * 24 * 60 * 60 * 1000,
   },

@@ -4,7 +4,7 @@ import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
 import urljoin from 'url-join';
 
-import { SERVER_ORIGIN, SPOTIFY_API_URL } from '~/constants';
+import { IS_DEVELOPMENT, SERVER_ORIGIN, SPOTIFY_API_URL } from '~/constants';
 
 const injector: Plugin = ({ $axios, app }, inject) => {
   /**
@@ -59,7 +59,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
   }) as NuxtAxiosInstance;
 
   // 自己証明書によるエラーを回避するため
-  if (process.env.NODE_ENV === 'development') {
+  if (IS_DEVELOPMENT) {
     const agent = new https.Agent({ rejectUnauthorized: false });
     serverApi.onRequest((config) => {
       config.httpsAgent = agent;
