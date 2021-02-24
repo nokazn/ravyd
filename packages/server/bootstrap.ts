@@ -5,11 +5,12 @@ import { httpsServerOptions } from './pre-start';
 import express from 'express';
 import https from 'https';
 import helmet from 'helmet';
+import * as path from 'path';
 
 import { logger } from 'shared/logger';
 import { cors, cookieParser, session } from '@/middleware';
 import router from '@/router/v1';
-import { PORT, HOST } from '@/config/constants';
+import { PORT, HOST, SERVER_API_PREFIX } from '@/config/constants';
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(cookieParser);
 app.use(helmet());
 app.use(cors);
 app.use(session);
-app.use('/api/v1', router);
+app.use(path.resolve(`/${SERVER_API_PREFIX}`), router);
 
 app.use((_, res) => {
   res.status(404).send({

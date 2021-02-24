@@ -1,10 +1,15 @@
 /* eslint-disable no-param-reassign */
 import https from 'https';
+import urljoin from 'url-join';
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
-import urljoin from 'url-join';
 
-import { IS_DEVELOPMENT, SERVER_ORIGIN, SPOTIFY_API_URL } from '~/constants';
+import {
+  IS_DEVELOPMENT,
+  SERVER_ORIGIN,
+  SERVER_API_PREFIX,
+  SPOTIFY_API_URL,
+} from '~/constants';
 
 const injector: Plugin = ({ $axios, app }, inject) => {
   /**
@@ -54,7 +59,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
    * serverMiddleware と通信する axios インスタンス
    */
   const serverApi = $axios.create({
-    baseURL: urljoin(SERVER_ORIGIN, '/api/v1'),
+    baseURL: urljoin(SERVER_ORIGIN, SERVER_API_PREFIX),
     withCredentials: true,
   }) as NuxtAxiosInstance;
 

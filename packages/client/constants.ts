@@ -1,6 +1,8 @@
 import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
+export * from 'shared/constants';
+
 // destructuring assignment は使わない (process.env のプロパティに生えてるわけではない)
 export const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN as string;
 export const SERVER_ORIGIN = process.env.SERVER_ORIGIN as string;
