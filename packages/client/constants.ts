@@ -1,9 +1,13 @@
 import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
+export * from 'shared/constants';
+
 // destructuring assignment は使わない (process.env のプロパティに生えてるわけではない)
 export const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN as string;
 export const SERVER_ORIGIN = process.env.SERVER_ORIGIN as string;
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 export const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
 
 export const UNEXPECTED_ERROR_CODE = 'UNEXPECTED_ERROR';
