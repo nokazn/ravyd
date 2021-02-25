@@ -46,6 +46,4 @@ steps:
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
 
-logsBucket: "gs://github-actions-cloud-build-logs"
-
 timeout: 900s

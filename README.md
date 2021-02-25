@@ -1,4 +1,4 @@
-[![test](https://github.com/nokazn/ravyd/workflows/test/badge.svg)](https://github.com/nokazn/ravyd/actions?workflow=test)
+[![CI](https://github.com/nokazn/ravyd/workflows/CI/badge.svg)](https://github.com/nokazn/ravyd/actions?workflow=CI)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Ravyd
