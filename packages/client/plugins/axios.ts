@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import urljoin from 'url-join';
-import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
 
 import {
@@ -15,7 +14,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
   /**
    * Spotify API と通信する axios インスタンス
    */
-  const spotifyApi = $axios.create({ baseURL: SPOTIFY_API_URL }) as NuxtAxiosInstance;
+  const spotifyApi = $axios.create({ baseURL: SPOTIFY_API_URL });
 
   spotifyApi.onRequest((config) => {
     const { accessToken } = app.$state().auth;
@@ -61,7 +60,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
     // Send Cookies
     withCredentials: true,
     httpsAgent,
-  }) as NuxtAxiosInstance;
+  });
 
   inject('serverApi', serverApi);
 };
