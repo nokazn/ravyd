@@ -12,7 +12,7 @@ env:
   # GCP_SA_KEY:
   GCP_REGION: ${{ secrets.GCP_REGION }}
   GCP_REPOSITORY_NAME: ${{ secrets.GCP_REPOSITORY_NAME }}
-  GCP_IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME }}
+  GCP_SERVICE_NAME: ${{ secrets.GCP_SERVICE_NAME }}
   SERVER_PORT: ${{ secrets.SERVER_PORT }}
 
 jobs:
@@ -43,5 +43,5 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud builds submit \
-            --substitutions="COMMIT_SHA=${{ github.sha }},_REGION=${GCP_REGION},_REPOSITORY_NAME=${GCP_REPOSITORY_NAME},_IMAGE_NAME=${GCP_IMAGE_NAME},_PORT=${SERVER_PORT}" \
+            --substitutions="COMMIT_SHA=${{ github.sha }},_REGION=${GCP_REGION},_REPOSITORY_NAME=${GCP_REPOSITORY_NAME},_SERVICE_NAME=${GCP_SERVICE_NAME},_PORT=${SERVER_PORT}" \
             --config ./packages/server/cloudbuild.yml
