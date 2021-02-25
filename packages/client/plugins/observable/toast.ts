@@ -7,4 +7,4 @@ const injector: Plugin = (_, inject) => {
   inject('toast', $toast);
 };
 
-export default (injector);
+export default injector;

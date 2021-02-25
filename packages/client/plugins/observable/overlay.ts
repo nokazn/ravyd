@@ -7,4 +7,4 @@ const injector: Plugin = (_, inject) => {
   inject('overlay', $overlay);
 };
 
-export default (injector);
+export default injector;

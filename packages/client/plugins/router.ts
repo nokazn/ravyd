@@ -10,4 +10,4 @@ const injector: Plugin = ({ app }) => {
   }
 };
 
-export default (injector);
+export default injector;
