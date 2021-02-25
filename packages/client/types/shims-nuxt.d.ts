@@ -1,10 +1,10 @@
+import type dayjs from 'dayjs';
 import type {
   RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
 } from 'typed-vuex';
-import type dayjs from 'dayjs';
 import type { TypedNuxtAxiosInstance } from 'typed-axios';
 
 import type { SpotifyServices } from '~/services/spotify';
@@ -14,7 +14,7 @@ import type { $Header } from '~/plugins/observable/header';
 import type { $Overlay } from '~/plugins/observable/overlay';
 import type { $Toast } from '~/plugins/observable/toast';
 
-declare module '@nuxt/types/app' {
+declare module '@nuxt/types' {
 
   interface NuxtAppOptions {
     // typed-vuex

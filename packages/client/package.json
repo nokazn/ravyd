@@ -22,6 +22,7 @@
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
     "@nuxtjs/axios": "^5.12.3",
+    "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/pwa": "^3.3.2",
     "@nuxtjs/style-resources": "^1.0.0",
     "@ravyd/shared": "^0.1.0",

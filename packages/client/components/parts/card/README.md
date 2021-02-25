@@ -1,3 +1,3 @@
-# Caution
+# ⚠ Caution
 
-- `ScrollableCardsWrapper` で囲んだ時に ref で1つのコンポーネントを参照できるように `<div>` タグで囲む
+- Components under this 'card' directory have to be wrapped by `<div>` tag so that template ref in `ScrollableCardsWrapper.vue` component can uniquely point to them.
