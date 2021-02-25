@@ -1,46 +1,32 @@
 // Must be at first line
 // eslint-disable-next-line import/order
-import { https } from './pre-start';
+import './pre-start';
 
-import * as path from 'path';
-import colors from 'vuetify/es5/util/colors';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
-import type { PluginItem } from '@babel/core';
 
-const APP_NAME = 'Ravyd';
-const isDevelopment = process.env.NODE_ENV === 'development';
-
-const babelPresets = (isServer: boolean, options?: Record<string, unknown>): PluginItem[] => {
-  const params = {
-    loose: true,
-    buildTarget: isServer ? 'server' : 'client',
-    // corejs のバージョンの競合を防ぐ
-    corejs: { version: 3 },
-    targets: { node: 'current' },
-  };
-
-  return [
-    [
-      '@nuxt/babel-preset-app',
-      options != null
-        ? { ...params, ...options }
-        : params,
-    ],
-  ];
-};
-
-const generateRelativePath = (r: string) => (p?: string) => {
-  return path.join(__dirname, r, p ?? '');
-};
-const relativeFromRoot = generateRelativePath('../../');
-const relative = generateRelativePath('./');
-
+import {
+  APP_NAME,
+  IS_DEVELOPMENT,
+  CLIENT_ORIGIN,
+  SERVER_ORIGIN,
+  PORT,
+} from './config/constants';
+import {
+  projectRoot,
+  clientRoot,
+  babelPresets,
+  axios,
+  https,
+  proxy,
+  vuetify,
+  webpack,
+} from './config';
 
 const nuxtConfig: NuxtConfig = {
   ssr: true,
-  rootDir: relative(),
-  srcDir: relative(),
+  rootDir: clientRoot(),
+  srcDir: clientRoot(),
   telemetry: false,
   head: {
     titleTemplate: `%s - ${APP_NAME}`,
@@ -72,15 +58,16 @@ const nuxtConfig: NuxtConfig = {
   ],
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     'portal-vue/nuxt',
   ],
   env: {
-    CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'https://127.0.0.1:3000',
-    SERVER_ORIGIN: process.env.SERVER_ORIGIN || 'https://127.0.0.1:5000',
+    CLIENT_ORIGIN,
+    SERVER_ORIGIN,
   },
   server: {
-    port: process.env.PORT ?? 3000,
+    port: PORT,
     https,
   },
   build: {
@@ -91,46 +78,7 @@ const nuxtConfig: NuxtConfig = {
       // lodash から必要な関数だけ取り出す
       new LodashModuleReplacementPlugin(),
     ],
-    extend(config, { isServer }) {
-      // eslint-disable-next-line no-param-reassign
-      config.module = config.module ?? { rules: [] };
-      config.module.rules.push({
-        // vue ファイルを js ファイルに変換してから適用させたい
-        enforce: 'post',
-        use: {
-          // lodash から必要な関数だけ取り出す
-          loader: 'babel-loader',
-          options: {
-            plugins: ['lodash'],
-            presets: babelPresets(isServer, { modules: false }),
-          },
-        },
-        test: /\.(ts|js|vue)$/,
-        exclude: /node_modules/,
-      });
-
-      // eslint-disable-next-line no-param-reassign
-      config.resolve = config.resolve ?? { alias: {} };
-      Object.assign(config.resolve.alias, {
-        ...config.resolve.alias,
-        '~': relative(),
-        '~~': relativeFromRoot(),
-        '@': relativeFromRoot('packages/server'),
-        shared: relativeFromRoot('packages/shared'),
-      });
-
-      // worker-loader を読み込む
-      // https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
-      // config.output = config.output ?? {};
-      // config.output.globalObject = 'this';
-      // if (isClient) {
-      //   config.module.rules.push({
-      //     test: /bundle\.worker\.js$/,
-      //     loader: 'worker-loader',
-      //     exclude: /node_modules/,
-      //   });
-      // }
-    },
+    extend: (config, { isServer }) => webpack(config, isServer),
   },
   plugins: [
     { src: '~/plugins/dayjs' },
@@ -154,67 +102,32 @@ const nuxtConfig: NuxtConfig = {
     middleware: 'auth',
   },
   css: [
-    relative('/assets/global.scss'),
+    clientRoot('/assets/global.scss'),
     'spinkit/spinkit.min.css',
   ],
   loading: { color: '#fff' },
-  axios: {
-    baseURL: process.env.CLIENT_ORIGIN,
-    browserBaseURL: 'https://api.spotify.com/v1',
-    progress: false,
-    retry: true,
-    debug: isDevelopment,
-    headers: {
-      common: {
-        Accept: 'application/json',
-      },
-    },
+  axios,
+  proxy: {
+    '/api': proxy,
   },
   stylelint: {
-    configFile: relativeFromRoot('.stylelintrc.js'),
+    configFile: projectRoot('.stylelintrc.js'),
     fix: true,
   },
   styleResources: {
-    scss: [relative('assets/variables.scss')],
+    scss: [clientRoot('assets/variables.scss')],
   },
   typescript: {
     // type check & lint
-    typeCheck: isDevelopment
+    typeCheck: IS_DEVELOPMENT
       ? {
         eslint: {
-          files: relative('**/*.{ts,js,vue}'),
+          files: clientRoot('**/*.{ts,js,vue}'),
         },
       }
       : undefined,
   },
-  vuetify: {
-    customVariables: [relative('assets/vuetify.scss')],
-    treeShake: true,
-    icons: {
-      iconfont: 'mdi',
-    },
-    defaultAssets: {
-      icons: false,
-    },
-    theme: {
-      dark: true,
-      themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.lightBlue.base,
-          warning: colors.amber.accent4,
-          error: colors.red.darken3,
-          success: colors.teal.lighten1,
-          active: colors.cyan.accent2,
-          'active-icon': colors.cyan.base,
-          subtext: colors.grey.lighten1,
-          inactive: colors.grey.darken1,
-        },
-      },
-    },
-  },
+  vuetify,
 };
 
 export default nuxtConfig;

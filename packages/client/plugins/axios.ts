@@ -1,23 +1,21 @@
 /* eslint-disable no-param-reassign */
-import https from 'https';
 import urljoin from 'url-join';
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import type { Plugin } from '@nuxt/types';
 
 import {
-  IS_DEVELOPMENT,
-  SERVER_ORIGIN,
-  SERVER_API_PREFIX,
   SPOTIFY_API_URL,
+  CLIENT_ORIGIN,
+  PROXY_API_PREFIX,
+  SERVER_API_PREFIX,
 } from '~/constants';
+import { httpsAgent } from '~/config/httpsAgent';
 
 const injector: Plugin = ({ $axios, app }, inject) => {
   /**
    * Spotify API と通信する axios インスタンス
    */
-  const spotifyApi = $axios.create({
-    baseURL: SPOTIFY_API_URL,
-  }) as NuxtAxiosInstance;
+  const spotifyApi = $axios.create({ baseURL: SPOTIFY_API_URL }) as NuxtAxiosInstance;
 
   spotifyApi.onRequest((config) => {
     const { accessToken } = app.$state().auth;
@@ -39,7 +37,6 @@ const injector: Plugin = ({ $axios, app }, inject) => {
   spotifyApi.onResponseError((err) => {
     // TODO:
     if (err.response?.status === 401) {
-      // 認可リクエストによるエラーだった場合はアクセストークンを更新
       app.$dispatch('auth/refreshAccessToken');
     } else if (err.message.includes('Network Error')) {
       // ネットワークエラーだった場合は polling を中止
@@ -55,21 +52,16 @@ const injector: Plugin = ({ $axios, app }, inject) => {
 
   inject('spotifyApi', spotifyApi);
 
+
   /**
-   * serverMiddleware と通信する axios インスタンス
+   * server と通信する axios インスタンス
    */
   const serverApi = $axios.create({
-    baseURL: urljoin(SERVER_ORIGIN, SERVER_API_PREFIX),
+    baseURL: urljoin(CLIENT_ORIGIN, PROXY_API_PREFIX, SERVER_API_PREFIX),
+    // Send Cookies
     withCredentials: true,
+    httpsAgent,
   }) as NuxtAxiosInstance;
-
-  // 自己証明書によるエラーを回避するため
-  if (IS_DEVELOPMENT) {
-    const agent = new https.Agent({ rejectUnauthorized: false });
-    serverApi.onRequest((config) => {
-      config.httpsAgent = agent;
-    });
-  }
 
   inject('serverApi', serverApi);
 };

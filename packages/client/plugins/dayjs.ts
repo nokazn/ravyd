@@ -7,4 +7,4 @@ const injector: Plugin = (_, inject) => {
   inject('dayjs', dayjs);
 };
 
-export default (injector);
+export default injector;

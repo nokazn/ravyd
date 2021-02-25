@@ -1,10 +1,9 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import type { NuxtOptions } from '@nuxt/types';
+import { projectRoot } from './path';
 
-const relativeFromRoot = (p: string) => path.join(__dirname, '../../../', p);
 const loadCertFile = (fileName: string) => {
-  const p = relativeFromRoot(fileName);
+  const p = projectRoot(fileName);
   if (fs.existsSync(p)) {
     return fs.readFileSync(p);
   }
