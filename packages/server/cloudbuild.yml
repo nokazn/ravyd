@@ -2,11 +2,11 @@
 
 steps:
   # Build
-  - name: "gcr.io/cloud-builders/docker"
+  - name: gcr.io/cloud-builders/docker
     args:
       - "build"
       - "-t"
-      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}"
       - "--file"
       - "./packages/server/Dockerfile"
       - "--target"
@@ -14,18 +14,18 @@ steps:
       - "."
 
   # Push to Artifact Registry
-  - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"]
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}"]
 
   # Deploy to Cloud Run
-  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-    entrypoint: "gcloud"
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
     args:
       - "run"
       - "deploy"
-      - "${_IMAGE_NAME}"
+      - "${_SERVICE_NAME}"
       - "--image"
-      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}"
       - "--region"
       - "${_REGION}"
       - "--platform"
@@ -43,9 +43,28 @@ steps:
       - "--allow-unauthenticated"
       - "--no-traffic"
 
-images:
-  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}"
+  # Update Cloud Run traffic
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "services"
+      - "update-traffic"
+      - "${_SERVICE_NAME}"
+      - "--region"
+      - "${_REGION}"
+      - "--platform"
+      - "managed"
+      - "--to-latest"
 
-logsBucket: "gs://github-actions-cloud-build-logs"
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}"
 
 timeout: 900s
+
+# substitutions:
+#   COMMIT_SHA:
+#   _REGION:
+#   _REPOSITORY_NAME:
+#   _SERVICE_NAME:
+#   _PORT:
