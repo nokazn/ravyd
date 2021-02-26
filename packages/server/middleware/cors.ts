@@ -1,7 +1,7 @@
-import c from 'cors';
-import { CLIENT_ORIGIN } from '@/config/constants';
+import corsMiddleware from 'cors';
+import { ALLOWED_ORIGIN } from '@/config/constants';
 
-export const cors = c({
-  origin: CLIENT_ORIGIN,
+export const cors = corsMiddleware({
+  origin: ALLOWED_ORIGIN,
   credentials: true,
 });
