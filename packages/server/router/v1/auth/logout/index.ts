@@ -2,7 +2,6 @@ import { promisify } from 'util';
 import httpStatusCodes from 'http-status-codes';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
-import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
 // TODO
@@ -19,7 +18,7 @@ export const logout = (req: FastifyRequest, rep: FastifyReply): Promise<Response
     .catch((err: Error) => {
       const code = 'INTERNAL_SERVER_ERROR';
       const message = 'Failed to log out.';
-      logger.error(code, message, err);
+      req.log.error(code, message, err);
       rep.code(INTERNAL_SERVER_ERROR);
       return {
         code,

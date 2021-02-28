@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import type { FastifyRequest } from 'fastify';
 
 import { createUrl } from 'shared/utils/createUrl';
-import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 import { upsertToken, refreshAccessToken } from '@/helper';
 import {
@@ -32,7 +31,7 @@ export const login = async (req: FastifyRequest): Promise<ResponseBody> => {
         url: null,
       };
     }
-    logger.warn('Failed to update an access token when logging in. Need to authorize to Spotify again.', {
+    req.log.warn('Failed to update an access token when logging in. Need to authorize to Spotify again.', {
       session: req.session,
       token,
     });

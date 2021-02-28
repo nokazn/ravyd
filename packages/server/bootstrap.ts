@@ -38,9 +38,7 @@ app.register(router, { prefix: SERVER_API_PREFIX });
 const start = async () => {
   return app.listen(PORT, HOST)
     .catch((err) => {
-      // app.log.error(err);
-      // app.log.error('Cloud not start server.', err);
-      logger.error('Cloud not start server.', err);
+      app.log.error('Cloud not start server.', err);
       process.exit(1);
     });
 };

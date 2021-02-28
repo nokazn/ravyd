@@ -1,26 +1,44 @@
-import log4js from 'log4js';
+import pino, { LevelWithSilent } from 'pino';
 
-log4js.configure({
-  appenders: {
-    stdout: {
-      type: 'stdout',
-    },
-    prod: {
-      type: 'file',
-      filename: 'server.log',
-      backups: 1,
+const isPrimitive = (t: unknown) => {
+  return typeof t === 'string' || typeof t === 'number' || typeof t === 'boolean';
+};
+const joinRest = (list1: any[], list2?: any[]): string => {
+  return [...list1, ...(list2 ?? [])].join(', ');
+};
+
+const level: LevelWithSilent = process.env.NODE_ENV === 'production'
+  ? 'trace'
+  : 'info';
+
+export const logger = pino({
+  level,
+  hooks: {
+    // 両端のいずれかが Object のときのみ展開し、残りを連結
+    logMethod(args, method) {
+      const l = args.length;
+      if (l > 1) {
+        const restExceptEdge = args.slice(1, l - 1);
+        if (restExceptEdge.every(isPrimitive)) {
+          const first = args[0];
+          const last = args[l - 1];
+          if (isPrimitive(first)) {
+            if (isPrimitive(last)) return method.apply(this, [joinRest(args)]);
+            return method.apply(this, [last, joinRest([first], restExceptEdge)]);
+          }
+          if (isPrimitive(last)) {
+            return method.apply(this, [first, joinRest(restExceptEdge, [last])]);
+          }
+        }
+      }
+      return method.apply(this, args as any);
     },
   },
-  categories: {
-    default: {
-      appenders: ['stdout'],
-      level: 'all',
-    },
-    prod: {
-      appenders: ['stdout', 'prod'],
-      level: 'debug',
-    },
+  browser: {
+    asObject: true,
+  },
+  prettyPrint: {
+    colorize: true,
   },
 });
 
-export const logger = log4js.getLogger(process.env.NODE_ENV === 'production' ? 'prod' : 'default');

@@ -3,7 +3,6 @@ import httpStatusCodes from 'http-status-codes';
 
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import { refreshAccessToken, upsertToken } from '@/helper';
-import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
 type Path = paths['/auth/refresh']['put'];
@@ -25,7 +24,7 @@ export const refresh = async (req: Request, rep: FastifyReply): Promise<Response
   if (accessTokenInReq == null || authState == null || refreshToken == null) {
     const code = 'BAD_REQUEST';
     const message = 'Fail to update an token because of an incorrect accessToken or authState.';
-    logger.warn(code, message, {
+    req.log.warn(code, message, {
       session: req.session,
       body: req.body,
     });
@@ -43,7 +42,7 @@ export const refresh = async (req: Request, rep: FastifyReply): Promise<Response
   if (tokenInSession == null) {
     const code = 'UNAUTHORIZED';
     const message = 'Fail to update an token because of no corresponding session.';
-    logger.error(code, message, {
+    req.log.error(code, message, {
       session: req.session,
       body: req.body,
     });
@@ -62,7 +61,7 @@ export const refresh = async (req: Request, rep: FastifyReply): Promise<Response
   if (accessTokenInReq !== tokenInSession?.access_token) {
     const code = 'CONFLICT';
     const message = 'Fail to update an token because of conflicting.';
-    logger.warn(code, message, {
+    req.log.warn(code, message, {
       session: req.session,
       body: req.body,
     });
@@ -80,7 +79,7 @@ export const refresh = async (req: Request, rep: FastifyReply): Promise<Response
   if (token == null) {
     const code = 'INTERNAL_SERVER_ERROR';
     const message = 'Fail to update an access token.';
-    logger.error(code, message, {
+    req.log.error(code, message, {
       session: req.session,
       body: req.body,
       token,

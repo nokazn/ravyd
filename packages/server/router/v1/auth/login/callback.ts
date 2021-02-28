@@ -3,7 +3,6 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 
 import { upsertToken, exchangeAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
-import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
 type Path = paths['/auth/login/callback']['get']
@@ -17,7 +16,7 @@ export const callback = async (req: Request, rep: FastifyReply): Promise<Respons
   if (codeInQuery == null) {
     const code = 'BAD_REQUEST';
     const message = 'Code in query parameters is invalid.';
-    logger.error(message, {
+    req.log.error(message, {
       query: req.query,
       codeInQuery,
     });
@@ -36,7 +35,7 @@ export const callback = async (req: Request, rep: FastifyReply): Promise<Respons
   if (state == null || state !== req.session.state) {
     const code = 'UNAUTHORIZED';
     const message = "CSRF state token doesn't match.";
-    logger.error(code, message, {
+    req.log.error(code, message, {
       query: req.query,
       session: req.session,
       state,
@@ -56,7 +55,7 @@ export const callback = async (req: Request, rep: FastifyReply): Promise<Respons
   if (token == null) {
     const code = 'INTERNAL_SERVER_ERROR';
     const message = 'An error occurred when exchanging an access token with code.';
-    logger.error(code, message, {
+    req.log.error(code, message, {
       session: req.session,
       code,
       token,
