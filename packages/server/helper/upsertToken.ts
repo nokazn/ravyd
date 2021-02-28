@@ -1,5 +1,5 @@
 import { v4 as uuid4 } from 'uuid';
-import type { Request } from 'express';
+import type { FastifyRequest } from 'fastify';
 import { SpotifyAPI } from 'shared/types';
 
 type Params = {
@@ -18,7 +18,7 @@ const generateAuthStateKey = () => {
 };
 
 export const upsertToken = (
-  req: Request,
+  req: FastifyRequest,
   token: SpotifyAPI.Auth.Token,
   params: Params,
 ): string => {

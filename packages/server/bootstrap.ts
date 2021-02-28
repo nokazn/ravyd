@@ -1,41 +1,47 @@
 // Must be at first line
 // eslint-disable-next-line import/order
-import { httpsServerOptions } from './pre-start';
+import './pre-start';
 
-import express from 'express';
-import https from 'https';
-import helmet from 'helmet';
-import * as path from 'path';
+import Fastify from 'fastify';
+import helmet from 'fastify-helmet';
+import type { Server } from 'https';
+import type { FastifyInstance, FastifyHttpsOptions, FastifyServerOptions } from 'fastify';
 
 import { logger } from 'shared/logger';
-import { cors, cookieParser, session } from '@/middleware';
-import router from '@/router/v1';
+import { cors, cookie, session } from '@/middleware';
+import { router } from '@/router/v1';
 import { PORT, HOST, SERVER_API_PREFIX } from '@/config/constants';
+import { httpsServerOptions } from '@/config';
 
-const app = express();
+type FastifyOptions = Omit<FastifyHttpsOptions<Server>, 'https'> & FastifyServerOptions;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser);
-app.use(helmet());
-app.use(cors);
-app.use(session);
-app.use(path.resolve(`/${SERVER_API_PREFIX}`), router);
+const app: FastifyInstance = (() => {
+  const options: FastifyOptions = {
+    logger,
+  };
+  if (httpsServerOptions == null) {
+    return Fastify(options);
+  }
 
-app.use((_, res) => {
-  res.status(404).send({
-    message: 'NOT FOUND',
+  return Fastify({
+    ...options,
+    https: httpsServerOptions,
   });
-});
+})();
 
-if (httpsServerOptions != null) {
-  const server = https.createServer(httpsServerOptions, app);
-  server.listen(PORT, HOST, () => {
-    logger.info(`Listening at https://${HOST}:${PORT}`);
-  });
-} else {
-  app.listen(PORT, HOST, () => {
-    logger.info(`Listening at http://${HOST}:${PORT}`);
-  });
-}
+app.register(helmet);
+app.register(cors);
+app.register(cookie);
+app.register(session);
+app.register(router, { prefix: SERVER_API_PREFIX });
 
+const start = async () => {
+  return app.listen(PORT, HOST)
+    .catch((err) => {
+      // app.log.error(err);
+      // app.log.error('Cloud not start server.', err);
+      logger.error('Cloud not start server.', err);
+      process.exit(1);
+    });
+};
+start();

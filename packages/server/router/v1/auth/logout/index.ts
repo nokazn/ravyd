@@ -1,24 +1,29 @@
-import { Request, Response } from 'express';
+import { promisify } from 'util';
 import httpStatusCodes from 'http-status-codes';
+import type { FastifyRequest, FastifyReply } from 'fastify';
+
 import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
-type ResponseBody = JSONResponseOf<paths['/auth/logout']['post']>;
+// TODO
+type ResponseBody = JSONResponseOf<paths['/auth/logout']['post']> | {};
 
 const { INTERNAL_SERVER_ERROR, NO_CONTENT } = httpStatusCodes;
 
-export const logout = (req: Request, res: Response<ResponseBody>) => {
-  return req.session.destroy((err: Error | undefined) => {
-    if (err != null) {
+export const logout = (req: FastifyRequest, rep: FastifyReply): Promise<ResponseBody> => {
+  return promisify(req.destroySession)()
+    .then(() => {
+      rep.code(NO_CONTENT);
+      return {};
+    })
+    .catch((err: Error) => {
       const code = 'INTERNAL_SERVER_ERROR';
       const message = 'Failed to log out.';
-      logger.error(code, message, { err });
-      return res.status(INTERNAL_SERVER_ERROR).send({
+      logger.error(code, message, err);
+      rep.code(INTERNAL_SERVER_ERROR);
+      return {
         code,
         message,
-      });
-    }
-
-    return res.status(NO_CONTENT).send();
-  });
+      };
+    });
 };

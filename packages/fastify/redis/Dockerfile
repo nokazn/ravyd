@@ -1,7 +1,0 @@
-FROM redis:6.0.4-alpine
-
-WORKDIR /data
-
-VOLUME /data
-
-EXPOSE 6379

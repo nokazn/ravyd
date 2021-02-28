@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
 
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
@@ -7,7 +7,7 @@ import { logger } from 'shared/logger';
 import type { paths, JSONResponseOf } from 'shared/types';
 
 type Path = paths['/auth/refresh']['put'];
-type RequestBody = Path['requestBody']['content']['application/json'];
+type Request = FastifyRequest<{ Body: Path['requestBody']['content']['application/json'] }>
 type ResponseBody = JSONResponseOf<Path>;
 
 const {
@@ -17,10 +17,7 @@ const {
   INTERNAL_SERVER_ERROR,
 } = httpStatusCodes;
 
-export const refresh = async (
-  req: Request<{}, ResponseBody, RequestBody>,
-  res: Response<ResponseBody>,
-) => {
+export const refresh = async (req: Request, rep: FastifyReply): Promise<ResponseBody> => {
   const { accessToken: accessTokenInReq, authState } = req.body;
   const { refreshToken } = req.session;
   // リフレッシュトークンが存在しない場合
@@ -32,13 +29,14 @@ export const refresh = async (
       session: req.session,
       body: req.body,
     });
-    return res.status(BAD_REQUEST).send({
+    rep.code(BAD_REQUEST);
+    return {
       code,
       message,
       authState: null,
       accessToken: null,
       expireIn: 0,
-    });
+    };
   }
 
   const tokenInSession = req.session.tokens?.[authState];
@@ -49,13 +47,14 @@ export const refresh = async (
       session: req.session,
       body: req.body,
     });
-    return res.status(UNAUTHORIZED).send({
+    rep.code(UNAUTHORIZED);
+    return {
       code,
       message,
       authState: null,
       accessToken: null,
       expireIn: 0,
-    });
+    };
   }
 
   // TODO:
@@ -67,13 +66,14 @@ export const refresh = async (
       session: req.session,
       body: req.body,
     });
-    return res.status(CONFLICT).send({
+    rep.code(CONFLICT);
+    return {
       code,
       message,
       authState,
       accessToken: tokenInSession?.access_token,
       expireIn: 0,
-    });
+    };
   }
 
   const token = await refreshAccessToken(refreshToken);
@@ -85,22 +85,23 @@ export const refresh = async (
       body: req.body,
       token,
     });
-    return res.status(INTERNAL_SERVER_ERROR).send({
+    rep.code(INTERNAL_SERVER_ERROR);
+    return {
       code,
       message,
       authState,
       accessToken: null,
       expireIn: 0,
-    });
+    };
   }
 
   upsertToken(req, token, { authState });
 
-  return res.send({
+  return {
     code: 'OK',
     message: 'Update an access token.',
     authState,
     accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
-  });
+  };
 };
