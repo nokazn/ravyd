@@ -1,5 +1,5 @@
 {
-  "name": "@ravyd/fastify",
+  "name": "@ravyd/server",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",

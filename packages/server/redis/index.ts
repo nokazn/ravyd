@@ -13,7 +13,8 @@ client.on('connect', () => {
 });
 
 client.on('error', (err: Error) => {
-  logger.error('❌ Redis client could not connect.', err, {
+  logger.error('❌ Redis client could not connect.', {
+    err,
     REDIS_URL,
     REDIS_PORT,
     password: REDIS_PASSWORD ? 'Password is set' : 'Password is not set.',
