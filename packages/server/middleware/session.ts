@@ -21,12 +21,9 @@ const cb: FastifyPluginCallback = (app, _, done) => {
     // rolling: true,
     store: new RedisStore({ client }),
     cookie: {
-    // HTTPS 通信でのみ送信
       secure: true,
-      // クライアントサイドのJSから読めないようにする
       httpOnly: true,
-      // 同一オリジンでのみ Cookie を送信
-      sameSite: 'strict',
+      sameSite: 'lax',
       // production ではサブドメインにも許可
       domain: IS_PRODUCTION
         ? CLIENT_ORIGIN.replace(/^https?:\/\//, '').replace(/\/+$/, '')

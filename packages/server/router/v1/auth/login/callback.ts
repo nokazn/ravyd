@@ -30,15 +30,16 @@ export const handler = async (req: Request, rep: FastifyReply): Promise<Response
     };
   }
 
+  const stateInSession = req.session.state;
+  req.session.state = undefined;
   // 送られてきた state と、認可時に送信し cookie に埋め込んだ state を比較
   // TODO:
-  if (state == null || state !== req.session.state) {
+  if (state == null || state !== stateInSession) {
     const code = 'UNAUTHORIZED';
     const message = "CSRF state token doesn't match.";
     req.log.error(code, message, {
       query: req.query,
       session: req.session,
-      state,
     });
     rep.code(UNAUTHORIZED);
     return {
