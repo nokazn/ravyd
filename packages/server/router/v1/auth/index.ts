@@ -1,5 +1,5 @@
 import httpStatusCodes from 'http-status-codes';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
 
 import { upsertToken, refreshAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
@@ -9,7 +9,7 @@ type ResponseBody = JSONResponseOf<paths['/auth']['get']>
 
 const { INTERNAL_SERVER_ERROR } = httpStatusCodes;
 
-export const auth = async (req: FastifyRequest, rep: FastifyReply): Promise<ResponseBody> => {
+const handler = async (req: FastifyRequest, rep: FastifyReply): Promise<ResponseBody> => {
   const { refreshToken } = req.session;
   if (refreshToken == null) {
     // TODO: token と auth_state をリセット
@@ -51,4 +51,11 @@ export const auth = async (req: FastifyRequest, rep: FastifyReply): Promise<Resp
     accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
   };
+};
+
+const schema: FastifySchema = {};
+
+export const auth = {
+  handler,
+  schema,
 };

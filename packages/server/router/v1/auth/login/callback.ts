@@ -1,5 +1,5 @@
 import httpStatusCodes from 'http-status-codes';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
 
 import { upsertToken, exchangeAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
@@ -11,7 +11,7 @@ type ResponseBody = JSONResponseOf<Path>
 
 const { BAD_REQUEST, UNAUTHORIZED } = httpStatusCodes;
 
-export const callback = async (req: Request, rep: FastifyReply): Promise<ResponseBody> => {
+export const handler = async (req: Request, rep: FastifyReply): Promise<ResponseBody> => {
   const { code: codeInQuery, state } = req.query;
   if (codeInQuery == null) {
     const code = 'BAD_REQUEST';
@@ -78,4 +78,24 @@ export const callback = async (req: Request, rep: FastifyReply): Promise<Respons
     accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
   };
+};
+
+const schema: FastifySchema = {
+  querystring: {
+    type: 'object',
+    required: ['code', 'state'],
+    properties: {
+      code: {
+        type: 'string',
+      },
+      state: {
+        type: 'string',
+      },
+    },
+  },
+};
+
+export const callback = {
+  handler,
+  schema,
 };

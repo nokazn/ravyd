@@ -5,14 +5,12 @@ import { callback } from './auth/login/callback';
 import { logout } from './auth/logout';
 import { refresh } from './auth/refresh';
 
-export * from './auth';
-
 export const router: FastifyPluginCallback = (app, _, done) => {
-  app.get('/auth', auth);
-  app.post('/auth/login', login);
-  app.get('/auth/login/callback', callback);
-  app.post('/auth/logout', logout);
-  app.put('/auth/refresh', refresh);
+  app.get('/auth', { schema: auth.schema }, auth.handler);
+  app.post('/auth/login', { schema: login.schema }, login.handler);
+  app.get('/auth/login/callback', { schema: callback.schema }, callback.handler);
+  app.post('/auth/logout', { schema: logout.schema }, logout.handler);
+  app.put('/auth/refresh', { schema: refresh.schema }, refresh.handler);
 
   done();
 };

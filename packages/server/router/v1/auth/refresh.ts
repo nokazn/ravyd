@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply, FastifySchema } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
 
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
@@ -16,7 +16,7 @@ const {
   INTERNAL_SERVER_ERROR,
 } = httpStatusCodes;
 
-export const refresh = async (req: Request, rep: FastifyReply): Promise<ResponseBody> => {
+const handler = async (req: Request, rep: FastifyReply): Promise<ResponseBody> => {
   const { accessToken: accessTokenInReq, authState } = req.body;
   const { refreshToken } = req.session;
   // リフレッシュトークンが存在しない場合
@@ -103,4 +103,24 @@ export const refresh = async (req: Request, rep: FastifyReply): Promise<Response
     accessToken: token.access_token,
     expireIn: TOKEN_EXPIRE_IN,
   };
+};
+
+const schema: FastifySchema = {
+  body: {
+    type: 'object',
+    required: ['accessToken', 'authState'],
+    properties: {
+      accessToken: {
+        type: 'string',
+      },
+      authState: {
+        type: 'string',
+      },
+    },
+  },
+};
+
+export const refresh = {
+  handler,
+  schema,
 };

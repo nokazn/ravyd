@@ -1,6 +1,6 @@
 import urljoin from 'url-join';
 import crypto from 'crypto';
-import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest, FastifySchema } from 'fastify';
 
 import { createUrl } from 'shared/utils/createUrl';
 import type { paths, JSONResponseOf } from 'shared/types';
@@ -14,7 +14,7 @@ import {
 
 type ResponseBody = JSONResponseOf<paths['/auth/login']['post']>;
 
-export const login = async (req: FastifyRequest): Promise<ResponseBody> => {
+const handler = async (req: FastifyRequest): Promise<ResponseBody> => {
   const { refreshToken } = req.session;
   // リフレッシュトークンが存在していた場合はそれを更新
   if (refreshToken != null) {
@@ -76,4 +76,11 @@ export const login = async (req: FastifyRequest): Promise<ResponseBody> => {
     expireIn: 0,
     url,
   };
+};
+
+const schema: FastifySchema = {};
+
+export const login = {
+  handler,
+  schema,
 };
