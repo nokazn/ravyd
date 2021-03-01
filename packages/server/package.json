@@ -21,7 +21,6 @@
     "fastify-cors": "^5.2.0",
     "fastify-helmet": "^5.2.0",
     "fastify-plugin": "^3.0.0",
-    "fastify-secure-session": "^2.3.1",
     "fastify-session": "^5.2.1",
     "http-status-codes": "^2.1.4",
     "ioredis": "^4.23.0",
