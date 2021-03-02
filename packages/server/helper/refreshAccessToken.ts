@@ -4,9 +4,7 @@ import { SPOTIFY_AUTHORIZE_BASE_URL, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } 
 import { logger } from 'shared/logger';
 import type { SpotifyAPI } from 'shared/types';
 
-export const refreshAccessToken = (
-  refresh_token: string | undefined,
-): Promise<SpotifyAPI.Auth.Token | undefined> => {
+export const refreshAccessToken = (refresh_token: string | undefined): Promise<SpotifyAPI.Auth.Token | undefined> => {
   if (refresh_token == null) {
     return Promise.resolve(undefined);
   }

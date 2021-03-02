@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
-import { REDIS_URL, REDIS_PORT, REDIS_PASSWORD } from '@/config/constants';
+
 import { logger } from 'shared/logger';
+import { REDIS_URL, REDIS_PORT, REDIS_PASSWORD } from '@/config/constants';
 
 const client = new Redis(REDIS_URL, {
   port: REDIS_PORT,
@@ -12,7 +13,8 @@ client.on('connect', () => {
 });
 
 client.on('error', (err: Error) => {
-  logger.error('❌ Redis client could not connect.', err, {
+  logger.error('❌ Redis client could not connect.', {
+    err,
     REDIS_URL,
     REDIS_PORT,
     password: REDIS_PASSWORD ? 'Password is set' : 'Password is not set.',

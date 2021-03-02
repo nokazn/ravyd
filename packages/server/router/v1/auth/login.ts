@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
 import urljoin from 'url-join';
 import crypto from 'crypto';
+import type { FastifyRequest, FastifySchema } from 'fastify';
 
+import { createUrl } from 'shared/utils/createUrl';
+import type { paths, JSONResponseOf } from 'shared/types';
 import { upsertToken, refreshAccessToken } from '@/helper';
 import {
   CLIENT_ORIGIN,
@@ -9,20 +11,17 @@ import {
   TOKEN_EXPIRE_IN,
   SPOTIFY_AUTHORIZE_BASE_URL,
 } from '@/config/constants';
-import { createUrl } from 'shared/utils/createUrl';
-import { logger } from 'shared/logger';
-import type { paths, JSONResponseOf } from 'shared/types';
 
 type ResponseBody = JSONResponseOf<paths['/auth/login']['post']>;
 
-export const login = async (req: Request, res: Response<ResponseBody>) => {
+const handler = async (req: FastifyRequest): Promise<ResponseBody> => {
   const { refreshToken } = req.session;
   // リフレッシュトークンが存在していた場合はそれを更新
   if (refreshToken != null) {
     const token = await refreshAccessToken(refreshToken);
     if (token != null) {
       const authState = upsertToken(req, token, { refreshToken });
-      return res.send({
+      return {
         code: 'OK',
         message: 'Current refresh token is valid.',
         authenticated: true,
@@ -30,9 +29,9 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
         accessToken: token.access_token,
         expireIn: TOKEN_EXPIRE_IN,
         url: null,
-      });
+      };
     }
-    logger.warn('Failed to update an access token when logging in. Need to authorize to Spotify again.', {
+    req.log.warn('Failed to update an access token when logging in. Need to authorize to Spotify again.', {
       session: req.session,
       token,
     });
@@ -68,7 +67,7 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
   });
 
   req.session.state = state;
-  return res.send({
+  return {
     code: 'OK',
     authenticated: false,
     message: 'Needs to authorize with Spotify.',
@@ -76,5 +75,12 @@ export const login = async (req: Request, res: Response<ResponseBody>) => {
     accessToken: null,
     expireIn: 0,
     url,
-  });
+  };
+};
+
+const schema: FastifySchema = {};
+
+export const login = {
+  handler,
+  schema,
 };

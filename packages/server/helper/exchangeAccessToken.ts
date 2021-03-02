@@ -1,18 +1,16 @@
 import axios from 'axios';
 import urljoin from 'url-join';
 
+import { logger } from 'shared/logger';
+import type { SpotifyAPI } from 'shared/types';
 import {
   CLIENT_ORIGIN,
   SPOTIFY_AUTHORIZE_BASE_URL,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
 } from '@/config/constants';
-import { logger } from 'shared/logger';
-import type { SpotifyAPI } from 'shared/types';
 
-export const exchangeAccessToken = (
-  code: string,
-): Promise<SpotifyAPI.Auth.InitialToken | undefined> => {
+export const exchangeAccessToken = (code: string): Promise<SpotifyAPI.Auth.InitialToken | undefined> => {
   const params: SpotifyAPI.Auth.GetToken.Params = {
     grant_type: 'authorization_code',
     code,

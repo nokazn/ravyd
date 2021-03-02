@@ -1,17 +1,18 @@
-import express from 'express';
-
+import { FastifyPluginCallback } from 'fastify';
 import { auth } from './auth';
 import { login } from './auth/login';
 import { callback } from './auth/login/callback';
-import { refresh } from './auth/refresh';
 import { logout } from './auth/logout';
+import { refresh } from './auth/refresh';
 
-const router = express.Router();
+export const router: FastifyPluginCallback = (app, _, done) => {
+  app.get('/auth', { schema: auth.schema }, auth.handler);
+  app.post('/auth/login', { schema: login.schema }, login.handler);
+  app.get('/auth/login/callback', { schema: callback.schema }, callback.handler);
+  app.post('/auth/logout', { schema: logout.schema }, logout.handler);
+  app.put('/auth/refresh', { schema: refresh.schema }, refresh.handler);
 
-router.get('/auth', auth);
-router.post('/auth/login', login);
-router.get('/auth/login/callback', callback);
-router.put('/auth/refresh', refresh);
-router.post('/auth/logout', logout);
+  done();
+};
 
-export default router;
+
