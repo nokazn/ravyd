@@ -44,7 +44,7 @@
     "@mdi/font": "^5.8.55",
     "@nuxt/types": "^2.14.11",
     "@nuxt/typescript-build": "^2.0.6",
-    "@nuxtjs/eslint-module": "^3.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "@types/dotenv": "^8.2.0",

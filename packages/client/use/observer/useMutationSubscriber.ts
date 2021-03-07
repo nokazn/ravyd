@@ -8,7 +8,7 @@ const typeMatcher = (
   target: MutationType | MutationType[],
 ): boolean => {
   return Array.isArray(target)
-    ? target.some((t) => origin === t)
+    ? target.includes(origin)
     : origin === target;
 };
 
