@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { debounce } from 'lodash';
+import debounce from 'just-debounce-it';
 import {
   SM_BREAK_POINT,
   MD_BREAK_POINT,

@@ -1,5 +1,4 @@
 export * from './axios';
-export * from './babelPresets';
 export * from './https';
 export * from './httpsAgent';
 export * from './path';

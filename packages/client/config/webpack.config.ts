@@ -1,26 +1,7 @@
 import type { Configuration } from 'webpack';
-
-import { babelPresets } from './babelPresets';
 import { projectRoot, clientRoot } from './path';
 
-export const webpack = (config: Configuration, isServer: boolean) => {
-  // eslint-disable-next-line no-param-reassign
-  config.module = config.module ?? { rules: [] };
-  config.module.rules.push({
-    // vue ファイルを js ファイルに変換してから適用させたい
-    enforce: 'post',
-    use: {
-      // lodash から必要な関数だけ取り出す
-      loader: 'babel-loader',
-      options: {
-        plugins: ['lodash'],
-        presets: babelPresets(isServer, { modules: false }),
-      },
-    },
-    test: /\.(ts|js|vue)$/,
-    exclude: /node_modules/,
-  });
-
+export const webpack = (config: Configuration) => {
   // eslint-disable-next-line no-param-reassign
   config.resolve = config.resolve ?? { alias: {} };
   Object.assign(config.resolve.alias, {

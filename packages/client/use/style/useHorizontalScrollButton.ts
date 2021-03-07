@@ -6,7 +6,7 @@ import {
   SetupContext,
   Ref,
 } from '@vue/composition-api';
-import { debounce } from 'lodash';
+import debounce from 'just-debounce-it';
 import { useIntersectionObserver } from '~/use/observer';
 
 type Card = {
