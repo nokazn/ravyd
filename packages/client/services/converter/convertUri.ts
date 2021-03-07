@@ -36,3 +36,11 @@ export const convertUriToUrl = (uri: string | undefined): string | undefined => 
       return undefined;
   }
 };
+
+/**
+ * @param uri spotify:track:foo のような形式
+ */
+export const convertUriToId = (uri: string) => {
+  const elementList = uri.split(':');
+  return elementList[elementList.length - 1];
+};
