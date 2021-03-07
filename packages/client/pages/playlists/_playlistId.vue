@@ -444,14 +444,12 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     const { length } = currentTracks.items;
     const maxLimit = 50;
     const limit = Math.min(counts, maxLimit) as OneToFifty;
-    const market = this.$getters()['auth/userCountryCode'];
     const handler = (index: number): Promise<PagingTracks | undefined> => {
       const offset = length + limit * index;
       return this.$spotify.playlists.getPlaylistItems({
         playlistId,
         limit,
         offset,
-        market,
       });
     };
     const handlerCounts = Math.ceil(counts / maxLimit);

@@ -228,7 +228,6 @@ export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
     const offset = currentReleaseList.items.length;
     const releases = await this.$spotify.artists.getArtistAlbums({
       artistId: this.$route.params.artistId,
-      country: this.$getters()['auth/userCountryCode'],
       includeGroupList: [type],
       limit: LIMIT_OF_RELEASES,
       offset,

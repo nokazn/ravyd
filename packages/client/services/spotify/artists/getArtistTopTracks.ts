@@ -6,9 +6,9 @@ type Tracks = { tracks: SpotifyAPI.Track[] };
 export const getArtistTopTracks = (context: Context) => {
   const { app } = context;
 
-  return ({ artistId, country }: {
+  return ({ artistId, country = 'from_token' }: {
     artistId: string;
-    country: SpotifyAPI.Country;
+    country?: SpotifyAPI.Country;
   }): Promise<Partial<Tracks>> => {
     return app.$spotifyApi.$get<Tracks>(`/artists/${artistId}/top-tracks`, {
       params: {

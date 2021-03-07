@@ -11,16 +11,16 @@ export const searchItems = (context: Context) => {
   return <T extends SpotifyAPI.SearchType[]>({
     query,
     typeList,
-    market,
     limit = 20,
     offset = 0,
+    market = 'from_token',
     includeExternal,
   }: {
     query: string;
     typeList: T;
-    market?: SpotifyAPI.Country;
     limit?: OneToFifty;
     offset?: number;
+    market?: SpotifyAPI.Country;
     includeExternal?: 'audio';
   }): Promise<SearchResults<T>> => {
     if (query === '') return Promise.resolve({});

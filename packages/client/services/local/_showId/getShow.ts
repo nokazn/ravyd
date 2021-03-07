@@ -5,10 +5,8 @@ import { convertEpisodeDetail } from '~/services/converter';
 export const getShow = async (
   { app, params }: Context,
 ): Promise<App.ShowPage | undefined> => {
-  const market = app.$getters()['auth/userCountryCode'];
   const show = await app.$spotify.shows.getShow({
     showId: params.showId,
-    market,
   });
   if (show == null) return undefined;
 

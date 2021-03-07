@@ -6,9 +6,9 @@ export const getShowEpisodes = (context: Context) => {
 
   return ({
     showId,
-    market,
     limit = 20,
     offset = 0,
+    market = 'from_token',
   }: {
     showId: string;
     limit?: OneToFifty;

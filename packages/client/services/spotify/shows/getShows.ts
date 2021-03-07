@@ -6,7 +6,7 @@ type SimpleShows = { shows: (SpotifyAPI.SimpleShow | null)[] };
 export const getShows = (context: Context) => {
   const { app } = context;
 
-  return ({ showIdList, market }: {
+  return ({ showIdList, market = 'from_token' }: {
     showIdList: string[];
     market?: SpotifyAPI.Country;
   }): Promise<Partial<SimpleShows>> => {

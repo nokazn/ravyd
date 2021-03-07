@@ -202,12 +202,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * プレイリストをフォローする
    */
-  async followPlaylist({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }, playlistId) {
+  async followPlaylist({ state, commit, dispatch }, playlistId) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
@@ -223,12 +218,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
           }
         }
 
-        const market = rootGetters['auth/userCountryCode'];
-        const playlist = await this.$spotify.playlists.getPlaylist({
-          playlistId,
-          market,
-        });
-
+        const playlist = await this.$spotify.playlists.getPlaylist({ playlistId });
         if (playlist != null) {
           commit('ADD_PLAYLIST', playlist);
           commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);

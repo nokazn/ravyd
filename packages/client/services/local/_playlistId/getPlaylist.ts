@@ -5,14 +5,10 @@ export const getPlaylist = async (
   { app, params }: Context,
 ): Promise<App.PlaylistPage | undefined> => {
   const { playlistId } = params;
-  const market = app.$getters()['auth/userCountryCode'];
   const userId = app.$getters()['auth/userId'];
-  if (market == null || userId == null) return undefined;
+  if (userId == null) return undefined;
 
-  const playlist = await app.$spotify.playlists.getPlaylist({
-    playlistId,
-    market,
-  });
+  const playlist = await app.$spotify.playlists.getPlaylist({ playlistId });
   if (playlist == null) return undefined;
 
   const {

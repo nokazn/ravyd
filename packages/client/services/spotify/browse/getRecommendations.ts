@@ -10,7 +10,7 @@ export const getRecommendations = (context: Context) => {
 
   return ({
     limit = 20,
-    market,
+    market = 'from_token',
     artistIdList,
     genreList,
     trackIdList,

@@ -7,13 +7,13 @@ export const getNewReleases = (context: Context) => {
   const { app } = context;
 
   return ({
-    country,
     limit = 20,
     offset = 0,
+    country = 'from_token',
   }: {
-    country?: SpotifyAPI.Country;
     limit?: OneToFifty;
     offset?: number;
+    country?: SpotifyAPI.Country;
   }): Promise<Partial<Albums>> => {
     return app.$spotifyApi.$get<Albums>('/browse/new-releases', {
       params: {

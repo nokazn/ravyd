@@ -23,25 +23,17 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
    * 保存済みのトラックを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedTrackList({
-    getters,
-    commit,
-    dispatch,
-    rootGetters,
-  }, payload) {
+  async getSavedTrackList({ getters, commit, dispatch }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.trackListLength;
-    const market = rootGetters['auth/userCountryCode'];
     const tracks = await this.$spotify.library.getUserSavedTracks({
       limit,
       offset,
-      market,
     });
     if (tracks == null) {
       this.$toast.pushError('お気に入りのトラックの一覧を取得できませんでした。');
@@ -62,12 +54,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 未更新のトラックを追加
    */
-  async updateLatestSavedTrackList({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }) {
+  async updateLatestSavedTrackList({ state, commit, dispatch }) {
     type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -82,13 +69,11 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     const maxLimit = 50;
     // 最大値は50
     const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
-    const market = rootGetters['auth/userCountryCode'];
     const handler = (index: number): Promise<LibraryOfTracks | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedTracks({
         limit,
         offset,
-        market,
       });
     };
     const tracks: LibraryOfTracks | undefined = await multipleRequests(

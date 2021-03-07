@@ -86,10 +86,8 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
 }): Promise<[T, Release<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 
-  const country = app.$getters()['auth/userCountryCode'];
   const releases = await app.$spotify.artists.getArtistAlbums({
     artistId: params.artistId,
-    country,
     includeGroupList: [releaseType],
     limit,
     offset,

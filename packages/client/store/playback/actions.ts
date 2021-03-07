@@ -186,7 +186,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     getters,
     commit,
     dispatch,
-    rootGetters,
   }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
@@ -236,9 +235,8 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       activeDeviceId: currentActiveDeviceId,
       trackId: currentTrackId,
     } = state;
-    const market = rootGetters['auth/userCountryCode'];
     // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
-    const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
+    const playbackState = await this.$spotify.player.getCurrentPlayback({});
     // デバイスがアクティブでなくなったとき空文字が返る
     commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
     // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合

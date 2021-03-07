@@ -4,7 +4,7 @@ import type { SpotifyAPI } from 'shared/types';
 export const getCurrentPlayback = (context: Context) => {
   const { app } = context;
 
-  return ({ market, additionalTypeList }: {
+  return ({ market = 'from_token', additionalTypeList }: {
     market?: SpotifyAPI.Country;
     additionalTypeList?: Array<'track' | 'episode'>;
   }): Promise<SpotifyAPI.Player.CurrentPlayback | undefined> => {

@@ -26,25 +26,17 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
    * 保存済みのリリースを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedReleaseList({
-    getters,
-    commit,
-    dispatch,
-    rootGetters,
-  }, payload) {
+  async getSavedReleaseList({ getters, commit, dispatch }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.releaseListLength;
-    const market = rootGetters['auth/userCountryCode'];
     const releases = await this.$spotify.library.getUserSavedAlbums({
       limit,
       offset,
-      market,
     });
     if (releases == null) {
       this.$toast.pushError('お気に入りのアルバムの一覧を取得できませんでした。');
@@ -59,12 +51,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 未更新のリリースを追加
    */
-  async updateLatestSavedReleaseList({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }) {
+  async updateLatestSavedReleaseList({ state, commit, dispatch }) {
     type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -72,20 +59,17 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       releaseList: currentReleaseList,
     } = state;
     if (unupdatedCounts === 0) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
     const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
-    const market = rootGetters['auth/userCountryCode'];
     const handler = (index: number): Promise<LibraryOfReleases | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedAlbums({
         limit,
         offset,
-        market,
       });
     };
 

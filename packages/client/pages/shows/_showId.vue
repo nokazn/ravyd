@@ -262,7 +262,6 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     const offset = this.show.episodeList.length;
     const episodes = await this.$spotify.shows.getShowEpisodes({
       showId,
-      market: this.$getters()['auth/userCountryCode'],
       limit,
       offset,
     });

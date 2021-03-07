@@ -11,10 +11,8 @@ export const getCategoryPlaylists = async (
   { app, params }: Context,
   limit: OneToFifty,
 ): Promise<CategoryPlaylists> => {
-  const country = app.$getters()['auth/userCountryCode'];
   const { playlists } = await app.$spotify.browse.getCategoryPlaylists({
     categoryId: params.categoryId,
-    country,
     limit,
   });
 
@@ -25,7 +23,6 @@ export const getCategoryPlaylists = async (
       hasPrevious: false,
     };
   }
-
   return {
     items: playlists.items,
     hasNext: playlists.next != null,

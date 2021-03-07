@@ -8,7 +8,7 @@ type Episodes = { episodes: (SpotifyAPI.Episode | null)[] };
 export const getEpisodes = (context: Context) => {
   const { app } = context;
 
-  return ({ episodeIdList, market }: {
+  return ({ episodeIdList, market = 'from_token' }: {
     episodeIdList: string[];
     market?: SpotifyAPI.Country;
   }): Promise<Episodes['episodes']> => {

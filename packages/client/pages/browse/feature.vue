@@ -68,10 +68,8 @@ export default class BrowseFeaturePage extends Vue implements AsyncData {
     if (this.feature == null || !this.feature.hasNext) return;
 
     const currentFeature = this.feature;
-    const country = this.$getters()['auth/userCountryCode'];
     const offset = this.feature.items.length;
     const { playlists, message } = await this.$spotify.browse.getFeaturedPlaylists({
-      country,
       limit: LIMIT_OF_PLAYLISTS,
       offset,
     });

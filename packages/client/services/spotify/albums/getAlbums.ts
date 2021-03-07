@@ -12,7 +12,7 @@ export const getAlbums = (context: Context) => {
   /**
    * albumIdList はの長さは最大 20
    */
-  return ({ albumIdList, market }: {
+  return ({ albumIdList, market = 'from_token' }: {
     albumIdList: string[];
     market?: SpotifyAPI.Country;
   }): Promise<Albums['albums']> => {

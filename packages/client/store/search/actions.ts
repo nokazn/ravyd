@@ -25,11 +25,9 @@ const searchEachItemHandler = <T extends SpotifyAPI.SearchType>(
   type: T,
 ) => ({ query, limit, offset }: SearchParams): Promise<SpotifyAPI.SearchResult<T>> => {
     const typeList = [type];
-    const market = app.$getters()['auth/userCountryCode'];
     const request = app.$spotify.search.searchItems({
       query,
       typeList,
-      market,
       limit,
       offset,
     });

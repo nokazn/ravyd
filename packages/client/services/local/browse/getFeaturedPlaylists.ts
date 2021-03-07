@@ -15,9 +15,7 @@ export const getFeaturedPlaylists = async (
     limit: OneToFifty;
   },
 ): Promise<Feature | undefined> => {
-  const country = app.$getters()['auth/userCountryCode'];
   const { playlists, message } = await app.$spotify.browse.getFeaturedPlaylists({
-    country,
     limit: params?.limit ?? 50,
     offset: params?.offset,
   });
