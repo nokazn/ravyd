@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.LoginPage">
     <v-card
-      v-show="!isLoggedin"
+      v-show="!isLoggedIn"
       :color="$constant.CARD_BACKGROUND_COLOR"
       :class="$style.LoginCard"
     >
@@ -43,8 +43,8 @@ export default Vue.extend({
   },
 
   computed: {
-    isLoggedin(): RootGetters['auth/isLoggedin'] {
-      return this.$getters()['auth/isLoggedin'];
+    isLoggedIn(): RootGetters['auth/isLoggedIn'] {
+      return this.$getters()['auth/isLoggedIn'];
     },
   },
 

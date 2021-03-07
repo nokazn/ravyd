@@ -5,7 +5,7 @@ import { getImageSrc } from '~/services/converter';
 import type { State } from './types';
 
 export type Getters = {
-  isLoggedin: boolean
+  isLoggedIn: boolean
   isPremium: boolean
   isTokenExpired: () => boolean
   finishedRefreshingToken: () => Promise<true>
@@ -16,7 +16,7 @@ export type Getters = {
 }
 
 const getters: VuexGetters<State, Getters> = {
-  isLoggedin(state) {
+  isLoggedIn(state) {
     return state.authState != null
       && state.accessToken != null
       && state.userData != null;

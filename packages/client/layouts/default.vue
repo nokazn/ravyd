@@ -6,10 +6,10 @@
     <WaveLoader v-if="!isLoaded" />
 
     <Header
-      v-if="isLoggedin"
+      v-if="isLoggedIn"
       :elevation="elevation"
     />
-    <NavigationDrawer v-if="isLoggedin" />
+    <NavigationDrawer v-if="isLoggedIn" />
 
     <v-main :style="contentContainerStyles">
       <div
@@ -20,7 +20,7 @@
       <Overlay />
     </v-main>
 
-    <template v-if="isLoggedin">
+    <template v-if="isLoggedIn">
       <PlayerBar />
       <NavigationBar v-if="$screen.isMobile" />
       <DeviceBar v-if="isAnotherDevicePlaying && $screen.isPc" />
@@ -91,7 +91,7 @@ export default defineComponent({
     }, {
       rootMargin: `-${root.$constant.HEADER_HEIGHT}px 0px`,
     });
-    const isLoggedin = computed(() => root.$getters()['auth/isLoggedin']);
+    const isLoggedIn = computed(() => root.$getters()['auth/isLoggedIn']);
     const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
     const contentContainerStyles = computed(() => root.$getters().backgroundStyles(320));
 
@@ -107,7 +107,7 @@ export default defineComponent({
     return {
       isLoaded,
       elevation,
-      isLoggedin,
+      isLoggedIn,
       isAnotherDevicePlaying,
       contentContainerStyles,
       SPACER_REF,

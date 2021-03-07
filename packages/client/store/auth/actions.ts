@@ -113,12 +113,12 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   },
 
   async confirmAuthState({ getters, dispatch }, params) {
-    if (!getters.isLoggedin || getters.isTokenExpired()) {
+    if (!getters.isLoggedIn || getters.isTokenExpired()) {
       await dispatch('refreshAccessToken');
     }
     return params?.checkPremium
-      ? getters.isLoggedin && getters.isPremium
-      : getters.isLoggedin;
+      ? getters.isLoggedIn && getters.isPremium
+      : getters.isLoggedIn;
   },
 };
 

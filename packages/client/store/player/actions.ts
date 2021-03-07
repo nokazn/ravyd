@@ -13,7 +13,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     dispatch,
     rootGetters,
   }) {
-    if (!rootGetters['auth/isLoggedin'] || !rootGetters['auth/isPremium']) {
+    if (!rootGetters['auth/isLoggedIn'] || !rootGetters['auth/isPremium']) {
       window.onSpotifyWebPlaybackSDKReady = () => {};
       return;
     }

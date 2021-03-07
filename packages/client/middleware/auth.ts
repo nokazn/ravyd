@@ -1,14 +1,14 @@
 import type { Middleware } from '@nuxt/types';
 
 const middleware: Middleware = ({ app, route, redirect }) => {
-  const isLoggedin = app.$getters()['auth/isLoggedin'];
+  const isLoggedIn = app.$getters()['auth/isLoggedIn'];
   if (route.path === '/login/callback') {
     return;
   }
 
-  if (!isLoggedin && route.path !== '/login') {
+  if (!isLoggedIn && route.path !== '/login') {
     redirect('/login');
-  } else if (isLoggedin && route.path === '/login') {
+  } else if (isLoggedIn && route.path === '/login') {
     redirect(route.query.redirect as string || '/');
   }
 };
