@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from 'shared/types';
 
-export type AuthState = {
+export type State = {
   authState: string | undefined;
   accessToken: string | undefined;
   expirationMs: number | undefined
@@ -8,7 +8,7 @@ export type AuthState = {
   isRefreshing: boolean;
 }
 
-const state = (): AuthState => ({
+const state = (): State => ({
   authState: undefined,
   accessToken: undefined,
   expirationMs: undefined,

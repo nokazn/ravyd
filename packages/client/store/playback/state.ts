@@ -1,7 +1,7 @@
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import type { App } from '~/entities';
 
-export type PlaybackState = {
+export type State = {
   pollingPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
   deviceId: string | undefined
   activeDeviceId: string | undefined
@@ -34,7 +34,7 @@ export type PlaybackState = {
   isMuted: boolean
 }
 
-const state = (): PlaybackState => ({
+const state = (): State => ({
   pollingPlaybackTimer: undefined,
   deviceId: undefined,
   activeDeviceId: undefined,

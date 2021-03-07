@@ -10,11 +10,11 @@ export const getTracks = (context: Context) => {
 
   // trackIdList は50個まで
   return ({
-    market,
     trackIdList,
+    market = 'from_token',
   }: {
-    market?: SpotifyAPI.Country;
     trackIdList: string[];
+    market?: SpotifyAPI.Country;
   }): Promise<Tracks['tracks']> => {
     const request = (ids: string, l: number) => {
       return app.$spotifyApi.$get<Tracks>('/tracks', {

@@ -5,14 +5,8 @@ import type { App } from '~/entities';
 export const getTopTrackList = async (
   { app, params }: Context,
 ): Promise<App.TrackDetail[]> => {
-  const country = app.$getters()['auth/userCountryCode'];
-  if (country == null) return [];
-
   const { artistId } = params;
-  const { tracks } = await app.$spotify.artists.getArtistTopTracks({
-    artistId,
-    country,
-  });
+  const { tracks } = await app.$spotify.artists.getArtistTopTracks({ artistId });
   if (tracks == null || tracks.length === 0) return [];
 
   const trackIdList = tracks.map((track) => track.id);

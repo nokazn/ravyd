@@ -1,13 +1,11 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 import type { AxiosError } from 'axios';
 
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { REPEAT_STATE_LIST } from '~/constants';
-import type { PlaybackState } from './state';
-import type { PlaybackGetters } from './getters';
-import type { PlaybackMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type PlaybackActions = {
+export type Actions = {
   transferPlayback: (params?: {
     deviceId?: string
     play?: false
@@ -49,31 +47,10 @@ export type PlaybackActions = {
   resetPlayback: () => void
 };
 
-export type RootActions = {
-  'playback/transferPlayback': PlaybackActions['transferPlayback']
-  'playback/getDeviceList': PlaybackActions['getDeviceList']
-  'playback/setCustomContext': PlaybackActions['setCustomContext']
-  'playback/resetCustomContext': PlaybackActions['resetCustomContext']
-  'playback/getCurrentPlayback': PlaybackActions['getCurrentPlayback']
-  'playback/pollCurrentPlayback': PlaybackActions['pollCurrentPlayback']
-  'playback/play': PlaybackActions['play']
-  'playback/pause': PlaybackActions['pause']
-  'playback/seek': PlaybackActions['seek']
-  'playback/next': PlaybackActions['next']
-  'playback/previous': PlaybackActions['previous']
-  'playback/shuffle': PlaybackActions['shuffle']
-  'playback/repeat': PlaybackActions['repeat']
-  'playback/volume': PlaybackActions['volume']
-  'playback/mute': PlaybackActions['mute']
-  'playback/checkTrackSavedState': PlaybackActions['checkTrackSavedState']
-  'playback/modifyTrackSavedState': PlaybackActions['modifyTrackSavedState']
-  'playback/resetPlayback': PlaybackActions['resetPlayback']
-};
-
 // プレイヤーを操作した後に polling するまでの初回の timeout
 const DEFAULT_TIMEOUT = 500;
 
-const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, PlaybackMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 再生するデバイスを変更し、update が指定されればデバイス一覧も更新
    */
@@ -209,7 +186,6 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
     getters,
     commit,
     dispatch,
-    rootGetters,
   }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
@@ -259,9 +235,8 @@ const actions: Actions<PlaybackState, PlaybackActions, PlaybackGetters, Playback
       activeDeviceId: currentActiveDeviceId,
       trackId: currentTrackId,
     } = state;
-    const market = rootGetters['auth/userCountryCode'];
     // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
-    const playbackState = await this.$spotify.player.getCurrentPlayback({ market });
+    const playbackState = await this.$spotify.player.getCurrentPlayback({});
     // デバイスがアクティブでなくなったとき空文字が返る
     commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
     // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合

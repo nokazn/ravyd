@@ -39,6 +39,7 @@
     "dotenv": "^8.2.0",
     "fastify-formbody": "^5.0.0",
     "ts-node-dev": "^1.1.6",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "~4.1"
   }
 }

@@ -1,6 +1,6 @@
 import { Store, SubscribeOptions } from 'vuex';
 import { Context } from '@nuxt/types';
-import type { ActionMethodMap } from 'shared/types';
+import type { ActionMethods } from 'shared/types';
 
 /**
  * 公式の型定義の拡張
@@ -9,7 +9,7 @@ declare module 'typed-vuex' {
   /**
    * getters
    */
-  type Getters<S, G> = {
+  type VuexGetters<S, G> = {
     [K in keyof G]: (
       state: S,
       getters: G,
@@ -21,7 +21,7 @@ declare module 'typed-vuex' {
   /**
    * mutations
    */
-  type Mutations<S, M> = {
+  type VuexMutations<S, M> = {
     [K in keyof M]: Extract<M[K], undefined> extends never
       ? (state: S, payload: M[K]) => void
       : (state: S, payload?: M[K]) => void
@@ -62,7 +62,7 @@ declare module 'typed-vuex' {
    * actions
    */
   type _ExtendedDispatchArguments<
-    A extends ActionMethodMap,
+    A extends ActionMethods,
     T extends keyof (A & RootActions)
   > = T extends keyof RootActions
     ? [Parameters<RootActions[T]>[0], { root: boolean }]
@@ -72,7 +72,7 @@ declare module 'typed-vuex' {
       : [Parameters<A[T]>[0]?]
 
   // ローカルモジュール内ではモジュール名なしで指定できる
-  type ExtendedDispatch<A extends ActionMethodMap> = <T extends keyof (A & RootActions)>(
+  type ExtendedDispatch<A extends ActionMethods> = <T extends keyof (A & RootActions)>(
     type: T,
     ...args: _ExtendedDispatchArguments<A, T>,
   ) => T extends keyof RootActions
@@ -87,7 +87,7 @@ declare module 'typed-vuex' {
       : [Parameters<RootActions[T]>[0]?]
   ) => ReturnType<RootActions[T]>
 
-  type _Context<S, G, M, A extends ActionMethodMap> = {
+  type _Context<S, G, M, A extends ActionMethods> = {
     state: S,
     getters: G,
     commit: ExtendedCommit<M>,
@@ -106,7 +106,7 @@ declare module 'typed-vuex' {
     rootGetters: RootGetters,
   }
 
-  type Actions<S, A extends ActionMethodMap, G = {}, M = {}> = {
+  type VuexActions<S, A extends ActionMethods, G = {}, M = {}> = {
     [K in keyof A]: (
       // this は仮の引数
       this: Store<RootState>,

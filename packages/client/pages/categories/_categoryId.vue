@@ -99,11 +99,9 @@ export default class CategoryIdPage extends Vue implements AsyncData, Data {
 
     const { playlists: currentPlaylists } = this;
     const { categoryId } = this.$route.params;
-    const country = this.$getters()['auth/userCountryCode'];
     const offset = this.playlists.items.length;
     const { playlists } = await this.$spotify.browse.getCategoryPlaylists({
       categoryId,
-      country,
       limit,
       offset,
     });

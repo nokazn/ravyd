@@ -1,11 +1,10 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 import type { OneToFifty } from 'shared/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { PlaylistsState } from './state';
-import type { PlaylistsGetters } from './getters';
-import type { PlaylistsMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type PlaylistsActions = {
+
+export type Actions = {
   getPlaylists: (payload?: { offset?: number, limit?: OneToFifty }) => Promise<void>
   getAllPlaylists: () => Promise<void>
   createPlaylist: (payload: {
@@ -43,18 +42,7 @@ export type PlaylistsActions = {
   }) => Promise<void>
 }
 
-export type RootActions = {
-  'playlists/getPlaylists': PlaylistsActions['getPlaylists']
-  'playlists/getAllPlaylists': PlaylistsActions['getAllPlaylists']
-  'playlists/createPlaylist': PlaylistsActions['createPlaylist']
-  'playlists/editPlaylist': PlaylistsActions['editPlaylist']
-  'playlists/followPlaylist': PlaylistsActions['followPlaylist']
-  'playlists/unfollowPlaylist': PlaylistsActions['unfollowPlaylist']
-  'playlists/addItemToPlaylist': PlaylistsActions['addItemToPlaylist']
-  'playlists/removePlaylistItem': PlaylistsActions['removePlaylistItem']
-}
-
-const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, PlaylistsMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * ユーザーのプレイリストを取得する
    */
@@ -214,12 +202,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
   /**
    * プレイリストをフォローする
    */
-  async followPlaylist({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }, playlistId) {
+  async followPlaylist({ state, commit, dispatch }, playlistId) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
@@ -235,12 +218,7 @@ const actions: Actions<PlaylistsState, PlaylistsActions, PlaylistsGetters, Playl
           }
         }
 
-        const market = rootGetters['auth/userCountryCode'];
-        const playlist = await this.$spotify.playlists.getPlaylist({
-          playlistId,
-          market,
-        });
-
+        const playlist = await this.$spotify.playlists.getPlaylist({ playlistId });
         if (playlist != null) {
           commit('ADD_PLAYLIST', playlist);
           commit('SET_ACTUAL_IS_SAVED', [playlistId, true]);

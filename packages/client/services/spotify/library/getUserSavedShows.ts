@@ -7,11 +7,11 @@ export const getUserSavedShows = (context: Context) => {
   return ({
     limit = 20,
     offset = 0,
-    market,
+    market = 'from_token',
   }: {
-    limit?: OneToFifty
-    offset?: number
-    market?: SpotifyAPI.Country
+    limit?: OneToFifty;
+    offset?: number;
+    market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.LibraryOf<'show'> | undefined> => {
     return app.$spotifyApi.$get<SpotifyAPI.LibraryOf<'show'>>('/me/shows', {
       params: {

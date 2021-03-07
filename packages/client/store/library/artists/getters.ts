@@ -1,19 +1,13 @@
-import type { Getters } from 'typed-vuex';
-import type { LibraryArtistsState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type LibraryArtistsGetters = {
+export type Getters = {
   artistListLength: number
   isFull: boolean
   lastArtistId: string | undefined
 };
 
-export type RootGetters = {
-  'library/artists/artistListLength': LibraryArtistsGetters['artistListLength']
-  'library/artists/isFull': LibraryArtistsGetters['isFull']
-  'library/artists/lastArtistId': LibraryArtistsGetters['lastArtistId']
-};
-
-const libraryArtistsGetters: Getters<LibraryArtistsState, LibraryArtistsGetters> = {
+const libraryArtistsGetters: VuexGetters<State, Getters> = {
   artistListLength(state) {
     return state.artistList?.length ?? 0;
   },

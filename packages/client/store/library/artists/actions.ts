@@ -1,10 +1,8 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 import type { OneToFifty, TODO } from 'shared/types';
-import type { LibraryArtistsState } from './state';
-import type { LibraryArtistsGetters } from './getters';
-import type { LibraryArtistsMutations } from './mutations';
+import type { State, Getters, Mutations } from './types';
 
-export type LibraryArtistsActions = {
+export type Actions = {
   getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedArtistList: () => Promise<void>
   followArtists: (idList: string[]) => Promise<void>
@@ -15,20 +13,7 @@ export type LibraryArtistsActions = {
   }) => void
 };
 
-export type RootActions = {
-  'library/artists/getSavedArtistList': LibraryArtistsActions['getSavedArtistList']
-  'library/artists/updateLatestSavedArtistList': LibraryArtistsActions['updateLatestSavedArtistList']
-  'library/artists/followArtists': LibraryArtistsActions['followArtists']
-  'library/artists/unfollowArtists': LibraryArtistsActions['unfollowArtists']
-  'library/artists/modifyArtistSavedState': LibraryArtistsActions['modifyArtistSavedState']
-};
-
-const actions: Actions<
-  LibraryArtistsState,
-  LibraryArtistsActions,
-  LibraryArtistsGetters,
-  LibraryArtistsMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * フォロー済みのアーティストを取得
    * 指定されない場合は limit: 30 で取得

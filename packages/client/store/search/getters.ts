@@ -1,10 +1,10 @@
-import type { Getters } from 'typed-vuex';
+import type { VuexGetters } from 'typed-vuex';
 
 import { convertToContentListItem } from '~/services/converter';
 import type { App } from '~/entities';
-import type { SearchState } from './state';
+import type { State } from './types';
 
-export type SearchGetters = {
+export type Getters = {
   tracks: App.ContentItem<'track'>[]
   artists: App.ContentItem<'artist'>[]
   albums: App.ContentItem<'album'>[]
@@ -13,16 +13,7 @@ export type SearchGetters = {
   episodes: App.ContentItem<'episode'>[]
 }
 
-export type RootGetters = {
-  'search/tracks': SearchGetters['tracks']
-  'search/artists': SearchGetters['artists']
-  'search/albums': SearchGetters['albums']
-  'search/playlists': SearchGetters['playlists']
-  'search/shows': SearchGetters['shows']
-  'search/episodes': SearchGetters['episodes']
-}
-
-const getters: Getters<SearchState, SearchGetters> = {
+const getters: VuexGetters<State, Getters> = {
   tracks(state) {
     return state.tracks?.map(convertToContentListItem('track')) ?? [];
   },

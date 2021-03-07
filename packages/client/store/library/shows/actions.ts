@@ -1,13 +1,12 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { LibraryShowsState } from './state';
-import type { LibraryShowsGetters } from './getters';
-import type { LibraryShowsMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type LibraryShowsActions = {
+
+export type Actions = {
   getSavedShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedShowList: () => Promise<void>
   saveShows: (showIdList: string[]) => Promise<void>
@@ -18,43 +17,21 @@ export type LibraryShowsActions = {
   }) => void
 }
 
-export type RootActions = {
-  'library/shows/getSavedShowList': LibraryShowsActions['getSavedShowList']
-  'library/shows/updateLatestSavedShowList': LibraryShowsActions['updateLatestSavedShowList']
-  'library/shows/saveShows': LibraryShowsActions['saveShows']
-  'library/shows/removeShows': LibraryShowsActions['removeShows']
-  'library/shows/modifyShowSavedState': LibraryShowsActions['modifyShowSavedState']
-}
-
-const actions: Actions<
-  LibraryShowsState,
-  LibraryShowsActions,
-  LibraryShowsGetters,
-  LibraryShowsMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 保存済みのポッドキャストを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedShowList({
-    getters,
-    commit,
-    dispatch,
-    rootGetters,
-  }, payload) {
+  async getSavedShowList({ getters, commit, dispatch }, payload) {
     if (getters.isFull) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
-
     const limit = payload?.limit ?? 30;
     const offset = getters.showListLength;
-    const market = rootGetters['auth/userCountryCode'];
     const shows = await this.$spotify.library.getUserSavedShows({
       limit,
       offset,
-      market,
     });
     if (shows == null) {
       this.$toast.pushError('お気に入りのポッドキャストの一覧を取得できませんでした。');
@@ -69,12 +46,7 @@ const actions: Actions<
   /**
    * 未更新のポッドキャストを追加
    */
-  async updateLatestSavedShowList({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }) {
+  async updateLatestSavedShowList({ state, commit, dispatch }) {
     type LibraryOfShows = SpotifyAPI.LibraryOf<'show'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -82,19 +54,16 @@ const actions: Actions<
       unupdatedCounts,
     } = state;
     if (unupdatedCounts === 0) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
     const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
-    const market = rootGetters['auth/userCountryCode'];
     const handler = (index: number): Promise<LibraryOfShows | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedShows({
         limit,
         offset,
-        market,
       });
     };
 

@@ -8,14 +8,14 @@ export const getCategoryPlaylists = (context: Context) => {
 
   return ({
     categoryId,
-    country,
     limit = 20,
     offset = 0,
+    country = 'from_token',
   }: {
     categoryId: string;
-    country?: SpotifyAPI.Country;
     limit?: OneToFifty;
     offset?: number;
+    country?: SpotifyAPI.Country;
   }): Promise<Partial<Playlists>> => {
     return app.$spotifyApi.$get<Playlists>(`/browse/categories/${categoryId}/playlists`, {
       params: {

@@ -1,10 +1,11 @@
-import type { Getters } from 'typed-vuex';
+import type { VuexGetters } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import { getImageSrc } from '~/services/converter';
-import type { AuthState } from './state';
 
-export type AuthGetters = {
-  isLoggedin: boolean
+import { getImageSrc } from '~/services/converter';
+import type { State } from './types';
+
+export type Getters = {
+  isLoggedIn: boolean
   isPremium: boolean
   isTokenExpired: () => boolean
   finishedRefreshingToken: () => Promise<true>
@@ -14,19 +15,8 @@ export type AuthGetters = {
   userCountryCode: SpotifyAPI.Country | undefined
 }
 
-export type RootGetters = {
-  'auth/isLoggedin': AuthGetters['isLoggedin']
-  'auth/isPremium': AuthGetters['isPremium']
-  'auth/isTokenExpired': AuthGetters['isTokenExpired']
-  'auth/finishedRefreshingToken': AuthGetters['finishedRefreshingToken']
-  'auth/userId': AuthGetters['userId']
-  'auth/userDisplayName': AuthGetters['userDisplayName']
-  'auth/userAvatarSrc': AuthGetters['userAvatarSrc']
-  'auth/userCountryCode': AuthGetters['userCountryCode']
-}
-
-const getters: Getters<AuthState, AuthGetters> = {
-  isLoggedin(state) {
+const getters: VuexGetters<State, Getters> = {
+  isLoggedIn(state) {
     return state.authState != null
       && state.accessToken != null
       && state.userData != null;

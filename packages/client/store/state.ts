@@ -1,10 +1,10 @@
 import type { App } from '~/entities';
 
-export type RootState = {
+export type State = {
   dominantBackgroundColor: App.DominantColor | undefined;
 }
 
-const state = (): RootState => ({
+const state = (): State => ({
   dominantBackgroundColor: undefined,
 });
 

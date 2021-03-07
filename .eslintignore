@@ -1,6 +1,6 @@
-.nuxt/
-assets/
-node_modules/
-static/
+**/node_modules/
+packages/client/.nuxt/
+packages/client/assets/
+packages/client/static/
 dist/
 coverage/

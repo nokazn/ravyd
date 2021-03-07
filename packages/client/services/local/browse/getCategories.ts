@@ -14,9 +14,7 @@ export const getCategories = async (
     limit: OneToFifty;
   },
 ): Promise<Categories | undefined> => {
-  const country = app.$getters()['auth/userCountryCode'];
   const { categories } = await app.$spotify.browse.getCategories({
-    country,
     limit: params?.limit ?? 50,
     offset: params?.offset,
   });

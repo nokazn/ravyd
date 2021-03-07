@@ -38,19 +38,16 @@
     "shared": "dist/shared"
   },
   "devDependencies": {
-    "@babel/compat-data": "^7.12.7",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.10",
     "@babel/preset-typescript": "^7.12.7",
-    "@babel/runtime-corejs3": "^7.12.5",
-    "@nuxtjs/eslint-config-typescript": "^5.0.0",
+    "@nuxtjs/eslint-config-typescript": "^6.0.0",
     "@types/jest": "^26.0.19",
     "@types/node": "^14.14.12",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.8.2",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^26.6.3",
-    "core-js": "3",
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -63,6 +60,7 @@
     "stylelint": "^13.8.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
-    "ts-jest": "^26.4.4"
+    "ts-jest": "^26.4.4",
+    "typescript": "~4.1"
   }
 }

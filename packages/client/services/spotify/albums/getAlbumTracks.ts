@@ -8,7 +8,7 @@ export const getAlbumTracks = (context: Context) => {
     albumId,
     limit = 20,
     offset = 0,
-    market,
+    market = 'from_token',
   }: {
     albumId: string;
     limit?: OneToFifty;

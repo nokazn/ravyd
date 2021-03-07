@@ -2,9 +2,7 @@
 // eslint-disable-next-line import/order
 import './pre-start';
 
-import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import type { NuxtConfig } from '@nuxt/types';
-
 import {
   APP_NAME,
   IS_DEVELOPMENT,
@@ -15,7 +13,6 @@ import {
 import {
   projectRoot,
   clientRoot,
-  babelPresets,
   axios,
   https,
   proxy,
@@ -71,14 +68,7 @@ const nuxtConfig: NuxtConfig = {
     https,
   },
   build: {
-    babel: {
-      presets: ({ isServer }) => babelPresets(isServer),
-    },
-    plugins: [
-      // lodash から必要な関数だけ取り出す
-      new LodashModuleReplacementPlugin(),
-    ],
-    extend: (config, { isServer }) => webpack(config, isServer),
+    extend: (config) => webpack(config),
   },
   plugins: [
     { src: '~/plugins/dayjs' },

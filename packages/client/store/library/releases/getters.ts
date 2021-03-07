@@ -1,17 +1,12 @@
-import type { Getters } from 'typed-vuex';
-import type { LibraryReleasesState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type LibraryReleasesGetters = {
+export type Getters = {
   releaseListLength: number;
   isFull: boolean;
 };
 
-export type RootGetters = {
-  'library/releases/releaseListLength': LibraryReleasesGetters['releaseListLength']
-  'library/releases/isFull': LibraryReleasesGetters['isFull']
-};
-
-const libraryReleasesGetters: Getters<LibraryReleasesState, LibraryReleasesGetters> = {
+const libraryReleasesGetters: VuexGetters<State, Getters> = {
   releaseListLength(state) {
     return state.releaseList?.length ?? 0;
   },

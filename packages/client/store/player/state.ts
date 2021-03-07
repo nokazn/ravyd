@@ -1,8 +1,8 @@
-export type PlayerState = {
+export type State = {
   playbackPlayer: Spotify.SpotifyPlayer | undefined
 }
 
-const state = (): PlayerState => ({
+const state = (): State => ({
   playbackPlayer: undefined,
 });
 

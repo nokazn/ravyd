@@ -9,17 +9,17 @@ export const getFeaturedPlaylists = (context: Context) => {
    * timestamp: ISO 8601 format
    */
   return ({
-    locale,
-    country,
     timestamp,
     limit = 20,
     offset = 0,
+    country = 'from_token',
+    locale,
   }: {
-    locale?: string;
-    country?: SpotifyAPI.Country;
     timestamp?: string;
     limit?: OneToFifty;
     offset?: number;
+    locale?: string;
+    country?: SpotifyAPI.Country;
   }): Promise<Partial<SpotifyAPI.Browse.Featured>> => {
     return app.$spotifyApi.$get<SpotifyAPI.Browse.Featured>('/browse/featured-playlists', {
       params: {

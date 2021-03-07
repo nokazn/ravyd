@@ -64,10 +64,8 @@ export default class BrowseCategoriesPage extends Vue implements AsyncData {
     if (this.categories == null || !this.categories.hasNext) return;
 
     const currentCategories = this.categories;
-    const country = this.$getters()['auth/userCountryCode'];
     const offset = this.categories.items.length;
     const { categories } = await this.$spotify.browse.getCategories({
-      country,
       limit: LIMIT_OF_CATEGORIES,
       offset,
     });

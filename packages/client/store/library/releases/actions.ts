@@ -1,14 +1,13 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import { convertReleaseForCard } from '~/services/converter';
 import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { LibraryReleasesState } from './state';
-import type { LibraryReleasesGetters } from './getters';
-import type { LibraryReleasesMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type LibraryReleasesActions = {
+
+export type Actions = {
   getSavedReleaseList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedReleaseList: () => Promise<void>
   saveReleases: (albumIdList: string[]) => Promise<void>
@@ -19,47 +18,25 @@ export type LibraryReleasesActions = {
   }) => void
 };
 
-export type RootActions = {
-  'library/releases/getSavedReleaseList': LibraryReleasesActions['getSavedReleaseList']
-  'library/releases/updateLatestSavedReleaseList': LibraryReleasesActions['updateLatestSavedReleaseList']
-  'library/releases/saveReleases': LibraryReleasesActions['saveReleases']
-  'library/releases/removeReleases': LibraryReleasesActions['removeReleases']
-  'library/releases/modifyReleaseSavedState': LibraryReleasesActions['modifyReleaseSavedState']
-};
+type Album = { album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album }
+const convertRelease = ({ album }: Album) => convertReleaseForCard(album);
 
-const convertRelease = ({ album }: {
-  album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album
-}) => convertReleaseForCard(album);
-
-const actions: Actions<
-  LibraryReleasesState,
-  LibraryReleasesActions,
-  LibraryReleasesGetters,
-  LibraryReleasesMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 保存済みのリリースを取得
    * 指定されない場合は limit: 30 で取得
    */
-  async getSavedReleaseList({
-    getters,
-    commit,
-    dispatch,
-    rootGetters,
-  }, payload) {
+  async getSavedReleaseList({ getters, commit, dispatch }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const limit = payload?.limit ?? 30;
     const offset = getters.releaseListLength;
-    const market = rootGetters['auth/userCountryCode'];
     const releases = await this.$spotify.library.getUserSavedAlbums({
       limit,
       offset,
-      market,
     });
     if (releases == null) {
       this.$toast.pushError('お気に入りのアルバムの一覧を取得できませんでした。');
@@ -74,12 +51,7 @@ const actions: Actions<
   /**
    * 未更新のリリースを追加
    */
-  async updateLatestSavedReleaseList({
-    state,
-    commit,
-    dispatch,
-    rootGetters,
-  }) {
+  async updateLatestSavedReleaseList({ state, commit, dispatch }) {
     type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
     const {
@@ -87,20 +59,17 @@ const actions: Actions<
       releaseList: currentReleaseList,
     } = state;
     if (unupdatedCounts === 0) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
     const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
-    const market = rootGetters['auth/userCountryCode'];
     const handler = (index: number): Promise<LibraryOfReleases | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedAlbums({
         limit,
         offset,
-        market,
       });
     };
 

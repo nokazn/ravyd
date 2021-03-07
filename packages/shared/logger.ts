@@ -8,8 +8,8 @@ const joinRest = (list1: any[], list2?: any[]): string => {
 };
 
 const level: LevelWithSilent = process.env.NODE_ENV === 'production'
-  ? 'trace'
-  : 'info';
+  ? 'info'
+  : 'trace';
 
 export const logger = pino({
   level,

@@ -62,7 +62,7 @@ import {
   computed,
   watch,
 } from '@vue/composition-api';
-import { debounce } from 'lodash';
+import debounce from 'just-debounce-it';
 import { useTextField, VTextFieldRef } from '~/use/keyboard';
 
 const LIMIT_OF_SEARCH_ITEM = 4;

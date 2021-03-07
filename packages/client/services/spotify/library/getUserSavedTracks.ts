@@ -7,7 +7,7 @@ export const getUserSavedTracks = (context: Context) => {
   return ({
     limit = 20,
     offset = 0,
-    market,
+    market = 'from_token',
   }: {
     limit?: OneToFifty;
     offset?: number;

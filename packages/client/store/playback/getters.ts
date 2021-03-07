@@ -1,14 +1,13 @@
-import type { Getters } from 'typed-vuex';
+import type { VuexGetters } from 'typed-vuex';
 
 import { getExternalUrlFromUri } from 'shared/utils';
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
-import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import { getImageSrc, convertTrackForQueue, convertUriToId } from '~/services/converter';
-import type { PlaybackState } from './state';
+import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import type { App } from '~/entities';
+import type { State } from './types';
 
-
-export type PlaybackGetters = {
+export type Getters = {
   activeDevice: SpotifyAPI.Device | undefined
   playbackDeviceId: string | undefined
   deviceList: App.Device[]
@@ -28,27 +27,7 @@ export type PlaybackGetters = {
   volumePercent: ZeroToHundred
 }
 
-export type RootGetters = {
-  'playback/activeDevice': PlaybackGetters['activeDevice']
-  'playback/playbackDeviceId': PlaybackGetters['playbackDeviceId']
-  'playback/deviceList': PlaybackGetters['deviceList']
-  'playback/isThisAppPlaying': PlaybackGetters['isThisAppPlaying']
-  'playback/isAnotherDevicePlaying': PlaybackGetters['isAnotherDevicePlaying']
-  'playback/currentTrack': PlaybackGetters['currentTrack']
-  'playback/trackQueue': PlaybackGetters['trackQueue']
-  'playback/releaseId': PlaybackGetters['releaseId']
-  'playback/artworkSrc': PlaybackGetters['artworkSrc']
-  'playback/hasTrack': PlaybackGetters['hasTrack']
-  'playback/isTrackSet': PlaybackGetters['isTrackSet']
-  'playback/contextUri': PlaybackGetters['contextUri']
-  'playback/isContextSet': PlaybackGetters['isContextSet']
-  'playback/remainingTimeMs': PlaybackGetters['remainingTimeMs']
-  'playback/repeatState': PlaybackGetters['repeatState']
-  'playback/isDisallowed': PlaybackGetters['isDisallowed']
-  'playback/volumePercent': PlaybackGetters['volumePercent']
-}
-
-const playerGetters: Getters<PlaybackState, PlaybackGetters> = {
+const playerGetters: VuexGetters<State, Getters> = {
   activeDevice(state) {
     const activeDevice = state.deviceList.find((device) => device.is_active);
     return activeDevice;

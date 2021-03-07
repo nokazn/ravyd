@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from 'shared/types';
 
-export type SearchState = {
+export type State = {
   albums: SpotifyAPI.SimpleAlbum[] | undefined
   artists: SpotifyAPI.Artist[] | undefined
   tracks: SpotifyAPI.Track[] | undefined
@@ -9,7 +9,7 @@ export type SearchState = {
   episodes: SpotifyAPI.SimpleEpisode[] | undefined
 }
 
-const state = (): SearchState => ({
+const state = (): State => ({
   albums: undefined,
   artists: undefined,
   tracks: undefined,

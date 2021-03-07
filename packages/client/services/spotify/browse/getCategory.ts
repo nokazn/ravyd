@@ -6,7 +6,7 @@ export const getCategory = (context: Context) => {
 
   return ({
     categoryId,
-    country,
+    country = 'from_token',
     locale,
   }: {
     categoryId: string;

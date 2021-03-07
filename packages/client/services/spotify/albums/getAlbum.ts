@@ -4,7 +4,7 @@ import type { SpotifyAPI } from 'shared/types';
 export const getAlbum = (context: Context) => {
   const { app } = context;
 
-  return ({ albumId, market }: {
+  return ({ albumId, market = 'from_token' }: {
     albumId: string;
     market?: SpotifyAPI.Country;
   }): Promise<SpotifyAPI.Album | undefined> => {

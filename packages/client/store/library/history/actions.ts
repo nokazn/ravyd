@@ -1,11 +1,9 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import { convertTrackDetail } from '~/services/converter';
-import type { LibraryHistoryState } from './state';
-import type { LibraryHistoryGetters } from './getters';
-import type { LibraryHistoryMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type LibraryHistoryActions = {
+export type Actions = {
   getRecentlyPlayed: () => Promise<void>
   modifyTrackSavedState: (params: {
     trackId: string
@@ -13,17 +11,7 @@ export type LibraryHistoryActions = {
   }) => void
 }
 
-export type RootActions = {
-  'library/history/getRecentlyPlayed': LibraryHistoryActions['getRecentlyPlayed'];
-  'library/history/modifyTrackSavedState': LibraryHistoryActions['modifyTrackSavedState']
-}
-
-const actions: Actions<
-  LibraryHistoryState,
-  LibraryHistoryActions,
-  LibraryHistoryGetters,
-  LibraryHistoryMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async getRecentlyPlayed({ commit, dispatch }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;

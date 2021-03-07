@@ -9,14 +9,10 @@ export const getRelease = async (
   // アーティストの他のリリースを取得
   const getArtistReleaseList = (
     artistList: SpotifyAPI.SimpleArtist[],
-    { market, limit = 10 }: {
-      market?: SpotifyAPI.Country
-      limit?: OneToFifty
-    },
+    { limit = 10 }: { limit?: OneToFifty },
   ): Promise<App.ReleasePage['artistReleaseList']> => Promise.all(artistList.map(async (artist) => {
     const releases = await app.$spotify.artists.getArtistAlbums({
       artistId: artist.id,
-      country: market,
       // 同じリリースが含まれる場合は除いて limit 件にするため
       limit: limit + 1 as OneToFifty,
     });
@@ -32,10 +28,8 @@ export const getRelease = async (
     };
   }));
 
-  const market = app.$getters()['auth/userCountryCode'];
   const release = await app.$spotify.albums.getAlbum({
     albumId: params.releaseId,
-    market,
   });
   if (release == null) return undefined;
 
@@ -67,7 +61,7 @@ export const getRelease = async (
     app.$spotify.library.checkUserSavedAlbums({ albumIdList: [id] }),
     app.$spotify.library.checkUserSavedTracks({ trackIdList }),
     app.$spotify.artists.getArtists({ artistIdList }),
-    getArtistReleaseList(simpleArtists, { market }),
+    getArtistReleaseList(simpleArtists, {}),
   ] as const);
 
   const trackList: App.TrackDetail[] = tracks.items.map((track, index) => {

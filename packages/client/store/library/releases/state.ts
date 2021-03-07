@@ -1,13 +1,13 @@
 import type { App } from '~/entities';
 
-export type LibraryReleasesState = {
+export type State = {
   releaseList: App.ReleaseCard<'album'>[]
   total: number | undefined
   unupdatedCounts: number
   actualIsSavedMap: Map<string, boolean>
 };
 
-const state: () => LibraryReleasesState = () => ({
+const state: () => State = () => ({
   releaseList: [],
   total: undefined,
   unupdatedCounts: 0,

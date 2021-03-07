@@ -7,9 +7,9 @@ export const getArtistAlbums = (context: Context) => {
   return ({
     artistId,
     includeGroupList,
-    country,
     limit = 20,
     offset = 0,
+    country = 'from_token',
   }: {
     artistId: string;
     includeGroupList?: Array<'album' | 'single' | 'appears_on' | 'compilation'>;

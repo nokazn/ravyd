@@ -18,12 +18,10 @@ export const getPlaylistTracks = async (
   },
 ): Promise<PlaylistTracks | undefined> => {
   const { playlistId } = params;
-  const market = app.$getters()['auth/userCountryCode'];
   const tracks = await app.$spotify.playlists.getPlaylistItems({
     playlistId,
     limit,
     offset,
-    market,
   });
   if (tracks == null) return undefined;
 

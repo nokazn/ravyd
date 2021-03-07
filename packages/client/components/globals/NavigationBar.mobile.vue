@@ -76,7 +76,7 @@ export default defineComponent({
     const isLoaded = useIsLoaded();
 
     const itemList = computed<Item[]>(() => {
-      const isLoggedin = root.$getters()['auth/isLoggedin'];
+      const isLoggedIn = root.$getters()['auth/isLoggedIn'];
       const userAvatarSrc = root.$getters()['auth/userAvatarSrc'](ICON_SIZR);
       const home: Item<'to'> = {
         type: 'to',
@@ -106,7 +106,7 @@ export default defineComponent({
         iconSrc: userAvatarSrc,
         text: 'アカウント',
       };
-      return isLoggedin
+      return isLoggedIn
         ? [home, browse, library, account]
         : [home, browse, library];
     });
