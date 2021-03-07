@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 
 import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
-import type { LibraryHistoryState } from './state';
+import type { State } from './types';
 
 
-export type LibraryHistoryMutations = {
+export type Mutations = {
   SET_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
   ADD_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
   UNSHIFT_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
@@ -14,15 +14,7 @@ export type LibraryHistoryMutations = {
   SET_TOTAL: number
 }
 
-export type RootMutations = {
-  'library/history/SET_RECENTLY_PLAYED': LibraryHistoryMutations['SET_RECENTLY_PLAYED']
-  'library/history/ADD_TO_RECENTLY_PLAYED': LibraryHistoryMutations['ADD_TO_RECENTLY_PLAYED']
-  'library/history/UNSHIFT_TO_RECENTLY_PLAYED': LibraryHistoryMutations['UNSHIFT_TO_RECENTLY_PLAYED']
-  'library/history/SET_TRACK_HISTORY_LIST': LibraryHistoryMutations['SET_TRACK_HISTORY_LIST']
-  'library/history/SET_TOTAL': LibraryHistoryMutations['SET_TOTAL']
-}
-
-const mutations: Mutations<LibraryHistoryState, LibraryHistoryMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_RECENTLY_PLAYED(state, recentlyPlayed) {
     state.recentlyPlayed = recentlyPlayed;
   },

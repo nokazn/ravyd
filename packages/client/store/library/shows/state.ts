@@ -1,13 +1,13 @@
 import type { SpotifyAPI } from 'shared/types';
 
-export type LibraryShowsState = {
+export type State = {
   showList: SpotifyAPI.SimpleShow[];
   total: number | undefined;
   unupdatedCounts: number;
   actualIsSavedMap: Map<string, boolean>;
 }
 
-const state = (): LibraryShowsState => ({
+const state = (): State => ({
   showList: [],
   total: undefined,
   unupdatedCounts: 0,

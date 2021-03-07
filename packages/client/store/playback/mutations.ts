@@ -1,17 +1,17 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertUriToId } from '~/services/converter';
-import type { PlaybackState } from './state';
+import type { State } from './types';
 
 // TODO
 type ExtendedTrack = Spotify.Track & {
   linked_from?: SpotifyAPI.LinkedTrack
 }
 
-export type PlaybackMutations = {
+export type Mutations = {
   SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined
   SET_DEVICE_ID: string | undefined
   SET_ACTIVE_DEVICE_ID: string | undefined
@@ -36,32 +36,7 @@ export type PlaybackMutations = {
   SET_IS_MUTED: boolean
 };
 
-export type RootMutations = {
-  'playback/SET_POLLING_PLAYBACK_TIMER': PlaybackMutations['SET_POLLING_PLAYBACK_TIMER']
-  'playback/SET_DEVICE_ID': PlaybackMutations['SET_DEVICE_ID']
-  'playback/SET_ACTIVE_DEVICE_ID': PlaybackMutations['SET_ACTIVE_DEVICE_ID']
-  'playback/SET_DEVICE_LIST': PlaybackMutations['SET_DEVICE_LIST']
-  'playback/SET_IS_PLAYBACK_SLEEP': PlaybackMutations['SET_IS_PLAYBACK_SLEEP']
-  'playback/SET_CUSTOM_CONTEXT_URI': PlaybackMutations['SET_CUSTOM_CONTEXT_URI']
-  'playback/SET_CUSTOM_TRACK_URI_LIST': PlaybackMutations['SET_CUSTOM_TRACK_URI_LIST']
-  'playback/SET_TRACK_INDEX': PlaybackMutations['SET_TRACK_INDEX']
-  'playback/SET_CURRENT_TRACK': PlaybackMutations['SET_CURRENT_TRACK']
-  'playback/SET_NEXT_TRACK_LIST': PlaybackMutations['SET_NEXT_TRACK_LIST']
-  'playback/SET_PREVIOUS_TRACK_LIST': PlaybackMutations['SET_PREVIOUS_TRACK_LIST']
-  'playback/SET_IS_SAVED_TRACK': PlaybackMutations['SET_IS_SAVED_TRACK']
-  'playback/SET_IS_PLAYING': PlaybackMutations['SET_IS_PLAYING']
-  'playback/SET_CONTEXT_URI': PlaybackMutations['SET_CONTEXT_URI']
-  'playback/SET_POSITION_MS': PlaybackMutations['SET_POSITION_MS']
-  'playback/SET_DURATION_MS': PlaybackMutations['SET_DURATION_MS']
-  'playback/SET_DISABLED_PLAYING_FROM_BEGINNING': PlaybackMutations['SET_DISABLED_PLAYING_FROM_BEGINNING']
-  'playback/SET_IS_SHUFFLED': PlaybackMutations['SET_IS_SHUFFLED']
-  'playback/SET_REPEAT_MODE': PlaybackMutations['SET_REPEAT_MODE']
-  'playback/SET_DISALLOWS': PlaybackMutations['SET_DISALLOWS']
-  'playback/SET_VOLUME_PERCENT': PlaybackMutations['SET_VOLUME_PERCENT']
-  'playback/SET_IS_MUTED': PlaybackMutations['SET_IS_MUTED']
-};
-
-const mutations: Mutations<PlaybackState, PlaybackMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_POLLING_PLAYBACK_TIMER(state, timer) {
     const { pollingPlaybackTimer } = state;
     if (typeof pollingPlaybackTimer === 'number') {

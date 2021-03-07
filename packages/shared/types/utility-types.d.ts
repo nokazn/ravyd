@@ -34,8 +34,12 @@ export type VHas<
   T extends unknown = unknown,
 > = Wrapper<Vue>['vm'] & Record<P, T>
 
-export type ActionMethodMap = {
+export type ActionMethods = {
   [k: string]: (...args: any) => Promise<any> | any
+}
+
+export type KeyPrefix<S extends string, T extends Record<string, unknown>> = {
+  [K in keyof T as `${S}/${string & K}`]: T[K];
 }
 
 export type TODO = any;

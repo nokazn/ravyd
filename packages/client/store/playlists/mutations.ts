@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import type { PlaylistsState } from './state';
+import type { State } from './types';
 
-export type PlaylistsMutations = {
+export type Mutations = {
   SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined
   ADD_PLAYLIST: SpotifyAPI.SimplePlaylist
   EDIT_PLAYLIST: {
@@ -29,21 +29,7 @@ export type PlaylistsMutations = {
   DELETE_ACTUALLY_DELETED_TRACK: string,
 }
 
-export type RootMutations = {
-  'playlists/SET_PLAYLISTS': PlaylistsMutations['SET_PLAYLISTS']
-  'playlists/ADD_PLAYLIST': PlaylistsMutations['ADD_PLAYLIST']
-  'playlists/EDIT_PLAYLIST': PlaylistsMutations['EDIT_PLAYLIST']
-  'playlists/REMOVE_PLAYLIST': PlaylistsMutations['REMOVE_PLAYLIST']
-  'playlists/MODIFY_PLAYLIST_TOTAL_TRACKS': PlaylistsMutations['MODIFY_PLAYLIST_TOTAL_TRACKS']
-  'playlists/SET_ACTUAL_IS_SAVED': PlaylistsMutations['SET_ACTUAL_IS_SAVED']
-  'playlists/DELETE_ACTUAL_IS_SAVED': PlaylistsMutations['DELETE_ACTUAL_IS_SAVED']
-  'playlists/INCREMENT_UNUPDATED_TRACKS_MAP': PlaylistsMutations['INCREMENT_UNUPDATED_TRACKS_MAP']
-  'playlists/DELETE_UNUPDATED_TRACKS_MAP': PlaylistsMutations['DELETE_UNUPDATED_TRACKS_MAP']
-  'playlists/SET_ACTUALLY_DELETED_TRACK': PlaylistsMutations['SET_ACTUALLY_DELETED_TRACK']
-  'playlists/DELETE_ACTUALLY_DELETED_TRACK': PlaylistsMutations['DELETE_ACTUALLY_DELETED_TRACK']
-}
-
-const mutations: Mutations<PlaylistsState, PlaylistsMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_PLAYLISTS(state, playlists) {
     state.playlists = playlists;
   },

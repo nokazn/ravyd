@@ -1,18 +1,17 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import { extractDominantColors } from '~/utils/image';
 import { DEFAULT_DOMINANT_COLOR } from '~/constants';
-import type { RootState } from './state';
-import type { RootGetters } from './getters';
-import type { RootMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type RootActions = {
+
+export type Actions = {
   extractDominantBackgroundColor: (src: string) => Promise<void>
   setDefaultDominantBackgroundColor: () => void
   resetDominantBackgroundColor: () => void
 }
 
-const actions: Actions<RootState, RootActions, RootGetters, RootMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async nuxtServerInit({ dispatch }) {
     const token = await dispatch('auth/getAccessToken', undefined, { root: true });
     if (token != null) {

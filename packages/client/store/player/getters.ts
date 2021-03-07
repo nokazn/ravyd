@@ -1,15 +1,11 @@
-import type { Getters } from 'typed-vuex';
-import type { PlayerState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type PlayerGetters = {
+export type Getters = {
   isPlayerConnected: boolean
 }
 
-export type RootGetters = {
-  'player/isPlayerConnected': PlayerGetters['isPlayerConnected']
-}
-
-const playerGetters: Getters<PlayerState, PlayerGetters> = {
+const playerGetters: VuexGetters<State, Getters> = {
   isPlayerConnected(state) {
     return state.playbackPlayer != null;
   },

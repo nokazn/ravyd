@@ -1,14 +1,12 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import { convertPlaylistTrackDetail } from '~/services/converter';
-import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { LibraryTracksState } from './state';
-import type { LibraryTracksGetters } from './getters';
-import type { LibraryTracksMutations } from './mutations';
+import { EMPTY_PAGING } from '~/constants';
+import type { State, Mutations, Getters } from './types';
 
-export type LibraryTracksActions = {
+export type Actions = {
   getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedTrackList: () => Promise<void>
   removeUnsavedTracks: () => void
@@ -20,21 +18,7 @@ export type LibraryTracksActions = {
   }) => void
 };
 
-export type RootActions = {
-  'library/tracks/getSavedTrackList': LibraryTracksActions['getSavedTrackList']
-  'library/tracks/updateLatestSavedTrackList': LibraryTracksActions['updateLatestSavedTrackList']
-  'library/tracks/removeUnsavedTracks': LibraryTracksActions['removeUnsavedTracks']
-  'library/tracks/saveTracks': LibraryTracksActions['saveTracks']
-  'library/tracks/removeTracks': LibraryTracksActions['removeTracks']
-  'library/tracks/modifyTrackSavedState': LibraryTracksActions['modifyTrackSavedState']
-};
-
-const actions: Actions<
-  LibraryTracksState,
-  LibraryTracksActions,
-  LibraryTracksGetters,
-  LibraryTracksMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 保存済みのトラックを取得
    * 指定されない場合は limit: 30 で取得

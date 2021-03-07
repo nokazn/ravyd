@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from 'shared/types';
 
-export type PlaylistsState = {
+export type State = {
   playlists: SpotifyAPI.SimplePlaylist[] | undefined
   actualIsSavedMap: Map<string, boolean>
   unupdatedTrackCountsMap: Map<string, number>
@@ -10,7 +10,7 @@ export type PlaylistsState = {
   }>
 }
 
-const state = (): PlaylistsState => ({
+const state = (): State => ({
   playlists: undefined,
   actualIsSavedMap: new Map(),
   unupdatedTrackCountsMap: new Map(),

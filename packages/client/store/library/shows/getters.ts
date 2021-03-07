@@ -1,17 +1,12 @@
-import type { Getters } from 'typed-vuex';
-import type { LibraryShowsState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type LibraryShowsGetters = {
+export type Getters = {
   showListLength: number
   isFull: boolean
 }
 
-export type RootGetters = {
-  'library/shows/showListLength': LibraryShowsGetters['showListLength']
-  'library/shows/isFull': LibraryShowsGetters['isFull']
-}
-
-const libraryShowsGetters: Getters<LibraryShowsState, LibraryShowsGetters> = {
+const libraryShowsGetters: VuexGetters<State, Getters> = {
   showListLength(state) {
     return state.showList?.length ?? 0;
   },

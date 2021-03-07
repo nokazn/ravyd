@@ -24,6 +24,7 @@
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "openapi-typescript": "^3.0.1",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "~4.1"
   }
 }

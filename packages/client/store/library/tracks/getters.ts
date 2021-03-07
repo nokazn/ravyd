@@ -1,17 +1,12 @@
-import type { Getters } from 'typed-vuex';
-import type { LibraryTracksState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type LibraryTracksGetters = {
+export type Getters = {
   trackListLength: number
   isFull: boolean
 };
 
-export type RootGetters = {
-  'library/tracks/trackListLength': LibraryTracksGetters['trackListLength']
-  'library/tracks/isFull': LibraryTracksGetters['isFull']
-};
-
-const libraryTracksGetters: Getters<LibraryTracksState, LibraryTracksGetters> = {
+const libraryTracksGetters: VuexGetters<State, Getters> = {
   trackListLength(state) {
     return state.trackList?.length ?? 0;
   },

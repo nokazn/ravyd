@@ -1,13 +1,12 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
-import type { LibraryShowsState } from './state';
-import type { LibraryShowsGetters } from './getters';
-import type { LibraryShowsMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
-export type LibraryShowsActions = {
+
+export type Actions = {
   getSavedShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedShowList: () => Promise<void>
   saveShows: (showIdList: string[]) => Promise<void>
@@ -18,20 +17,7 @@ export type LibraryShowsActions = {
   }) => void
 }
 
-export type RootActions = {
-  'library/shows/getSavedShowList': LibraryShowsActions['getSavedShowList']
-  'library/shows/updateLatestSavedShowList': LibraryShowsActions['updateLatestSavedShowList']
-  'library/shows/saveShows': LibraryShowsActions['saveShows']
-  'library/shows/removeShows': LibraryShowsActions['removeShows']
-  'library/shows/modifyShowSavedState': LibraryShowsActions['modifyShowSavedState']
-}
-
-const actions: Actions<
-  LibraryShowsState,
-  LibraryShowsActions,
-  LibraryShowsGetters,
-  LibraryShowsMutations
-> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 保存済みのポッドキャストを取得
    * 指定されない場合は limit: 30 で取得

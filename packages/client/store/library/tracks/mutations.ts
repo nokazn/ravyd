@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 
 import type { App } from '~/entities';
-import type { LibraryTracksState } from './state';
+import type { State } from './types';
 
-export type LibraryTracksMutations = {
+export type Mutations = {
   SET_TRACK_LIST: App.PlaylistTrackDetail[]
   ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[]
   UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[]
@@ -15,18 +15,7 @@ export type LibraryTracksMutations = {
   DELETE_ACTUAL_IS_SAVED: string,
 };
 
-export type RootMutations = {
-  'library/tracks/SET_TRACK_LIST': LibraryTracksMutations['SET_TRACK_LIST'];
-  'library/tracks/SET_TOTAL': LibraryTracksMutations['SET_TOTAL'];
-  'library/tracks/ADD_TO_TRACK_LIST': LibraryTracksMutations['ADD_TO_TRACK_LIST'];
-  'library/tracks/UNSHIFT_TO_TRACK_LIST': LibraryTracksMutations['UNSHIFT_TO_TRACK_LIST'];
-  'library/tracks/INCREMENT_UNUPDATED_COUNTS': LibraryTracksMutations['INCREMENT_UNUPDATED_COUNTS'];
-  'library/tracks/RESET_UNUPDATED_COUNTS': LibraryTracksMutations['RESET_UNUPDATED_COUNTS'];
-  'library/tracks/SET_ACTUAL_IS_SAVED': LibraryTracksMutations['SET_ACTUAL_IS_SAVED'];
-  'library/tracks/DELETE_ACTUAL_IS_SAVED': LibraryTracksMutations['DELETE_ACTUAL_IS_SAVED'];
-};
-
-const mutations: Mutations<LibraryTracksState, LibraryTracksMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_TRACK_LIST(state, trackList) {
     state.trackList = trackList;
   },

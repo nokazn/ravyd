@@ -1,17 +1,12 @@
-import type { Getters } from 'typed-vuex';
-import type { LibraryHistoryState } from './state';
+import type { VuexGetters } from 'typed-vuex';
+import type { State } from './types';
 
-export type LibraryHistoryGetters = {
+export type Getters = {
   historyLength: number
   hasNext: boolean
 }
 
-export type RootGetters = {
-  'library/history/historyLength': LibraryHistoryGetters['historyLength']
-  'library/history/hasNext': LibraryHistoryGetters['hasNext']
-}
-
-const libraryHistoryGetters: Getters<LibraryHistoryState, LibraryHistoryGetters> = {
+const libraryHistoryGetters: VuexGetters<State, Getters> = {
   historyLength(state) {
     return state.recentlyPlayed?.length ?? 0;
   },

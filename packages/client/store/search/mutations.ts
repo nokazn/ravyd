@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 
 import type { SpotifyAPI } from 'shared/types';
-import type { SearchState } from './state';
+import type { State } from './types';
 
-export type SearchMutations = {
+export type Mutations = {
   SET_ALBUMS: SpotifyAPI.SimpleAlbum[] | undefined
   SET_ARTISTS: SpotifyAPI.Artist[] | undefined
   SET_TRACKS: SpotifyAPI.Track[] | undefined
@@ -13,16 +13,7 @@ export type SearchMutations = {
   SET_EPISODES: SpotifyAPI.SimpleEpisode[] | undefined
 }
 
-export type RootMutations = {
-  'search/SET_ALBUMS': SearchMutations['SET_ALBUMS']
-  'search/SET_ARTISTS': SearchMutations['SET_ARTISTS']
-  'search/SET_TRACKS': SearchMutations['SET_TRACKS']
-  'search/SET_PLAYLISTS': SearchMutations['SET_PLAYLISTS']
-  'search/SET_SHOWS': SearchMutations['SET_SHOWS']
-  'search/SET_EPISODES': SearchMutations['SET_EPISODES']
-}
-
-const mutations: Mutations<SearchState, SearchMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_ALBUMS(state, albums) {
     state.albums = albums;
   },

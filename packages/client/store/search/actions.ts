@@ -1,9 +1,8 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 import type { Context } from '@nuxt/types';
+
 import type { SpotifyAPI, OneToFifty } from 'shared/types';
-import type { SearchState } from './state';
-import type { SearchGetters } from './getters';
-import type { SearchMutations } from './mutations';
+import type { State, Mutations, Getters } from './types';
 
 type SearchParams = {
   query: string
@@ -11,7 +10,7 @@ type SearchParams = {
   offset?: number
 }
 
-export type SearchActions = {
+export type Actions = {
   searchAllItems: (params: SearchParams) => Promise<void>
   searchAlbums: (params: SearchParams) => Promise<void>
   searchArtists: (params: SearchParams) => Promise<void>
@@ -19,16 +18,6 @@ export type SearchActions = {
   searchPlaylists: (params: SearchParams) => Promise<void>
   searchShows: (params: SearchParams) => Promise<void>
   searchEpisodes: (params: SearchParams) => Promise<void>
-}
-
-export type RootActions = {
-  'search/searchAllItems': SearchActions['searchAllItems']
-  'search/searchAlbums': SearchActions['searchAlbums']
-  'search/searchArtists': SearchActions['searchArtists']
-  'search/searchTracks': SearchActions['searchTracks']
-  'search/searchPlaylists': SearchActions['searchPlaylists']
-  'search/searchShows': SearchActions['searchShows']
-  'search/searchEpisodes': SearchActions['searchEpisodes']
 }
 
 const searchEachItemHandler = <T extends SpotifyAPI.SearchType>(
@@ -48,7 +37,7 @@ const searchEachItemHandler = <T extends SpotifyAPI.SearchType>(
     return request;
   };
 
-const actions: Actions<SearchState, SearchActions, SearchGetters, SearchMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async searchAllItems({ commit }, { query, limit, offset }) {
     const typeList: SpotifyAPI.SearchType[] = [
       'album',

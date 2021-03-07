@@ -1,13 +1,11 @@
 import httpStatusCodes from 'http-status-codes';
 import type { AxiosError } from 'axios';
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
 
 import type { paths, JSONResponseOf } from 'shared/types';
-import type { AuthState } from './state';
-import type { AuthGetters } from './getters';
-import type { AuthMutations } from './mutations';
+import type { State, Getters, Mutations } from './types';
 
-export type AuthActions = {
+export type Actions = {
   login: () => Promise<JSONResponseOf<paths['/auth/login']['post']>>
   exchangeCodeWithAccessToken: (params: {
     code: string;
@@ -20,19 +18,9 @@ export type AuthActions = {
   confirmAuthState: (params?: { checkPremium?: boolean } | undefined) => Promise<boolean>
 }
 
-export type RootActions = {
-  'auth/login': AuthActions['login']
-  'auth/exchangeCodeWithAccessToken': AuthActions['exchangeCodeWithAccessToken']
-  'auth/getUserData': AuthActions['getUserData']
-  'auth/getAccessToken': AuthActions['getAccessToken']
-  'auth/refreshAccessToken': AuthActions['refreshAccessToken']
-  'auth/logout': AuthActions['logout']
-  'auth/confirmAuthState': AuthActions['confirmAuthState']
-}
-
 const { CONFLICT } = httpStatusCodes;
 
-const actions: Actions<AuthState, AuthActions, AuthGetters, AuthMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async login({ commit, dispatch }) {
     const data = await this.$server.auth.login();
     if (data.authenticated) {

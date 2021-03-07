@@ -1,20 +1,12 @@
-import type { Actions } from 'typed-vuex';
+import type { VuexActions } from 'typed-vuex';
+import type { State, Mutations, Getters } from './types';
 
-import type { PlayerState } from './state';
-import type { PlayerGetters } from './getters';
-import type { PlayerMutations } from './mutations';
-
-export type PlayerActions = {
+export type Actions = {
   initPlayer: () => void
   disconnectPlayer: () => void
 };
 
-export type RootActions = {
-  'player/initPlayer': PlayerActions['initPlayer']
-  'player/disconnectPlayer': PlayerActions['disconnectPlayer']
-};
-
-const actions: Actions<PlayerState, PlayerActions, PlayerGetters, PlayerMutations> = {
+const actions: VuexActions<State, Actions, Getters, Mutations> = {
   initPlayer({
     commit,
     getters,

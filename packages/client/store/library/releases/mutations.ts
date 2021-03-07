@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 
 import type { App } from '~/entities';
-import type { LibraryReleasesState } from './state';
+import type { State } from './types';
 
-export type LibraryReleasesMutations = {
+export type Mutations = {
   SET_RELEASE_LIST: App.ReleaseCard<'album'>[]
   ADD_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
   UNSHIFT_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
@@ -15,18 +15,7 @@ export type LibraryReleasesMutations = {
   DELETE_ACTUAL_IS_SAVED: string,
 };
 
-export type RootMutations = {
-  'library/releases/SET_RELEASE_LIST': LibraryReleasesMutations['SET_RELEASE_LIST'];
-  'library/releases/ADD_TO_RELEASE_LIST': LibraryReleasesMutations['ADD_TO_RELEASE_LIST'];
-  'library/releases/UNSHIFT_TO_RELEASE_LIST': LibraryReleasesMutations['UNSHIFT_TO_RELEASE_LIST'];
-  'library/releases/SET_TOTAL': LibraryReleasesMutations['SET_TOTAL'];
-  'library/releases/INCREMENT_UNUPDATED_COUNTS': LibraryReleasesMutations['INCREMENT_UNUPDATED_COUNTS'];
-  'library/releases/RESET_UNUPDATED_COUNTS': LibraryReleasesMutations['RESET_UNUPDATED_COUNTS'];
-  'library/releases/SET_ACTUAL_IS_SAVED': LibraryReleasesMutations['SET_ACTUAL_IS_SAVED'];
-  'library/releases/DELETE_ACTUAL_IS_SAVED': LibraryReleasesMutations['DELETE_ACTUAL_IS_SAVED'];
-};
-
-const mutations: Mutations<LibraryReleasesState, LibraryReleasesMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_RELEASE_LIST(state, releaseList) {
     state.releaseList = releaseList;
   },

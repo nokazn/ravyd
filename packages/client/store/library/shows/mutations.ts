@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
-import type { Mutations } from 'typed-vuex';
+import type { VuexMutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import type { LibraryShowsState } from './state';
+import type { State } from './types';
 
-export type LibraryShowsMutations = {
+export type Mutations = {
   SET_SHOW_LIST: SpotifyAPI.SimpleShow[];
   ADD_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
   UNSHIFT_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
@@ -14,18 +14,7 @@ export type LibraryShowsMutations = {
   DELETE_ACTUAL_IS_SAVED: string;
 }
 
-export type RootMutations = {
-  'library/shows/SET_SHOW_LIST': LibraryShowsMutations['SET_SHOW_LIST']
-  'library/shows/ADD_TO_SHOW_LIST': LibraryShowsMutations['ADD_TO_SHOW_LIST']
-  'library/shows/UNSHIFT_TO_SHOW_LIST': LibraryShowsMutations['UNSHIFT_TO_SHOW_LIST']
-  'library/shows/SET_TOTAL': LibraryShowsMutations['SET_TOTAL']
-  'library/shows/INCREMENT_UNUPDATED_COUNTS': LibraryShowsMutations['INCREMENT_UNUPDATED_COUNTS']
-  'library/shows/RESET_UNUPDATED_COUNTS': LibraryShowsMutations['RESET_UNUPDATED_COUNTS']
-  'library/shows/SET_ACTUAL_IS_SAVED': LibraryShowsMutations['SET_ACTUAL_IS_SAVED']
-  'library/shows/DELETE_ACTUAL_IS_SAVED': LibraryShowsMutations['DELETE_ACTUAL_IS_SAVED']
-}
-
-const mutations: Mutations<LibraryShowsState, LibraryShowsMutations> = {
+const mutations: VuexMutations<State, Mutations> = {
   SET_SHOW_LIST(state, showList) {
     state.showList = showList;
   },
