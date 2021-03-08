@@ -12822,9 +12822,9 @@ onetime@^5.1.0:
     mimic-fn "^2.1.0"
 
 openapi-typescript@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-3.0.1.tgz#4a6a10fda8cdee8dde0c63265a2d21f2c2b91931"
-  integrity sha512-Kp7RPQ5kTBKWW1xdfYSOwfIaYDv/AcDyymj2Z+4sq55FLdMv2dCMm45RdVwLWDGhMAIguuyU5HKDvdIsBZT01Q==
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-3.0.4.tgz#3b0238eb980d02b8952e902876b044c68d13ef94"
+  integrity sha512-SMnd+oOkUiQrMf9F7dBVZ4iwJxXriMA8puAwOHDJE10SlNibILhNVEC7Nrebm1Oj3RuCqx7HaALjQ2yDQtRu0g==
   dependencies:
     js-yaml "^4.0.0"
     kleur "^4.1.3"
