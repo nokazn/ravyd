@@ -16,7 +16,6 @@ export type Actions = {
   setCustomContext: (params: {
     contextUri?: string
     trackUriList: string[]
-    trackIndex?: number
   }) => void
   resetCustomContext: (uri: string | null) => void
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
@@ -154,12 +153,11 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 再生するコンテキストを手動でセット
    */
-  setCustomContext({ commit }, { contextUri, trackUriList, trackIndex }) {
+  setCustomContext({ commit }, { contextUri, trackUriList }) {
     if (contextUri != null) {
       commit('SET_CUSTOM_CONTEXT_URI', contextUri);
     }
     commit('SET_CUSTOM_TRACK_URI_LIST', trackUriList);
-    commit('SET_TRACK_INDEX', trackIndex);
   },
 
   /**
@@ -169,10 +167,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     if (uri != null) {
       commit('SET_CUSTOM_CONTEXT_URI', undefined);
       commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
-      // プレイリストを再生する場合は setCustomContext で設定したイデックスを保持したいのでパス
-      if (!uri.includes('playlist')) {
-        commit('SET_TRACK_INDEX', undefined);
-      }
     }
   },
 
@@ -233,7 +227,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     const {
       activeDeviceId: currentActiveDeviceId,
-      trackId: currentTrackId,
+      track: currentTrack,
     } = state;
     // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
     const playbackState = await this.$spotify.player.getCurrentPlayback({});
@@ -242,7 +236,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合
     if (!playbackState) return playbackState;
 
-    setTrack(playbackState.item, currentTrackId);
+    setTrack(playbackState.item, currentTrack?.id);
     setPlayback(playbackState);
     dispatch('updateDeviceList', playbackState.device);
     // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
@@ -646,18 +640,16 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return;
     }
-
-    const id = trackId ?? state.trackId;
+    const id = trackId ?? state.track?.id;
     if (id == null) return;
-
     const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
       trackIdList: [id],
     });
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
   },
 
-  modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
-    if (state.trackId == null || state.trackId !== trackId) return;
+  modifyTrackSavedState({ getters, commit }, { trackId, isSaved }) {
+    if (!getters.isTrackSet(trackId)) return;
     commit('SET_IS_SAVED_TRACK', isSaved);
   },
 

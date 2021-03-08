@@ -109,19 +109,15 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
         // TODO
         console.info(playerState);
-        const {
-          trackId: currentTrackId,
-          repeatMode: currentRepeatMode,
-        } = this.$state().playback;
+        const { repeatMode: currentRepeatMode } = this.$state().playback;
         const {
           context: { uri },
           track_window: { current_track: track },
         } = playerState;
 
-        // track を変更する前に行う
         const trackId = track.id;
         // アイテムが取得でき、id 変わったときだけチェック
-        if (trackId != null && trackId !== currentTrackId) {
+        if (trackId != null && this.$getters()['playback/isTrackSet'](trackId)) {
           dispatch('playback/checkTrackSavedState', trackId, { root: true });
         }
 

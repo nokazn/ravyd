@@ -227,7 +227,6 @@ export default defineComponent({
       root.$dispatch('playback/setCustomContext', {
         contextUri: props.uri,
         trackUriList,
-        trackIndex: row.index,
       });
     };
     const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {

@@ -25,6 +25,14 @@ export namespace App {
   export type SubtitleColorClass = 'inactive--text' | 'active--text' | 'subtext--text';
   export type ItemColor = 'inactive' | 'active' | undefined;
 
+  export interface ExtendedTrack extends Spotify.Track {
+    artists: App.MinimumArtist[];
+    id: string;
+    duration_ms?: number;
+    linked_from?: SpotifyAPI.LinkedTrack;
+    album: Spotify.Track['album'] & { id: string };
+  }
+
   /**
    * Component
    */

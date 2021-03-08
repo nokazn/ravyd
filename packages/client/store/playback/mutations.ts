@@ -3,37 +3,31 @@ import type { VuexMutations } from 'typed-vuex';
 
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { DEFAULT_DURATION_MS } from '~/constants';
-import { convertUriToId } from '~/services/converter';
+import { convertMinimumArtist, convertUriToId } from '~/services/converter';
 import type { State } from './types';
 
-// TODO
-type ExtendedTrack = Spotify.Track & {
-  linked_from?: SpotifyAPI.LinkedTrack
-}
-
 export type Mutations = {
-  SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined
-  SET_DEVICE_ID: string | undefined
-  SET_ACTIVE_DEVICE_ID: string | undefined
-  SET_DEVICE_LIST: SpotifyAPI.Device[]
-  SET_IS_PLAYBACK_SLEEP: boolean
-  SET_CUSTOM_CONTEXT_URI: string | undefined
-  SET_CUSTOM_TRACK_URI_LIST: string[] | undefined
-  SET_TRACK_INDEX: number | undefined
-  SET_CURRENT_TRACK: ExtendedTrack | undefined
-  SET_NEXT_TRACK_LIST: ExtendedTrack[]
-  SET_PREVIOUS_TRACK_LIST: ExtendedTrack[]
-  SET_IS_SAVED_TRACK: boolean
-  SET_IS_PLAYING: boolean
-  SET_CONTEXT_URI: string | undefined
-  SET_POSITION_MS: number
-  SET_DURATION_MS: number | undefined
-  SET_DISABLED_PLAYING_FROM_BEGINNING: boolean
-  SET_IS_SHUFFLED: boolean
-  SET_REPEAT_MODE: 0 | 1 | 2
-  SET_DISALLOWS: SpotifyAPI.Disallows
-  SET_VOLUME_PERCENT: { volumePercent: ZeroToHundred }
-  SET_IS_MUTED: boolean
+  SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined;
+  SET_DEVICE_ID: string | undefined;
+  SET_ACTIVE_DEVICE_ID: string | undefined;
+  SET_DEVICE_LIST: SpotifyAPI.Device[];
+  SET_IS_PLAYBACK_SLEEP: boolean;
+  SET_CUSTOM_CONTEXT_URI: string | undefined;
+  SET_CUSTOM_TRACK_URI_LIST: string[] | undefined;
+  SET_CURRENT_TRACK: Spotify.Track | undefined;
+  SET_NEXT_TRACK_LIST: Spotify.Track[];
+  SET_PREVIOUS_TRACK_LIST: Spotify.Track[];
+  SET_IS_SAVED_TRACK: boolean;
+  SET_IS_PLAYING: boolean;
+  SET_CONTEXT_URI: string | undefined;
+  SET_POSITION_MS: number;
+  SET_DURATION_MS: number | undefined;
+  SET_DISABLED_PLAYING_FROM_BEGINNING: boolean;
+  SET_IS_SHUFFLED: boolean;
+  SET_REPEAT_MODE: 0 | 1 | 2;
+  SET_DISALLOWS: SpotifyAPI.Disallows;
+  SET_VOLUME_PERCENT: { volumePercent: ZeroToHundred };
+  SET_IS_MUTED: boolean;
 };
 
 const mutations: VuexMutations<State, Mutations> = {
@@ -74,25 +68,18 @@ const mutations: VuexMutations<State, Mutations> = {
     state.customTrackUriList = trackUriList;
   },
 
-  SET_TRACK_INDEX(state, trackIndex) {
-    state.trackIndex = trackIndex;
-  },
-
-  SET_CURRENT_TRACK(state, currentTrack) {
-    state.trackName = currentTrack?.name;
-    state.trackId = currentTrack?.id ?? undefined;
-    state.trackUri = currentTrack?.uri;
-    state.trackType = currentTrack?.type;
-    state.linkedFrom = currentTrack?.linked_from;
-
-    state.images = currentTrack?.album.images;
-    state.releaseName = currentTrack?.album.name;
-    state.releaseUri = currentTrack?.album.uri;
-
-    state.artists = currentTrack?.artists.map((artist) => ({
-      ...artist,
-      id: convertUriToId(artist.uri),
-    }));
+  SET_CURRENT_TRACK(state, track) {
+    state.track = track != null
+      ? {
+        ...track,
+        id: track.id ?? '',
+        album: {
+          ...track.album,
+          id: convertUriToId(track.album.uri),
+        },
+        artists: track.artists.map(convertMinimumArtist),
+      }
+      : undefined;
   },
 
   SET_NEXT_TRACK_LIST(state, nextTrackList) {
