@@ -52,11 +52,11 @@ const nuxtConfig: NuxtConfig = {
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
     '@nuxtjs/vuetify',
+    '@nuxtjs/pwa',
   ],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    '@nuxtjs/pwa',
     'portal-vue/nuxt',
   ],
   env: {
