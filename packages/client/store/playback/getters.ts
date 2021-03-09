@@ -13,8 +13,7 @@ export type Getters = {
   activeDevice: SpotifyAPI.Device | undefined;
   playbackDeviceId: string | undefined;
   deviceList: App.Device[];
-  isThisAppPlaying: boolean;
-  isAnotherDevicePlaying: boolean;
+  deviceState: App.DeviceState;
   currentTrack: App.SimpleTrackDetail | undefined;
   trackQueue: App.TrackQueue[];
   artworkSrc: (minSize?: number) => string | undefined;
@@ -65,16 +64,12 @@ const playerGetters: VuexGetters<State, Getters> = {
     }));
   },
 
-  // このデバイスの ID が存在し、アクティブなデバイスの ID と同じとき
-  isThisAppPlaying(state, getters) {
-    return state.deviceId != null && getters.activeDevice?.id === state.deviceId;
-  },
-
-  // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
-  isAnotherDevicePlaying(state, getters) {
-    return state.deviceId != null
-      && getters.activeDevice != null
-      && getters.activeDevice.id !== state.deviceId;
+  deviceState(state, getters) {
+    if (state.deviceId == null || getters.activeDevice == null) return 'disconnected';
+    // このデバイスの ID が存在し、アクティブなデバイスの ID と同じとき
+    if (getters.activeDevice.id === state.deviceId) return 'self';
+    // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
+    return 'another';
   },
 
   currentTrack(state) {
@@ -90,7 +85,7 @@ const playerGetters: VuexGetters<State, Getters> = {
     return {
       index: -1,
       type: track.type,
-      id: track.id ?? '',
+      id: track.id,
       name: track.name,
       uri: track.uri,
       artists: track.artists.map(convertMinimumArtist),
@@ -109,13 +104,12 @@ const playerGetters: VuexGetters<State, Getters> = {
   trackQueue(state) {
     const { track } = state;
     if (track == null) return [];
-    // hasTrack の場合 trackType, trackId, trackName, trackUri, releaseName, releaseUri, artists は存在
     const currentTrack: App.TrackQueue = {
       isSet: true,
       isPlaying: state.isPlaying,
       index: 0,
       type: track.type,
-      id: track.id ?? '',
+      id: track.id,
       name: track.name,
       uri: track.uri,
       artists: track.artists.map(convertMinimumArtist),
@@ -125,25 +119,23 @@ const playerGetters: VuexGetters<State, Getters> = {
       linkedFrom: track.linked_from,
       durationMs: state.durationMs,
     };
-
-    const prevLength = Math.min(state.previousTrackList.length, 2);
     // 前後2曲まで含める
+    const numberOfTracks = 2;
+    const prevLength = Math.min(state.previousTrackList.length, numberOfTracks);
     const previousTrackList = state.previousTrackList
-      .slice(0, 2)
+      .slice(0, numberOfTracks)
       .map(convertTrackForQueue({
         isSet: false,
         isPlaying: false,
         offset: -1 * prevLength,
       }));
-
     const nextTrackList = state.nextTrackList
-      .slice(0, 2)
+      .slice(0, numberOfTracks)
       .map(convertTrackForQueue({
         isSet: false,
         isPlaying: false,
         offset: 1,
       }));
-
     return [
       ...previousTrackList,
       currentTrack,
@@ -169,10 +161,7 @@ const playerGetters: VuexGetters<State, Getters> = {
     return state.contextUri ?? state.customContextUri;
   },
 
-  /**
-   * uri を指定
-   * アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
-   */
+  // アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
   isContextSet(_, getters) {
     return (uri) => uri != null && (getters.contextUri === uri);
   },

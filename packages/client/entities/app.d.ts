@@ -21,6 +21,8 @@ export namespace App {
     title: string;
   }
 
+  export type DeviceState = 'self' | 'another' | 'disconnected';
+
   export type TitleColorClass = 'inactive--text' | 'active--text' | undefined;
   export type SubtitleColorClass = 'inactive--text' | 'active--text' | 'subtext--text';
   export type ItemColor = 'inactive' | 'active' | undefined;

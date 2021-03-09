@@ -197,7 +197,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         ? { ...item, media_type: 'audio' }
         : undefined;
       // このデバイスで再生中でアイテムの内容が取得できなかった場合は Playback SDK の情報を信頼してパスする
-      if (track == null && getters.isThisAppPlaying) return;
+      if (track == null && getters.deviceState === 'self') return;
 
       const trackId = track?.id;
       // trackId 変わったときだけチェック
@@ -256,21 +256,19 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   pollCurrentPlayback({ commit, dispatch }, firstTimeout) {
     // callback を アイテムが変わった後か、timeout ?? regularPeriod 後に実行
     const setTimer = (callback: () => Promise<void>, timeout?: number) => {
-      const isThisAppPlaying = this.$getters()['playback/isThisAppPlaying'];
+      const defaultTimeout = this.$getters()['playback/deviceState'] === 'self'
+        ? 30 * 1000
+        : 10 * 1000;
       const remainingTimeMs = this.$getters()['playback/remainingTimeMs'];
       const hasTrack = this.$getters()['playback/hasTrack'];
       const { isPlaying } = this.$state().playback;
-
       // TODO: 設定で間隔設定できるようにしたい
       // timeout が指定されない場合は、このデバイスで再生中の場合は30秒、そうでなければ10秒
-      const nextTimeout = timeout ?? (isThisAppPlaying
-        ? 30 * 1000
-        : 10 * 1000);
+      const nextTimeout = timeout ?? defaultTimeout;
       // トラックがセットされていて再生中の場合、曲を再生しきって 500ms の方が先に来ればそれを採用
       const timer = setTimeout(callback, hasTrack && isPlaying
         ? Math.min(remainingTimeMs + 500, nextTimeout)
         : nextTimeout);
-
       commit('SET_POLLING_PLAYBACK_TIMER', timer);
     };
 
@@ -343,7 +341,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       return this.$spotify.player.play(params)
         .then(() => {
           commit('SET_IS_PLAYING', true);
-          if (!getters.isThisAppPlaying) {
+          if (getters.deviceState === 'another') {
             dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
           }
         });
@@ -383,7 +381,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     await this.$spotify.player.pause({ deviceId: getters.playbackDeviceId })
       .then(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       })
@@ -426,7 +424,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -447,7 +445,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、次の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -468,7 +466,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、前の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -505,7 +503,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、シャッフルのモードを変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -545,7 +543,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、リピートのモードを変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -581,7 +579,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、ボリュームが変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -625,7 +623,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、ボリュームをミュートにできませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
