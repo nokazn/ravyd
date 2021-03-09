@@ -16,7 +16,7 @@ describe('FollowButton', () => {
     expect(wrapper.find('.v-icon').classes()).toContain('mdi-heart');
     const button = wrapper.findComponent({ name: 'VBtn' });
     expect(button.text()).toBe('フォロー中');
-    expect(button.props().color).toBe('grey darken-3');
+    expect(button.props().color).toBe('secondary');
     expect(button.props().outlined).toBe(false);
     await button.trigger(CLICK);
     expect(wrapper.emitted(INPUT)?.[0][0]).toBe(false);

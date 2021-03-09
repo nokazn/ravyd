@@ -9,7 +9,6 @@ export const getExternalUrlFromUri = (uri: string): string | undefined => {
     case 'track':
     case 'episode':
       return `${baseUrl}/${type}/${id}`;
-
     default:
       return undefined;
   }

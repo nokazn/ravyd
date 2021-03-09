@@ -2,36 +2,27 @@ import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import type { App } from '~/entities';
 
 export type State = {
-  pollingPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined
-  deviceId: string | undefined
-  activeDeviceId: string | undefined
-  deviceList: SpotifyAPI.Device[]
-  isPlaybackSleep: boolean
-  contextUri: string | undefined
-  trackId: string | undefined
-  trackName: string | undefined
-  trackUri: string | undefined
-  trackType: Spotify.Track['type'] | undefined
-  trackIndex: number | undefined
-  linkedFrom: SpotifyAPI.LinkedTrack | undefined
-  releaseName: string | undefined
-  releaseUri: string | undefined
-  images: SpotifyAPI.Image[] | undefined
-  artists: App.MinimumArtist[] | undefined
-  customContextUri: string | undefined
-  customTrackUriList: string[] | undefined
-  nextTrackList: Spotify.Track[]
-  previousTrackList: Spotify.Track[]
-  isPlaying: boolean
-  isSavedTrack: boolean
-  positionMs: number
-  disabledPlayingFromBeginning: boolean
-  durationMs: number
-  isShuffled: boolean
-  repeatMode: 0 | 1 | 2 | undefined
-  disallows: SpotifyAPI.Disallows
-  volumePercent: ZeroToHundred
-  isMuted: boolean
+  pollingPlaybackTimer: ReturnType<typeof setTimeout> | number | undefined;
+  deviceId: string | undefined;
+  activeDeviceId: string | undefined;
+  deviceList: SpotifyAPI.Device[];
+  isPlaybackSleep: boolean;
+  contextUri: string | undefined;
+  track: App.ExtendedTrack | undefined;
+  customContextUri: string | undefined;
+  customTrackUriList: string[] | undefined;
+  nextTrackList: Spotify.Track[];
+  previousTrackList: Spotify.Track[];
+  isPlaying: boolean;
+  isSavedTrack: boolean;
+  positionMs: number;
+  disabledPlayingFromBeginning: boolean;
+  durationMs: number;
+  isShuffled: boolean;
+  repeatMode: 0 | 1 | 2 | undefined;
+  disallows: SpotifyAPI.Disallows;
+  volumePercent: ZeroToHundred;
+  isMuted: boolean;
 }
 
 const state = (): State => ({
@@ -40,17 +31,8 @@ const state = (): State => ({
   activeDeviceId: undefined,
   deviceList: [],
   isPlaybackSleep: false,
-  images: undefined,
   contextUri: undefined,
-  trackId: undefined,
-  trackName: undefined,
-  trackUri: undefined,
-  trackType: undefined,
-  trackIndex: undefined,
-  linkedFrom: undefined,
-  releaseName: undefined,
-  releaseUri: undefined,
-  artists: [],
+  track: undefined,
   customContextUri: undefined,
   customTrackUriList: undefined,
   nextTrackList: [],

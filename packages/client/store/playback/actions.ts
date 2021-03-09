@@ -16,7 +16,6 @@ export type Actions = {
   setCustomContext: (params: {
     contextUri?: string
     trackUriList: string[]
-    trackIndex?: number
   }) => void
   resetCustomContext: (uri: string | null) => void
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
@@ -154,12 +153,11 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 再生するコンテキストを手動でセット
    */
-  setCustomContext({ commit }, { contextUri, trackUriList, trackIndex }) {
+  setCustomContext({ commit }, { contextUri, trackUriList }) {
     if (contextUri != null) {
       commit('SET_CUSTOM_CONTEXT_URI', contextUri);
     }
     commit('SET_CUSTOM_TRACK_URI_LIST', trackUriList);
-    commit('SET_TRACK_INDEX', trackIndex);
   },
 
   /**
@@ -169,10 +167,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     if (uri != null) {
       commit('SET_CUSTOM_CONTEXT_URI', undefined);
       commit('SET_CUSTOM_TRACK_URI_LIST', undefined);
-      // プレイリストを再生する場合は setCustomContext で設定したイデックスを保持したいのでパス
-      if (!uri.includes('playlist')) {
-        commit('SET_TRACK_INDEX', undefined);
-      }
     }
   },
 
@@ -203,7 +197,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         ? { ...item, media_type: 'audio' }
         : undefined;
       // このデバイスで再生中でアイテムの内容が取得できなかった場合は Playback SDK の情報を信頼してパスする
-      if (track == null && getters.isThisAppPlaying) return;
+      if (track == null && getters.deviceState === 'self') return;
 
       const trackId = track?.id;
       // trackId 変わったときだけチェック
@@ -233,7 +227,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     const {
       activeDeviceId: currentActiveDeviceId,
-      trackId: currentTrackId,
+      track: currentTrack,
     } = state;
     // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
     const playbackState = await this.$spotify.player.getCurrentPlayback({});
@@ -242,7 +236,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合
     if (!playbackState) return playbackState;
 
-    setTrack(playbackState.item, currentTrackId);
+    setTrack(playbackState.item, currentTrack?.id);
     setPlayback(playbackState);
     dispatch('updateDeviceList', playbackState.device);
     // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
@@ -262,21 +256,19 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   pollCurrentPlayback({ commit, dispatch }, firstTimeout) {
     // callback を アイテムが変わった後か、timeout ?? regularPeriod 後に実行
     const setTimer = (callback: () => Promise<void>, timeout?: number) => {
-      const isThisAppPlaying = this.$getters()['playback/isThisAppPlaying'];
+      const defaultTimeout = this.$getters()['playback/deviceState'] === 'self'
+        ? 30 * 1000
+        : 10 * 1000;
       const remainingTimeMs = this.$getters()['playback/remainingTimeMs'];
       const hasTrack = this.$getters()['playback/hasTrack'];
       const { isPlaying } = this.$state().playback;
-
       // TODO: 設定で間隔設定できるようにしたい
       // timeout が指定されない場合は、このデバイスで再生中の場合は30秒、そうでなければ10秒
-      const nextTimeout = timeout ?? (isThisAppPlaying
-        ? 30 * 1000
-        : 10 * 1000);
+      const nextTimeout = timeout ?? defaultTimeout;
       // トラックがセットされていて再生中の場合、曲を再生しきって 500ms の方が先に来ればそれを採用
       const timer = setTimeout(callback, hasTrack && isPlaying
         ? Math.min(remainingTimeMs + 500, nextTimeout)
         : nextTimeout);
-
       commit('SET_POLLING_PLAYBACK_TIMER', timer);
     };
 
@@ -349,7 +341,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       return this.$spotify.player.play(params)
         .then(() => {
           commit('SET_IS_PLAYING', true);
-          if (!getters.isThisAppPlaying) {
+          if (getters.deviceState === 'another') {
             dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
           }
         });
@@ -389,7 +381,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     await this.$spotify.player.pause({ deviceId: getters.playbackDeviceId })
       .then(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       })
@@ -432,7 +424,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         commit('SET_POSITION_MS', currentPositionMs ?? positionMsOfCurrentState);
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -453,7 +445,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、次の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -474,7 +466,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、前の曲を再生できません。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -511,7 +503,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、シャッフルのモードを変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -551,7 +543,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、リピートのモードを変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -587,7 +579,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、ボリュームが変更できませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -631,7 +623,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('エラーが発生し、ボリュームをミュートにできませんでした。');
       })
       .finally(() => {
-        if (!getters.isThisAppPlaying) {
+        if (getters.deviceState === 'another') {
           dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
         }
       });
@@ -646,18 +638,16 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return;
     }
-
-    const id = trackId ?? state.trackId;
+    const id = trackId ?? state.track?.id;
     if (id == null) return;
-
     const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
       trackIdList: [id],
     });
     commit('SET_IS_SAVED_TRACK', isSavedTrack);
   },
 
-  modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
-    if (state.trackId == null || state.trackId !== trackId) return;
+  modifyTrackSavedState({ getters, commit }, { trackId, isSaved }) {
+    if (!getters.isTrackSet(trackId)) return;
     commit('SET_IS_SAVED_TRACK', isSaved);
   },
 

@@ -73,7 +73,7 @@ export default defineComponent({
     const isRefreshing = ref(false);
 
     const deviceButtonColor = computed(() => {
-      return root.$getters()['playback/isThisAppPlaying']
+      return root.$getters()['playback/deviceState'] === 'self'
         ? 'active-icon'
         : undefined;
     });

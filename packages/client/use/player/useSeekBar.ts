@@ -36,7 +36,7 @@ export const useSeekBar = (root: SetupContext['root']) => {
   const color = computed(() => {
     return isPlaying.value
       ? 'active-icon'
-      : 'grey lighten-2';
+      : 'white';
   });
 
   const setPositionMs = (p: number) => {

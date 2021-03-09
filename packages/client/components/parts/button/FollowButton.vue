@@ -56,7 +56,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const color = computed((): string | undefined => {
       return props.value
-        ? 'grey darken-3'
+        ? 'secondary'
         : undefined;
     });
     const button = (hover: boolean): Button => {

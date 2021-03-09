@@ -2,35 +2,34 @@ import type { VuexGetters } from 'typed-vuex';
 
 import { getExternalUrlFromUri } from 'shared/utils';
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
-import { getImageSrc, convertTrackForQueue, convertUriToId } from '~/services/converter';
+import { getImageSrc, convertTrackForQueue, convertMinimumArtist } from '~/services/converter';
 import { REPEAT_STATE_LIST, DEFAULT_DURATION_MS } from '~/constants';
 import type { App } from '~/entities';
 import type { State } from './types';
 
+type Disallows = keyof SpotifyAPI.Disallows;
+
 export type Getters = {
-  activeDevice: SpotifyAPI.Device | undefined
-  playbackDeviceId: string | undefined
-  deviceList: App.Device[]
-  isThisAppPlaying: boolean
-  isAnotherDevicePlaying: boolean
-  currentTrack: App.SimpleTrackDetail | undefined
-  trackQueue: App.TrackQueue[]
-  releaseId: string | undefined
-  artworkSrc: (minSize?: number) => string | undefined
-  hasTrack: boolean
-  isTrackSet: (trackId: string | undefined) => boolean
-  contextUri: string | undefined
-  isContextSet: (uri: string | undefined) => boolean
-  remainingTimeMs: number
-  repeatState: SpotifyAPI.RepeatState | undefined
-  isDisallowed: (disallow: keyof SpotifyAPI.Disallows | (keyof SpotifyAPI.Disallows)[]) => boolean
-  volumePercent: ZeroToHundred
+  activeDevice: SpotifyAPI.Device | undefined;
+  playbackDeviceId: string | undefined;
+  deviceList: App.Device[];
+  deviceState: App.DeviceState;
+  currentTrack: App.SimpleTrackDetail | undefined;
+  trackQueue: App.TrackQueue[];
+  artworkSrc: (minSize?: number) => string | undefined;
+  hasTrack: boolean;
+  isTrackSet: (trackId: string | undefined | null) => boolean;
+  contextUri: string | undefined;
+  isContextSet: (uri: string | undefined) => boolean;
+  remainingTimeMs: number;
+  repeatState: SpotifyAPI.RepeatState | undefined;
+  isDisallowed: (disallow: Disallows | Disallows[]) => boolean;
+  volumePercent: ZeroToHundred;
 }
 
 const playerGetters: VuexGetters<State, Getters> = {
   activeDevice(state) {
-    const activeDevice = state.deviceList.find((device) => device.is_active);
-    return activeDevice;
+    return state.deviceList.find((device) => device.is_active);
   },
 
   playbackDeviceId(state) {
@@ -65,106 +64,78 @@ const playerGetters: VuexGetters<State, Getters> = {
     }));
   },
 
-  // このデバイスの ID が存在し、アクティブなデバイスの ID と同じとき
-  isThisAppPlaying(state, getters) {
-    return state.deviceId != null && getters.activeDevice?.id === state.deviceId;
+  deviceState(state, getters) {
+    if (state.deviceId == null || getters.activeDevice == null) return 'disconnected';
+    // このデバイスの ID が存在し、アクティブなデバイスの ID と同じとき
+    if (getters.activeDevice.id === state.deviceId) return 'self';
+    // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
+    return 'another';
   },
 
-  // このデバイスの ID が存在し、アクティブなデバイスの ID と違うとき
-  isAnotherDevicePlaying(state, getters) {
-    return state.deviceId != null
-      && getters.activeDevice != null
-      && getters.activeDevice.id !== state.deviceId;
-  },
-
-  currentTrack(state, getters) {
+  currentTrack(state) {
     const {
-      trackType,
-      trackId,
-      trackName,
-      trackUri,
-      artists,
-      releaseName,
-      releaseUri,
-      images,
+      track,
       durationMs,
       isSavedTrack,
-      linkedFrom,
     } = state;
-    const { releaseId } = getters;
-
-    if (trackId == null
-      || trackName == null
-      || trackUri == null
-      || artists == null
-      || releaseName == null
-      || releaseUri == null
-      || images == null
-      || releaseId == null) return undefined;
+    if (track == null) return undefined;
 
     // Spotify で開く用のリンク
-    const spotify = getExternalUrlFromUri(trackUri);
-    const externalUrls: SpotifyAPI.ExternalUrls = spotify != null
-      ? { spotify }
-      : {};
-
+    const spotify = getExternalUrlFromUri(track.uri);
     return {
-      type: trackType,
       index: -1,
-      id: trackId,
-      name: trackName,
-      uri: trackUri,
-      artists,
+      type: track.type,
+      id: track.id,
+      name: track.name,
+      uri: track.uri,
+      artists: track.artists.map(convertMinimumArtist),
       featuredArtistList: [],
       durationMs,
-      externalUrls,
+      externalUrls: { spotify } as SpotifyAPI.ExternalUrls,
       previewUrl: {},
       isSaved: isSavedTrack,
-      releaseId,
-      releaseName,
-      images,
-      linkedFrom,
+      releaseId: track.album.id,
+      releaseName: track.album.name,
+      images: track.album.images,
+      linkedFrom: track.linked_from,
     };
   },
 
-  trackQueue(state, getters) {
-    if (!getters.hasTrack) return [];
-
-    // hasTrack の場合 trackType, trackId, trackName, trackUri, releaseName, releaseUri, artists は存在
-    const currentTrack = {
+  trackQueue(state) {
+    const { track } = state;
+    if (track == null) return [];
+    const currentTrack: App.TrackQueue = {
       isSet: true,
       isPlaying: state.isPlaying,
       index: 0,
-      type: state.trackType!,
-      id: state.trackId,
-      name: state.trackName!,
-      uri: state.trackUri!,
-      releaseId: getters.releaseId!,
-      releaseName: state.releaseName!,
-      artists: state.artists!,
-      images: state.images ?? [],
+      type: track.type,
+      id: track.id,
+      name: track.name,
+      uri: track.uri,
+      artists: track.artists.map(convertMinimumArtist),
+      releaseId: track.album.id,
+      releaseName: track.album.name,
+      images: track.album.images,
+      linkedFrom: track.linked_from,
       durationMs: state.durationMs,
-      linkedFrom: state.linkedFrom,
     };
-
-    const prevLength = Math.min(state.previousTrackList.length, 2);
     // 前後2曲まで含める
+    const numberOfTracks = 2;
+    const prevLength = Math.min(state.previousTrackList.length, numberOfTracks);
     const previousTrackList = state.previousTrackList
-      .slice(0, 2)
+      .slice(0, numberOfTracks)
       .map(convertTrackForQueue({
         isSet: false,
         isPlaying: false,
         offset: -1 * prevLength,
       }));
-
     const nextTrackList = state.nextTrackList
-      .slice(0, 2)
+      .slice(0, numberOfTracks)
       .map(convertTrackForQueue({
         isSet: false,
         isPlaying: false,
         offset: 1,
       }));
-
     return [
       ...previousTrackList,
       currentTrack,
@@ -172,39 +143,25 @@ const playerGetters: VuexGetters<State, Getters> = {
     ];
   },
 
-  releaseId(state) {
-    // 最後の ":" 以降を取り出す
-    return state.releaseUri != null
-      ? convertUriToId(state.releaseUri)
-      : undefined;
-  },
-
   artworkSrc(state) {
-    return (minSize?: number) => getImageSrc(state.images, minSize);
+    return (minSize?: number) => getImageSrc(state.track?.album.images, minSize);
   },
 
   hasTrack(state) {
-    return state.trackId != null
-      && state.trackName != null
-      && state.trackUri != null
-      && state.releaseName != null
-      && state.releaseUri != null
-      && state.artists != null
-      && state.durationMs > 0 && state.durationMs !== DEFAULT_DURATION_MS;
+    return state.track != null
+      && state.durationMs > 0
+      && state.durationMs !== DEFAULT_DURATION_MS;
   },
 
   isTrackSet(state) {
-    return (trackId) => trackId != null && state.trackId === trackId;
+    return (trackId) => trackId != null && state.track != null && state.track.id === trackId;
   },
 
   contextUri(state) {
     return state.contextUri ?? state.customContextUri;
   },
 
-  /**
-   * uri を指定
-   * アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
-   */
+  // アーティストページのトラックリストやコレクションから再生すると customContextUri に uri が保持される
   isContextSet(_, getters) {
     return (uri) => uri != null && (getters.contextUri === uri);
   },

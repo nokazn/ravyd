@@ -54,7 +54,7 @@ export default defineComponent({
     // fab の時のみ有効
     color: {
       type: String,
-      default: 'grey darken-3',
+      default: 'secondary',
     },
     // outlined で value === true の時のみ有効
     iconColor: {

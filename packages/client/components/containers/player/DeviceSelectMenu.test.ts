@@ -14,21 +14,21 @@ const device = (i: number, isActive: boolean = false, disabled: boolean = false)
   title: `title${i}`,
   subtitle: `subtitle${i}`,
 });
-const $getters = (playing: boolean, devices: App.Device[]) => () => ({
-  'playback/isThisAppPlaying': playing,
+const $getters = (deviceState: App.DeviceState, devices: App.Device[]) => () => ({
+  'playback/deviceState': deviceState,
   'playback/deviceList': devices,
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
-  playing: boolean,
+  deviceState: App.DeviceState,
   devices: App.Device[],
 ) => {
   const vm = mount(DeviceSelectMenu, {
     ...options,
     mocks: {
       ...mocks,
-      $getters: $getters(playing, devices),
+      $getters: $getters(deviceState, devices),
       $dispatch,
     },
   });
@@ -37,17 +37,17 @@ const factory = (
 
 describe('DeviceSelectMenu', () => {
   it('this device is active', () => {
-    const wrapper = factory(true, [device(1, false), device(2, true)]);
+    const wrapper = factory('self', [device(1, false), device(2, true)]);
     expect(wrapper.find('.v-btn--icon').props().color).toBe('active-icon');
   });
 
   it('this device is inactive', () => {
-    const wrapper = factory(false, [device(1, true), device(2, false)]);
+    const wrapper = factory('another', [device(1, true), device(2, false)]);
     expect(wrapper.find('.v-btn--icon').props().color).toBe(undefined);
   });
 
   it('open menu', async () => {
-    const wrapper = factory(false, [device(1), device(2)]);
+    const wrapper = factory('another', [device(1), device(2)]);
     const vm = wrapper.vm as VHas<'menu', boolean>;
     expect(vm.menu).toBe(false);
     await wrapper.findAll('.v-btn--icon').at(0).trigger(CLICK);

@@ -91,8 +91,8 @@ export default defineComponent({
     }, {
       rootMargin: `-${root.$constant.HEADER_HEIGHT}px 0px`,
     });
-    const isLoggedIn = computed(() => root.$getters()['auth/isLoggedIn']);
-    const isAnotherDevicePlaying = computed(() => root.$getters()['playback/isAnotherDevicePlaying']);
+    const isLoggedIn = computed<boolean>(() => root.$getters()['auth/isLoggedIn']);
+    const isAnotherDevicePlaying = computed<boolean>(() => root.$getters()['playback/deviceState'] === 'another');
     const contentContainerStyles = computed(() => root.$getters().backgroundStyles(320));
 
     onMounted(() => {

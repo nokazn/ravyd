@@ -83,9 +83,9 @@ import {
 import type { App } from '~/entities';
 
 export type On = {
-  [ON_ROW_CLICKED]: App.TrackDetail
-  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail
-  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail
+  [ON_ROW_CLICKED]: App.TrackDetail;
+  [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail;
+  [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail;
 }
 
 export default defineComponent({
@@ -112,11 +112,11 @@ export default defineComponent({
       required: true,
     },
     titleColor: {
-      type: String as PropType<string | undefined>,
+      type: String as PropType<App.TitleColorClass | undefined>,
       default: undefined,
     },
     subtitleColor: {
-      type: String,
+      type: String as PropType<App.SubtitleColorClass>,
       required: true,
     },
   },

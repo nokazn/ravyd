@@ -12,7 +12,7 @@
     </span>
     <v-progress-linear
       rounded
-      color="grey lighten-4"
+      color="white"
       :value="value"
       :title="title"
       :style="styles"

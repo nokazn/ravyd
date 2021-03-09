@@ -81,7 +81,7 @@ describe('ProgressBar', () => {
       disabledPlayingFromBeginning: false,
     });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
-    expect(vProgressLinear.props().color).toBe('grey lighten-2');
+    expect(vProgressLinear.props().color).toBe('white');
   });
 
   it.todo('stop updating seek bar when paused');
