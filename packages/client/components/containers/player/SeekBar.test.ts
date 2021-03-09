@@ -106,7 +106,7 @@ describe('SeekBar', () => {
       disabledPlayingFromBeginning: false,
     }], false);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
-    expect(vSlider.props().color).toBe('grey lighten-2');
+    expect(vSlider.props().color).toBe('white');
     expect(vSlider.props().value).toBe((2 * 60 + 30) * 1000);
     expect(vSlider.props().max).toBe(Infinity);
     expect(vSlider.props().disabled).toBe(true);

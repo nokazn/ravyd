@@ -26,7 +26,7 @@
       <div :class="$style.SearchField__prependInnerIcon">
         <v-icon
           :size="28"
-          color="grey darken-4"
+          color="secondary"
           title="検索"
         >
           mdi-magnify
@@ -45,7 +45,7 @@
         >
           <v-icon
             :size="24"
-            color="grey"
+            color="inactive"
           >
             mdi-close
           </v-icon>

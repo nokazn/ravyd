@@ -17,9 +17,13 @@ export const vuetify: Options = {
     dark: true,
     themes: {
       dark: {
+        bg: '#1e2022',
+        'bg-card': '2a2a2c',
+        'bg-menu': '2e3032',
+        'bg-footer': '343636',
         primary: colors.blue.darken2,
-        accent: colors.grey.darken3,
-        secondary: colors.amber.darken3,
+        secondary: colors.grey.darken3,
+        accent: colors.amber.darken3,
         info: colors.lightBlue.base,
         warning: colors.amber.accent4,
         error: colors.red.darken3,

@@ -120,11 +120,11 @@ export default defineComponent({
       required: true,
     },
     titleColor: {
-      type: String,
+      type: String as PropType<App.TitleColorClass>,
       default: undefined,
     },
     subtitleColor: {
-      type: String,
+      type: String as PropType<App.SubtitleColorClass>,
       default: undefined,
     },
   },

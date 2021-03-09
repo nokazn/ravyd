@@ -100,10 +100,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    // fab の時のみ有効s
+    // fab の時のみ有効
     color: {
       type: String,
-      default: 'grey darken-3',
+      default: 'secondary',
     },
     fab: {
       type: Boolean,

@@ -96,7 +96,6 @@ export default defineComponent({
 .TrackName {
   @include side-gradation($g-footer-background-color, 8px);
 
-  color: $g-title-color;
   font-size: 0.9em;
   line-height: 1.5em;
   padding: 0 0.5em;
