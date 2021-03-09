@@ -42,7 +42,7 @@ describe('DeviceSelectMenu', () => {
   });
 
   it('this device is inactive', () => {
-    const wrapper = factory('self', [device(1, true), device(2, false)]);
+    const wrapper = factory('another', [device(1, true), device(2, false)]);
     expect(wrapper.find('.v-btn--icon').props().color).toBe(undefined);
   });
 
