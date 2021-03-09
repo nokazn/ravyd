@@ -1,11 +1,19 @@
+const path = require('path');
+
+/**
+ * @param {string} p
+ * @returns {string}
+ */
+const projectRoot = (p) => path.join(__dirname, p);
+
 module.exports = {
   moduleNameMapper: {
-    '^~/(.*)$': '<rootDir>/packages/client/$1',
-    '^~~/(.*)$': '<rootDir>/$1',
-    '^@/(.*)$': '<rootDir>/packages/server/$1',
-    '^shared/(.*)$': '<rootDir>/packages/shared/$1',
+    '^~/(.*)$': projectRoot('packages/client/$1'),
+    '^~~/(.*)$': projectRoot('$1'),
+    '^@/(.*)$': projectRoot('packages/server/$1'),
+    '^shared/(.*)$': projectRoot('packages/shared/$1'),
     '^vue$': 'vue/dist/vue.common.js',
-    '\\.(scss|css)$': 'identity-obj-proxy',
+    '^.+\\.(scss|css)$': 'jest-transform-stub',
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   transform: {
@@ -15,8 +23,8 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    '<rootDir>/packages/client/components/**',
-    '<rootDir>/packages/client/pages/**',
+    projectRoot('packages/client/components/**'),
+    projectRoot('packages/client/pages/**'),
   ],
   setupFiles: [
     '<rootDir>/packages/client/tests/jest.setup.js',
@@ -27,9 +35,11 @@ module.exports = {
   globals: {
     'vue-jest': {
       experimentalCSSCompile: true,
-      // TODO
       resources: {
-        scss: ['<rootDir>/packages/client/assets/variables.scss'],
+        scss: [
+          projectRoot('packages/client/assets/variables.scss'),
+          projectRoot('packages/client/assets/vuetify.scss'),
+        ],
       },
     },
   },
