@@ -127,13 +127,13 @@ describe('TrackList', () => {
       .at(1)
       .vm
       .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
-    const trackUriList = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
+    const context = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      trackUriList,
-      offset: { uri: 'uri2' },
+      context,
+      track: item(2),
     });
     expect($dispatch).toHaveBeenCalledWith('playback/setCustomContext', {
-      trackUriList,
+      trackUriList: context,
       contextUri: 'contextUri',
     });
     expect($dispatch).toBeCalledTimes(2);
@@ -169,13 +169,13 @@ describe('TrackList', () => {
       .at(1)
       .vm
       .$emit(ON_MEDIA_BUTTON_CLICKED, item(2));
-    const trackUriList = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
+    const context = ['uri1', 'uri2', 'uri3', 'uri4', 'uri5', 'uri6'];
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      trackUriList,
-      offset: { uri: 'uri2' },
+      context,
+      track: item(2),
     });
     expect($dispatch).toHaveBeenCalledWith('playback/setCustomContext', {
-      trackUriList,
+      trackUriList: context,
       contextUri: 'contextUri',
     });
     expect($dispatch).toBeCalledTimes(2);

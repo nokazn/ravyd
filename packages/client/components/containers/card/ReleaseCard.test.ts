@@ -157,7 +157,7 @@ describe('ReleaseCard', () => {
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'uri',
+      context: 'uri',
     });
   });
 
@@ -168,7 +168,7 @@ describe('ReleaseCard', () => {
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      trackUriList: ['uri'],
+      context: ['uri'],
     });
   });
 

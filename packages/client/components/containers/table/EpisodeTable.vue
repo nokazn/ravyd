@@ -204,8 +204,8 @@ export default defineComponent({
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
-          contextUri: props.uri,
-          offset: { uri: row.uri },
+          context: props.uri,
+          track: row,
         });
       }
     };

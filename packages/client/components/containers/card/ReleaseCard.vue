@@ -126,11 +126,10 @@ export default defineComponent({
         return;
       }
       // トラックとアルバムのカードで場合分け
-      const params = props.item.type === 'track'
-        ? { trackUriList: [props.item.uri] }
-        : { contextUri: props.item.uri };
-      // プレイヤーにセットされた release の場合は一時停止中のトラックをそのまま再生する
-      root.$dispatch('playback/play', params);
+      const context = props.item.type === 'track'
+        ? [props.item.uri]
+        : props.item.uri;
+      root.$dispatch('playback/play', { context });
     };
 
     return {

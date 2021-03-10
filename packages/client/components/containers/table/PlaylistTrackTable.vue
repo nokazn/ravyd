@@ -204,29 +204,21 @@ export default defineComponent({
         root.$dispatch('playback/play');
         return;
       }
-      // trackUriList は更新されうるので都度算出する
-      const trackUriList = props.tracks.map((track) => track.uri);
-      // history と collection は contextUri では指定できないので、trackUriList を指定
-      root.$dispatch('playback/play', props.custom || props.uri == null
-        ? {
-          trackUriList,
-          offset: {
-            // position: row.index,
-            uri: row.uri,
-          },
-        }
-        : {
-          contextUri: props.uri,
-          // TODO: #552 offset を uri で指定すると、403 が返る場合がある?
-          offset: {
-            // position: row.index,
-            uri: row.uri,
-          },
-        });
-      root.$dispatch('playback/setCustomContext', {
-        contextUri: props.uri,
-        trackUriList,
+      const context: string | string[] = props.custom || props.uri == null
+        ? props.tracks.map((track) => track.uri) // 更新されうるので都度算出する
+        : props.uri;
+      // TODO: #552 offset を uri で指定すると、403 が返る場合がある?
+      root.$dispatch('playback/play', {
+        context,
+        track: row,
       });
+      // TODO:
+      if (Array.isArray(context)) {
+        root.$dispatch('playback/setCustomContext', {
+          contextUri: props.uri,
+          trackUriList: context,
+        });
+      }
     };
     const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {
       emit(ON_FAVORITE_BUTTON_CLICKED, row);

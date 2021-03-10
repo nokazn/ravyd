@@ -126,18 +126,15 @@ export default class LibraryTracksPage extends Vue implements AsyncData, Data {
       this.$dispatch('playback/pause');
       return;
     }
-
     if (this.trackList == null || this.trackList.length === 0) return;
-
-    // 再生
-    const trackUriList = this.trackList.map((track) => track.uri);
+    const context = this.trackList.map((track) => track.uri);
     // uri を contextUri に指定しても再生できないため uris で指定
     this.$dispatch('playback/play', this.isPlaylistSet
       ? undefined
-      : { trackUriList });
+      : { context });
     this.$dispatch('playback/setCustomContext', {
       contextUri: this.uri,
-      trackUriList,
+      trackUriList: context,
     });
   }
 

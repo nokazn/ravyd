@@ -292,7 +292,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isShowSet
         ? undefined
-        : { contextUri: this.show.uri });
+        : { context: this.show.uri });
     } else {
       this.$dispatch('playback/pause');
     }

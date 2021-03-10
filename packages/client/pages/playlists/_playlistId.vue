@@ -494,7 +494,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isPlaylistSet
         ? undefined
-        : { contextUri: this.playlist.uri });
+        : { context: this.playlist.uri });
     } else {
       this.$dispatch('playback/pause');
     }

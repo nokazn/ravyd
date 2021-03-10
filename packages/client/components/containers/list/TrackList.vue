@@ -53,9 +53,8 @@ export default defineComponent({
   },
 
   setup(props, { root, emit }) {
-    // trackUriList は更新されることがない
-    const trackUriList = props.tracks.map((track) => track.uri);
-
+    // context は更新されることがない
+    const context = props.tracks.map((track) => track.uri);
     const isTrackSet = (row: App.MinimumTrack | undefined) => root.$getters()['playback/isTrackSet'](row);
     const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$state().playback.isPlaying;
     const isVisible = (index: number) => props.length == null || index < props.length;
@@ -68,13 +67,13 @@ export default defineComponent({
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
-          trackUriList,
-          offset: { uri: row.uri },
+          context,
+          track: row,
         });
         // アーティストの contextUri から直接再生はできない
         root.$dispatch('playback/setCustomContext', {
           contextUri: props.uri,
-          trackUriList,
+          trackUriList: context,
         });
       }
     };

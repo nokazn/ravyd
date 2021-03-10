@@ -52,7 +52,7 @@ import { getQuery } from '~/utils/text';
 import type { App } from '~/entities';
 
 export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
+  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked'];
 }
 
 export default defineComponent({
@@ -144,11 +144,8 @@ export default defineComponent({
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
-          contextUri: props.uri,
-          // TODO:
-          offset: row.linkedFrom != null
-            ? { position: row.index }
-            : { uri: row.uri },
+          context: props.uri,
+          track: row,
         });
       }
     };

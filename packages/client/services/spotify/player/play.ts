@@ -1,28 +1,32 @@
 import type { Context } from '@nuxt/types';
 
-export const play = (context: Context) => {
-  const { app } = context;
+type Offset = { uri: string; } | { position: number; };
 
+export const play = ({ app }: Context) => {
   /**
    * contextUri が album/playlist の時のみに offset.uri が有効
    * trackUriList が指定された時のみに offset.position が有効
    */
   return ({
     deviceId,
-    contextUri,
-    trackUriList,
+    context,
     offset,
     positionMs,
   }: {
     deviceId: string | undefined;
-    contextUri?: string;
-    trackUriList?: string[];
-    offset?: { uri: string } | { position: number };
+    context?: string | string[];
+    offset?: Offset;
     positionMs?: number;
   }): Promise<void> => {
+    const context_uri = typeof context === 'string'
+      ? context
+      : undefined;
+    const uris = Array.isArray(context)
+      ? context
+      : undefined;
     return app.$spotifyApi.$put<void>('/me/player/play', {
-      context_uri: contextUri,
-      uris: trackUriList,
+      context_uri,
+      uris,
       offset,
       position_ms: positionMs,
     }, {

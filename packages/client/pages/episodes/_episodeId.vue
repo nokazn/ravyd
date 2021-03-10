@@ -217,11 +217,10 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.episode == null) return;
-
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isEpisodeSet
         ? undefined
-        : { contextUri: this.episode.uri });
+        : { context: this.episode.uri });
     } else {
       this.$dispatch('playback/pause');
     }

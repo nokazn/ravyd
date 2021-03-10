@@ -122,7 +122,7 @@ describe('PlaylistCard', () => {
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'uri1',
+      context: 'uri1',
     });
   });
 

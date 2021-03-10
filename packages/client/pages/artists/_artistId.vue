@@ -286,11 +286,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.artist == null) return;
-
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isArtistSet
         ? undefined
-        : { contextUri: this.artist.uri });
+        : { context: this.artist.uri });
     } else {
       this.$dispatch('playback/pause');
     }

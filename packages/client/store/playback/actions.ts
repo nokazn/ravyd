@@ -4,46 +4,60 @@ import type { AxiosError } from 'axios';
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { REPEAT_STATE_LIST } from '~/constants';
 import type { State, Mutations, Getters } from './types';
+import { App } from '~/entities';
+
+interface TransferParams {
+  deviceId?: string;
+  play?: false;
+  update?: true;
+}
+interface CustomContextParams {
+  contextUri?: string;
+  trackUriList: string[];
+}
+type PlayParams = {
+  context: string | string[];
+  offset?: {
+    uri: string;
+    position?: undefined;
+  } | {
+    uri?: undefined;
+    position: number;
+  };
+  track?: App.MinimumTrack & { index?: number; };
+}
+interface SeekParams {
+  positionMs: number;
+  currentPositionMs?: number;
+}
+interface VolumeParams {
+  volumePercent: ZeroToHundred;
+}
+interface ModifyTrackSavedStateParams {
+  trackId?: string;
+  isSaved: boolean;
+}
 
 export type Actions = {
-  transferPlayback: (params?: {
-    deviceId?: string
-    play?: false
-    update?: true
-  }) => Promise<void>
-  getDeviceList: () => Promise<void>
-  updateDeviceList: (activeDevice: SpotifyAPI.Device) => Promise<void>
-  setCustomContext: (params: {
-    contextUri?: string
-    trackUriList: string[]
-  }) => void
-  resetCustomContext: (uri: string | null) => void
-  getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>
-  pollCurrentPlayback: (timeout?: number) => void
-  play: (params?: (
-    { contextUri: string; trackUriList?: undefined }
-    | { contextUri?: undefined; trackUriList: string[] }
-  ) & {
-    offset?: { uri: string; position?: undefined }
-      | { uri?: undefined; position: number }
-  }) => Promise<void>
-  pause: () => Promise<void>
-  seek: (params: {
-    positionMs: number
-    currentPositionMs?: number
-  }) => Promise<void>
-  next: () => Promise<void>
-  previous: () => Promise<void>
-  shuffle: () => Promise<void>
-  repeat: () => Promise<void>
-  volume: (params: { volumePercent: ZeroToHundred }) => Promise<void>
-  mute: () => Promise<void>
-  checkTrackSavedState: (trackIds: string | undefined | null) => Promise<void>
-  modifyTrackSavedState: (params: {
-    trackId?: string
-    isSaved: boolean
-  }) => void
-  resetPlayback: () => void
+  transferPlayback: (params?: TransferParams) => Promise<void>;
+  getDeviceList: () => Promise<void>;
+  updateDeviceList: (activeDevice: SpotifyAPI.Device) => Promise<void>;
+  setCustomContext: (params: CustomContextParams) => void;
+  resetCustomContext: (uri: string | null) => void;
+  getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>;
+  pollCurrentPlayback: (timeout?: number) => void;
+  play: (params?: PlayParams) => Promise<void>;
+  pause: () => Promise<void>;
+  seek: (params: SeekParams) => Promise<void>;
+  next: () => Promise<void>;
+  previous: () => Promise<void>;
+  shuffle: () => Promise<void>;
+  repeat: () => Promise<void>;
+  volume: (params: VolumeParams) => Promise<void>;
+  mute: () => Promise<void>;
+  checkTrackSavedState: (trackIds: string | undefined | null) => Promise<void>;
+  modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void;
+  resetPlayback: () => void;
 };
 
 // プレイヤーを操作した後に polling するまでの初回の timeout
@@ -320,32 +334,40 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.pushError('トラックを再生できません');
       return;
     }
-    const { positionMs } = state;
-    const deviceId = getters.playbackDeviceId;
-    const contextUri = payload?.contextUri;
-    const trackUriList = payload?.trackUriList;
-    const offset = payload?.offset;
-    // uri が指定されなかった場合は一時停止を解除
-    const params = contextUri == null && trackUriList == null
-      ? {
-        positionMs,
-        deviceId,
+
+    const params = () => {
+      const deviceId = getters.playbackDeviceId;
+      if (payload == null) {
+        // uri が指定されなかった場合は一時停止を解除
+        return {
+          positionMs: state.positionMs,
+          deviceId,
+        };
       }
-      : {
-        contextUri,
-        trackUriList,
-        offset,
+      if (payload.track != null) {
+        const uri = payload.track.linkedFrom?.uri
+          ?? payload.track.linked_from?.uri
+          ?? payload.track.uri;
+        return {
+          context: payload.context,
+          offset: { uri },
+          deviceId,
+        };
+      }
+      return {
+        context: payload.context,
+        offset: payload.offset,
         deviceId,
       };
-    const request = () => {
-      return this.$spotify.player.play(params)
-        .then(() => {
-          commit('SET_IS_PLAYING', true);
-          if (getters.deviceState === 'another') {
-            dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
-          }
-        });
     };
+    const request = () => this.$spotify.player.play(params())
+      .then(() => {
+        commit('SET_IS_PLAYING', true);
+        if (getters.deviceState === 'another') {
+          dispatch('pollCurrentPlayback', DEFAULT_TIMEOUT);
+        }
+      });
+
     await request()
       .catch(async (err: AxiosError) => {
         if (err.response?.status === 404) {

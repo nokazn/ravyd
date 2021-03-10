@@ -91,7 +91,7 @@ export default defineComponent({
           ? 'playback/pause'
           : 'playback/play');
       } else {
-        root.$dispatch('playback/play', { contextUri: props.item.uri });
+        root.$dispatch('playback/play', { context: props.item.uri });
       }
     };
 

@@ -331,7 +331,7 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
       // 一時停止中のトラックが表示しているアルバムのものの場合は一時停止中のトラックをそのまま再生する
       this.$dispatch('playback/play', this.isReleaseSet
         ? undefined
-        : { contextUri: this.release.uri });
+        : { context: this.release.uri });
     } else {
       this.$dispatch('playback/pause');
     }
