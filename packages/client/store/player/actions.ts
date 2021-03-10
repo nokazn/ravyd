@@ -128,15 +128,12 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         commit('playback/SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks, { root: true });
         commit('playback/SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks, { root: true });
         commit('playback/SET_DISALLOWS', playerState.disallows, { root: true });
-        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
-
-        // TODO
-        // 表示がちらつくので、初回以外は player/repeat 内で commit する
-        if (currentRepeatMode == null) {
-          commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
-        }
+        // TODO: 表示がちらつく
+        commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
         // playback-sdk から提供される uri が存在する場合は customContext をリセット
         dispatch('playback/resetCustomContext', uri, { root: true });
+        // TODO:
+        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
       }));
 
       const isConnected = await player.connect();

@@ -552,13 +552,14 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       || getters.isDisallowed('toggling_repeat_track')) return;
 
     const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
-
     await this.$spotify.player.repeat({
       state: REPEAT_STATE_LIST[nextRepeatMode],
       deviceId: getters.playbackDeviceId,
     })
       .then(() => {
-        commit('SET_REPEAT_MODE', nextRepeatMode);
+        if (getters.deviceState === 'another') {
+          commit('SET_REPEAT_MODE', nextRepeatMode);
+        }
       })
       .catch((err: Error) => {
         console.error({ err });
