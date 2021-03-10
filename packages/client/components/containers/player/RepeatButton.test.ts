@@ -2,10 +2,11 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import RepeatButton from './RepeatButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import type { App } from '~/entities';
 
 const CLICK = 'click';
 
-const $state = (repeatMode: 0 | 1 | 2) => () => ({
+const $state = (repeatMode: App.RepeatMode) => () => ({
   playback: {
     repeatMode,
   },
@@ -15,7 +16,7 @@ const $getters = (isDisallowed: boolean) => () => ({
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
-const factory = (mode: 0 | 1 | 2, isDisallowed: boolean = false, size: number = 32) => {
+const factory = (mode: App.RepeatMode, isDisallowed: boolean = false, size: number = 32) => {
   return mount(RepeatButton, {
     ...options,
     propsData: {

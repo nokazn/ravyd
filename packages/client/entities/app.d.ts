@@ -6,7 +6,7 @@ import type { SpotifyAPI } from 'shared/types';
 export namespace App {
   export type DominantColor = {
     hex: Swatch['hex'];
-    rgb: Swatch['rgb'];
+    rgb: Readonly<Swatch['rgb']>;
   }
 
   export type MinimumArtist = {
@@ -40,6 +40,7 @@ export namespace App {
     linked_from?: SpotifyAPI.LinkedTrack;
     album: Spotify.Track['album'] & { id: string };
   }
+  export type RepeatMode = 0 | 1 | 2;
 
   /**
    * Component

@@ -2,9 +2,9 @@ import type { VuexActions } from 'typed-vuex';
 import type { AxiosError } from 'axios';
 
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
-import { REPEAT_STATE_LIST } from '~/constants';
+import { nextRepeatState } from '~/services/converter';
 import type { State, Mutations, Getters } from './types';
-import { App } from '~/entities';
+import type { App } from '~/entities';
 
 interface TransferParams {
   deviceId?: string;
@@ -545,20 +545,19 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return;
     }
-
     // 初回読み込み時は undefined
     if (state.repeatMode == null
       || getters.isDisallowed('toggling_repeat_context')
       || getters.isDisallowed('toggling_repeat_track')) return;
 
-    const nextRepeatMode = (state.repeatMode + 1) % REPEAT_STATE_LIST.length as 0 | 1 | 2;
+    const [repeatMode, repeatState] = nextRepeatState(state.repeatMode);
     await this.$spotify.player.repeat({
-      state: REPEAT_STATE_LIST[nextRepeatMode],
+      state: repeatState,
       deviceId: getters.playbackDeviceId,
     })
       .then(() => {
         if (getters.deviceState === 'another') {
-          commit('SET_REPEAT_MODE', nextRepeatMode);
+          commit('SET_REPEAT_MODE', repeatMode);
         }
       })
       .catch((err: Error) => {

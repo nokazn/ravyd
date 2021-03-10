@@ -5,6 +5,7 @@ import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertMinimumArtist, convertUriToId } from '~/services/converter';
 import type { State } from './types';
+import type { App } from '~/entities';
 
 export type Mutations = {
   SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined;
@@ -24,7 +25,7 @@ export type Mutations = {
   SET_DURATION_MS: number | undefined;
   SET_DISABLED_PLAYING_FROM_BEGINNING: boolean;
   SET_IS_SHUFFLED: boolean;
-  SET_REPEAT_MODE: 0 | 1 | 2;
+  SET_REPEAT_MODE: App.RepeatMode;
   SET_DISALLOWS: SpotifyAPI.Disallows;
   SET_VOLUME_PERCENT: { volumePercent: ZeroToHundred };
   SET_IS_MUTED: boolean;

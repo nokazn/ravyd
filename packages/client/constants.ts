@@ -15,7 +15,7 @@ export const UNEXPECTED_ERROR_CODE = 'UNEXPECTED_ERROR';
 /**
  * colors
  */
-const rgb: [number, number, number] = [120, 122, 122];
+const rgb = [120, 122, 122] as const;
 export const DEFAULT_DOMINANT_COLOR: App.DominantColor = {
   hex: '#787a7a',
   rgb,
@@ -78,7 +78,7 @@ export const Z_INDEX_OF = {
 /**
  * player
  */
-export const REPEAT_STATE_LIST: SpotifyAPI.RepeatState[] = [
+export const REPEAT_STATE_LIST: readonly SpotifyAPI.RepeatState[] = [
   'off',
   'context',
   'track',
