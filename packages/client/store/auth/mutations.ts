@@ -12,7 +12,7 @@ type Token = {
 export type Mutations = {
   SET_TOKEN: Token | undefined;
   SET_AUTH_STATE: string | undefined | null;
-  SET_USER_DATA: SpotifyAPI.UserData |undefined;
+  SET_USER: SpotifyAPI.User | undefined;
   SET_IS_REFRESHING: boolean;
 }
 
@@ -30,8 +30,8 @@ const mutations: VuexMutations<State, Mutations> = {
     state.authState = authState ?? undefined;
   },
 
-  SET_USER_DATA(state, userData): void {
-    state.userData = userData;
+  SET_USER(state, user): void {
+    state.user = user;
   },
 
   SET_IS_REFRESHING(state, isRefreshing) {

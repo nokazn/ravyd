@@ -32,11 +32,11 @@ export default defineComponent({
 
   setup(_, { root }) {
     const artworkSrc = (size: number | undefined) => root.$getters()['playback/artworkSrc'](size);
-    const track = computed(() => root.$state().playback.track);
+    const track = computed(() => root.$getters()['playback/track']);
     const trackName = computed(() => track.value?.name ?? '不明なトラック');
     const hasTrack = computed(() => root.$getters()['playback/hasTrack']);
     const isSaved = computed<boolean>({
-      get() { return root.$state().playback.isSavedTrack; },
+      get() { return root.$getters()['playback/isSavedTrack']; },
       set(saved: OnMobile['input'] | OnPc['input']) {
         const id = track.value?.id;
         if (id == null) return;

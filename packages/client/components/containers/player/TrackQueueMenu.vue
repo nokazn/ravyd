@@ -112,9 +112,8 @@ export default defineComponent({
       // const { contextUri, customTrackUriList } = root.$state().playback;
       // // album と playlist は contextUri + offset で操作できる
       // if (contextUri != null && /album|playlist/.test(contextUri)) {
-      //   // TODO: #54 プレイリスト再生の際 position を uri で指定すると、403 が返る場合があるので index で指定
       //   root.$dispatch('playback/play', {
-      //     contextUri,
+      //     context: contextUri,
       //     offset: customTrackUriList != null && contextUri.includes('playlist')
       //       ? { position: customTrackUriList?.findIndex((trackUri) => trackUri === row.uri) }
       //       : { uri: row.uri },
@@ -125,7 +124,7 @@ export default defineComponent({
       //     ? customTrackUriList
       //     : trackQueue.value.map((track) => track.uri);
       //   root.$dispatch('playback/play', {
-      //     trackUriList,
+      //     context: trackUriList,
       //     offset: { uri: row.uri },
       //   });
       // }

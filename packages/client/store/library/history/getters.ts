@@ -1,12 +1,18 @@
 import type { VuexGetters } from 'typed-vuex';
+import type { App } from '~/entities';
 import type { State } from './types';
 
 export type Getters = {
-  historyLength: number
-  hasNext: boolean
+  historyList: App.PlaylistTrackDetail[];
+  historyLength: number;
+  hasNext: boolean;
 }
 
 const libraryHistoryGetters: VuexGetters<State, Getters> = {
+  historyList(state) {
+    return state.historyList;
+  },
+
   historyLength(state) {
     return state.recentlyPlayed?.length ?? 0;
   },

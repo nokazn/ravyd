@@ -1,10 +1,10 @@
 import type { App } from '~/entities';
 
 export type State = {
-  releaseList: App.ReleaseCard<'album'>[]
-  total: number | undefined
-  unupdatedCounts: number
-  actualIsSavedMap: Map<string, boolean>
+  releaseList: App.ReleaseCard<'album'>[];
+  total: number | undefined;
+  unupdatedCounts: number;
+  actualIsSavedMap: Map<string, boolean>;
 };
 
 const state: () => State = () => ({

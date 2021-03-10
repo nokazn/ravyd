@@ -117,9 +117,9 @@ export const convertPlaylistTrackDetail = (
   },
 ) => (
   { track, added_at, added_by }: {
-    track: SpotifyAPI.Track
-    added_at: string
-    added_by?: SpotifyAPI.UserData
+    track: SpotifyAPI.Track;
+    added_at: string;
+    added_by?: SpotifyAPI.User;
   },
   index: number,
 ): App.PlaylistTrackDetail => {

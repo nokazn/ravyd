@@ -44,8 +44,8 @@
         :playlist-id="playlistId"
         :collaborative="collaborative"
         :hide-added-at="hideAddedAt"
-        :set="isTrackSet(item.id)"
-        :playing="isPlayingTrack(item.id)"
+        :set="isTrackSet(item)"
+        :playing="isPlayingTrack(item)"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -185,49 +185,40 @@ export default defineComponent({
         menuColumn,
       ].filter((header) => header != null) as DataTableHeader[];
     });
-    const isTrackSet = (id: string) => {
+    const isTrackSet = (row: App.MinimumTrack): boolean => {
       return root.$getters()['playback/isContextSet'](props.uri)
-        && root.$getters()['playback/isTrackSet'](id);
+        && root.$getters()['playback/isTrackSet'](row);
     };
-    const isPlayingTrack = (id: string) => {
-      return isTrackSet(id) && root.$state().playback.isPlaying;
+    const isPlayingTrack = (row: App.MinimumTrack) => {
+      return isTrackSet(row) && root.$getters()['playback/isPlaying'];
     };
 
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       // TODO: エピソードは isPlayable が false でも再生できるようにしている
       if (row.type !== 'episode' && row.isPlayable === false) return;
-
-      if (isPlayingTrack(row.id)) {
+      if (isPlayingTrack(row)) {
         root.$dispatch('playback/pause');
         return;
       }
-      if (isTrackSet(row.id)) {
+      if (isTrackSet(row)) {
         root.$dispatch('playback/play');
         return;
       }
-      // trackUriList は更新されうるので都度算出する
-      const trackUriList = props.tracks.map((track) => track.uri);
-      // history と collection は contextUri では指定できないので、trackUriList を指定
-      root.$dispatch('playback/play', props.custom || props.uri == null
-        ? {
-          trackUriList,
-          offset: {
-            // position: row.index,
-            uri: row.uri,
-          },
-        }
-        : {
-          contextUri: props.uri,
-          // TODO: #552 offset を uri で指定すると、403 が返る場合がある?
-          offset: {
-            // position: row.index,
-            uri: row.uri,
-          },
-        });
-      root.$dispatch('playback/setCustomContext', {
-        contextUri: props.uri,
-        trackUriList,
+      const context: string | string[] = props.custom || props.uri == null
+        ? props.tracks.map((track) => track.uri) // 更新されうるので都度算出する
+        : props.uri;
+      // TODO: #552 offset を uri で指定すると、403 が返る場合がある?
+      root.$dispatch('playback/play', {
+        context,
+        track: row,
       });
+      // TODO:
+      if (Array.isArray(context)) {
+        root.$dispatch('playback/setCustomContext', {
+          contextUri: props.uri,
+          trackUriList: context,
+        });
+      }
     };
     const onFavoriteButtonClicked = (row: OnRow['on-favorite-button-clicked']) => {
       emit(ON_FAVORITE_BUTTON_CLICKED, row);

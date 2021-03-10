@@ -16,6 +16,9 @@ declare module 'vuex/types/index' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
     // typed-vuex
+    /**
+     * @deprecated
+     */
     $state: () => RootState;
     $getters: () => RootGetters;
     $commit: SFCCommit;

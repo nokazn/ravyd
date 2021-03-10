@@ -3,6 +3,7 @@ import type { RawLocation } from 'vue-router';
 
 import { addComma } from 'shared/utils';
 import type { SpotifyAPI } from 'shared/types';
+import { REPEAT_STATE_LIST } from '~/constants';
 import type { App } from '~/entities';
 
 type CopyrightMap = Record<string, ('C' | 'P')[]>
@@ -118,4 +119,14 @@ export const parseCopyrights = (copyrights: SpotifyAPI.Copyright[]): string[] =>
       .join('');
     return `${types} ${key}`;
   });
+};
+
+type RepeatState = [App.RepeatMode, SpotifyAPI.RepeatState];
+const nextRepeatMode = (current: App.RepeatMode) => (current + 1) % REPEAT_STATE_LIST.length as App.RepeatMode;
+export const nextRepeatState = (current: RepeatState[number]): RepeatState => {
+  const currentIndex = typeof current === 'string'
+    ? REPEAT_STATE_LIST.findIndex((r) => r === current) as App.RepeatMode
+    : current;
+  const index = nextRepeatMode(currentIndex);
+  return [index, REPEAT_STATE_LIST[index]];
 };

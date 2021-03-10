@@ -56,13 +56,9 @@ const item = (
   isPlayable: true,
   previewUrl: 'path/to/preview',
 });
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
-});
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
@@ -80,8 +76,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $state(playing),
-      $getters: $getters(set),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isSingleColumn: column === 'single',
@@ -174,8 +169,8 @@ describe('TrackTable', () => {
     const wrapper = factory([item(1), item(2), item(3)], 'single', false);
     await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'contextUri',
-      offset: { uri: 'uri2' },
+      context: 'contextUri',
+      track: item(2),
     });
   });
 
@@ -189,8 +184,8 @@ describe('TrackTable', () => {
     const wrapper = factory([item(1), item(2), item(3)], 'multi');
     await wrapper.findAllComponents(CircleButton).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'contextUri',
-      offset: { uri: 'uri2' },
+      context: 'contextUri',
+      track: item(2),
     });
   });
 

@@ -5,11 +5,16 @@ import type { App } from '~/entities';
 import type { State } from './types';
 
 export type Getters = {
-  backgroundStyles: (height: number) => { background?: string }
-  headerStyles: { backgroundColor: string }
+  dominantBackgroundColor: App.DominantColor | undefined;
+  backgroundStyles: (height: number) => { background?: string };
+  headerStyles: { backgroundColor: string };
 }
 
 const getters: VuexGetters<State, Getters> = {
+  dominantBackgroundColor(state) {
+    return state.dominantBackgroundColor;
+  },
+
   backgroundStyles(state) {
     return (gradationHeight: number) => {
       const rgb = state.dominantBackgroundColor?.rgb
@@ -24,7 +29,7 @@ const getters: VuexGetters<State, Getters> = {
   headerStyles(state) {
     const opacity = 0.6;
     const rgbList = state.dominantBackgroundColor?.rgb
-      ?.map((color) => color * DARKEN_FILTER_RATIO) as App.DominantColor['rgb'] ?? BACKGROUND_COLOR_RGB;
+      ?.map((color) => color * DARKEN_FILTER_RATIO) ?? BACKGROUND_COLOR_RGB as App.DominantColor['rgb'];
     return { backgroundColor: `rgba(${rgbList.join(',')},${opacity})` };
   },
 };

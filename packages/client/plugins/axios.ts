@@ -17,7 +17,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
   const spotifyApi = $axios.create({ baseURL: SPOTIFY_API_URL });
 
   spotifyApi.onRequest((config) => {
-    const { accessToken } = app.$state().auth;
+    const accessToken = app.$getters()['auth/accessToken'];
     if (accessToken != null) {
       config.headers = {
         ...config.headers,
@@ -28,7 +28,7 @@ const injector: Plugin = ({ $axios, app }, inject) => {
 
   spotifyApi.onResponse(() => {
     // アクセストークンの期限が切れていたらリクエストが終わった後に更新
-    if (app.$getters()['auth/isTokenExpired']() && !app.$state().auth.isRefreshing) {
+    if (app.$getters()['auth/isTokenExpired']() && !app.$getters()['auth/isRefreshing']) {
       app.$dispatch('auth/refreshAccessToken');
     }
   });

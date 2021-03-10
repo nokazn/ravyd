@@ -6,7 +6,7 @@ import type { SpotifyAPI } from 'shared/types';
 export namespace App {
   export type DominantColor = {
     hex: Swatch['hex'];
-    rgb: Swatch['rgb'];
+    rgb: Readonly<Swatch['rgb']>;
   }
 
   export type MinimumArtist = {
@@ -27,6 +27,12 @@ export namespace App {
   export type SubtitleColorClass = 'inactive--text' | 'active--text' | 'subtext--text';
   export type ItemColor = 'inactive' | 'active' | undefined;
 
+  export interface MinimumTrack {
+    id: string;
+    uri: string;
+    linked_from?: SpotifyAPI.LinkedTrack;
+    linkedFrom?: SpotifyAPI.LinkedTrack;
+  }
   export interface ExtendedTrack extends Spotify.Track {
     artists: App.MinimumArtist[];
     id: string;
@@ -34,6 +40,7 @@ export namespace App {
     linked_from?: SpotifyAPI.LinkedTrack;
     album: Spotify.Track['album'] & { id: string };
   }
+  export type RepeatMode = 0 | 1 | 2;
 
   /**
    * Component
@@ -69,7 +76,7 @@ export namespace App {
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
     addedAt?: AddedAt
-    addedBy?: SpotifyAPI.UserData
+    addedBy?: SpotifyAPI.User
   }
 
   // TrackQueueMenu component
@@ -232,7 +239,7 @@ export type MenuItemGroup = MenuItem[];
     description: string | null
     isCollaborative: boolean
     images: SpotifyAPI.Image[]
-    owner: SpotifyAPI.UserData
+    owner: SpotifyAPI.User
     durationMs: number
     totalTracks: number
     isPublic: boolean | null

@@ -5,14 +5,14 @@ import type { App } from '~/entities';
 import type { State } from './types';
 
 export type Mutations = {
-  SET_RELEASE_LIST: App.ReleaseCard<'album'>[]
-  ADD_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
-  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCard<'album'>[]
-  SET_TOTAL: number
-  INCREMENT_UNUPDATED_COUNTS: void
-  RESET_UNUPDATED_COUNTS: void
-  SET_ACTUAL_IS_SAVED: [string, boolean],
-  DELETE_ACTUAL_IS_SAVED: string,
+  SET_RELEASE_LIST: App.ReleaseCard<'album'>[];
+  ADD_TO_RELEASE_LIST: App.ReleaseCard<'album'>[];
+  UNSHIFT_TO_RELEASE_LIST: App.ReleaseCard<'album'>[];
+  SET_TOTAL: number;
+  INCREMENT_UNUPDATED_COUNTS: void;
+  RESET_UNUPDATED_COUNTS: void;
+  SET_ACTUAL_IS_SAVED: [string, boolean];
+  DELETE_ACTUAL_IS_SAVED: string;
 };
 
 const mutations: VuexMutations<State, Mutations> = {

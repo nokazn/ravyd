@@ -116,7 +116,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, ExtendedMutationPayload } from 'typed-vuex';
+import { ExtendedMutationPayload } from 'typed-vuex';
 
 import type { OneToFifty, SpotifyAPI } from 'shared/types';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
@@ -201,8 +201,8 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   get isShowSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.show?.uri);
   }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
+  get isPlaying(): boolean {
+    return this.$getters()['playback/isPlaying'];
   }
   get hasEpisodes(): boolean {
     return (this.show?.episodeList.length ?? 0) > 0;
@@ -292,7 +292,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isShowSet
         ? undefined
-        : { contextUri: this.show.uri });
+        : { context: this.show.uri });
     } else {
       this.$dispatch('playback/pause');
     }

@@ -4,20 +4,20 @@ import type { Context } from '@nuxt/types';
 import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import type { State, Mutations, Getters } from './types';
 
-type SearchParams = {
-  query: string
-  limit?: OneToFifty
-  offset?: number
+interface SearchParams {
+  query: string;
+  limit?: OneToFifty;
+  offset?: number;
 }
 
 export type Actions = {
-  searchAllItems: (params: SearchParams) => Promise<void>
-  searchAlbums: (params: SearchParams) => Promise<void>
-  searchArtists: (params: SearchParams) => Promise<void>
-  searchTracks: (params: SearchParams) => Promise<void>
-  searchPlaylists: (params: SearchParams) => Promise<void>
-  searchShows: (params: SearchParams) => Promise<void>
-  searchEpisodes: (params: SearchParams) => Promise<void>
+  searchAllItems: (params: SearchParams) => Promise<void>;
+  searchAlbums: (params: SearchParams) => Promise<void>;
+  searchArtists: (params: SearchParams) => Promise<void>;
+  searchTracks: (params: SearchParams) => Promise<void>;
+  searchPlaylists: (params: SearchParams) => Promise<void>;
+  searchShows: (params: SearchParams) => Promise<void>;
+  searchEpisodes: (params: SearchParams) => Promise<void>;
 }
 
 const searchEachItemHandler = <T extends SpotifyAPI.SearchType>(

@@ -53,13 +53,11 @@ export default defineComponent({
 
     const onClicked = () => {
       const ms = props.seconds * 1000;
-      const positionMs = root.$state().playback.positionMs + ms;
-      // 戻る
+      const positionMs = root.$getters()['playback/positionMs'] + ms;
       if (ms < 0) {
+        // 戻る
         root.$dispatch('playback/seek', { positionMs: Math.max(positionMs, 0) });
-        return;
-      }
-      if (positionMs < root.$state().playback.durationMs) {
+      } else if (positionMs < root.$getters()['playback/durationMs']) {
         // 進む
         root.$dispatch('playback/seek', { positionMs });
       } else {

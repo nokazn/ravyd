@@ -13,7 +13,7 @@ export const getPlaylistItems = (context: Context) => {
     fields,
     limit = 20,
     offset = 0,
-    market,
+    market = 'from_token',
     additionalTypeList,
   }: {
     playlistId: string;

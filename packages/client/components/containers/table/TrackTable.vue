@@ -32,8 +32,8 @@
       <TrackTableRow
         :item="item"
         :active="item.id === activeRowId"
-        :set="isTrackSet(item.id)"
-        :playing="isPlayingTrack(item.id)"
+        :set="isTrackSet(item)"
+        :playing="isPlayingTrack(item)"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -52,7 +52,7 @@ import { getQuery } from '~/utils/text';
 import type { App } from '~/entities';
 
 export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
+  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked'];
 }
 
 export default defineComponent({
@@ -135,21 +135,17 @@ export default defineComponent({
         : false;
     });
 
-    const isTrackSet = (id: string | undefined) => root.$getters()['playback/isTrackSet'](id);
-    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const isTrackSet = (row: App.MinimumTrack | undefined) => root.$getters()['playback/isTrackSet'](row);
+    const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$getters()['playback/isPlaying'];
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
-      if (isPlayingTrack(row.id)) {
+      if (isPlayingTrack(row)) {
         root.$dispatch('playback/pause');
-      // TODO: relinked track を参照する必要性
-      } else if (isTrackSet(row.id) || isTrackSet(row.linkedFrom?.id)) {
+      } else if (isTrackSet(row)) {
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {
-          contextUri: props.uri,
-          // TODO:
-          offset: row.linkedFrom != null
-            ? { position: row.index }
-            : { uri: row.uri },
+          context: props.uri,
+          track: row,
         });
       }
     };

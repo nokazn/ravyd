@@ -132,7 +132,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import type { Context } from '@nuxt/types';
-import { RootState, ExtendedMutationPayload } from 'typed-vuex';
+import { ExtendedMutationPayload } from 'typed-vuex';
 
 import Avatar from '~/components/parts/image/Avatar.vue';
 import HashTags from '~/components/parts/chip/HashTags.vue';
@@ -221,8 +221,8 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
   get isArtistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.artist?.uri);
   }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
+  get isPlaying(): boolean {
+    return this.$getters()['playback/isPlaying'];
   }
   get tabs(): Item[] {
     const { artistId } = this.$route.params;
@@ -286,11 +286,10 @@ export default class ArtistIdPage extends Vue implements AsyncData, Data {
 
   onContextMediaButtonClicked(nextPlayingState: OnMediaButton['input']) {
     if (this.artist == null) return;
-
     if (nextPlayingState) {
       this.$dispatch('playback/play', this.isArtistSet
         ? undefined
-        : { contextUri: this.artist.uri });
+        : { context: this.artist.uri });
     } else {
       this.$dispatch('playback/pause');
     }

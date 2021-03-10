@@ -41,14 +41,10 @@ const track = (i: number): App.ReleaseCard<'track'> => ({
   linkedFrom: undefined,
 });
 
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
-});
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn();
 
@@ -60,8 +56,7 @@ const factory = (type: 'album' | 'track', set: boolean, playing: boolean) => {
     },
     mocks: {
       ...mocks,
-      $getters: $getters(set),
-      $state: $state(playing),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isMultiColumn: true,
@@ -157,7 +152,7 @@ describe('ReleaseCard', () => {
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      contextUri: 'uri',
+      context: 'uri',
     });
   });
 
@@ -168,7 +163,7 @@ describe('ReleaseCard', () => {
     });
     await wrapper.findComponent(ReleaseArtwork).vm.$emit(ON_MEDIA_BUTTON_CLICKED);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
-      trackUriList: ['uri'],
+      context: ['uri'],
     });
   });
 

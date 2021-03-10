@@ -2,8 +2,8 @@ import type { VuexActions } from 'typed-vuex';
 import type { State, Mutations, Getters } from './types';
 
 export type Actions = {
-  initPlayer: () => void
-  disconnectPlayer: () => void
+  initPlayer: () => void;
+  disconnectPlayer: () => void;
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
@@ -26,9 +26,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       const player = new Spotify.Player({
         name: this.$constant.APP_NAME,
         // 0 ~ 1 で指定
-        volume: this.$state().playback.isMuted
-          ? 0
-          : this.$state().playback.volumePercent / 100,
+        volume: this.$getters()['playback/volumePercent'] / 100,
         // 初期化時とアクセストークンの更新が必要になった時に呼ばれる
         getOAuthToken: async (callback) => {
           const token = await dispatch('auth/refreshAccessToken', undefined, { root: true });
@@ -36,7 +34,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
             callback(token.accessToken);
             return;
           }
-          const currentAccessToken = this.$state().auth.accessToken;
+          const currentAccessToken = this.$getters()['auth/accessToken'];
           if (currentAccessToken != null) {
             callback(currentAccessToken);
           }
@@ -56,7 +54,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
           }, { root: true });
         }
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
-        const firstTimeout = this.$state().playback.activeDeviceId === device_id
+        const firstTimeout = this.$getters()['playback/deviceState'] === 'self'
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });
@@ -106,19 +104,16 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       player.addListener('player_state_changed', ((playerState) => {
         // TODO: playerState は Nullable
         if (playerState == null) return;
-
         // TODO
         console.info(playerState);
-        const { repeatMode: currentRepeatMode } = this.$state().playback;
         const {
           context: { uri },
           track_window: { current_track: track },
         } = playerState;
 
-        const trackId = track.id;
-        // アイテムが取得でき、id 変わったときだけチェック
-        if (trackId != null && this.$getters()['playback/isTrackSet'](trackId)) {
-          dispatch('playback/checkTrackSavedState', trackId, { root: true });
+        // アイテムが取得でき、ID 変わったときだけチェック
+        if (track != null && !this.$getters()['playback/isTrackSet'](track.id)) {
+          dispatch('playback/checkTrackSavedState', track.id, { root: true });
         }
 
         commit('playback/SET_IS_PLAYING', !playerState.paused, { root: true });
@@ -131,15 +126,12 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         commit('playback/SET_NEXT_TRACK_LIST', playerState.track_window.next_tracks, { root: true });
         commit('playback/SET_PREVIOUS_TRACK_LIST', playerState.track_window.previous_tracks, { root: true });
         commit('playback/SET_DISALLOWS', playerState.disallows, { root: true });
-        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
-
-        // TODO
-        // 表示がちらつくので、初回以外は player/repeat 内で commit する
-        if (currentRepeatMode == null) {
-          commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
-        }
+        // TODO: 表示がちらつく
+        commit('playback/SET_REPEAT_MODE', playerState.repeat_mode, { root: true });
         // playback-sdk から提供される uri が存在する場合は customContext をリセット
         dispatch('playback/resetCustomContext', uri, { root: true });
+        // TODO:
+        commit('playback/SET_IS_PLAYBACK_SLEEP', false, { root: true });
       }));
 
       const isConnected = await player.connect();

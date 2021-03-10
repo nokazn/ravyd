@@ -5,16 +5,17 @@ import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
 import type { State, Mutations, Getters } from './types';
 
+interface ModifyShowSavedStateParams {
+  showId: string;
+  isSaved: boolean;
+}
 
 export type Actions = {
-  getSavedShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
-  updateLatestSavedShowList: () => Promise<void>
-  saveShows: (showIdList: string[]) => Promise<void>
-  removeShows: (showIdList: string[]) => Promise<void>
-  modifyShowSavedState: ({ showId, isSaved }: {
-    showId: string
-    isSaved: boolean
-  }) => void
+  getSavedShowList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>;
+  updateLatestSavedShowList: () => Promise<void>;
+  saveShows: (showIdList: string[]) => Promise<void>;
+  removeShows: (showIdList: string[]) => Promise<void>;
+  modifyShowSavedState: (params: ModifyShowSavedStateParams) => void;
 }
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {

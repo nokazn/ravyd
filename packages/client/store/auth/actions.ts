@@ -54,8 +54,8 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
   async getUserData({ state, commit }): Promise<void> {
     if (state.accessToken != null) {
-      const userData = await this.$spotify.users.getCurrentUserProfile();
-      commit('SET_USER_DATA', userData);
+      const user = await this.$spotify.users.getCurrentUserProfile();
+      commit('SET_USER', user);
     }
   },
 
@@ -107,7 +107,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     return this.$server.auth.logout()
       .then(() => {
         commit('SET_TOKEN', undefined);
-        commit('SET_USER_DATA', undefined);
+        commit('SET_USER', undefined);
         dispatch('playback/resetPlayback', undefined, { root: true });
       });
   },

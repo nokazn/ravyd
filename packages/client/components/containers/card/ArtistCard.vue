@@ -82,7 +82,7 @@ export default defineComponent({
     const avatarMaxSize = computed(() => adjustAvatarSize(props.maxWidth));
 
     const isArtistSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
-    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const isPlaying = computed(() => root.$getters()['playback/isPlaying']);
     const mediaIcon = computed<MediaIcon>(() => {
       return isArtistSet.value && isPlaying.value
         ? 'mdi-pause-circle'
@@ -95,7 +95,7 @@ export default defineComponent({
           ? 'playback/pause'
           : 'playback/play');
       } else {
-        root.$dispatch('playback/play', { contextUri: props.item.uri });
+        root.$dispatch('playback/play', { context: props.item.uri });
       }
     };
 

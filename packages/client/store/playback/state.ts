@@ -16,10 +16,9 @@ export type State = {
   isPlaying: boolean;
   isSavedTrack: boolean;
   positionMs: number;
-  disabledPlayingFromBeginning: boolean;
   durationMs: number;
   isShuffled: boolean;
-  repeatMode: 0 | 1 | 2 | undefined;
+  repeatMode: App.RepeatMode | undefined;
   disallows: SpotifyAPI.Disallows;
   volumePercent: ZeroToHundred;
   isMuted: boolean;
@@ -40,9 +39,7 @@ const state = (): State => ({
   isPlaying: false,
   isSavedTrack: false,
   positionMs: 0,
-  disabledPlayingFromBeginning: false,
-  // if set to 0, Seekbar has 0 length
-  durationMs: 1,
+  durationMs: 1, // if set to 0, seek bar has 0 length
   isShuffled: false,
   repeatMode: undefined,
   disallows: {},

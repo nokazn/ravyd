@@ -1,5 +1,4 @@
 import type {
-  RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
@@ -20,11 +19,10 @@ import type { $Toast } from '~/plugins/observable/toast';
 
 declare module 'vue/types/vue' {
   interface Vue {
-    // css module
+    // CSS modules
     $style: Record<string, string>;
 
     // typed-vuex
-    $state: () => RootState;
     $getters: () => RootGetters;
     $commit: SFCCommit;
     $dispatch: SFCDispatch;

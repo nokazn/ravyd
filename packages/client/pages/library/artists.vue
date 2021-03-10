@@ -22,14 +22,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootGetters } from 'typed-vuex';
 
+import type { SpotifyAPI } from 'shared/types';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ArtistCard from '~/components/containers/card/ArtistCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 
 interface Data {
-  observer: IntersectionObserver | undefined
+  observer: IntersectionObserver | undefined;
 }
 
 const LIMIT_OF_ARTISTS = 30;
@@ -60,10 +60,10 @@ const LIMIT_OF_ARTISTS = 30;
 export default class LibraryArtistsPage extends Vue implements Data {
   observer: IntersectionObserver | undefined = undefined;
 
-  get artistList(): RootState['library']['artists']['artistList'] {
-    return this.$state().library.artists.artistList ?? [];
+  get artistList(): SpotifyAPI.Artist[] {
+    return this.$getters()['library/artists/artistList'];
   }
-  get isFull(): RootGetters['library/artists/isFull'] {
+  get isFull(): boolean {
     return this.$getters()['library/artists/isFull'];
   }
 

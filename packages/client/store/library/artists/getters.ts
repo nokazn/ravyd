@@ -1,13 +1,19 @@
 import type { VuexGetters } from 'typed-vuex';
+import type { SpotifyAPI } from 'shared/types';
 import type { State } from './types';
 
 export type Getters = {
-  artistListLength: number
-  isFull: boolean
-  lastArtistId: string | undefined
+  artistList: SpotifyAPI.Artist[];
+  artistListLength: number;
+  isFull: boolean;
+  lastArtistId: string | undefined;
 };
 
 const libraryArtistsGetters: VuexGetters<State, Getters> = {
+  artistList(state) {
+    return state.artistList;
+  },
+
   artistListLength(state) {
     return state.artistList?.length ?? 0;
   },

@@ -5,25 +5,40 @@ import { getImageSrc } from '~/services/converter';
 import type { State } from './types';
 
 export type Getters = {
-  isLoggedIn: boolean
-  isPremium: boolean
-  isTokenExpired: () => boolean
-  finishedRefreshingToken: () => Promise<true>
-  userId: string | undefined
-  userDisplayName: string | undefined
-  userAvatarSrc: (avatarSize?: number) => string| undefined
-  userCountryCode: SpotifyAPI.Country | undefined
+  accessToken: string | undefined;
+  user: SpotifyAPI.User | undefined;
+  isRefreshing: boolean;
+  isLoggedIn: boolean;
+  isPremium: boolean;
+  isTokenExpired: () => boolean;
+  finishedRefreshingToken: () => Promise<true>;
+  userId: string | undefined;
+  userDisplayName: string | undefined;
+  userAvatarSrc: (avatarSize?: number) => string| undefined;
+  userCountryCode: SpotifyAPI.Country | undefined;
 }
 
 const getters: VuexGetters<State, Getters> = {
+  accessToken(state) {
+    return state.accessToken;
+  },
+
+  user(state) {
+    return state.user;
+  },
+
+  isRefreshing(state) {
+    return state.isRefreshing;
+  },
+
   isLoggedIn(state) {
     return state.authState != null
       && state.accessToken != null
-      && state.userData != null;
+      && state.user != null;
   },
 
   isPremium(state) {
-    return state.userData?.product === 'premium';
+    return state.user?.product === 'premium';
   },
 
   // 関数実行時に Date.now() が評価されるようにする
@@ -44,19 +59,19 @@ const getters: VuexGetters<State, Getters> = {
   },
 
   userId(state) {
-    return state.userData?.id;
+    return state.user?.id;
   },
 
   userDisplayName(state) {
-    return state.userData?.display_name ?? state.userData?.email;
+    return state.user?.display_name ?? state.user?.email;
   },
 
   userAvatarSrc(state) {
-    return (avatarSize) => getImageSrc(state.userData?.images, avatarSize);
+    return (avatarSize) => getImageSrc(state.user?.images, avatarSize);
   },
 
   userCountryCode(state) {
-    return state.userData?.country;
+    return state.user?.country;
   },
 };
 

@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { RootGetters } from 'typed-vuex';
 
 export default Vue.extend({
   head() {
@@ -43,7 +42,7 @@ export default Vue.extend({
   },
 
   computed: {
-    isLoggedIn(): RootGetters['auth/isLoggedIn'] {
+    isLoggedIn(): boolean {
       return this.$getters()['auth/isLoggedIn'];
     },
   },

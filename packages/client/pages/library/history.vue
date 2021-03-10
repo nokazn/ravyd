@@ -14,11 +14,11 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'typed-vuex';
 
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateUserContextUri } from '~/services/converter';
+import type { App } from '~/entities';
 
 interface AsyncData {
   uri: string | undefined;
@@ -54,8 +54,8 @@ export default class HistoryPage extends Vue implements AsyncData, Data {
   uri: string | undefined;
   mutationUnsubscribe: (() => void) | undefined = undefined;
 
-  get trackList(): RootState['library']['history']['trackHistoryList'] {
-    return this.$state().library.history.trackHistoryList;
+  get trackList(): App.PlaylistTrackDetail[] {
+    return this.$getters()['library/history/historyList'];
   }
 
   mounted() {

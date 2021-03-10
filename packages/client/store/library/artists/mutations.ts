@@ -4,14 +4,14 @@ import type { SpotifyAPI } from 'shared/types';
 import type { State } from './types';
 
 export type Mutations = {
-  SET_ARTIST_LIST: SpotifyAPI.Artist[]
-  ADD_TO_ARTIST_LIST: SpotifyAPI.Artist[]
-  UNSHIFT_TO_ARTIST_LIST: SpotifyAPI.Artist[]
-  SET_TOTAL: number
-  INCREMENT_UNUPDATED_COUNTS: void
-  RESET_UNUPDATED_COUNTS: void
-  SET_ACTUAL_IS_SAVED: [string, boolean],
-  DELETE_ACTUAL_IS_SAVED: string,
+  SET_ARTIST_LIST: SpotifyAPI.Artist[];
+  ADD_TO_ARTIST_LIST: SpotifyAPI.Artist[];
+  UNSHIFT_TO_ARTIST_LIST: SpotifyAPI.Artist[];
+  SET_TOTAL: number;
+  INCREMENT_UNUPDATED_COUNTS: void;
+  RESET_UNUPDATED_COUNTS: void;
+  SET_ACTUAL_IS_SAVED: [string, boolean];
+  DELETE_ACTUAL_IS_SAVED: string;
 };
 
 const mutations: VuexMutations<State, Mutations> = {

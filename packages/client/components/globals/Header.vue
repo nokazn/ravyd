@@ -81,7 +81,7 @@ export default defineComponent({
           backdropFilter: 'blur(16px)',
         };
       }
-      const dominantColor = root.$state().dominantBackgroundColor;
+      const dominantColor = root.$getters().dominantBackgroundColor;
       return {
         backgroundColor: dominantColor?.hex ?? root.$constant.BACKGROUND_COLOR,
       };

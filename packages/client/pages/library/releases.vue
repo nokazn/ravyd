@@ -22,10 +22,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootGetters } from 'typed-vuex';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ReleaseCard from '~/components/containers/card/ReleaseCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import type { App } from '~/entities';
 
 interface Data {}
 
@@ -55,10 +55,10 @@ const LIMIT_OF_RELEASES = 30;
   },
 })
 export default class LibraryReleasesPage extends Vue implements Data {
-  get releaseList(): RootState['library']['releases']['releaseList'] {
-    return this.$state().library.releases.releaseList;
+  get releaseList(): App.ReleaseCard<'album'>[] {
+    return this.$getters()['library/releases/releaseList'];
   }
-  get isFull(): RootGetters['library/releases/isFull'] {
+  get isFull(): boolean {
     return this.$getters()['library/releases/isFull'];
   }
 

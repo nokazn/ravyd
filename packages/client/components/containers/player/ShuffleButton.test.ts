@@ -6,20 +6,12 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 const CLICK = 'click';
 
-const $state = (isShuffled: boolean) => {
-  return jest.fn().mockReturnValue({
-    playback: {
-      isShuffled,
-    },
-  });
-};
-const $getters = (isDisallowed: boolean) => {
-  return jest.fn().mockReturnValue({
-    'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'toggling_shuffle'
-      ? isDisallowed
-      : false),
-  });
-};
+const $getters = (isShuffled: boolean, isDisallowed: boolean) => () => ({
+  'playback/isShuffled': isShuffled,
+  'playback/isDisallowed': (d: keyof SpotifyAPI.Disallows) => (d === 'toggling_shuffle'
+    ? isDisallowed
+    : false),
+});
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (isShuffled: boolean, isDisallowed: boolean = false, size: number = 32) => {
@@ -30,8 +22,7 @@ const factory = (isShuffled: boolean, isDisallowed: boolean = false, size: numbe
     },
     mocks: {
       ...mocks,
-      $state: $state(isShuffled),
-      $getters: $getters(isDisallowed),
+      $getters: $getters(isShuffled, isDisallowed),
       $dispatch,
     },
   });

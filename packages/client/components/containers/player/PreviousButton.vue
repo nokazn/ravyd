@@ -28,10 +28,10 @@ export default defineComponent({
   setup(_, { root }) {
     const firstClicked = ref(false);
 
-    const position = computed(() => root.$state().playback.positionMs);
+    const position = computed(() => root.$getters()['playback/positionMs']);
     const disallowedSkippingPrev = computed(() => root.$getters()['playback/isDisallowed']('skipping_prev'));
     const disabled = computed(() => {
-      return disallowedSkippingPrev.value && root.$state().playback.disabledPlayingFromBeginning;
+      return disallowedSkippingPrev.value && root.$getters()['playback/isBeginningOfTrack'];
     });
 
     let timer: ReturnType<typeof setTimeout> | undefined;

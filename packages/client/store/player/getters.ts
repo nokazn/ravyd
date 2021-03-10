@@ -2,10 +2,15 @@ import type { VuexGetters } from 'typed-vuex';
 import type { State } from './types';
 
 export type Getters = {
-  isPlayerConnected: boolean
+  playbackPlayer: Spotify.SpotifyPlayer | undefined;
+  isPlayerConnected: boolean;
 }
 
 const playerGetters: VuexGetters<State, Getters> = {
+  playbackPlayer(state) {
+    return state.playbackPlayer;
+  },
+
   isPlayerConnected(state) {
     return state.playbackPlayer != null;
   },

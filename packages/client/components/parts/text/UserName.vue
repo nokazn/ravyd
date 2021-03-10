@@ -34,7 +34,7 @@ export default defineComponent({
 
   props: {
     user: {
-      type: Object as PropType<SpotifyAPI.UserData>,
+      type: Object as PropType<SpotifyAPI.User>,
       required: true,
     },
     avatar: {
