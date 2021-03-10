@@ -23,7 +23,6 @@ export type Mutations = {
   SET_CONTEXT_URI: string | undefined;
   SET_POSITION_MS: number;
   SET_DURATION_MS: number | undefined;
-  SET_DISABLED_PLAYING_FROM_BEGINNING: boolean;
   SET_IS_SHUFFLED: boolean;
   SET_REPEAT_MODE: App.RepeatMode;
   SET_DISALLOWS: SpotifyAPI.Disallows;
@@ -105,16 +104,11 @@ const mutations: VuexMutations<State, Mutations> = {
 
   SET_POSITION_MS(state, positionMs) {
     state.positionMs = positionMs;
-    state.disabledPlayingFromBeginning = positionMs <= 1000;
   },
 
   SET_DURATION_MS(state, durationMs) {
     // デフォルト値は DEFAULT_DURATION_MS
     state.durationMs = durationMs ?? DEFAULT_DURATION_MS;
-  },
-
-  SET_DISABLED_PLAYING_FROM_BEGINNING(state, disabledPlayingFromBeginning) {
-    state.disabledPlayingFromBeginning = disabledPlayingFromBeginning;
   },
 
   SET_IS_SHUFFLED(state, isShuffled) {

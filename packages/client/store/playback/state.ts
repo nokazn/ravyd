@@ -16,7 +16,6 @@ export type State = {
   isPlaying: boolean;
   isSavedTrack: boolean;
   positionMs: number;
-  disabledPlayingFromBeginning: boolean;
   durationMs: number;
   isShuffled: boolean;
   repeatMode: App.RepeatMode | undefined;
@@ -40,7 +39,6 @@ const state = (): State => ({
   isPlaying: false,
   isSavedTrack: false,
   positionMs: 0,
-  disabledPlayingFromBeginning: false,
   durationMs: 1, // if set to 0, seek bar has 0 length
   isShuffled: false,
   repeatMode: undefined,

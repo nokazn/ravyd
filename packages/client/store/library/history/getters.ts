@@ -10,7 +10,7 @@ export type Getters = {
 
 const libraryHistoryGetters: VuexGetters<State, Getters> = {
   historyList(state) {
-    return state.trackHistoryList;
+    return state.historyList;
   },
 
   historyLength(state) {

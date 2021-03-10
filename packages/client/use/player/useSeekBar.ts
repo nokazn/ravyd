@@ -37,11 +37,6 @@ export const useSeekBar = (root: SetupContext['root']) => {
 
   const setPositionMs = (p: number) => {
     root.$commit('playback/SET_POSITION_MS', p);
-    // 1000ms 以内かどうかの情報がストアと異なる場合は更新
-    const isBeginning = p <= 1000;
-    if (isBeginning !== root.$state().playback.disabledPlayingFromBeginning) {
-      root.$commit('playback/SET_DISABLED_PLAYING_FROM_BEGINNING', isBeginning);
-    }
   };
 
   let timer: ReturnType<typeof setInterval> | undefined;

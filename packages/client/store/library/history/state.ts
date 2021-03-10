@@ -3,14 +3,14 @@ import type { App } from '~/entities';
 
 export type State = {
   recentlyPlayed: SpotifyAPI.Player.History[];
-  trackHistoryList: App.PlaylistTrackDetail[];
+  historyList: App.PlaylistTrackDetail[];
   total: number | undefined;
   unupdatedCounts: number;
 }
 
 const state = (): State => ({
   recentlyPlayed: [],
-  trackHistoryList: [],
+  historyList: [],
   total: undefined,
   unupdatedCounts: 0,
 });

@@ -683,7 +683,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     commit('SET_CONTEXT_URI', undefined);
     commit('SET_POSITION_MS', 0);
     commit('SET_DURATION_MS', undefined);
-    commit('SET_DISABLED_PLAYING_FROM_BEGINNING', false);
     commit('SET_IS_SHUFFLED', false);
     commit('SET_REPEAT_MODE', 0);
     commit('SET_DISALLOWS', {});

@@ -6,7 +6,7 @@ import type { State } from './types';
 
 export type Getters = {
   accessToken: string | undefined;
-  user: SpotifyAPI.UserData | undefined;
+  user: SpotifyAPI.User | undefined;
   isRefreshing: boolean;
   isLoggedIn: boolean;
   isPremium: boolean;
@@ -24,7 +24,7 @@ const getters: VuexGetters<State, Getters> = {
   },
 
   user(state) {
-    return state.userData;
+    return state.user;
   },
 
   isRefreshing(state) {
@@ -34,11 +34,11 @@ const getters: VuexGetters<State, Getters> = {
   isLoggedIn(state) {
     return state.authState != null
       && state.accessToken != null
-      && state.userData != null;
+      && state.user != null;
   },
 
   isPremium(state) {
-    return state.userData?.product === 'premium';
+    return state.user?.product === 'premium';
   },
 
   // 関数実行時に Date.now() が評価されるようにする
@@ -59,19 +59,19 @@ const getters: VuexGetters<State, Getters> = {
   },
 
   userId(state) {
-    return state.userData?.id;
+    return state.user?.id;
   },
 
   userDisplayName(state) {
-    return state.userData?.display_name ?? state.userData?.email;
+    return state.user?.display_name ?? state.user?.email;
   },
 
   userAvatarSrc(state) {
-    return (avatarSize) => getImageSrc(state.userData?.images, avatarSize);
+    return (avatarSize) => getImageSrc(state.user?.images, avatarSize);
   },
 
   userCountryCode(state) {
-    return state.userData?.country;
+    return state.user?.country;
   },
 };
 

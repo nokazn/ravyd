@@ -76,7 +76,7 @@ export namespace App {
   export type PlaylistTrackDetail = TrackDetail & {
     type: 'track' | 'episode'
     addedAt?: AddedAt
-    addedBy?: SpotifyAPI.UserData
+    addedBy?: SpotifyAPI.User
   }
 
   // TrackQueueMenu component
@@ -239,7 +239,7 @@ export type MenuItemGroup = MenuItem[];
     description: string | null
     isCollaborative: boolean
     images: SpotifyAPI.Image[]
-    owner: SpotifyAPI.UserData
+    owner: SpotifyAPI.User
     durationMs: number
     totalTracks: number
     isPublic: boolean | null

@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from 'shared/types';
 
-export type DeletedTrack = {
+export interface DeletedTrack {
   uri: string;
   positions: [number];
 }

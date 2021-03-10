@@ -332,7 +332,7 @@ export namespace SpotifyAPI {
     id: string
     images: Image[]
     name: string
-    owner: UserData
+    owner: User
     public: boolean | null
     snapshot_id: string
     tracks: {
@@ -349,7 +349,7 @@ export namespace SpotifyAPI {
   export type PlaylistTrack = {
     added_at: string // timestamp
     // TODO: display_name など取得できないフィールドがある
-    added_by: UserData
+    added_by: User
     is_local: boolean
     track: Track | null
   }
@@ -439,7 +439,7 @@ export namespace SpotifyAPI {
     popularity: string
   }
 
-  export type UserData = {
+  export type User = {
     country: Country
     display_name: string | null
     email: string

@@ -35,7 +35,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
   modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {
     // TODO: コピーしないと表示に反映されない
-    const trackList = [...state.trackHistoryList];
+    const trackList = [...state.historyList];
     const savedTrackIndex = trackList.findIndex((track) => track.id === trackId);
     // ライブラリに存在する場合、削除したリリースは削除し、保存したリリースは再度先頭にするためにライブラリからは一度削除
     if (savedTrackIndex !== -1) {

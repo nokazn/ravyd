@@ -28,8 +28,8 @@ const mutations: VuexMutations<State, Mutations> = {
     state.recentlyPlayed = [...recentlyPlayed, ...currentRecentlyPlayed];
   },
 
-  SET_TRACK_HISTORY_LIST(state, trackHistoryList) {
-    state.trackHistoryList = trackHistoryList;
+  SET_TRACK_HISTORY_LIST(state, historyList) {
+    state.historyList = historyList;
   },
 
   SET_TOTAL(state, total) {

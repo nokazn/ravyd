@@ -15,7 +15,7 @@ const user = (
   i: number,
   hasDisplayName: boolean,
   images: SpotifyAPI.Image[],
-): SpotifyAPI.UserData => ({
+): SpotifyAPI.User => ({
   country: 'JP',
   display_name: hasDisplayName ? userName(i) : null,
   email: 'user@email.com',
