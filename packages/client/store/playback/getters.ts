@@ -18,7 +18,7 @@ export type Getters = {
   trackQueue: App.TrackQueue[];
   artworkSrc: (minSize?: number) => string | undefined;
   hasTrack: boolean;
-  isTrackSet: (trackId: string | undefined | null) => boolean;
+  isTrackSet: (track: string | App.MinimumTrack | undefined | null) => boolean;
   contextUri: string | undefined;
   isContextSet: (uri: string | undefined) => boolean;
   remainingTimeMs: number;
@@ -153,8 +153,18 @@ const playerGetters: VuexGetters<State, Getters> = {
       && state.durationMs !== DEFAULT_DURATION_MS;
   },
 
+  // TODO: string を省く
   isTrackSet(state) {
-    return (trackId) => trackId != null && state.track != null && state.track.id === trackId;
+    return (track) => {
+      const currentTrack = state.track;
+      if (track == null || currentTrack == null) return false;
+      const currentTrackId = currentTrack.linked_from?.id ?? currentTrack.id;
+      if (typeof track === 'string') {
+        return track === currentTrackId;
+      }
+      const trackId = track.linked_from?.id ?? track.linkedFrom?.id ?? track.id;
+      return trackId === currentTrackId;
+    };
   },
 
   contextUri(state) {

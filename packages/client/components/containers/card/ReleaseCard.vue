@@ -107,7 +107,7 @@ export default defineComponent({
     const isReleaseSet = computed(() => {
       // トラックのカードでトラックがセットされているか、アルバムのカードでアルバムがセットされているか
       if (props.item.type === 'track') {
-        return root.$getters()['playback/isTrackSet'](props.item.id);
+        return root.$getters()['playback/isTrackSet'](props.item);
       }
       return root.$getters()['playback/isContextSet'](props.item.uri);
     });

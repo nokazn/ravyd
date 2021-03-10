@@ -44,8 +44,8 @@
         :playlist-id="playlistId"
         :collaborative="collaborative"
         :hide-added-at="hideAddedAt"
-        :set="isTrackSet(item.id)"
-        :playing="isPlayingTrack(item.id)"
+        :set="isTrackSet(item)"
+        :playing="isPlayingTrack(item)"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -185,23 +185,22 @@ export default defineComponent({
         menuColumn,
       ].filter((header) => header != null) as DataTableHeader[];
     });
-    const isTrackSet = (id: string) => {
+    const isTrackSet = (row: App.MinimumTrack): boolean => {
       return root.$getters()['playback/isContextSet'](props.uri)
-        && root.$getters()['playback/isTrackSet'](id);
+        && root.$getters()['playback/isTrackSet'](row);
     };
-    const isPlayingTrack = (id: string) => {
-      return isTrackSet(id) && root.$state().playback.isPlaying;
+    const isPlayingTrack = (row: App.MinimumTrack) => {
+      return isTrackSet(row) && root.$state().playback.isPlaying;
     };
 
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       // TODO: エピソードは isPlayable が false でも再生できるようにしている
       if (row.type !== 'episode' && row.isPlayable === false) return;
-
-      if (isPlayingTrack(row.id)) {
+      if (isPlayingTrack(row)) {
         root.$dispatch('playback/pause');
         return;
       }
-      if (isTrackSet(row.id)) {
+      if (isTrackSet(row)) {
         root.$dispatch('playback/play');
         return;
       }

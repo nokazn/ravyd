@@ -42,8 +42,8 @@
         <EpisodeTableRow
           :item="item"
           :publisher="publisher"
-          :set="isEpisodeSet(item.id)"
-          :playing="isPlayingEpisode(item.id)"
+          :set="isEpisodeSet(item)"
+          :playing="isPlayingEpisode(item)"
           :hide-added-at="hideAddedAt"
           @on-media-button-clicked="onMediaButtonClicked"
           @on-row-clicked="onRowClicked"
@@ -195,12 +195,12 @@ export default defineComponent({
       return h.filter((header) => header != null) as DataTableHeader[];
     });
 
-    const isEpisodeSet = (id: string) => root.$getters()['playback/isTrackSet'](id);
-    const isPlayingEpisode = (id: string) => isEpisodeSet(id) && root.$state().playback.isPlaying;
+    const isEpisodeSet = (row: App.MinimumTrack) => root.$getters()['playback/isTrackSet'](row);
+    const isPlayingEpisode = (row: App.MinimumTrack) => isEpisodeSet(row) && root.$state().playback.isPlaying;
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
-      if (isPlayingEpisode(row.id)) {
+      if (isPlayingEpisode(row)) {
         root.$dispatch('playback/pause');
-      } else if (isEpisodeSet(row.id)) {
+      } else if (isEpisodeSet(row)) {
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {

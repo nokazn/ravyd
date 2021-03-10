@@ -32,8 +32,8 @@
       <TrackTableRow
         :item="item"
         :active="item.id === activeRowId"
-        :set="isTrackSet(item.id)"
-        :playing="isPlayingTrack(item.id)"
+        :set="isTrackSet(item)"
+        :playing="isPlayingTrack(item)"
         @on-row-clicked="onRowClicked"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
@@ -135,13 +135,12 @@ export default defineComponent({
         : false;
     });
 
-    const isTrackSet = (id: string | undefined) => root.$getters()['playback/isTrackSet'](id);
-    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const isTrackSet = (row: App.MinimumTrack | undefined) => root.$getters()['playback/isTrackSet'](row);
+    const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$state().playback.isPlaying;
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
-      if (isPlayingTrack(row.id)) {
+      if (isPlayingTrack(row)) {
         root.$dispatch('playback/pause');
-      // TODO: relinked track を参照する必要性
-      } else if (isTrackSet(row.id) || isTrackSet(row.linkedFrom?.id)) {
+      } else if (isTrackSet(row)) {
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {

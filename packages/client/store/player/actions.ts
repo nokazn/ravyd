@@ -106,19 +106,16 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       player.addListener('player_state_changed', ((playerState) => {
         // TODO: playerState は Nullable
         if (playerState == null) return;
-
         // TODO
         console.info(playerState);
-        const { repeatMode: currentRepeatMode } = this.$state().playback;
         const {
           context: { uri },
           track_window: { current_track: track },
         } = playerState;
 
-        const trackId = track.id;
-        // アイテムが取得でき、id 変わったときだけチェック
-        if (trackId != null && this.$getters()['playback/isTrackSet'](trackId)) {
-          dispatch('playback/checkTrackSavedState', trackId, { root: true });
+        // アイテムが取得でき、ID 変わったときだけチェック
+        if (track != null && !this.$getters()['playback/isTrackSet'](track.id)) {
+          dispatch('playback/checkTrackSavedState', track.id, { root: true });
         }
 
         commit('playback/SET_IS_PLAYING', !playerState.paused, { root: true });

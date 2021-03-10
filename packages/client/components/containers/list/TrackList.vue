@@ -12,8 +12,8 @@
         v-show="isVisible(i)"
         :key="track.id"
         :item="track"
-        :set="isTrackSet(track.id)"
-        :playing="isPlayingTrack(track.id)"
+        :set="isTrackSet(track)"
+        :playing="isPlayingTrack(track)"
         @on-media-button-clicked="onMediaButtonClicked"
         @on-favorite-button-clicked="onFavoriteButtonClicked"
       />
@@ -56,16 +56,15 @@ export default defineComponent({
     // trackUriList は更新されることがない
     const trackUriList = props.tracks.map((track) => track.uri);
 
-    const isTrackSet = (id: string | undefined) => root.$getters()['playback/isTrackSet'](id);
-    const isPlayingTrack = (id: string) => isTrackSet(id) && root.$state().playback.isPlaying;
+    const isTrackSet = (row: App.MinimumTrack | undefined) => root.$getters()['playback/isTrackSet'](row);
+    const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$state().playback.isPlaying;
     const isVisible = (index: number) => props.length == null || index < props.length;
 
     // id, uri は track のパラメータで、this.uri は context のパラメータ
     const onMediaButtonClicked = (row: OnListItem['on-media-button-clicked']) => {
-      if (isPlayingTrack(row.id)) {
+      if (isPlayingTrack(row)) {
         root.$dispatch('playback/pause');
-      // TODO: relinked track を参照する必要性
-      } else if (isTrackSet(row.id) || isTrackSet(row.linkedFrom?.id)) {
+      } else if (isTrackSet(row)) {
         root.$dispatch('playback/play');
       } else {
         root.$dispatch('playback/play', {

@@ -38,7 +38,7 @@ export type Actions = {
   repeat: () => Promise<void>
   volume: (params: { volumePercent: ZeroToHundred }) => Promise<void>
   mute: () => Promise<void>
-  checkTrackSavedState: (trackIds?: string) => Promise<void>
+  checkTrackSavedState: (trackIds: string | undefined | null) => Promise<void>
   modifyTrackSavedState: (params: {
     trackId?: string
     isSaved: boolean
@@ -632,23 +632,20 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * セットされているトラックの保存状態を確認する
    */
-  async checkTrackSavedState({ state, commit, dispatch }, trackId?) {
-    const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
-    if (!isAuthorized) {
-      this.$toast.requirePremium();
-      return;
-    }
+  async checkTrackSavedState({ state, commit }, trackId) {
     const id = trackId ?? state.track?.id;
-    if (id == null) return;
-    const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
-      trackIdList: [id],
-    });
-    commit('SET_IS_SAVED_TRACK', isSavedTrack);
+    if (id != null) {
+      const [isSavedTrack] = await this.$spotify.library.checkUserSavedTracks({
+        trackIdList: [id],
+      });
+      commit('SET_IS_SAVED_TRACK', isSavedTrack);
+    }
   },
 
   modifyTrackSavedState({ getters, commit }, { trackId, isSaved }) {
-    if (!getters.isTrackSet(trackId)) return;
-    commit('SET_IS_SAVED_TRACK', isSaved);
+    if (getters.isTrackSet(trackId)) {
+      commit('SET_IS_SAVED_TRACK', isSaved);
+    }
   },
 
   resetPlayback({ commit }) {
