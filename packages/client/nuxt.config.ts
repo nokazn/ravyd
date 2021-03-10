@@ -23,6 +23,7 @@ import {
 const nuxtConfig: NuxtConfig = {
   ssr: true,
   rootDir: clientRoot(),
+  srcDir: clientRoot(),
   telemetry: false,
   head: {
     titleTemplate: `%s - ${APP_NAME}`,
