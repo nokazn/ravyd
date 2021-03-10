@@ -8,28 +8,24 @@ import { ExtendedMutationPayload } from 'typed-vuex';
 import { elapsedTime } from 'shared/utils';
 
 export const useSeekBar = (root: SetupContext['root']) => {
-  const positionMs = computed(() => root.$state().playback.positionMs);
+  const positionMs = computed(() => root.$getters()['playback/positionMs']);
   // TODO: this.value が undefined になるときがある
   const positionMss = computed(() => {
     const min = Math.floor((positionMs.value ?? 0) / 1000 / 60).toString();
     const sec = Math.floor(((positionMs.value ?? 0) / 1000) % 60).toString().padStart(2, '0');
     return `${min}:${sec}`;
   });
-
-  const durationMs = computed(() => root.$state().playback.durationMs);
+  const durationMs = computed(() => root.$getters()['playback/durationMs']);
   const durationMss = computed(() => elapsedTime(durationMs.value));
   const durationMsTitle = computed(() => {
     return durationMs.value === root.$constant.DEFAULT_DURATION_MS
       ? '再生時間が取得できません'
       : undefined;
   });
+  const progress = computed(() => (positionMs.value / durationMs.value) * 100);
 
-  const progress = computed(() => {
-    return (root.$state().playback.positionMs / root.$state().playback.durationMs) * 100;
-  });
-
-  const isPlaying = computed(() => root.$state().playback.isPlaying);
-  // durationMs が不適な値の場合もシークバーを操作できないようにするs
+  const isPlaying = computed(() => root.$getters()['playback/isPlaying']);
+  // durationMs が不適な値の場合もシークバーを操作できないようにする
   const disabled = computed(() => root.$getters()['playback/isDisallowed']('seeking')
     || durationMs.value === root.$constant.DEFAULT_DURATION_MS);
 
@@ -60,13 +56,13 @@ export const useSeekBar = (root: SetupContext['root']) => {
     const intervalMs = 500;
     clearTimer();
     timer = setInterval(() => {
-      setPositionMs(root.$state().playback.positionMs + intervalMs);
+      setPositionMs(root.$getters()['playback/positionMs'] + intervalMs);
     }, intervalMs);
   };
 
   const onMouseDown = () => { clearTimer(); };
   const onChange = async (p: number) => {
-    const currentPositionMs = root.$state().playback.positionMs;
+    const currentPositionMs = root.$getters()['playback/positionMs'];
     setPositionMs(p);
     await root.$dispatch('playback/seek', {
       positionMs: p,

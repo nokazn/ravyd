@@ -16,8 +16,8 @@ import { defineComponent, computed } from '@vue/composition-api';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 type ShuffleButton = {
-  color: 'active-icon' | 'inactive',
-  title: 'シャッフル再生' | 'シャッフル再生しない'
+  color: 'active-icon' | 'inactive';
+  title: 'シャッフル再生' | 'シャッフル再生しない';
 }
 
 export default defineComponent({
@@ -34,7 +34,7 @@ export default defineComponent({
 
   setup(_, { root }) {
     const shuffleButton = computed<ShuffleButton>(() => {
-      return root.$state().playback.isShuffled
+      return root.$getters()['playback/isShuffled']
         ? {
           color: 'active-icon',
           title: 'シャッフル再生しない',
@@ -45,7 +45,6 @@ export default defineComponent({
         };
     });
     const disabled = computed(() => root.$getters()['playback/isDisallowed']('toggling_shuffle'));
-
     const onClicked = () => { root.$dispatch('playback/shuffle'); };
 
     return {

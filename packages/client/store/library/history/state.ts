@@ -2,10 +2,10 @@ import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
 export type State = {
-  recentlyPlayed: SpotifyAPI.Player.History[]
-  trackHistoryList: App.PlaylistTrackDetail[]
-  total: number | undefined
-  unupdatedCounts: number
+  recentlyPlayed: SpotifyAPI.Player.History[];
+  trackHistoryList: App.PlaylistTrackDetail[];
+  total: number | undefined;
+  unupdatedCounts: number;
 }
 
 const state = (): State => ({

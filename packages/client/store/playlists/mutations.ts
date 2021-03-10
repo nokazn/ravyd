@@ -1,32 +1,32 @@
 /* eslint-disable no-param-reassign */
 import type { VuexMutations } from 'typed-vuex';
 import type { SpotifyAPI } from 'shared/types';
-import type { State } from './types';
+import type { State, DeletedTrack } from './types';
+
+interface EditPlaylistParams {
+  id: string;
+  name?: string;
+  description?: string;
+  isPublic?: boolean;
+  isCollaborative?: boolean;
+}
+interface ModifyPlaylistTotalTracksParams {
+  playlistId: string;
+  total: number;
+}
 
 export type Mutations = {
-  SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined
-  ADD_PLAYLIST: SpotifyAPI.SimplePlaylist
-  EDIT_PLAYLIST: {
-    id: string
-    name?: string
-    description?: string
-    isPublic?: boolean
-    isCollaborative?: boolean
-  }
-  REMOVE_PLAYLIST: string
-  MODIFY_PLAYLIST_TOTAL_TRACKS: {
-    playlistId: string
-    total: number
-  }
-  SET_ACTUAL_IS_SAVED: [string, boolean],
-  DELETE_ACTUAL_IS_SAVED: string,
-  INCREMENT_UNUPDATED_TRACKS_MAP: [string, number],
-  DELETE_UNUPDATED_TRACKS_MAP: string,
-  SET_ACTUALLY_DELETED_TRACK: [string, {
-    uri: string
-    positions: [number]
-  }],
-  DELETE_ACTUALLY_DELETED_TRACK: string,
+  SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined;
+  ADD_PLAYLIST: SpotifyAPI.SimplePlaylist;
+  EDIT_PLAYLIST: EditPlaylistParams;
+  REMOVE_PLAYLIST: string;
+  MODIFY_PLAYLIST_TOTAL_TRACKS: ModifyPlaylistTotalTracksParams;
+  SET_ACTUAL_IS_SAVED: [string, boolean];
+  DELETE_ACTUAL_IS_SAVED: string;
+  INCREMENT_UNUPDATED_TRACKS_MAP: [string, number];
+  DELETE_UNUPDATED_TRACKS_MAP: string;
+  SET_ACTUALLY_DELETED_TRACK: [string, DeletedTrack];
+  DELETE_ACTUALLY_DELETED_TRACK: string;
 }
 
 const mutations: VuexMutations<State, Mutations> = {

@@ -1,5 +1,4 @@
 import type {
-  RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
@@ -24,7 +23,6 @@ declare module 'vue/types/vue' {
     $style: Record<string, string>;
 
     // typed-vuex
-    $state: () => RootState;
     $getters: () => RootGetters;
     $commit: SFCCommit;
     $dispatch: SFCDispatch;

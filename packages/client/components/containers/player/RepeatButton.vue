@@ -35,7 +35,7 @@ export default defineComponent({
 
   setup(_, { root }) {
     const repeatButton = computed<RepeatButton>(() => {
-      switch (root.$state().playback.repeatMode) {
+      switch (root.$getters()['playback/repeatMode']) {
         case 1:
           return {
             icon: 'mdi-repeat',

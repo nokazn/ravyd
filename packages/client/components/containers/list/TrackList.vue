@@ -56,7 +56,7 @@ export default defineComponent({
     // context は更新されることがない
     const context = props.tracks.map((track) => track.uri);
     const isTrackSet = (row: App.MinimumTrack | undefined) => root.$getters()['playback/isTrackSet'](row);
-    const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$state().playback.isPlaying;
+    const isPlayingTrack = (row: App.MinimumTrack) => isTrackSet(row) && root.$getters()['playback/isPlaying'];
     const isVisible = (index: number) => props.length == null || index < props.length;
 
     // id, uri は track のパラメータで、this.uri は context のパラメータ

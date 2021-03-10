@@ -108,7 +108,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState } from 'typed-vuex';
 
 import { elapsedTimeInJapanese } from 'shared/utils';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
@@ -182,8 +181,8 @@ export default class EpisodeIdPage extends Vue implements AsyncData, Data {
   get isEpisodeSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.episode?.uri);
   }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
+  get isPlaying(): boolean {
+    return this.$getters()['playback/isPlaying'];
   }
   get remainingTime(): string | undefined {
     if (this.episode == null) return undefined;

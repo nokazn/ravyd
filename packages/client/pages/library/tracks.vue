@@ -24,12 +24,12 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootGetters } from 'typed-vuex';
 
 import ContextMediaButton, { On as OnMediaButton } from '~/components/parts/button/ContextMediaButton.vue';
 import PlaylistTrackTable, { On as OnTable } from '~/components/containers/table/PlaylistTrackTable.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
 import { generateUserContextUri } from '~/services/converter';
+import type { App } from '~/entities';
 
 interface AsyncData {
   uri: string | undefined;
@@ -81,17 +81,17 @@ export default class LibraryTracksPage extends Vue implements AsyncData, Data {
   mutationUnsubscribe: (() => void) | undefined = undefined;
   MEDIA_BUTTON_REF = MEDIA_BUTTON_REF;
 
-  get trackList(): RootState['library']['tracks']['trackList'] {
-    return this.$state().library.tracks.trackList;
+  get trackList(): App.PlaylistTrackDetail[] {
+    return this.$getters()['library/tracks/trackList'];
   }
-  get isFull(): RootGetters['library/tracks/isFull'] {
+  get isFull(): boolean {
     return this.$getters()['library/tracks/isFull'];
   }
   get isPlaylistSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.uri);
   }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
+  get isPlaying(): boolean {
+    return this.$getters()['playback/isPlaying'];
   }
 
   mounted() {

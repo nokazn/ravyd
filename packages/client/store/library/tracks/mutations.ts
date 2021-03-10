@@ -5,14 +5,14 @@ import type { App } from '~/entities';
 import type { State } from './types';
 
 export type Mutations = {
-  SET_TRACK_LIST: App.PlaylistTrackDetail[]
-  ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[]
-  UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[]
-  SET_TOTAL: number
-  INCREMENT_UNUPDATED_COUNTS: void
-  RESET_UNUPDATED_COUNTS: void
-  SET_ACTUAL_IS_SAVED: [string, boolean],
-  DELETE_ACTUAL_IS_SAVED: string,
+  SET_TRACK_LIST: App.PlaylistTrackDetail[];
+  ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[];
+  UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[];
+  SET_TOTAL: number;
+  INCREMENT_UNUPDATED_COUNTS: void;
+  RESET_UNUPDATED_COUNTS: void;
+  SET_ACTUAL_IS_SAVED: [string, boolean];
+  DELETE_ACTUAL_IS_SAVED: string;
 };
 
 const mutations: VuexMutations<State, Mutations> = {

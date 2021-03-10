@@ -5,12 +5,12 @@ import type { SpotifyAPI } from 'shared/types';
 import type { State } from './types';
 
 export type Mutations = {
-  SET_ALBUMS: SpotifyAPI.SimpleAlbum[] | undefined
-  SET_ARTISTS: SpotifyAPI.Artist[] | undefined
-  SET_TRACKS: SpotifyAPI.Track[] | undefined
-  SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined
-  SET_SHOWS: SpotifyAPI.SimpleShow[] | undefined
-  SET_EPISODES: SpotifyAPI.SimpleEpisode[] | undefined
+  SET_ALBUMS: SpotifyAPI.SimpleAlbum[] | undefined;
+  SET_ARTISTS: SpotifyAPI.Artist[] | undefined;
+  SET_TRACKS: SpotifyAPI.Track[] | undefined;
+  SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined;
+  SET_SHOWS: SpotifyAPI.SimpleShow[] | undefined;
+  SET_EPISODES: SpotifyAPI.SimpleEpisode[] | undefined;
 }
 
 const mutations: VuexMutations<State, Mutations> = {

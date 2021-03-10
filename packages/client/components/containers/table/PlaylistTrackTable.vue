@@ -190,7 +190,7 @@ export default defineComponent({
         && root.$getters()['playback/isTrackSet'](row);
     };
     const isPlayingTrack = (row: App.MinimumTrack) => {
-      return isTrackSet(row) && root.$state().playback.isPlaying;
+      return isTrackSet(row) && root.$getters()['playback/isPlaying'];
     };
 
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {

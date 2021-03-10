@@ -196,7 +196,7 @@ export default defineComponent({
     });
 
     const isEpisodeSet = (row: App.MinimumTrack) => root.$getters()['playback/isTrackSet'](row);
-    const isPlayingEpisode = (row: App.MinimumTrack) => isEpisodeSet(row) && root.$state().playback.isPlaying;
+    const isPlayingEpisode = (row: App.MinimumTrack) => isEpisodeSet(row) && root.$getters()['playback/isPlaying'];
     const onMediaButtonClicked = (row: OnRow['on-media-button-clicked']) => {
       if (isPlayingEpisode(row)) {
         root.$dispatch('playback/pause');

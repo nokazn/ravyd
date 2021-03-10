@@ -40,7 +40,7 @@ interface Data {}
 })
 export default class LibraryPlaylistPage extends Vue implements Data {
   get playlists(): SpotifyAPI.SimplePlaylist[] {
-    return this.$state().playlists.playlists ?? [];
+    return this.$getters()['playlists/playlists'] ?? [];
   }
 }
 </script>

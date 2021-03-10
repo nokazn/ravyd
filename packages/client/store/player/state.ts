@@ -1,5 +1,5 @@
 export type State = {
-  playbackPlayer: Spotify.SpotifyPlayer | undefined
+  playbackPlayer: Spotify.SpotifyPlayer | undefined;
 }
 
 const state = (): State => ({

@@ -39,14 +39,9 @@ type VolumeButton = {
 
 export default defineComponent({
   setup(_, { root }) {
-    const isMuted = computed(() => root.$state().playback.isMuted);
+    const isMuted = computed(() => root.$getters()['playback/isMuted']);
     // volumePercent と isMuted は localStorage で永続化されてる
-    const volumePercent = computed(() => {
-      return isMuted.value
-        ? 0
-        : root.$state().playback.volumePercent;
-    });
-
+    const volumePercent = computed(() => root.$getters()['playback/volumePercent']);
     const icon = computed<VolumeButtonIcon>(() => {
       if (isMuted.value || volumePercent.value === 0) return 'mdi-volume-mute';
       if (volumePercent.value === 100) return 'mdi-volume-high';

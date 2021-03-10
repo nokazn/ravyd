@@ -3,21 +3,21 @@ import type { VuexActions } from 'typed-vuex';
 import { convertTrackDetail } from '~/services/converter';
 import type { State, Mutations, Getters } from './types';
 
+interface ModifyTrackSavedStateParams {
+  trackId: string;
+  isSaved: boolean;
+}
+
 export type Actions = {
-  getRecentlyPlayed: () => Promise<void>
-  modifyTrackSavedState: (params: {
-    trackId: string
-    isSaved: boolean
-  }) => void
+  getRecentlyPlayed: () => Promise<void>;
+  modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void;
 }
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async getRecentlyPlayed({ commit, dispatch }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
-
     const recentlyPlayed = await this.$spotify.player.getRecentlyPlayed({ limit: 50 });
-
     // 再生履歴が取得できなかった場合はパス
     if (recentlyPlayed == null) return;
 

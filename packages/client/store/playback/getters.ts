@@ -10,6 +10,14 @@ import type { State } from './types';
 type Disallows = keyof SpotifyAPI.Disallows;
 
 export type Getters = {
+  track: App.ExtendedTrack | undefined;
+  isPlaying: boolean;
+  isSavedTrack: boolean;
+  positionMs: number;
+  durationMs: number;
+  isShuffled: boolean;
+  repeatMode: App.RepeatMode | undefined;
+  isMuted: boolean;
   activeDevice: SpotifyAPI.Device | undefined;
   playbackDeviceId: string | undefined;
   deviceList: App.Device[];
@@ -22,12 +30,45 @@ export type Getters = {
   contextUri: string | undefined;
   isContextSet: (uri: string | undefined) => boolean;
   remainingTimeMs: number;
+  isBeginingOfTrack: boolean;
   repeatState: SpotifyAPI.RepeatState | undefined;
   isDisallowed: (disallow: Disallows | Disallows[]) => boolean;
   volumePercent: ZeroToHundred;
 }
 
 const playerGetters: VuexGetters<State, Getters> = {
+  track(state) {
+    return state.track;
+  },
+
+  isPlaying(state) {
+    return state.isPlaying;
+  },
+
+  isSavedTrack(state) {
+    return state.isSavedTrack;
+  },
+
+  positionMs(state) {
+    return state.positionMs;
+  },
+
+  durationMs(state) {
+    return state.durationMs;
+  },
+
+  isShuffled(state) {
+    return state.isShuffled;
+  },
+
+  repeatMode(state) {
+    return state.repeatMode;
+  },
+
+  isMuted(state) {
+    return state.isMuted;
+  },
+
   activeDevice(state) {
     return state.deviceList.find((device) => device.is_active);
   },
@@ -188,6 +229,10 @@ const playerGetters: VuexGetters<State, Getters> = {
     return Math.max(state.durationMs - state.positionMs, 0);
   },
 
+  isBeginingOfTrack(state) {
+    return state.positionMs <= 1000;
+  },
+
   repeatState(state) {
     return state.repeatMode != null
       ? REPEAT_STATE_LIST[state.repeatMode]
@@ -195,7 +240,9 @@ const playerGetters: VuexGetters<State, Getters> = {
   },
 
   volumePercent(state) {
-    return state.isMuted ? 0 : state.volumePercent;
+    return state.isMuted
+      ? 0
+      : state.volumePercent;
   },
 };
 

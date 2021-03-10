@@ -73,7 +73,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return;
     }
-
     const thisDeviceId = state.deviceId;
     // 指定されなければこのデバイスに変更
     const deviceId = params?.deviceId ?? thisDeviceId;
@@ -144,7 +143,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         return deviceList.find((device) => device.is_active)?.volume_percent;
       }
       // TODO: 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
-      const volume = await this.$state().player.playbackPlayer?.getVolume();
+      const volume = await this.$getters()['player/playbackPlayer']?.getVolume();
       return volume != null
         ? volume * 100 as ZeroToHundred
         : undefined;
@@ -275,7 +274,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         : 10 * 1000;
       const remainingTimeMs = this.$getters()['playback/remainingTimeMs'];
       const hasTrack = this.$getters()['playback/hasTrack'];
-      const { isPlaying } = this.$state().playback;
+      const isPlaying = this.$getters()['playback/isPlaying'];
       // TODO: 設定で間隔設定できるようにしたい
       // timeout が指定されない場合は、このデバイスで再生中の場合は30秒、そうでなければ10秒
       const nextTimeout = timeout ?? defaultTimeout;

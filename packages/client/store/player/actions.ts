@@ -2,8 +2,8 @@ import type { VuexActions } from 'typed-vuex';
 import type { State, Mutations, Getters } from './types';
 
 export type Actions = {
-  initPlayer: () => void
-  disconnectPlayer: () => void
+  initPlayer: () => void;
+  disconnectPlayer: () => void;
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
@@ -26,9 +26,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       const player = new Spotify.Player({
         name: this.$constant.APP_NAME,
         // 0 ~ 1 で指定
-        volume: this.$state().playback.isMuted
-          ? 0
-          : this.$state().playback.volumePercent / 100,
+        volume: this.$getters()['playback/volumePercent'] / 100,
         // 初期化時とアクセストークンの更新が必要になった時に呼ばれる
         getOAuthToken: async (callback) => {
           const token = await dispatch('auth/refreshAccessToken', undefined, { root: true });
@@ -36,7 +34,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
             callback(token.accessToken);
             return;
           }
-          const currentAccessToken = this.$state().auth.accessToken;
+          const currentAccessToken = this.$getters()['auth/accessToken'];
           if (currentAccessToken != null) {
             callback(currentAccessToken);
           }
@@ -56,7 +54,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
           }, { root: true });
         }
         // このデバイスで再生中の場合は初回の更新は30秒後、ほかのデバイスで再生中の場合はすぐに取得
-        const firstTimeout = this.$state().playback.activeDeviceId === device_id
+        const firstTimeout = this.$getters()['playback/deviceState'] === 'self'
           ? 30 * 1000
           : 0;
         dispatch('playback/pollCurrentPlayback', firstTimeout, { root: true });

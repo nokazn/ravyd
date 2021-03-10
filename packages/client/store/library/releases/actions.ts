@@ -6,16 +6,17 @@ import { EMPTY_PAGING } from '~/constants';
 import { multipleRequests } from '~/utils/request/multipleRequests';
 import type { State, Mutations, Getters } from './types';
 
+interface ModifyReleaseSavedStateParams {
+  releaseId: string;
+  isSaved: boolean;
+}
 
 export type Actions = {
-  getSavedReleaseList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
+  getSavedReleaseList: (params?: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedReleaseList: () => Promise<void>
   saveReleases: (albumIdList: string[]) => Promise<void>
   removeReleases: (albumIdList: string[]) => Promise<void>
-  modifyReleaseSavedState: ({ releaseId, isSaved }: {
-    releaseId: string
-    isSaved: boolean
-  }) => void
+  modifyReleaseSavedState: (params: ModifyReleaseSavedStateParams) => void
 };
 
 type Album = { album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album }
@@ -72,7 +73,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         offset,
       });
     };
-
     const releases: LibraryOfReleases | undefined = await multipleRequests(
       handler,
       unupdatedCounts,
@@ -96,11 +96,9 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     const currentLatestReleaseId = currentReleaseList[0].id;
     const lastReleaseIndex = releases.items
       .findIndex(({ album }) => album.id === currentLatestReleaseId);
-
     const addedReleaseList = lastReleaseIndex === -1
       ? releases.items.map(convertRelease)
       : releases.items.slice(0, lastReleaseIndex).map(convertRelease);
-
     commit('UNSHIFT_TO_RELEASE_LIST', addedReleaseList);
     commit('SET_TOTAL', releases.total);
     commit('RESET_UNUPDATED_COUNTS');

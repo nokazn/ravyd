@@ -142,7 +142,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import type { Context } from '@nuxt/types';
-import type { RootState, ExtendedMutationPayload } from 'typed-vuex';
+import type { ExtendedMutationPayload } from 'typed-vuex';
 
 import type { SpotifyAPI, OneToFifty } from 'shared/types';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
@@ -222,8 +222,8 @@ export default class ReleaseIdPage extends Vue implements AsyncData, Data {
   get isReleaseSet(): boolean {
     return this.$getters()['playback/isContextSet'](this.release?.uri);
   }
-  get isPlaying(): RootState['playback']['isPlaying'] {
-    return this.$state().playback.isPlaying;
+  get isPlaying(): boolean {
+    return this.$getters()['playback/isPlaying'];
   }
 
   mounted() {

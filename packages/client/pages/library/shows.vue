@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator';
-import { RootState, RootGetters } from 'typed-vuex';
 
+import type { SpotifyAPI } from 'shared/types';
 import CardsWrapper from '~/components/parts/wrapper/CardsWrapper.vue';
 import ShowCard from '~/components/containers/card/ShowCard.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
@@ -56,10 +56,10 @@ const LIMIT_OF_SHOWS = 30;
   },
 })
 export default class LibraryShowsPage extends Vue implements Data {
-  get showList(): RootState['library']['shows']['showList'] {
-    return this.$state().library.shows.showList;
+  get showList(): SpotifyAPI.SimpleShow[] {
+    return this.$getters()['library/shows/showList'];
   }
-  get isFull(): RootGetters['library/shows/isFull'] {
+  get isFull(): boolean {
     return this.$getters()['library/shows/isFull'];
   }
 

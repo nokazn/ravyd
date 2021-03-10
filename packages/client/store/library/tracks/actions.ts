@@ -6,16 +6,18 @@ import { multipleRequests } from '~/utils/request/multipleRequests';
 import { EMPTY_PAGING } from '~/constants';
 import type { State, Mutations, Getters } from './types';
 
+interface ModifyTrackSavedStateParams {
+  trackId: string;
+  isSaved: boolean;
+}
+
 export type Actions = {
-  getSavedTrackList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
+  getSavedTrackList: (params: { limit: OneToFifty } | undefined) => Promise<void>
   updateLatestSavedTrackList: () => Promise<void>
   removeUnsavedTracks: () => void
   saveTracks: (trackIdList: string[]) => Promise<void>
   removeTracks: (trackIdList: string[]) => Promise<void>
-  modifyTrackSavedState: ({ trackId, isSaved }: {
-    trackId: string
-    isSaved: boolean
-  }) => void
+  modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {

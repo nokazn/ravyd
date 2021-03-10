@@ -47,7 +47,7 @@ export default defineComponent({
     // TODO: resuming
     const disabled = computed(() => root.$getters()['playback/isDisallowed']('interrupting_playback'));
     const mediaButton = computed<MediaButton>(() => {
-      if (root.$state().playback.isPlaying) {
+      if (root.$getters()['playback/isPlaying']) {
         return {
           icon: props.circle ? 'mdi-pause-circle' : 'mdi-pause',
           title: '停止',
@@ -60,7 +60,7 @@ export default defineComponent({
     });
 
     const onClicked = () => {
-      if (root.$state().playback.isPlaying) {
+      if (root.$getters()['playback/isPlaying']) {
         root.$dispatch('playback/pause');
       } else {
         root.$dispatch('playback/play');

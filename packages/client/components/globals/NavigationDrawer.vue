@@ -138,9 +138,9 @@ export default defineComponent({
     const createPlaylistModal = ref(false);
 
     const playlistItems = computed<Item[]>(() => {
-      const listOfPlaylists = root.$state().playlists.playlists;
+      const listOfPlaylists = root.$getters()['playlists/playlists'];
       const isActiveContext = (uri: string) => root.$getters()['playback/contextUri'] === uri;
-      const { isPlaying } = root.$state().playback;
+      const isPlaying = root.$getters()['playback/isPlaying'];
       return listOfPlaylists?.map((playlist) => {
         const isSet = isActiveContext(playlist.uri);
         return {
@@ -160,7 +160,7 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      if (root.$state().playlists.playlists == null) {
+      if (root.$getters()['playlists/playlists'] == null) {
         root.$dispatch('playlists/getAllPlaylists');
       }
     });

@@ -3,7 +3,7 @@ import type { VuexMutations } from 'typed-vuex';
 import type { State } from './types';
 
 export type Mutations = {
-  SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined
+  SET_PLAYBACK_PLAYER: Spotify.SpotifyPlayer | undefined;
 };
 
 const mutations: VuexMutations<State, Mutations> = {

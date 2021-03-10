@@ -3,43 +3,44 @@ import type { OneToFifty } from 'shared/types';
 import { multipleRequests } from '~/utils/request/multipleRequests';
 import type { State, Mutations, Getters } from './types';
 
+interface CreatePlaylistParams {
+  name: string;
+  description?: string;
+  isPublic?: boolean;
+  isCollaborative?: boolean;
+  uriList?: string[];
+}
+interface EditPlaylistParams extends Exclude<Partial<CreatePlaylistParams>, 'uriList'> {
+  playlistId: string;
+}
+interface UnfollowPlaylistParams {
+  playlistId: string;
+  isOwnPlaylist: boolean;
+}
+interface AddItemToPlaylistParams {
+  playlistId: string;
+  playlistName: string;
+  uriList: string[];
+  name: string;
+}
+interface RemovePlaylistItem {
+  playlistId: string;
+  track: {
+    uri: string;
+    positions: [number];
+  }
+  name: string;
+}
 
 export type Actions = {
-  getPlaylists: (payload?: { offset?: number, limit?: OneToFifty }) => Promise<void>
-  getAllPlaylists: () => Promise<void>
-  createPlaylist: (payload: {
-    name: string
-    description?: string
-    isPublic?: boolean
-    isCollaborative?: boolean
-    uriList?: string[]
-  }) => Promise<void>
-  editPlaylist: (payload: {
-    playlistId: string
-    name?: string
-    description?: string
-    isPublic?: boolean
-    isCollaborative?: boolean
-  }) => Promise<void>
-  followPlaylist: (playlistId: string) => Promise<void>
-  unfollowPlaylist: (params: {
-    playlistId: string
-    isOwnPlaylist: boolean
-  }) => Promise<void>
-  addItemToPlaylist: (params: {
-    playlistId: string
-    playlistName: string
-    uriList: string[]
-    name: string
-  }) => Promise<void>
-  removePlaylistItem: (params: {
-    playlistId: string
-    track: {
-      uri: string
-      positions: [number]
-    }
-    name: string
-  }) => Promise<void>
+  getPlaylists: (params?: { offset?: number, limit?: OneToFifty }) => Promise<void>;
+  getAllPlaylists: () => Promise<void>;
+  createPlaylist: (payload: CreatePlaylistParams) => Promise<void>;
+  editPlaylist: (payload: EditPlaylistParams) => Promise<void>;
+  followPlaylist: (playlistId: string) => Promise<void>;
+  unfollowPlaylist: (params: UnfollowPlaylistParams) => Promise<void>;
+  addItemToPlaylist: (params: AddItemToPlaylistParams) => Promise<void>;
+  removePlaylistItem: (params: RemovePlaylistItem) => Promise<void>
 }
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
@@ -60,7 +61,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.pushError('プレイリストの一覧を取得できませんでした。');
       return;
     }
-
     commit('SET_PLAYLISTS', playlists?.items);
   },
 
@@ -75,13 +75,10 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     const firstListOfPlaylists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
       limit,
     });
-
     if (firstListOfPlaylists == null) {
       this.$toast.pushError('プレイリストの一覧を取得できませんでした。');
-
       return;
     }
-
     // offset: index から limit 件取得
     const handler = async (index: number) => {
       const playlists = await this.$spotify.playlists.getListOfCurrentUserPlaylist({
@@ -92,7 +89,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         this.$toast.pushError('プレイリストの一部が取得できませんでした。');
         return [];
       }
-
       return playlists.items;
     };
     const unacquiredCounts = firstListOfPlaylists.total - limit;
@@ -117,7 +113,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   }) {
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
-
     const userId = rootGetters['auth/userId'];
     if (userId == null) return;
 
@@ -145,7 +140,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
         prev[index].push(uri);
         return prev;
       }, baseLists);
-
       const request = (uriList: string[]) => {
         return this.$spotify.playlists.addItemToPlaylist({
           playlistId: playlist.id,
@@ -155,7 +149,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
           throw err;
         });
       };
-
       await Promise.all(uriLists.map((uriList) => request(uriList)))
         .catch((err: Error) => {
           console.error({ err });
@@ -217,7 +210,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
             return;
           }
         }
-
         const playlist = await this.$spotify.playlists.getPlaylist({ playlistId });
         if (playlist != null) {
           commit('ADD_PLAYLIST', playlist);

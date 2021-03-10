@@ -5,12 +5,12 @@ import type { App } from '~/entities';
 import type { State } from './types';
 
 export type Getters = {
-  tracks: App.ContentItem<'track'>[]
-  artists: App.ContentItem<'artist'>[]
-  albums: App.ContentItem<'album'>[]
-  playlists: App.ContentItem<'playlist'>[]
-  shows: App.ContentItem<'show'>[]
-  episodes: App.ContentItem<'episode'>[]
+  tracks: App.ContentItem<'track'>[];
+  artists: App.ContentItem<'artist'>[];
+  albums: App.ContentItem<'album'>[];
+  playlists: App.ContentItem<'playlist'>[];
+  shows: App.ContentItem<'show'>[];
+  episodes: App.ContentItem<'episode'>[];
 }
 
 const getters: VuexGetters<State, Getters> = {

@@ -5,17 +5,32 @@ import { getImageSrc } from '~/services/converter';
 import type { State } from './types';
 
 export type Getters = {
-  isLoggedIn: boolean
-  isPremium: boolean
-  isTokenExpired: () => boolean
-  finishedRefreshingToken: () => Promise<true>
-  userId: string | undefined
-  userDisplayName: string | undefined
-  userAvatarSrc: (avatarSize?: number) => string| undefined
-  userCountryCode: SpotifyAPI.Country | undefined
+  accessToken: string | undefined;
+  user: SpotifyAPI.UserData | undefined;
+  isRefreshing: boolean;
+  isLoggedIn: boolean;
+  isPremium: boolean;
+  isTokenExpired: () => boolean;
+  finishedRefreshingToken: () => Promise<true>;
+  userId: string | undefined;
+  userDisplayName: string | undefined;
+  userAvatarSrc: (avatarSize?: number) => string| undefined;
+  userCountryCode: SpotifyAPI.Country | undefined;
 }
 
 const getters: VuexGetters<State, Getters> = {
+  accessToken(state) {
+    return state.accessToken;
+  },
+
+  user(state) {
+    return state.userData;
+  },
+
+  isRefreshing(state) {
+    return state.isRefreshing;
+  },
+
   isLoggedIn(state) {
     return state.authState != null
       && state.accessToken != null

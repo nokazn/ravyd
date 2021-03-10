@@ -2,15 +2,17 @@ import type { VuexActions } from 'typed-vuex';
 import type { OneToFifty, TODO } from 'shared/types';
 import type { State, Getters, Mutations } from './types';
 
+interface ModifyArtistSavedStateParams {
+  artistId: string;
+  isSaved: boolean;
+}
+
 export type Actions = {
-  getSavedArtistList: (payload?: { limit: OneToFifty } | undefined) => Promise<void>
-  updateLatestSavedArtistList: () => Promise<void>
-  followArtists: (idList: string[]) => Promise<void>
-  unfollowArtists: (idList: string[]) => Promise<void>
-  modifyArtistSavedState: ({ artistId, isSaved }: {
-    artistId: string
-    isSaved: boolean
-  }) => void
+  getSavedArtistList: (params?: { limit: OneToFifty } | undefined) => Promise<void>;
+  updateLatestSavedArtistList: () => Promise<void>;
+  followArtists: (idList: string[]) => Promise<void>;
+  unfollowArtists: (idList: string[]) => Promise<void>;
+  modifyArtistSavedState: (params: ModifyArtistSavedStateParams) => void
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
@@ -21,7 +23,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async getSavedArtistList({ getters, commit, dispatch }, payload) {
     // すでに全データを取得している場合は何もしない
     if (getters.isFull) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
@@ -53,7 +54,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       artistList: currentArtistList,
     } = state;
     if (unupdatedCounts === 0) return;
-
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
@@ -65,7 +65,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     });
     if (artists == null) {
       this.$toast.pushError('フォロー中のアーティストの一覧を更新できませんでした。');
-
       return;
     }
 

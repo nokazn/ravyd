@@ -5,13 +5,12 @@ import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 import type { State } from './types';
 
-
 export type Mutations = {
-  SET_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
-  ADD_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
-  UNSHIFT_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[]
-  SET_TRACK_HISTORY_LIST: App.PlaylistTrackDetail[]
-  SET_TOTAL: number
+  SET_RECENTLY_PLAYED: SpotifyAPI.Player.History[];
+  ADD_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[];
+  UNSHIFT_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[];
+  SET_TRACK_HISTORY_LIST: App.PlaylistTrackDetail[];
+  SET_TOTAL: number;
 }
 
 const mutations: VuexMutations<State, Mutations> = {

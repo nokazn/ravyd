@@ -1,6 +1,5 @@
 import type dayjs from 'dayjs';
 import type {
-  RootState,
   RootGetters,
   SFCCommit,
   SFCDispatch,
@@ -18,7 +17,6 @@ declare module '@nuxt/types' {
 
   interface NuxtAppOptions {
     // typed-vuex
-    $state: () => RootState;
     $getters: () => RootGetters;
     $commit: SFCCommit;
     $dispatch: SFCDispatch;

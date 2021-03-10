@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
 import TwoColumnsListCard, { Item } from '~/components/parts/list/TwoColumnsListCard.vue';
 
 export default Vue.extend({
@@ -49,25 +48,25 @@ export default Vue.extend({
 
   computed: {
     itemList(): Item[] | undefined {
-      const { userData } = this.$state().auth;
-      if (userData == null) return undefined;
+      const user = this.$getters()['auth/user'];
+      if (user == null) return undefined;
 
       return [
         {
           title: 'ID',
-          value: userData.id,
+          value: user.id,
         },
         {
           title: 'ユーザー名',
-          value: userData.display_name,
+          value: user.display_name,
         },
         {
           title: 'メールアドレス',
-          value: userData.email,
+          value: user.email,
         },
         {
           title: '国',
-          value: userData.country,
+          value: user.country,
         },
       ];
     },

@@ -86,7 +86,7 @@ export default defineComponent({
     ));
     const playlistPath = computed(() => `/playlists/${props.item.id}`);
     const isPlaylistSet = computed(() => root.$getters()['playback/isContextSet'](props.item.uri));
-    const isPlaying = computed(() => root.$state().playback.isPlaying);
+    const isPlaying = computed(() => root.$getters()['playback/isPlaying']);
     const mediaIcon = computed<MediaIcon>(() => {
       return isPlaylistSet.value && isPlaying.value
         ? 'mdi-pause-circle'
