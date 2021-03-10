@@ -6,17 +6,13 @@ import type { App } from '~/entities';
 
 const CLICK = 'click';
 
-const $state = (repeatMode: App.RepeatMode) => () => ({
-  playback: {
-    repeatMode,
-  },
-});
-const $getters = (isDisallowed: boolean) => () => ({
+const $getters = (repeatMode: App.RepeatMode, isDisallowed: boolean) => () => ({
+  'playback/repeatMode': repeatMode,
   'playback/isDisallowed': jest.fn().mockReturnValue(isDisallowed),
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
-const factory = (mode: App.RepeatMode, isDisallowed: boolean = false, size: number = 32) => {
+const factory = (repeatMode: App.RepeatMode, isDisallowed: boolean = false, size: number = 32) => {
   return mount(RepeatButton, {
     ...options,
     propsData: {
@@ -24,8 +20,7 @@ const factory = (mode: App.RepeatMode, isDisallowed: boolean = false, size: numb
     },
     mocks: {
       ...mocks,
-      $state: $state(mode),
-      $getters: $getters(isDisallowed),
+      $getters: $getters(repeatMode, isDisallowed),
       $dispatch,
     },
   });

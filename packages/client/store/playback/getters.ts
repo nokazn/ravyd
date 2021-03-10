@@ -30,7 +30,7 @@ export type Getters = {
   contextUri: string | undefined;
   isContextSet: (uri: string | undefined) => boolean;
   remainingTimeMs: number;
-  isBeginingOfTrack: boolean;
+  isBeginningOfTrack: boolean;
   repeatState: SpotifyAPI.RepeatState | undefined;
   isDisallowed: (disallow: Disallows | Disallows[]) => boolean;
   volumePercent: ZeroToHundred;
@@ -229,7 +229,7 @@ const playerGetters: VuexGetters<State, Getters> = {
     return Math.max(state.durationMs - state.positionMs, 0);
   },
 
-  isBeginingOfTrack(state) {
+  isBeginningOfTrack(state) {
     return state.positionMs <= 1000;
   },
 

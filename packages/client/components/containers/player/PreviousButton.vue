@@ -31,7 +31,7 @@ export default defineComponent({
     const position = computed(() => root.$getters()['playback/positionMs']);
     const disallowedSkippingPrev = computed(() => root.$getters()['playback/isDisallowed']('skipping_prev'));
     const disabled = computed(() => {
-      return disallowedSkippingPrev.value && root.$getters()['playback/isBeginingOfTrack'];
+      return disallowedSkippingPrev.value && root.$getters()['playback/isBeginningOfTrack'];
     });
 
     let timer: ReturnType<typeof setTimeout> | undefined;

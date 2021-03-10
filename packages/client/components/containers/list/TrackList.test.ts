@@ -36,13 +36,9 @@ const item = (i: number): App.TrackDetail => ({
   previewUrl: 'path/to/preview',
 });
 
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
-});
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn();
 
@@ -62,8 +58,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $getters: $getters(set),
-      $state: $state(playing),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isMultiColumn: column === 'multi',

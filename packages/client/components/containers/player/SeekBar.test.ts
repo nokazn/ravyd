@@ -5,32 +5,38 @@ import SeekBar from './SeekBar.vue';
 const MOUSEDOWN = 'mousedown';
 const CHANGE = 'change';
 
-type PlaybackState = {
+interface PlaybackGetters {
   positionMs: number;
   durationMs: number;
   isPlaying: boolean;
-  disabledPlayingFromBeginning: boolean;
+  isDisallowed: boolean;
+}
+type RootGetters = {
+  [K in keyof PlaybackGetters as `playback/${K}`]: jest.Mock<PlaybackGetters[K]>;
 }
 
-const $getters = (disallowed: boolean) => () => ({
-  'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
-});
-const $state = (stateList: PlaybackState[]) => {
-  const mock = jest.fn();
-  const { length } = stateList;
-  return stateList.reduce((mocked, playback, i) => {
-    return i + 1 < length
-      ? mocked.mockReturnValueOnce({ playback })
-      : mocked.mockReturnValue({ playback });
-  }, mock);
+const toRootGetters = (getters: PlaybackGetters): RootGetters => {
+  return Object.entries(getters).reduce<RootGetters>((prev, [k, v]) => ({
+    ...prev,
+    [`playback/${k}`]: k === 'isDisallowed'
+      ? () => v
+      : v,
+  }), {} as RootGetters);
+};
+const $getters = (gettersList: PlaybackGetters[]) => {
+  const { length } = gettersList;
+  return gettersList.reduce((mocked, getters, i) => {
+    return i < length - 1
+      ? mocked.mockReturnValueOnce(toRootGetters(getters))
+      : mocked.mockReturnValue(toRootGetters(getters));
+  }, jest.fn());
 };
 const $commit = jest.fn();
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 const $subscribe = jest.fn();
 
 const factory = (
-  stateList: PlaybackState[],
-  disallowed: boolean,
+  gettersList: PlaybackGetters[],
   hideText: boolean = false,
   thumbColor: string = 'white',
 ) => {
@@ -42,8 +48,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $state(stateList),
-      $getters: $getters(disallowed),
+      $getters: $getters(gettersList),
       $commit,
       $dispatch,
       $subscribe,
@@ -57,8 +62,8 @@ describe('SeekBar', () => {
       positionMs: 2 * 60 * 1000,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
-    }], false, false);
+      isDisallowed: false,
+    }], false);
     expect(wrapper.findAll('div.SeekBar > *').length).toBe(2);
     expect(wrapper.find('div.SeekBar > div.SeekBar__mss').exists()).toBe(true);
 
@@ -74,8 +79,8 @@ describe('SeekBar', () => {
       positionMs: 2.5 * 60 * 1000,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
-    }], false, false, 'grey');
+      isDisallowed: false,
+    }], false, 'grey');
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     expect(vSlider.props().thumbColor).toBe('grey');
   });
@@ -85,8 +90,8 @@ describe('SeekBar', () => {
       positionMs: 2.5 * 60 * 1000,
       durationMs: 4 * 60 * 1000,
       isPlaying: true,
-      disabledPlayingFromBeginning: false,
-    }], false);
+      isDisallowed: false,
+    }]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     expect(vSlider.props().color).toBe('active-icon');
     expect(vSlider.props().value).toBe((2 * 60 + 30) * 1000);
@@ -103,8 +108,8 @@ describe('SeekBar', () => {
       positionMs: 2.5 * 60 * 1000,
       durationMs: Infinity,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
-    }], false);
+      isDisallowed: false,
+    }]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     expect(vSlider.props().color).toBe('white');
     expect(vSlider.props().value).toBe((2 * 60 + 30) * 1000);
@@ -121,8 +126,8 @@ describe('SeekBar', () => {
       positionMs: 0,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
-    }], true);
+      isDisallowed: true,
+    }]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     expect(vSlider.props().disabled).toBe(true);
   });
@@ -132,8 +137,8 @@ describe('SeekBar', () => {
       positionMs: 0,
       durationMs: 4 * 60 * 1000,
       isPlaying: true,
-      disabledPlayingFromBeginning: false,
-    }], false);
+      isDisallowed: false,
+    }]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     const clearTimer = jest.spyOn(window, 'clearInterval').mockReturnValue();
     await vSlider.vm.$emit(MOUSEDOWN);
@@ -146,16 +151,15 @@ describe('SeekBar', () => {
         positionMs: 2.5 * 60 * 1000,
         durationMs: 4 * 60 * 1000,
         isPlaying: true,
-        disabledPlayingFromBeginning: false,
+        isDisallowed: false,
       },
-    ], false);
+    ]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     await vSlider.vm.$emit(CHANGE, 2.75 * 60 * 1000);
     // onMouseDown
     expect(clearInterval).toHaveBeenCalled();
     // onChange
     expect($commit).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 2.75 * 60 * 1000);
-    expect($commit).not.toHaveBeenCalledWith('playback/SET_DISABLED_PLAYING_FROM_BEGINNING');
     expect($dispatch).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 2.75 * 60 * 1000,
       currentPositionMs: 2.5 * 60 * 1000,
@@ -170,16 +174,15 @@ describe('SeekBar', () => {
         positionMs: 2.5 * 60 * 1000,
         durationMs: 4 * 60 * 1000,
         isPlaying: true,
-        disabledPlayingFromBeginning: false,
+        isDisallowed: false,
       },
-    ], false);
+    ]);
     const vSlider = wrapper.findComponent({ name: 'VSlider' });
     await vSlider.vm.$emit(CHANGE, 0);
     // onMouseDown
     expect(clearInterval).toHaveBeenCalled();
     // onChange
     expect($commit).toHaveBeenNthCalledWith(1, 'playback/SET_POSITION_MS', 0);
-    expect($commit).toHaveBeenNthCalledWith(2, 'playback/SET_DISABLED_PLAYING_FROM_BEGINNING', true);
     expect($dispatch).toHaveBeenNthCalledWith(1, 'playback/seek', {
       positionMs: 0,
       currentPositionMs: 2.5 * 60 * 1000,
@@ -194,9 +197,9 @@ describe('SeekBar', () => {
         positionMs: 2.5 * 60 * 1000,
         durationMs: 4 * 60 * 1000,
         isPlaying: true,
-        disabledPlayingFromBeginning: false,
+        isDisallowed: false,
       },
-    ], false);
+    ]);
     jest.runOnlyPendingTimers();
     // setTimer
     expect(setInterval).toHaveBeenCalled();

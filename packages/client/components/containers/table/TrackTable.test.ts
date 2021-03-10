@@ -56,13 +56,9 @@ const item = (
   isPlayable: true,
   previewUrl: 'path/to/preview',
 });
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
-});
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
@@ -80,8 +76,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $state(playing),
-      $getters: $getters(set),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isSingleColumn: column === 'single',

@@ -6,30 +6,23 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 
 const CLICK = 'click';
 
-const $state = (disabledPlayingFromBeginning: boolean = false) => () => ({
-  playback: {
-    disabledPlayingFromBeginning,
-  },
-});
-const $getters = (disallowed: boolean = false) => () => ({
+const $getters = (disallowed: boolean = false, isBeginningOfTrack: boolean = false) => () => ({
+  'playback/isBeginningOfTrack': isBeginningOfTrack,
   'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
-  disallowedSkippingPrev: boolean = false,
-  disabledPlayingFromBeginning: boolean = false,
-  propsData?: {
-    size?: number;
-  },
+  disallowed: boolean = false,
+  isBeginningOfTrack: boolean = false,
+  propsData?: { size?: number; },
 ) => {
   return mount(PreviousButton, {
     ...options,
     propsData,
     mocks: {
       ...mocks,
-      $state: $state(disabledPlayingFromBeginning),
-      $getters: $getters(disallowedSkippingPrev),
+      $getters: $getters(disallowed, isBeginningOfTrack),
       $dispatch,
     },
   });

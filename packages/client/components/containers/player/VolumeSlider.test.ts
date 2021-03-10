@@ -6,11 +6,9 @@ import VolumeSlider from './VolumeSlider.vue';
 const CHANGE = 'change';
 const CLICK = 'click';
 
-const $state = (volumePercent: ZeroToHundred, isMuted: boolean) => () => ({
-  playback: {
-    volumePercent,
-    isMuted,
-  },
+const $getters = (volumePercent: ZeroToHundred, isMuted: boolean) => () => ({
+  'playback/volumePercent': volumePercent,
+  'playback/isMuted': isMuted,
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
@@ -19,7 +17,7 @@ const factory = (volumePercent: ZeroToHundred, isMuted: boolean = false) => {
     ...options,
     mocks: {
       ...mocks,
-      $state: $state(volumePercent, isMuted),
+      $getters: $getters(volumePercent, isMuted),
       $dispatch,
     },
   });
@@ -80,53 +78,8 @@ describe('VolumeSlider', () => {
     expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(100);
   });
 
-  it('volume 0% & mute', async () => {
+  it('mute', async () => {
     const wrapper = factory(0, true);
-    expect(wrapper.attributes().title).toBe('ミュート中');
-    expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
-    expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');
-    expect(wrapper.find('div > .v-btn--icon .v-icon').classes()).toContain('mdi-volume-mute');
-    expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(0);
-  });
-
-  it('volume 33% & mute', async () => {
-    const wrapper = factory(33, true);
-    expect(wrapper.attributes().title).toBe('ミュート中');
-    expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
-    expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');
-    expect(wrapper.find('div > .v-btn--icon .v-icon').classes()).toContain('mdi-volume-mute');
-    expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(0);
-  });
-
-  it('volume 34% & mute', async () => {
-    const wrapper = factory(34, true);
-    expect(wrapper.attributes().title).toBe('ミュート中');
-    expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
-    expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');
-    expect(wrapper.find('div > .v-btn--icon .v-icon').classes()).toContain('mdi-volume-mute');
-    expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(0);
-  });
-
-  it('volume 66% & mute', async () => {
-    const wrapper = factory(66, true);
-    expect(wrapper.attributes().title).toBe('ミュート中');
-    expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
-    expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');
-    expect(wrapper.find('div > .v-btn--icon .v-icon').classes()).toContain('mdi-volume-mute');
-    expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(0);
-  });
-
-  it('volume 67% & mute', async () => {
-    const wrapper = factory(67, true);
-    expect(wrapper.attributes().title).toBe('ミュート中');
-    expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
-    expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');
-    expect(wrapper.find('div > .v-btn--icon .v-icon').classes()).toContain('mdi-volume-mute');
-    expect(wrapper.findComponent({ name: 'VSlider' }).props().value).toBe(0);
-  });
-
-  it('volume 100% & mute', async () => {
-    const wrapper = factory(100, true);
     expect(wrapper.attributes().title).toBe('ミュート中');
     expect(wrapper.find('div > .v-btn--icon').props().color).toBe('inactive');
     expect(wrapper.find('div > .v-btn--icon').attributes().title).toBe('ミュートを解除');

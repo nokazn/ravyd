@@ -29,13 +29,9 @@ const item = (i: number): SpotifyAPI.Artist => ({
   popularity: 100,
 });
 
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isContextSet': jest.fn().mockReturnValue(set),
-});
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn();
 
@@ -47,8 +43,7 @@ const factory = (set: boolean, playing: boolean) => {
     },
     mocks: {
       ...mocks,
-      $getters: $getters(set),
-      $state: $state(playing),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isMultiColumn: true,

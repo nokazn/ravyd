@@ -46,14 +46,10 @@ const item = (i: number): App.PlaylistTrackDetail => ({
     title: '2020-01-01',
   },
 });
-const $state = (isPlaying: boolean) => () => ({
-  playback: {
-    isPlaying,
-  },
-});
-const $getters = (set: boolean) => () => ({
+const $getters = (set: boolean, playing: boolean) => () => ({
   'playback/isTrackSet': jest.fn().mockReturnValue(set),
   'playback/isContextSet': jest.fn().mockReturnValue(set),
+  'playback/isPlaying': playing,
 });
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
@@ -92,8 +88,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $state(playing),
-      $getters: $getters(set),
+      $getters: $getters(set, playing),
       $dispatch,
       $screen: {
         isSingleColumn: column === 'single',

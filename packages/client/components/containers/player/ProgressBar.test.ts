@@ -2,25 +2,26 @@ import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
 import ProgressBar from './ProgressBar.vue';
 
-type PlaybackState = {
+interface PlaybackGetters {
   positionMs: number;
   durationMs: number;
   isPlaying: boolean;
-  disabledPlayingFromBeginning: boolean;
+  isDisallowed: boolean;
 }
 
-const $getters = (disallowed: boolean) => () => ({
-  'playback/isDisallowed': jest.fn().mockReturnValue(disallowed),
+const $getters = (getters: PlaybackGetters) => () => ({
+  'playback/positionMs': getters.positionMs,
+  'playback/durationMs': getters.durationMs,
+  'playback/isPlaying': getters.isPlaying,
+  'playback/isDisallowed': jest.fn().mockReturnValue(getters.isDisallowed),
 });
-const $state = (playback: PlaybackState) => () => ({ playback });
 const $commit = jest.fn();
 const $dispatch = jest.fn();
 const $subscribe = jest.fn();
 
 const factory = (
-  state: PlaybackState,
+  getters: PlaybackGetters,
   height?: number,
-  disallowed: boolean = false,
 ) => {
   const vm = mount(ProgressBar, {
     ...options,
@@ -29,8 +30,7 @@ const factory = (
     },
     mocks: {
       ...mocks,
-      $state: $state(state),
-      $getters: $getters(disallowed),
+      $getters: $getters(getters),
       $commit,
       $dispatch,
       $subscribe,
@@ -45,7 +45,7 @@ describe('ProgressBar', () => {
       positionMs: 2 * 60 * 1000,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
+      isDisallowed: false,
     }, 4);
     expect(wrapper.find('.v-progress-linear').props().height).toBe(4);
   });
@@ -55,7 +55,7 @@ describe('ProgressBar', () => {
       positionMs: 2 * 60 * 1000,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
+      isDisallowed: false,
     });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().value).toBe(50);
@@ -67,7 +67,7 @@ describe('ProgressBar', () => {
       positionMs: 0,
       durationMs: 4 * 60 * 1000,
       isPlaying: true,
-      disabledPlayingFromBeginning: false,
+      isDisallowed: false,
     });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().color).toBe('active-icon');
@@ -78,7 +78,7 @@ describe('ProgressBar', () => {
       positionMs: 0,
       durationMs: 4 * 60 * 1000,
       isPlaying: false,
-      disabledPlayingFromBeginning: false,
+      isDisallowed: false,
     });
     const vProgressLinear = wrapper.findComponent({ name: 'VProgressLinear' });
     expect(vProgressLinear.props().color).toBe('white');
