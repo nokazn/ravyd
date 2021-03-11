@@ -4,6 +4,7 @@ import connectRedis from 'connect-redis';
 import type { FastifyPluginCallback } from 'fastify';
 
 import client from '@/redis';
+import { httpsServerOptions } from '@/config/https';
 import { CLIENT_ORIGIN, IS_PRODUCTION, SESSION_SECRET } from '@/config/constants';
 
 const cb: FastifyPluginCallback = (app, _, done) => {
@@ -11,7 +12,6 @@ const cb: FastifyPluginCallback = (app, _, done) => {
   const RedisStore = connectRedis(fastifySession as any);
 
   app.register(fastifySession, {
-    // TODO:
     secret: SESSION_SECRET,
     // resave: false,
     saveUninitialized: true,
@@ -21,7 +21,7 @@ const cb: FastifyPluginCallback = (app, _, done) => {
     // rolling: true,
     store: new RedisStore({ client }),
     cookie: {
-      secure: true,
+      secure: IS_PRODUCTION || httpsServerOptions != null,
       httpOnly: true,
       sameSite: 'lax',
       // production ではサブドメインにも許可

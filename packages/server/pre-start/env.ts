@@ -7,9 +7,7 @@ import { logger } from '../../shared/logger';
 
   const [isValid, env] = checkEnv([
     'CLIENT_ORIGIN',
-    'PORT',
     'REDIS_URL',
-    'REDIS_PORT',
     'REDIS_PASSWORD',
     'SESSION_SECRET',
     'SPOTIFY_CLIENT_ID',
