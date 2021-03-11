@@ -47,24 +47,40 @@ LOCAL_HTTPS=true # set to true If you use https local server
 
 You can use https local development server by locally-trusted certificates. You need to set `LOCAL_HTTPS` to true, and generate `localhost.pem` and `localhost-key.pem` by tools like [mkcert](https://github.com/FiloSottile/mkcert) and put them at project root.
 
+Please refer to [`.env` for client](packages/client/.env.sample) and [`.env` for server](packages/server/.env.sample).
 ### 3. Install dependencies
 
-This project is managed by [lerna](https://github.com/lerna/lerna). You can install dependencies for all packages by `lerna bootstrap`
+This project is managed by [lerna](https://github.com/lerna/lerna). You can install dependencies for all packages by `lerna bootstrap`.
 
 ```bash
+$ yarn global add lerna # or npm i -g lerna
+
 # install dependencies for all packages
 $ lerna bootstrap
 ```
 
 ### 4. Start application
 
+This project uses Redis for session store. You can launch Redis by Docker.
+
+```bash
+# launch Redis
+$ docker-compose up -d redis
+```
+
 ```bash
 # start development server at localhost:5000
 lerna run dev --scope @ravyd/server --stream
+# or start development server in Docker container
+docker-compose up -d client
 
 # start development server for client at localhost:3000
 lerna run dev --scope @ravyd/client --stream
+# or start development server in Docker container
+docker-compose up -d server
 ```
+
+If you want to launch client/server by docker-compose, you need to set environment variables in `.env` at project root. Please refer to [`.env.sample`](.env.sample).
 
 ```bash
 # build for production and launch server
