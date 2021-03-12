@@ -37,12 +37,12 @@ export default defineComponent({
     const hasTrack = computed(() => root.$getters()['playback/hasTrack']);
     const isSaved = computed<boolean>({
       get() { return root.$getters()['playback/isSavedTrack']; },
-      set(saved: OnMobile['input'] | OnPc['input']) {
+      set(v: OnMobile['input'] | OnPc['input']) {
         const id = track.value?.id;
         if (id == null) return;
         // API との通信の結果を待たずに先に表示を変更させておく
-        root.$commit('playback/SET_IS_SAVED_TRACK', saved);
-        if (isSaved) {
+        root.$commit('playback/SET_IS_SAVED_TRACK', v);
+        if (v) {
           root.$dispatch('library/tracks/saveTracks', [id]);
         } else {
           root.$dispatch('library/tracks/removeTracks', [id]);
