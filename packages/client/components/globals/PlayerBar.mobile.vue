@@ -136,12 +136,12 @@ export default defineComponent({
     },
   },
 
-  setup(props, { root }) {
+  setup(props, { emit }) {
     const isTrack = computed(() => props.track?.type === 'track');
     const isEpisode = computed(() => props.track?.type === 'episode');
     const isSaved = computed<boolean>({
       get() { return props.value; },
-      set(saved: OnFavorite['input']) { root.$emit(INPUT, saved); },
+      set(saved: OnFavorite['input']) { emit(INPUT, saved); },
     });
 
     return {

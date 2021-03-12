@@ -255,7 +255,7 @@ export default class ShowIdPage extends Vue implements AsyncData, Data {
   }
 
   async appendEpisodeList(limit: OneToFifty = LIMIT_OF_EPISODES) {
-    if (this.show == null || this.show.hasNextEpisode) return;
+    if (this.show == null || !this.show.hasNextEpisode) return;
 
     const currentShow = this.show;
     const { showId } = this.$route.params;

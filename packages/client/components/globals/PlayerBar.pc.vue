@@ -121,14 +121,14 @@ export default defineComponent({
     },
   },
 
-  setup(props, { root }) {
+  setup(props, { emit }) {
     const deviceSelectMenu = ref(false);
     const isTrack = computed(() => props.track?.type === 'track');
     const isEpisode = computed(() => props.track?.type === 'episode');
     const trackType = computed(() => props.track?.type);
     const isSaved = computed<boolean>({
       get() { return props.value; },
-      set(saved: OnFavorite['input'] | OnPlaybackMenu['input']) { root.$emit(INPUT, saved); },
+      set(saved: OnFavorite['input'] | OnPlaybackMenu['input']) { emit(INPUT, saved); },
     });
 
     return {
