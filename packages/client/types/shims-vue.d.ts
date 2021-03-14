@@ -16,7 +16,6 @@ import type { $Overlay } from '~/plugins/observable/overlay';
 import type { $Screen } from '~/plugins/observable/screen';
 import type { $Toast } from '~/plugins/observable/toast';
 
-
 declare module 'vue/types/vue' {
   interface Vue {
     // CSS modules

@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import debounce from 'just-debounce-it';
 import {
   SM_BREAK_POINT,
   MD_BREAK_POINT,
@@ -12,12 +11,31 @@ import {
   ARTWORK_BASE_SIZE,
 } from '~/constants';
 
-const touchScreenDetector = (): boolean => {
-  if (typeof window !== 'undefined') {
-    return 'ontouchstart' in window && navigator.maxTouchPoints > 0;
-  }
-  return false;
-};
+export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+type MediaQueryListObserver = (e: MediaQueryListEvent) => void;
+
+type ScreenState = {
+  type: DeviceType;
+  isTouchScreen: boolean;
+  mediaQueries: Partial<Record<DeviceType, MediaQueryList>>;
+  observers: Partial<Record<DeviceType, MediaQueryListObserver>>;
+}
+
+export type $Screen = {
+  readonly isTouchScreen: boolean;
+  readonly isMobile: boolean;
+  readonly isPc: boolean;
+  readonly isSingleColumn: boolean;
+  readonly isMultiColumn: boolean;
+  readonly isSp: boolean;
+  readonly smallerThan: (type: DeviceType) => boolean;
+  readonly largerThan: (type: DeviceType) => boolean;
+  readonly cardWidth: number;
+  readonly cardWidthMinMax: Readonly<[number, number]>;
+  readonly artworkSize: number;
+  observe: () => void;
+  disconnectObserver: () => void;
+}
 
 const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
   xs: 0,
@@ -26,6 +44,40 @@ const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
   lg: LG_BREAK_POINT,
   xl: XL_BREAK_POINT,
   xxl: XXL_BREAK_POINT,
+};
+
+const mediaQueryRange = (min: number | undefined, max: number | undefined): MediaQueryList => {
+  const minWidth = min && min > 0
+    ? `(min-width:${min}px)`
+    : '';
+  const maxWidth = max && (!min || max > min)
+    ? `(max-width:${max}px)`
+    : '';
+  return window.matchMedia([minWidth, maxWidth]
+    .filter((w) => w !== '')
+    .join(' and '));
+};
+
+const touchScreenDetector = (): boolean => {
+  if (typeof window !== 'undefined') {
+    return 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+  }
+  return false;
+};
+
+const computeType = (width: number) => {
+  if (width > XXL_BREAK_POINT) {
+    return 'xxl';
+  } if (width > XL_BREAK_POINT) {
+    return 'xl';
+  } if (width > LG_BREAK_POINT) {
+    return 'lg';
+  } if (width > MD_BREAK_POINT) {
+    return 'md';
+  } if (width > SM_BREAK_POINT) {
+    return 'sm';
+  }
+  return 'xs';
 };
 
 const cardAdjustor = (type: DeviceType, width: number) => {
@@ -64,72 +116,26 @@ const linearCardAdjustor = (type: DeviceType, width: number) => {
   }
 };
 
-export type DeviceType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
-type ResizeObserver = ((e?: UIEvent) => void)
-
-type ScreenState = {
-  width: number;
-  isTouchScreen: boolean;
-  observer: ResizeObserver | undefined;
-}
-
-export type $Screen = {
-  readonly width: number;
-  readonly isTouchScreen: boolean;
-  readonly type: DeviceType;
-  readonly isMobile: boolean;
-  readonly isPc: boolean;
-  readonly isSingleColumn: boolean;
-  readonly isMultiColumn: boolean;
-  readonly isSp: boolean;
-  readonly smallerThan: (type: DeviceType) => boolean;
-  readonly largerThan: (type: DeviceType) => boolean;
-  readonly cardWidth: number;
-  readonly cardWidthMinMax: Readonly<[number, number]>;
-  readonly artworkSize: number;
-  observe: () => void;
-  disconnectObserver: () => void;
-}
-
 const state = Vue.observable<ScreenState>({
-  width: 0,
+  type: 'xs',
   isTouchScreen: false,
-  observer: undefined,
+  mediaQueries: {},
+  observers: {},
 });
 
 export const $screen: $Screen = {
-  get width() {
-    return state.width;
-  },
-
   get isTouchScreen() {
     return state.isTouchScreen;
   },
 
-  get type() {
-    const { width } = state;
-    if (width > XXL_BREAK_POINT) {
-      return 'xxl';
-    } if (width > XL_BREAK_POINT) {
-      return 'xl';
-    } if (width > LG_BREAK_POINT) {
-      return 'lg';
-    } if (width > MD_BREAK_POINT) {
-      return 'md';
-    } if (width > SM_BREAK_POINT) {
-      return 'sm';
-    }
-    return 'xs';
-  },
-
   // type のブレイクポイントをを含まない
   get smallerThan() {
-    return (type: DeviceType) => state.width <= BREAK_POINTS[type];
+    return (type: DeviceType) => BREAK_POINTS[state.type] < BREAK_POINTS[type];
   },
 
   // type のブレイクポイントをを含む
   get largerThan() {
-    return (type: DeviceType) => state.width > BREAK_POINTS[type];
+    return (type: DeviceType) => BREAK_POINTS[state.type] >= BREAK_POINTS[type];
   },
 
   get isMobile() {
@@ -151,42 +157,55 @@ export const $screen: $Screen = {
   },
 
   get cardWidth() {
-    return cardAdjustor(this.type, FIXED_CARD_BASE_WIDTH);
+    return cardAdjustor(state.type, FIXED_CARD_BASE_WIDTH);
   },
 
   get cardWidthMinMax() {
     const minMax: readonly [number, number] = [
-      linearCardAdjustor(this.type, FLEX_CARD_MIN_WIDTH),
-      linearCardAdjustor(this.type, FLEX_CARD_MAX_WIDTH),
+      linearCardAdjustor(state.type, FLEX_CARD_MIN_WIDTH),
+      linearCardAdjustor(state.type, FLEX_CARD_MAX_WIDTH),
     ];
     return minMax;
   },
 
   get artworkSize() {
-    return linearCardAdjustor(this.type, ARTWORK_BASE_SIZE);
+    return linearCardAdjustor(state.type, ARTWORK_BASE_SIZE);
   },
 
   observe() {
-    this.disconnectObserver();
-    const observe = () => {
-      state.width = window.innerWidth;
-      state.isTouchScreen = touchScreenDetector();
+    if (window == null) return;
+    const mediaQueries: Record<DeviceType, MediaQueryList> = {
+      xs: mediaQueryRange(undefined, SM_BREAK_POINT),
+      sm: mediaQueryRange(SM_BREAK_POINT + 1, MD_BREAK_POINT),
+      md: mediaQueryRange(MD_BREAK_POINT + 1, LG_BREAK_POINT),
+      lg: mediaQueryRange(LG_BREAK_POINT + 1, XL_BREAK_POINT),
+      xl: mediaQueryRange(XL_BREAK_POINT + 1, XXL_BREAK_POINT),
+      xxl: mediaQueryRange(XXL_BREAK_POINT + 1, undefined),
     };
+    const observe = (type: DeviceType): MediaQueryListObserver => (e) => {
+      if (e.matches) {
+        state.type = type;
+        state.isTouchScreen = touchScreenDetector();
+      }
+    };
+    (Object.keys(mediaQueries) as DeviceType[]).forEach((type) => {
+      const observer = observe(type);
+      mediaQueries[type].addEventListener('change', observer);
+      state.observers[type] = observer;
+    });
 
-    if (typeof window !== 'undefined') {
-      observe();
-      const interval = 300;
-      const observer = debounce(observe, interval);
-      window.addEventListener('resize', observer);
-      state.observer = observer;
-    }
+    state.type = computeType(window.innerWidth);
+    state.isTouchScreen = touchScreenDetector();
+    state.mediaQueries = mediaQueries;
   },
 
   disconnectObserver() {
-    const { observer } = state;
-    if (observer != null) {
-      window.removeEventListener('resize', observer);
-      state.observer = undefined;
-    }
+    (Object.entries(state.observers) as [DeviceType, MediaQueryListObserver][]).forEach(([type, observer]) => {
+      const mediaQuery = state.mediaQueries[type];
+      if (mediaQuery != null) {
+        mediaQuery.removeEventListener('change', observer);
+      }
+    });
+    state.observers = {};
   },
 };

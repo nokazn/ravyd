@@ -76,7 +76,7 @@ export default defineComponent({
       isScrollOnRightEdge,
       onLeftButtonClicked,
       onRightButtonClicked,
-    } = useHorizontalScrollButton(root, CONTAINER_REF);
+    } = useHorizontalScrollButton(CONTAINER_REF);
 
     const cssProps = computed(() => ({
       '--margin-right': `${props.margin ?? Math.floor(root.$screen.cardWidth / 12)}px`,

@@ -3,7 +3,6 @@ import {
   computed,
   onMounted,
   onBeforeUnmount,
-  SetupContext,
   Ref,
 } from '@vue/composition-api';
 import debounce from 'just-debounce-it';
@@ -22,10 +21,7 @@ const gradationWidth = (width: number): number => {
   return 0;
 };
 
-export const useHorizontalScrollButton = (
-  root: SetupContext['root'],
-  containerRef: Ref<HTMLElement | undefined | null>,
-) => {
+export const useHorizontalScrollButton = (containerRef: Ref<HTMLElement | undefined | null>) => {
   const scrollableWidth = ref(0);
   const scrollLeft = ref(0);
   const cardList = ref<Card[]>([]);
@@ -73,7 +69,7 @@ export const useHorizontalScrollButton = (
     const container = containerRef.value;
     if (container == null) return;
 
-    const sidePadding = gradationWidth(root.$screen.width);
+    const sidePadding = gradationWidth(window.innerWidth);
     // ラッパーの右端の right - 余白
     const rightSideEdgeRight = container.getBoundingClientRect().right - sidePadding;
     // 表示されている一番左端のカードの right
@@ -94,7 +90,7 @@ export const useHorizontalScrollButton = (
     const container = containerRef.value;
     if (container == null) return;
 
-    const sidePadding = gradationWidth(root.$screen.width);
+    const sidePadding = gradationWidth(window.innerWidth);
     // ラッパーの左端の left ⁺ 余白
     const leftSideEdgeLeft = container.getBoundingClientRect().left + sidePadding;
 
