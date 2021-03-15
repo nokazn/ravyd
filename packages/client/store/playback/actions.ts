@@ -6,12 +6,12 @@ import { nextRepeatState } from '~/services/converter';
 import type { State, Mutations, Getters } from './types';
 import type { App } from '~/entities';
 
-interface TransferParams {
+interface TransferPlaybackParams {
   deviceId?: string;
   play?: false;
-  update?: true;
 }
-interface CustomContextParams {
+interface UpdateDeviceParams extends Pick<SpotifyAPI.Device, 'id' | 'volume_percent'> {}
+interface SetCustomContextParams {
   contextUri?: string;
   trackUriList: string[];
 }
@@ -39,10 +39,10 @@ interface ModifyTrackSavedStateParams {
 }
 
 export type Actions = {
-  transferPlayback: (params?: TransferParams) => Promise<void>;
+  transferPlayback: (params?: TransferPlaybackParams) => Promise<void>;
   getDeviceList: () => Promise<void>;
-  updateDeviceList: (activeDevice: SpotifyAPI.Device) => Promise<void>;
-  setCustomContext: (params: CustomContextParams) => void;
+  updateDevice(device: UpdateDeviceParams | string | undefined |null): Promise<void>;
+  setCustomContext: (params: SetCustomContextParams) => void;
   resetCustomContext: (uri: string | null) => void;
   getCurrentPlayback: () => Promise<SpotifyAPI.Player.CurrentPlayback | undefined>;
   pollCurrentPlayback: (timeout?: number) => void;
@@ -67,33 +67,22 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**
    * 再生するデバイスを変更し、update が指定されればデバイス一覧も更新
    */
-  async transferPlayback({ state, commit, dispatch }, params) {
+  async transferPlayback({ state, dispatch }, params) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
       this.$toast.requirePremium();
       return;
     }
-    const thisDeviceId = state.deviceId;
     // 指定されなければこのデバイスに変更
-    const deviceId = params?.deviceId ?? thisDeviceId;
+    const deviceId = params?.deviceId ?? state.deviceId;
     if (deviceId == null) return;
-
-    const device = state.deviceList.find((d) => d.id === deviceId);
     // play が指定されなかった場合は、デバイス内の状態を維持し、false が指定された場合は現在の状態を維持
     const play = params?.play ?? state.isPlaying;
     await this.$spotify.player.transferPlayback({ deviceId, play })
-      .then(async () => {
-        commit('SET_ACTIVE_DEVICE_ID', deviceId);
-        if (params?.update) {
-          // デバイスのリストを取得しなおす
-          await dispatch('getDeviceList');
-          return;
-        }
-        if (device != null) {
-          await dispatch('updateDeviceList', device);
-        }
+      .then(async () => dispatch('updateDevice', deviceId))
+      .then(() => {
         // 他のデバイスに変更した場合タイマーをセットする
-        if (deviceId !== thisDeviceId) {
+        if (deviceId !== state.deviceId) {
           dispatch('pollCurrentPlayback', 1000);
         }
       })
@@ -118,6 +107,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     if (activeDevice != null) {
       // activeDevice がなく、このデバイスで再生する場合は localStorage で永続化されてる volumePercent が採用される
       commit('SET_VOLUME_PERCENT', { volumePercent: activeDevice.volume_percent });
+      commit('SET_IS_MUTED', activeDevice.volume_percent === 0);
       if (activeDevice.id != null) {
         commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
       }
@@ -125,41 +115,36 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   },
 
   /**
-   * デバイス一覧を更新
+   * デバイス一覧とデバイスのボリュームを更新
    */
-  async updateDeviceList({ state, commit, dispatch }, activeDevice) {
+  async updateDevice({ state, commit, dispatch }, deviceToActive) {
     const isAuthorized = await dispatch('auth/confirmAuthState', { checkPremium: true }, { root: true });
     if (!isAuthorized) {
       this.$toast.requirePremium();
       return;
     }
-    // 変更するデバイスのボリュームを取得
-    const getVolumePercent = async (
-      deviceId: string | null,
-      deviceList: SpotifyAPI.Device[],
-    ): Promise<ZeroToHundred | undefined> => {
-      // 違うデバイスで再生する場合
-      if (deviceId != null && deviceId !== state.deviceId) {
-        return deviceList.find((device) => device.is_active)?.volume_percent;
+    const activeDevice = typeof deviceToActive === 'string'
+      ? state.deviceList.find((d) => d.id === deviceToActive)
+      : deviceToActive;
+    if (activeDevice?.id != null) {
+      const deviceList: SpotifyAPI.Device[] = state.deviceList.map((device) => {
+        const is_active = device.id === activeDevice.id;
+        return {
+          ...device,
+          is_active,
+          volume_percent: is_active
+            ? activeDevice.volume_percent
+            : device.volume_percent,
+        };
+      });
+      commit('SET_ACTIVE_DEVICE_ID', activeDevice.id);
+      commit('SET_DEVICE_LIST', deviceList);
+      if (activeDevice.volume_percent > 0) {
+        commit('SET_VOLUME_PERCENT', { volumePercent: activeDevice.volume_percent });
       }
-      // TODO: 初期化直後だと deviceList のボリュームの値が 100% になっちゃうのでプレイヤーから取得
-      const volume = await this.$getters()['player/playbackPlayer']?.getVolume();
-      return volume != null
-        ? volume * 100 as ZeroToHundred
-        : undefined;
-    };
-
-    // 再生されているデバイスの isActive を true にする
-    const deviceList: SpotifyAPI.Device[] = state.deviceList.map((device) => {
-      const is_active = device.id === activeDevice.id;
-      return is_active
-        ? { ...activeDevice, is_active }
-        : { ...device, is_active };
-    });
-    commit('SET_DEVICE_LIST', deviceList);
-    const volumePercent = await getVolumePercent(activeDevice.id, deviceList);
-    if (volumePercent != null) {
-      commit('SET_VOLUME_PERCENT', { volumePercent });
+      commit('SET_IS_MUTED', activeDevice.volume_percent === 0);
+    } else {
+      dispatch('getDeviceList');
     }
   },
 
@@ -190,7 +175,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
    */
   async getCurrentPlayback({
     state,
-    getters,
     commit,
     dispatch,
   }) {
@@ -199,32 +183,11 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return undefined;
     }
-
-    // currentTrack と durationMs を設定
-    const setTrack = (
-      item: SpotifyAPI.Track | SpotifyAPI.Episode | null,
-      currentTrackId: string | undefined,
-    ) => {
-      // TODO: episode 再生中だと null になる
-      const track: Spotify.Track | undefined = item?.type === 'track'
-        ? { ...item, media_type: 'audio' }
-        : undefined;
-      // このデバイスで再生中でアイテムの内容が取得できなかった場合は Playback SDK の情報を信頼してパスする
-      if (track == null && getters.deviceState === 'self') return;
-
-      const trackId = track?.id;
-      // trackId 変わったときだけチェック
-      if (trackId != null && trackId !== currentTrackId) {
-        dispatch('checkTrackSavedState', trackId);
-      }
-      commit('SET_CURRENT_TRACK', track);
-      commit('SET_DURATION_MS', item?.duration_ms);
-    };
-
-    // アイテムの情報以外を設定
-    const setPlayback = (playbackState: SpotifyAPI.Player.CurrentPlayback): void => {
-      if (!playbackState) return;
-
+    // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
+    const playbackState = await this.$spotify.player.getCurrentPlayback({});
+    // デバイスがアクティブでなくなったとき空文字が返る
+    commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
+    if (playbackState) {
       commit('SET_IS_PLAYING', playbackState.is_playing);
       commit('SET_CONTEXT_URI', playbackState.context?.uri);
       commit('SET_IS_SHUFFLED', playbackState.shuffle_state);
@@ -233,31 +196,20 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       const deviceId = playbackState.device.id;
       // このデバイスで再生中の場合は Web Playback SDK から取得するのでパス
       if (deviceId == null || deviceId !== state.deviceId) {
+        // TODO: episode 再生中だと null になる
+        const track: Spotify.Track | undefined = playbackState.item?.type === 'track'
+          ? { ...playbackState.item, media_type: 'audio' }
+          : undefined;
+        commit('SET_CURRENT_TRACK', track);
+        commit('SET_DURATION_MS', playbackState.item?.duration_ms);
         commit('SET_NEXT_TRACK_LIST', []);
         commit('SET_PREVIOUS_TRACK_LIST', []);
+        // ID 変わったときだけチェック
+        if (track != null && track.id !== state.track?.id) {
+          dispatch('checkTrackSavedState', track.id);
+        }
       }
-    };
-
-    const {
-      activeDeviceId: currentActiveDeviceId,
-      track: currentTrack,
-    } = state;
-    // TODO: 複数タブ開いた場合はデバイスが消失する場合がある?
-    const playbackState = await this.$spotify.player.getCurrentPlayback({});
-    // デバイスがアクティブでなくなったとき空文字が返る
-    commit('SET_IS_PLAYBACK_SLEEP', playbackState === '');
-    // エラー (i.e.トークンの期限切れなど) が発生し、再生状況が取得できなかった場合か、デバイスが見つからない場合
-    if (!playbackState) return playbackState;
-
-    setTrack(playbackState.item, currentTrack?.id);
-    setPlayback(playbackState);
-    dispatch('updateDeviceList', playbackState.device);
-    // アクティブなデバイスのデータに不整合がある場合はデバイス一覧を取得し直す
-    if (playbackState.device.id !== currentActiveDeviceId) {
-      dispatch('getDeviceList')
-        .then(() => {
-          this.$toast.pushPrimary('デバイスの変更を検知しました。');
-        });
+      dispatch('updateDevice', playbackState.device);
     }
     return playbackState;
   },
@@ -394,12 +346,10 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       this.$toast.requirePremium();
       return;
     }
-
     if (getters.isDisallowed('pausing')) {
       commit('SET_IS_PLAYING', false);
       return;
     }
-
     await this.$spotify.player.pause({ deviceId: getters.playbackDeviceId })
       .then(() => {
         if (getters.deviceState === 'another') {
@@ -429,7 +379,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     }
 
     if (getters.isDisallowed('seeking')) return;
-
     // Playback SDK からの通知が来ない場合が偶にあるので先に変更しておく
     commit('SET_POSITION_MS', positionMs);
     const positionMsOfCurrentState = state.positionMs;
@@ -459,7 +408,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     }
 
     if (getters.isDisallowed('skipping_next')) return;
-
     await this.$spotify.player.next({ deviceId: getters.playbackDeviceId })
       .catch((err: Error) => {
         console.error({ err });
@@ -480,7 +428,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     }
 
     if (getters.isDisallowed('skipping_prev')) return;
-
     await this.$spotify.player.previous({ deviceId: getters.playbackDeviceId })
       .catch((err: Error) => {
         console.error({ err });
@@ -509,10 +456,8 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     }
 
     if (getters.isDisallowed('toggling_shuffle')) return;
-
     const { isShuffled } = state;
     const nextIsShuffled = !isShuffled;
-
     await this.$spotify.player.shuffle({
       state: nextIsShuffled,
       deviceId: getters.playbackDeviceId,
@@ -592,7 +537,9 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       deviceId: getters.playbackDeviceId,
     })
       .then(() => {
-        commit('SET_VOLUME_PERCENT', { volumePercent });
+        if (volumePercent > 0) {
+          commit('SET_VOLUME_PERCENT', { volumePercent });
+        }
         commit('SET_IS_MUTED', volumePercent === 0);
       })
       .catch((err: Error) => {

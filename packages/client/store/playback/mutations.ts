@@ -125,10 +125,25 @@ const mutations: VuexMutations<State, Mutations> = {
 
   SET_VOLUME_PERCENT(state, { volumePercent }) {
     state.volumePercent = volumePercent;
+    state.deviceList = state.deviceList.map((device) => ({
+      ...device,
+      volume_percent: device.is_active
+        ? volumePercent
+        : device.volume_percent,
+    }));
   },
 
   SET_IS_MUTED(state, isMuted) {
     state.isMuted = isMuted;
+    const volumePercent = isMuted
+      ? 0
+      : state.volumePercent;
+    state.deviceList = state.deviceList.map((device) => ({
+      ...device,
+      volume_percent: device.is_active
+        ? volumePercent
+        : device.volume_percent,
+    }));
   },
 };
 
