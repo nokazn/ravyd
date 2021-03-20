@@ -11831,10 +11831,10 @@ mime@1.6.0, mime@^1.3.4:
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
 
-mime@^2.3.1, mime@^2.4.4:
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.6.tgz#e5b407c90db442f2beb5b162373d07b69affa4d1"
-  integrity sha512-RZKhC3EmpBchfTGBVb8fb+RL2cWyw/32lshnsETttkBAyAUXSGHxbEJWWRXc751DrIxG1q04b8QwMbAwkRPpUA==
+mime@^2.3.1, mime@^2.4.4, mime@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.5.2.tgz#6e3dc6cc2b9510643830e5f19d5cb753da5eeabe"
+  integrity sha512-tqkh47FzKeCPD2PUiPB6pkbMzsCasjxAfC62/Wap5qrUWcb+sFasXUC5I3gYM5iBM8v/Qpn4UK0x+j0iHyFPDg==
 
 mimic-fn@^1.0.0:
   version "1.2.0"
@@ -12619,13 +12619,14 @@ onetime@^5.1.0:
     mimic-fn "^2.1.0"
 
 openapi-typescript@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-3.0.1.tgz#4a6a10fda8cdee8dde0c63265a2d21f2c2b91931"
-  integrity sha512-Kp7RPQ5kTBKWW1xdfYSOwfIaYDv/AcDyymj2Z+4sq55FLdMv2dCMm45RdVwLWDGhMAIguuyU5HKDvdIsBZT01Q==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-3.1.2.tgz#aa777a5662300eb14acc6712346e2b8f65da968b"
+  integrity sha512-P8tyjJWjohpJNFt4aB8L1hwdpWuh/HmL7+zWM51kt4KmFXogH4k2ACfUemkyB2vk8w44BY4p/1pzoPi6Eb51Ag==
   dependencies:
     js-yaml "^4.0.0"
     kleur "^4.1.3"
     meow "^9.0.0"
+    mime "^2.5.2"
     prettier "^2.2.1"
 
 opener@1.5.2:
