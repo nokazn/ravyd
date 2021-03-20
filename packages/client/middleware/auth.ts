@@ -9,6 +9,7 @@ const middleware: Middleware = ({ app, route, redirect }) => {
   if (!isLoggedIn && route.path !== '/login') {
     redirect('/login');
   } else if (isLoggedIn && route.path === '/login') {
+    // TODO:
     redirect(route.query.redirect as string || '/');
   }
 };

@@ -7,7 +7,6 @@ const injector: Plugin = (context, inject) => {
   inject('getters', () => context.store.getters);
   inject('commit', context.store.commit);
   inject('dispatch', context.store.dispatch);
-
   // TODO: 第二引数で this._subscribers を参照させる必要がある
   inject('subscribe', (
     fn: Parameters<ExtendedSubscribe>[0],

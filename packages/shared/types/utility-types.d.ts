@@ -5,21 +5,21 @@ import { Wrapper } from '@vue/test-utils';
 export type Except<ObjectType, KeysType extends keyof ObjectType> = Pick<
   ObjectType,
   Exclude<keyof ObjectType, KeysType>
->
+>;
 
 export type Merge<FirstType, SecondType> = Except<
   FirstType,
   Extract<keyof FirstType, keyof SecondType>
-> & SecondType
+> & SecondType;
 
 export type ValueOf<T extends Record<string, unknown>> = T[keyof T];
 
 type Responses<T = unknown> = {
   responses: {
     [k in number]: {
-      content: { 'application/json': T }
-    }
-  }
+      content: { 'application/json': T };
+    };
+  };
 };
 export type JSONResponseOf<T extends Responses> = T extends Responses<infer U> ? U : never;
 
@@ -27,16 +27,16 @@ export type Has<
   O extends Record<string, unknown>,
   P extends string,
   T extends unknown = unknown,
-> = O & Record<P, T>
+> = O & Record<P, T>;
 // test 中で vm のプロパティを参照するときにキャストする
 export type VHas<
   P extends string,
   T extends unknown = unknown,
-> = Wrapper<Vue>['vm'] & Record<P, T>
+> = Wrapper<Vue>['vm'] & Record<P, T>;
 
 export type KeyPrefix<S extends string, T extends Record<string, unknown>> = {
   [K in keyof T as `${S}/${string & K}`]: T[K];
-}
+};
 
 export type TODO = any;
 

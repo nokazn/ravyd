@@ -123,6 +123,9 @@ const playerGetters: VuexGetters<State, Getters> = {
 
     // Spotify で開く用のリンク
     const spotify = getExternalUrlFromUri(track.uri);
+    const externalUrls: SpotifyAPI.ExternalUrls = spotify != null
+      ? { spotify }
+      : {};
     return {
       index: -1,
       type: track.type,
@@ -132,7 +135,7 @@ const playerGetters: VuexGetters<State, Getters> = {
       artists: track.artists.map(convertMinimumArtist),
       featuredArtistList: [],
       durationMs,
-      externalUrls: { spotify } as SpotifyAPI.ExternalUrls,
+      externalUrls,
       previewUrl: {},
       isSaved: isSavedTrack,
       releaseId: track.album.id,

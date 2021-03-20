@@ -192,7 +192,7 @@ export default defineComponent({
           durationColumn,
           menuColumn,
         ];
-      return h.filter((header) => header != null) as DataTableHeader[];
+      return h.filter((header): header is DataTableHeader => header != null);
     });
 
     const isEpisodeSet = (row: App.MinimumTrack) => root.$getters()['playback/isTrackSet'](row);

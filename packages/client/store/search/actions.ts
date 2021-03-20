@@ -60,8 +60,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       offset,
     });
     const filteredEpisodes = episodes?.items
-      .filter((episode) => episode != null) as SpotifyAPI.Episode[] | undefined;
-
+      .filter((episode): episode is SpotifyAPI.Episode => episode != null);
     commit('SET_ALBUMS', albums?.items);
     commit('SET_ARTISTS', artists?.items);
     commit('SET_TRACKS', tracks?.items);
@@ -72,39 +71,33 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
   async searchAlbums({ commit }, params) {
     const { albums } = await searchEachItemHandler(this.app, 'album')(params);
-
     commit('SET_ALBUMS', albums?.items);
   },
 
   async searchArtists({ commit }, params) {
     const { artists } = await searchEachItemHandler(this.app, 'artist')(params);
-
     commit('SET_ARTISTS', artists?.items);
   },
 
   async searchTracks({ commit }, params) {
     const { tracks } = await searchEachItemHandler(this.app, 'track')(params);
-
     commit('SET_TRACKS', tracks?.items);
   },
 
   async searchPlaylists({ commit }, params) {
     const { playlists } = await searchEachItemHandler(this.app, 'playlist')(params);
-
     commit('SET_PLAYLISTS', playlists?.items);
   },
 
   async searchShows({ commit }, params) {
     const { shows } = await searchEachItemHandler(this.app, 'show')(params);
-
     commit('SET_SHOWS', shows?.items);
   },
 
   async searchEpisodes({ commit }, params) {
     const { episodes } = await searchEachItemHandler(this.app, 'episode')(params) ?? {};
     const filteredEpisodes = episodes?.items
-      .filter((episode) => episode != null) as SpotifyAPI.SimpleEpisode[] | undefined;
-
+      .filter((episode): episode is SpotifyAPI.SimpleEpisode => episode != null);
     commit('SET_EPISODES', filteredEpisodes);
   },
 };

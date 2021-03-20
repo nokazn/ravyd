@@ -183,7 +183,7 @@ export default defineComponent({
         props.hideAddedAt ? undefined : addedAtColumn,
         durationColumn,
         menuColumn,
-      ].filter((header) => header != null) as DataTableHeader[];
+      ].filter((header): header is DataTableHeader => header != null);
     });
     const isTrackSet = (row: App.MinimumTrack): boolean => {
       return root.$getters()['playback/isContextSet'](props.uri)

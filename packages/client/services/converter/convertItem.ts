@@ -1,70 +1,51 @@
-import type { SpotifyAPI } from 'shared/types';
+import type { ValueOf } from 'shared/types';
 import { generateContentPath } from '~/services/converter';
 import type { App } from '~/entities';
 
+type CommonKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
+type CommonItemInfo = Omit<App.ContentItem, CommonKey>;
+
+const itemIdentifier = <T extends App.ContentItemType>(
+  item: ValueOf<App.ContentItemTypes>,
+  type: T,
+): item is App.ContentItemTypes[T] => {
+  return item.type === type;
+};
+
+const getSpecifiedParams = (item: ValueOf<App.ContentItemTypes>): CommonItemInfo => {
+  if (itemIdentifier(item, 'track')) {
+    return {
+      releaseId: item.album.id,
+      images: item.album.images,
+      artists: item.album.artists,
+      to: generateContentPath('track', item.album.id, item.id),
+      linkedFrom: item.linked_from,
+    };
+  }
+  if (itemIdentifier(item, 'album')) {
+    return {
+      releaseId: item.id,
+      images: item.images,
+      artists: item.artists,
+      to: generateContentPath('album', item.id),
+    };
+  }
+  return {
+    releaseId: item.id,
+    images: item.images,
+    to: generateContentPath(item.type, item.id),
+  };
+};
 
 export const convertToContentListItem = <T extends App.ContentItemType>(type: T) => (
   item: App.ContentItemTypes[T],
 ): App.ContentItem<T> => {
-  const {
-    id,
-    name,
-    uri,
-    external_urls: externalUrls,
-  } = item;
-
-  type OneLineItem = SpotifyAPI.Artist
-    | SpotifyAPI.SimplePlaylist
-    | SpotifyAPI.SimpleShow
-    | SpotifyAPI.SimpleEpisode;
-  const getOneLineItem = (oneLineItem: OneLineItem) => ({
-    releaseId: id,
-    images: oneLineItem.images,
-    to: generateContentPath(type, id),
-  });
-
-  type CommonPropKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
-  const info: { [k in App.ContentItemType]: () => Omit<App.ContentItem<k>, CommonPropKey> } = {
-    track() {
-      const track = item as SpotifyAPI.Track;
-      const { album } = track;
-      return {
-        releaseId: album.id,
-        images: album.images,
-        artists: album.artists,
-        to: generateContentPath('track', album.id, id),
-        linkedFrom: track.linked_from,
-      };
-    },
-    album() {
-      const album = item as SpotifyAPI.SimpleAlbum;
-      return {
-        releaseId: id,
-        images: album.images,
-        artists: album.artists,
-        to: generateContentPath('album', id),
-      };
-    },
-    artist() {
-      return getOneLineItem(item as SpotifyAPI.Artist);
-    },
-    playlist() {
-      return getOneLineItem(item as SpotifyAPI.SimplePlaylist);
-    },
-    show() {
-      return getOneLineItem(item as SpotifyAPI.SimpleShow);
-    },
-    episode() {
-      return getOneLineItem(item as SpotifyAPI.SimpleEpisode);
-    },
-  };
-
   return {
     type,
-    id,
-    name,
-    uri,
-    externalUrls,
-    ...info[type](),
+    id: item.id,
+    name: item.name,
+    uri: item.uri,
+    externalUrls: item.external_urls,
+    ...getSpecifiedParams(item),
   };
 };

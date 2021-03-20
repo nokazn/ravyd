@@ -74,7 +74,7 @@ export const getRelease = async (
     })(track, index);
   });
 
-  const filteredArtists = artists.filter((artist) => artist != null) as SpotifyAPI.Artist[];
+  const filteredArtists = artists.filter((artist): artist is SpotifyAPI.Artist => artist != null);
   const releaseType = convertReleaseType(album_type, totalTracks);
   const durationMs = tracks.items.reduce((prev, curr) => prev + curr.duration_ms, 0);
   const hasNextTrack = tracks.next != null;

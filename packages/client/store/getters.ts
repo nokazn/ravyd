@@ -29,7 +29,7 @@ const getters: VuexGetters<State, Getters> = {
   headerStyles(state) {
     const opacity = 0.6;
     const rgbList = state.dominantBackgroundColor?.rgb
-      ?.map((color) => color * DARKEN_FILTER_RATIO) ?? BACKGROUND_COLOR_RGB as App.DominantColor['rgb'];
+      ?.map((color) => color * DARKEN_FILTER_RATIO) ?? BACKGROUND_COLOR_RGB;
     return { backgroundColor: `rgba(${rgbList.join(',')},${opacity})` };
   },
 };

@@ -465,8 +465,8 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         };
       }, this.$constant.EMPTY_PAGING as PagingTracks));
 
-    const filteredTrackList = (tracks?.items
-      .filter(({ track }) => track != null) ?? []) as App.FilteredPlaylistTrack[];
+    const filteredTrackList = tracks?.items
+      .filter((item): item is App.FilteredPlaylistTrack => item.track != null) ?? [];
     if (tracks == null || filteredTrackList.length === 0) {
       this.playlistTracks = {
         ...currentTracks,

@@ -4,7 +4,7 @@ import type { OneToFifty } from 'shared/types';
 import { convertPlaylistTrackDetail } from '~/services/converter';
 import type { App } from '~/entities';
 
-export type PlaylistTracks = {
+export interface PlaylistTracks {
   items: App.PlaylistTrackDetail[];
   hasNext: boolean;
   hasPrevious: boolean;
@@ -25,8 +25,7 @@ export const getPlaylistTracks = async (
   });
   if (tracks == null) return undefined;
 
-  const filteredTrackList = tracks.items
-    .filter(({ track }) => track != null) as App.FilteredPlaylistTrack[];
+  const filteredTrackList = tracks.items.filter((item): item is App.FilteredPlaylistTrack => item.track != null);
   if (filteredTrackList.length === 0) {
     return {
       items: [],
@@ -34,16 +33,12 @@ export const getPlaylistTracks = async (
       hasPrevious: false,
     };
   }
-
   const trackIdList = filteredTrackList.map(({ track }) => track.id);
-  const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({
-    trackIdList,
-  });
+  const isTrackSavedList = await app.$spotify.library.checkUserSavedTracks({ trackIdList });
   const items = filteredTrackList.map(convertPlaylistTrackDetail({
     isTrackSavedList,
     offset,
   }));
-
   return {
     items,
     hasNext: tracks.next != null,
