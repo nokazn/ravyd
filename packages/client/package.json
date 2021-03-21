@@ -67,6 +67,6 @@
     "vue-jest": "^4.0.1",
     "vue-template-compiler": "^2.6.12",
     "vue-type-check": "^1.1.0",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "^3.0.8"
   }
 }
