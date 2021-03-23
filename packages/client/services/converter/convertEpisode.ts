@@ -2,28 +2,29 @@ import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
 type Episode = SpotifyAPI.Episode | SpotifyAPI.SimpleEpisode;
+interface CommonConvertEpisodeDetailParams {
+  offset?: number;
+}
 // Episode の場合は show の情報は不要
 type ConvertEpisodeDetailParams<T> = T extends SpotifyAPI.Episode
-  ? {
-    offset?: number;
-    showId?: undefined;
-    showName?: undefined;
-  } | undefined
-  : {
-    offset?: number;
+  ? CommonConvertEpisodeDetailParams | undefined
+  : CommonConvertEpisodeDetailParams & {
     showId: string;
     showName: string;
   }
 
-export const convertEpisodeDetail = <T extends Episode>(params: ConvertEpisodeDetailParams<T>) => (
-  episode: SpotifyAPI.SimpleEpisode,
+const hasEpisodeAttributes = (
+  params: ConvertEpisodeDetailParams<Episode>,
+): params is ConvertEpisodeDetailParams<SpotifyAPI.SimpleShow> => {
+  return params != null && 'showId' in params;
+};
+
+export const convertEpisodeDetail = <T extends Episode = SpotifyAPI.Episode>(params: ConvertEpisodeDetailParams<T>) => (
+  episode: T,
   index: number,
 ): App.EpisodeDetail => {
-  const offset = params?.offset ?? 0;
-  const showId = params?.showId;
-  const showName = params?.showName;
-  const detail = {
-    index: index + offset,
+  const common = {
+    index: index + (params?.offset ?? 0),
     id: episode.id,
     name: episode.name,
     uri: episode.uri,
@@ -37,8 +38,18 @@ export const convertEpisodeDetail = <T extends Episode>(params: ConvertEpisodeDe
     resumePoint: episode.resume_point,
     externalUrls: episode.external_urls,
     previewUrl: episode.audio_preview_url,
-    showId: showId ?? (episode as SpotifyAPI.Episode).show.id,
-    showName: showName ?? (episode as SpotifyAPI.Episode).show.name,
   };
-  return detail;
+  if (hasEpisodeAttributes(params)) {
+    return {
+      ...common,
+      showId: params.showId,
+      showName: params.showName,
+    };
+  }
+  const { show } = episode as SpotifyAPI.Episode;
+  return {
+    ...common,
+    showId: show.id,
+    showName: show.name,
+  };
 };

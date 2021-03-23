@@ -128,7 +128,7 @@ export const convertPlaylistTrackDetail = (
   { track, added_at, added_by }: ConvertPlaylistTrackDetailParams2,
   index: number,
 ): App.PlaylistTrackDetail => {
-  const detail = {
+  return {
     type: track.type,
     index: index + offset,
     name: track.name,
@@ -152,7 +152,6 @@ export const convertPlaylistTrackDetail = (
     addedAt: convertAddedAt(added_at),
     addedBy: added_by,
   };
-  return detail;
 };
 
 export const convertTrackForCard = (track: SpotifyAPI.Track): App.ReleaseCard<'track'> => {

@@ -210,7 +210,8 @@ export namespace SpotifyAPI {
     images: Image[]
     is_externally_hosted: boolean
     is_playable: boolean
-    language: string // deprecated
+    /* @deprecated */
+    language: string
     languages: string[]
     name: string
     release_date: string

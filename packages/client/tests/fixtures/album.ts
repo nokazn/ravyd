@@ -1,14 +1,17 @@
 import type { SpotifyAPI } from 'shared/types';
-import { simpleArtist, image, externalUrls } from './index';
+import { simpleArtist } from './artist';
+import {
+  image,
+  externalUrls,
+  paging,
+  copyright,
+} from './spotify';
 
 export const simpleAlbum = (i: number, l: number = 1): SpotifyAPI.SimpleAlbum => ({
   available_markets: ['JP'],
   album_type: 'album',
-  artists: new Array(l).fill(undefined).map((_, j) => simpleArtist(j)),
-  copyrights: [{
-    type: 'C',
-    text: 'copyright',
-  }],
+  artists: [...new Array(l)].map((_, j) => simpleArtist(j)),
+  copyrights: [copyright(1)],
   external_urls: externalUrls(i),
   href: `path/to/album${i}`,
   id: `id${i}`,
@@ -29,15 +32,7 @@ export const album = (i: number, l: number = 1): SpotifyAPI.Album => {
     genres: ['art pop', 'indie pop'],
     label: '4AD',
     popularity: 80,
-    tracks: {
-      href: `path/to/album${i}/tracks`,
-      items,
-      limit: 50,
-      next: null,
-      offset: 0,
-      previous: null,
-      total: items.length,
-    },
+    tracks: paging(items),
     total_tracks: items.length,
   };
 };

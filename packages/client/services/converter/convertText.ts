@@ -6,18 +6,15 @@ import type { SpotifyAPI } from 'shared/types';
 import { REPEAT_STATE_LIST } from '~/constants';
 import type { App } from '~/entities';
 
-type CopyrightMap = Record<string, ('C' | 'P')[]>
-
 export const convertAddedAt = (addedAt: string): App.AddedAt => {
   const moment = dayjs(addedAt);
   // 2週間前か否かで表示を分けるため
   const overTwoWeeksAgo = Date.now() - moment.valueOf() > 14 * 24 * 60 * 60 * 1000;
   // 1970-01-01-T00:00:00Z とかを無効にするため、2000年以前のものは無視
-  const isTooOld = moment.valueOf() <= new Date(2000, 0, 1).getMilliseconds();
+  const isTooOld = moment.valueOf() <= Number(new Date(2000, 0, 1));
   const text = overTwoWeeksAgo
     ? moment.format('YYYY/M/D')
     : moment.fromNow();
-
   return {
     origin: addedAt,
     text: isTooOld ? undefined : text,
@@ -59,13 +56,12 @@ export const getFollowersText = (followers: number | null): string | undefined =
     : undefined;
 };
 
-
-const computeAbsoluteRatioDiff = (
-  num: number | null | undefined,
-  base: number,
-): number => (num != null
-  ? Math.abs((num / base) - 1)
-  : Infinity);
+const computeRatioDiff = (num: number | null | undefined, base: number): number => {
+  return num != null
+    ? num / base
+    : Infinity;
+};
+const getImageLength = (image: SpotifyAPI.Image): number => image.height ?? image.width ?? 0;
 
 /**
  * minSize より大きいギリギリのサイズの画像の URL を返す
@@ -75,22 +71,40 @@ export const getImageSrc = (
   minSize?: number,
 ): string | undefined => {
   if (imageList == null || imageList.length === 0) return undefined;
-
-  if (minSize == null) return imageList[0].url;
-
-  const appropriateImage: SpotifyAPI.Image = imageList.reduce((prev, curr) => {
-    if (prev == null) return curr;
-
-    const prevDiff = computeAbsoluteRatioDiff(prev.width, minSize);
-    const currDiff = computeAbsoluteRatioDiff(curr.width, minSize);
-    return curr.width != null && currDiff < prevDiff && curr.width >= minSize
+  if (minSize == null) {
+    // 最大のサイズのものを返す
+    return imageList.reduce((prev, curr) => (getImageLength(prev) < getImageLength(curr)
       ? curr
-      : prev;
+      : prev)).url;
+  }
+  const appropriateImage: SpotifyAPI.Image = imageList.reduce((prev, curr) => {
+    const prevDiff = computeRatioDiff(getImageLength(prev), minSize);
+    const currDiff = computeRatioDiff(getImageLength(curr), minSize);
+    if (prevDiff < 1) {
+      // 両方の diff が 1 を超えない場合はより大きい (minSize に近い) 方を選択
+      return currDiff > 1 || prevDiff < currDiff
+        ? curr
+        : prev;
+    }
+    // diff が 1 を超える中でより小さい (minSize に近い) 方を選択
+    return currDiff < 1 || prevDiff < currDiff
+      ? prev
+      : curr;
   });
-
   return appropriateImage?.url;
 };
 
+type RepeatState = [App.RepeatMode, SpotifyAPI.RepeatState];
+const nextRepeatMode = (current: App.RepeatMode) => (current + 1) % REPEAT_STATE_LIST.length as App.RepeatMode;
+export const nextRepeatState = (current: RepeatState[number]): RepeatState => {
+  const currentIndex = typeof current === 'string'
+    ? REPEAT_STATE_LIST.findIndex((r) => r === current) as App.RepeatMode
+    : current;
+  const index = nextRepeatMode(currentIndex);
+  return [index, REPEAT_STATE_LIST[index]];
+};
+
+type CopyrightMap = Record<string, ('C' | 'P')[]>
 export const parseCopyrights = (copyrights: SpotifyAPI.Copyright[]): string[] => {
   const textNormalizedCopyrights = copyrights.map((copyright) => {
     // 文頭の C/P マーク
@@ -110,21 +124,10 @@ export const parseCopyrights = (copyrights: SpotifyAPI.Copyright[]): string[] =>
       : [copyright.type],
   }), {}));
   const copyrightMapKeys = Object.keys(parsedCopyrightMap) as (keyof CopyrightMap)[];
-
   return copyrightMapKeys.map((key) => {
-    const types = parsedCopyrightMap[key]
+    const types = [...new Set(parsedCopyrightMap[key])]
       .map((type) => ({ C: '©', P: '℗' }[type]))
       .join('');
     return `${types} ${key}`;
   });
-};
-
-type RepeatState = [App.RepeatMode, SpotifyAPI.RepeatState];
-const nextRepeatMode = (current: App.RepeatMode) => (current + 1) % REPEAT_STATE_LIST.length as App.RepeatMode;
-export const nextRepeatState = (current: RepeatState[number]): RepeatState => {
-  const currentIndex = typeof current === 'string'
-    ? REPEAT_STATE_LIST.findIndex((r) => r === current) as App.RepeatMode
-    : current;
-  const index = nextRepeatMode(currentIndex);
-  return [index, REPEAT_STATE_LIST[index]];
 };

@@ -46,12 +46,13 @@ describe('converter/convertReleaseType', () => {
 
 describe('converter/convertReleaseForCard', () => {
   it('convert SimpleAlbum', () => {
-    expect(convertReleaseForCard(simpleAlbum(3))).toEqual({
-      type: 'album',
-      releaseId: 'id3',
-      id: 'id3',
-      name: 'name3',
-      uri: 'spotify:album:album3',
+    const item = simpleAlbum(3);
+    expect(convertReleaseForCard(item)).toEqual({
+      type: item.type,
+      releaseId: item.id,
+      id: item.id,
+      name: item.name,
+      uri: item.uri,
       artists: [simpleArtist(0)],
       releaseYear: '2021年',
       images: [image(3)],
@@ -60,12 +61,13 @@ describe('converter/convertReleaseForCard', () => {
   });
 
   it('convert Album', () => {
+    const item = album(3);
     expect(convertReleaseForCard(album(3))).toEqual({
-      type: 'album',
-      releaseId: 'id3',
-      id: 'id3',
-      name: 'name3',
-      uri: 'spotify:album:album3',
+      type: item.type,
+      releaseId: item.id,
+      id: item.id,
+      name: item.name,
+      uri: item.uri,
       artists: [simpleArtist(0)],
       releaseYear: '2021年',
       images: [image(3)],
