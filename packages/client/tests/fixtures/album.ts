@@ -14,7 +14,7 @@ export const simpleAlbum = (i: number, l: number = 1): SpotifyAPI.SimpleAlbum =>
   copyrights: [copyright(1)],
   external_urls: externalUrls(i),
   href: `path/to/album${i}`,
-  id: `id${i}`,
+  id: `album${i}`,
   images: [image(i)],
   name: `name${i}`,
   release_date: '2021-03-22',

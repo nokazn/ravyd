@@ -14,7 +14,7 @@ export const simpleArtist = (i: number): SpotifyAPI.SimpleArtist => ({
   ...minimumArtist(i),
   external_urls: externalUrls(i),
   href: `path/to/artist${i}`,
-  id: `id${i}`,
+  id: `artist${i}`,
   type: 'artist',
 });
 

@@ -19,7 +19,7 @@ export const simpleEpisode = (i: number, params?: Params): SpotifyAPI.SimpleEpis
     explicit: params?.explicit ?? false,
     external_urls: externalUrls(i),
     href: `path/to/episode${i}`,
-    id: `id${i}`,
+    id: `episode${i}`,
     images: [image(i)],
     is_externally_hosted: false,
     is_playable: params?.explicit ?? true,

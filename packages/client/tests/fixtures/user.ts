@@ -17,7 +17,7 @@ export const user = (i: number, params?: UserParams): SpotifyAPI.User => ({
   followers: followers(params?.followers ?? 10),
   external_urls: externalUrls(i),
   href: `/path/to/user${i}`,
-  id: `id${i}`,
+  id: `user${i}`,
   images: [image(i)],
   product: params?.product ?? 'premium',
   type: 'user',

@@ -27,7 +27,7 @@ export const simpleTrack = (i: number, params?: SimpleTrackParams): SpotifyAPI.S
   explicit: false,
   external_urls: externalUrls(i),
   href: `path/to/track${i}`,
-  id: `id${i}`,
+  id: `track${i}`,
   is_playable: params?.is_playable ?? true,
   is_local: false,
   linked_from: params?.linked_from,
@@ -41,7 +41,7 @@ export const simpleTrack = (i: number, params?: SimpleTrackParams): SpotifyAPI.S
 
 export const track = (i: number, params?: TrackParams): SpotifyAPI.Track => ({
   ...simpleTrack(i, params),
-  album: simpleAlbum(i, params?.artists ?? 0),
+  album: simpleAlbum(i, params?.artists ?? 1),
   external_ids: {},
   popularity: params?.popularity ?? 50,
 });

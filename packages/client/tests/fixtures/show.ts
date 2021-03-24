@@ -14,7 +14,7 @@ export const simpleShow = (i: number, total_episodes: number = 3): SpotifyAPI.Si
   explicit: false,
   external_urls: externalUrls(i),
   href: `path/to/show${i}`,
-  id: `id${i}`,
+  id: `show${i}`,
   images: [image(1)],
   is_externally_hosted: false,
   languages: ['JP'],

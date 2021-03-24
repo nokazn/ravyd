@@ -5,3 +5,4 @@ export * from './playlist';
 export * from './show';
 export * from './spotify';
 export * from './track';
+export * from './user';

@@ -23,7 +23,7 @@ export const simplePlaylist = (i: number, params?: SimplePlaylistParams): Spotif
   description: params?.description ?? null,
   external_urls: externalUrls(i),
   href: `path/to/playlist${i}`,
-  id: `id${i}`,
+  id: `playlist${i}`,
   images: [image(1)],
   name: `playlist${i}`,
   owner: user(i),
