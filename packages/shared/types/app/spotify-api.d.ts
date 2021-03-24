@@ -433,7 +433,7 @@ export namespace SpotifyAPI {
   export type Track = SimpleTrack & {
     album: SimpleAlbum
     external_ids: ExternalId
-    popularity: string
+    popularity: OneToHundred
   }
 
   export type User = {

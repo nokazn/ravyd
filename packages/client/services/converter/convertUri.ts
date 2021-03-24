@@ -35,7 +35,7 @@ export const convertUriToUrl = (uri: string | undefined): string | undefined => 
 /**
  * @param uri spotify:track:foo のような形式
  */
-export const convertUriToId = (uri: string): string | undefined => {
+export const convertUriToId = (uri: string): string => {
   const elementList = uri.split(':');
   return elementList[elementList.length - 1];
 };

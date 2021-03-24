@@ -20,6 +20,11 @@ export const copyright = (i: number): SpotifyAPI.Copyright => ({
   type: 'C',
 });
 
+export const followers = (total: number): SpotifyAPI.Followers => ({
+  href: 'path/to/followers',
+  total,
+});
+
 export const paging = <I>(items: I[]): SpotifyAPI.Paging<I> => ({
   href: 'path/to/items',
   items,

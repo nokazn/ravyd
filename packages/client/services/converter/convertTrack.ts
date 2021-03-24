@@ -90,8 +90,8 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
   offset?: number
 }) => (track: ExtendedTrack | SpotifyAPI.Track, i: number): App.TrackQueue => {
   // Array#map 関数が呼べるように型を定義する
-  const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[]} = track;
-  const info = {
+  const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[] } = track;
+  return {
     isSet,
     isPlaying,
     index: i + offset,
@@ -109,7 +109,6 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
     durationMs: track.duration_ms,
     linkedFrom: track.linked_from,
   };
-  return info;
 };
 
 interface ConvertPlaylistTrackDetailParams1 {
