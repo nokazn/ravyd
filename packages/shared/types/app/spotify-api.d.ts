@@ -1,4 +1,4 @@
-import { Merge, ZeroToHundred } from 'shared/types';
+import { ZeroToHundred, OneToHundred } from 'shared/types';
 
 export namespace SpotifyAPI {
   export namespace Auth {
@@ -54,7 +54,7 @@ export namespace SpotifyAPI {
     external_ids: ExternalId
     genres: string[]
     label: string
-    popularity: number // 0 ~ 100
+    popularity: OneToHundred
     tracks: Paging<SimpleTrack>
     total_tracks: number
   } & Omit<SimpleAlbum, 'album_group'>
@@ -210,7 +210,8 @@ export namespace SpotifyAPI {
     images: Image[]
     is_externally_hosted: boolean
     is_playable: boolean
-    language: string // deprecated
+    /* @deprecated */
+    language: string
     languages: string[]
     name: string
     release_date: string
@@ -223,14 +224,11 @@ export namespace SpotifyAPI {
     show: SimpleShow
   }
 
-  // TODO
-  type ExternalId = Merge<{
+  type ExternalId = {
     isrc?: string
     ean?: string
     upc?: string
-  }, {
-    [k: string]: string
-  }>
+  }
 
   // TODO
   type ExternalUrls = {
@@ -383,8 +381,7 @@ export namespace SpotifyAPI {
   type RepeatState = 'off' | 'track' | 'context'
 
   type Restriction = {
-    reason: string
-    [k: string]: string
+    reason?: 'market' | 'product' | 'explicit';
   }
 
   export type ResumePoint = {
@@ -436,7 +433,7 @@ export namespace SpotifyAPI {
   export type Track = SimpleTrack & {
     album: SimpleAlbum
     external_ids: ExternalId
-    popularity: string
+    popularity: OneToHundred
   }
 
   export type User = {

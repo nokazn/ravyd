@@ -10,11 +10,11 @@ interface ExtendedTrack extends Spotify.Track {
 }
 
 type Track = SpotifyAPI.Track | SpotifyAPI.SimpleTrack;
-type CommonConvertTrackDetailParams = {
+interface CommonConvertTrackDetailParams {
   isTrackSavedList: boolean[];
   artistIdList?: string[];
   offset?: number;
-};
+}
 // Track の場合は release の情報は不要
 type ConvertTrackDetailParams<T extends Track> = T extends SpotifyAPI.Track
   ? CommonConvertTrackDetailParams
@@ -66,7 +66,6 @@ export const convertTrackDetail = <T extends Track = SpotifyAPI.Track>(params: C
     isSaved: params.isTrackSavedList[index],
     linkedFrom: track.linked_from,
   };
-
   if (hasReleaseAttributes(params)) {
     return {
       ...common,
@@ -90,8 +89,8 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
   offset?: number
 }) => (track: ExtendedTrack | SpotifyAPI.Track, i: number): App.TrackQueue => {
   // Array#map 関数が呼べるように型を定義する
-  const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[]} = track;
-  const info = {
+  const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[] } = track;
+  return {
     isSet,
     isPlaying,
     index: i + offset,
@@ -109,7 +108,6 @@ export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
     durationMs: track.duration_ms,
     linkedFrom: track.linked_from,
   };
-  return info;
 };
 
 interface ConvertPlaylistTrackDetailParams1 {
@@ -128,7 +126,7 @@ export const convertPlaylistTrackDetail = (
   { track, added_at, added_by }: ConvertPlaylistTrackDetailParams2,
   index: number,
 ): App.PlaylistTrackDetail => {
-  const detail = {
+  return {
     type: track.type,
     index: index + offset,
     name: track.name,
@@ -152,7 +150,6 @@ export const convertPlaylistTrackDetail = (
     addedAt: convertAddedAt(added_at),
     addedBy: added_by,
   };
-  return detail;
 };
 
 export const convertTrackForCard = (track: SpotifyAPI.Track): App.ReleaseCard<'track'> => {

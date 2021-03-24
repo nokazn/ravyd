@@ -3,7 +3,7 @@ import { generateContentPath } from '~/services/converter';
 import type { App } from '~/entities';
 
 type CommonKey = 'type' | 'id' | 'name' | 'uri' | 'externalUrls';
-type CommonItemInfo = Omit<App.ContentItem, CommonKey>;
+type SpecifiedItemParams = Omit<App.ContentItem, CommonKey>;
 
 const itemIdentifier = <T extends App.ContentItemType>(
   item: ValueOf<App.ContentItemTypes>,
@@ -12,7 +12,7 @@ const itemIdentifier = <T extends App.ContentItemType>(
   return item.type === type;
 };
 
-const getSpecifiedParams = (item: ValueOf<App.ContentItemTypes>): CommonItemInfo => {
+const getSpecifiedParams = (item: ValueOf<App.ContentItemTypes>): SpecifiedItemParams => {
   if (itemIdentifier(item, 'track')) {
     return {
       releaseId: item.album.id,
