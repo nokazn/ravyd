@@ -10,7 +10,7 @@ steps:
       - "--file"
       - "./packages/server/Dockerfile"
       - "--target"
-      - "start-stage"
+      - "prod-stage"
       - "."
 
   # Push to Artifact Registry

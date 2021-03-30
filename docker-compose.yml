@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./packages/client/Dockerfile
       target: dev-stage
-    container_name: nuxt
+    container_name: ravyd_client
     tty: true
     ports:
       - ${CLIENT_PORT}:${CLIENT_PORT}
@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile: ./packages/server/Dockerfile
       target: dev-stage
-    container_name: server
+    container_name: ravyd_server
     tty: true
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
@@ -42,7 +42,6 @@ services:
       - client:/app/packages/client
 
   redis:
-    image: redis:6.0.10-alpine
     container_name: redis
     build: ./packages/server/redis
     env_file:
