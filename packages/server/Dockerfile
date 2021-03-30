@@ -30,6 +30,7 @@ ENV HOST="0.0.0.0"
 ENV NODE_ENV="production"
 COPY --from=build-stage /app/dist /app/dist
 COPY --from=build-stage /app/node_modules /app/node_modules
+COPY --from=build-stage /app/packages/server/node_modules /app/packages/server/node_modules
 COPY --from=build-stage /app/package.json /app/package.json
 WORKDIR /app/dist
 EXPOSE ${SERVER_PORT}
