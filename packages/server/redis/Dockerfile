@@ -1,4 +1,4 @@
-FROM redis:6.0.4-alpine
+FROM redis:6.0.10-alpine
 
 WORKDIR /data
 

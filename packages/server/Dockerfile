@@ -1,28 +1,37 @@
-# Install dependencies
-FROM node:12.18.0-alpine as init-stage
-
+# Dev
+FROM node:14.15.0-buster AS dev-stage
 # This is required to access to a host other than localhost.
 ENV HOST="0.0.0.0"
-
-WORKDIR /app/
-
-# The current directory is where the command is executed.
 COPY . /app/
-
-RUN yarn global add lerna && lerna bootstrap
-
-# Dev
-FROM init-stage as dev-stage
-
+WORKDIR /app/
+RUN yarn global add lerna \
+  && lerna bootstrap
 EXPOSE ${SERVER_PORT}
-
 CMD ["lerna", "run", "dev", "--scope", "@ravyd/server", "--stream"]
 
-# Start
-FROM init-stage as start-stage
+# Build
+FROM node:14.15.0-buster AS build-stage
+COPY . /app/
+WORKDIR /app/
+RUN rm -rf pakages/client \
+  && yarn global add lerna \
+  && lerna bootstrap \
+  && lerna run build --scope "@ravyd/server" --stream \
+  && rm -rf node_modules \
+  && cd /app/packages/shared \
+  && yarn --production=true \
+  && cd /app/packages/server \
+  && yarn --production=true
 
-RUN lerna run build --scope @ravyd/server --stream
-
+# Prod
+FROM gcr.io/distroless/nodejs:14 AS prod-stage
+# This is required to access to a host other than localhost.
+ENV HOST="0.0.0.0"
+ENV NODE_ENV="production"
+COPY --from=build-stage /app/dist /app/dist
+COPY --from=build-stage /app/node_modules /app/node_modules
+COPY --from=build-stage /app/packages/server/node_modules /app/packages/server/node_modules
+COPY --from=build-stage /app/package.json /app/package.json
+WORKDIR /app/dist
 EXPOSE ${SERVER_PORT}
-
-CMD ["lerna", "run", "start", "--scope", "@ravyd/server", "--stream"]
+CMD ["-r", "module-alias/register", "server/bootstrap"]

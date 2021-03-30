@@ -23,8 +23,7 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    projectRoot('packages/client/components/**'),
-    projectRoot('packages/client/pages/**'),
+    projectRoot('packages/client/**'),
   ],
   setupFiles: [
     '<rootDir>/packages/client/tests/jest.setup.js',
