@@ -60,7 +60,7 @@ steps:
 images:
   - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}"
 
-timeout: 900s
+timeout: 1200s
 
 # substitutions:
 #   COMMIT_SHA:
