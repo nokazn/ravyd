@@ -7,7 +7,7 @@ type HeaderState = {
   fab: boolean;
   intersectionObserver: IntersectionObserver | undefined;
   backdropFiltered: boolean;
-}
+};
 
 export type $Header = {
   readonly fab: boolean;
@@ -17,7 +17,7 @@ export type $Header = {
   disconnectObserver: () => void;
   hideFab: () => void;
   toggleBackdropFilter: (isEnabled: boolean) => void;
-}
+};
 
 const state = Vue.observable<HeaderState>({
   fab: false,

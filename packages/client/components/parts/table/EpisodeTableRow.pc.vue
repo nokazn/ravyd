@@ -102,7 +102,7 @@ export type On = {
   [ON_ROW_CLICKED]: App.EpisodeDetail;
   [ON_MEDIA_BUTTON_CLICKED]: App.EpisodeDetail;
   [ON_FAVORITE_BUTTON_CLICKED]: App.EpisodeDetail;
-}
+};
 
 export default defineComponent({
   components: {

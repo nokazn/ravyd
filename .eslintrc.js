@@ -1,4 +1,7 @@
 const isProduction = process.env === 'production';
+const ALLOW = 0;
+const WARN = 1;
+const ERROR = 2;
 
 module.exports = {
   root: true,
@@ -34,16 +37,20 @@ module.exports = {
     'jest',
   ],
   rules: {
-    'no-console': isProduction ? [2, { allow: ['info', 'warn', 'error'] }] : [1, { allow: ['info', 'warn', 'error'] }],
-    'no-debugger': isProduction ? 2 : 1,
-    'no-multiple-empty-lines': [2, { max: 2 }],
+    'no-console': isProduction
+      ? [ERROR, { allow: ['info', 'warn', 'error'] }]
+      : [WARN, { allow: ['info', 'warn', 'error'] }],
+    'no-debugger': isProduction
+      ? ERROR
+      : WARN,
+    'no-multiple-empty-lines': [ERROR, { max: 2 }],
     // TypeScript でチェック
-    'no-undef': 0,
-    camelcase: 0,
-    'lines-between-class-members': 0,
-    'arrow-body-style': 0,
+    'no-undef': ALLOW,
+    camelcase: ALLOW,
+    'lines-between-class-members': ALLOW,
+    'arrow-body-style': ALLOW,
     'max-len': [
-      'error',
+      ERROR,
       120,
       2,
       {
@@ -72,22 +79,25 @@ module.exports = {
       },
     ],
     // ts でチェック
-    'import/no-unresolved': 0,
+    'import/no-unresolved': ALLOW,
     // dependencies, devDependencies にないパッケージからの import を許容
-    'import/no-extraneous-dependencies': [0, { devDependencies: true }],
+    'import/no-extraneous-dependencies': [ALLOW, { devDependencies: true }],
     // 'import/no-extraneous-dependencies': [1, { devDependencies: true }],
-    'import/prefer-default-export': 0,
+    'import/prefer-default-export': ALLOW,
 
     /**
      * eslint と @typescript-eslint 競合を防ぐ
      */
     // typescript-eslint の no-use-before-define を有効にする
-    'no-use-before-define': 0,
-    '@typescript-eslint/no-use-before-define': 2,
-    // typescript-eslint の no-unuserd-vars を有効にする
-    'no-unused-vars': 0,
-    '@typescript-eslint/no-unused-vars': 2,
+    'no-use-before-define': ALLOW,
+    '@typescript-eslint/no-use-before-define': ERROR,
+    // typescript-eslint の no-unused-vars を有効にする
+    'no-unused-vars': ALLOW,
+    '@typescript-eslint/no-unused-vars': ERROR,
+    semi: ALLOW,
+    '@typescript-eslint/semi': [ERROR],
+    '@typescript-eslint/member-delimiter-style': ERROR,
 
-    'vue/valid-v-slot': [2, { allowModifiers: true }],
+    'vue/valid-v-slot': [ERROR, { allowModifiers: true }],
   },
 };

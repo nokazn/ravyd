@@ -80,7 +80,7 @@ type NavigationGroup = {
   name: string;
   subtitle?: string;
   scroll?: boolean;
-}
+};
 
 export default defineComponent({
   components: {

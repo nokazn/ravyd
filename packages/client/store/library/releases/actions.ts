@@ -12,14 +12,14 @@ interface ModifyReleaseSavedStateParams {
 }
 
 export type Actions = {
-  getSavedReleaseList: (params?: { limit: OneToFifty } | undefined) => Promise<void>
-  updateLatestSavedReleaseList: () => Promise<void>
-  saveReleases: (albumIdList: string[]) => Promise<void>
-  removeReleases: (albumIdList: string[]) => Promise<void>
-  modifyReleaseSavedState: (params: ModifyReleaseSavedStateParams) => void
+  getSavedReleaseList: (params?: { limit: OneToFifty } | undefined) => Promise<void>;
+  updateLatestSavedReleaseList: () => Promise<void>;
+  saveReleases: (albumIdList: string[]) => Promise<void>;
+  removeReleases: (albumIdList: string[]) => Promise<void>;
+  modifyReleaseSavedState: (params: ModifyReleaseSavedStateParams) => void;
 };
 
-type Album = { album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album }
+type Album = { album: SpotifyAPI.SimpleAlbum | SpotifyAPI.Album };
 const convertRelease = ({ album }: Album) => convertReleaseForCard(album);
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {

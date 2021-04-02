@@ -6,7 +6,7 @@ export type Getters = {
   historyList: App.PlaylistTrackDetail[];
   historyLength: number;
   hasNext: boolean;
-}
+};
 
 const libraryHistoryGetters: VuexGetters<State, Getters> = {
   historyList(state) {

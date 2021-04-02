@@ -5,9 +5,9 @@ import { upsertToken, exchangeAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import type { paths, JSONResponseOf } from 'shared/types';
 
-type Path = paths['/auth/login/callback']['get']
-type Request = FastifyRequest<{ Querystring: Path['parameters']['query'] }>
-type ResponseBody = JSONResponseOf<Path>
+type Path = paths['/auth/login/callback']['get'];
+type Request = FastifyRequest<{ Querystring: Path['parameters']['query'] }>;
+type ResponseBody = JSONResponseOf<Path>;
 
 const { BAD_REQUEST, UNAUTHORIZED } = httpStatusCodes;
 

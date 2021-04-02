@@ -19,7 +19,7 @@ type RepeatButton = {
   icon: 'mdi-repeat-off' | 'mdi-repeat' | 'mdi-repeat-once';
   title: 'リピート再生しない' | 'リピート再生' | '曲をリピート再生';
   color: 'active-icon' | 'inactive';
-}
+};
 
 export default defineComponent({
   components: {

@@ -18,7 +18,7 @@ export type Actions = {
   searchPlaylists: (params: SearchParams) => Promise<void>;
   searchShows: (params: SearchParams) => Promise<void>;
   searchEpisodes: (params: SearchParams) => Promise<void>;
-}
+};
 
 const searchEachItemHandler = <T extends SpotifyAPI.SearchType>(
   app: Context['app'],

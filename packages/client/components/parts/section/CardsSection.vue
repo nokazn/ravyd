@@ -55,7 +55,7 @@ export type On = {
   [INPUT]: OnShowAll['input'];
   [ON_BUTTON_HOVERED]: void;
   [ON_LOADING_APPEARED]: void;
-}
+};
 
 export default defineComponent({
   components: {

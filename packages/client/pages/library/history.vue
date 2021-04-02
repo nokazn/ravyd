@@ -25,7 +25,7 @@ interface AsyncData {
 }
 
 interface Data {
-  mutationUnsubscribe: (() => void) | undefined
+  mutationUnsubscribe: (() => void) | undefined;
 }
 
 @Component({

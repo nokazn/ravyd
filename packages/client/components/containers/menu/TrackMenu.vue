@@ -33,7 +33,7 @@ const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 
 export type On = {
   [ON_FAVORITE_MENU_CLICKED]: 'on-favorite-menu-clicked';
-}
+};
 
 export default defineComponent({
   components: {

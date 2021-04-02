@@ -5,8 +5,8 @@ import type { App } from '~/entities';
 
 // TODO
 interface ExtendedTrack extends Spotify.Track {
-  duration_ms?: number
-  linked_from?: SpotifyAPI.LinkedTrack
+  duration_ms?: number;
+  linked_from?: SpotifyAPI.LinkedTrack;
 }
 
 type Track = SpotifyAPI.Track | SpotifyAPI.SimpleTrack;
@@ -84,9 +84,9 @@ export const convertTrackDetail = <T extends Track = SpotifyAPI.Track>(params: C
 };
 
 export const convertTrackForQueue = ({ isSet, isPlaying, offset = 0 }: {
-  isSet: boolean
-  isPlaying: boolean
-  offset?: number
+  isSet: boolean;
+  isPlaying: boolean;
+  offset?: number;
 }) => (track: ExtendedTrack | SpotifyAPI.Track, i: number): App.TrackQueue => {
   // Array#map 関数が呼べるように型を定義する
   const { artists }: { artists: (Spotify.Artist | SpotifyAPI.SimpleArtist)[] } = track;

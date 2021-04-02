@@ -248,8 +248,8 @@ export default class UserIdPage extends Vue implements AsyncData, Data {
 
   toggleFollowingState(nextFollowingState: OnFollowButton['input'] | OnFavoriteButton['input']| OnUserMenu['on-follow-menu-clicked']) {
     const handler = (params: {
-      type: 'artist' | 'user',
-      idList: string[],
+      type: 'artist' | 'user';
+      idList: string[];
     }) => (nextFollowingState
       ? this.$spotify.following.follow(params)
       : this.$spotify.following.unfollow(params));

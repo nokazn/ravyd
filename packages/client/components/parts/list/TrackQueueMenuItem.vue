@@ -77,7 +77,7 @@ const ON_LINK_CLICKED = 'on-link-clicked';
 export type On = {
   [ON_ITEM_CLICKED]: App.TrackQueue;
   [ON_LINK_CLICKED]: void;
-}
+};
 
 export default defineComponent({
   components: {

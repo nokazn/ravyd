@@ -12,7 +12,7 @@ export type Actions = {
   updateLatestSavedArtistList: () => Promise<void>;
   followArtists: (idList: string[]) => Promise<void>;
   unfollowArtists: (idList: string[]) => Promise<void>;
-  modifyArtistSavedState: (params: ModifyArtistSavedStateParams) => void
+  modifyArtistSavedState: (params: ModifyArtistSavedStateParams) => void;
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {

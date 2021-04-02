@@ -154,7 +154,7 @@ export type On = {
   [ON_ROW_CLICKED]: App.PlaylistTrackDetail;
   [ON_MEDIA_BUTTON_CLICKED]: App.PlaylistTrackDetail;
   [ON_FAVORITE_BUTTON_CLICKED]: App.PlaylistTrackDetail;
-}
+};
 
 export default defineComponent({
   components: {

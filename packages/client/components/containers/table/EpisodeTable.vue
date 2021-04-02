@@ -69,7 +69,7 @@ type EpisodeSelector = 'all' | 'unplayed' | 'inProgress';
 type SelectItem = {
   text: string;
   value: EpisodeSelector;
-}
+};
 
 export default defineComponent({
   components: {

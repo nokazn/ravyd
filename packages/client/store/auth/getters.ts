@@ -16,7 +16,7 @@ export type Getters = {
   userDisplayName: string | undefined;
   userAvatarSrc: (avatarSize?: number) => string| undefined;
   userCountryCode: SpotifyAPI.Country | undefined;
-}
+};
 
 const getters: VuexGetters<State, Getters> = {
   accessToken(state) {

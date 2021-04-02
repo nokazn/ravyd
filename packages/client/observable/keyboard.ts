@@ -6,11 +6,11 @@ export type EventListenerMap<Require extends boolean> = {
   event: KeyboardEventKey;
   listener: Listener;
 } & (Require extends true
-  ? { disabled: boolean; }
-  : { disabled?: boolean; });
+  ? { disabled: boolean }
+  : { disabled?: boolean });
 type KeyboardState = {
-  eventListeners: { [k: string]: EventListenerMap<true>; }
-}
+  eventListeners: { [k: string]: EventListenerMap<true> };
+};
 
 export type $Keyboard = {
   readonly eventListener: (key: string) => Listener | undefined;
@@ -19,7 +19,7 @@ export type $Keyboard = {
   remove: (key: string) => void;
   disable: (key: string) => void;
   enable: (key: string) => void;
-}
+};
 
 const state = Vue.observable<KeyboardState>({
   eventListeners: {},

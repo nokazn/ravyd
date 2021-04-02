@@ -16,7 +16,7 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 type SkipButton = {
   title: string;
   icon: 'mdi-redo' | 'mdi-undo';
-}
+};
 
 export default defineComponent({
   components: {

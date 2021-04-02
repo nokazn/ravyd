@@ -5,7 +5,7 @@ export type Categories = {
   items: SpotifyAPI.Category[];
   hasNext: boolean;
   hasPrevious: boolean;
-}
+};
 
 export const getCategories = async (
   { app }: Context,

@@ -12,12 +12,12 @@ interface ModifyTrackSavedStateParams {
 }
 
 export type Actions = {
-  getSavedTrackList: (params: { limit: OneToFifty } | undefined) => Promise<void>
-  updateLatestSavedTrackList: () => Promise<void>
-  removeUnsavedTracks: () => void
-  saveTracks: (trackIdList: string[]) => Promise<void>
-  removeTracks: (trackIdList: string[]) => Promise<void>
-  modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void
+  getSavedTrackList: (params: { limit: OneToFifty } | undefined) => Promise<void>;
+  updateLatestSavedTrackList: () => Promise<void>;
+  removeUnsavedTracks: () => void;
+  saveTracks: (trackIdList: string[]) => Promise<void>;
+  removeTracks: (trackIdList: string[]) => Promise<void>;
+  modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void;
 };
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {

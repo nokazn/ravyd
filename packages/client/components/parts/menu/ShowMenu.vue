@@ -27,7 +27,7 @@ const ON_SAVE_MENU_CLICKED = 'on-save-menu-clicked';
 
 export type On = {
   [ON_SAVE_MENU_CLICKED]: boolean;
-}
+};
 
 export default defineComponent({
   components: {

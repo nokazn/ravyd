@@ -18,7 +18,7 @@ export const APPEAR = 'appear';
 
 export type On = {
   [APPEAR]: void;
-}
+};
 
 export default defineComponent({
   props: {

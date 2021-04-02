@@ -1,7 +1,7 @@
 import type { ExtendedMutationPayload, SFCCommit } from 'typed-vuex';
 import type { App } from '~/entities';
 
-type Track = App.TrackDetail | App.PlaylistTrackDetail
+type Track = App.TrackDetail | App.PlaylistTrackDetail;
 
 // library/tracks/SET_ACTUAL_IS_SAVED を subscribe
 export const checkTrackSavedState = <T extends Track>(

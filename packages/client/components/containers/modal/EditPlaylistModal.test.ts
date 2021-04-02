@@ -10,7 +10,7 @@ type Form = {
   isPrivate: boolean;
   isCollaborative: boolean;
   playlistId?: string ;
-}
+};
 
 const CLICK = 'click';
 const INPUT = 'input';

@@ -11,7 +11,7 @@ interface ModifyTrackSavedStateParams {
 export type Actions = {
   getRecentlyPlayed: () => Promise<void>;
   modifyTrackSavedState: (params: ModifyTrackSavedStateParams) => void;
-}
+};
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async getRecentlyPlayed({ commit, dispatch }) {

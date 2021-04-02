@@ -32,7 +32,7 @@ const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 const emptyMenuItem = (name: string) : App.MenuItem<'custom'> => ({
   type: 'custom',

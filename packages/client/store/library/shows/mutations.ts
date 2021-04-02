@@ -12,7 +12,7 @@ export type Mutations = {
   RESET_UNUPDATED_COUNTS: void;
   SET_ACTUAL_IS_SAVED: [string, boolean];
   DELETE_ACTUAL_IS_SAVED: string;
-}
+};
 
 const mutations: VuexMutations<State, Mutations> = {
   SET_SHOW_LIST(state, showList) {

@@ -62,7 +62,7 @@ const CLICK = 'click';
 
 export type On = {
   [CLICK]: void;
-}
+};
 
 type Artist = App.MinimumArtist | SpotifyAPI.Artist;
 

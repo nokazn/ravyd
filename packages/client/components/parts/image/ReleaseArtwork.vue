@@ -56,7 +56,7 @@
 import { defineComponent, computed, PropType } from '@vue/composition-api';
 import ImageOverlay from '~/components/parts/image/ImageOverlay.vue';
 
-export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle'
+export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 const ON_LOADED = 'on-loaded';
@@ -64,7 +64,7 @@ const ON_LOADED = 'on-loaded';
 export type On = {
   [ON_MEDIA_BUTTON_CLICKED]: void;
   [ON_LOADED]: void;
-}
+};
 
 export default defineComponent({
   components: {

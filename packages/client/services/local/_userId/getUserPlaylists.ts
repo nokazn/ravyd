@@ -6,7 +6,7 @@ export type UserPlaylists = {
   hasNext: boolean;
   hasPrevious: boolean;
   total: number;
-}
+};
 
 export const getUserPlaylists = async (
   { app, params }: Context,

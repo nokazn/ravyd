@@ -104,7 +104,7 @@ export const nextRepeatState = (current: RepeatState[number]): RepeatState => {
   return [index, REPEAT_STATE_LIST[index]];
 };
 
-type CopyrightMap = Record<string, ('C' | 'P')[]>
+type CopyrightMap = Record<string, ('C' | 'P')[]>;
 export const parseCopyrights = (copyrights: SpotifyAPI.Copyright[]): string[] => {
   const textNormalizedCopyrights = copyrights.map((copyright) => {
     // 文頭の C/P マーク

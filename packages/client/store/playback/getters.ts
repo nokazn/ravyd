@@ -34,7 +34,7 @@ export type Getters = {
   repeatState: SpotifyAPI.RepeatState | undefined;
   isDisallowed: (disallow: Disallows | Disallows[]) => boolean;
   volumePercent: ZeroToHundred;
-}
+};
 
 const playerGetters: VuexGetters<State, Getters> = {
   track(state) {

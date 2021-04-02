@@ -58,7 +58,7 @@ import type { App } from '~/entities';
 
 export type On = {
   [ON_ROW_CLICKED]: App.EpisodeDetail;
-}
+};
 
 export default defineComponent({
   components: {

@@ -67,7 +67,7 @@ const ON_LOADED = 'on-loaded';
 export type On = {
   ON_MEDIA_BUTTON_CLICKED: void;
   ON_LOADED: void;
-}
+};
 export type MediaIcon = 'mdi-play-circle' | 'mdi-pause-circle';
 type AvatarType = 'user' | 'artist';
 

@@ -10,8 +10,8 @@ export const TITLE_MAP = {
   appears_on: '参加作品',
 } as const;
 
-export type ReleaseType = keyof typeof TITLE_MAP
-export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T]
+export type ReleaseType = keyof typeof TITLE_MAP;
+export type ReleaseTitle<T extends ReleaseType> = typeof TITLE_MAP[T];
 export type Release<T extends ReleaseType> = {
   title: ReleaseTitle<T>;
   items: App.ReleaseCard<'album'>[];
@@ -21,8 +21,8 @@ export type Release<T extends ReleaseType> = {
   // undefined の時は最初からすべて表示
   isAllShown: boolean | undefined;
   isAppended: boolean;
-}
-export type ArtistRelease<T extends ReleaseType = ReleaseType> = Map<T, Release<T>>
+};
+export type ArtistRelease<T extends ReleaseType = ReleaseType> = Map<T, Release<T>>;
 
 export const initalReleaseListMap: ArtistRelease = new Map([
   [
@@ -80,9 +80,9 @@ const getReleaseListHandler = ({ app, params }: Context) => async <T extends Rel
   limit,
   offset,
 }: {
-  releaseType: T
-  limit: OneToFifty
-  offset?: number
+  releaseType: T;
+  limit: OneToFifty;
+  offset?: number;
 }): Promise<[T, Release<T>]> => {
   const title: ReleaseTitle<T> = TITLE_MAP[releaseType];
 

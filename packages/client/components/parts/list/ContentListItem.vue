@@ -64,7 +64,7 @@ const CLICK = 'click';
 
 export type On = {
   [CLICK]: void;
-}
+};
 
 export default defineComponent({
   components: {

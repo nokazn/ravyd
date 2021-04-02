@@ -8,7 +8,7 @@ export type Actions = {
   extractDominantBackgroundColor: (src: string) => Promise<void>;
   setDefaultDominantBackgroundColor: () => void;
   resetDominantBackgroundColor: () => void;
-}
+};
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async nuxtServerInit({ dispatch }) {

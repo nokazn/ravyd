@@ -63,7 +63,7 @@ type AsyncData = {
   topArtistList: SpotifyAPI.Artist[];
   topTrackList: App.ReleaseCard<'track'>[];
   newReleaseList: App.ReleaseCard<'album'>[];
-}
+};
 
 @Component({
   components: {

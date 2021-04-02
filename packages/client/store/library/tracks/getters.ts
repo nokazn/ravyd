@@ -4,8 +4,8 @@ import type { State } from './types';
 
 export type Getters = {
   trackList: App.PlaylistTrackDetail[];
-  trackListLength: number
-  isFull: boolean
+  trackListLength: number;
+  isFull: boolean;
 };
 
 const libraryTracksGetters: VuexGetters<State, Getters> = {

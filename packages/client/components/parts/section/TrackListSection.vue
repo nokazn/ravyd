@@ -22,7 +22,7 @@ import ShowAllButton, { On as OnShowAll, INPUT } from '~/components/parts/button
 
 export type On = {
   [INPUT]: OnShowAll['input'];
-}
+};
 
 export default defineComponent({
   components: {

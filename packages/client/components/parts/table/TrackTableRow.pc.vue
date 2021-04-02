@@ -86,7 +86,7 @@ export type On = {
   [ON_ROW_CLICKED]: App.TrackDetail;
   [ON_MEDIA_BUTTON_CLICKED]: App.TrackDetail;
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail;
-}
+};
 
 export default defineComponent({
   components: {

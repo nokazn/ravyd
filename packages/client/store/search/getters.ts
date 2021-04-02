@@ -11,7 +11,7 @@ export type Getters = {
   playlists: App.ContentItem<'playlist'>[];
   shows: App.ContentItem<'show'>[];
   episodes: App.ContentItem<'episode'>[];
-}
+};
 
 const getters: VuexGetters<State, Getters> = {
   tracks(state) {

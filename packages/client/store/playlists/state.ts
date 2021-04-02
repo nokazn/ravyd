@@ -10,7 +10,7 @@ export type State = {
   actualIsSavedMap: Map<string, boolean>;
   unupdatedTrackCountsMap: Map<string, number>;
   actuallyDeletedTrackMap: Map<string, DeletedTrack>;
-}
+};
 
 const state = (): State => ({
   playlists: undefined,

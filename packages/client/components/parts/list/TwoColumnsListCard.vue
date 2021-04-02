@@ -37,7 +37,7 @@ import { defineComponent, PropType } from '@vue/composition-api';
 export type Item = {
   title: string;
   value: string | null;
-}
+};
 
 export default defineComponent({
   props: {

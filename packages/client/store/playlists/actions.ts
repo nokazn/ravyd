@@ -28,20 +28,20 @@ interface RemovePlaylistItem {
   track: {
     uri: string;
     positions: [number];
-  }
+  };
   name: string;
 }
 
 export type Actions = {
-  getPlaylists: (params?: { offset?: number, limit?: OneToFifty }) => Promise<void>;
+  getPlaylists: (params?: { offset?: number; limit?: OneToFifty }) => Promise<void>;
   getAllPlaylists: () => Promise<void>;
   createPlaylist: (payload: CreatePlaylistParams) => Promise<void>;
   editPlaylist: (payload: EditPlaylistParams) => Promise<void>;
   followPlaylist: (playlistId: string) => Promise<void>;
   unfollowPlaylist: (params: UnfollowPlaylistParams) => Promise<void>;
   addItemToPlaylist: (params: AddItemToPlaylistParams) => Promise<void>;
-  removePlaylistItem: (params: RemovePlaylistItem) => Promise<void>
-}
+  removePlaylistItem: (params: RemovePlaylistItem) => Promise<void>;
+};
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**

@@ -11,7 +11,7 @@ type ConvertEpisodeDetailParams<T> = T extends SpotifyAPI.Episode
   : CommonConvertEpisodeDetailParams & {
     showId: string;
     showName: string;
-  }
+  };
 
 const hasEpisodeAttributes = (
   params: ConvertEpisodeDetailParams<Episode>,

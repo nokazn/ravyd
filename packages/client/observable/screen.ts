@@ -19,7 +19,7 @@ type ScreenState = {
   isTouchScreen: boolean;
   mediaQueries: Partial<Record<DeviceType, MediaQueryList>>;
   observers: Partial<Record<DeviceType, MediaQueryListObserver>>;
-}
+};
 
 export type $Screen = {
   readonly isTouchScreen: boolean;
@@ -35,7 +35,7 @@ export type $Screen = {
   readonly artworkSize: number;
   observe: () => void;
   disconnectObserver: () => void;
-}
+};
 
 const BREAK_POINTS: Readonly<Record<DeviceType, number>> = {
   xs: 0,

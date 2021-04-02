@@ -40,13 +40,13 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 type Button = {
   icon: 'mdi-play' | 'mdi-pause';
   title: '再生' | '停止';
-}
+};
 
 const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 export default defineComponent({
   components: {

@@ -16,7 +16,7 @@ import PlaylistModal, {
 
 export type On = {
   [INPUT]: OnModal['input'];
-}
+};
 
 export default defineComponent({
   components: {

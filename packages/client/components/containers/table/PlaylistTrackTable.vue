@@ -62,8 +62,8 @@ import { useButtonSize } from '~/use/style';
 import type { App } from '~/entities';
 
 export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked']
-}
+  [ON_FAVORITE_BUTTON_CLICKED]: OnRow['on-favorite-button-clicked'];
+};
 
 export default defineComponent({
   components: {

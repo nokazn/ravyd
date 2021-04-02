@@ -28,9 +28,9 @@ const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 const ON_EDIT_MENU_CLICKED = 'on-edit-menu-clicked';
 
 export type On = {
-  [ON_FOLLOW_MENU_CLICKED]: boolean
-  [ON_EDIT_MENU_CLICKED]: boolean
-}
+  [ON_FOLLOW_MENU_CLICKED]: boolean;
+  [ON_EDIT_MENU_CLICKED]: boolean;
+};
 
 export default defineComponent({
   components: {

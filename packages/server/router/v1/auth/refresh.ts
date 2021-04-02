@@ -6,7 +6,7 @@ import { refreshAccessToken, upsertToken } from '@/helper';
 import type { paths, JSONResponseOf } from 'shared/types';
 
 type Path = paths['/auth/refresh']['put'];
-type Request = FastifyRequest<{ Body: Path['requestBody']['content']['application/json'] }>
+type Request = FastifyRequest<{ Body: Path['requestBody']['content']['application/json'] }>;
 type ResponseBody = JSONResponseOf<Path>;
 
 const {

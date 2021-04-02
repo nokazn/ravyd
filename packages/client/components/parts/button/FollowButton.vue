@@ -25,13 +25,13 @@ import { defineComponent, computed } from '@vue/composition-api';
 type Button = {
   icon: 'mdi-heart-plus-outline' | 'mdi-heart-outline' | 'mdi-heart';
   text: 'フォロー' | 'フォローしない' | 'フォロー中';
-}
+};
 
 const INPUT = 'input';
 
 export type On = {
-  [INPUT]: boolean
-}
+  [INPUT]: boolean;
+};
 
 export default defineComponent({
   props: {

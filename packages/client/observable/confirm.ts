@@ -9,7 +9,7 @@ type ConfirmState = {
   description: string;
   loading: boolean;
   onConfirm: (() => void | Promise<void>) | undefined;
-}
+};
 type ConfirmOptions = {
   color?: string | undefined;
   title?: string | undefined;
@@ -17,7 +17,7 @@ type ConfirmOptions = {
   description: string;
   loading?: boolean;
   onConfirm: (() => void | Promise<void>) | undefined;
-}
+};
 
 export type $Confirm = {
   readonly color: string | undefined;
@@ -30,7 +30,7 @@ export type $Confirm = {
   close: () => void;
   load: (loading: boolean) => void;
   onConfirm: (...args: unknown[]) => Promise<void>;
-}
+};
 
 const state = Vue.observable<ConfirmState>({
   value: false,

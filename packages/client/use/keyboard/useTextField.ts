@@ -9,7 +9,7 @@ import {
 export type VTextFieldRef = Vue & {
   focus(): void;
   blur(): void;
-}
+};
 
 export const useTextField = (
   root: SetupContext['root'],

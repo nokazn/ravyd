@@ -15,7 +15,7 @@ const $dispatch = jest.fn().mockResolvedValue(undefined);
 const factory = (
   disallowed: boolean = false,
   isBeginningOfTrack: boolean = false,
-  propsData?: { size?: number; },
+  propsData?: { size?: number },
 ) => {
   return mount(PreviousButton, {
     ...options,

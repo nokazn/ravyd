@@ -7,7 +7,7 @@ export type State = {
   playlists: SpotifyAPI.SimplePlaylist[] | undefined;
   shows: SpotifyAPI.SimpleShow[] | undefined;
   episodes: SpotifyAPI.SimpleEpisode[] | undefined;
-}
+};
 
 const state = (): State => ({
   albums: undefined,

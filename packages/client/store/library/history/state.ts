@@ -6,7 +6,7 @@ export type State = {
   historyList: App.PlaylistTrackDetail[];
   total: number | undefined;
   unupdatedCounts: number;
-}
+};
 
 const state = (): State => ({
   recentlyPlayed: [],

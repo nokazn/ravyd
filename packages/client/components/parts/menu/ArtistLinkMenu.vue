@@ -39,7 +39,7 @@ type MenuItem = {
   name: string;
   to: string;
   disabled: boolean;
-}
+};
 
 export default defineComponent({
   components: {

@@ -4,7 +4,7 @@ import type { State } from './types';
 export type Getters = {
   playbackPlayer: Spotify.SpotifyPlayer | undefined;
   isPlayerConnected: boolean;
-}
+};
 
 const playerGetters: VuexGetters<State, Getters> = {
   playbackPlayer(state) {

@@ -11,7 +11,7 @@ export type ShareMenuProps = {
   externalUrls: SpotifyAPI.ExternalUrls;
   left?: boolean;
   right?: boolean;
-}
+};
 
 export const useShareMenu = (
   options: {

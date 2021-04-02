@@ -7,7 +7,7 @@ export type AddItemToPlaylistMenuProps = {
   artists: App.MinimumArtist[] | string | undefined;
   left?: boolean;
   right?: boolean;
-}
+};
 
 export const useAddItemToPlaylistMenu = (
   item: App.SimpleTrackDetail | App.EpisodeDetail | App.ReleasePage | undefined,

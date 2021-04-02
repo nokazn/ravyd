@@ -26,8 +26,8 @@ import type { App } from '~/entities';
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';
 
 export type On = {
-  [ON_FAVORITE_MENU_CLICKED]: boolean
-}
+  [ON_FAVORITE_MENU_CLICKED]: boolean;
+};
 
 export default defineComponent({
   components: {

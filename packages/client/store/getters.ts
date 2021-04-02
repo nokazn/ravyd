@@ -8,7 +8,7 @@ export type Getters = {
   dominantBackgroundColor: App.DominantColor | undefined;
   backgroundStyles: (height: number) => { background?: string };
   headerStyles: { backgroundColor: string };
-}
+};
 
 const getters: VuexGetters<State, Getters> = {
   dominantBackgroundColor(state) {

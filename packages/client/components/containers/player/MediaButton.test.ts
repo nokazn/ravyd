@@ -15,7 +15,7 @@ const factory = (
   playing: boolean,
   propsData?: {
     size?: number;
-    circle?: boolean,
+    circle?: boolean;
   },
   disabled: boolean = false,
 ) => {

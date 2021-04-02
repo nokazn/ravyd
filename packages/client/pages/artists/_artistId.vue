@@ -161,7 +161,7 @@ interface AsyncData {
 }
 
 interface Data {
-  mutationUnsubscribe: (() => void) | undefined
+  mutationUnsubscribe: (() => void) | undefined;
   HEADER_REF: string;
 }
 

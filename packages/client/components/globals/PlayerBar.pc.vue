@@ -82,7 +82,7 @@ const ARTWORK_SIZE = 60;
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 export default defineComponent({
   components: {

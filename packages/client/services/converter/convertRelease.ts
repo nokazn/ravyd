@@ -4,9 +4,9 @@ import type { SpotifyAPI } from 'shared/types';
 import type { App } from '~/entities';
 
 export const convertReleaseDate = ({ releaseDate, releaseDatePrecision, format }: {
-  releaseDate: string
-  releaseDatePrecision: 'year' | 'month' | 'day'
-  format?: string
+  releaseDate: string;
+  releaseDatePrecision: 'year' | 'month' | 'day';
+  format?: string;
 }) => {
   // releaseDate のフォーマットと date のフォーマットの配列
   const releaseDateFormat = {

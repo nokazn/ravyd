@@ -5,7 +5,7 @@ import { upsertToken, refreshAccessToken } from '@/helper';
 import { TOKEN_EXPIRE_IN } from '@/config/constants';
 import type { paths, JSONResponseOf } from 'shared/types';
 
-type ResponseBody = JSONResponseOf<paths['/auth']['get']>
+type ResponseBody = JSONResponseOf<paths['/auth']['get']>;
 
 const { INTERNAL_SERVER_ERROR } = httpStatusCodes;
 

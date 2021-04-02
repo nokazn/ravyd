@@ -22,7 +22,7 @@ export type State = {
   disallows: SpotifyAPI.Disallows;
   volumePercent: ZeroToHundred;
   isMuted: boolean;
-}
+};
 
 const state = (): State => ({
   pollingPlaybackTimer: undefined,

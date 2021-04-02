@@ -29,13 +29,13 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 type Button = {
   icon: 'mdi-chevron-down' | 'mdi-chevron-up';
   text: string;
-}
+};
 
 export const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 export default defineComponent({
   props: {

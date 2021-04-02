@@ -31,7 +31,7 @@ const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 export default defineComponent({
   props: {

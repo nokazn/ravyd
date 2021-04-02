@@ -42,12 +42,12 @@ import { defineComponent, computed, PropType } from '@vue/composition-api';
 import { textColorClass } from '~/utils/text';
 
 export type Item = {
-  name: string
-  to: string
-  icon?: string
-  isSet?: boolean
-  isPlaying?: boolean
-}
+  name: string;
+  to: string;
+  icon?: string;
+  isSet?: boolean;
+  isPlaying?: boolean;
+};
 
 export default defineComponent({
   props: {

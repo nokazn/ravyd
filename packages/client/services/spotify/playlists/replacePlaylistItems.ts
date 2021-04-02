@@ -14,8 +14,8 @@ export const replacePlaylistItems = (context: Context) => {
     playlistId,
     uriList,
   }: {
-    playlistId: string
-    uriList?: string[]
+    playlistId: string;
+    uriList?: string[];
   }): Promise<Partial<SpotifyAPI.PlaylistSnapshot>[]> => {
     const length = uriList?.length;
     const limit = 100;

@@ -29,8 +29,8 @@ import type { App } from '~/entities';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
 
 export type On = {
-  [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked']
-}
+  [ON_FAVORITE_BUTTON_CLICKED]: OnListItem['on-favorite-button-clicked'];
+};
 
 export default defineComponent({
   components: {

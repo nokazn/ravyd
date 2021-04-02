@@ -33,12 +33,12 @@ const INPUT = 'input';
 
 export type On = {
   [INPUT]: boolean;
-}
+};
 
 type Button = {
   icon: 'mdi-play' | 'mdi-pause';
   text: '再生' | '停止';
-}
+};
 
 export default defineComponent({
   props: {

@@ -13,7 +13,7 @@ interface SimpleTrackParams {
   track_number?: number;
 }
 interface TrackParams extends SimpleTrackParams {
-  popularity?: OneToHundred,
+  popularity?: OneToHundred;
 }
 interface PlaylistTrackParams extends TrackParams {
   added_at?: string;

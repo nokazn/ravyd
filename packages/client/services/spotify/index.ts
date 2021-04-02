@@ -31,4 +31,4 @@ export const spotify = (context: Context) => ({
 });
 
 const endpoints = (context: Context) => spotify(context);
-export type SpotifyServices = ReturnType<typeof endpoints>
+export type SpotifyServices = ReturnType<typeof endpoints>;

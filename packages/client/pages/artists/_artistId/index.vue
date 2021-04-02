@@ -89,14 +89,14 @@ const ABBREVIATED_RELEASE_LENGTH = 12;
 const LIMIT_OF_RELEASES = 30;
 
 interface AsyncData {
-  topTrackList: App.TrackDetail[]
-  releaseListMap: ArtistRelease
-  ABBREVIATED_RELEASE_LENGTH: number
+  topTrackList: App.TrackDetail[];
+  releaseListMap: ArtistRelease;
+  ABBREVIATED_RELEASE_LENGTH: number;
 }
 
 interface Data {
-  isAllTracksShown: boolean | undefined
-  mutationUnsubscribe: (() => void) | undefined
+  isAllTracksShown: boolean | undefined;
+  mutationUnsubscribe: (() => void) | undefined;
 }
 
 @Component({

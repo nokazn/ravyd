@@ -17,7 +17,7 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 type MediaButton = {
   icon: 'mdi-play-circle' | 'mdi-pause-circle' | 'mdi-play' | 'mdi-pause';
   title: '再生' | '停止';
-}
+};
 
 export default defineComponent({
   components: {

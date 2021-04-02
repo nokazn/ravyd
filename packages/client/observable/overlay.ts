@@ -4,14 +4,14 @@ type OverlayOptions = {
   opacity?: number;
   fullscreen: boolean;
   zIndex?: number;
-}
+};
 
 type OverlayState = {
   value: boolean;
   opacity: number | undefined;
   fullscreen: boolean;
   zIndex: number | undefined;
-}
+};
 
 export type $Overlay = {
   readonly value: boolean;
@@ -19,7 +19,7 @@ export type $Overlay = {
   readonly fullscreen: boolean;
   readonly zIndex: number | undefined;
   change: (value: boolean, options?: OverlayOptions) => void;
-}
+};
 
 const state = Vue.observable<OverlayState>({
   value: false,

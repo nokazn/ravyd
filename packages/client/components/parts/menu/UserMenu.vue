@@ -27,7 +27,7 @@ const ON_FOLLOW_MENU_CLICKED = 'on-follow-menu-clicked';
 
 export type On = {
   [ON_FOLLOW_MENU_CLICKED]: boolean;
-}
+};
 
 export default defineComponent({
   components: {

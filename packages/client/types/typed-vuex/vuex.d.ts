@@ -3,7 +3,7 @@ import { Context } from '@nuxt/types';
 
 type ActionMethods = {
   [k: string]: (...args: any) => Promise<any> | any;
-}
+};
 type Dictionary<T = unknown> = Record<string, T>;
 // undefined をとりうるか (省略可能か) で場合分け
 type OptionalArguments<T> = Extract<T, undefined> extends never
@@ -24,14 +24,14 @@ declare module 'typed-vuex' {
       rootState: RootState,
       rootGetters: RootGetters,
     ) => G[K];
-  }
+  };
 
   /**
    * mutations
    */
   type VuexMutations<S, M> = {
     [K in keyof M]: (state: S, ...payload: OptionalArguments<M[K]>) => void;
-  }
+  };
 
   type ExtendedCommit<M extends Dictionary> = <T extends keyof (M & RootMutations)>(
     type: T,
@@ -64,22 +64,22 @@ declare module 'typed-vuex' {
   ) => ReturnType<RootActions[T]>;
 
   interface _Context<S, G, M extends Dictionary, A extends ActionMethods> {
-    state: S,
-    getters: G,
-    commit: ExtendedCommit<M>,
-    dispatch: ExtendedDispatch<A>,
-    rootState: RootState,
-    rootGetters: RootGetters,
+    state: S;
+    getters: G;
+    commit: ExtendedCommit<M>;
+    dispatch: ExtendedDispatch<A>;
+    rootState: RootState;
+    rootGetters: RootGetters;
   }
 
   // nuxtServerInit 用
   interface _StoreContext {
-    state: RootState,
-    getters: RootGetters,
-    commit: ExtendedCommit<RootMutations>,
-    dispatch: ExtendedDispatch<RootActions>
-    rootState: RootState,
-    rootGetters: RootGetters,
+    state: RootState;
+    getters: RootGetters;
+    commit: ExtendedCommit<RootMutations>;
+    dispatch: ExtendedDispatch<RootActions>;
+    rootState: RootState;
+    rootGetters: RootGetters;
   }
 
   type VuexActions<S, A extends ActionMethods, G = {}, M extends Dictionary = {}> = {
@@ -93,8 +93,8 @@ declare module 'typed-vuex' {
     nuxtServerInit?: (
       context: _StoreContext,
       payload: Context,
-    ) => void | Promise<void>
-  }
+    ) => void | Promise<void>;
+  };
 
   /**
    * subscribe

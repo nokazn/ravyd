@@ -6,7 +6,7 @@ export type ArtistLinkMenuProps = {
   artists: App.MinimumArtist[];
   left?: boolean;
   right?: boolean;
-}
+};
 
 export const useArtistLinkMenu = (
   root: SetupContext['root'],

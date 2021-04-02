@@ -21,7 +21,7 @@ import Tabs, { Item } from '~/components/parts/tab/Tabs.vue';
 
 type Data = {
   tabs: Item[];
-}
+};
 
 @Component({
   components: {

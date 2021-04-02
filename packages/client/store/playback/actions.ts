@@ -24,8 +24,8 @@ type PlayParams = {
     uri?: undefined;
     position: number;
   };
-  track?: App.MinimumTrack & { index?: number; };
-}
+  track?: App.MinimumTrack & { index?: number };
+};
 interface SeekParams {
   positionMs: number;
   currentPositionMs?: number;

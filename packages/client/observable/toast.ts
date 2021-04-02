@@ -1,16 +1,16 @@
 import Vue from 'vue';
 
-export type ToastType = 'primary' | 'accent' | 'secondary' | 'info' | 'warning' | 'error' | 'success' | undefined
+export type ToastType = 'primary' | 'accent' | 'secondary' | 'info' | 'warning' | 'error' | 'success' | undefined;
 
 type Toast = {
   color?: ToastType;
   message: string;
   timeout?: number;
-}
+};
 
 type ToastState = {
   toasts: Toast[];
-}
+};
 
 export type $Toast = {
   toasts: Toast[];
@@ -19,7 +19,7 @@ export type $Toast = {
   pushError: (message: string, timeout?: number) => void;
   pushPrimary: (message: string, timeout?: number) => void;
   requirePremium: (message?: string) => void;
-}
+};
 
 const state = Vue.observable<ToastState>({
   toasts: [],

@@ -43,7 +43,7 @@ export const ON_CONFIRMED = 'on-confirmed';
 export type On = {
   [INPUT]: boolean;
   [ON_CONFIRMED]: string | undefined;
-}
+};
 
 export default defineComponent({
   components: {

@@ -11,7 +11,7 @@ export type Mutations = {
   SET_PLAYLISTS: SpotifyAPI.SimplePlaylist[] | undefined;
   SET_SHOWS: SpotifyAPI.SimpleShow[] | undefined;
   SET_EPISODES: SpotifyAPI.SimpleEpisode[] | undefined;
-}
+};
 
 const mutations: VuexMutations<State, Mutations> = {
   SET_ALBUMS(state, albums) {

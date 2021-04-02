@@ -21,7 +21,7 @@ import TextInfo from '~/components/parts/text/TextInfo.vue';
 type Duration = {
   text: string;
   title: string;
-}
+};
 
 export default defineComponent({
   components: {

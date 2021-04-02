@@ -14,8 +14,8 @@ import Vue, { PropType } from 'vue';
 import type { NuxtError } from '@nuxt/types';
 
 type Data = {
-  errorMessage: string
-}
+  errorMessage: string;
+};
 
 export default Vue.extend({
   layout: 'empty',

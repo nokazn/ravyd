@@ -13,7 +13,7 @@ interface PlaybackGetters {
 }
 type RootGetters = {
   [K in keyof PlaybackGetters as `playback/${K}`]: jest.Mock<PlaybackGetters[K]>;
-}
+};
 
 const toRootGetters = (getters: PlaybackGetters): RootGetters => {
   return Object.entries(getters).reduce<RootGetters>((prev, [k, v]) => ({

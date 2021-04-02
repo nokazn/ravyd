@@ -56,7 +56,7 @@ import Search from '~/components/globals/Search.vue';
 type HeaderStyles = {
   backgroundColor: string;
   backdropFilter?: string;
-}
+};
 
 export default defineComponent({
   components: {

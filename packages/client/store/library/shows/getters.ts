@@ -6,7 +6,7 @@ export type Getters = {
   showList: SpotifyAPI.SimpleShow[];
   showListLength: number;
   isFull: boolean;
-}
+};
 
 const libraryShowsGetters: VuexGetters<State, Getters> = {
   showList(state) {

@@ -97,11 +97,11 @@ type PlaylistBase = {
   description: string;
   isPrivate: boolean;
   isCollaborative: boolean;
-}
-type Playlist = PlaylistBase & { artwork: File | undefined; };
-type FormRef = Vue & { resetValidation(): void; }
+};
+type Playlist = PlaylistBase & { artwork: File | undefined };
+type FormRef = Vue & { resetValidation(): void };
 // 編集するときは playlistId を指定
-export type Form = PlaylistBase & { playlistId?: string; }
+export type Form = PlaylistBase & { playlistId?: string };
 export type Handler<T extends HandlerType> = (payload: T extends 'edit'
   ? {
     playlistId: string;
@@ -116,7 +116,7 @@ export type Handler<T extends HandlerType> = (payload: T extends 'edit'
     isPublic: boolean;
     isCollaborative: boolean;
   }
-) => Promise<void>
+) => Promise<void>;
 
 export const INPUT = 'input';
 export const UPDATE_IMAGE = 'update:image';
@@ -124,7 +124,7 @@ export const UPDATE_IMAGE = 'update:image';
 export type On = {
   [INPUT]: boolean;
   [UPDATE_IMAGE]: void;
-}
+};
 
 export default defineComponent({
   components: {

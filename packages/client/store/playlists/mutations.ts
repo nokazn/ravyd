@@ -27,7 +27,7 @@ export type Mutations = {
   DELETE_UNUPDATED_TRACKS_MAP: string;
   SET_ACTUALLY_DELETED_TRACK: [string, DeletedTrack];
   DELETE_ACTUALLY_DELETED_TRACK: string;
-}
+};
 
 const mutations: VuexMutations<State, Mutations> = {
   SET_PLAYLISTS(state, playlists) {

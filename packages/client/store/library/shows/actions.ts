@@ -16,7 +16,7 @@ export type Actions = {
   saveShows: (showIdList: string[]) => Promise<void>;
   removeShows: (showIdList: string[]) => Promise<void>;
   modifyShowSavedState: (params: ModifyShowSavedStateParams) => void;
-}
+};
 
 const actions: VuexActions<State, Actions, Getters, Mutations> = {
   /**

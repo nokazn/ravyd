@@ -33,7 +33,7 @@ import { defineComponent, ref, PropType } from '@vue/composition-api';
 export type Item = {
   title: string;
   to: string;
-}
+};
 
 export default defineComponent({
   props: {

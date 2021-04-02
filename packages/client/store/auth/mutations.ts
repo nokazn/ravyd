@@ -7,14 +7,14 @@ type Token = {
   authState: string;
   accessToken: SpotifyAPI.Auth.Token['access_token'];
   expireIn: number;
-}
+};
 
 export type Mutations = {
   SET_TOKEN: Token | undefined;
   SET_AUTH_STATE: string | undefined | null;
   SET_USER: SpotifyAPI.User | undefined;
   SET_IS_REFRESHING: boolean;
-}
+};
 
 const mutations: VuexMutations<State, Mutations> = {
   SET_TOKEN(state, token) {

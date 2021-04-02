@@ -62,7 +62,7 @@ type MenuItem = {
   title: string;
   to: string | undefined;
   disabled?: boolean;
-}
+};
 
 export default defineComponent({
   components: {

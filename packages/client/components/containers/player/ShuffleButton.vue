@@ -18,7 +18,7 @@ import CircleButton from '~/components/parts/button/CircleButton.vue';
 type ShuffleButton = {
   color: 'active-icon' | 'inactive';
   title: 'シャッフル再生' | 'シャッフル再生しない';
-}
+};
 
 export default defineComponent({
   components: {

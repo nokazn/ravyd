@@ -10,7 +10,7 @@ type Track = {
 type RequestBody = {
   tracks: Track[];
   snapshot_id?: string;
-}
+};
 
 export const removePlaylistItems = (context: Context) => {
   const { app } = context;

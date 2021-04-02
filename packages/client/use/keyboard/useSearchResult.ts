@@ -14,7 +14,7 @@ import type { App } from '~/entities';
 type ItemMap = {
   title: string;
   items: App.ContentItem<SpotifyAPI.SearchType>[];
-}
+};
 
 const key = 'SEARCH_RESULT';
 const LIMIT_OF_SEARCH_ITEM = 4;

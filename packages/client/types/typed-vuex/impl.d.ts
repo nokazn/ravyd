@@ -16,19 +16,19 @@ import * as Search from '~/store/search/types';
  */
 declare module 'typed-vuex' {
   type RootState = {
-    auth: Auth.State
+    auth: Auth.State;
     library: {
-      tracks: LibraryTracks.State
-      releases: LibraryReleases.State
-      artists: LibraryArtists.State
-      shows: LibraryShows.State
-      history: LibraryHistory.State
-    }
-    playback: Playback.State
-    player: Player.State
-    playlists: Playlists.State
-    search: Search.State
-  } & Root.State
+      tracks: LibraryTracks.State;
+      releases: LibraryReleases.State;
+      artists: LibraryArtists.State;
+      shows: LibraryShows.State;
+      history: LibraryHistory.State;
+    };
+    playback: Playback.State;
+    player: Player.State;
+    playlists: Playlists.State;
+    search: Search.State;
+  } & Root.State;
 
   type RootGetters = Root.Getters
     & KeyPrefix<'auth', Auth.Getters>
@@ -40,7 +40,7 @@ declare module 'typed-vuex' {
     & KeyPrefix<'playback', Playback.Getters>
     & KeyPrefix<'player', Player.Getters>
     & KeyPrefix<'playlists', Playlists.Getters>
-    & KeyPrefix<'search', Search.Getters>
+    & KeyPrefix<'search', Search.Getters>;
 
   type RootMutations = Root.Mutations
     & KeyPrefix<'auth', Auth.Mutations>
@@ -52,7 +52,7 @@ declare module 'typed-vuex' {
     & KeyPrefix<'playback', Playback.Mutations>
     & KeyPrefix<'player', Player.Mutations>
     & KeyPrefix<'playlists', Playlists.Mutations>
-    & KeyPrefix<'search', Search.Mutations>
+    & KeyPrefix<'search', Search.Mutations>;
 
   type RootActions = Root.Actions
     & KeyPrefix<'auth', Auth.Actions>
@@ -64,5 +64,5 @@ declare module 'typed-vuex' {
     & KeyPrefix<'playback', Playback.Actions>
     & KeyPrefix<'player', Player.Actions>
     & KeyPrefix<'playlists', Playlists.Actions>
-    & KeyPrefix<'search', Search.Actions>
+    & KeyPrefix<'search', Search.Actions>;
 }

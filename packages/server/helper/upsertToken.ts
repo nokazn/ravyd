@@ -8,7 +8,7 @@ type Params = {
 } | {
   authState?: undefined;
   refreshToken: string;
-}
+};
 
 const generateAuthStateKey = () => {
   const key = uuid4();

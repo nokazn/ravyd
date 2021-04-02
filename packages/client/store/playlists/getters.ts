@@ -6,7 +6,7 @@ export type Getters = {
   playlists: SpotifyAPI.SimplePlaylist[] | undefined;
   ownPlaylists: SpotifyAPI.SimplePlaylist[];
   playlistCounts: number;
-}
+};
 
 const getters: VuexGetters<State, Getters> = {
   playlists(state) {

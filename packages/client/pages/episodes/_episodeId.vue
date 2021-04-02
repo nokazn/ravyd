@@ -128,12 +128,12 @@ const ARTWORK_SIZE = 220;
 const HEADER_REF = 'HEADER_REF';
 
 interface AsyncData {
-  episode: App.EpisodeDetail | undefined
+  episode: App.EpisodeDetail | undefined;
 }
 
 interface Data {
-  ARTWORK_SIZE: number
-  HEADER_REF: string
+  ARTWORK_SIZE: number;
+  HEADER_REF: string;
 }
 
 @Component({

@@ -24,7 +24,7 @@ export type { Form } from '~/components/containers/modal/PlaylistModal.vue';
 export type On = {
   [INPUT]: OnModal['input'];
   [UPDATE_IMAGE]: OnModal['update:image'];
-}
+};
 
 export default defineComponent({
   components: {

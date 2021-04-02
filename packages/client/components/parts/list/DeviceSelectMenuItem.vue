@@ -48,7 +48,7 @@ const CLICK = 'click';
 
 export type On = {
   [CLICK]: App.Device['id'];
-}
+};
 
 const deviceIcon = (type: SpotifyAPI.Device['type']): string => {
   switch (type) {

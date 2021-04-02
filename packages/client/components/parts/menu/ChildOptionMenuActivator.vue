@@ -23,11 +23,11 @@ const CLICK = 'click';
 
 export type On = {
   [CLICK]: void;
-}
+};
 
 type EventHandlers = {
   [k: string]: (e?: Event) => void;
-}
+};
 
 export default defineComponent({
   props: {

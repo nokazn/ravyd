@@ -11,7 +11,7 @@ import { useIntersectionObserver } from '~/use/observer';
 type Card = {
   isVisible: boolean;
   element: HTMLDivElement;
-}
+};
 
 // variables.scss の $g-gradation-width
 const gradationWidth = (width: number): number => {

@@ -70,7 +70,7 @@ import type { App } from '~/entities';
 export type On = {
   [ON_MEDIA_BUTTON_CLICKED]:App.TrackDetail;
   [ON_FAVORITE_BUTTON_CLICKED]: App.TrackDetail;
-}
+};
 
 export default defineComponent({
   components: {

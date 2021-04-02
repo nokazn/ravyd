@@ -6,7 +6,7 @@ export type Feature = {
   items: SpotifyAPI.SimplePlaylist[];
   hasNext: boolean;
   hasPrevious: boolean;
-}
+};
 
 export const getFeaturedPlaylists = async (
   { app }: Context,

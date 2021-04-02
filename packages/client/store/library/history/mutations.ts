@@ -11,7 +11,7 @@ export type Mutations = {
   UNSHIFT_TO_RECENTLY_PLAYED: SpotifyAPI.Player.History[];
   SET_TRACK_HISTORY_LIST: App.PlaylistTrackDetail[];
   SET_TOTAL: number;
-}
+};
 
 const mutations: VuexMutations<State, Mutations> = {
   SET_RECENTLY_PLAYED(state, recentlyPlayed) {

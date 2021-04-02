@@ -6,17 +6,17 @@ import type { paths, JSONResponseOf } from 'shared/types';
 import type { State, Getters, Mutations } from './types';
 
 export type Actions = {
-  login: () => Promise<JSONResponseOf<paths['/auth/login']['post']>>
+  login: () => Promise<JSONResponseOf<paths['/auth/login']['post']>>;
   exchangeCodeWithAccessToken: (params: {
     code: string;
     state: string;
-  }) => Promise<JSONResponseOf<paths['/auth/login/callback']['get']>>
-  getAccessToken: () => Promise<JSONResponseOf<paths['/auth']['get']>>
-  getUserData: () => Promise<void>
-  refreshAccessToken: () => Promise<JSONResponseOf<paths['/auth/refresh']['put']> | undefined>
-  logout: () => Promise<void>
-  confirmAuthState: (params?: { checkPremium?: boolean } | undefined) => Promise<boolean>
-}
+  }) => Promise<JSONResponseOf<paths['/auth/login/callback']['get']>>;
+  getAccessToken: () => Promise<JSONResponseOf<paths['/auth']['get']>>;
+  getUserData: () => Promise<void>;
+  refreshAccessToken: () => Promise<JSONResponseOf<paths['/auth/refresh']['put']> | undefined>;
+  logout: () => Promise<void>;
+  confirmAuthState: (params?: { checkPremium?: boolean } | undefined) => Promise<boolean>;
+};
 
 const { CONFLICT } = httpStatusCodes;
 

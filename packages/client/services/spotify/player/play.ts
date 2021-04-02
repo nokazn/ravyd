@@ -1,6 +1,6 @@
 import type { Context } from '@nuxt/types';
 
-type Offset = { uri: string; } | { position: number; };
+type Offset = { uri: string } | { position: number };
 
 export const play = ({ app }: Context) => {
   /**
