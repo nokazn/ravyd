@@ -7,7 +7,7 @@ export type State = {
   actualIsSavedMap: Map<string, boolean>;
 };
 
-const state: () => State = () => ({
+const state = (): State => ({
   releaseList: [],
   total: undefined,
   unupdatedCounts: 0,
