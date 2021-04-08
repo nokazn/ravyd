@@ -52,14 +52,14 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     // ライブラリの情報が更新されていないものの数
     const {
       showList: currentShowList,
-      unupdatedCounts,
+      unacquiredShows,
     } = state;
-    if (unupdatedCounts === 0) return;
+    if (unacquiredShows === 0) return;
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
-    const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
+    const limit = Math.min(unacquiredShows, maxLimit) as OneToFifty;
     const handler = (index: number): Promise<LibraryOfShows | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedShows({
@@ -70,7 +70,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     const shows: LibraryOfShows | undefined = await multipleRequests(
       handler,
-      unupdatedCounts,
+      unacquiredShows,
       maxLimit,
     ).then((pagings) => pagings.reduce((prev, curr) => {
       // 1つでもリクエストが失敗したらすべて無効にする
@@ -96,7 +96,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     commit('UNSHIFT_TO_SHOW_LIST', addedShowList);
     commit('SET_TOTAL', shows.total);
-    commit('RESET_UNUPDATED_COUNTS');
+    commit('RESET_UNACQUIRED_SHOWS');
   },
 
   /**
@@ -157,7 +157,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     // ライブラリ一覧に表示されてないリリースを保存した場合
     if (isSaved && savedShowIndex === -1) {
-      commit('INCREMENT_UNUPDATED_COUNTS');
+      commit('INCREMENT_UNACQUIRED_SHOWS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [showId, isSaved]);

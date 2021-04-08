@@ -50,10 +50,10 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
   async updateLatestSavedArtistList({ state, commit, dispatch }) {
     // ライブラリの情報が更新されていないものの数
     const {
-      unupdatedCounts,
+      unacquiredArtists,
       artistList: currentArtistList,
     } = state;
-    if (unupdatedCounts === 0) return;
+    if (unacquiredArtists === 0) return;
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
@@ -61,7 +61,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     // TODO: コンパイルを通すためにとりあえずキャストする
     const { artists } = await this.$spotify.following.getUserFollowed({
       type: 'artist',
-      limit: Math.min(unupdatedCounts, maxLimit) as TODO,
+      limit: Math.min(unacquiredArtists, maxLimit) as TODO,
     });
     if (artists == null) {
       this.$toast.pushError('フォロー中のアーティストの一覧を更新できませんでした。');
@@ -80,7 +80,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     commit('UNSHIFT_TO_ARTIST_LIST', addedArtistList);
     commit('SET_TOTAL', artists.total);
-    commit('RESET_UNUPDATED_COUNTS');
+    commit('RESET_UNACQUIRED_ARTISTS');
   },
 
   /**
@@ -146,7 +146,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     // ライブラリ一覧に表示されてないリリースを保存した場合
     if (isSaved && savedArtistIndex === -1) {
-      commit('INCREMENT_UNUPDATED_COUNTS');
+      commit('INCREMENT_UNACQUIRED_ARTISTS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [artistId, isSaved]);

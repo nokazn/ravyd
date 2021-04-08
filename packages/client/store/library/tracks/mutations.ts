@@ -9,8 +9,8 @@ export type Mutations = {
   ADD_TO_TRACK_LIST: App.PlaylistTrackDetail[];
   UNSHIFT_TO_TRACK_LIST: App.PlaylistTrackDetail[];
   SET_TOTAL: number;
-  INCREMENT_UNUPDATED_COUNTS: void;
-  RESET_UNUPDATED_COUNTS: void;
+  INCREMENT_UNACQUIRED_TRACKS: void;
+  RESET_UNACQUIRED_TRACKS: void;
   SET_ACTUAL_IS_SAVED: [string, boolean];
   DELETE_ACTUAL_IS_SAVED: string;
 };
@@ -34,12 +34,12 @@ const mutations: VuexMutations<State, Mutations> = {
     state.total = total;
   },
 
-  INCREMENT_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts += 1;
+  INCREMENT_UNACQUIRED_TRACKS(state) {
+    state.unacquiredTracks += 1;
   },
 
-  RESET_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts = 0;
+  RESET_UNACQUIRED_TRACKS(state) {
+    state.unacquiredTracks = 0;
   },
 
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {

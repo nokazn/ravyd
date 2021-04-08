@@ -9,8 +9,8 @@ export type Mutations = {
   ADD_TO_RELEASE_LIST: App.ReleaseCard<'album'>[];
   UNSHIFT_TO_RELEASE_LIST: App.ReleaseCard<'album'>[];
   SET_TOTAL: number;
-  INCREMENT_UNUPDATED_COUNTS: void;
-  RESET_UNUPDATED_COUNTS: void;
+  INCREMENT_UNACQUIRED_RELEASES: void;
+  RESET_UNACQUIRED_RELEASES: void;
   SET_ACTUAL_IS_SAVED: [string, boolean];
   DELETE_ACTUAL_IS_SAVED: string;
 };
@@ -34,12 +34,12 @@ const mutations: VuexMutations<State, Mutations> = {
     state.total = total;
   },
 
-  INCREMENT_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts += 1;
+  INCREMENT_UNACQUIRED_RELEASES(state) {
+    state.unacquiredReleases += 1;
   },
 
-  RESET_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts = 0;
+  RESET_UNACQUIRED_RELEASES(state) {
+    state.unacquiredReleases = 0;
   },
 
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {

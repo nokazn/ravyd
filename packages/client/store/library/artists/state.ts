@@ -3,14 +3,14 @@ import type { SpotifyAPI } from 'shared/types';
 export type State = {
   artistList: SpotifyAPI.Artist[];
   total: number | undefined;
-  unupdatedCounts: number;
+  unacquiredArtists: number;
   actualIsSavedMap: Map<string, boolean>;
 };
 
-const state: () => State = () => ({
+const state = (): State => ({
   artistList: [],
   total: undefined,
-  unupdatedCounts: 0,
+  unacquiredArtists: 0,
   actualIsSavedMap: new Map(),
 });
 

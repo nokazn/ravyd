@@ -56,16 +56,16 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     type LibraryOfReleases = SpotifyAPI.LibraryOf<'album'>;
     // ライブラリの情報が更新されていないものの数
     const {
-      unupdatedCounts,
+      unacquiredReleases,
       releaseList: currentReleaseList,
     } = state;
-    if (unupdatedCounts === 0) return;
+    if (unacquiredReleases === 0) return;
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
-    const limit = Math.min(unupdatedCounts, maxLimit) as OneToFifty;
+    const limit = Math.min(unacquiredReleases, maxLimit) as OneToFifty;
     const handler = (index: number): Promise<LibraryOfReleases | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedAlbums({
@@ -75,7 +75,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     };
     const releases: LibraryOfReleases | undefined = await multipleRequests(
       handler,
-      unupdatedCounts,
+      unacquiredReleases,
       maxLimit,
     ).then((pagings) => pagings.reduce((prev, curr) => {
       // 1つでもリクエストが失敗したらすべて無効にする
@@ -101,7 +101,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       : releases.items.slice(0, lastReleaseIndex).map(convertRelease);
     commit('UNSHIFT_TO_RELEASE_LIST', addedReleaseList);
     commit('SET_TOTAL', releases.total);
-    commit('RESET_UNUPDATED_COUNTS');
+    commit('RESET_UNACQUIRED_RELEASES');
   },
 
   /**
@@ -162,7 +162,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     // ライブラリ一覧に表示されてないリリースを保存した場合
     if (isSaved && savedReleaseIndex === -1) {
-      commit('INCREMENT_UNUPDATED_COUNTS');
+      commit('INCREMENT_UNACQUIRED_RELEASES');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [releaseId, isSaved]);

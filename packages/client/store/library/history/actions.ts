@@ -30,7 +30,6 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     commit('SET_RECENTLY_PLAYED', recentlyPlayed.items);
     commit('SET_TRACK_HISTORY_LIST', trackList);
-    commit('SET_TOTAL', recentlyPlayed.total);
   },
 
   modifyTrackSavedState({ state, commit }, { trackId, isSaved }) {

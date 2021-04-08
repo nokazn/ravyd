@@ -3,14 +3,14 @@ import type { App } from '~/entities';
 export type State = {
   releaseList: App.ReleaseCard<'album'>[];
   total: number | undefined;
-  unupdatedCounts: number;
+  unacquiredReleases: number;
   actualIsSavedMap: Map<string, boolean>;
 };
 
-const state: () => State = () => ({
+const state = (): State => ({
   releaseList: [],
   total: undefined,
-  unupdatedCounts: 0,
+  unacquiredReleases: 0,
   actualIsSavedMap: new Map(),
 });
 
