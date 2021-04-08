@@ -341,7 +341,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
 
     // アイテムを追加した後呼ばれる
-    const subscribeAddedItem = async (mutationPayload: ExtendedMutationPayload<'playlists/INCREMENT_UNUPDATED_TRACKS_MAP'>) => {
+    const subscribeAddedItem = async (mutationPayload: ExtendedMutationPayload<'playlists/INCREMENT_UNACQUIRED_TRACKS'>) => {
       if (this.playlist == null || this.playlistTracks == null) return;
       const [playlistId, limit] = mutationPayload.payload;
       const { hasNext } = this.playlistTracks;
@@ -354,11 +354,11 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
           totalTracks: playlist.totalTracks + limit,
         };
       }
-      this.$commit('playlists/DELETE_UNUPDATED_TRACKS_MAP', playlistId);
+      this.$commit('playlists/UNSET_UNACQUIRED_TRACK', playlistId);
     };
 
     // アイテムを削除した後呼ばれる
-    const subscribeRemovedItem = (mutationPayload: ExtendedMutationPayload<'playlists/SET_ACTUALLY_DELETED_TRACK'>) => {
+    const subscribeRemovedItem = (mutationPayload: ExtendedMutationPayload<'playlists/SET_DELETED_TRACK'>) => {
       if (this.playlist == null || this.playlistTracks == null) return;
 
       const [playlistId, { uri, positions: [index] }] = mutationPayload.payload;
@@ -385,7 +385,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
           totalTracks: currentPlaylist.totalTracks - 1,
         };
       }
-      this.$commit('playlists/DELETE_ACTUALLY_DELETED_TRACK', playlistId);
+      this.$commit('playlists/UNSET_DELETED_TRACK', playlistId);
     };
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
@@ -400,10 +400,10 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
         case 'playlists/EDIT_PLAYLIST':
           subscribeEditedPlaylist(mutation as ExtendedMutationPayload<typeof type>);
           break;
-        case 'playlists/INCREMENT_UNUPDATED_TRACKS_MAP':
+        case 'playlists/INCREMENT_UNACQUIRED_TRACKS':
           subscribeAddedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
-        case 'playlists/SET_ACTUALLY_DELETED_TRACK':
+        case 'playlists/SET_DELETED_TRACK':
           subscribeRemovedItem(mutation as ExtendedMutationPayload<typeof type>);
           break;
         default:

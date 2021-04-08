@@ -8,8 +8,8 @@ export type Mutations = {
   ADD_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
   UNSHIFT_TO_SHOW_LIST: SpotifyAPI.SimpleShow[];
   SET_TOTAL: number;
-  INCREMENT_UNUPDATED_COUNTS: void;
-  RESET_UNUPDATED_COUNTS: void;
+  INCREMENT_UNACQUIRED_SHOWS: void;
+  RESET_UNACQUIRED_SHOWS: void;
   SET_ACTUAL_IS_SAVED: [string, boolean];
   DELETE_ACTUAL_IS_SAVED: string;
 };
@@ -33,12 +33,12 @@ const mutations: VuexMutations<State, Mutations> = {
     state.total = total;
   },
 
-  INCREMENT_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts += 1;
+  INCREMENT_UNACQUIRED_SHOWS(state) {
+    state.unacquiredShows += 1;
   },
 
-  RESET_UNUPDATED_COUNTS(state) {
-    state.unupdatedCounts = 0;
+  RESET_UNACQUIRED_SHOWS(state) {
+    state.unacquiredShows = 0;
   },
 
   SET_ACTUAL_IS_SAVED(state, [key, isSaved]) {

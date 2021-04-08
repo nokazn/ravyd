@@ -277,8 +277,8 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
     }
 
-    const currentUnupdatedCounts = state.unupdatedTrackCountsMap.get(playlistId) ?? 0;
-    commit('INCREMENT_UNUPDATED_TRACKS_MAP', [playlistId, currentUnupdatedCounts + 1]);
+    const currentUnacquiredTracks = state.unacquiredTrackMap.get(playlistId) ?? 0;
+    commit('INCREMENT_UNACQUIRED_TRACKS', [playlistId, currentUnacquiredTracks + 1]);
     this.$toast.pushPrimary(`"${name}" を "${playlistName}" に追加しました。`);
   },
 
@@ -307,7 +307,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
       commit('MODIFY_PLAYLIST_TOTAL_TRACKS', { playlistId, total });
     }
 
-    commit('SET_ACTUALLY_DELETED_TRACK', [playlistId, track]);
+    commit('SET_DELETED_TRACK', [playlistId, track]);
 
     this.$toast.pushPrimary(`${name}をこのプレイリストから削除しました。`);
   },

@@ -8,15 +8,15 @@ export interface DeletedTrack {
 export type State = {
   playlists: SpotifyAPI.SimplePlaylist[] | undefined;
   actualIsSavedMap: Map<string, boolean>;
-  unupdatedTrackCountsMap: Map<string, number>;
-  actuallyDeletedTrackMap: Map<string, DeletedTrack>;
+  unacquiredTrackMap: Map<string, number>;
+  deletedTrackMap: Map<string, DeletedTrack>;
 };
 
 const state = (): State => ({
   playlists: undefined,
   actualIsSavedMap: new Map(),
-  unupdatedTrackCountsMap: new Map(),
-  actuallyDeletedTrackMap: new Map(),
+  unacquiredTrackMap: new Map(),
+  deletedTrackMap: new Map(),
 });
 
 export default state;

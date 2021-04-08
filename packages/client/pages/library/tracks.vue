@@ -101,7 +101,7 @@ export default class LibraryTracksPage extends Vue implements AsyncData, Data {
 
     this.mutationUnsubscribe = this.$subscribe((mutation) => {
       switch (mutation.type) {
-        case 'library/tracks/INCREMENT_MISSING_OUT_TRACKS':
+        case 'library/tracks/INCREMENT_UNACQUIRED_TRACKS':
           this.$dispatch('library/tracks/updateLatestSavedTrackList');
           break;
 

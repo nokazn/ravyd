@@ -60,17 +60,17 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     type LibraryOfTracks = SpotifyAPI.LibraryOf<'track'>;
     // ライブラリの情報が更新されていないものの数
     const {
-      missingOutTracks,
+      unacquiredTracks,
       trackList: currentTrackList,
     } = state;
-    if (missingOutTracks === 0) return;
+    if (unacquiredTracks === 0) return;
 
     const isAuthorized = await dispatch('auth/confirmAuthState', undefined, { root: true });
     if (!isAuthorized) return;
 
     const maxLimit = 50;
     // 最大値は50
-    const limit = Math.min(missingOutTracks, maxLimit) as OneToFifty;
+    const limit = Math.min(unacquiredTracks, maxLimit) as OneToFifty;
     const handler = (index: number): Promise<LibraryOfTracks | undefined> => {
       const offset = limit * index;
       return this.$spotify.library.getUserSavedTracks({
@@ -80,7 +80,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
     };
     const tracks: LibraryOfTracks | undefined = await multipleRequests(
       handler,
-      missingOutTracks,
+      unacquiredTracks,
       maxLimit,
     ).then((pagings) => pagings.reduce((prev, curr) => {
       // 1つでもリクエストが失敗したらすべて無効にする
@@ -113,7 +113,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     commit('UNSHIFT_TO_TRACK_LIST', addedTrackList);
     commit('SET_TOTAL', tracks.total);
-    commit('RESET_MISSING_OUT_TRACKS');
+    commit('RESET_UNACQUIRED_TRACKS');
   },
 
   /**
@@ -199,7 +199,7 @@ const actions: VuexActions<State, Actions, Getters, Mutations> = {
 
     // ライブラリ一覧に表示されてない曲を保存した場合
     if (isSaved && savedTrackIndex === -1) {
-      commit('INCREMENT_MISSING_OUT_TRACKS');
+      commit('INCREMENT_UNACQUIRED_TRACKS');
     }
 
     commit('SET_ACTUAL_IS_SAVED', [trackId, isSaved]);

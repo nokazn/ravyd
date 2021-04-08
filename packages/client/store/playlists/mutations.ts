@@ -23,10 +23,10 @@ export type Mutations = {
   MODIFY_PLAYLIST_TOTAL_TRACKS: ModifyPlaylistTotalTracksParams;
   SET_ACTUAL_IS_SAVED: [string, boolean];
   DELETE_ACTUAL_IS_SAVED: string;
-  INCREMENT_UNUPDATED_TRACKS_MAP: [string, number];
-  DELETE_UNUPDATED_TRACKS_MAP: string;
-  SET_ACTUALLY_DELETED_TRACK: [string, DeletedTrack];
-  DELETE_ACTUALLY_DELETED_TRACK: string;
+  INCREMENT_UNACQUIRED_TRACKS: [string, number];
+  UNSET_UNACQUIRED_TRACK: string;
+  SET_DELETED_TRACK: [string, DeletedTrack];
+  UNSET_DELETED_TRACK: string;
 };
 
 const mutations: VuexMutations<State, Mutations> = {
@@ -107,20 +107,20 @@ const mutations: VuexMutations<State, Mutations> = {
     state.actualIsSavedMap.delete(key);
   },
 
-  INCREMENT_UNUPDATED_TRACKS_MAP(state, [key, isTrackSavedMap]) {
-    state.unupdatedTrackCountsMap.set(key, isTrackSavedMap);
+  INCREMENT_UNACQUIRED_TRACKS(state, [key, isTrackSavedMap]) {
+    state.unacquiredTrackMap.set(key, isTrackSavedMap);
   },
 
-  DELETE_UNUPDATED_TRACKS_MAP(state, key) {
-    state.unupdatedTrackCountsMap.delete(key);
+  UNSET_UNACQUIRED_TRACK(state, key) {
+    state.unacquiredTrackMap.delete(key);
   },
 
-  SET_ACTUALLY_DELETED_TRACK(state, [key, track]) {
-    state.actuallyDeletedTrackMap.set(key, track);
+  SET_DELETED_TRACK(state, [key, track]) {
+    state.deletedTrackMap.set(key, track);
   },
 
-  DELETE_ACTUALLY_DELETED_TRACK(state, key) {
-    state.actuallyDeletedTrackMap.delete(key);
+  UNSET_DELETED_TRACK(state, key) {
+    state.deletedTrackMap.delete(key);
   },
 };
 
