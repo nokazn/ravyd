@@ -3553,9 +3553,9 @@
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
 "@types/spotify-web-playback-sdk@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.7.tgz#44a9038f6a96a67a83b4495348e49c71b279f74f"
-  integrity sha512-6LukYGr1EMux3Ak1K0htq+lN2pU1G4o8m6E/HzQvXkJzWHEQkyQb0MRJ+lAM0nzY602Sqqd1IKNCRAZ2BQDx0A==
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.8.tgz#59a06ddae72401918c04368409dbb0c73d1bcfe2"
+  integrity sha512-WvclWvBwzf7PD16DG8NIVRHhDvb40tkY0XxVdF+BVYXgJ7qD5mkHAibq0Q+jaqQozwfrUB7XlSdjk0A4PrbA5w==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
