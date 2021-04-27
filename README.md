@@ -110,7 +110,7 @@ $ yarn vtc
 $ yarn tsc
 ```
 
-## TODOs
+## Roadmap
 
 - [x] Play albums, artists, playlists & podcasts
 - [x] Create/Edit playlists
