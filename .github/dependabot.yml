@@ -1,0 +1,89 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "20:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@types/ioredis"
+    versions:
+    - 4.22.1
+    - 4.22.2
+    - 4.22.3
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.19.0
+    - 4.20.0
+    - 4.21.0
+  - dependency-name: ioredis
+    versions:
+    - 4.19.4
+    - 4.20.0
+    - 4.22.0
+    - 4.24.3
+    - 4.24.4
+    - 4.24.5
+    - 4.24.6
+    - 4.25.0
+  - dependency-name: typescript
+    versions:
+    - 4.2.3
+  - dependency-name: "@vue/composition-api"
+    versions:
+    - 1.0.0-rc.5
+    - 1.0.0-rc.6
+  - dependency-name: eslint-plugin-jest
+    versions:
+    - 24.2.0
+    - 24.2.1
+    - 24.3.1
+  - dependency-name: "@nuxt/types"
+    versions:
+    - 2.15.2
+    - 2.15.3
+  - dependency-name: openapi-typescript
+    versions:
+    - 3.0.4
+    - 3.1.0
+    - 3.1.1
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.13.1
+    - 7.13.8
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.20
+  - dependency-name: node-sass
+    versions:
+    - 5.0.0
+  - dependency-name: "@nuxt/typescript-build"
+    versions:
+    - 2.0.4
+    - 2.0.5
+    - 2.0.6
+  - dependency-name: lodash-webpack-plugin
+    versions:
+    - 0.11.6
+  - dependency-name: eslint-plugin-vue
+    versions:
+    - 7.5.0
+    - 7.6.0
+  - dependency-name: eslint-plugin-nuxt
+    versions:
+    - 2.0.0
+  - dependency-name: "@types/express"
+    versions:
+    - 4.17.11
+  - dependency-name: "@nuxtjs/axios"
+    versions:
+    - 5.12.5
+    - 5.13.0
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+  - dependency-name: worker-loader
+    versions:
+    - 3.0.7
