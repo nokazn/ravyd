@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
-import TrackTableGroupHeader from './TrackTableGroupHeader.vue';
 import { options } from '~/tests/mocks/mount';
+import TrackTableGroupHeader from './TrackTableGroupHeader.vue';
 
 const subtextClass = 'subtext--text';
 

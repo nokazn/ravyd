@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import EditPlaylistModal from './EditPlaylistModal.vue';
 import PlaylistModal from '~/components/containers/modal/PlaylistModal.vue';
+import EditPlaylistModal from './EditPlaylistModal.vue';
 
 type Form = {
   name: string;

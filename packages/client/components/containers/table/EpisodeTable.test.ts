@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import { mocks, options } from '~/tests/mocks/mount';
-import EpisodeTable from './EpisodeTable.vue';
 import EpisodeTableRow from '~/components/parts/table/EpisodeTableRow.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import type { App } from '~/entities';
+import EpisodeTable from './EpisodeTable.vue';
 
 const CLICK = 'click';
 

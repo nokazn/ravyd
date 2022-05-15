@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import CardsSection from './CardsSection.vue';
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
 import IntersectionLoadingCircle from '~/components/parts/progress/IntersectionLoadingCircle.vue';
+import CardsSection from './CardsSection.vue';
 
 const APPEAR = 'appear';
 const CLICK = 'click';

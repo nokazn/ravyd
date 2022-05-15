@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import PlaylistTrackTableRow from './PlaylistTrackTableRow.vue';
 import PlaylistTrackTableRowMobile from '~/components/parts/table/PlaylistTrackTableRow.mobile.vue';
 import PlaylistTrackTableRowPc from '~/components/parts/table/PlaylistTrackTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
 import type { App } from '~/entities';
+import PlaylistTrackTableRow from './PlaylistTrackTableRow.vue';
 
 const CLICK = 'click';
 

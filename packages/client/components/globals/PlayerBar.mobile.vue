@@ -88,8 +88,8 @@ import PreviousButton from '~/components/containers/player/PreviousButton.vue';
 import MediaButton from '~/components/containers/player/MediaButton.vue';
 import NextButton from '~/components/containers/player/NextButton.vue';
 import RepeatButton from '~/components/containers/player/RepeatButton.vue';
-import type { ArtworkSrc } from './PlayerBar.vue';
 import type { App } from '~/entities';
+import type { ArtworkSrc } from './PlayerBar.vue';
 
 const INPUT = 'input';
 const ARTWORK_SIZE = 48;

@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import ReleaseDuration from './ReleaseDuration.vue';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
+import ReleaseDuration from './ReleaseDuration.vue';
 
 describe('ReleaseDuration', () => {
   it('icon', () => {

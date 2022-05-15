@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import PlaylistTrackTableRowPc from './PlaylistTrackTableRow.pc.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import EpisodeMenu from '~/components/containers/menu/EpisodeMenu.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~/entities';
+import PlaylistTrackTableRowPc from './PlaylistTrackTableRow.pc.vue';
 
 const CLICK = 'click';
 const ON_ROW_CLICKED = 'on-row-clicked';

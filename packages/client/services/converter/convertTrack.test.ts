@@ -1,3 +1,4 @@
+import { track, user } from '~/tests/fixtures';
 import {
   convertPlaylistTrackDetail,
   convertTrackDetail,
@@ -5,7 +6,6 @@ import {
   convertTrackForQueue,
 } from './convertTrack';
 import { convertAddedAt } from './convertText';
-import { track, user } from '~/tests/fixtures';
 
 describe('converter/convertPlaylistTrackDetail', () => {
   it('convert Track to PlaylistTrackDetail', () => {

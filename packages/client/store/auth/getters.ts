@@ -53,7 +53,7 @@ const getters: VuexGetters<State, Getters> = {
     return () => {
       const timeout = 30 * 1000;
       return state.isRefreshing
-        ? new Promise((resolve) => setTimeout(() => resolve(true), timeout))
+        ? new Promise((resolve) => { setTimeout(() => resolve(true), timeout); })
         : Promise.resolve(true);
     };
   },

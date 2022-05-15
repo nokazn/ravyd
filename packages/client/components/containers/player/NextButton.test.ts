@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import NextButton from './NextButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import NextButton from './NextButton.vue';
 
 const CLICK = 'click';
 
@@ -11,7 +11,7 @@ const $getters = (disallowed: boolean) => () => ({
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
-  disallowed: boolean = false,
+  disallowed: boolean,
   propsData?: {
     size?: number;
   },
@@ -43,7 +43,7 @@ describe('NextButton', () => {
   });
 
   it('call pausing request', async () => {
-    const wrapper = factory();
+    const wrapper = factory(false);
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/next');
   });

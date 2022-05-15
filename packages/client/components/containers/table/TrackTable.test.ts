@@ -1,12 +1,12 @@
 import { mount } from '@vue/test-utils';
 import type { SpotifyAPI } from 'shared/types';
 import { mocks, options } from '~/tests/mocks/mount';
-import TrackTable from './TrackTable.vue';
 import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import type { App } from '~/entities';
+import TrackTable from './TrackTable.vue';
 
 const CLICK = 'click';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';
@@ -31,7 +31,7 @@ const linkedTrack = (i: number): SpotifyAPI.LinkedTrack => ({
 });
 const item = (
   i: number,
-  discNumber: number = 1,
+  discNumber: number,
   linkedFrom?: SpotifyAPI.LinkedTrack,
 ): App.TrackDetail => ({
   type: 'track',
@@ -88,7 +88,7 @@ const factory = (
 
 describe('TrackTable', () => {
   it('headers for single column', () => {
-    const wrapper = factory([item(1), item(2)], 'single');
+    const wrapper = factory([item(1, 1), item(2, 1)], 'single');
     const th = wrapper.findAll('thead > tr > th');
     expect(th.length).toBe(2);
     expect(th.at(0).classes()).toContain(textStartClass);
@@ -97,7 +97,7 @@ describe('TrackTable', () => {
   });
 
   it('headers for multi column with added-at column', () => {
-    const wrapper = factory([item(1), item(2)], 'multi');
+    const wrapper = factory([item(1, 1), item(2, 1)], 'multi');
     const th = wrapper.findAll('thead > tr > th');
     expect(th.length).toBe(5);
     expect(th.at(0).classes()).toContain(textCenterClass);
@@ -160,49 +160,49 @@ describe('TrackTable', () => {
   });
 
   it('call resuming request when 2nd row is clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single', true);
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'single', true);
     await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play');
   });
 
   it('call playing request when a row is clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single', false);
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'single', false);
     await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
       context: 'contextUri',
-      track: item(2),
+      track: item(2, 1),
     });
   });
 
   it('call pausing request when 2nd row is clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single', true, true);
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'single', true, true);
     await wrapper.findAllComponents(TrackTableRow).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
   it('call playing request when 2nd media button is clicked', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'multi');
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'multi');
     await wrapper.findAllComponents(CircleButton).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/play', {
       context: 'contextUri',
-      track: item(2),
+      track: item(2, 1),
     });
   });
 
   it('call pausing request when 2nd media button is clicked', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'multi', true, true);
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'multi', true, true);
     await wrapper.findAllComponents(CircleButton).at(1).trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/pause');
   });
 
   it('emit when 2nd favorite button is clicked for mobile', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'single');
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'single');
     await wrapper.findAllComponents(FavoriteButton).at(1).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0]).toBeTruthy();
   });
 
   it('emit when 2nd favorite button is clicked', async () => {
-    const wrapper = factory([item(1), item(2), item(3)], 'multi');
+    const wrapper = factory([item(1, 1), item(2, 1), item(3, 1)], 'multi');
     await wrapper.findAllComponents(FavoriteButton).at(1).trigger(CLICK);
     expect(wrapper.emitted(ON_FAVORITE_BUTTON_CLICKED)?.[0]).toBeTruthy();
   });

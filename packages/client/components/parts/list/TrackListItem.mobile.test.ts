@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import TrackListItemMobile from './TrackListItem.mobile.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import type { App } from '~/entities';
+import TrackListItemMobile from './TrackListItem.mobile.vue';
 
 const CLICK = 'click';
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';

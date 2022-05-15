@@ -1,4 +1,3 @@
-import { convertToContentListItem } from './convertItem';
 import {
   simpleAlbum,
   track,
@@ -7,6 +6,7 @@ import {
   simpleEpisode,
   simpleShow,
 } from '~/tests/fixtures';
+import { convertToContentListItem } from './convertItem';
 
 describe('converter/convertToContentListItem', () => {
   it('convert SimpleAlbum to ContentListItem', () => {

@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import type { SpotifyAPI } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
-import UserName from './UserName.vue';
 import Avatar from '~/components/parts/image/Avatar.vue';
+import UserName from './UserName.vue';
 
 const userName = (i: number) => `display_name${i}`;
 const id = (i: number) => `id${i}`;

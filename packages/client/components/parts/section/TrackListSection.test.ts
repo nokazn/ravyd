@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
-import TrackListSection from './TrackListSection.vue';
 import { options } from '~/tests/mocks/mount';
 import ShowAllButton from '~/components/parts/button/ShowAllButton.vue';
+import TrackListSection from './TrackListSection.vue';
 
 const CLICK = 'click';
 const INPUT = 'input';

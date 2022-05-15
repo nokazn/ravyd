@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import type { VHas } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
-import PreviousButton from './PreviousButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import PreviousButton from './PreviousButton.vue';
 
 const CLICK = 'click';
 
@@ -13,8 +13,8 @@ const $getters = (disallowed: boolean = false, isBeginningOfTrack: boolean = fal
 const $dispatch = jest.fn().mockResolvedValue(undefined);
 
 const factory = (
-  disallowed: boolean = false,
-  isBeginningOfTrack: boolean = false,
+  disallowed: boolean,
+  isBeginningOfTrack: boolean,
   propsData?: { size?: number },
 ) => {
   return mount(PreviousButton, {
@@ -44,13 +44,13 @@ describe('PreviousButton', () => {
   });
 
   it('call seeking request when skipping_prev is disallowed', async () => {
-    const wrapper = factory(true);
+    const wrapper = factory(true, false);
     await wrapper.trigger(CLICK);
     expect($dispatch).toHaveBeenCalledWith('playback/seek', { positionMs: 0 });
   });
 
   it('call previous request when double-clicked in the last 1 sec', async () => {
-    const wrapper = factory(false);
+    const wrapper = factory(false, false);
     await wrapper.setData({
       firstClicked: true,
     });
@@ -59,7 +59,7 @@ describe('PreviousButton', () => {
   });
 
   it('call restarting from beginning request', async () => {
-    const wrapper = factory(false);
+    const wrapper = factory(false, false);
     await wrapper.trigger(CLICK);
     const vm = wrapper.vm as VHas<'firstClicked', boolean>;
     expect(vm.firstClicked).toBe(true);

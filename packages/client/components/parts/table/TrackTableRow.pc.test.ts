@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import TrackTableRowPc from './TrackTableRow.pc.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~/entities';
+import TrackTableRowPc from './TrackTableRow.pc.vue';
 
 const CLICK = 'click';
 const ON_ROW_CLICKED = 'on-row-clicked';

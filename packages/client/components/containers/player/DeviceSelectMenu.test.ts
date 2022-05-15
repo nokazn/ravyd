@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import type { VHas } from 'shared/types';
 import { options, mocks } from '~/tests/mocks/mount';
-import DeviceSelectMenu from './DeviceSelectMenu.vue';
 import type { App } from '~/entities';
+import DeviceSelectMenu from './DeviceSelectMenu.vue';
 
 const CLICK = 'click';
 

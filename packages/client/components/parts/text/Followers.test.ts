@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import type { SpotifyAPI } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
-import Followers from './Followers.vue';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
+import Followers from './Followers.vue';
 
 const followers = (total: number): SpotifyAPI.Followers => ({
   total,

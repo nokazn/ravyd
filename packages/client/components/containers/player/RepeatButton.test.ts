@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import RepeatButton from './RepeatButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import type { App } from '~/entities';
+import RepeatButton from './RepeatButton.vue';
 
 const CLICK = 'click';
 

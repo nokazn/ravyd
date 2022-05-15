@@ -130,10 +130,10 @@ interface Data {
 })
 export default class ArtistIdTopPage extends Vue implements AsyncData, Data {
   @Prop([Object])
-  artist!: App.ArtistPage;
+    artist!: App.ArtistPage;
 
   @Prop([Array])
-  relatedArtists!: App.ContentItem<'artist'>[];
+    relatedArtists!: App.ContentItem<'artist'>[];
 
   topTrackList: App.TrackDetail[] = [];
   releaseListMap: ArtistRelease = initalReleaseListMap;

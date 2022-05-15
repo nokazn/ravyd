@@ -1,3 +1,5 @@
+// TODO: ルールが見つからない旨解消する
+/* eslint-disable import/no-relative-packages */
 import { loadEnv, checkEnv } from '../../shared/pre-start/env';
 import { logger } from '../../shared/logger';
 

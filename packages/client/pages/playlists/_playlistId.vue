@@ -432,7 +432,7 @@ export default class PlaylistIdPage extends Vue implements AsyncData, Data {
     };
   }
 
-  async appendTrackList(counts: number = LIMIT_OF_TRACKS, payload?: { force: true } | undefined) {
+  async appendTrackList(counts: number, payload?: { force: true } | undefined) {
     type PagingTracks = SpotifyAPI.Paging<SpotifyAPI.PlaylistTrack>;
     const force = payload?.force ?? false;
     // 強制更新でない場合、すでにトラックがすべて取得されていたら何もしない
