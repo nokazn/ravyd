@@ -27,22 +27,16 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     // @typescript-eslint/eslint-plugin と @nuxtjs/eslint-config を拡張
     '@nuxtjs/eslint-config-typescript',
-    'plugin:vue/recommended',
     // eslint-plugin-vue を拡張
     'plugin:nuxt/recommended',
     'airbnb-base',
   ],
-  plugins: [
-    '@typescript-eslint',
-    'jest',
-  ],
+  plugins: ['@typescript-eslint', 'jest'],
   rules: {
     'no-console': isProduction
       ? [ERROR, { allow: ['info', 'warn', 'error'] }]
       : [WARN, { allow: ['info', 'warn', 'error'] }],
-    'no-debugger': isProduction
-      ? ERROR
-      : WARN,
+    'no-debugger': isProduction ? ERROR : WARN,
     'no-multiple-empty-lines': [ERROR, { max: 2 }],
     // TypeScript でチェック
     'no-undef': ALLOW,
@@ -84,6 +78,13 @@ module.exports = {
     'import/no-extraneous-dependencies': [ALLOW, { devDependencies: true }],
     // 'import/no-extraneous-dependencies': [1, { devDependencies: true }],
     'import/prefer-default-export': ALLOW,
+    // TODO: あとで直す
+    'import/no-cycle': [
+      WARN,
+      {
+        ignoreExternal: true,
+      },
+    ],
 
     /**
      * eslint と @typescript-eslint 競合を防ぐ
@@ -99,5 +100,6 @@ module.exports = {
     '@typescript-eslint/member-delimiter-style': ERROR,
 
     'vue/valid-v-slot': [ERROR, { allowModifiers: true }],
+    'vue/multi-word-component-names': ALLOW,
   },
 };
