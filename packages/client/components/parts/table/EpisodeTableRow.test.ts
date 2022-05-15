@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import EpisodeTableRow from './EpisodeTableRow.vue';
 import EpisodeTableRowMobile from '~/components/parts/table/EpisodeTableRow.mobile.vue';
 import EpisodeTableRowPc from '~/components/parts/table/EpisodeTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
 import type { App } from '~/entities';
+import EpisodeTableRow from './EpisodeTableRow.vue';
 
 const CLICK = 'click';
 

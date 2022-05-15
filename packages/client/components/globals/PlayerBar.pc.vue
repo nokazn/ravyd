@@ -74,8 +74,8 @@ import TrackQueueMenu from '~/components/containers/player/TrackQueueMenu.vue';
 import DeviceSelectMenu from '~/components/containers/player/DeviceSelectMenu.vue';
 import PlaybackMenu, { On as OnPlaybackMenu } from '~/components/containers/menu/PlaybackMenu.vue';
 import VolumeSlider from '~/components/containers/player/VolumeSlider.vue';
-import type { ArtworkSrc } from './PlayerBar.vue';
 import type { App } from '~/entities';
+import type { ArtworkSrc } from './PlayerBar.vue';
 
 const INPUT = 'input';
 const ARTWORK_SIZE = 60;

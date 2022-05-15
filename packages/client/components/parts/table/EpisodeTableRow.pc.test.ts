@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import EpisodeTableRowPc from './EpisodeTableRow.pc.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~/entities';
+import EpisodeTableRowPc from './EpisodeTableRow.pc.vue';
 
 const CLICK = 'click';
 const ON_ROW_CLICKED = 'on-row-clicked';

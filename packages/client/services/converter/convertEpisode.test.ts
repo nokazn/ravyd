@@ -1,6 +1,6 @@
 import type { SpotifyAPI } from 'shared/types';
-import { convertEpisodeDetail } from './convertEpisode';
 import { simpleEpisode, episode } from '~/tests/fixtures';
+import { convertEpisodeDetail } from './convertEpisode';
 
 describe('converter/convertEpisodeDetail', () => {
   it('convert SimpleEpisode', () => {

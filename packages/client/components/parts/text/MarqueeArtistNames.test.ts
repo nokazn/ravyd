@@ -1,8 +1,8 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import type { VHas } from 'shared/types';
 import { options } from '~/tests/mocks/mount';
-import MarqueeArtistNames from './MarqueeArtistNames.vue';
 import type { App } from '~/entities';
+import MarqueeArtistNames from './MarqueeArtistNames.vue';
 
 const artist = (i: number): App.MinimumArtist => ({
   id: `id${i}`,

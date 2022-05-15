@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import EpisodeTableRowMobile from './EpisodeTableRow.mobile.vue';
 import { textColorClass, subtextColorClass } from '~/utils/text';
 import type { App } from '~/entities';
+import EpisodeTableRowMobile from './EpisodeTableRow.mobile.vue';
 
 const CLICK = 'click';
 const ON_ROW_CLICKED = 'on-row-clicked';

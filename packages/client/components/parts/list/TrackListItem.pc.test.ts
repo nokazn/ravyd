@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import TrackListItemPc from './TrackListItem.pc.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import TrackMenu from '~/components/containers/menu/TrackMenu.vue';
 import type { App } from '~/entities';
+import TrackListItemPc from './TrackListItem.pc.vue';
 
 const CLICK = 'click';
 const ON_FAVORITE_MENU_CLICKED = 'on-favorite-menu-clicked';

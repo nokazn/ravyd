@@ -1,12 +1,12 @@
 import { mount } from '@vue/test-utils';
 import type { SpotifyAPI } from 'shared/types';
 import { mocks, options } from '~/tests/mocks/mount';
-import TrackTable from './TrackTable.vue';
 import TrackTableRow from '~/components/parts/table/TrackTableRow.vue';
 import TrackTableGroupHeader from '~/components/parts/table/TrackTableGroupHeader.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import type { App } from '~/entities';
+import TrackTable from './TrackTable.vue';
 
 const CLICK = 'click';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';

@@ -2,8 +2,8 @@ import { mount, Wrapper } from '@vue/test-utils';
 import Vue from 'vue';
 
 import { options } from '~/tests/mocks/mount';
-import ContentListSection from './ContentListSection.vue';
 import type { App } from '~/entities';
+import ContentListSection from './ContentListSection.vue';
 
 const item = (i: number): App.ContentItem<'artist'> => ({
   type: 'artist',

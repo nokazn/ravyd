@@ -3,8 +3,8 @@ import type { AxiosError } from 'axios';
 
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { nextRepeatState } from '~/services/converter';
-import type { State, Mutations, Getters } from './types';
 import type { App } from '~/entities';
+import type { State, Mutations, Getters } from './types';
 
 interface TransferPlaybackParams {
   deviceId?: string;

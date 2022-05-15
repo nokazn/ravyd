@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import TrackTableRow from './TrackTableRow.vue';
 import TrackTableRowMobile from '~/components/parts/table/TrackTableRow.mobile.vue';
 import TrackTableRowPc from '~/components/parts/table/TrackTableRow.pc.vue';
 import { options, mocks } from '~/tests/mocks/mount';
 import type { App } from '~/entities';
+import TrackTableRow from './TrackTableRow.vue';
 
 const CLICK = 'click';
 

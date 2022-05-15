@@ -4,8 +4,8 @@ import type { VuexMutations } from 'typed-vuex';
 import type { SpotifyAPI, ZeroToHundred } from 'shared/types';
 import { DEFAULT_DURATION_MS } from '~/constants';
 import { convertMinimumArtist, convertUriToId } from '~/services/converter';
-import type { State } from './types';
 import type { App } from '~/entities';
+import type { State } from './types';
 
 export type Mutations = {
   SET_POLLING_PLAYBACK_TIMER: NodeJS.Timeout | number | undefined;

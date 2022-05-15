@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import NextButton from './NextButton.vue';
 import CircleButton from '~/components/parts/button/CircleButton.vue';
+import NextButton from './NextButton.vue';
 
 const CLICK = 'click';
 

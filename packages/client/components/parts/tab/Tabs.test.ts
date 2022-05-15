@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
-import Tabs from './Tabs.vue';
 import { options } from '~/tests/mocks/mount';
 import { BACKGROUND_COLOR } from '~/constants';
+import Tabs from './Tabs.vue';
 
 const item = (i: number) => ({
   title: `title${i}`,

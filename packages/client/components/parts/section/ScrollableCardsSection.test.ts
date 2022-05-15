@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
-import ScrollableCardsSection from './ScrollableCardsSection.vue';
 import { options } from '~/tests/mocks/mount';
+import ScrollableCardsSection from './ScrollableCardsSection.vue';
 
 describe('ScrollableCardsSection', () => {
   it('title', () => {

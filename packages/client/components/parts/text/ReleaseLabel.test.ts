@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import ReleaseLabel from './ReleaseLabel.vue';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
+import ReleaseLabel from './ReleaseLabel.vue';
 
 describe('ReleaseLabel', () => {
   it('icon', () => {

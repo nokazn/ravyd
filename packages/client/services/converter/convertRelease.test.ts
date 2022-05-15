@@ -1,4 +1,3 @@
-import { convertReleaseDate, convertReleaseForCard, convertReleaseType } from './convertRelease';
 import {
   album,
   simpleAlbum,
@@ -6,6 +5,7 @@ import {
   image,
   externalUrls,
 } from '~/tests/fixtures';
+import { convertReleaseDate, convertReleaseForCard, convertReleaseType } from './convertRelease';
 
 describe('converter/convertReleaseDate', () => {
   it('convert YYYY', () => {

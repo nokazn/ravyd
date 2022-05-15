@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
 import { mocks, options } from '~/tests/mocks/mount';
-import PlaylistTrackTable from './PlaylistTrackTable.vue';
 import PlaylistTrackTableRow from '~/components/parts/table/PlaylistTrackTableRow.vue';
 import PlaylistMediaButton from '~/components/parts/button/PlaylistMediaButton.vue';
 import FavoriteButton from '~/components/parts/button/FavoriteButton.vue';
 import type { App } from '~/entities';
+import PlaylistTrackTable from './PlaylistTrackTable.vue';
 
 const CLICK = 'click';
 const ON_FAVORITE_BUTTON_CLICKED = 'on-favorite-button-clicked';

@@ -1,9 +1,9 @@
 import { mount, RouterLinkStub } from '@vue/test-utils';
 import { options, mocks } from '~/tests/mocks/mount';
-import ReleaseCard from './ReleaseCard.vue';
 import ReleaseArtwork from '~/components/parts/image/ReleaseArtwork.vue';
 import Card from '~/components/parts/card/Card.vue';
 import type { App } from '~/entities';
+import ReleaseCard from './ReleaseCard.vue';
 
 const ON_MEDIA_BUTTON_CLICKED = 'on-media-button-clicked';
 

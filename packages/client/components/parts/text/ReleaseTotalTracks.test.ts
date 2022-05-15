@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { options } from '~/tests/mocks/mount';
-import ReleaseTotalTracks from './ReleaseTotalTracks.vue';
 import TextInfo from '~/components/parts/text/TextInfo.vue';
+import ReleaseTotalTracks from './ReleaseTotalTracks.vue';
 
 describe('ReleaseTotalTracks', () => {
   it('icon', () => {
