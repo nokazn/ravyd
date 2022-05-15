@@ -1,5 +1,7 @@
-import { loadEnv, checkEnv } from '@ravyd/shared/pre-start/env';
-import { logger } from '@ravyd/shared/logger';
+// TODO: ルールが見つからない旨解消する
+/* eslint-disable import/no-relative-packages */
+import { loadEnv, checkEnv } from '../../shared/pre-start/env';
+import { logger } from '../../shared/logger';
 
 (() => {
   const e = process.env.NODE_ENV ?? 'development';
