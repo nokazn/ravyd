@@ -30,7 +30,7 @@
     "dayjs": "^1.9.7",
     "just-debounce-it": "^1.1.0",
     "node-vibrant": "^3.1.6",
-    "nuxt": "^2.14.11",
+    "nuxt": "^3.0.0",
     "nuxt-property-decorator": "^2.8.8",
     "portal-vue": "^2.1.7",
     "spinkit": "^2.0.1",
